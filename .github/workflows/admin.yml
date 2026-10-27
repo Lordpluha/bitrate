@@ -65,7 +65,7 @@ permissions:
 jobs:
   admin-pr:
     if: ${{ github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'pr') }}
-    uses: ./.github/workflows/admin_reusable.yml
+    uses: $/.github/workflows/admin_reusable.yml
     secrets: inherit
     with:
       push-image: false
@@ -77,7 +77,7 @@ jobs:
 
   admin-develop:
     if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/develop') || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'develop') }}
-    uses: ./.github/workflows/admin_reusable.yml
+    uses: $/.github/workflows/admin_reusable.yml
     secrets: inherit
     with:
       push-image: true
@@ -97,7 +97,7 @@ jobs:
     # other five. This mode is the hand-run escape hatch for rebuilding just this
     # service's `:master` image.
     if: ${{ github.event_name == 'workflow_dispatch' && inputs.mode == 'master' }}
-    uses: ./.github/workflows/admin_reusable.yml
+    uses: $/.github/workflows/admin_reusable.yml
     secrets: inherit
     with:
       push-image: true

@@ -70,7 +70,11 @@ RUN --mount=type=secret,id=turbo_token,env=TURBO_TOKEN \
 
 # Stage 5: Production — static files behind nginx. There is no server to run: the app is an SPA
 # by decision (it sits entirely behind operator auth, so it has nothing to server-render).
-FROM nginx:alpine AS production
+FROM nginx:1.31-alpine AS production
+# The nginx base is rebuilt upstream only every few weeks, while Alpine ships fixes for its
+# packages (curl, brotli, ...) in between; upgrading here keeps the scan clean without
+# waiting for a new tag.
+RUN apk upgrade --no-cache
 
 COPY --from=build /app/apps/admin/dist/admin/browser /usr/share/nginx/html
 COPY apps/admin/nginx.conf /etc/nginx/conf.d/default.conf

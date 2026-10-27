@@ -91,11 +91,12 @@ jobs:
       - name: Checkout the base branch
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          persist-credentials: false
           ref: ${{ inputs.base-branch }}
           fetch-depth: 0
 
       - name: Setup Node.js and pnpm
-        uses: ./.github/actions/setup-node-pnpm
+        uses: $/.github/actions/setup-node-pnpm
 
       # A second open release PR would consume the same changesets and derive the
       # same version, then collide on the tag. The real fix is the back-merge;

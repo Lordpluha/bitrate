@@ -52,7 +52,7 @@ services:
   # started natively (`pnpm dev`) reaches it at http://localhost:8333. Always on: the API has no
   # other storage backend.
   seaweedfs:
-    image: chrislusf/seaweedfs:4.48
+    image: chrislusf/seaweedfs:4.51
     restart: unless-stopped
     entrypoint: ["/bin/sh", "-c"]
     command:
@@ -79,7 +79,7 @@ services:
 
   # One-shot: creates the bucket if it is missing, then exits 0. Safe on every `up -d`.
   seaweedfs-init:
-    image: chrislusf/seaweedfs:4.48
+    image: chrislusf/seaweedfs:4.51
     restart: "no"
     entrypoint: ["/bin/sh", "-c"]
     command:

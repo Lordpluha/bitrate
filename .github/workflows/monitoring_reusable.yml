@@ -9,13 +9,13 @@ permissions:
 
 jobs:
   health:
-    uses: ./.github/workflows/monitoring_health_reusable.yml
+    uses: $/.github/workflows/monitoring_health_reusable.yml
 
   ssl:
-    uses: ./.github/workflows/monitoring_ssl_reusable.yml
+    uses: $/.github/workflows/monitoring_ssl_reusable.yml
 
   dependencies:
-    uses: ./.github/workflows/monitoring_dependency_reusable.yml
+    uses: $/.github/workflows/monitoring_dependency_reusable.yml
     with:
       branch-name: develop
 

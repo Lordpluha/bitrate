@@ -88,7 +88,7 @@ permissions:
 jobs:
   expo-dev-server-check:
     if: ${{ inputs.run-expo-check }}
-    uses: ./.github/workflows/mobile_expo_reusable.yml
+    uses: $/.github/workflows/mobile_expo_reusable.yml
     with:
       expo-image-tag: ${{ inputs.expo-image-tag }}
       expo-container-name: ${{ inputs.expo-container-name }}
@@ -96,7 +96,7 @@ jobs:
 
   mobile-web-build:
     if: ${{ inputs.run-mobile-web-build }}
-    uses: ./.github/workflows/mobile_web_reusable.yml
+    uses: $/.github/workflows/mobile_web_reusable.yml
     with:
       mobile-web-push: ${{ inputs.mobile-web-push }}
       mobile-web-load: ${{ inputs.mobile-web-load }}
@@ -109,7 +109,7 @@ jobs:
 
   mobile-eas:
     if: ${{ inputs.run-eas-android || inputs.run-eas-ios }}
-    uses: ./.github/workflows/mobile_eas_reusable.yml
+    uses: $/.github/workflows/mobile_eas_reusable.yml
     with:
       run-eas-android: ${{ inputs.run-eas-android }}
       run-eas-ios: ${{ inputs.run-eas-ios }}

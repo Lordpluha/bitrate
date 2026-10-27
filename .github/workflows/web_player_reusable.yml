@@ -85,11 +85,13 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Setup Node.js and pnpm
         if: ${{ inputs.run-biome || inputs.run-tests || inputs.run-e2e || inputs.run-screenshot }}
-        uses: ./.github/actions/setup-node-pnpm
+        uses: $/.github/actions/setup-node-pnpm
 
       - name: Run Biome check
         if: ${{ inputs.run-biome }}
@@ -142,14 +144,14 @@ jobs:
 
       - name: Upload screenshot test failure artifacts
         if: ${{ inputs.run-screenshot && failure() }}
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: web-player-screenshot-diffs
           path: apps/web-player/test-results/
           retention-days: 7
 
       - name: Setup Docker + registries
-        uses: ./.github/actions/setup-docker
+        uses: $/.github/actions/setup-docker
         with:
           ghcr: "true"
           ghcr-registry: ${{ env.REGISTRY }}
@@ -157,7 +159,7 @@ jobs:
           ghcr-password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build Web Player Docker image
-        uses: docker/build-push-action@v7
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
         with:
           context: .
           file: ./apps/web-player/Dockerfile
@@ -188,7 +190,7 @@ jobs:
         run: echo "ref=$(printf '%s\n' "$TAGS" | sed -e 's/^[[:space:]]*//' -e '/^$/d' | head -n1)" >> "$GITHUB_OUTPUT"
 
       - name: Scan image
-        uses: ./.github/actions/scan-image
+        uses: $/.github/actions/scan-image
         with:
           image-ref: ${{ steps.scan-ref.outputs.ref }}
           service: web-player

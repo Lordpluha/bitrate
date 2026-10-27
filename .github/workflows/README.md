@@ -19,8 +19,12 @@ Current workflow map for .github/workflows.
   `env:` and are read as `"$VAR"`, so nothing can be spliced into a shell word. (Some older
   mobile and desktop reusables still interpolate workflow-authored inputs directly;
   none of them read attacker-controlled context, but new code should not copy the pattern.)
-- **Third-party actions in the release and deploy chain are pinned by full commit SHA** with a
-  `# vX.Y.Z` comment. Elsewhere in the repository a major tag is still used.
+- **Every third-party action is pinned by full commit SHA** with a `# vX.Y.Z` comment (zizmor's
+  blanket `unpinned-uses` policy). Dependabot's `github-actions` updates bump the SHA and the
+  comment together. In-repo actions and reusable workflows use the self-repository form
+  `uses: $/.github/...`, which GitHub resolves at the workflow's own commit and counts as pinned.
+- **`actions/checkout` runs with `persist-credentials: false`.** No job pushes through the
+  checkout's credential: tags, releases and back-merge PRs all go through the API.
 - **No secret is ever interpolated into a `run:` string, a step `name`, an artifact or a cache
   key.** Secrets travel through `env:`.
 
@@ -362,7 +366,7 @@ SmartScreen warn on first launch.
 ## Structure Summary
 - Entry workflows: admin.yml, api.yml, desktop.yml, docs.yml, mobile.yml, player.yml, ui_react.yml, web_player.yml, web_artists.yml, security.yml, monitoring.yml, release.yml, release_publish.yml, release_images.yml, deploy.yml.
 - Reusable workflows: all *_reusable.yml files at the top level of .github/workflows.
-- Note: GitHub Actions requires local reusable workflows referenced via uses: ./.github/workflows/... to be stored at the top level of .github/workflows.
+- Note: GitHub Actions requires local reusable workflows referenced via uses: $/.github/workflows/... to be stored at the top level of .github/workflows.
 
 ## Published images
 

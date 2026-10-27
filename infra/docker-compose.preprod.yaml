@@ -79,7 +79,7 @@ services:
   # in the spirit of admin/admin.
   # The application identity is scoped to one bucket; there is no admin S3 identity.
   seaweedfs:
-    image: chrislusf/seaweedfs:4.48
+    image: chrislusf/seaweedfs:4.51
     container_name: bitrate-seaweedfs
     restart: unless-stopped
     entrypoint: ["/bin/sh", "-c"]
@@ -113,7 +113,7 @@ services:
 
   # One-shot: creates the bucket if it is missing, then exits 0. Safe on every `up -d`.
   seaweedfs-init:
-    image: chrislusf/seaweedfs:4.48
+    image: chrislusf/seaweedfs:4.51
     restart: "no"
     entrypoint: ["/bin/sh", "-c"]
     command:

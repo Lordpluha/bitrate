@@ -81,7 +81,11 @@ WORKDIR /app/apps/mobile
 RUN pnpm run export
 
 # Stage 6: Production Web Server (nginx для веб-версии)
-FROM nginx:alpine AS production-web
+FROM nginx:1.31-alpine AS production-web
+# The nginx base is rebuilt upstream only every few weeks, while Alpine ships fixes for its
+# packages (curl, brotli, ...) in between; upgrading here keeps the scan clean without
+# waiting for a new tag.
+RUN apk upgrade --no-cache
 
 # Копируем статические файлы
 COPY --from=build /app/apps/mobile/dist /usr/share/nginx/html

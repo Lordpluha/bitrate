@@ -66,7 +66,7 @@ jobs:
       contents: read
       packages: write
       security-events: write
-    uses: ./.github/workflows/api_reusable.yml
+    uses: $/.github/workflows/api_reusable.yml
     with:
       push-image: ${{ inputs.push-image }}
       image-tags: |
@@ -85,7 +85,7 @@ jobs:
       contents: read
       packages: write
       security-events: write
-    uses: ./.github/workflows/web_player_reusable.yml
+    uses: $/.github/workflows/web_player_reusable.yml
     secrets: inherit
     with:
       push-image: ${{ inputs.push-image }}
@@ -103,7 +103,7 @@ jobs:
       contents: read
       packages: write
       security-events: write
-    uses: ./.github/workflows/web_artists_reusable.yml
+    uses: $/.github/workflows/web_artists_reusable.yml
     secrets: inherit
     with:
       push-image: ${{ inputs.push-image }}
@@ -120,7 +120,7 @@ jobs:
       contents: read
       packages: write
       security-events: write
-    uses: ./.github/workflows/admin_reusable.yml
+    uses: $/.github/workflows/admin_reusable.yml
     secrets: inherit
     with:
       push-image: ${{ inputs.push-image }}
@@ -138,7 +138,7 @@ jobs:
       contents: read
       packages: write
       security-events: write
-    uses: ./.github/workflows/docs_reusable.yml
+    uses: $/.github/workflows/docs_reusable.yml
     secrets: inherit
     with:
       push-image: ${{ inputs.push-image }}
@@ -155,7 +155,7 @@ jobs:
       contents: read
       packages: write
       security-events: write
-    uses: ./.github/workflows/storybook_reusable.yml
+    uses: $/.github/workflows/storybook_reusable.yml
     with:
       push-image: ${{ inputs.push-image }}
       tags: |
