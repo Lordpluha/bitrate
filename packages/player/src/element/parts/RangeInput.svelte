@@ -64,7 +64,7 @@
       --bitrate-player-thumb-color,
       var(--color-text, var(--color-primary, currentColor))
     );
-    opacity: 0;
+    opacity: var(--bitrate-player-thumb-opacity, 0);
     transition: opacity 0.15s ease;
   }
 
@@ -77,7 +77,7 @@
       --bitrate-player-thumb-color,
       var(--color-text, var(--color-primary, currentColor))
     );
-    opacity: 0;
+    opacity: var(--bitrate-player-thumb-opacity, 0);
     transition: opacity 0.15s ease;
   }
 

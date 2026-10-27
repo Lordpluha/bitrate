@@ -99,12 +99,15 @@ export class SlotPlayer {
     const slot = this.slots[this.active]
     const { media } = slot
     const heard = this.current !== null && slot.key === this.current.key
-    const duration = heard && Number.isFinite(media.duration) ? media.duration : 0
+    /** Until the media knows its length, the source's own duration and start stand in. */
+    const loaded = heard && Number.isFinite(media.duration) && media.duration > 0
+    const duration = loaded ? media.duration : heard ? (this.current?.duration ?? 0) : 0
+    const currentTime = loaded ? media.currentTime : heard ? (this.current?.startTime ?? 0) : 0
 
     return {
       status: this.status(heard),
       key: heard ? slot.key : null,
-      currentTime: heard ? media.currentTime : 0,
+      currentTime,
       duration,
       volume: this.volume,
       muted: this.muted,
@@ -340,7 +343,7 @@ export class SlotPlayer {
       slot.loader = null
       slot.bitrate = null
       if (!isPrefetch && this.active === index) this.pendingPlay = true
-      this.restoreOnMetadata(slot, key)
+      this.restoreOnMetadata(slot, source)
       attachLegacy()
     }
 
@@ -355,7 +358,7 @@ export class SlotPlayer {
       })
       .catch(attachLegacy)
 
-    if (!isPrefetch) this.restoreOnMetadata(slot, key)
+    if (!isPrefetch) this.restoreOnMetadata(slot, source)
   }
 
   private attachLegacy(
@@ -439,15 +442,18 @@ export class SlotPlayer {
     return true
   }
 
-  /** Seeks to the saved position once metadata loads, unless another track took the slot. */
-  private restoreOnMetadata(slot: Slot, key: string): void {
+  /**
+   * Seeks to where the play left off once metadata loads, unless another track took the slot:
+   * the position store's entry for the key, else the source's `startTime`.
+   */
+  private restoreOnMetadata(slot: Slot, source: BitratePlayerSource): void {
+    const { key } = source
     const { positions } = this.input.streaming
-    if (!positions) return
     slot.media.addEventListener(
       'loadedmetadata',
       () => {
         if (slot.key !== key) return
-        const saved = positions.restore(key)
+        const saved = positions?.restore(key) ?? source.startTime ?? null
         if (saved !== null && saved > 0 && saved < slot.media.duration) {
           slot.media.currentTime = saved
         }

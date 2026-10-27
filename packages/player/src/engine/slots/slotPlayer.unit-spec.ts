@@ -234,6 +234,27 @@ describe('SlotPlayer', () => {
     expect(positions.remove).toHaveBeenCalledWith('k1')
   })
 
+  it("shows the source's duration and start until the media knows its own", async () => {
+    const { media, player } = setup()
+
+    player.setSource({ ...source('k1'), duration: 182, startTime: 64 })
+
+    expect(player.state).toMatchObject({ currentTime: 64, duration: 182 })
+    media[0].setTiming({ currentTime: 0, duration: 181.5 })
+    expect(player.state).toMatchObject({ currentTime: 0, duration: 181.5 })
+  })
+
+  it("resumes from the source's start when the position store has nothing for the key", async () => {
+    const { media, player } = setup()
+    player.setSource({ ...source('k1'), startTime: 64 })
+    await settle()
+
+    media[0].setTiming({ duration: 200 })
+    media[0].dispatchEvent(new Event('loadedmetadata'))
+
+    expect(media[0].currentTime).toBe(64)
+  })
+
   it('resumes from the saved position once metadata loads', async () => {
     const { media, player, positions } = setup()
     positions.restore.mockReturnValue(42 as never)

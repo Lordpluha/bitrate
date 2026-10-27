@@ -143,6 +143,13 @@ export type BitratePlayerSource = {
   trackId: string
   /** The plain audio file, the last fallback when neither CMAF nor HLS can play. */
   progressiveUrl: string
+  /** The track's length in seconds, shown until the media reports its own. */
+  duration?: number
+  /**
+   * Where a restored play left off, in seconds: shown until the media loads, and resumed from
+   * when the position store has nothing newer for this key.
+   */
+  startTime?: number
 }
 
 /** One byte range of one rendition, as the CMAF loader asks for it. */
