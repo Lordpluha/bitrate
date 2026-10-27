@@ -9,8 +9,9 @@ import {
 } from '@entities/Player'
 import type { TrackEntity } from '@entities/Track/models/schema/Track.entity'
 import { useTrackContextMenuPosition } from '@entities/Track/models/useTrackContextMenuPosition'
+import { useI18n } from '@shared/i18n'
 import { ROUTES } from '@shared/routes'
-import { DateUtils } from '@shared/utils/DateUtils'
+import { formatDate } from '@shared/utils/formatDate'
 import Link from 'next/link'
 import type { TrackAlbum } from '../api/client/trackAlbums'
 import { TrackContextMenu } from './TrackContextMenu'
@@ -48,6 +49,7 @@ export const TrackCard = ({
   track,
   viewMode = 'list',
 }: TrackCardProps) => {
+  const { locale, t } = useI18n()
   const currentTrack = usePlayerStore(selectCurrentTrack)
   const isPlaying = usePlayerStore(selectIsPlaying)
   const play = usePlayerStore((state) => state.play)
@@ -123,8 +125,8 @@ export const TrackCard = ({
         {showDateAdded ? (
           <div className="truncate text-xs text-muted-foreground max-[1024px]:hidden">
             {track.createdAt
-              ? DateUtils.formatDate(track.createdAt)
-              : 'Unknown'}
+              ? formatDate({ date: track.createdAt, locale })
+              : t('common.unknown')}
           </div>
         ) : null}
         <TrackRowActions

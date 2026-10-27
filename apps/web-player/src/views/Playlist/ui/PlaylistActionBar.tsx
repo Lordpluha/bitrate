@@ -3,6 +3,7 @@
 import { List, MoreHorizontal } from 'lucide-react'
 import { useState } from 'react'
 import { ReportDialog } from '@/features/Report'
+import { useI18n } from '@/shared/i18n'
 import type {
   PlaylistPlayback,
   TrackViewMode,
@@ -11,6 +12,7 @@ import { usePlaylistActionMenus } from '@/views/Playlist/model/usePlaylistAction
 import {
   PlaylistMoreMenu,
   TrackViewMenu,
+  VIEW_MODE_LABEL,
 } from '@/views/Playlist/ui/PlaylistMenus'
 import {
   type PlaylistActionDetails,
@@ -37,6 +39,7 @@ export const PlaylistActionBar = ({
   playback,
   view,
 }: PlaylistActionBarProps) => {
+  const { t } = useI18n()
   const menus = usePlaylistActionMenus()
   const [isReportOpen, setIsReportOpen] = useState(false)
 
@@ -48,7 +51,7 @@ export const PlaylistActionBar = ({
           <div className="relative" ref={menus.moreMenuRef}>
             <button
               aria-expanded={menus.isMoreOpen}
-              aria-label="More playlist options"
+              aria-label={t('playlist.moreOptions')}
               className="transition-colors hover:text-foreground"
               onClick={menus.toggleMoreMenu}
               type="button"
@@ -83,12 +86,12 @@ export const PlaylistActionBar = ({
         <div className="relative max-[1024px]:hidden" ref={menus.viewMenuRef}>
           <button
             aria-expanded={menus.isViewMenuOpen}
-            aria-label="Change track list view"
+            aria-label={t('playlist.changeView')}
             className="flex items-center gap-1.5 text-sm capitalize text-muted-foreground transition-colors hover:text-foreground"
             onClick={menus.toggleViewMenu}
             type="button"
           >
-            <span>{view.value}</span>
+            <span>{t(VIEW_MODE_LABEL[view.value])}</span>
             <List size={18} />
           </button>
           {menus.isViewMenuOpen && (

@@ -56,13 +56,13 @@ export const PlaylistContent = ({ playlist }: PlaylistContentProps) => {
         imageUrl={cover}
         title={playlist.title || t('common.playlist')}
         tracksCount={tracks.length}
-        type={playlist.isPublic ? 'Public playlist' : t('common.playlist')}
+        type={playlist.isPublic ? t('playlist.public') : t('common.playlist')}
       />
       <PlaylistActionBar
         details={{
           id: playlist.id,
           isOwner,
-          title: playlist.title || 'playlist',
+          title: playlist.title || t('playlist.fallbackTitle'),
           tracksCount: tracks.length,
         }}
         onDelete={actions.deletePlaylist}
@@ -91,15 +91,15 @@ export const PlaylistContent = ({ playlist }: PlaylistContentProps) => {
           addingTrackId={actions.addingTrackId}
           existingTrackIds={actions.existingTrackIds}
           onAddTrack={actions.addTrack}
-          playlistTitle={playlist.title || 'playlist'}
+          playlistTitle={playlist.title || t('playlist.fallbackTitle')}
         />
       )}
       {!isOwner && tracks.length === 0 && (
         <StateMessage
           className="min-h-80"
-          description="Let's find something for your playlist."
+          description={t('playlist.findDescription')}
           icon={Music}
-          primary={{ href: ROUTES.search(), label: 'Search tracks' }}
+          primary={{ href: ROUTES.search(), label: t('playlist.searchTracks') }}
           title={t('playlist.noTracks')}
         />
       )}

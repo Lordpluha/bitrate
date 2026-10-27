@@ -15,6 +15,7 @@ import { useState } from 'react'
 import { useFollowingActivity } from '@/entities/User'
 import { usePlayCollection } from '@/features/PlayCollection'
 import { Z_INDEX_CLASS } from '@/shared/constants'
+import { useI18n } from '@/shared/i18n'
 import { ROUTES } from '@/shared/routes'
 import { formatRelativeTime } from '@/shared/utils/formatRelativeTime'
 import { getTrackCoverUrl, getUserAvatarUrl } from '@/shared/utils/mediaUrl'
@@ -24,6 +25,7 @@ import { getTrackCoverUrl, getUserAvatarUrl } from '@/shared/utils/mediaUrl'
  * panel is open. A track plays from here as it does on the page.
  */
 export const ActivityPopover = () => {
+  const { locale, t } = useI18n()
   const [isOpen, setIsOpen] = useState(false)
   const { data, isError, isPending } = useFollowingActivity(isOpen)
   const playCollection = usePlayCollection()
@@ -31,7 +33,7 @@ export const ActivityPopover = () => {
   return (
     <Popover onOpenChange={setIsOpen} open={isOpen}>
       <PopoverTrigger
-        aria-label="Activity"
+        aria-label={t('activity.title')}
         className="rounded-full p-2 text-muted-foreground transition-colors hover:bg-surface hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
       >
         <MembersIcon className="size-5 xl:size-4.5" />
@@ -46,9 +48,9 @@ export const ActivityPopover = () => {
         sideOffset={8}
       >
         <div className="border-b border-border px-4 py-3">
-          <h2 className="font-bold">Activity</h2>
+          <h2 className="font-bold">{t('activity.title')}</h2>
           <p className="text-xs text-muted-foreground">
-            What people you follow played this week
+            {t('activity.popoverDescription')}
           </p>
         </div>
 
@@ -58,22 +60,22 @@ export const ActivityPopover = () => {
               className="px-3 py-8 text-center text-sm text-muted-foreground"
               role="status"
             >
-              Loading activity…
+              {t('activity.loadingEllipsis')}
             </p>
           ) : isError ? (
             <StateMessage
-              description="Try again in a moment."
+              description={t('common.tryAgainSoon')}
               icon={TriangleAlert}
               size="compact"
-              title="Activity is unavailable"
+              title={t('activity.unavailable')}
               tone="error"
             />
           ) : data.length === 0 ? (
             <StateMessage
-              description="What they play shows up here, unless they keep their listening private."
+              description={t('activity.emptyDescription')}
               icon={UsersRound}
               size="compact"
-              title="Follow listeners to see their activity"
+              title={t('activity.emptyTitle')}
             />
           ) : (
             <ul className="grid gap-1">
@@ -109,11 +111,11 @@ export const ActivityPopover = () => {
                         className="shrink-0 text-xs text-muted-foreground"
                         dateTime={listenedAt.toISOString()}
                       >
-                        {formatRelativeTime({ date: listenedAt })}
+                        {formatRelativeTime({ date: listenedAt, locale })}
                       </time>
                     </div>
                     <button
-                      aria-label={`Play ${track.title}`}
+                      aria-label={t('common.playName', { name: track.title })}
                       className="flex min-w-0 items-center gap-2 text-left text-xs text-muted-foreground hover:text-foreground"
                       onClick={() =>
                         void playCollection({
@@ -149,7 +151,7 @@ export const ActivityPopover = () => {
             href={ROUTES.activity}
             onClick={() => setIsOpen(false)}
           >
-            Show all
+            {t('common.showAll')}
           </Link>
         </div>
       </PopoverContent>

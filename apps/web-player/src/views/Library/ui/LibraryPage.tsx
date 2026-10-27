@@ -108,9 +108,9 @@ export const LibraryPage = () => {
           </div>
         ) : library.isError ? (
           <ErrorState
-            description="Something went wrong on our side. Try again."
+            description={t('error.tryAgainShort')}
             onRetry={library.refetch}
-            title="Your library could not be loaded"
+            title={t('library.loadFailed')}
           />
         ) : controls.activeSection === 'playlists' ? (
           <PlaylistLibrarySection

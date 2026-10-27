@@ -3,8 +3,10 @@
 import { Button } from '@bitrate/ui-react'
 import { LoginModal, SignUpModal } from '@features/AuthModal'
 import { useState } from 'react'
+import { useI18n } from '@/shared/i18n'
 
 export const AuthButtons = () => {
+  const { t } = useI18n()
   const [loginOpen, setLoginOpen] = useState(false)
   const [signUpOpen, setSignUpOpen] = useState(false)
 
@@ -26,7 +28,7 @@ export const AuthButtons = () => {
           onClick={openSignUp}
           variant="ghost"
         >
-          Sign up
+          {t('auth.signUp')}
         </Button>
 
         <Button
@@ -34,7 +36,7 @@ export const AuthButtons = () => {
           onClick={openLogin}
           variant="default"
         >
-          Log in
+          {t('profile.logIn')}
         </Button>
       </div>
 

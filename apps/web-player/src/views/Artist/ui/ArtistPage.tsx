@@ -5,6 +5,7 @@ import { useLikedTracks } from '@entities/Track'
 import { useImageColor } from '@shared/hooks/useImageColor'
 import { getArtistBackgroundUrl } from '@shared/utils/mediaUrl'
 import { type UIEventHandler, useMemo, useRef, useState } from 'react'
+import { useI18n } from '@/shared/i18n'
 import { useArtistContent } from '@/views/Artist/model/useArtistContent'
 import { useArtistPlayback } from '@/views/Artist/model/useArtistPlayback'
 import { ArtistCatalogue } from '@/views/Artist/ui/ArtistCatalogue'
@@ -16,10 +17,8 @@ export type ArtistPageProps = {
   artistId: string
 }
 
-const pluralize = (count: number, noun: string) =>
-  `${count} ${noun}${count === 1 ? '' : 's'}`
-
 export const ArtistPage = ({ artistId }: ArtistPageProps) => {
+  const { t, tp } = useI18n()
   const {
     data: artist,
     error,
@@ -67,13 +66,16 @@ export const ArtistPage = ({ artistId }: ArtistPageProps) => {
    * fallback for artists the API has no listener figure for yet.
    */
   const statsLabel = content.isPending
-    ? 'Loading catalogue…'
+    ? t('artist.loadingCatalogue')
     : artist.monthlyListeners
-      ? `${artist.monthlyListeners.toLocaleString('en-US')} monthly listeners`
-      : [
-          pluralize(content.tracks.length, 'song'),
-          pluralize(content.albums.length, 'album'),
-        ].join(' · ')
+      ? tp({ count: artist.monthlyListeners, key: 'artist.monthlyListeners' })
+      : t('artist.statsSeparator', {
+          albums: tp({
+            count: content.albums.length,
+            key: 'artist.albumCount',
+          }),
+          songs: tp({ count: content.tracks.length, key: 'common.songs' }),
+        })
   const compactHeaderColor = `rgb(${artistRed} ${artistGreen} ${artistBlue})`
   const handleScroll: UIEventHandler<HTMLDivElement> = (event) => {
     const heroHeight = heroRef.current?.offsetHeight ?? 360

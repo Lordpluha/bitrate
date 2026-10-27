@@ -5,6 +5,7 @@ import { ROUTES } from '@shared/routes'
 import { MusicCardLg } from '@shared/ui'
 import { getPlaylistCoverUrl } from '@shared/utils/mediaUrl'
 import { usePlayCollection } from '@/features/PlayCollection'
+import { useI18n } from '@/shared/i18n'
 
 type ArtistFeaturingProps = {
   artistId: string
@@ -16,6 +17,7 @@ export const ArtistFeaturing = ({
   artistId,
   artistName,
 }: ArtistFeaturingProps) => {
+  const { t } = useI18n()
   const { data } = useArtistPlaylists(artistId)
   const playlists = data?.data ?? []
   const playCollection = usePlayCollection()
@@ -24,7 +26,7 @@ export const ArtistFeaturing = ({
   return (
     <section className="flex flex-col gap-3">
       <h2 className="text-[19px] leading-[1.25] font-semibold">
-        Featuring {artistName}
+        {t('artist.featuring', { name: artistName })}
       </h2>
 
       <ul className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-5 xl:gap-5.5">
@@ -32,7 +34,9 @@ export const ArtistFeaturing = ({
           <li className="min-w-0" key={playlist.id}>
             <MusicCardLg
               description={
-                playlist.user ? `By ${playlist.user.username}` : 'Playlist'
+                playlist.user
+                  ? t('artist.byUser', { name: playlist.user.username })
+                  : t('common.playlist')
               }
               href={ROUTES.playlist(playlist.id)}
               id={playlist.id}

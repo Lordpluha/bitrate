@@ -8,6 +8,7 @@ import {
   usePlayerStore,
 } from '@entities/Player'
 import { LikeTrackButton } from '@entities/Track'
+import { useI18n } from '@shared/i18n'
 import { ROUTES } from '@shared/routes'
 import { MediaImage } from '@shared/ui/MediaImage'
 import { getTrackCoverUrl } from '@shared/utils/mediaUrl'
@@ -18,10 +19,11 @@ type CurrentPlaylistProps = {
 }
 
 export const CurrentPlaylist = ({ onCollapse }: CurrentPlaylistProps) => {
+  const { t } = useI18n()
   const currentTrack = usePlayerStore(selectCurrentTrack)
   const playlistName = usePlayerStore(selectCurrentPlaylistName)
   const { data: artist } = useArtist(currentTrack?.artistId)
-  const artistName = artist?.username || 'Unknown Artist'
+  const artistName = artist?.username || t('common.unknownArtist')
 
   if (!currentTrack) {
     return null
@@ -38,12 +40,14 @@ export const CurrentPlaylist = ({ onCollapse }: CurrentPlaylistProps) => {
             className="size-1.5 shrink-0 rounded-full bg-accent"
           />
           <h2 className="truncate text-[10px] font-medium tracking-wide text-foreground/90 uppercase">
-            {playlistName ? `Now playing · ${playlistName}` : 'Now playing'}
+            {playlistName
+              ? t('sidebar.nowPlayingFrom', { name: playlistName })
+              : t('queue.nowPlaying')}
           </h2>
         </div>
         {onCollapse && (
           <button
-            aria-label="Collapse sidebar"
+            aria-label={t('sidebar.collapse')}
             className="flex size-7 shrink-0 items-center justify-center rounded-[7px] border border-primary bg-secondary text-accent transition-colors hover:bg-surface"
             onClick={onCollapse}
             type="button"

@@ -24,7 +24,7 @@ export const RecentlyPlayed = () => {
     try {
       play(await getTrackById(trackId))
     } catch (error) {
-      showApiErrorToast(error, 'Unable to play this track.')
+      showApiErrorToast(error, t('profile.playFailed'))
     }
   }
 

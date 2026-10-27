@@ -2,6 +2,7 @@
 
 import { Badge } from '@bitrate/ui-react'
 import { useAuth } from '@shared/hooks'
+import { useI18n } from '@shared/i18n'
 import { ROUTES } from '@shared/routes'
 import {
   ErrorState,
@@ -41,18 +42,19 @@ type PersonResultProps = {
 
 /** One search result with the action its relationship calls for. */
 const PersonResult = ({ onNotice, person, relation }: PersonResultProps) => {
+  const { t } = useI18n()
   const name = person.username
 
   const meta = {
-    friends: 'Friends',
-    incoming: 'Wants to be your friend',
+    friends: t('friends.friends'),
+    incoming: t('friends.wantsToBeFriend'),
     none: `@${name}`,
-    outgoing: 'Request sent',
+    outgoing: t('friends.requestSent'),
   }[relation.kind]
 
   const actions =
     relation.kind === 'friends' ? (
-      <Badge variant="secondary">Friends</Badge>
+      <Badge variant="secondary">{t('friends.friends')}</Badge>
     ) : relation.kind === 'outgoing' ? (
       <CancelRequestAction
         placement="search"
@@ -63,8 +65,8 @@ const PersonResult = ({ onNotice, person, relation }: PersonResultProps) => {
       <AcceptDeclineActions
         onAccepted={() =>
           onNotice({
-            body: 'You can see each other’s online status.',
-            title: `You and ${name} are now friends`,
+            body: t('friends.seeEachOther'),
+            title: t('friends.nowFriends', { name }),
           })
         }
         placement="search"
@@ -77,12 +79,12 @@ const PersonResult = ({ onNotice, person, relation }: PersonResultProps) => {
           onNotice(
             status === 'accepted'
               ? {
-                  body: `${name} had already asked, so you are friends now.`,
-                  title: `You and ${name} are now friends`,
+                  body: t('friends.alreadyAsked', { name }),
+                  title: t('friends.nowFriends', { name }),
                 }
               : {
-                  body: `${name} will see it in their requests.`,
-                  title: 'Friend request sent',
+                  body: t('friends.willSeeRequest', { name }),
+                  title: t('friends.requestSentTitle'),
                 },
           )
         }
@@ -95,6 +97,7 @@ const PersonResult = ({ onNotice, person, relation }: PersonResultProps) => {
 
 /** The design's Find friends: search people by name, add, accept or see a sent request. */
 export const FindFriendsPage = () => {
+  const { t, tp } = useI18n()
   const [query, setQuery] = useState('')
   const [notice, setNotice] = useState<Notice | null>(null)
   const search = useDeferredValue(query.trim())
@@ -120,11 +123,11 @@ export const FindFriendsPage = () => {
 
   return (
     <PageShell>
-      <PageTitle title="Find friends" />
+      <PageTitle title={t('friends.findFriends')} />
       <SearchField
-        label="Search people"
+        label={t('friends.searchPeople')}
         onChange={setQuery}
-        placeholder="Search by name or @username"
+        placeholder={t('friends.searchPlaceholder')}
         value={query}
       />
 
@@ -132,37 +135,43 @@ export const FindFriendsPage = () => {
 
       {!search ? (
         <StateMessage
-          description="Find people by their name. Friends see each other’s online status and what they are playing."
+          description={t('friends.searchDescription')}
           icon={Search}
           secondary={
             incoming.data?.length
               ? {
                   href: ROUTES.friendRequests,
-                  label: `${incoming.data.length} friend ${incoming.data.length === 1 ? 'request' : 'requests'}`,
+                  label: tp({
+                    count: incoming.data.length,
+                    key: 'friends.requestCount',
+                  }),
                 }
               : undefined
           }
-          title="Search for people you know"
+          title={t('friends.searchTitle')}
         />
       ) : people.isPending ? (
-        <ListSkeleton label="Searching" rows={4} />
+        <ListSkeleton label={t('friends.searching')} rows={4} />
       ) : people.isError ? (
         <ErrorState
-          description="Try again in a moment."
+          description={t('common.tryAgainSoon')}
           onRetry={() => void people.refetch()}
-          title="Search is unavailable right now"
+          title={t('friends.searchUnavailable')}
         />
       ) : results.length === 0 ? (
         <StateMessage
-          description="Check the spelling and try again."
+          description={t('friends.checkSpelling')}
           icon={Search}
-          title={`No one found for “${search}”`}
+          title={t('friends.noOneFound', { query: search })}
         />
       ) : (
         <section className="flex flex-col gap-2">
           <p className="text-[13px] text-muted-foreground">
-            {results.length} {results.length === 1 ? 'person' : 'people'} for “
-            {search}”
+            {tp({
+              count: results.length,
+              key: 'friends.results',
+              values: { query: search },
+            })}
           </p>
           <div className="flex flex-col">
             {results.map(({ person, relation }) => (
@@ -178,12 +187,12 @@ export const FindFriendsPage = () => {
       )}
 
       <p className="text-[13px] text-muted-foreground">
-        Already sent some?{' '}
+        {t('friends.alreadySent')}{' '}
         <Link
           className="text-foreground underline"
           href={ROUTES.friendRequests}
         >
-          See your requests
+          {t('friends.seeRequests')}
         </Link>
       </p>
     </PageShell>

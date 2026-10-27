@@ -2,8 +2,10 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { showApiErrorToast, showApiSuccessToast } from '@/shared/api/feedback'
+import { useI18n } from '@/shared/i18n'
 
 export const usePlaylistActionMenus = () => {
+  const { t } = useI18n()
   const [isMoreOpen, setIsMoreOpen] = useState(false)
   const [isViewMenuOpen, setIsViewMenuOpen] = useState(false)
   const moreMenuRef = useRef<HTMLDivElement>(null)
@@ -29,10 +31,10 @@ export const usePlaylistActionMenus = () => {
   const copyLink = async () => {
     try {
       await navigator.clipboard.writeText(window.location.href)
-      showApiSuccessToast('Link copied to clipboard')
+      showApiSuccessToast(t('playlist.linkCopied'))
       setIsMoreOpen(false)
     } catch (error) {
-      showApiErrorToast(error, 'Failed to copy link')
+      showApiErrorToast(error, t('playlist.copyFailed'))
     }
   }
 

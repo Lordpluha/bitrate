@@ -19,7 +19,7 @@ export const BurgerMenu = ({ trigger = 'menu' }: BurgerMenuProps) => {
   const panelId = useId()
   const [isOpen, setIsOpen] = useState(false)
   const { isAuthenticated, isLogoutPending, logout, user } = useAuth()
-  const username = user?.username || 'User'
+  const username = user?.username || t('common.user')
   const avatarUrl = user?.avatar ? getUserAvatarUrl(user.avatar) : null
 
   const closeMenu = () => setIsOpen(false)

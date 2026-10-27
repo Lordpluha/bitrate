@@ -3,10 +3,12 @@
 import { MediaImage } from '@shared/ui/MediaImage'
 import { getArtistBackgroundUrl } from '@shared/utils/mediaUrl'
 import { BadgeCheck } from 'lucide-react'
+import { useI18n } from '@/shared/i18n'
 import type { ArtistHeroProps } from '@/views/Artist/model/artist.types'
 
 /** Full-bleed artist header: cover art, name, and the primary listen action. */
 export const ArtistHero = ({ artist, statsLabel }: ArtistHeroProps) => {
+  const { t } = useI18n()
   const backgroundUrl = getArtistBackgroundUrl(
     artist.backgroundImage,
     artist.avatar,
@@ -35,7 +37,7 @@ export const ArtistHero = ({ artist, statsLabel }: ArtistHeroProps) => {
             aria-hidden="true"
             className="size-4 text-info md:size-5"
           />
-          <span>Verified artist</span>
+          <span>{t('artist.verified')}</span>
         </div>
       ) : null}
       <h1

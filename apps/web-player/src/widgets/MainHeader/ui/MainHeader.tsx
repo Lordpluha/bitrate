@@ -1,6 +1,7 @@
 'use client'
 
 import { useAuth } from '@shared/hooks'
+import { useI18n } from '@shared/i18n'
 import { ROUTES } from '@shared/routes'
 import { Logo } from '@shared/ui'
 import { ActivityPopover } from './ActivityPopover'
@@ -11,6 +12,7 @@ import { NotificationsPopover } from './NotificationsPopover'
 import { ProfileButton } from './ProfileButton'
 
 export const MainHeader = () => {
+  const { t } = useI18n()
   const { user, isAuthenticated, isLoading } = useAuth()
 
   return (
@@ -30,7 +32,7 @@ export const MainHeader = () => {
                 <ActivityPopover />
                 <ProfileButton
                   avatar={user.avatar}
-                  username={user.username || 'User'}
+                  username={user.username || t('common.user')}
                 />
               </>
             ) : (

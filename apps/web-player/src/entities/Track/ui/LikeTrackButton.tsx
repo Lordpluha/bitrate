@@ -3,6 +3,7 @@
 import { cn } from '@bitrate/ui-react'
 import { useTrackLike } from '@entities/Track/api/client'
 import { Heart } from 'lucide-react'
+import { useI18n } from '@/shared/i18n'
 
 type LikeButtonProps = {
   className?: string
@@ -21,34 +22,35 @@ export const LikeButton = ({
   isLiked,
   onToggle,
   size = 16,
-  trackTitle = 'track',
-}: LikeButtonProps) => (
-  <button
-    aria-label={
-      isLiked
-        ? `Remove ${trackTitle} from Liked Songs`
-        : `Save ${trackTitle} to Liked Songs`
-    }
-    aria-pressed={isLiked}
-    className={cn(
-      'shrink-0 rounded-full p-1 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-60',
-      isLiked ? 'text-accent' : 'text-muted-foreground hover:text-foreground',
-      className,
-    )}
-    disabled={disabled}
-    onClick={(event) => {
-      event.stopPropagation()
-      onToggle()
-    }}
-    type="button"
-  >
-    <Heart
-      aria-hidden="true"
-      fill={isLiked ? 'currentColor' : 'none'}
-      size={size}
-    />
-  </button>
-)
+  trackTitle,
+}: LikeButtonProps) => {
+  const { t } = useI18n()
+  const title = trackTitle ?? t('likes.trackFallback')
+
+  return (
+    <button
+      aria-label={t(isLiked ? 'likes.remove' : 'likes.add', { title })}
+      aria-pressed={isLiked}
+      className={cn(
+        'shrink-0 rounded-full p-1 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-60',
+        isLiked ? 'text-accent' : 'text-muted-foreground hover:text-foreground',
+        className,
+      )}
+      disabled={disabled}
+      onClick={(event) => {
+        event.stopPropagation()
+        onToggle()
+      }}
+      type="button"
+    >
+      <Heart
+        aria-hidden="true"
+        fill={isLiked ? 'currentColor' : 'none'}
+        size={size}
+      />
+    </button>
+  )
+}
 
 type LikeTrackButtonProps = Pick<
   LikeButtonProps,

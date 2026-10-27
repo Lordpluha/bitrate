@@ -3,6 +3,7 @@
 import { ChevronLeft } from 'lucide-react'
 import { usePathname } from 'next/navigation'
 import { useAuth } from '@/shared/hooks'
+import { useI18n } from '@/shared/i18n'
 import { ROUTES } from '@/shared/routes'
 import { BackButton } from '@/shared/ui/BackButton'
 import { BurgerMenu } from '@/widgets/MainHeader/ui/BurgerMenu'
@@ -27,6 +28,7 @@ const NESTED_PAGE_PREFIXES = [
  * repeat them.
  */
 export const MobileMainHeader = () => {
+  const { t } = useI18n()
   const { isAuthenticated } = useAuth()
   const pathname = usePathname()
   const isSearch = pathname.startsWith(ROUTES.search())
@@ -38,7 +40,7 @@ export const MobileMainHeader = () => {
     <div className="flex h-full w-full items-center gap-3">
       {isNested ? (
         <BackButton
-          aria-label="Back"
+          aria-label={t('common.back')}
           className="flex size-10 items-center justify-center rounded-full text-foreground transition-colors hover:bg-surface"
         >
           <ChevronLeft aria-hidden="true" size={24} />

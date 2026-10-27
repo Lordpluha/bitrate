@@ -9,6 +9,7 @@ import {
   useRef,
   useState,
 } from 'react'
+import { useI18n } from '@/shared/i18n'
 
 type PlaybackProgressProps = {
   currentTime: number
@@ -32,6 +33,7 @@ export const PlaybackProgress = ({
   layout = 'inline',
   onSeek,
 }: PlaybackProgressProps) => {
+  const { t } = useI18n()
   const progressBarRef = useRef<HTMLDivElement>(null)
   const activePointerIdRef = useRef<number | null>(null)
   const seekTimeRef = useRef<number | null>(null)
@@ -133,7 +135,7 @@ export const PlaybackProgress = ({
   const isStacked = layout === 'stacked'
   const slider = (
     <div
-      aria-label="Seek playback"
+      aria-label={t('player.seek')}
       aria-valuemax={safeDuration}
       aria-valuemin={0}
       aria-valuenow={displayedTime}

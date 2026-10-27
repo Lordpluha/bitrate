@@ -4,6 +4,8 @@ import { cn } from '@bitrate/ui-react'
 import { MediaImage } from '@shared/ui/MediaImage'
 import { Bookmark, BookmarkCheck } from 'lucide-react'
 import type { Episode } from '@/entities/Podcast'
+import { useI18n } from '@/shared/i18n'
+import { formatDate } from '@/shared/utils/formatDate'
 import { getEpisodeCoverUrl } from '@/shared/utils/mediaUrl'
 
 type EpisodeRowProps = {
@@ -13,8 +15,11 @@ type EpisodeRowProps = {
   onToggleSaved?: () => void
 }
 
-const formatMinutes = (duration: number | null) =>
-  duration ? `${Math.max(1, Math.round(duration / 60))} min` : null
+const EPISODE_DATE_OPTIONS: Intl.DateTimeFormatOptions = {
+  dateStyle: 'medium',
+}
+
+const toMinutes = (duration: number) => Math.max(1, Math.round(duration / 60))
 
 /** The design's Episode Row: a 72px cover, the title, date and length, the description and save. */
 export const EpisodeRow = ({
@@ -22,13 +27,18 @@ export const EpisodeRow = ({
   isSaved,
   onToggleSaved,
 }: EpisodeRowProps) => {
+  const { locale, t } = useI18n()
   const meta = [
     episode.releaseDate
-      ? new Intl.DateTimeFormat(undefined, { dateStyle: 'medium' }).format(
-          new Date(episode.releaseDate),
-        )
+      ? formatDate({
+          date: episode.releaseDate,
+          locale,
+          options: EPISODE_DATE_OPTIONS,
+        })
       : null,
-    formatMinutes(episode.duration),
+    episode.duration
+      ? t('podcast.minutes', { count: toMinutes(episode.duration) })
+      : null,
   ]
     .filter(Boolean)
     .join(' · ')
@@ -59,7 +69,10 @@ export const EpisodeRow = ({
       </div>
       {onToggleSaved ? (
         <button
-          aria-label={`${isSaved ? 'Remove' : 'Save'} ${episode.title}`}
+          aria-label={t(
+            isSaved ? 'podcast.removeEpisode' : 'podcast.saveEpisode',
+            { title: episode.title },
+          )}
           aria-pressed={isSaved}
           className={cn(
             'mt-1 shrink-0 rounded-full p-1.5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',

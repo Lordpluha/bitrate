@@ -11,6 +11,7 @@ import {
   TooltipTrigger,
 } from '@bitrate/ui-react'
 import { useAuth } from '@shared/hooks'
+import { useI18n } from '@shared/i18n'
 import { MediaImage } from '@shared/ui/MediaImage'
 import { generateColor } from '@shared/utils'
 import { getUserAvatarUrl } from '@shared/utils/mediaUrl'
@@ -29,6 +30,7 @@ export const ProfileButton = ({
   username,
   ...etcDivProps
 }: ProfileButtonProps) => {
+  const { t } = useI18n()
   const firstLetter = username.charAt(0).toUpperCase()
   const backgroundColor = generateColor(username)
   const avatarUrl = avatar ? getUserAvatarUrl(avatar) : null
@@ -42,7 +44,7 @@ export const ProfileButton = ({
           <Tooltip>
             <TooltipTrigger asChild>
               <PopoverTrigger
-                aria-label={`Open profile menu for ${username}`}
+                aria-label={t('header.openProfileMenu', { name: username })}
                 className="size-12 rounded-full bg-background-highlight p-2 transition-transform duration-200 hover:scale-105 xl:size-7.5 xl:bg-transparent xl:p-0"
               >
                 {avatarUrl ? (

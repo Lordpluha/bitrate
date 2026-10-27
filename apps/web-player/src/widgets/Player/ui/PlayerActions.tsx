@@ -12,6 +12,7 @@ import {
 import Link from 'next/link'
 import type { ChangeEvent } from 'react'
 import { ConnectDevicesPopover } from '@/features/BitrateConnect'
+import { useI18n } from '@/shared/i18n'
 
 /** The player bar's 17px icons in 32px targets. */
 const iconButtonClassName =
@@ -35,6 +36,7 @@ export const PlayerActions = ({
   onExpand,
   onPictureInPicture,
 }: PlayerActionsProps) => {
+  const { t } = useI18n()
   const handleVolumeChange = (e: ChangeEvent<HTMLInputElement>) => {
     onVolumeChange(Number(e.target.value))
   }
@@ -46,14 +48,14 @@ export const PlayerActions = ({
   return (
     <div className="flex items-center justify-end gap-2">
       <Link
-        aria-label="Open lyrics"
+        aria-label={t('player.openLyrics')}
         className={iconButtonClassName}
         href={ROUTES.lyrics}
       >
         <Mic2 size={ICON_SIZE} />
       </Link>
       <Link
-        aria-label="Open queue"
+        aria-label={t('player.openQueue')}
         className={iconButtonClassName}
         href={ROUTES.queue}
       >
@@ -64,7 +66,7 @@ export const PlayerActions = ({
         triggerClassName={iconButtonClassName}
       />
       <button
-        aria-label="Open floating player"
+        aria-label={t('player.openFloating')}
         className={iconButtonClassName}
         onClick={onPictureInPicture}
         type="button"
@@ -72,7 +74,7 @@ export const PlayerActions = ({
         <PictureInPicture2 size={ICON_SIZE} />
       </button>
       <button
-        aria-label={volume === 0 ? 'Unmute' : 'Mute'}
+        aria-label={volume === 0 ? t('player.unmute') : t('player.mute')}
         className={iconButtonClassName}
         onClick={toggleMute}
         type="button"
@@ -93,7 +95,7 @@ export const PlayerActions = ({
           </div>
         </div>
         <input
-          aria-label="Volume"
+          aria-label={t('player.volume')}
           className="absolute inset-0 size-full cursor-pointer opacity-0"
           max="1"
           min="0"
@@ -104,7 +106,7 @@ export const PlayerActions = ({
         />
       </div>
       <button
-        aria-label="Open full player"
+        aria-label={t('player.openFull')}
         className={iconButtonClassName}
         onClick={onExpand}
         type="button"

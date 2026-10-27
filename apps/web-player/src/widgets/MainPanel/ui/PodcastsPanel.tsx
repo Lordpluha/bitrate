@@ -35,7 +35,7 @@ export const PodcastsPanel = () => {
   if (podcastsQuery.isPending) {
     return (
       <div
-        aria-label="Loading podcasts"
+        aria-label={t('main.loadingPodcasts')}
         className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5"
         role="status"
       >
@@ -52,9 +52,9 @@ export const PodcastsPanel = () => {
   if (podcastsQuery.isError) {
     return (
       <ErrorState
-        description="The podcast catalog could not be loaded."
+        description={t('main.podcastsFailed')}
         onRetry={() => void podcastsQuery.refetch()}
-        title="Podcasts are unavailable"
+        title={t('main.podcastsUnavailable')}
       />
     )
   }
@@ -67,7 +67,7 @@ export const PodcastsPanel = () => {
             className="mb-4 text-[22px] leading-[1.25] font-semibold text-foreground"
             id="saved-episodes-title"
           >
-            Your episodes
+            {t('main.yourEpisodes')}
           </h2>
           <div className="space-y-2">
             {savedQuery.data.data.map((episode) => (
@@ -98,7 +98,9 @@ export const PodcastsPanel = () => {
                   </Link>
                 </div>
                 <button
-                  aria-label={`Remove ${episode.title} from saved episodes`}
+                  aria-label={t('main.removeSavedEpisode', {
+                    title: episode.title,
+                  })}
                   className="rounded-full p-2 text-accent hover:bg-surface-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                   disabled={unsaveEpisode.isPending}
                   onClick={() => unsaveEpisode.mutate(episode.id)}

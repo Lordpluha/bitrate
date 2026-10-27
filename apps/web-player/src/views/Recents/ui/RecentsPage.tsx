@@ -54,7 +54,7 @@ export const RecentsPage = () => {
     try {
       play(await getTrackById(trackId))
     } catch (error) {
-      showApiErrorToast(error, 'Unable to play this track.')
+      showApiErrorToast(error, t('profile.playFailed'))
     }
   }
 
@@ -90,13 +90,13 @@ export const RecentsPage = () => {
         ) : isError ? (
           <ErrorState
             onRetry={() => void refetch()}
-            title="Recents could not be loaded"
+            title={t('recents.loadFailed')}
           />
         ) : Object.keys(groups).length === 0 ? (
           <StateMessage
-            description="Tracks you play will show up here."
+            description={t('recents.emptyDescription')}
             icon={History}
-            primary={{ href: ROUTES.search(), label: 'Find something to play' }}
+            primary={{ href: ROUTES.search(), label: t('queue.find') }}
             title={t('recents.empty')}
           />
         ) : (

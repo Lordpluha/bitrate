@@ -2,6 +2,7 @@
 
 import { FollowArtistButton, useArtist } from '@entities/Artist'
 import { selectCurrentTrack, usePlayerStore } from '@entities/Player'
+import { useI18n } from '@shared/i18n'
 import { ROUTES } from '@shared/routes'
 import { MediaImage } from '@shared/ui/MediaImage'
 import { getArtistBackgroundUrl } from '@shared/utils/mediaUrl'
@@ -13,6 +14,7 @@ import {
 } from './model/ncsArtistBio'
 
 export const AboutArtist = () => {
+  const { t } = useI18n()
   const currentTrack = usePlayerStore(selectCurrentTrack)
   const { data: artist, isLoading } = useArtist(currentTrack?.artistId)
 
@@ -34,7 +36,7 @@ export const AboutArtist = () => {
   return (
     <div className="overflow-hidden rounded-lg bg-surface">
       <Link
-        aria-label={`Open ${artist.username} artist page`}
+        aria-label={t('sidebar.openArtist', { name: artist.username })}
         className="group block rounded-t-lg outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-text"
         href={ROUTES.artist(artist.id)}
       >
@@ -51,7 +53,7 @@ export const AboutArtist = () => {
           />
           <div className="absolute inset-0 bg-black/15 transition-colors group-hover:bg-black/25" />
           <h2 className="absolute left-4 top-4 z-10 text-sm font-bold text-white drop-shadow-md">
-            About the artist
+            {t('sidebar.aboutArtist')}
           </h2>
         </div>
       </Link>
@@ -62,7 +64,7 @@ export const AboutArtist = () => {
           href={ROUTES.artist(artist.id)}
         >
           <span className="truncate text-sm font-bold text-foreground group-hover/name:underline">
-            {artist.username || 'Unknown Artist'}
+            {artist.username || t('common.unknownArtist')}
           </span>
           {artist.verified ? (
             <BadgeCheck
@@ -88,7 +90,7 @@ export const AboutArtist = () => {
                 </a>
               </>
             ) : (
-              artist.bio || 'Artist profile'
+              artist.bio || t('sidebar.artistProfile')
             )}
           </p>
 

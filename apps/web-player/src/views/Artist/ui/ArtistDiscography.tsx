@@ -3,6 +3,7 @@
 import type { TrackEntity } from '@entities/Track'
 import { FilterChips } from '@shared/ui'
 import { useState } from 'react'
+import { useI18n } from '@/shared/i18n'
 import type { ArtistAlbum } from '../model/artist.types'
 import {
   COLLAPSED_RELEASE_COUNT,
@@ -24,6 +25,7 @@ export const ArtistDiscography = ({
   tracks,
   onPlayTrack,
 }: ArtistDiscographyProps) => {
+  const { t } = useI18n()
   const [activeFilter, setActiveFilter] = useState<DiscographyFilter>('popular')
   const [isExpanded, setIsExpanded] = useState(false)
   const releases = getDiscographyReleases(albums, tracks)[activeFilter]
@@ -41,7 +43,7 @@ export const ArtistDiscography = ({
     <section className="flex min-w-0 flex-col gap-3">
       <div className="flex items-center justify-between gap-4">
         <h2 className="text-[19px] leading-[1.25] font-semibold">
-          Discography
+          {t('artist.discography')}
         </h2>
         {hasOverflow && (
           <button
@@ -49,20 +51,23 @@ export const ArtistDiscography = ({
             onClick={() => setIsExpanded((value) => !value)}
             type="button"
           >
-            {isExpanded ? 'Show less' : 'Show all'}
+            {isExpanded ? t('common.showLess') : t('common.showAll')}
           </button>
         )}
       </div>
       <FilterChips
-        ariaLabel="Discography filters"
-        chips={DISCOGRAPHY_FILTERS}
+        ariaLabel={t('artist.discographyFilters')}
+        chips={DISCOGRAPHY_FILTERS.map(({ id, labelKey }) => ({
+          id,
+          label: t(labelKey),
+        }))}
         className="flex-wrap"
         onChange={changeFilter}
         value={activeFilter}
       />
       {visibleReleases.length === 0 ? (
         <p className="py-10 text-sm text-muted-foreground">
-          {EMPTY_FILTER_LABELS[activeFilter]}
+          {t(EMPTY_FILTER_LABELS[activeFilter])}
         </p>
       ) : (
         <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-3">

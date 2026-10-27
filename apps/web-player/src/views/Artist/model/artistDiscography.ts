@@ -1,4 +1,5 @@
 import type { TrackEntity } from '@entities/Track'
+import type { Translate, TranslationKey } from '@shared/i18n'
 import type { ArtistAlbum } from './artist.types'
 
 export type DiscographyFilter = 'popular' | 'albums' | 'singles'
@@ -24,17 +25,17 @@ export const COLLAPSED_RELEASE_COUNT = 6
 
 export const DISCOGRAPHY_FILTERS: Array<{
   id: DiscographyFilter
-  label: string
+  labelKey: TranslationKey
 }> = [
-  { id: 'popular', label: 'Popular releases' },
-  { id: 'albums', label: 'Albums' },
-  { id: 'singles', label: 'Singles and EPs' },
+  { id: 'popular', labelKey: 'artist.popularReleases' },
+  { id: 'albums', labelKey: 'artist.albums' },
+  { id: 'singles', labelKey: 'artist.singles' },
 ]
 
-export const EMPTY_FILTER_LABELS: Record<DiscographyFilter, string> = {
-  popular: 'No releases yet.',
-  albums: 'No albums yet.',
-  singles: 'No singles or EPs yet.',
+export const EMPTY_FILTER_LABELS: Record<DiscographyFilter, TranslationKey> = {
+  popular: 'artist.noReleases',
+  albums: 'artist.noAlbums',
+  singles: 'artist.noSingles',
 }
 
 const getReleaseTimestamp = (releaseDate: string | null) => {
@@ -55,13 +56,24 @@ const compareNewestFirst = (
   return rightTimestamp - leftTimestamp
 }
 
-export const getReleaseMetadata = (
-  releaseDate: string | null,
-  releaseType: 'Album' | 'Single',
-) => {
+type ReleaseMetadataInput = {
+  releaseDate: string | null
+  releaseType: 'album' | 'single'
+  t: Translate
+}
+
+/** "2024 · Album" under a release card, or just the type when the year is unknown. */
+export const getReleaseMetadata = ({
+  releaseDate,
+  releaseType,
+  t,
+}: ReleaseMetadataInput) => {
+  const type = t(
+    releaseType === 'album' ? 'album.type.album' : 'album.type.single',
+  )
   const timestamp = getReleaseTimestamp(releaseDate)
   const year = timestamp === null ? null : new Date(timestamp).getFullYear()
-  return year ? `${year} · ${releaseType}` : releaseType
+  return year ? t('artist.releaseMeta', { type, year }) : type
 }
 
 export const getDiscographyReleases = (

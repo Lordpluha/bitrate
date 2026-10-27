@@ -9,12 +9,12 @@ import {
   useTopArtists,
   useTopTracks,
 } from '@entities/Discovery'
+import { type TranslationKey, useI18n } from '@shared/i18n'
 import { ROUTES } from '@shared/routes'
 import {
   ErrorState,
   PageShell,
   PageTitle,
-  type SegmentedTab,
   SegmentedTabs,
   Skeleton,
   StateMessage,
@@ -26,18 +26,16 @@ import Link from 'next/link'
 import { type ReactNode, useState } from 'react'
 import { usePlayCollection } from '@/features/PlayCollection'
 
-const RANGES: ReadonlyArray<SegmentedTab<DiscoveryRange>> = [
-  { id: 'short', label: 'Last 4 weeks' },
-  { id: 'medium', label: 'Last 6 months' },
-  { id: 'long', label: 'All time' },
-]
+const RANGES: ReadonlyArray<{ id: DiscoveryRange; labelKey: TranslationKey }> =
+  [
+    { id: 'short', labelKey: 'stats.last4Weeks' },
+    { id: 'medium', labelKey: 'stats.last6Months' },
+    { id: 'long', labelKey: 'stats.allTime' },
+  ]
 
 const TOP_TRACKS = 10
 const TOP_ARTISTS = 8
 const TILE_KEYS = ['tracks', 'artists', 'top-artist', 'top-track']
-
-const plays = (count: number) =>
-  `${count.toLocaleString('en-US')} ${count === 1 ? 'play' : 'plays'}`
 
 /** The design's Stat Tile. */
 const StatTile = ({ label, sub, value }: ListeningStat) => (
@@ -60,25 +58,31 @@ const Panel = ({ children, title }: { children: ReactNode; title: string }) => (
   </section>
 )
 
-const StatsLoading = () => (
-  <div
-    aria-label="Loading statistics"
-    className="flex flex-col gap-4"
-    role="status"
-  >
-    <div className="grid grid-cols-2 gap-3 md:gap-4 xl:grid-cols-4">
-      {TILE_KEYS.map((key) => (
-        <Skeleton className="h-28 rounded-[14px]" key={key} />
-      ))}
+const StatsLoading = () => {
+  const { t } = useI18n()
+
+  return (
+    <div
+      aria-label={t('stats.loading')}
+      className="flex flex-col gap-4"
+      role="status"
+    >
+      <div className="grid grid-cols-2 gap-3 md:gap-4 xl:grid-cols-4">
+        {TILE_KEYS.map((key) => (
+          <Skeleton className="h-28 rounded-[14px]" key={key} />
+        ))}
+      </div>
+      <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_380px]">
+        <Skeleton className="h-96 rounded-[14px]" />
+        <Skeleton className="h-96 rounded-[14px]" />
+      </div>
     </div>
-    <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_380px]">
-      <Skeleton className="h-96 rounded-[14px]" />
-      <Skeleton className="h-96 rounded-[14px]" />
-    </div>
-  </div>
-)
+  )
+}
 
 const StatsContent = ({ range }: { range: DiscoveryRange }) => {
+  const i18n = useI18n()
+  const { t, tp } = i18n
   const tracks = useTopTracks(range, 1, TOP_TRACKS)
   const artists = useTopArtists(range, 1, TOP_ARTISTS)
   const playCollection = usePlayCollection()
@@ -87,27 +91,28 @@ const StatsContent = ({ range }: { range: DiscoveryRange }) => {
   if (tracks.isError || artists.isError) {
     return (
       <ErrorState
-        description="Try again in a moment."
+        description={t('common.tryAgainSoon')}
         onRetry={() => {
           void tracks.refetch()
           void artists.refetch()
         }}
-        title="Statistics are unavailable"
+        title={t('stats.unavailable')}
       />
     )
   }
 
   const stats = summarizeListening({
     artists: artists.data,
+    i18n,
     tracks: tracks.data,
   })
   if (!stats) {
     return (
       <StateMessage
-        description="Listen for a few days and your statistics will appear here."
+        description={t('stats.emptyDescription')}
         icon={ChartColumn}
-        primary={{ href: ROUTES.main, label: 'Find something to play' }}
-        title="Not enough listening yet"
+        primary={{ href: ROUTES.main, label: t('queue.find') }}
+        title={t('stats.emptyTitle')}
       />
     )
   }
@@ -128,12 +133,12 @@ const StatsContent = ({ range }: { range: DiscoveryRange }) => {
         ))}
       </div>
       <div className="grid items-start gap-4 lg:grid-cols-[minmax(0,1fr)_380px]">
-        <Panel title="Top tracks">
+        <Panel title={t('stats.topTracks')}>
           <ol className="-mx-2 flex flex-col">
             {tracks.data.data.map((track, index) => (
               <li key={track.id}>
                 <button
-                  aria-label={`Play ${track.title}`}
+                  aria-label={t('common.playName', { name: track.title })}
                   className="grid h-14 w-full grid-cols-[24px_40px_minmax(0,1fr)_auto] items-center gap-3 rounded-lg px-2 text-left transition-colors hover:bg-surface"
                   onClick={() =>
                     void playCollection({
@@ -167,14 +172,14 @@ const StatsContent = ({ range }: { range: DiscoveryRange }) => {
                     </span>
                   </span>
                   <span className="text-[13px] text-muted-foreground tabular-nums">
-                    {plays(track.plays)}
+                    {tp({ count: track.plays, key: 'stats.plays' })}
                   </span>
                 </button>
               </li>
             ))}
           </ol>
         </Panel>
-        <Panel title="Top artists">
+        <Panel title={t('stats.topArtists')}>
           <ol className="-mx-2 flex flex-col">
             {artists.data.data.map((artist) => (
               <li key={artist.id}>
@@ -195,7 +200,7 @@ const StatsContent = ({ range }: { range: DiscoveryRange }) => {
                     {artist.username}
                   </span>
                   <span className="text-[13px] text-muted-foreground tabular-nums">
-                    {plays(artist.plays)}
+                    {tp({ count: artist.plays, key: 'stats.plays' })}
                   </span>
                 </Link>
               </li>
@@ -212,19 +217,20 @@ const StatsContent = ({ range }: { range: DiscoveryRange }) => {
  * listening by day wait for an endpoint, so the tiles show only what the top lists back.
  */
 export const StatsPage = () => {
+  const { t } = useI18n()
   const [range, setRange] = useState<DiscoveryRange>('short')
 
   return (
     <PageShell width="full">
       <div className="flex flex-col gap-1.5">
-        <PageTitle title="Your listening" />
-        <p className="text-sm text-muted-foreground">Only visible to you.</p>
+        <PageTitle title={t('stats.title')} />
+        <p className="text-sm text-muted-foreground">{t('stats.onlyYou')}</p>
       </div>
       <SegmentedTabs
-        ariaLabel="Time range"
+        ariaLabel={t('stats.timeRange')}
         className="-mx-4 overflow-x-auto px-4 md:mx-0 md:px-0"
         onChange={setRange}
-        tabs={RANGES}
+        tabs={RANGES.map(({ id, labelKey }) => ({ id, label: t(labelKey) }))}
         value={range}
       />
       <StatsContent range={range} />

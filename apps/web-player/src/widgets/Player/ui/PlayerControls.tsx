@@ -2,14 +2,15 @@
 
 import { cn } from '@bitrate/ui-react'
 import { Pause, Play, Repeat, Repeat1, Shuffle } from 'lucide-react'
+import { type TranslationKey, useI18n } from '@/shared/i18n'
 import { usePlayerNavigationTracks } from '@/widgets/Player/model/usePlayerNavigationTracks'
 import { PlaybackProgress } from '@/widgets/Player/ui/PlaybackProgress'
 import { TrackNavigationButton } from '@/widgets/Player/ui/TrackNavigationButton'
 
-const repeatLabels: Record<'off' | 'all' | 'one', string> = {
-  all: 'Repeat one track',
-  off: 'Repeat playlist',
-  one: 'Disable repeat',
+const repeatLabels: Record<'off' | 'all' | 'one', TranslationKey> = {
+  all: 'player.repeatOne',
+  off: 'player.repeatPlaylist',
+  one: 'player.disableRepeat',
 }
 
 interface PlayerControlsProps {
@@ -42,6 +43,7 @@ export const PlayerControls = ({
   onRepeatToggle,
   size = 'bar',
 }: PlayerControlsProps) => {
+  const { t } = useI18n()
   const { nextTrack, previousTrack } = usePlayerNavigationTracks()
   const isLarge = size === 'large'
   const modeIconSize = isLarge ? 22 : 17
@@ -70,7 +72,11 @@ export const PlayerControls = ({
         )}
       >
         <button
-          aria-label={isShuffled ? 'Disable shuffle' : 'Enable shuffle'}
+          aria-label={
+            isShuffled
+              ? t('playlist.disableShuffle')
+              : t('player.enableShuffle')
+          }
           className={cn(
             'p-1 hover:scale-110 transition-transform',
             isShuffled ? 'text-primary' : 'text-muted-foreground',
@@ -90,7 +96,7 @@ export const PlayerControls = ({
         />
 
         <button
-          aria-label={isPlaying ? 'Pause' : 'Play'}
+          aria-label={isPlaying ? t('trackMenu.pause') : t('trackMenu.play')}
           className={cn(
             'flex shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground transition-transform hover:scale-105',
             isLarge ? 'size-17' : 'size-11.5',
@@ -113,7 +119,7 @@ export const PlayerControls = ({
         />
 
         <button
-          aria-label={repeatLabels[repeatMode]}
+          aria-label={t(repeatLabels[repeatMode])}
           className={cn(
             'p-1 hover:scale-110 transition-transform',
             repeatMode !== 'off' ? 'text-primary' : 'text-muted-foreground',

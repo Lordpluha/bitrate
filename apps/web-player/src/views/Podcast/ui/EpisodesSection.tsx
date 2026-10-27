@@ -7,6 +7,7 @@ import Link from 'next/link'
 import { useState } from 'react'
 import type { PodcastDetail } from '@/entities/Podcast'
 import { useToggleSavedEpisode } from '@/features/SaveEpisode'
+import { useI18n } from '@/shared/i18n'
 import { ROUTES } from '@/shared/routes'
 import type { EpisodeFilter } from '@/views/Podcast/model/filterEpisodes'
 import { useEpisodeResults } from '@/views/Podcast/model/useEpisodeResults'
@@ -17,44 +18,53 @@ type EpisodesSectionProps = {
   podcast: PodcastDetail
 }
 
-const EpisodeListSkeleton = () => (
-  <div
-    aria-busy="true"
-    aria-label="Loading episodes"
-    className="flex flex-col"
-    role="status"
-  >
-    {[0, 1, 2].map((row) => (
-      <div className="flex items-start gap-4 py-4" key={row}>
-        <Skeleton className="size-18 shrink-0 rounded-md" />
-        <div className="flex flex-1 flex-col gap-2 pt-1">
-          <Skeleton className="h-3.5 w-2/5" />
-          <Skeleton className="h-3 w-1/4" />
-          <Skeleton className="h-3 w-3/5" />
-        </div>
-      </div>
-    ))}
-  </div>
-)
+const EpisodeListSkeleton = () => {
+  const { t } = useI18n()
 
-const LoginHint = () => (
-  <div className="flex items-start gap-2.5 rounded-[10px] border border-info-border bg-info-surface px-4 py-3 text-[13px] text-info-text">
-    <Info aria-hidden="true" className="mt-0.5 shrink-0" size={16} />
-    <p>
-      <span className="font-semibold">Save episodes for later. </span>
-      <Link className="underline hover:no-underline" href={ROUTES.auth.login}>
-        Log in
-      </Link>{' '}
-      to keep episodes in Your episodes and pick up where you left off.
-    </p>
-  </div>
-)
+  return (
+    <div
+      aria-busy="true"
+      aria-label={t('podcast.loadingEpisodes')}
+      className="flex flex-col"
+      role="status"
+    >
+      {[0, 1, 2].map((row) => (
+        <div className="flex items-start gap-4 py-4" key={row}>
+          <Skeleton className="size-18 shrink-0 rounded-md" />
+          <div className="flex flex-1 flex-col gap-2 pt-1">
+            <Skeleton className="h-3.5 w-2/5" />
+            <Skeleton className="h-3 w-1/4" />
+            <Skeleton className="h-3 w-3/5" />
+          </div>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+const LoginHint = () => {
+  const { t } = useI18n()
+
+  return (
+    <div className="flex items-start gap-2.5 rounded-[10px] border border-info-border bg-info-surface px-4 py-3 text-[13px] text-info-text">
+      <Info aria-hidden="true" className="mt-0.5 shrink-0" size={16} />
+      <p>
+        <span className="font-semibold">{t('podcast.saveForLater')} </span>
+        <Link className="underline hover:no-underline" href={ROUTES.auth.login}>
+          {t('profile.logIn')}
+        </Link>{' '}
+        {t('podcast.loginHint')}
+      </p>
+    </div>
+  )
+}
 
 /** The Episodes tab: Newest / Saved chips, search, the episode list with paging, and saving. */
 export const EpisodesSection = ({
   isAuthenticated,
   podcast,
 }: EpisodesSectionProps) => {
+  const { t, tp } = useI18n()
   const [filter, setFilter] = useState<EpisodeFilter>('newest')
   const [query, setQuery] = useState('')
   const results = useEpisodeResults({
@@ -70,9 +80,9 @@ export const EpisodesSection = ({
       return (
         <StateMessage
           className="min-h-80"
-          description="New episodes will appear here."
+          description={t('podcast.noEpisodesDescription')}
           icon={Podcast}
-          title="No episodes have been published yet."
+          title={t('podcast.noEpisodes')}
         />
       )
     }
@@ -81,10 +91,10 @@ export const EpisodesSection = ({
       return (
         <StateMessage
           className="min-h-60"
-          description="Check your connection and try again."
+          description={t('podcast.checkConnection')}
           icon={Podcast}
-          primary={{ label: 'Try again', onClick: results.retry }}
-          title="Episodes couldn’t load."
+          primary={{ label: t('common.tryAgain'), onClick: results.retry }}
+          title={t('podcast.episodesFailed')}
           tone="error"
         />
       )
@@ -96,8 +106,8 @@ export const EpisodesSection = ({
           icon={Podcast}
           title={
             filter === 'saved' && !query.trim()
-              ? 'No saved episodes from this show yet.'
-              : 'No episodes match your search.'
+              ? t('podcast.noSaved')
+              : t('podcast.noMatch')
           }
         />
       )
@@ -125,34 +135,37 @@ export const EpisodesSection = ({
   }
 
   return (
-    <section aria-label="Episodes" className="flex flex-col gap-4">
+    <section aria-label={t('podcast.episodes')} className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <FilterChips
-          ariaLabel="Episodes"
+          ariaLabel={t('podcast.episodes')}
           chips={
             isAuthenticated
               ? [
-                  { id: 'newest', label: 'Newest' },
-                  { id: 'saved', label: 'Saved' },
+                  { id: 'newest', label: t('podcast.newest') },
+                  { id: 'saved', label: t('podcast.saved') },
                 ]
-              : [{ id: 'newest', label: 'Newest' }]
+              : [{ id: 'newest', label: t('podcast.newest') }]
           }
           onChange={setFilter}
           value={filter}
         />
         <SearchField
           className="w-full md:w-65"
-          label="Search episodes"
+          label={t('podcast.searchEpisodes')}
           onChange={setQuery}
-          placeholder="Search episodes"
+          placeholder={t('podcast.searchEpisodes')}
           value={query}
         />
       </div>
 
       {results.searchedQuery && !results.isPending && !results.isError ? (
         <p className="text-[13px] text-muted-foreground" role="status">
-          {results.total} {results.total === 1 ? 'episode' : 'episodes'} for “
-          {results.searchedQuery}”
+          {tp({
+            count: results.total,
+            key: 'podcast.results',
+            values: { query: results.searchedQuery },
+          })}
         </p>
       ) : null}
 
@@ -165,7 +178,9 @@ export const EpisodesSection = ({
           onClick={results.loadMore}
           variant="outline"
         >
-          {results.isLoadingMore ? 'Loading episodes…' : 'Load more episodes'}
+          {results.isLoadingMore
+            ? t('podcast.loadingMore')
+            : t('podcast.loadMore')}
         </Button>
       ) : null}
 

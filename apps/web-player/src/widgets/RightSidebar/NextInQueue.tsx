@@ -8,6 +8,7 @@ import {
   selectQueue,
   usePlayerStore,
 } from '@entities/Player'
+import { useI18n } from '@shared/i18n'
 import { ROUTES } from '@shared/routes'
 import { MediaImage } from '@shared/ui/MediaImage'
 import { formatDuration } from '@shared/utils/apiHelpers'
@@ -58,6 +59,7 @@ const UpNextRowContent = ({ track }: UpNextRowContentProps) => (
  * queued track opens the queue; Clear empties the user queue.
  */
 export const NextInQueue = () => {
+  const { t } = useI18n()
   const { currentTrack, currentTrackIndex, playlist } =
     usePlayerStore(selectMusicPlayer)
   const queue = usePlayerStore(selectQueue)
@@ -92,7 +94,7 @@ export const NextInQueue = () => {
           className="text-xs font-semibold text-foreground uppercase"
           id="up-next-title"
         >
-          Up next
+          {t('sidebar.upNext')}
         </h2>
         <div className="flex items-center gap-3">
           {queue.length > 0 ? (
@@ -101,14 +103,14 @@ export const NextInQueue = () => {
               onClick={clearQueue}
               type="button"
             >
-              Clear
+              {t('common.clear')}
             </button>
           ) : null}
           <Link
             className="text-xs text-accent hover:underline"
             href={ROUTES.queue}
           >
-            Open queue
+            {t('player.openQueue')}
           </Link>
         </div>
       </div>
@@ -121,7 +123,7 @@ export const NextInQueue = () => {
               </Link>
             ) : (
               <button
-                aria-label={`Play ${track.title}`}
+                aria-label={t('common.playName', { name: track.title })}
                 className={cn(rowClassName, 'w-full text-left')}
                 onClick={() =>
                   playPlaylist({

@@ -8,15 +8,17 @@ import {
 } from '@/entities/AuthSession'
 import { showApiSuccessToast } from '@/shared/api/feedback'
 import { useAuth } from '@/shared/hooks'
+import { useI18n } from '@/shared/i18n'
+import { formatDate } from '@/shared/utils/formatDate'
 import { SettingsSection } from './controls/SettingsSection'
 
-const formatSessionDate = (value: string) =>
-  new Intl.DateTimeFormat(undefined, {
-    dateStyle: 'medium',
-    timeStyle: 'short',
-  }).format(new Date(value))
+const SESSION_DATE_OPTIONS: Intl.DateTimeFormatOptions = {
+  dateStyle: 'medium',
+  timeStyle: 'short',
+}
 
 export const ActiveSessionsSection = () => {
+  const { locale } = useI18n()
   const { isAuthenticated } = useAuth()
   const sessionsQuery = useAuthSessions(isAuthenticated)
   const revokeSession = useRevokeAuthSession()
@@ -59,7 +61,12 @@ export const ActiveSessionsSection = () => {
                     {session.current ? 'This browser' : 'Browser session'}
                   </p>
                   <p className="truncate text-xs text-muted-foreground">
-                    Started {formatSessionDate(session.createdAt)}
+                    Started{' '}
+                    {formatDate({
+                      date: session.createdAt,
+                      locale,
+                      options: SESSION_DATE_OPTIONS,
+                    })}
                   </p>
                 </div>
               </div>

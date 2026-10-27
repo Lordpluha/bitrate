@@ -3,6 +3,7 @@
 import { useUserPlaylists } from '@entities/Playlist'
 import { FollowUserButton, useUserById } from '@entities/User'
 import { getApiErrorStatus } from '@shared/api/errors'
+import { useI18n } from '@shared/i18n'
 import { ROUTES } from '@shared/routes'
 import {
   ErrorState,
@@ -28,6 +29,7 @@ const PLAYLIST_SKELETON_KEYS = Array.from(
 )
 
 export const PublicProfilePage = ({ userId }: PublicProfilePageProps) => {
+  const { t } = useI18n()
   const userQuery = useUserById(userId)
   const playlistsQuery = useUserPlaylists(userId)
   const playCollection = usePlayCollection()
@@ -36,7 +38,7 @@ export const PublicProfilePage = ({ userId }: PublicProfilePageProps) => {
   if (userQuery.isPending) {
     return (
       <div
-        aria-label="Loading profile"
+        aria-label={t('profile.loading')}
         className="flex h-full flex-col gap-7 px-4 pt-2 md:px-8 md:py-6"
         role="status"
       >
@@ -57,9 +59,9 @@ export const PublicProfilePage = ({ userId }: PublicProfilePageProps) => {
     return (
       <div className="flex h-full flex-col px-4 md:px-8">
         <ErrorState
-          description="Something went wrong on our side. Try again."
+          description={t('error.tryAgainShort')}
           onRetry={() => void userQuery.refetch()}
-          title="Profile could not be loaded"
+          title={t('profile.loadFailed')}
         />
       </div>
     )
@@ -69,10 +71,10 @@ export const PublicProfilePage = ({ userId }: PublicProfilePageProps) => {
     return (
       <div className="flex h-full flex-col px-4 md:px-8">
         <StateMessage
-          description="This profile is unavailable or no longer exists."
+          description={t('profile.notFoundDescription')}
           icon={UserRound}
-          primary={{ href: ROUTES.main, label: 'Back to home' }}
-          title="User not found"
+          primary={{ href: ROUTES.main, label: t('common.backToHome') }}
+          title={t('profile.notFound')}
         />
       </div>
     )
@@ -93,10 +95,10 @@ export const PublicProfilePage = ({ userId }: PublicProfilePageProps) => {
         />
 
         <section className="flex flex-col gap-4">
-          <SectionHeader title="Public playlists" />
+          <SectionHeader title={t('profile.publicPlaylists')} />
           {playlistsQuery.isPending ? (
             <div
-              aria-label="Loading playlists"
+              aria-label={t('profile.loadingPlaylistsShort')}
               className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-5 xl:gap-5.5"
               role="status"
             >
@@ -107,22 +109,24 @@ export const PublicProfilePage = ({ userId }: PublicProfilePageProps) => {
           ) : playlistsQuery.isError ? (
             <ErrorState
               className="min-h-60"
-              description="Something went wrong on our side."
+              description={t('error.ourSide')}
               onRetry={() => void playlistsQuery.refetch()}
-              title="Playlists could not be loaded. Try again later."
+              title={t('profile.playlistsFailed')}
             />
           ) : playlists.length === 0 ? (
             <StateMessage
               className="min-h-60"
               icon={ListMusic}
-              title="No public playlists yet."
+              title={t('profile.noPublicPlaylists')}
             />
           ) : (
             <ul className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-5 xl:gap-5.5">
               {playlists.map((playlist) => (
                 <li className="min-w-0" key={playlist.id}>
                   <MusicCardLg
-                    description={playlist.description || 'Public playlist'}
+                    description={
+                      playlist.description || t('profile.publicPlaylist')
+                    }
                     href={ROUTES.playlist(playlist.id)}
                     id={playlist.id}
                     imageUrl={getPlaylistCoverUrl(playlist.cover)}
@@ -143,12 +147,12 @@ export const PublicProfilePage = ({ userId }: PublicProfilePageProps) => {
 
         <ProfileFollowsSection
           kind="followers"
-          title="Followers"
+          title={t('profile.followers')}
           userId={user.id}
         />
         <ProfileFollowsSection
           kind="following"
-          title="Following"
+          title={t('profile.following')}
           userId={user.id}
         />
       </div>

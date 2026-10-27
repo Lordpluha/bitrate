@@ -1,5 +1,6 @@
 'use client'
 
+import { type Translate, useI18n } from '@shared/i18n'
 import { ROUTES } from '@shared/routes'
 import {
   ErrorState,
@@ -24,13 +25,15 @@ type RequestsTab = 'incoming' | 'outgoing'
 type TabLabelInput = {
   count: number | undefined
   label: string
+  t: Translate
 }
 
-const tabLabel = ({ count, label }: TabLabelInput) =>
-  count ? `${label} · ${count}` : label
+const tabLabel = ({ count, label, t }: TabLabelInput) =>
+  count ? t('friends.countLabel', { count, label }) : label
 
 /** The design's Friend requests: accept or decline what you received, cancel what you sent. */
 export const FriendRequestsPage = () => {
+  const { locale, t } = useI18n()
   const [tab, setTab] = useState<RequestsTab>('incoming')
   const [acceptedName, setAcceptedName] = useState<string | null>(null)
   const incoming = useFriendRequests('incoming')
@@ -40,21 +43,26 @@ export const FriendRequestsPage = () => {
 
   return (
     <PageShell>
-      <PageTitle title="Friend requests" />
+      <PageTitle title={t('friends.requestsTitle')} />
       <SegmentedTabs
-        ariaLabel="Friend requests"
+        ariaLabel={t('friends.requestsTitle')}
         onChange={setTab}
         tabs={[
           {
             id: 'incoming',
             label: tabLabel({
               count: incoming.data?.length,
-              label: 'Received',
+              label: t('friends.received'),
+              t,
             }),
           },
           {
             id: 'outgoing',
-            label: tabLabel({ count: outgoing.data?.length, label: 'Sent' }),
+            label: tabLabel({
+              count: outgoing.data?.length,
+              label: t('friends.sent'),
+              t,
+            }),
           },
         ]}
         value={tab}
@@ -62,29 +70,36 @@ export const FriendRequestsPage = () => {
 
       {acceptedName && tab === 'incoming' ? (
         <InlineNotice
-          body="You can see each other’s online status."
-          title={`You and ${acceptedName} are now friends`}
+          body={t('friends.seeEachOther')}
+          title={t('friends.nowFriends', { name: acceptedName })}
         />
       ) : null}
 
       {current.isPending ? (
-        <ListSkeleton label="Loading requests" rows={3} />
+        <ListSkeleton label={t('friends.loadingRequests')} rows={3} />
       ) : current.isError ? (
         <ErrorState
-          description="Try again in a moment."
+          description={t('common.tryAgainSoon')}
           onRetry={() => void current.refetch()}
-          title="Requests are unavailable right now"
+          title={t('friends.requestsUnavailable')}
         />
       ) : current.data.length === 0 ? (
         <StateMessage
           description={
             tab === 'incoming'
-              ? 'When someone adds you, you can accept it here.'
-              : 'Requests you send wait here until they are answered.'
+              ? t('friends.incomingEmpty')
+              : t('friends.outgoingEmpty')
           }
           icon={UserPlus}
-          primary={{ href: ROUTES.findFriends, label: 'Find friends' }}
-          title={tab === 'incoming' ? 'No friend requests' : 'No sent requests'}
+          primary={{
+            href: ROUTES.findFriends,
+            label: t('friends.findFriends'),
+          }}
+          title={t(
+            tab === 'incoming'
+              ? 'friends.noRequests'
+              : 'friends.noSentRequests',
+          )}
         />
       ) : (
         <div className="flex flex-col">
@@ -109,8 +124,14 @@ export const FriendRequestsPage = () => {
               key={request.id}
               meta={
                 tab === 'incoming'
-                  ? formatRelativeTime({ date: request.createdAt, now })
-                  : `Sent ${formatRelativeTime({ date: request.createdAt, now })}`
+                  ? formatRelativeTime({ date: request.createdAt, locale, now })
+                  : t('friends.sentAgo', {
+                      time: formatRelativeTime({
+                        date: request.createdAt,
+                        locale,
+                        now,
+                      }),
+                    })
               }
               user={request.user}
             />

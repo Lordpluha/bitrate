@@ -5,6 +5,7 @@ import { MusicCardLg } from '@shared/ui/MusicCardLg'
 import { getAlbumCoverUrl, getTrackCoverUrl } from '@shared/utils/mediaUrl'
 import { Play } from 'lucide-react'
 import { usePlayCollection } from '@/features/PlayCollection'
+import { useI18n } from '@/shared/i18n'
 import type { AlbumRelease, SingleRelease } from '../model/artistDiscography'
 import { getReleaseMetadata } from '../model/artistDiscography'
 import type { ArtistDiscographyProps } from './ArtistDiscography'
@@ -34,11 +35,16 @@ const Cover = ({ alt, src }: { alt: string; src: string }) => (
 
 /** An album: the card opens it and its Play button starts it, as every album card does. */
 export const ArtistAlbumCard = ({ release }: { release: AlbumRelease }) => {
+  const { t } = useI18n()
   const playCollection = usePlayCollection()
 
   return (
     <MusicCardLg
-      description={getReleaseMetadata(release.album.releaseDate, 'Album')}
+      description={getReleaseMetadata({
+        releaseDate: release.album.releaseDate,
+        releaseType: 'album',
+        t,
+      })}
       href={ROUTES.album(release.album.id)}
       id={release.album.id}
       imageUrl={getAlbumCoverUrl(release.album.cover)}
@@ -61,22 +67,30 @@ export const ArtistSingleCard = ({
 }: {
   onPlayTrack: ArtistDiscographyProps['onPlayTrack']
   release: SingleRelease
-}) => (
-  <button
-    aria-label={`Play ${release.track.title}`}
-    className={cn(cardClassName, 'w-full cursor-pointer')}
-    onClick={() => onPlayTrack(release.track, release.index)}
-    type="button"
-  >
-    <Cover
-      alt={release.track.title}
-      src={getTrackCoverUrl(release.track.cover)}
-    />
-    <h3 className="line-clamp-1 font-[family-name:var(--font-landing-body)] text-[13px] font-semibold text-foreground">
-      {release.track.title}
-    </h3>
-    <p className="-mt-2 line-clamp-1 text-[10px] text-muted-foreground">
-      {getReleaseMetadata(release.track.releaseDate, 'Single')}
-    </p>
-  </button>
-)
+}) => {
+  const { t } = useI18n()
+
+  return (
+    <button
+      aria-label={t('common.playName', { name: release.track.title })}
+      className={cn(cardClassName, 'w-full cursor-pointer')}
+      onClick={() => onPlayTrack(release.track, release.index)}
+      type="button"
+    >
+      <Cover
+        alt={release.track.title}
+        src={getTrackCoverUrl(release.track.cover)}
+      />
+      <h3 className="line-clamp-1 font-[family-name:var(--font-landing-body)] text-[13px] font-semibold text-foreground">
+        {release.track.title}
+      </h3>
+      <p className="-mt-2 line-clamp-1 text-[10px] text-muted-foreground">
+        {getReleaseMetadata({
+          releaseDate: release.track.releaseDate,
+          releaseType: 'single',
+          t,
+        })}
+      </p>
+    </button>
+  )
+}

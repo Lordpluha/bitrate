@@ -1,4 +1,5 @@
 import type { CSSProperties } from 'react'
+import { useI18n } from '@/shared/i18n'
 import styles from '@/widgets/Player/ui/FloatingPlayerWindow.module.css'
 
 type ProgressStyle = CSSProperties & {
@@ -23,6 +24,7 @@ export const FloatingPlayerProgress = ({
   duration,
   onSeek,
 }: FloatingPlayerProgressProps) => {
+  const { t } = useI18n()
   const safeDuration = Number.isFinite(duration) && duration > 0 ? duration : 0
   const safeCurrentTime = Math.min(currentTime, safeDuration)
   const progress =
@@ -37,7 +39,7 @@ export const FloatingPlayerProgress = ({
         {formatTime(currentTime)}
       </span>
       <input
-        aria-label="Seek track"
+        aria-label={t('player.seekTrack')}
         className={styles.range}
         max={safeDuration}
         min={0}

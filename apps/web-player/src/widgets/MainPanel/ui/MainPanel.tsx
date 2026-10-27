@@ -31,7 +31,7 @@ export const MainPanel = () => {
   }))
 
   const hour = useMemo(() => new Date().getHours(), [])
-  const name = user?.username || 'User'
+  const name = user?.username || t('common.user')
 
   return (
     <div className="h-full overflow-y-auto custom-scrollbar">
