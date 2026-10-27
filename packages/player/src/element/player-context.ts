@@ -24,8 +24,20 @@ export class PlayerContextRequestEvent extends Event {
   }
 }
 
+/** The playback methods the root's component hands its host element. */
+export type HostTransport = {
+  play: () => Promise<void>
+  pause: () => void
+  seek: (seconds: number) => void
+}
+
 /** A root element once `withPlayerProvider` has extended it. */
 export type PlayerProviderHost = HTMLElement & {
+  play: () => Promise<void>
+  pause: () => void
+  seek: (seconds: number) => void
+  /** Binds the host methods above to the component's engine; later calls replace parts of it. */
+  provideTransport: (transport: Partial<HostTransport>) => void
   /** Hands every subscriber this controller, now and after any later `providePlayer`. */
   providePlayer: (controller: PlayerController) => void
   /**
@@ -67,6 +79,45 @@ export function withPlayerProvider(Base: ElementConstructor): new () => PlayerPr
     #controller: PlayerController | null = null
     #subscribers: PlayerContextCallback[] = []
     #readState: (() => BitratePlayerStateDetail) | null = null
+    #transport: Partial<HostTransport> = {}
+    /**
+     * Svelte mounts the component a microtask after the element connects, so a host that calls
+     * `play()` from a ref callback reaches the element before any engine exists. The last
+     * intent and seek are kept and replayed once the component provides its transport.
+     */
+    #pendingIntent: 'play' | 'pause' | null = null
+    #pendingSeek: number | null = null
+
+    play(): Promise<void> {
+      if (this.#transport.play) return this.#transport.play()
+      this.#pendingIntent = 'play'
+      return Promise.resolve()
+    }
+
+    pause(): void {
+      if (this.#transport.pause) this.#transport.pause()
+      else this.#pendingIntent = 'pause'
+    }
+
+    seek(seconds: number): void {
+      if (this.#transport.seek) this.#transport.seek(seconds)
+      else this.#pendingSeek = seconds
+    }
+
+    provideTransport(transport: Partial<HostTransport>): void {
+      this.#transport = { ...this.#transport, ...transport }
+      if (this.#pendingSeek !== null && this.#transport.seek) {
+        this.#transport.seek(this.#pendingSeek)
+        this.#pendingSeek = null
+      }
+      if (this.#pendingIntent === 'play' && this.#transport.play) {
+        void this.#transport.play()
+        this.#pendingIntent = null
+      } else if (this.#pendingIntent === 'pause' && this.#transport.pause) {
+        this.#transport.pause()
+        this.#pendingIntent = null
+      }
+    }
 
     constructor() {
       super()

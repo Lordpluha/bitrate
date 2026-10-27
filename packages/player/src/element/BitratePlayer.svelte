@@ -38,7 +38,7 @@
   import ChromeLayout from './layouts/ChromeLayout.svelte'
   import { createPlayerController, legacyStateDetail } from './create-controller'
   import { resolveChrome } from './lib/controls'
-  import { isPlayerProviderHost } from './player-context'
+  import { type HostTransport, isPlayerProviderHost } from './player-context'
   import type { PlayerController } from './player-controller'
   import type { BitratePlayerProps } from './player-props'
   import { createPlayerEngineState } from './player-state.svelte'
@@ -83,18 +83,10 @@
     $host().dispatchEvent(new CustomEvent(type, { detail, bubbles: true, composed: true }))
   }
 
-  type HostTransport = {
-    play: () => Promise<void>
-    pause: () => void
-    seek: (seconds: number) => void
-  }
-
-  /** Rebinds host play()/pause()/seek() to the engine in use — $host() must stay in this file. */
+  /** Rebinds the host's play()/pause()/seek() to the engine in use — $host() must stay here. */
   function exposeTransport(transport: Partial<HostTransport>): void {
-    const host = $host() as HTMLElement & HostTransport
-    if (transport.play) host.play = transport.play
-    if (transport.pause) host.pause = transport.pause
-    if (transport.seek) host.seek = transport.seek
+    const host = $host()
+    if (isPlayerProviderHost(host)) host.provideTransport(transport)
   }
 
   const legacy = createPlayerEngineState({
@@ -169,7 +161,16 @@
 
   /** Not named `host`: `$host` would then read as a store subscription to it. */
   const rootElement = $host()
-  exposeTransport({ seek: () => undefined })
+  /**
+   * The host methods exist from upgrade: a host may call them right after assigning
+   * `streaming`, before the streaming player is created, which then applies the intent. The
+   * `resolveSource` engine rebinds play/pause to itself once a resolver is set.
+   */
+  exposeTransport({
+    play: async () => live.play(),
+    pause: () => live.pause(),
+    seek: (seconds) => live.seek(seconds),
+  })
   if (isPlayerProviderHost(rootElement)) {
     rootElement.providePlayer(controller)
     rootElement.provideState(() => (live.active ? live.state : legacyStateDetail(legacy)))

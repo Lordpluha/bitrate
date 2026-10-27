@@ -37,7 +37,7 @@ type Story = StoryObj<typeof meta>
 async function startPlayback(canvasElement: HTMLElement): Promise<BitratePlayerElement> {
   const element = await waitFor(() => {
     const found = canvasElement.querySelector(BITRATE_PLAYER_TAG_NAME)
-    if (!found || !Object.hasOwn(found, 'play')) throw new Error('engine not wired yet')
+    if (!found?.shadowRoot?.querySelector('audio')) throw new Error('element not mounted yet')
     return found
   })
   element.play().catch(() => {
