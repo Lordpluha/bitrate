@@ -255,5 +255,16 @@
       "src/app/main/layout.tsx",
       "src/app/main/podcast/[id]/page.tsx"
     ]
+  },
+  {
+    "test": "src/widgets/Player/ui/NowPlayingView.screenshot-spec.ts",
+    "dependsOn": [
+      "src/widgets/Player/ui/NowPlayingView.screenshot-spec.ts",
+      "src/app/layout.tsx",
+      "src/app/_provider.tsx",
+      "src/app/main/layout.tsx",
+      "src/widgets/Player/index.ts",
+      "src/widgets/MobileIsland/index.ts"
+    ]
   }
 ]
