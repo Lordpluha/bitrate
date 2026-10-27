@@ -428,6 +428,9 @@ export class SlotPlayer {
     })
 
     slot.loader = loader
+    /** `onBitrateChange` reports switches only; the opening rendition is read once here. */
+    slot.bitrate = loader.bitrate
+    if (this.slots[this.active] === slot) this.emit()
     void loader.start().catch((error: unknown) => {
       const message = error instanceof Error ? error.message : String(error)
       playerLog('error', `загрузчик не запустился: ${message}`, { trackId })

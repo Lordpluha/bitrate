@@ -12,7 +12,7 @@ type LegacyState = ReturnType<typeof createPlayerEngineState>
 type StreamingState = ReturnType<typeof createStreamingState>
 
 /** The host-supplied metadata and callbacks, read from the root's props. */
-export type PlayerView = Pick<
+type PlayerView = Pick<
   PlayerController,
   | 'trackTitle'
   | 'artist'

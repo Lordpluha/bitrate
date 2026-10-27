@@ -85,8 +85,49 @@ The element uses your design tokens (`--color-foreground`, `--color-surface`,
 For anything else, inner nodes expose `::part()` names: `layout`, `cover`, `meta`, `title`,
 `artist`, `transport`, `seek`, `volume`, `actions`, `quality`, `error`.
 
+## Streaming mode
+
+Set `streaming` and the element streams CMAF with adaptive bitrate over two media elements,
+prefetching what comes next (ADR-0063). The host keeps its queue and tells the element what
+plays now and what follows, each keyed per play:
+
+```ts
+player.streaming = {
+  resolveManifest: (trackId) => api.manifest(trackId), // null → legacy path
+  fetchRange: ({ trackId, bitrate, range, signal }) =>
+    api.range({ trackId, bitrate, range, signal }),
+  legacy: hlsAdapter, // optional: plays tracks without a manifest
+  positions: sessionPositions, // optional: resume per play key
+  isConstrained: () => navigator.connection?.saveData === true, // optional
+  crossOrigin: 'use-credentials',
+}
+player.source = { key: 'mix:t1:1', trackId: 't1', progressiveUrl: '/t1.mp3' }
+player.next = { key: 'mix:t2:2', trackId: 't2', progressiveUrl: '/t2.mp3' }
+player.addEventListener('ended', ({ detail }) => {
+  // move the queue on, then set source to what was next: the element switches instantly
+})
+```
+
+`seek(seconds)`, `volume`, `muted` and the read-only `state` complete it; `statechange`
+(`detail`: status, key, time, duration, volume, bitrate, error) fires on every change. Call
+`configureCmafEngine({ storage, debugByDefault })` from `@bitrate/player/engine` once to keep
+the measured bandwidth between tracks.
+
+## Mirrors
+
+`mirror.mirror = player` makes a second element render and control the first, with no media
+of its own — one element plays, every visible surface mirrors it:
+
+```html
+<bitrate-player chrome="none"></bitrate-player>
+<!-- plays -->
+<bitrate-player chrome="mini"></bitrate-player>
+<!-- .mirror = the one above -->
+```
+
 ## Events
 
-`play`, `pause`, `ended`, `error` (`detail: { code, message }`) and `qualitychange`
-(`detail: { bitrate }`), all bubbling and composed. `element.play()` and `element.pause()`
-drive playback from the host.
+`play`, `pause`, `ended`, `error` (`detail: { code, message }`), `statechange` and
+`qualitychange` (`detail: { bitrate }`), all bubbling and composed. In streaming mode `ended`
+carries `{ key }`. `element.play()`, `element.pause()` and `element.seek()` drive playback
+from the host.

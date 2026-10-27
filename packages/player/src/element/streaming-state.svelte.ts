@@ -14,7 +14,7 @@ import { SlotPlayer } from '../engine'
 
 type DispatchFn = <T>(type: string, detail?: T) => void
 
-export const IDLE_STATE: BitratePlayerStateDetail = {
+const IDLE_STATE: BitratePlayerStateDetail = {
   status: 'idle',
   key: null,
   currentTime: 0,
