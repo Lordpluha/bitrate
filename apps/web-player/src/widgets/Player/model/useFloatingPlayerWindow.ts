@@ -30,10 +30,10 @@ export const useFloatingPlayerWindow = (trackTitle?: string) => {
     const currentWindow = window as DocumentPictureInPictureWindow
     const nextWindow = currentWindow.documentPictureInPicture
       ? await currentWindow.documentPictureInPicture.requestWindow({
-          height: 140,
-          width: 380,
+          height: 200,
+          width: 320,
         })
-      : window.open('', 'bitrate-floating-player', 'popup,width=380,height=140')
+      : window.open('', 'bitrate-floating-player', 'popup,width=320,height=200')
 
     if (!nextWindow) return
 

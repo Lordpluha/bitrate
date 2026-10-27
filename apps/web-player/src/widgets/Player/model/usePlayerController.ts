@@ -11,7 +11,7 @@ import {
 import { useTrackLike } from '@entities/Track'
 import { useI18n } from '@shared/i18n'
 import { getTrackCoverUrl } from '@shared/utils/mediaUrl'
-import { useEffect } from 'react'
+import { useCallback, useEffect } from 'react'
 import { useFloatingPlayerWindow } from './useFloatingPlayerWindow'
 import { usePlayerElementSync } from './usePlayerElementSync'
 import { usePlayerHotkeys } from './usePlayerHotkeys'
@@ -49,6 +49,11 @@ export const usePlayerController = ({
   })
   const isVisible = Boolean(currentTrack)
 
+  const { changeTrack } = audio
+  /** Stable, since the playing element is handed them on every change. */
+  const playNext = useCallback(() => changeTrack('next'), [changeTrack])
+  const playPrevious = useCallback(() => changeTrack('prev'), [changeTrack])
+
   usePlayerSessionPersistence(player, currentPlaylistName)
   useRecordListenedTrack({
     currentTime: player.currentTime,
@@ -58,8 +63,8 @@ export const usePlayerController = ({
     currentTime: player.currentTime,
     duration: player.duration,
     isEnabled: isVisible,
-    onNext: () => audio.changeTrack('next'),
-    onPrevious: () => audio.changeTrack('prev'),
+    onNext: playNext,
+    onPrevious: playPrevious,
     onSeek: audio.onSeek,
     onToggleShuffle: toggleShuffle,
     onTogglePlay: audio.togglePlayPause,
@@ -70,6 +75,8 @@ export const usePlayerController = ({
     artist: artist?.username || t('common.unknownArtist'),
     coverUrl: (currentTrack && getTrackCoverUrl(currentTrack.cover)) || '',
     isShuffled: player.isShuffled,
+    onNext: playNext,
+    onPrevious: playPrevious,
     onRepeatToggle: cycleRepeatMode,
     onShuffleToggle: toggleShuffle,
     repeatMode,
@@ -85,14 +92,10 @@ export const usePlayerController = ({
   const common = {
     artist: artist?.username || t('common.unknownArtist'),
     coverUrl: getTrackCoverUrl(currentTrack.cover),
-    currentTime: player.currentTime,
-    duration: player.duration,
     isLiked: trackLike.isLiked,
-    isPlaying: player.isPlaying,
     onLikeToggle: trackLike.toggleLike,
-    onNext: () => audio.changeTrack('next'),
-    onPlayPause: audio.togglePlayPause,
-    onPrevious: () => audio.changeTrack('prev'),
+    onNext: playNext,
+    onPrevious: playPrevious,
     title: currentTrack.title || t('common.unknown'),
   }
 
@@ -113,8 +116,6 @@ export const usePlayerController = ({
       floatingWindow: floatingPlayer.targetWindow,
       isExpanded,
       onCloseExpanded: () => onExpandedChange(false),
-      onCloseFloating: floatingPlayer.close,
-      onSeek: audio.onSeek,
       onVolumeChange: setVolume,
       playlistTitle: currentPlaylistName || t('common.playlist'),
       volume: player.volume,

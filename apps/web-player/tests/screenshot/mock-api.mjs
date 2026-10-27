@@ -63,7 +63,7 @@ const track = (title, index) => {
     album: { id: 'al1', title: 'Afterglow' },
     artist: artistRef(owner),
     artistId: owner[0],
-    audioUrl: `/static/tracks/audio/t${index + 1}.m4a`,
+    audioUrl: `http://localhost:${PORT}/static/tracks/audio/t${index + 1}.wav`,
     cover: null,
     createdAt: ago(60 * 24 * (20 + index)),
     deletedAt: null,
@@ -183,7 +183,7 @@ const podcast = {
   updatedAt: ago(60 * 24 * 5),
 }
 const episode = (index) => ({
-  audioUrl: `/static/episodes/e${index}.m4a`,
+  audioUrl: `http://localhost:${PORT}/static/episodes/e${index}.wav`,
   cover: null,
   createdAt: ago(60 * 24 * (7 * index)),
   description: 'How a mix comes together, from rough demo to master.',
@@ -630,9 +630,69 @@ const respond = (request, response, status, body) => {
   response.end(status === 204 ? '' : JSON.stringify(body))
 }
 
+/**
+ * Silent 8 kHz mono PCM as long as the fixture track it stands for (`duration` in the track
+ * fixture is 182 s + 17 s per position), so the player loads, measures and resumes a source
+ * the way it does against the real API.
+ */
+const silentWavCache = new Map()
+
+const silentWav = (seconds) => {
+  const cached = silentWavCache.get(seconds)
+  if (cached) return cached
+  const samples = 8000 * seconds
+  const wav = Buffer.alloc(44 + samples, 128)
+  wav.write('RIFF', 0, 'ascii')
+  wav.writeUInt32LE(36 + samples, 4)
+  wav.write('WAVEfmt ', 8, 'ascii')
+  wav.writeUInt32LE(16, 16)
+  wav.writeUInt16LE(1, 20)
+  wav.writeUInt16LE(1, 22)
+  wav.writeUInt32LE(8000, 24)
+  wav.writeUInt32LE(8000, 28)
+  wav.writeUInt16LE(1, 32)
+  wav.writeUInt16LE(8, 34)
+  wav.write('data', 36, 'ascii')
+  wav.writeUInt32LE(samples, 40)
+  silentWavCache.set(seconds, wav)
+  return wav
+}
+
+/** `/static/tracks/audio/t3.wav` → the third fixture track's length; anything else 1 s. */
+const silentWavFor = (pathname) => {
+  const track = /^\/static\/tracks\/audio\/t(\d+)\.wav$/.exec(pathname)
+  return silentWav(track ? 182 + (Number(track[1]) - 1) * 17 : 1)
+}
+
 createServer((request, response) => {
   const url = new URL(request.url ?? '/', `http://localhost:${PORT}`)
   if (request.method === 'OPTIONS') return respond(request, response, 204, {})
+  if (/^\/static\/.+\.wav$/.test(url.pathname)) {
+    const wav = silentWavFor(url.pathname)
+    /** Byte ranges, so the media is seekable and a restored position can resume. */
+    const range = /^bytes=(\d+)-(\d*)$/.exec(request.headers.range ?? '')
+    if (range) {
+      const start = Number(range[1])
+      const end = range[2]
+        ? Math.min(Number(range[2]), wav.length - 1)
+        : wav.length - 1
+      response.writeHead(206, {
+        ...corsHeaders(request),
+        'accept-ranges': 'bytes',
+        'content-length': end - start + 1,
+        'content-range': `bytes ${start}-${end}/${wav.length}`,
+        'content-type': 'audio/wav',
+      })
+      return response.end(wav.subarray(start, end + 1))
+    }
+    response.writeHead(200, {
+      ...corsHeaders(request),
+      'accept-ranges': 'bytes',
+      'content-length': wav.length,
+      'content-type': 'audio/wav',
+    })
+    return response.end(wav)
+  }
   for (const [method, pattern, handler] of ROUTES) {
     if (method !== request.method) continue
     const match = pattern.exec(url.pathname)

@@ -3,7 +3,7 @@ import { playPauseLabel } from './play-pause-label'
 import { REPEAT_LABELS } from './repeat-labels'
 
 /** The English labels the element renders unless the host supplies its own. */
-export const DEFAULT_LABELS: BitratePlayerLabels = {
+const DEFAULT_LABELS: BitratePlayerLabels = {
   play: (trackTitle) => playPauseLabel(trackTitle, false),
   pause: (trackTitle) => playPauseLabel(trackTitle, true),
   preparing: 'Preparing…',

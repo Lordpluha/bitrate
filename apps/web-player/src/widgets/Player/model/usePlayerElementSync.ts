@@ -12,6 +12,8 @@ type UsePlayerElementSyncInput = {
   artist: string
   coverUrl: string
   isShuffled: boolean
+  onNext: () => void
+  onPrevious: () => void
   onRepeatToggle: () => void
   onShuffleToggle: () => void
   repeatMode: BitratePlayerRepeatMode
@@ -20,12 +22,15 @@ type UsePlayerElementSyncInput = {
 
 /**
  * Hands the playing element what its mirrors render beyond playback: the track, the
- * shuffle/repeat state and toggles, and web-player's translations of every control label.
+ * shuffle/repeat state, the queue and mode actions, and web-player's translations of every
+ * control label.
  */
 export const usePlayerElementSync = ({
   artist,
   coverUrl,
   isShuffled,
+  onNext,
+  onPrevious,
   onRepeatToggle,
   onShuffleToggle,
   repeatMode,
@@ -75,5 +80,7 @@ export const usePlayerElementSync = ({
     if (!element) return
     element.onShuffleToggle = onShuffleToggle
     element.onRepeatToggle = onRepeatToggle
-  }, [element, onRepeatToggle, onShuffleToggle])
+    element.onNext = onNext
+    element.onPrevious = onPrevious
+  }, [element, onNext, onPrevious, onRepeatToggle, onShuffleToggle])
 }

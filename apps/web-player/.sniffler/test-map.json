@@ -266,5 +266,16 @@
       "src/widgets/Player/index.ts",
       "src/widgets/MobileIsland/index.ts"
     ]
+  },
+  {
+    "test": "src/widgets/Player/ui/FloatingPlayerWindow.screenshot-spec.ts",
+    "dependsOn": [
+      "src/widgets/Player/ui/FloatingPlayerWindow.screenshot-spec.ts",
+      "src/app/layout.tsx",
+      "src/app/_provider.tsx",
+      "src/app/main/layout.tsx",
+      "src/widgets/Player/index.ts",
+      "src/widgets/MobileIsland/index.ts"
+    ]
   }
 ]
