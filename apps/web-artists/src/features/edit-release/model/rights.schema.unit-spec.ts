@@ -3,7 +3,7 @@ import { parseShares, rightsFormSchema } from './rights.schema'
 
 describe('rights form', () => {
   it('requires a name only when another party owns the master', () => {
-    const base = { writersConfirmed: true, accuracyConfirmed: false }
+    const base = { writersConfirmed: true }
     expect(
       rightsFormSchema.safeParse({
         ...base,

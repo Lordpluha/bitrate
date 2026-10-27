@@ -5,12 +5,25 @@ import { NS, TTL } from '@infra/cache/cache.constants'
 import { CacheService } from '@infra/cache/cache.service'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import { ArtistEntity } from '@modules/artists'
+import { PUBLIC_TRACK_WHERE } from '@modules/tracks/track-visibility'
 import type { UserEntity } from '@modules/users'
 import { Injectable, NotFoundException } from '@nestjs/common'
-import type { Prisma } from '@prisma/client'
+import type { AlbumType, Prisma } from '@prisma/client'
+import { PUBLIC_ALBUM_WHERE } from './album-visibility'
 import { CreateAlbumDto } from './dtos/create-album.dto'
 import { UpdateAlbumDto } from './dtos/update-album.dto'
 import { AlbumEntity } from './entities'
+
+/** The listener-facing album of a release that went live. */
+export type ReleaseAlbumInput = {
+  artistId: string
+  title: string
+  type: AlbumType
+  cover: string | null
+  publishedAt: Date
+  /** Published tracks in running order. */
+  trackIds: string[]
+}
 
 /**
  * Loads an album's playable tracks in running order.
@@ -19,7 +32,7 @@ import { AlbumEntity } from './entities'
  */
 export const ALBUM_TRACKS_INCLUDE = {
   tracks: {
-    where: { track: { processingStatus: 'READY', deletedAt: null } },
+    where: { track: PUBLIC_TRACK_WHERE },
     include: { track: true },
     orderBy: [{ discNumber: 'asc' }, { trackNumber: 'asc' }],
   },
@@ -57,7 +70,7 @@ export class AlbumsService {
   }: { page?: number; limit?: number } & Pick<Partial<AlbumEntity>, 'artistId' | 'title'>) {
     const pagination = normalizePagination(page, limit)
     const where = {
-      deletedAt: null,
+      ...PUBLIC_ALBUM_WHERE,
       ...(artistId ? { artistId } : {}),
       ...(title ? { title: { contains: title, mode: 'insensitive' as const } } : {}),
     }
@@ -92,7 +105,7 @@ export class AlbumsService {
    */
   async findForTracks(trackIds: string[]) {
     const rows = await this.prisma.albumTrack.findMany({
-      where: { trackId: { in: trackIds }, album: { deletedAt: null } },
+      where: { trackId: { in: trackIds }, album: PUBLIC_ALBUM_WHERE },
       select: {
         trackId: true,
         album: { select: { id: true, title: true, releaseDate: true, createdAt: true } },
@@ -119,7 +132,7 @@ export class AlbumsService {
    */
   async findLiked(userId: UserEntity['id'], { page = 1, limit = 10 }: PaginationInput) {
     const pagination = normalizePagination(page, limit)
-    const where = { userId, album: { deletedAt: null } }
+    const where = { userId, album: PUBLIC_ALBUM_WHERE }
     const [likes, total] = await this.prisma.$transaction([
       this.prisma.userLikedAlbum.findMany({
         where,
@@ -146,7 +159,7 @@ export class AlbumsService {
     return await this.cache.wrap(NS.ALBUMS, `id:${id}`, TTL.LONG, () =>
       this.prisma.album
         .findFirst({
-          where: { id, deletedAt: null },
+          where: { id, ...PUBLIC_ALBUM_WHERE },
           include: ALBUM_TRACKS_INCLUDE,
         })
         .then((album) =>
@@ -175,6 +188,40 @@ export class AlbumsService {
     return album
   }
 
+  /**
+   * Creates the published album of a release that just went live, inside the caller's
+   * transaction, with its tracks in running order. Callers drop caches after commit.
+   */
+  async createForRelease(tx: Prisma.TransactionClient, input: ReleaseAlbumInput) {
+    const album = await tx.album.create({
+      data: {
+        artistId: input.artistId,
+        title: input.title,
+        type: input.type,
+        cover: input.cover,
+        releaseDate: input.publishedAt,
+        publishedAt: input.publishedAt,
+        totalTracks: input.trackIds.length,
+        ...rightsConfirmationRecord(input.publishedAt),
+        tracks: {
+          create: input.trackIds.map((trackId, index) => ({ trackId, trackNumber: index + 1 })),
+        },
+      },
+      select: { id: true },
+    })
+    return album.id
+  }
+
+  /** Shows (`at`) or hides (null) a release's album inside the caller's transaction. */
+  async setReleaseAlbumVisibility(tx: Prisma.TransactionClient, albumId: string, at: Date | null) {
+    await tx.album.update({ where: { id: albumId }, data: { publishedAt: at } })
+  }
+
+  /** Drops album and search caches after a release changed what listeners can see. */
+  async invalidateCatalogueCaches() {
+    await Promise.all([this.cache.invalidate(NS.ALBUMS), this.cache.invalidate(NS.SEARCH)])
+  }
+
   /** Updates an album the artist owns; a missing, deleted or foreign album is a 404. */
   async update(artistId: ArtistEntity['id'], id: AlbumEntity['id'], updateDto: UpdateAlbumDto) {
     const updated = await this.ownedAlbumWrite(() =>
@@ -199,7 +246,7 @@ export class AlbumsService {
 
   async like(userId: UserEntity['id'], albumId: AlbumEntity['id']) {
     const album = await this.prisma.album.findFirst({
-      where: { id: albumId, deletedAt: null },
+      where: { id: albumId, ...PUBLIC_ALBUM_WHERE },
     })
     if (!album) throw new NotFoundException('Album not found')
     await this.prisma.userLikedAlbum.upsert({
@@ -212,7 +259,7 @@ export class AlbumsService {
 
   async unlike(userId: UserEntity['id'], albumId: AlbumEntity['id']) {
     const album = await this.prisma.album.findFirst({
-      where: { id: albumId, deletedAt: null },
+      where: { id: albumId, ...PUBLIC_ALBUM_WHERE },
     })
     if (!album) throw new NotFoundException('Album not found')
     await this.prisma.userLikedAlbum.deleteMany({ where: { userId, albumId } })

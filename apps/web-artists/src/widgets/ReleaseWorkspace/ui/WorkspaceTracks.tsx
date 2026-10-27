@@ -1,5 +1,9 @@
 import { Button } from '@bitrate/ui-react'
-import { type ReleaseWorkspace, useReorderTracks } from '@entities/release'
+import {
+  type ReleaseWorkspace,
+  releaseCoverUrl,
+  useReorderTracks,
+} from '@entities/release'
 import { Music2, Upload } from 'lucide-react'
 import { durationLabel, isrcLabel } from '../lib/trackLabels'
 import type { WorkspaceActionHandler } from '../model/workspaceAction'
@@ -79,6 +83,7 @@ export function WorkspaceTracks({
           {release.trackDrafts.map((track, index) => (
             <DraftTrackRow
               count={ids.length}
+              coverUrl={release.cover && releaseCoverUrl(release.cover)}
               editable={draft}
               index={index}
               key={track.id}

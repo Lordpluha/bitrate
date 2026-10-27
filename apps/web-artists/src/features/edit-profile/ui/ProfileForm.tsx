@@ -10,6 +10,7 @@ import {
 } from '@entities/artist-account'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { countries } from '@shared/constants/countries'
+import { NativeSelect } from '@shared/ui'
 import { useId, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
@@ -115,8 +116,8 @@ export function ProfileForm({
           >
             Country
           </label>
-          <select
-            className="artist-music-control h-11 w-full px-3 text-sm"
+          <NativeSelect
+            className="artist-music-control h-11 pl-3 text-sm"
             disabled={busy}
             id={`${id}-country`}
             {...field('country')}
@@ -127,7 +128,7 @@ export function ProfileForm({
                 {country.name}
               </option>
             ))}
-          </select>
+          </NativeSelect>
         </div>
       </div>
       <div className="space-y-2">

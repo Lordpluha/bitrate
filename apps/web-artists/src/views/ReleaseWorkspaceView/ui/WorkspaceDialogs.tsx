@@ -1,9 +1,11 @@
 import type { ReleaseWorkspace } from '@entities/release'
 import {
   AddContributorDialog,
+  CreditSelfDialog,
   EditContributorDialog,
   EditReleaseDialog,
   IsrcDialog,
+  RemoveContributorDialog,
   RightsDialog,
   ScheduleReleaseDialog,
   SplitsDialog,
@@ -60,7 +62,7 @@ export function WorkspaceDialogs({
     case 'rights':
       return <RightsDialog {...props} />
     case 'splits':
-      return <SplitsDialog {...props} rightType={dialog.rightType} />
+      return <SplitsDialog {...props} />
     case 'upc':
       return <UpcDialog {...props} />
     case 'isrc':
@@ -75,5 +77,14 @@ export function WorkspaceDialogs({
       return <RenameTrackDialog {...props} trackId={dialog.trackId} />
     case 'track-remove':
       return <RemoveTrackDialog {...props} trackId={dialog.trackId} />
+    case 'contributor-remove':
+      return (
+        <RemoveContributorDialog
+          {...props}
+          contributorId={dialog.contributorId}
+        />
+      )
+    case 'contributor-self':
+      return <CreditSelfDialog {...props} />
   }
 }

@@ -5,31 +5,26 @@ import {
   FULL_SHARE_BASIS_POINTS,
   type ReleaseWorkspace,
   rightTypeLabels,
+  rightTypes,
   useSaveSplits,
 } from '@entities/release'
 import { WorkspaceModal } from '@shared/ui/WorkspaceModal/WorkspaceModal'
 import { useId, useState } from 'react'
 import { parseShares } from '../model/rights.schema'
 
+type RightType = ApiSchemas['ReleaseRightType']
+/** Entered percent per contributor, for each right. */
+type ShareValues = Record<RightType, Record<string, string>>
+
 interface SplitsDialogProps {
   artistId: string
   release: ReleaseWorkspace
-  rightType: ApiSchemas['ReleaseRightType']
   onClose: () => void
   onSaved: () => void
 }
 
-export function SplitsDialog({
-  artistId,
-  release,
-  rightType,
-  onClose,
-  onSaved,
-}: SplitsDialogProps) {
-  const id = useId()
-  const mutation = useSaveSplits(artistId)
-  const [expectedUpdatedAt] = useState(release.updatedAt)
-  const [values, setValues] = useState<Record<string, string>>(() =>
+function savedValues(release: ReleaseWorkspace): ShareValues {
+  const column = (rightType: RightType) =>
     Object.fromEntries(
       release.participants.map((participant) => {
         const split = release.splits.find(
@@ -42,28 +37,63 @@ export function SplitsDialog({
           split ? basisPointsToPercent(split.shareBasisPoints) : '',
         ]
       }),
-    ),
+    )
+  return { RECORDING: column('RECORDING'), COMPOSITION: column('COMPOSITION') }
+}
+
+const sameColumn = (a: Record<string, string>, b: Record<string, string>) =>
+  Object.keys(a).every((key) => a[key].trim() === (b[key] ?? '').trim())
+
+/** Master and publishing shares side by side; saving writes each changed right in turn. */
+export function SplitsDialog({
+  artistId,
+  release,
+  onClose,
+  onSaved,
+}: SplitsDialogProps) {
+  const id = useId()
+  const mutation = useSaveSplits(artistId)
+  const [version, setVersion] = useState(release.updatedAt)
+  const [saved, setSaved] = useState(() => savedValues(release))
+  const [values, setValues] = useState(() => savedValues(release))
+  const columns = rightTypes.map((rightType) => {
+    const shares = parseShares(values[rightType])
+    const total = shares?.reduce(
+      (sum, share) => sum + share.shareBasisPoints,
+      0,
+    )
+    const problem =
+      shares === null
+        ? `${rightTypeLabels[rightType]}: use a share between 0.01% and 100% with up to two decimals.`
+        : total !== undefined && total > FULL_SHARE_BASIS_POINTS
+          ? `${rightTypeLabels[rightType]} shares cannot exceed 100%.`
+          : null
+    return { rightType, shares, total, problem }
+  })
+  const problems = columns.flatMap((column) =>
+    column.problem ? [column.problem] : [],
   )
-  const shares = parseShares(values)
-  const total = shares?.reduce((sum, share) => sum + share.shareBasisPoints, 0)
-  const problem =
-    shares === null
-      ? 'Use a share between 0.01% and 100% with up to two decimals.'
-      : total !== undefined && total > FULL_SHARE_BASIS_POINTS
-        ? 'Shares cannot exceed 100%.'
-        : null
   const busy = mutation.isPending
-  const label = rightTypeLabels[rightType]
   const submit = async () => {
-    if (!shares || problem) return
+    if (problems.length > 0) return
+    let current = version
     try {
-      await mutation.mutateAsync({
-        id: release.id,
-        input: { rightType, shares, expectedUpdatedAt },
-      })
+      for (const { rightType, shares } of columns) {
+        if (!shares || sameColumn(values[rightType], saved[rightType])) continue
+        const result = await mutation.mutateAsync({
+          id: release.id,
+          input: { rightType, shares, expectedUpdatedAt: current },
+        })
+        current = result.release.updatedAt
+        setVersion(current)
+        setSaved((previous) => ({
+          ...previous,
+          [rightType]: values[rightType],
+        }))
+      }
       onSaved()
     } catch {
-      // Keep the entered shares when the write is rejected or unconfirmed.
+      // Keep the entered shares; a right already saved is not written again on retry.
     }
   }
   return (
@@ -71,7 +101,7 @@ export function SplitsDialog({
       canClose={!busy}
       className="artist-release-credit-modal"
       onClose={onClose}
-      title={`${label} splits`}
+      title="Splits"
     >
       <form
         aria-busy={busy}
@@ -83,55 +113,79 @@ export function SplitsDialog({
         }}
       >
         <p className="text-sm text-text-secondary">
-          Assign each contributor's share of the{' '}
-          {rightType === 'RECORDING' ? 'master recording' : 'composition'}. A
-          draft can stay below 100%; review requires exactly 100%. Saving clears
-          the accuracy confirmation.
+          <strong>Master</strong> is the money from the recording itself;{' '}
+          <strong>publishing</strong> is the money for the music and lyrics.
+          Each column must reach exactly 100% before review; a draft can stay
+          below.
         </p>
         {release.participants.length === 0 ? (
           <p role="status">Add contributors before assigning splits.</p>
         ) : (
           <fieldset className="space-y-3" disabled={busy}>
-            <legend className="sr-only">{label} shares in percent</legend>
+            <legend className="sr-only">Shares in percent</legend>
+            <div
+              aria-hidden="true"
+              className="grid grid-cols-[minmax(0,1fr)_6.5rem_6.5rem] gap-3 text-xs text-text-secondary"
+            >
+              <span>Contributor</span>
+              {rightTypes.map((rightType) => (
+                <span className="text-right" key={rightType}>
+                  {rightTypeLabels[rightType]}
+                </span>
+              ))}
+            </div>
             {release.participants.map((participant, index) => (
               <div
-                className="flex items-center justify-between gap-4"
+                className="grid grid-cols-[minmax(0,1fr)_6.5rem_6.5rem] items-center gap-3"
                 key={participant.id}
               >
-                <label
-                  className="text-sm font-medium"
-                  htmlFor={`${id}-${participant.id}`}
-                >
+                <span className="truncate text-sm font-medium">
                   {participant.displayName}
-                </label>
-                <div className="flex items-center gap-2">
-                  <Input
-                    className="w-24 text-right"
-                    data-initial-focus={index === 0 ? true : undefined}
-                    id={`${id}-${participant.id}`}
-                    inputMode="decimal"
-                    onChange={(event) => {
-                      mutation.reset()
-                      setValues((current) => ({
-                        ...current,
-                        [participant.id]: event.target.value,
-                      }))
-                    }}
-                    value={values[participant.id] ?? ''}
-                  />
-                  <span aria-hidden="true">%</span>
-                </div>
+                </span>
+                {rightTypes.map((rightType) => (
+                  <div className="flex items-center gap-1" key={rightType}>
+                    <Input
+                      aria-label={`${participant.displayName} ${rightTypeLabels[rightType].toLowerCase()} share`}
+                      className="w-full text-right"
+                      data-initial-focus={
+                        index === 0 && rightType === 'RECORDING'
+                          ? true
+                          : undefined
+                      }
+                      id={`${id}-${rightType}-${participant.id}`}
+                      inputMode="decimal"
+                      onChange={(event) => {
+                        mutation.reset()
+                        const next = event.target.value
+                        setValues((current) => ({
+                          ...current,
+                          [rightType]: {
+                            ...current[rightType],
+                            [participant.id]: next,
+                          },
+                        }))
+                      }}
+                      value={values[rightType][participant.id] ?? ''}
+                    />
+                    <span aria-hidden="true">%</span>
+                  </div>
+                ))}
               </div>
             ))}
           </fieldset>
         )}
-        <p aria-live="polite" className="text-sm font-medium" role="status">
-          Total {total === undefined ? '—' : `${basisPointsToPercent(total)}%`}{' '}
-          of 100%
-        </p>
-        {problem && (
+        <ul aria-live="polite" className="space-y-1 text-sm font-medium">
+          {columns.map(({ rightType, total }) => (
+            <li key={rightType}>
+              {rightTypeLabels[rightType]} total{' '}
+              {total === undefined ? '—' : `${basisPointsToPercent(total)}%`} of
+              100%
+            </li>
+          ))}
+        </ul>
+        {problems.length > 0 && (
           <p className="text-sm text-destructive" role="alert">
-            {problem}
+            {problems.join(' ')}
           </p>
         )}
         {mutation.error && (
@@ -150,7 +204,7 @@ export function SplitsDialog({
           </Button>
           <Button
             className="artist-workspace-primary"
-            disabled={busy || problem !== null}
+            disabled={busy || problems.length > 0}
             type="submit"
             variant="primary"
           >

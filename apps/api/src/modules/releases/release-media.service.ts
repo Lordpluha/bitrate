@@ -30,6 +30,7 @@ const TRACK_DRAFT_SELECT = {
   isrc: true,
   audioFileName: true,
   audioSizeBytes: true,
+  waveform: true,
 } as const satisfies Prisma.ArtistTrackDraftSelect
 
 /** The release summary returned by {@link lockOwnedDraft}. */
@@ -161,6 +162,7 @@ export class ReleaseMediaService {
           audioFileName: null,
           audioContentType: null,
           audioSizeBytes: null,
+          waveform: [],
         },
       })
       return { release: locked, previousKey: previous }

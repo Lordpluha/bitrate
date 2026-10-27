@@ -3,6 +3,7 @@
 import type { ApiPaths } from '@bitrate/contracts'
 import { ROUTES } from '@shared/routes/routes'
 import createClient, { type Middleware } from 'openapi-fetch'
+import { redirectsToLoginOnExpiry } from './sessionRedirect'
 
 let refreshPromise: Promise<boolean> | null = null
 const retryRequests = new WeakMap<Request, Request>()
@@ -64,17 +65,11 @@ const authRefreshMiddleware: Middleware = {
         return retryResponse
       }
 
-      if (typeof window !== 'undefined') {
-        const currentPath = window.location.pathname
-        const isOnAuthPage =
-          currentPath.startsWith('/auth/') ||
-          currentPath === '/login' ||
-          currentPath === '/registration' ||
-          currentPath === ROUTES.auth.verifyEmail
-
-        if (!isOnAuthPage) {
-          window.location.href = ROUTES.auth.login
-        }
+      if (
+        typeof window !== 'undefined' &&
+        redirectsToLoginOnExpiry(window.location.pathname)
+      ) {
+        window.location.href = ROUTES.auth.login
       }
 
       return response

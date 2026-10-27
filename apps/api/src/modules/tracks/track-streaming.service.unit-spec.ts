@@ -80,7 +80,9 @@ describe('TrackStreamingService', () => {
       expect(playlist).toContain('128/index.m3u8')
       expect(storage.getObjectStream).toHaveBeenCalledWith('tracks/track-1/hls/master.m3u8')
       expect(prisma.track.findFirst).toHaveBeenCalledWith(
-        expect.objectContaining({ where: { id: 'track-1', deletedAt: null } }),
+        expect.objectContaining({
+          where: { id: 'track-1', deletedAt: null, publishedAt: { not: null } },
+        }),
       )
     })
 
@@ -150,7 +152,7 @@ describe('TrackStreamingService', () => {
 
       expect(asset.contentLength).toBe(7)
       expect(prisma.track.findFirst).toHaveBeenCalledWith({
-        where: { id: 'track-1', deletedAt: null },
+        where: { id: 'track-1', deletedAt: null, publishedAt: { not: null } },
       })
     })
   })

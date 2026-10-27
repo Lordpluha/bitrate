@@ -40,7 +40,7 @@ export function DashboardView({ artistId }: DashboardViewProps) {
       ) : dashboard.data.counts.releases === 0 ? (
         <FirstReleasePrompt />
       ) : (
-        <DashboardOverview dashboard={dashboard.data} />
+        <DashboardOverview artistId={artistId} dashboard={dashboard.data} />
       )}
     </div>
   )

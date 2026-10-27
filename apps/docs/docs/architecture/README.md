@@ -63,6 +63,7 @@ how to apply it day to day.
 | [0059](./0059-release-rights-and-review-submission.md) | Rights confirmation, splits, optional UPC/ISRC, readiness and review submission/withdrawal |
 | [0060](./0060-api-data-write-ownership.md) | API Prisma write ownership per module, enforced by an oxlint JS plugin with a shrinking baseline |
 | [0061](./0061-shared-account-auth-core.md) | Shared login, lockout, session, recovery-token, 2FA and guard core for listeners and artists; no account merge |
+| [0062](./0062-release-publishing-and-track-visibility.md) | Release publishing state machine, all-or-nothing go-live and `publishedAt` visibility for tracks and albums |
 
 Create new records from [`template.md`](./template.md). Accepted decisions are changed by
 a superseding ADR rather than silently rewriting history.

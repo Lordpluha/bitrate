@@ -1,4 +1,6 @@
 import { PrismaService } from '@infra/prisma/prisma.service'
+import { PUBLIC_ALBUM_WHERE } from '@modules/albums/album-visibility'
+import { PUBLIC_TRACK_WHERE } from '@modules/tracks/track-visibility'
 import {
   BadRequestException,
   HttpException,
@@ -79,8 +81,7 @@ export class ModerationService {
         target = await transaction.track.findFirst({
           where: {
             id: dto.entityId,
-            deletedAt: null,
-            processingStatus: 'READY',
+            ...PUBLIC_TRACK_WHERE,
             artist: { deletedAt: null },
           },
           select: { id: true },
@@ -88,7 +89,7 @@ export class ModerationService {
         break
       case 'album':
         target = await transaction.album.findFirst({
-          where: { id: dto.entityId, deletedAt: null, artist: { deletedAt: null } },
+          where: { id: dto.entityId, ...PUBLIC_ALBUM_WHERE, artist: { deletedAt: null } },
           select: { id: true },
         })
         break

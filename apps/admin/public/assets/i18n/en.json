@@ -425,6 +425,9 @@
       "SUBMITTED": "Awaiting review",
       "REJECTED": "Changes requested",
       "READY": "Approved",
+      "PUBLISHING": "Publishing",
+      "PUBLISH_FAILED": "Publishing failed",
+      "RELEASED": "Released",
       "ALL": "All statuses"
     },
     "table": {
@@ -461,7 +464,11 @@
       "SUBMITTED": "Awaiting review",
       "READY": "Approved",
       "REJECTED": "Changes requested",
-      "RELEASED": "Released"
+      "RELEASED": "Released",
+      "SCHEDULED": "Premiere scheduled",
+      "PUBLISHING": "Publishing",
+      "PUBLISH_FAILED": "Publishing failed",
+      "UNPUBLISHED": "Unpublished"
     },
     "eyebrow": "Releases · Review",
     "loadingTitle": "Release",
@@ -469,7 +476,9 @@
     "submitted": "submitted {age} ago",
     "action": {
       "approve": "Approve",
-      "changes": "Request changes"
+      "changes": "Request changes",
+      "retryPublishing": "Retry publishing",
+      "takeDown": "Take offline"
     },
     "plan": {
       "title": "Release plan",
@@ -504,7 +513,6 @@
       "TRACK_AUDIO_MISSING": "A recording has no audio",
       "MASTER_OWNER_MISSING": "Master owner not set",
       "WRITERS_NOT_CONFIRMED": "Writers not confirmed",
-      "ACCURACY_NOT_CONFIRMED": "Accuracy not confirmed",
       "CONTRIBUTOR_ROLES_MISSING": "A contributor has no role",
       "SPLITS_INCOMPLETE": "Splits do not add up to 100%"
     },
@@ -563,7 +571,9 @@
       "message": "Note to the artist (optional)",
       "saving": "Saving…",
       "approved": "“{title}” was approved. The artist sees the decision now.",
-      "changesSent": "Changes were requested on “{title}”."
+      "changesSent": "Changes were requested on “{title}”.",
+      "publishingRetried": "Publishing “{title}” restarted. Converted tracks are kept.",
+      "takenDown": "“{title}” is offline for listeners. The artist cannot publish it again."
     },
     "notFound": {
       "title": "Release not found",

@@ -28,6 +28,7 @@ export const trackResponseSchema = z.object({
   processingFinishedAt: z.string().nullable(),
   processingStartedAt: z.string().nullable(),
   processingStatus: z.enum(['PROCESSING', 'READY', 'FAILED']),
+  publishedAt: z.string().nullable(),
   releaseDate: z.string().nullable(),
   title: z.string(),
   trackNumber: z.number().nullable(),

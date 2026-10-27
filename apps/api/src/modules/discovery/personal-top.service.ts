@@ -1,6 +1,7 @@
 import { normalizePagination } from '@common/pagination'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import { PUBLIC_ARTIST_SELECT } from '@modules/artists/artists.select'
+import { PUBLIC_TRACK_SQL } from '@modules/tracks/track-visibility'
 import { Injectable } from '@nestjs/common'
 import { Prisma } from '@prisma/client'
 import { toRankedPage } from './ranked-page'
@@ -37,8 +38,7 @@ export class PersonalTopService {
       JOIN "Track" t ON t.id = h."trackId"
       WHERE h."userId" = ${userId}::uuid
         AND h."listenedAt" >= ${this.rangeStart(range)}
-        AND t."deletedAt" IS NULL
-        AND t."processingStatus" = 'READY'
+        AND ${PUBLIC_TRACK_SQL}
     `
 
     const [rows, countRows] = await Promise.all([
@@ -77,8 +77,7 @@ export class PersonalTopService {
       JOIN "Artist" a ON a.id = t."artistId"
       WHERE h."userId" = ${userId}::uuid
         AND h."listenedAt" >= ${this.rangeStart(range)}
-        AND t."deletedAt" IS NULL
-        AND t."processingStatus" = 'READY'
+        AND ${PUBLIC_TRACK_SQL}
         AND a."deletedAt" IS NULL
     `
 

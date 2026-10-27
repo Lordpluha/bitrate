@@ -11,7 +11,9 @@ export { ArtistSearchSwagger } from './artist-search.swagger'
 export { CreateReleaseSwagger } from './create-release.swagger'
 export { ListReleasesSwagger } from './list-releases.swagger'
 export {
+  CreditReleaseArtistSwagger,
   ReleaseContributorSwagger,
+  RemoveReleaseContributorSwagger,
   UpdateReleaseContributorSwagger,
 } from './release-contributor.swagger'
 export {
@@ -30,6 +32,12 @@ export {
   UploadReleaseTrackSwagger,
 } from './release-media.swagger'
 export {
+  CancelPremiereSwagger,
+  PublishReleaseSwagger,
+  RepublishReleaseSwagger,
+  UnpublishReleaseSwagger,
+} from './release-publishing.swagger'
+export {
   ReplaceReleaseSplitsSwagger,
   ReviseReleaseSwagger,
   SubmitReleaseSwagger,
@@ -45,4 +53,4 @@ export {
   UpdateReleaseTaskSwagger,
 } from './release-tasks.swagger'
 export { ReleaseWorkspaceSwagger } from './release-workspace.swagger'
-export { UpdateReleaseSwagger } from './update-release.swagger'
+export { DeleteReleaseSwagger, UpdateReleaseSwagger } from './update-release.swagger'

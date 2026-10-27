@@ -35,11 +35,22 @@ const QUEUE_STATUS_KEYS: Record<ReleaseQueueStatus, string> = {
   SUBMITTED: 'releases.queueStatus.SUBMITTED',
   REJECTED: 'releases.queueStatus.REJECTED',
   READY: 'releases.queueStatus.READY',
+  PUBLISHING: 'releases.queueStatus.PUBLISHING',
+  PUBLISH_FAILED: 'releases.queueStatus.PUBLISH_FAILED',
+  RELEASED: 'releases.queueStatus.RELEASED',
   ALL: 'releases.queueStatus.ALL',
 }
 
 /** Filter order: what needs a decision first, everything last. */
-const QUEUE_STATUS_ORDER: readonly ReleaseQueueStatus[] = ['SUBMITTED', 'REJECTED', 'READY', 'ALL']
+const QUEUE_STATUS_ORDER: readonly ReleaseQueueStatus[] = [
+  'SUBMITTED',
+  'REJECTED',
+  'READY',
+  'PUBLISHING',
+  'PUBLISH_FAILED',
+  'RELEASED',
+  'ALL',
+]
 
 const LOAD_ERROR = 'releases.error.load'
 

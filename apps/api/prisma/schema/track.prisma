@@ -61,6 +61,10 @@ model Track {
   discNumber  Int       @default(1)
   language    String?
   deletedAt   DateTime?
+  /// Listeners see the track only once this has passed; null while its release is publishing or
+  /// offline. Defaults to creation time, so tracks uploaded outside a release stay public as soon
+  /// as they are READY.
+  publishedAt DateTime? @default(now()) @db.Timestamptz(3)
 
   /// Revision of the Artist Agreement the artist confirmed their rights under at upload, and when.
   /// Null for tracks uploaded before the confirmation was recorded.
@@ -83,17 +87,17 @@ model Track {
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 
-  audioFiles           TrackFile[]
+  audioFiles            TrackFile[]
   processingAttemptsLog TrackProcessingAttempt[]
-  albums           AlbumTrack[]
-  releases         ReleaseTrack[]
-  playlists        PlaylistTrack[]
-  likedBy          UserLikedTrack[]
-  artists          TrackArtist[]
-  genres           TrackGenre[]
-  listeningHistory ListeningHistory[]
-  playerStates     PlayerState[]
-  queueEntries     PlayerQueueItem[]
+  albums                AlbumTrack[]
+  releases              ReleaseTrack[]
+  playlists             PlaylistTrack[]
+  likedBy               UserLikedTrack[]
+  artists               TrackArtist[]
+  genres                TrackGenre[]
+  listeningHistory      ListeningHistory[]
+  playerStates          PlayerState[]
+  queueEntries          PlayerQueueItem[]
 
   artist Artist @relation("PrimaryArtist", fields: [artistId], references: [id], onDelete: Restrict)
 
@@ -135,8 +139,8 @@ model TrackFile {
 // failures carry the redacted step/error detail the operator panel needs. Retention is
 // pruned on write to the newest 25 rows per track — see ADR-0040.
 model TrackProcessingAttempt {
-  id             String  @id @default(uuid(7)) @db.Uuid
-  trackId        String  @db.Uuid
+  id             String                 @id @default(uuid(7)) @db.Uuid
+  trackId        String                 @db.Uuid
   sourceFileName String // the generation this attempt encoded
   jobId          String
   attempt        Int // 1-based, = job.attemptsMade + 1 at start
@@ -144,7 +148,7 @@ model TrackProcessingAttempt {
   trigger        TrackProcessingTrigger
 
   status          TrackProcessingAttemptStatus @default(RUNNING)
-  willRetry       Boolean                       @default(false) // FAILED and BullMQ will try again
+  willRetry       Boolean                      @default(false) // FAILED and BullMQ will try again
   deadLetterJobId String? // set on the exhausted attempt
 
   startedAt    DateTime  @default(now())
@@ -157,11 +161,11 @@ model TrackProcessingAttempt {
 
   errorCode      TrackProcessingErrorCode?
   errorName      String? // constructor name
-  errorMessage   String?                    @db.Text // redacted, <= 2 KB
-  errorStack     String?                    @db.Text // redacted, <= 8 KB
+  errorMessage   String?                   @db.Text // redacted, <= 2 KB
+  errorStack     String?                   @db.Text // redacted, <= 8 KB
   retryable      Boolean?
-  commandSummary String?                    @db.Text // ffmpeg argv, paths redacted, <= 2 KB
-  stderrTail     String?                    @db.Text // redacted, <= 16 KB (last bytes)
+  commandSummary String?                   @db.Text // ffmpeg argv, paths redacted, <= 2 KB
+  stderrTail     String?                   @db.Text // redacted, <= 16 KB (last bytes)
   exitCode       Int?
   signal         String?
 

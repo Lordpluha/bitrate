@@ -8,7 +8,6 @@ export interface ReleaseReadinessInput {
   cover: string | null
   masterOwnerType: ReleaseMasterOwner | null
   writersConfirmedAt: Date | null
-  accuracyConfirmedAt: Date | null
   tracks: { id: string; isrc: string | null; hasAudio: boolean }[]
   contributors: { id: string; roles: ReleaseCreditRole[] }[]
   splits: { rightType: ReleaseRightType; shareBasisPoints: number }[]
@@ -20,7 +19,6 @@ type ReleaseBlocker =
   | { code: 'TRACK_AUDIO_MISSING'; trackId: string }
   | { code: 'MASTER_OWNER_MISSING' }
   | { code: 'WRITERS_NOT_CONFIRMED' }
-  | { code: 'ACCURACY_NOT_CONFIRMED' }
   | { code: 'CONTRIBUTOR_ROLES_MISSING'; contributorId: string }
   | { code: 'SPLITS_INCOMPLETE'; rightType: ReleaseRightType; totalBasisPoints: number }
 
@@ -32,7 +30,10 @@ export interface ReleaseReadiness {
   notices: ReleaseNotice[]
 }
 
-/** Lists what still prevents submitting a release for Bitrate review. */
+/**
+ * Lists what still prevents submitting a release for Bitrate review. Accuracy is not checked:
+ * submitting is the artist's confirmation that the checked data is accurate.
+ */
 export function releaseReadiness(input: ReleaseReadinessInput): ReleaseReadiness {
   const blockers: ReleaseBlocker[] = []
   if (input.tracks.length === 0) blockers.push({ code: 'NO_TRACKS' })
@@ -42,7 +43,6 @@ export function releaseReadiness(input: ReleaseReadinessInput): ReleaseReadiness
   }
   if (!input.masterOwnerType) blockers.push({ code: 'MASTER_OWNER_MISSING' })
   if (!input.writersConfirmedAt) blockers.push({ code: 'WRITERS_NOT_CONFIRMED' })
-  if (!input.accuracyConfirmedAt) blockers.push({ code: 'ACCURACY_NOT_CONFIRMED' })
   for (const contributor of input.contributors) {
     if (contributor.roles.length === 0) {
       blockers.push({ code: 'CONTRIBUTOR_ROLES_MISSING', contributorId: contributor.id })

@@ -39,6 +39,12 @@ class StubReleaseRepository extends ReleaseReviewRepository {
   override requestChanges(_input: ReleaseChangesRequest): Promise<SubmissionReview> {
     throw new Error('not used')
   }
+  override retryPublishing(_id: string): Promise<void> {
+    throw new Error('not used')
+  }
+  override takeDown(_id: string): Promise<void> {
+    throw new Error('not used')
+  }
 }
 
 function submission(overrides: Partial<ReleaseSubmission> = {}): ReleaseSubmission {

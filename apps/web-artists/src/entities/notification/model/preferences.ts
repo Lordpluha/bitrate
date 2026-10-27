@@ -1,14 +1,10 @@
 import type { ApiSchemas } from '@bitrate/contracts'
 import { z } from 'zod'
 
-export const notificationCategories = ['TASKS', 'REVIEW', 'DELIVERY'] as const
+export const notificationCategories = ['REVIEW', 'DELIVERY'] as const
 export type NotificationCategory = (typeof notificationCategories)[number]
 
 export const notificationCategoryLabels = {
-  TASKS: {
-    title: 'Tasks and deadlines',
-    hint: 'Overdue tasks and tasks due within 48 hours',
-  },
   REVIEW: {
     title: 'Bitrate review',
     hint: 'Submissions, approvals and requested changes',
@@ -23,7 +19,14 @@ export const notificationCategoryLabels = {
 >
 
 export const notificationPreferencesSchema = z.object({
-  mutedInApp: z.array(z.enum(notificationCategories)),
+  // The API keeps a TASKS category for release tasks, which the workspace no longer shows.
+  mutedInApp: z
+    .array(z.enum([...notificationCategories, 'TASKS']))
+    .transform((categories) =>
+      categories.filter(
+        (category): category is NotificationCategory => category !== 'TASKS',
+      ),
+    ),
 }) satisfies z.ZodType<ApiSchemas['ArtistNotificationPreferencesEntity']>
 
 export type NotificationPreferences = z.infer<

@@ -13,6 +13,7 @@ export const buildAlbum = (overrides: Partial<Album> = {}): Album => ({
   totalTracks: 2,
   copyright: null,
   deletedAt: null,
+  publishedAt: new Date('2026-01-01T00:00:00.000Z'),
   rightsConfirmedVersion: null,
   rightsConfirmedAt: null,
   createdAt: new Date('2026-01-01T00:00:00Z'),

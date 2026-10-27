@@ -53,6 +53,7 @@ describe('ModerationService', () => {
         id: TARGET_ID,
         deletedAt: null,
         processingStatus: 'READY',
+        publishedAt: { not: null },
         artist: { deletedAt: null },
       },
       select: { id: true },
@@ -72,7 +73,12 @@ describe('ModerationService', () => {
     )
 
     expect(transaction.album.findFirst).toHaveBeenCalledWith({
-      where: { id: TARGET_ID, deletedAt: null, artist: { deletedAt: null } },
+      where: {
+        id: TARGET_ID,
+        deletedAt: null,
+        publishedAt: { not: null },
+        artist: { deletedAt: null },
+      },
       select: { id: true },
     })
     expect(transaction.track.findFirst).not.toHaveBeenCalled()

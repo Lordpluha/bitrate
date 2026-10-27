@@ -39,8 +39,8 @@ export function CreateReleaseDialog({
     }
     try {
       await navigate({
-        to: ROUTES.dashboard.music,
-        search: { page: 1, created: draft.id },
+        to: '/dashboard/music/$releaseId',
+        params: { releaseId: draft.id },
       })
       onClose()
     } catch {
@@ -60,10 +60,10 @@ export function CreateReleaseDialog({
           >
             <Link
               onClick={onClose}
-              search={{ page: 1, created: create.data.id }}
-              to={ROUTES.dashboard.music}
+              params={{ releaseId: create.data.id }}
+              to="/dashboard/music/$releaseId"
             >
-              View in Music
+              Open release
             </Link>
           </Button>
         </div>
@@ -76,7 +76,7 @@ export function CreateReleaseDialog({
         >
           <p className="text-sm leading-relaxed text-text-secondary">
             Start with a title and release type. This saves a draft; it does not
-            publish your music. Tracks and artwork editing are coming soon.
+            publish your music. You add tracks and artwork next.
           </p>
           <ReleaseFields
             busy={busy}
