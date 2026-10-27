@@ -28,7 +28,7 @@ export const LibraryHeader = ({
       <div className="flex flex-col items-center gap-3">
         <button
           aria-label={openLabel}
-          className="rounded-md p-2 text-text-subdued transition-colors hover:bg-surface hover:text-text"
+          className="rounded-md p-2 text-muted-foreground transition-colors hover:bg-surface hover:text-foreground"
           onClick={onToggleCollapsed}
           title={openLabel}
           type="button"
@@ -37,7 +37,7 @@ export const LibraryHeader = ({
         </button>
         <Link
           aria-label={t('library.createPlaylist')}
-          className="rounded-full bg-surface p-3 text-text transition-colors hover:bg-surface-hover"
+          className="rounded-full bg-surface p-3 text-foreground transition-colors hover:bg-surface-hover"
           href={ROUTES.createPlaylist}
           title={t('common.create')}
         >
@@ -53,7 +53,7 @@ export const LibraryHeader = ({
         <div className="w-0 overflow-hidden opacity-0 transition-[width,opacity] duration-200 ease-out group-hover/header:w-8 group-hover/header:opacity-100">
           <button
             aria-label={t('library.title')}
-            className="mr-2 rounded p-1 text-text-subdued transition-colors hover:bg-surface hover:text-text"
+            className="mr-2 rounded p-1 text-muted-foreground transition-colors hover:bg-surface hover:text-foreground"
             onClick={onToggleCollapsed}
             title={t('library.title')}
             type="button"

@@ -1,8 +1,8 @@
 'use client'
 
-import { Button, cn } from '@bitrate/ui-react'
-import { Skeleton, StateMessage } from '@shared/ui'
-import { Info, Podcast, SearchIcon } from 'lucide-react'
+import { Button } from '@bitrate/ui-react'
+import { FilterChips, SearchField, Skeleton, StateMessage } from '@shared/ui'
+import { Info, Podcast } from 'lucide-react'
 import Link from 'next/link'
 import { useState } from 'react'
 import type { PodcastDetail } from '@/entities/Podcast'
@@ -16,14 +16,6 @@ type EpisodesSectionProps = {
   isAuthenticated: boolean
   podcast: PodcastDetail
 }
-
-const chipClassName = (isActive: boolean) =>
-  cn(
-    'flex h-8 items-center rounded-full border px-3.5 text-[13px] text-foreground transition-colors',
-    isActive
-      ? 'border-primary bg-primary font-semibold text-primary-foreground'
-      : 'border-border hover:bg-surface',
-  )
 
 const EpisodeListSkeleton = () => (
   <div
@@ -135,41 +127,26 @@ export const EpisodesSection = ({
   return (
     <section aria-label="Episodes" className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="flex gap-2">
-          <button
-            aria-pressed={filter === 'newest'}
-            className={chipClassName(filter === 'newest')}
-            onClick={() => setFilter('newest')}
-            type="button"
-          >
-            Newest
-          </button>
-          {isAuthenticated ? (
-            <button
-              aria-pressed={filter === 'saved'}
-              className={chipClassName(filter === 'saved')}
-              onClick={() => setFilter('saved')}
-              type="button"
-            >
-              Saved
-            </button>
-          ) : null}
-        </div>
-        <label className="relative w-full md:w-65">
-          <span className="sr-only">Search episodes</span>
-          <SearchIcon
-            aria-hidden="true"
-            className="absolute top-1/2 left-3 -translate-y-1/2 text-muted-foreground"
-            size={16}
-          />
-          <input
-            className="h-9 w-full rounded-md border border-border bg-background pr-3 pl-9 text-sm text-foreground outline-none placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring"
-            onChange={(event) => setQuery(event.target.value)}
-            placeholder="Search episodes"
-            type="search"
-            value={query}
-          />
-        </label>
+        <FilterChips
+          ariaLabel="Episodes"
+          chips={
+            isAuthenticated
+              ? [
+                  { id: 'newest', label: 'Newest' },
+                  { id: 'saved', label: 'Saved' },
+                ]
+              : [{ id: 'newest', label: 'Newest' }]
+          }
+          onChange={setFilter}
+          value={filter}
+        />
+        <SearchField
+          className="w-full md:w-65"
+          label="Search episodes"
+          onChange={setQuery}
+          placeholder="Search episodes"
+          value={query}
+        />
       </div>
 
       {results.searchedQuery && !results.isPending && !results.isError ? (

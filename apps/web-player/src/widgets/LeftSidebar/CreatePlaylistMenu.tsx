@@ -34,7 +34,7 @@ export const CreatePlaylistMenu = () => {
       <PopoverContent
         align="start"
         aria-label={t('library.createPlaylist')}
-        className="w-82 rounded-md !border-border !bg-popover p-2 !text-text shadow-2xl"
+        className="w-82 rounded-md !border-border !bg-popover p-2 !text-foreground shadow-2xl"
         sideOffset={8}
       >
         <CreatePlaylistActions onCreate={openForm} />

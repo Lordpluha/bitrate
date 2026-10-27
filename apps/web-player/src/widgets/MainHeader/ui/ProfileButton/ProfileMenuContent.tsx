@@ -1,6 +1,8 @@
 'use client'
 
+import { cn } from '@bitrate/ui-react'
 import { ACCOUNT_NAV } from '@shared/routes'
+import { menuItemClassName } from '@shared/ui'
 import Link from 'next/link'
 import { ThemeSwitcher } from '@/features/SwitchTheme'
 import { useI18n } from '@/shared/i18n'
@@ -11,8 +13,7 @@ type ProfileMenuContentProps = {
   onLogout: () => void
 }
 
-const itemClassName =
-  'flex w-full items-center gap-3 rounded-sm px-3 py-2.5 text-left text-foreground transition-colors hover:bg-surface disabled:cursor-not-allowed disabled:opacity-60'
+const itemClassName = cn(menuItemClassName, 'py-2.5')
 
 /**
  * The account menu behind the avatar: the account's pages, theme and log out. Notifications

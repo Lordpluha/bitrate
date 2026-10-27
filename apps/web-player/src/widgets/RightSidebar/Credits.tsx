@@ -19,19 +19,23 @@ export const Credits = () => {
   return (
     <div className="overflow-hidden rounded-lg bg-surface p-0">
       <div className="px-4 pb-1 pt-3">
-        <Typography as="h6" className="text-text" size="heading6">
+        <Typography as="h6" className="text-foreground" size="heading6">
           Credits
         </Typography>
       </div>
       <div className="flex items-center justify-between gap-3 px-4 pb-4">
         <div className="min-w-0">
           <Link
-            className="block truncate text-sm text-text hover:underline"
+            className="block truncate text-sm text-foreground hover:underline"
             href={ROUTES.artist(artist.id)}
           >
             {artist.username}
           </Link>
-          <Typography as="p" className="text-xs text-text-subdued" size="body">
+          <Typography
+            as="p"
+            className="text-xs text-muted-foreground"
+            size="body"
+          >
             Main Artist
           </Typography>
         </div>

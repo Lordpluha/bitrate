@@ -4,10 +4,10 @@ import { Button } from '@bitrate/ui-react'
 import { ArtistName } from '@entities/Artist'
 import { ROUTES } from '@shared/routes'
 import {
+  ErrorState,
   ListSkeleton,
   PageShell,
   PageTitle,
-  RetryState,
   StateMessage,
 } from '@shared/ui'
 import { MediaImage } from '@shared/ui/MediaImage'
@@ -39,7 +39,8 @@ export const ActivityPage = () => {
           rows={6}
         />
       ) : activity.isError ? (
-        <RetryState
+        <ErrorState
+          description="Try again in a moment."
           onRetry={() => void activity.refetch()}
           title="Activity is unavailable"
         />

@@ -1,7 +1,7 @@
 'use client'
 
-import { cn } from '@bitrate/ui-react'
 import type { TrackEntity } from '@entities/Track'
+import { FilterChips } from '@shared/ui'
 import { useState } from 'react'
 import type { ArtistAlbum } from '../model/artist.types'
 import {
@@ -53,25 +53,13 @@ export const ArtistDiscography = ({
           </button>
         )}
       </div>
-      <fieldset className="m-0 flex min-w-0 flex-wrap gap-2 border-0 p-0">
-        <legend className="sr-only">Discography filters</legend>
-        {DISCOGRAPHY_FILTERS.map((filter) => (
-          <button
-            aria-pressed={activeFilter === filter.id}
-            className={cn(
-              'flex h-8 items-center rounded-full border px-3.5 text-[13px] text-foreground transition-colors',
-              activeFilter === filter.id
-                ? 'border-primary bg-primary font-semibold text-primary-foreground'
-                : 'border-border hover:bg-surface',
-            )}
-            key={filter.id}
-            onClick={() => changeFilter(filter.id)}
-            type="button"
-          >
-            {filter.label}
-          </button>
-        ))}
-      </fieldset>
+      <FilterChips
+        ariaLabel="Discography filters"
+        chips={DISCOGRAPHY_FILTERS}
+        className="flex-wrap"
+        onChange={changeFilter}
+        value={activeFilter}
+      />
       {visibleReleases.length === 0 ? (
         <p className="py-10 text-sm text-muted-foreground">
           {EMPTY_FILTER_LABELS[activeFilter]}

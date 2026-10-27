@@ -82,7 +82,7 @@ const LegalBlockView = ({ block }: { block: LegalBlock }) => {
  * by a lawyer and the operator placeholders are filled in.
  */
 export const LegalDocumentView = ({ document }: LegalDocumentViewProps) => (
-  <article className="mx-auto flex max-w-3xl flex-col gap-6 px-6 py-12 text-text">
+  <article className="mx-auto flex max-w-3xl flex-col gap-6 px-6 py-12 text-foreground">
     <p
       className="rounded-md border border-primary px-4 py-3 text-sm"
       role="note"

@@ -22,17 +22,19 @@ export const TrackViewMenu = ({ onChange, value }: TrackViewMenuProps) => (
     aria-label="Track list view"
     className={cn(
       Z_INDEX_CLASS.dropdownMenu,
-      'absolute right-0 top-[calc(100%+10px)] w-40 max-w-[calc(100vw-2rem)] rounded-md bg-popover p-1 text-sm text-text shadow-2xl',
+      'absolute right-0 top-[calc(100%+10px)] w-40 max-w-[calc(100vw-2rem)] rounded-md bg-popover p-1 text-sm text-foreground shadow-2xl',
     )}
     role="menu"
   >
-    <div className="px-3 py-2 text-xs font-bold text-text-subdued">View as</div>
+    <div className="px-3 py-2 text-xs font-bold text-muted-foreground">
+      View as
+    </div>
     {(['compact', 'list'] as const).map((viewMode) => (
       <button
         aria-checked={value === viewMode}
         className={cn(
-          'flex w-full items-center justify-between rounded-sm px-3 py-2 text-left capitalize transition-colors hover:bg-white/10',
-          value === viewMode ? 'text-primary' : 'text-text',
+          'flex w-full items-center justify-between rounded-sm px-3 py-2 text-left capitalize transition-colors hover:bg-surface',
+          value === viewMode ? 'text-primary' : 'text-foreground',
         )}
         key={viewMode}
         onClick={() => onChange(viewMode)}
@@ -72,7 +74,7 @@ export const PlaylistMoreMenu = ({
     aria-label="Playlist actions"
     className={cn(
       Z_INDEX_CLASS.dropdownMenu,
-      'absolute left-0 top-[calc(100%+8px)] w-66 max-w-[calc(100vw-2rem)] rounded-md bg-popover p-1 text-sm text-text shadow-2xl',
+      'absolute left-0 top-[calc(100%+8px)] w-66 max-w-[calc(100vw-2rem)] rounded-md bg-popover p-1 text-sm text-foreground shadow-2xl',
     )}
     role="menu"
   >
@@ -94,7 +96,7 @@ export const PlaylistMoreMenu = ({
       label="Delete"
       onClick={onDelete}
     />
-    <div className="mx-2 my-1 border-t border-white/10" />
+    <div className="mx-2 my-1 border-t border-border" />
     <MenuItem icon={<Share2 size={17} />} label="Share" onClick={onCopyLink} />
     {!canEdit && (
       <MenuItem icon={<Flag size={17} />} label="Report" onClick={onReport} />

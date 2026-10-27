@@ -52,10 +52,13 @@ export const LegalReacceptanceDialog = () => {
         className="relative w-full max-w-md rounded-lg bg-popover p-6 shadow-2xl"
         role="dialog"
       >
-        <h2 className="text-xl font-bold text-text" id="reaccept-legal-title">
+        <h2
+          className="text-xl font-bold text-foreground"
+          id="reaccept-legal-title"
+        >
           Our terms have been updated
         </h2>
-        <p className="mt-2 text-sm text-text-subdued">
+        <p className="mt-2 text-sm text-muted-foreground">
           To keep using Bitrate, please confirm that you accept the current
           documents.
         </p>

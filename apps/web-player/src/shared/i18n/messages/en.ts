@@ -8,6 +8,7 @@ export const en = {
   'common.loggingOut': 'Logging out…',
   'friends.title': 'Friends',
   'library.sortRecentlyAdded': 'Recently added',
+  'main.sections': 'Home sections',
   'profile.updates': 'Your Updates',
   'profile.caughtUp': "You're all caught up",
   'profile.updatesUnavailable': 'Updates are unavailable right now.',

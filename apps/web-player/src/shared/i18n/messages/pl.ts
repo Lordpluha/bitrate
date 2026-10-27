@@ -10,6 +10,7 @@ export const pl = {
   'common.loggingOut': 'Wylogowywanie…',
   'friends.title': 'Znajomi',
   'library.sortRecentlyAdded': 'Ostatnio dodane',
+  'main.sections': 'Sekcje strony głównej',
   'profile.updates': 'Twoje aktualności',
   'profile.caughtUp': 'Wszystko przejrzane',
   'profile.updatesUnavailable': 'Aktualności są teraz niedostępne.',

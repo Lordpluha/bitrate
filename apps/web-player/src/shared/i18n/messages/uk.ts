@@ -10,6 +10,7 @@ export const uk = {
   'common.loggingOut': 'Виходимо…',
   'friends.title': 'Друзі',
   'library.sortRecentlyAdded': 'Нещодавно додані',
+  'main.sections': 'Розділи головної',
   'profile.updates': 'Оновлення',
   'profile.caughtUp': 'Ви все переглянули',
   'profile.updatesUnavailable': 'Оновлення зараз недоступні.',

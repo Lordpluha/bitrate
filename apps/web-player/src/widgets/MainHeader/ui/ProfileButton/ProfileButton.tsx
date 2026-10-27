@@ -72,7 +72,7 @@ export const ProfileButton = ({
           align="end"
           className={cn(
             Z_INDEX_CLASS.popover,
-            'w-82 rounded-md border border-border bg-popover p-1 text-sm text-text shadow-2xl',
+            'w-82 rounded-md border border-border bg-popover p-1 text-sm text-foreground shadow-2xl',
           )}
           positionerClassName={Z_INDEX_CLASS.popover}
           sideOffset={8}

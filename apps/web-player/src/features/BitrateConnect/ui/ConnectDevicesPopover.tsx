@@ -47,28 +47,28 @@ export const ConnectDevicesPopover = ({
         align="end"
         className={cn(
           Z_INDEX_CLASS.popover,
-          'w-[min(20rem,calc(100vw-2rem))] rounded-md border border-border bg-popover p-0 text-text shadow-2xl',
+          'w-[min(20rem,calc(100vw-2rem))] rounded-md border border-border bg-popover p-0 text-foreground shadow-2xl',
         )}
         positionerClassName={Z_INDEX_CLASS.popover}
         sideOffset={8}
       >
         <div className="border-b border-border px-4 py-3">
           <h2 className="font-bold">Bitrate Connect</h2>
-          <p className="text-xs leading-5 text-text-subdued">
+          <p className="text-xs leading-5 text-muted-foreground">
             Sign in on another device to continue this queue there.
           </p>
         </div>
         <div className="max-h-80 overflow-y-auto p-2 custom-scrollbar">
           {isPending ? (
             <p
-              className="px-3 py-6 text-center text-sm text-text-subdued"
+              className="px-3 py-6 text-center text-sm text-muted-foreground"
               role="status"
             >
               Loading devices…
             </p>
           ) : isError ? (
             <p
-              className="px-3 py-6 text-center text-sm text-text-subdued"
+              className="px-3 py-6 text-center text-sm text-muted-foreground"
               role="status"
             >
               Devices are unavailable right now.
@@ -86,7 +86,9 @@ export const ConnectDevicesPopover = ({
                     <Icon
                       aria-hidden="true"
                       className={
-                        device.isActive ? 'text-primary' : 'text-text-subdued'
+                        device.isActive
+                          ? 'text-primary'
+                          : 'text-muted-foreground'
                       }
                       size={20}
                     />
@@ -95,7 +97,7 @@ export const ConnectDevicesPopover = ({
                         {device.name}
                         {isThisDevice ? ' · This browser' : ''}
                       </p>
-                      <p className="text-xs text-text-subdued">
+                      <p className="text-xs text-muted-foreground">
                         {device.isActive
                           ? 'Playing here last'
                           : `Seen ${formatRelativeTime({ date: device.lastSeenAt })}`}

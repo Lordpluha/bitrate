@@ -34,7 +34,7 @@ export const ProfileTracksSection = ({
               onClick={() => onPlayTrack(track)}
               type="button"
             >
-              <span className="text-center text-[13px] font-semibold text-text-subdued">
+              <span className="text-center text-[13px] font-semibold text-muted-foreground">
                 {index + 1}
               </span>
               <span className="flex min-w-0 items-center gap-3">

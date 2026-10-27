@@ -30,7 +30,7 @@ export const HeaderSearchDropdown = ({
   return (
     <div className="absolute left-0 right-0 top-[calc(100%+8px)] z-50 max-h-[70vh] overflow-y-auto rounded-md border border-border bg-background-tinted p-3 shadow-2xl custom-scrollbar">
       {variant === 'recent' && (
-        <div className="px-1 pb-2 text-sm font-bold text-text">
+        <div className="px-1 pb-2 text-sm font-bold text-foreground">
           {t('search.recent')}
         </div>
       )}
@@ -76,22 +76,22 @@ export const HeaderSearchDropdown = ({
                   width={44}
                 />
               ) : (
-                <span className="flex size-11 items-center justify-center rounded-full text-text-subdued">
+                <span className="flex size-11 items-center justify-center rounded-full text-muted-foreground">
                   <SearchIcon height={26} width={26} />
                 </span>
               )}
               <span className="min-w-0">
-                <span className="block truncate text-sm font-medium text-text">
+                <span className="block truncate text-sm font-medium text-foreground">
                   {item.title}
                 </span>
                 {(!isQuery || variant === 'recent') && (
-                  <span className="block truncate text-xs text-text-subdued">
+                  <span className="block truncate text-xs text-muted-foreground">
                     {item.subtitle}
                   </span>
                 )}
               </span>
               {isQuery && variant === 'suggestions' && (
-                <span className="text-xs text-text-subdued">
+                <span className="text-xs text-muted-foreground">
                   {t('common.search')}
                 </span>
               )}

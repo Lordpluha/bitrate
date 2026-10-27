@@ -51,8 +51,8 @@ export const TrackNavigationButton = ({
             width={48}
           />
           <div className="min-w-0">
-            <p className="text-xs font-medium text-text-subdued">{label}</p>
-            <p className="mt-0.5 truncate text-sm font-semibold text-text">
+            <p className="text-xs font-medium text-muted-foreground">{label}</p>
+            <p className="mt-0.5 truncate text-sm font-semibold text-foreground">
               {track.title}
             </p>
           </div>

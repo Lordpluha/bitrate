@@ -5,8 +5,8 @@ import {
   CarouselContent,
   CarouselItem,
   CarouselNext,
-  cn,
 } from '@bitrate/ui-react'
+import { chipClassName } from '@shared/ui'
 import type { LibraryItemType } from '@/widgets/LeftSidebar/model/library.types'
 
 type LibraryTag = {
@@ -49,12 +49,7 @@ export const LibraryTags = ({ onToggle, selectedTypes }: LibraryTagsProps) => (
             <CarouselItem className="px-1 basis-auto" key={tag.type}>
               <button
                 aria-pressed={isSelected}
-                className={cn(
-                  'px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-200 whitespace-nowrap',
-                  isSelected
-                    ? 'bg-text text-background'
-                    : 'bg-surface text-text hover:bg-surface-hover',
-                )}
+                className={chipClassName({ isActive: isSelected })}
                 onClick={() => onToggle(tag.type)}
                 type="button"
               >

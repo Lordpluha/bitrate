@@ -55,7 +55,7 @@ export const ActiveSessionsSection = () => {
               <div className="flex min-w-0 items-center gap-3">
                 <Monitor className="shrink-0 text-muted-foreground" size={20} />
                 <div className="min-w-0">
-                  <p className="font-semibold text-text">
+                  <p className="font-semibold text-foreground">
                     {session.current ? 'This browser' : 'Browser session'}
                   </p>
                   <p className="truncate text-xs text-muted-foreground">

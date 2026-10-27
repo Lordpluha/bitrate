@@ -7,7 +7,9 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@bitrate/ui-react'
+import { StateMessage } from '@shared/ui'
 import { MediaImage } from '@shared/ui/MediaImage'
+import { TriangleAlert, UsersRound } from 'lucide-react'
 import Link from 'next/link'
 import { useState } from 'react'
 import { useFollowingActivity } from '@/entities/User'
@@ -38,14 +40,14 @@ export const ActivityPopover = () => {
         align="end"
         className={cn(
           Z_INDEX_CLASS.popover,
-          'w-[min(22rem,calc(100vw-2rem))] rounded-md border border-border bg-popover p-0 text-text shadow-2xl',
+          'w-[min(22rem,calc(100vw-2rem))] rounded-md border border-border bg-popover p-0 text-foreground shadow-2xl',
         )}
         positionerClassName={Z_INDEX_CLASS.popover}
         sideOffset={8}
       >
         <div className="border-b border-border px-4 py-3">
           <h2 className="font-bold">Activity</h2>
-          <p className="text-xs text-text-subdued">
+          <p className="text-xs text-muted-foreground">
             What people you follow played this week
           </p>
         </div>
@@ -53,22 +55,26 @@ export const ActivityPopover = () => {
         <div className="max-h-96 overflow-y-auto p-2 custom-scrollbar">
           {isPending ? (
             <p
-              className="px-3 py-8 text-center text-sm text-text-subdued"
+              className="px-3 py-8 text-center text-sm text-muted-foreground"
               role="status"
             >
-              Loading friend activity…
+              Loading activity…
             </p>
           ) : isError ? (
-            <p
-              className="px-3 py-8 text-center text-sm text-text-subdued"
-              role="status"
-            >
-              Activity is unavailable right now.
-            </p>
+            <StateMessage
+              description="Try again in a moment."
+              icon={TriangleAlert}
+              size="compact"
+              title="Activity is unavailable"
+              tone="error"
+            />
           ) : data.length === 0 ? (
-            <p className="px-3 py-8 text-center text-sm text-text-subdued">
-              When people you follow listen to music, it shows up here.
-            </p>
+            <StateMessage
+              description="What they play shows up here, unless they keep their listening private."
+              icon={UsersRound}
+              size="compact"
+              title="Follow listeners to see their activity"
+            />
           ) : (
             <ul className="grid gap-1">
               {data.map(({ listenedAt, track, user }) => (
@@ -100,7 +106,7 @@ export const ActivityPopover = () => {
                         {user.username}
                       </Link>
                       <time
-                        className="shrink-0 text-xs text-text-subdued"
+                        className="shrink-0 text-xs text-muted-foreground"
                         dateTime={listenedAt.toISOString()}
                       >
                         {formatRelativeTime({ date: listenedAt })}
@@ -108,7 +114,7 @@ export const ActivityPopover = () => {
                     </div>
                     <button
                       aria-label={`Play ${track.title}`}
-                      className="flex min-w-0 items-center gap-2 text-left text-xs text-text-subdued hover:text-text"
+                      className="flex min-w-0 items-center gap-2 text-left text-xs text-muted-foreground hover:text-foreground"
                       onClick={() =>
                         void playCollection({
                           id: track.id,

@@ -61,7 +61,10 @@ export const PodcastsPanel = () => {
     <div className="space-y-10">
       {isAuthenticated && savedQuery.data?.data.length ? (
         <section aria-labelledby="saved-episodes-title">
-          <h2 className="mb-4 text-2xl font-bold" id="saved-episodes-title">
+          <h2
+            className="mb-4 text-[22px] leading-[1.25] font-semibold text-foreground"
+            id="saved-episodes-title"
+          >
             Your episodes
           </h2>
           <div className="space-y-2">
@@ -82,11 +85,11 @@ export const PodcastsPanel = () => {
                   width={56}
                 />
                 <div className="min-w-0 flex-1">
-                  <p className="truncate font-semibold text-text">
+                  <p className="truncate font-semibold text-foreground">
                     {episode.title}
                   </p>
                   <Link
-                    className="truncate text-sm text-text-subdued hover:underline"
+                    className="truncate text-sm text-muted-foreground hover:underline"
                     href={ROUTES.podcast(episode.podcastId)}
                   >
                     {episode.podcast.title}
@@ -112,7 +115,10 @@ export const PodcastsPanel = () => {
       ) : null}
 
       <section aria-labelledby="podcast-catalog-title">
-        <h2 className="mb-4 text-2xl font-bold" id="podcast-catalog-title">
+        <h2
+          className="mb-4 text-[22px] leading-[1.25] font-semibold text-foreground"
+          id="podcast-catalog-title"
+        >
           Podcasts &amp; shows
         </h2>
         {podcastsQuery.data.data.length ? (
@@ -129,7 +135,7 @@ export const PodcastsPanel = () => {
             ))}
           </div>
         ) : (
-          <p className="py-12 text-center text-text-subdued">
+          <p className="py-12 text-center text-muted-foreground">
             No podcasts have been published yet.
           </p>
         )}

@@ -4,8 +4,8 @@ import { ArtistName } from '@entities/Artist'
 import { useArtistCharts, useCharts } from '@entities/Discovery'
 import { ROUTES } from '@shared/routes'
 import {
+  ErrorState,
   PageTitle,
-  RetryState,
   type SegmentedTab,
   SegmentedTabs,
   StateMessage,
@@ -41,7 +41,11 @@ const Rank = ({ place }: { place: number }) => (
 )
 
 const ChartError = ({ onRetry }: { onRetry: () => void }) => (
-  <RetryState onRetry={onRetry} title="Charts are unavailable" />
+  <ErrorState
+    description="Try again in a moment."
+    onRetry={onRetry}
+    title="Charts are unavailable"
+  />
 )
 
 const ChartLoading = () => (

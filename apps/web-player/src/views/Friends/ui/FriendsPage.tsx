@@ -3,10 +3,10 @@
 import { Button } from '@bitrate/ui-react'
 import { ROUTES } from '@shared/routes'
 import {
+  ErrorState,
   ListSkeleton,
   PageShell,
   PageTitle,
-  RetryState,
   SectionHeader,
   SegmentedTabs,
   StateMessage,
@@ -105,7 +105,8 @@ export const FriendsPage = () => {
       {friends.isPending ? (
         <ListSkeleton label="Loading friends" rows={6} />
       ) : friends.isError ? (
-        <RetryState
+        <ErrorState
+          description="Try again in a moment."
           onRetry={() => void friends.refetch()}
           title="Friends are unavailable right now"
         />

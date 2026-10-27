@@ -2,11 +2,11 @@
 
 import { ROUTES } from '@shared/routes'
 import {
+  ErrorState,
   InlineNotice,
   ListSkeleton,
   PageShell,
   PageTitle,
-  RetryState,
   SegmentedTabs,
   StateMessage,
 } from '@shared/ui'
@@ -70,7 +70,8 @@ export const FriendRequestsPage = () => {
       {current.isPending ? (
         <ListSkeleton label="Loading requests" rows={3} />
       ) : current.isError ? (
-        <RetryState
+        <ErrorState
+          description="Try again in a moment."
           onRetry={() => void current.refetch()}
           title="Requests are unavailable right now"
         />

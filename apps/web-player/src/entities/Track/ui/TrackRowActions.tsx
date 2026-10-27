@@ -24,7 +24,7 @@ export const TrackRowActions = ({
       {removable && (
         <button
           aria-label={`Remove ${track.title} from playlist`}
-          className="rounded-full p-1 opacity-0 transition-opacity hover:bg-white/10 group-hover:opacity-100 focus-visible:opacity-100"
+          className="rounded-full p-1 opacity-0 transition-opacity hover:bg-surface group-hover:opacity-100 focus-visible:opacity-100"
           onClick={onRemove}
           type="button"
         >
@@ -42,7 +42,7 @@ export const TrackRowActions = ({
       {removable ? (
         <button
           aria-label={`Remove ${track.title} from playlist`}
-          className="rounded-full p-2 transition-colors hover:bg-white/10 hover:text-text"
+          className="rounded-full p-2 transition-colors hover:bg-surface hover:text-foreground"
           onClick={onRemove}
           type="button"
         >

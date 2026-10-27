@@ -79,8 +79,8 @@ export const MusicCardSm = ({
       <div className="flex-1 min-w-0">
         <h3
           className={cn(
-            'truncate font-[family-name:var(--font-landing-body)] text-sm leading-tight font-semibold transition-colors duration-150 group-hover:text-text',
-            isPlaying ? 'text-primary' : 'text-text',
+            'truncate font-[family-name:var(--font-landing-body)] text-sm leading-tight font-semibold transition-colors duration-150 group-hover:text-foreground',
+            isPlaying ? 'text-primary' : 'text-foreground',
           )}
         >
           {item.title}

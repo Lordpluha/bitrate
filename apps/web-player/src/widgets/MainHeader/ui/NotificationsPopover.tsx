@@ -7,6 +7,8 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@bitrate/ui-react'
+import { StateMessage } from '@shared/ui'
+import { CircleCheck, TriangleAlert } from 'lucide-react'
 import Link from 'next/link'
 import {
   NotificationItem,
@@ -73,9 +75,13 @@ export const NotificationsPopover = () => {
               Loading notifications...
             </p>
           ) : isError ? (
-            <p className="px-3 py-8 text-center text-sm text-muted-foreground">
-              Notifications are unavailable right now.
-            </p>
+            <StateMessage
+              description="Try again in a moment."
+              icon={TriangleAlert}
+              size="compact"
+              title="Notifications are unavailable"
+              tone="error"
+            />
           ) : data?.data.length ? (
             data.data.map((notification) => (
               <NotificationItem
@@ -84,9 +90,12 @@ export const NotificationsPopover = () => {
               />
             ))
           ) : (
-            <p className="px-3 py-8 text-center text-sm text-muted-foreground">
-              You are all caught up.
-            </p>
+            <StateMessage
+              description="Watch this space for news on your followers, playlists, events and more."
+              icon={CircleCheck}
+              size="compact"
+              title="You're all caught up"
+            />
           )}
         </div>
         <div className="border-t border-border p-2">

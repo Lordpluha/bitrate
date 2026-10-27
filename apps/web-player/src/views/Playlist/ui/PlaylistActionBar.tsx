@@ -49,7 +49,7 @@ export const PlaylistActionBar = ({
             <button
               aria-expanded={menus.isMoreOpen}
               aria-label="More playlist options"
-              className="transition-colors hover:text-text"
+              className="transition-colors hover:text-foreground"
               onClick={menus.toggleMoreMenu}
               type="button"
             >
@@ -84,7 +84,7 @@ export const PlaylistActionBar = ({
           <button
             aria-expanded={menus.isViewMenuOpen}
             aria-label="Change track list view"
-            className="flex items-center gap-1.5 text-sm capitalize text-muted-foreground transition-colors hover:text-text"
+            className="flex items-center gap-1.5 text-sm capitalize text-muted-foreground transition-colors hover:text-foreground"
             onClick={menus.toggleViewMenu}
             type="button"
           >

@@ -74,7 +74,7 @@ export const ArtistMoreMenu = ({
           aria-label={`${artistName} actions`}
           className={cn(
             Z_INDEX_CLASS.dropdownMenu,
-            'absolute left-0 top-[calc(100%+8px)] w-56 max-w-[calc(100vw-2rem)] rounded-md bg-popover p-1 text-sm text-text shadow-2xl',
+            'absolute left-0 top-[calc(100%+8px)] w-56 max-w-[calc(100vw-2rem)] rounded-md bg-popover p-1 text-sm text-foreground shadow-2xl',
           )}
           role="menu"
         >

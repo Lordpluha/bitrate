@@ -4,11 +4,12 @@ import { Badge } from '@bitrate/ui-react'
 import { useAuth } from '@shared/hooks'
 import { ROUTES } from '@shared/routes'
 import {
+  ErrorState,
   InlineNotice,
   ListSkeleton,
   PageShell,
   PageTitle,
-  RetryState,
+  SearchField,
   StateMessage,
 } from '@shared/ui'
 import { Search } from 'lucide-react'
@@ -120,17 +121,12 @@ export const FindFriendsPage = () => {
   return (
     <PageShell>
       <PageTitle title="Find friends" />
-      <label className="relative block">
-        <span className="sr-only">Search people</span>
-        <Search className="pointer-events-none absolute top-1/2 left-3.5 size-4.5 -translate-y-1/2 text-muted-foreground" />
-        <input
-          className="h-11 w-full rounded-[10px] border border-border bg-card pr-4 pl-11 text-sm text-foreground outline-none transition-colors placeholder:text-muted-foreground focus-visible:border-primary [&::-webkit-search-cancel-button]:appearance-none"
-          onChange={(event) => setQuery(event.target.value)}
-          placeholder="Search by name or @username"
-          type="search"
-          value={query}
-        />
-      </label>
+      <SearchField
+        label="Search people"
+        onChange={setQuery}
+        placeholder="Search by name or @username"
+        value={query}
+      />
 
       {notice ? <InlineNotice body={notice.body} title={notice.title} /> : null}
 
@@ -151,7 +147,8 @@ export const FindFriendsPage = () => {
       ) : people.isPending ? (
         <ListSkeleton label="Searching" rows={4} />
       ) : people.isError ? (
-        <RetryState
+        <ErrorState
+          description="Try again in a moment."
           onRetry={() => void people.refetch()}
           title="Search is unavailable right now"
         />

@@ -1,11 +1,12 @@
 'use client'
 
-import { Button, cn } from '@bitrate/ui-react'
+import { Button } from '@bitrate/ui-react'
 import {
+  ErrorState,
+  FilterChips,
   ListSkeleton,
   PageShell,
   PageTitle,
-  RetryState,
   StateMessage,
 } from '@shared/ui'
 import { CircleCheck } from 'lucide-react'
@@ -58,24 +59,13 @@ export const NotificationsPage = () => {
         title="Notifications"
       />
 
-      <div className="-mx-4 flex gap-2 overflow-x-auto px-4 md:mx-0 md:px-0">
-        {FILTERS.map(({ id, label }) => (
-          <button
-            aria-pressed={filter === id}
-            className={cn(
-              'flex h-8 shrink-0 items-center rounded-full border px-3.5 text-[13px] text-foreground transition-colors',
-              filter === id
-                ? 'border-primary bg-primary font-semibold text-primary-foreground'
-                : 'border-border hover:bg-surface',
-            )}
-            key={id}
-            onClick={() => setFilter(id)}
-            type="button"
-          >
-            {label}
-          </button>
-        ))}
-      </div>
+      <FilterChips
+        ariaLabel="Show"
+        chips={FILTERS}
+        className="-mx-4 overflow-x-auto px-4 md:mx-0 md:px-0"
+        onChange={setFilter}
+        value={filter}
+      />
 
       {notifications.isPending ? (
         <ListSkeleton
@@ -85,7 +75,8 @@ export const NotificationsPage = () => {
           rows={6}
         />
       ) : notifications.isError ? (
-        <RetryState
+        <ErrorState
+          description="Try again in a moment."
           onRetry={() => void notifications.refetch()}
           title="Notifications are unavailable right now."
         />

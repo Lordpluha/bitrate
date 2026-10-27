@@ -52,16 +52,18 @@ export const BurgerMenuPanel = ({
       <div className="h-full overflow-y-auto p-6 custom-scrollbar">
         <div className="mb-8 flex items-center justify-between">
           <div className="min-w-0">
-            <h2 className="text-lg font-semibold text-text">
+            <h2 className="text-lg font-semibold text-foreground">
               {t('common.menu')}
             </h2>
             {username && (
-              <p className="truncate text-sm text-text-subdued">{username}</p>
+              <p className="truncate text-sm text-muted-foreground">
+                {username}
+              </p>
             )}
           </div>
           <button
             aria-label={t('common.closeMenu')}
-            className="p-2 text-text transition-opacity hover:opacity-70"
+            className="p-2 text-foreground transition-opacity hover:opacity-70"
             onClick={onClose}
             type="button"
           >
@@ -88,14 +90,14 @@ export const BurgerMenuPanel = ({
                 ))}
               </nav>
               <div className="flex items-center justify-between border-b border-border pb-6">
-                <span className="text-sm text-text-subdued">
+                <span className="text-sm text-muted-foreground">
                   {t('common.theme')}
                 </span>
                 <ThemeSwitcher />
               </div>
               <InstallBtn />
               <button
-                className="w-full rounded-full bg-surface px-4 py-2.5 text-sm font-semibold text-text transition-colors hover:bg-surface-hover disabled:opacity-60"
+                className="w-full rounded-full bg-surface px-4 py-2.5 text-sm font-semibold text-foreground transition-colors hover:bg-surface-hover disabled:opacity-60"
                 disabled={isLogoutPending}
                 onClick={logout}
                 type="button"

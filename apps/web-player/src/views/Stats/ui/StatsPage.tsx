@@ -11,9 +11,9 @@ import {
 } from '@entities/Discovery'
 import { ROUTES } from '@shared/routes'
 import {
+  ErrorState,
   PageShell,
   PageTitle,
-  RetryState,
   type SegmentedTab,
   SegmentedTabs,
   Skeleton,
@@ -86,7 +86,8 @@ const StatsContent = ({ range }: { range: DiscoveryRange }) => {
   if (tracks.isPending || artists.isPending) return <StatsLoading />
   if (tracks.isError || artists.isError) {
     return (
-      <RetryState
+      <ErrorState
+        description="Try again in a moment."
         onRetry={() => {
           void tracks.refetch()
           void artists.refetch()

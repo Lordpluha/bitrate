@@ -61,7 +61,7 @@ export const AboutArtist = () => {
           className="group/name flex w-fit max-w-full items-center gap-1.5 rounded-sm outline-none focus-visible:ring-2 focus-visible:ring-text"
           href={ROUTES.artist(artist.id)}
         >
-          <span className="truncate text-sm font-bold text-text group-hover/name:underline">
+          <span className="truncate text-sm font-bold text-foreground group-hover/name:underline">
             {artist.username || 'Unknown Artist'}
           </span>
           {artist.verified ? (
@@ -74,12 +74,12 @@ export const AboutArtist = () => {
         </Link>
 
         <div className="mt-3 flex items-end justify-between gap-3">
-          <p className="line-clamp-3 min-w-0 text-xs leading-relaxed text-text-subdued">
+          <p className="line-clamp-3 min-w-0 text-xs leading-relaxed text-muted-foreground">
             {ncsBioLink ? (
               <>
                 {ncsBioPrefix}{' '}
                 <a
-                  className="font-medium text-text underline decoration-text-subdued underline-offset-2 transition-colors hover:text-primary focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-text"
+                  className="font-medium text-foreground underline decoration-text-subdued underline-offset-2 transition-colors hover:text-primary focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-text"
                   href={ncsBioLink.href}
                   rel="noopener noreferrer"
                   target="_blank"

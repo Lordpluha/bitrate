@@ -113,7 +113,7 @@ export const TrackCard = ({
         <div className="truncate pr-4 text-[13px] text-muted-foreground max-[1024px]:hidden">
           {album ? (
             <Link
-              className="hover:text-text hover:underline"
+              className="hover:text-foreground hover:underline"
               href={ROUTES.album(album.id)}
             >
               {album.title}
@@ -121,7 +121,7 @@ export const TrackCard = ({
           ) : null}
         </div>
         {showDateAdded ? (
-          <div className="truncate text-xs text-text-subdued max-[1024px]:hidden">
+          <div className="truncate text-xs text-muted-foreground max-[1024px]:hidden">
             {track.createdAt
               ? DateUtils.formatDate(track.createdAt)
               : 'Unknown'}

@@ -32,7 +32,7 @@ export const BurgerMenu = ({ trigger = 'menu' }: BurgerMenuProps) => {
         aria-haspopup="dialog"
         aria-label={isOpen ? t('common.closeMenu') : t('common.openMenu')}
         className={cn(
-          'text-text transition-opacity hover:opacity-80',
+          'text-foreground transition-opacity hover:opacity-80',
           trigger === 'avatar'
             ? 'flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-surface p-1'
             : 'p-2',
