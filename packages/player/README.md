@@ -124,6 +124,16 @@ player.addEventListener('ended', ({ detail }) => {
 `configureCmafEngine({ storage, debugByDefault })` from `@bitrate/player/engine` once to keep
 the measured bandwidth between tracks.
 
+In streaming mode the element also:
+
+- starts the prefetched `next` 50 ms before the current track ends, so there is no gap;
+- offers **Auto** and the CMAF ladder in the quality select; a manual pick holds for the
+  following tracks at their closest rendition at or below it (`state.renditions`,
+  `state.autoBitrate`);
+- with the `media-session` attribute, shows the track on the lock screen and in the OS media
+  controls and answers play/pause, seek, ±10 s and previous/next. Set it on the one element
+  that plays; a mirror never claims the session.
+
 ## Labels
 
 Every accessible name and visible label can be translated: set `labels` to any subset, the
