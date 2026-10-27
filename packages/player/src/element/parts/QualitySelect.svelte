@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { AUTO_QUALITY } from '../create-controller'
   import type { PlayerController } from '../player-controller'
 
   let { player }: { player: PlayerController } = $props()
@@ -9,8 +10,11 @@
   <select
     disabled={player.preparing}
     onchange={player.changeQuality}
-    value={player.effectiveBitrate}
+    value={player.autoQuality ? AUTO_QUALITY : player.effectiveBitrate}
   >
+    {#if player.autoQuality !== null}
+      <option value={AUTO_QUALITY}>{player.labels.qualityAuto}</option>
+    {/if}
     {#each player.renditions as rendition (rendition.bitrate)}
       <option value={rendition.bitrate}>{rendition.label}</option>
     {/each}

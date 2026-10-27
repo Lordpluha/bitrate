@@ -131,6 +131,44 @@ describe('<bitrate-player> CMAF path', () => {
     await expect.poll(() => element.state.currentTime, { timeout: 5_000 }).toBeGreaterThan(0.5)
   })
 
+  it('lets the listener pin a rendition and go back to Auto', async () => {
+    configureCmafEngine({ storage: fastConnection() })
+    const { bitrates, element } = await mountCmaf({})
+    element.chrome = 'bar'
+    await element.play()
+
+    const select = await vi.waitFor(() => {
+      const found = element.shadowRoot?.querySelector('select')
+      if (!(found instanceof HTMLSelectElement)) throw new Error('quality select not shown yet')
+      return found
+    })
+    expect([...select.options].map((option) => option.textContent?.trim())).toEqual([
+      'Auto',
+      '64 kbps',
+      '192 kbps',
+    ])
+    expect(select.value).toBe('auto')
+
+    select.value = '64'
+    select.dispatchEvent(new Event('change', { bubbles: true }))
+    await expect.poll(() => element.state.autoBitrate).toBe(false)
+    await expect.poll(() => bitrates.at(-1), { timeout: 5_000 }).toBe(64)
+
+    /** The pin carries over to the next play instead of reopening on the top rung. */
+    element.source = { key: 'k2', trackId: 't2', progressiveUrl: '' }
+    await expect.poll(() => element.state.key).toBe('k2')
+    await expect.poll(() => element.state.bitrate).toBe(64)
+    expect(element.state.autoBitrate).toBe(false)
+
+    /** The select re-renders for the new track's ladder; take the current one. */
+    const current = element.shadowRoot?.querySelector('select')
+    if (!(current instanceof HTMLSelectElement)) throw new Error('quality select missing')
+    expect(current.value).toBe('64')
+    current.value = 'auto'
+    current.dispatchEvent(new Event('change', { bubbles: true }))
+    await expect.poll(() => element.state.autoBitrate).toBe(true)
+  })
+
   it('opens on the top rung and drops to the floor once fragments arrive too slowly', async () => {
     /**
      * A remembered 600 kbps affords 192 kbps to open with; 24 KB fragments taking 1.5 s

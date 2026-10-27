@@ -22,6 +22,8 @@ const IDLE_STATE: BitratePlayerStateDetail = {
   volume: 1,
   muted: false,
   bitrate: null,
+  renditions: [],
+  autoBitrate: true,
   error: null,
 }
 
@@ -114,5 +116,6 @@ export function createStreamingState(input: CreateStreamingStateInput) {
     seek: (seconds: number) => player?.seek(seconds),
     setVolume: (volume: number) => player?.setVolume(volume),
     setMuted: (muted: boolean) => player?.setMuted(muted),
+    setBitrate: (bitrate: number | null) => player?.setBitrate(bitrate),
   }
 }

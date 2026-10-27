@@ -49,6 +49,8 @@ type Slot = {
   loader: StreamLoader | null
   legacy: { destroy: () => void } | null
   bitrate: number | null
+  /** The CMAF ladder of the track in this slot, lowest first. */
+  renditions: number[]
 }
 
 type PendingPrefetch = {
@@ -90,6 +92,8 @@ export class SlotPlayer {
   private volume = 1
   private muted = false
   private error: BitratePlayerErrorDetail | null = null
+  /** The listener's manual rendition, carried over to the tracks that follow; `null` is Auto. */
+  private pinnedBitrate: number | null = null
   private destroyed = false
 
   constructor(input: SlotPlayerInput) {
@@ -124,6 +128,8 @@ export class SlotPlayer {
       volume: this.volume,
       muted: this.muted,
       bitrate: heard ? slot.bitrate : null,
+      renditions: heard ? slot.renditions : [],
+      autoBitrate: this.pinnedBitrate === null,
       error: this.error,
     }
   }
@@ -184,12 +190,27 @@ export class SlotPlayer {
     this.emit()
   }
 
-  /** Pins a CMAF rendition on the element being heard, or returns it to automatic with `null`. */
+  /**
+   * Pins a CMAF rendition, or returns to adaptive bitrate with `null`. The pin holds for the
+   * tracks that follow, at their closest rendition at or below it.
+   */
   setBitrate(bitrate: number | null): void {
-    const { loader } = this.slots[this.active]
+    this.pinnedBitrate = bitrate
+    for (const slot of this.slots) this.applyPin(slot)
+    this.emit()
+  }
+
+  private applyPin(slot: Slot): void {
+    const { loader } = slot
     if (!loader) return
-    if (bitrate === null) loader.setAutoBitrate()
-    else loader.setBitrate(bitrate)
+    if (this.pinnedBitrate === null) {
+      loader.setAutoBitrate()
+      return
+    }
+    const pinned = this.pinnedBitrate
+    const affordable = slot.renditions.filter((bitrate) => bitrate <= pinned)
+    const target = affordable.at(-1) ?? slot.renditions[0]
+    if (target !== undefined) loader.setBitrate(target)
   }
 
   destroy(): void {
@@ -202,7 +223,7 @@ export class SlotPlayer {
   }
 
   private emptySlot(media: HTMLAudioElement): Slot {
-    return { media, key: null, loader: null, legacy: null, bitrate: null }
+    return { media, key: null, loader: null, legacy: null, bitrate: null, renditions: [] }
   }
 
   private status(heard: boolean): BitratePlayerStateDetail['status'] {
@@ -309,6 +330,7 @@ export class SlotPlayer {
     slot.loader?.destroy()
     slot.loader = null
     slot.bitrate = null
+    slot.renditions = []
     slot.media.pause()
     slot.media.removeAttribute('src')
     slot.media.load()
@@ -454,6 +476,10 @@ export class SlotPlayer {
     })
 
     slot.loader = loader
+    slot.renditions = manifest.renditions
+      .map((rendition) => rendition.bitrate)
+      .sort((a, b) => a - b)
+    this.applyPin(slot)
     /** `onBitrateChange` reports switches only; the opening rendition is read once here. */
     slot.bitrate = loader.bitrate
     if (this.slots[this.active] === slot) this.emit()

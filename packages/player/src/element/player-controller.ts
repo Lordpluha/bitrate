@@ -48,6 +48,11 @@ export type PlayerController = {
   readonly volumeProgress: number
   readonly muted: boolean
   readonly effectiveBitrate: number | null
+  /**
+   * In streaming mode, whether adaptive bitrate is choosing (the select shows Auto); `null`
+   * on the resolveSource path, which has no Auto.
+   */
+  readonly autoQuality: boolean | null
   /** More than one rendition to choose between. */
   readonly showQuality: boolean
   readonly error: BitratePlayerErrorDetail | null

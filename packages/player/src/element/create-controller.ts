@@ -38,6 +38,9 @@ const percent = (value: number, total: number) =>
 
 const numberFrom = (event: Event) => Number((event.target as HTMLInputElement).value)
 
+/** The quality select's value for adaptive bitrate. */
+export const AUTO_QUALITY = 'auto'
+
 /** The legacy engine's state in the shape of the streaming `statechange` detail. */
 export function legacyStateDetail(legacy: LegacyState): BitratePlayerStateDetail {
   const { playbackState, computed } = legacy
@@ -49,6 +52,9 @@ export function legacyStateDetail(legacy: LegacyState): BitratePlayerStateDetail
     volume: playbackState.volume,
     muted: playbackState.muted,
     bitrate: playbackState.bitrate,
+    /** The resolveSource path offers the host's renditions, not a CMAF ladder or Auto. */
+    renditions: [],
+    autoBitrate: false,
     error: playbackState.error,
   }
 }
@@ -82,7 +88,13 @@ export function createPlayerController({
       return readView().repeatMode
     },
     get renditions() {
-      return readView().renditions
+      const state = live()
+      if (!state) return readView().renditions
+      const { labels } = readView()
+      return state.renditions.map((bitrate) => ({ bitrate, label: labels.qualityOption(bitrate) }))
+    },
+    get autoQuality() {
+      return live()?.autoBitrate ?? null
     },
     get callbacks() {
       return readView().callbacks
@@ -128,7 +140,8 @@ export function createPlayerController({
       return state ? state.bitrate : legacy.computed.effectiveBitrate
     },
     get showQuality() {
-      return live() ? false : legacy.computed.showQuality
+      const state = live()
+      return state ? state.renditions.length > 1 : legacy.computed.showQuality
     },
     get error() {
       const state = live()
@@ -157,7 +170,12 @@ export function createPlayerController({
       else legacy.onMuteToggle()
     },
     changeQuality: (event) => {
-      if (!live()) legacy.onQualityChange(event)
+      if (!live()) {
+        legacy.onQualityChange(event)
+        return
+      }
+      const { value } = event.target as HTMLSelectElement
+      streaming.setBitrate(value === AUTO_QUALITY ? null : Number(value))
     },
   }
 }

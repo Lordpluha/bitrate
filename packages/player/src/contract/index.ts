@@ -215,6 +215,10 @@ export type BitratePlayerStateDetail = {
   muted: boolean
   /** The CMAF rendition being downloaded, or `null` off the CMAF path. */
   bitrate: number | null
+  /** The bitrates the current CMAF track offers, lowest first; empty off the CMAF path. */
+  renditions: number[]
+  /** Whether adaptive bitrate picks the rendition, as opposed to the listener's pin. */
+  autoBitrate: boolean
   error: BitratePlayerErrorDetail | null
 }
 
@@ -248,6 +252,10 @@ export type BitratePlayerLabels = {
   openQueue: string
   openFull: string
   quality: string
+  /** The quality select's adaptive option. */
+  qualityAuto: string
+  /** A rendition in the quality select, from its bitrate in kbps. */
+  qualityOption: (kbps: number) => string
 }
 
 /** What a host sets on `labels`: any subset, including part of `repeat`. */

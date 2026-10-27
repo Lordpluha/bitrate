@@ -22,6 +22,8 @@ const DEFAULT_LABELS: BitratePlayerLabels = {
   openQueue: 'Open queue',
   openFull: 'Open full player',
   quality: 'Quality',
+  qualityAuto: 'Auto',
+  qualityOption: (kbps) => `${kbps} kbps`,
 }
 
 /** The host's labels over the defaults; a partial `repeat` keeps the missing modes. */
