@@ -1,35 +1,8 @@
 /**
- * The single-file CMAF manifest the API serves at `/tracks/{id}/manifest` (ADR-0020): every
- * rendition is one file, fetched fragment by fragment with HTTP `Range` requests.
+ * The manifest shape is wire data shared with hosts, so it lives in the contract; the engine
+ * adds only the loader-internal `ResolvedFragment`.
  */
-
-/**
- * Fragment entry as stored in the manifest: `[startTicks, durationTicks, offset, length]`.
- * Offsets are absolute byte positions inside the rendition file.
- */
-type ManifestFragment = readonly [
-  startTicks: number,
-  durationTicks: number,
-  offset: number,
-  length: number,
-]
-
-export type ManifestRendition = {
-  bitrate: number
-  codec: string
-  size: number
-  /** Inclusive byte range of the MSE initialization segment (`ftyp`+`moov`). */
-  initRange: readonly [number, number]
-  fragments: readonly ManifestFragment[]
-}
-
-export type TrackManifest = {
-  version: 1
-  timescale: number
-  durationTicks: number
-  durationMs: number
-  renditions: readonly ManifestRendition[]
-}
+export type { ManifestRendition, TrackManifest } from '../../contract'
 
 /** A fragment resolved against a rendition, ready to be requested. */
 export type ResolvedFragment = {

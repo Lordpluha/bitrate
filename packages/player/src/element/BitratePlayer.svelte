@@ -19,6 +19,12 @@
       onExpand: {},
       onPictureInPicture: {},
       onQueueOpen: {},
+      streaming: {},
+      source: {},
+      next: {},
+      volume: { type: 'Number', attribute: 'volume' },
+      muted: { type: 'Boolean', attribute: 'muted', reflect: true },
+      mirror: {},
     },
     extend: withPlayerProvider,
   }}
@@ -30,11 +36,13 @@
 
 <script lang="ts">
   import ChromeLayout from './layouts/ChromeLayout.svelte'
+  import { createPlayerController, legacyStateDetail } from './create-controller'
   import { resolveChrome } from './lib/controls'
   import { isPlayerProviderHost } from './player-context'
   import type { PlayerController } from './player-controller'
   import type { BitratePlayerProps } from './player-props'
   import { createPlayerEngineState } from './player-state.svelte'
+  import { createStreamingState } from './streaming-state.svelte'
 
   let {
     chrome = 'bar',
@@ -54,30 +62,66 @@
     onExpand = null,
     onPictureInPicture = null,
     onQueueOpen = null,
+    streaming = null,
+    source = null,
+    next = null,
+    volume = 1,
+    muted = false,
+    mirror = null,
   }: BitratePlayerProps = $props()
 
   let audioEl: HTMLAudioElement | undefined = $state(undefined)
+  /** The standby element streaming mode prefetches into; rendered only in that mode. */
+  let standbyEl: HTMLAudioElement | undefined = $state(undefined)
   let slotEl: HTMLElement | undefined = $state(undefined)
   /** True once the host composes its own parts; the built-in layout steps aside. */
   let composed = $state(false)
+  /** The controller of the root this one mirrors, once that root answers. */
+  let mirrored: PlayerController | null = $state.raw(null)
 
   function dispatch<T>(type: string, detail?: T): void {
     $host().dispatchEvent(new CustomEvent(type, { detail, bubbles: true, composed: true }))
   }
 
-  /** Rebinds host play()/pause() to the current engine — $host() must stay in this file. */
-  function exposeTransport(transport: { play: () => Promise<void>; pause: () => void }): void {
-    const host = $host() as HTMLElement & { play: () => Promise<void>; pause: () => void }
-    host.play = transport.play
-    host.pause = transport.pause
+  type HostTransport = {
+    play: () => Promise<void>
+    pause: () => void
+    seek: (seconds: number) => void
   }
 
-  const player = createPlayerEngineState({
+  /** Rebinds host play()/pause()/seek() to the engine in use — $host() must stay in this file. */
+  function exposeTransport(transport: Partial<HostTransport>): void {
+    const host = $host() as HTMLElement & HostTransport
+    if (transport.play) host.play = transport.play
+    if (transport.pause) host.pause = transport.pause
+    if (transport.seek) host.seek = transport.seek
+  }
+
+  const legacy = createPlayerEngineState({
     getAudioEl: () => audioEl,
     getResolveSource: () => resolveSource,
     getRenditions: () => renditions,
     dispatch,
     exposeTransport,
+  })
+
+  const live = createStreamingState({
+    getMedia: () => (audioEl && standbyEl ? [audioEl, standbyEl] : null),
+    getStreaming: () => streaming,
+    getSource: () => source,
+    getNext: () => next,
+    getVolume: () => volume,
+    getMuted: () => muted,
+    dispatch,
+  })
+
+  $effect(() => {
+    if (!live.active) return
+    exposeTransport({
+      play: async () => live.play(),
+      pause: () => live.pause(),
+      seek: (seconds) => live.seek(seconds),
+    })
   })
 
   const callbacks: PlayerController['callbacks'] = {
@@ -107,75 +151,51 @@
     },
   }
 
-  const controller: PlayerController = {
-    get trackTitle() {
-      return trackTitle
-    },
-    get artist() {
-      return artist
-    },
-    get coverUrl() {
-      return coverUrl
-    },
-    get isLiked() {
-      return isLiked
-    },
-    get isShuffled() {
-      return isShuffled
-    },
-    get repeatMode() {
-      return repeatMode
-    },
-    get renditions() {
-      return renditions
-    },
-    callbacks,
-    get playing() {
-      return player.computed.playing
-    },
-    get preparing() {
-      return player.computed.preparing
-    },
-    get canPlay() {
-      return !player.computed.preparing && player.computed.effectiveBitrate !== null
-    },
-    get currentTime() {
-      return player.playbackState.currentTime
-    },
-    get duration() {
-      return player.computed.safeDuration
-    },
-    get seekProgress() {
-      return player.computed.seekProgress
-    },
-    get volume() {
-      return player.playbackState.volume
-    },
-    get volumeProgress() {
-      return player.computed.volumeProgress
-    },
-    get muted() {
-      return player.playbackState.muted
-    },
-    get effectiveBitrate() {
-      return player.computed.effectiveBitrate
-    },
-    get showQuality() {
-      return player.computed.showQuality
-    },
-    get error() {
-      return player.playbackState.error
-    },
-    playPause: () => void player.onPlayPause(),
-    seek: player.onSeek,
-    setVolume: player.onVolume,
-    toggleMute: player.onMuteToggle,
-    changeQuality: player.onQualityChange,
-  }
+  const controller = createPlayerController({
+    readView: () => ({
+      trackTitle,
+      artist,
+      coverUrl,
+      isLiked,
+      isShuffled,
+      repeatMode,
+      renditions,
+      callbacks,
+    }),
+    hasSource: () => source !== null,
+    legacy,
+    streaming: live,
+  })
 
   /** Not named `host`: `$host` would then read as a store subscription to it. */
   const rootElement = $host()
-  if (isPlayerProviderHost(rootElement)) rootElement.providePlayer(controller)
+  exposeTransport({ seek: () => undefined })
+  if (isPlayerProviderHost(rootElement)) {
+    rootElement.providePlayer(controller)
+    rootElement.provideState(() => (live.active ? live.state : legacyStateDetail(legacy)))
+  }
+
+  /** A mirror renders the other root's controller and never plays anything itself. */
+  $effect(() => {
+    const target = mirror
+    if (!target || target === rootElement || !isPlayerProviderHost(target)) {
+      mirrored = null
+      return
+    }
+    let current = true
+    target.requestPlayer((answer) => {
+      if (current) mirrored = answer
+    })
+    return () => {
+      current = false
+    }
+  })
+
+  const shared = $derived(mirrored ?? controller)
+
+  $effect(() => {
+    if (isPlayerProviderHost(rootElement)) rootElement.providePlayer(shared)
+  })
 
   function syncComposed(): void {
     composed = slotEl instanceof HTMLSlotElement && slotEl.assignedElements().length > 0
@@ -192,6 +212,9 @@
 </script>
 
 <audio bind:this={audioEl} preload="none"></audio>
+{#if streaming}
+  <audio bind:this={standbyEl} preload="none"></audio>
+{/if}
 
 <!--
   A native slot for the host's part elements — `<svelte:element>`, since `<slot>` is Svelte's
@@ -201,7 +224,7 @@
 <svelte:element this={"slot"} bind:this={slotEl} />
 
 {#if !composed}
-  <ChromeLayout chrome={resolveChrome(chrome)} player={controller} />
+  <ChromeLayout chrome={resolveChrome(chrome)} player={shared} />
 {/if}
 
 <style>

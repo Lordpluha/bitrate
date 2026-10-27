@@ -1,8 +1,11 @@
 import type {
+  BitratePlayerElement,
   BitratePlayerRendition,
-  PlayerChrome,
   BitratePlayerRepeatMode,
+  BitratePlayerSource,
   BitratePlayerSourceResolver,
+  BitratePlayerStreaming,
+  PlayerChrome,
 } from '../contract'
 
 /** Props accepted by `<bitrate-player>` — mirrors the `customElement.props` map in `BitratePlayer.svelte`. */
@@ -24,4 +27,10 @@ export type BitratePlayerProps = {
   onExpand?: (() => void) | null
   onPictureInPicture?: (() => void) | null
   onQueueOpen?: (() => void) | null
+  streaming?: BitratePlayerStreaming | null
+  source?: BitratePlayerSource | null
+  next?: BitratePlayerSource | null
+  volume?: number
+  muted?: boolean
+  mirror?: BitratePlayerElement | null
 }

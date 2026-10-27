@@ -20,19 +20,22 @@ export type ConnectedPlayer = {
 export function connectPlayer(host: HTMLElement): ConnectedPlayer {
   /** `$state.raw`: the controller is a bag of getters a deep proxy would freeze. */
   let current: PlayerController | null = $state.raw(null)
+  /** Plain flag, not `current`: read right after dispatch, outside any reactive scope. */
+  let answered = false
 
   const request = () => {
     host.dispatchEvent(
       new PlayerContextRequestEvent((controller) => {
+        answered = true
         current = controller
       }),
     )
   }
 
   request()
-  if (!current) {
+  if (!answered) {
     void customElements.whenDefined(ROOT_TAG_NAME).then(() => {
-      if (!current && host.isConnected) request()
+      if (!answered && host.isConnected) request()
     })
   }
 

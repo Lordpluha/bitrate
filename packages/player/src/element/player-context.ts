@@ -4,6 +4,7 @@
  * host's light DOM and inside the root's own shadow tree, and the nearest root answers first.
  * Element-only: the contract stays free of DOM classes.
  */
+import type { BitratePlayerStateDetail } from '../contract'
 import type { PlayerController } from './player-controller'
 
 const PLAYER_CONTEXT = 'bitrate-player'
@@ -25,11 +26,27 @@ export class PlayerContextRequestEvent extends Event {
 
 /** A root element once `withPlayerProvider` has extended it. */
 export type PlayerProviderHost = HTMLElement & {
+  /** Hands every subscriber this controller, now and after any later `providePlayer`. */
   providePlayer: (controller: PlayerController) => void
+  /**
+   * Subscribes to this root's controller directly, without an event — how a mirror reaches
+   * the root it mirrors, which need not be its ancestor or even in its document.
+   */
+  requestPlayer: (callback: PlayerContextCallback) => void
+  /** Where the host's `state` getter reads from. */
+  provideState: (read: () => BitratePlayerStateDetail) => void
+  readonly state: BitratePlayerStateDetail | null
 }
 
-export function isPlayerProviderHost(element: HTMLElement): element is PlayerProviderHost {
-  return 'providePlayer' in element && typeof element.providePlayer === 'function'
+export function isPlayerProviderHost(element: unknown): element is PlayerProviderHost {
+  return (
+    typeof element === 'object' &&
+    element !== null &&
+    'providePlayer' in element &&
+    typeof element.providePlayer === 'function' &&
+    'requestPlayer' in element &&
+    typeof element.requestPlayer === 'function'
+  )
 }
 
 function isPlayerContextRequest(event: Event): event is PlayerContextRequestEvent {
@@ -41,29 +58,42 @@ type ElementConstructor = new () => HTMLElement
 /**
  * Extends the root's compiled custom-element class with the provider side. The listener is
  * attached in the constructor — at upgrade, before any child part connects — while the
- * controller only exists once the Svelte component mounts a microtask later, so requests that
- * arrive in between are queued and answered by `providePlayer`.
+ * controller only exists once the Svelte component mounts a microtask later, so a request that
+ * arrives in between is answered by `providePlayer`. Subscribers are kept, so a root that
+ * starts mirroring another hands its parts the mirrored controller.
  */
 export function withPlayerProvider(Base: ElementConstructor): new () => PlayerProviderHost {
   return class extends Base {
     #controller: PlayerController | null = null
-    #pending: PlayerContextCallback[] = []
+    #subscribers: PlayerContextCallback[] = []
+    #readState: (() => BitratePlayerStateDetail) | null = null
 
     constructor() {
       super()
       this.addEventListener(CONTEXT_REQUEST_EVENT, (event) => {
         if (!isPlayerContextRequest(event)) return
         event.stopPropagation()
-        if (this.#controller) event.callback(this.#controller)
-        else this.#pending.push(event.callback)
+        this.requestPlayer(event.callback)
       })
     }
 
+    get state(): BitratePlayerStateDetail | null {
+      return this.#readState?.() ?? null
+    }
+
+    requestPlayer(callback: PlayerContextCallback): void {
+      this.#subscribers.push(callback)
+      if (this.#controller) callback(this.#controller)
+    }
+
     providePlayer(controller: PlayerController): void {
+      if (this.#controller === controller) return
       this.#controller = controller
-      const pending = this.#pending
-      this.#pending = []
-      for (const callback of pending) callback(controller)
+      for (const callback of this.#subscribers) callback(controller)
+    }
+
+    provideState(read: () => BitratePlayerStateDetail): void {
+      this.#readState = read
     }
   }
 }

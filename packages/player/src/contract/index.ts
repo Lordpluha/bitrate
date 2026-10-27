@@ -100,6 +100,119 @@ export type BitratePlayerQualityChangeDetail = {
  */
 export type BitratePlayerRepeatMode = 'off' | 'all' | 'one'
 
+/**
+ * Fragment entry of the single-file CMAF manifest (ADR-0020):
+ * `[startTicks, durationTicks, offset, length]`, offsets absolute inside the rendition file.
+ */
+type ManifestFragment = readonly [
+  startTicks: number,
+  durationTicks: number,
+  offset: number,
+  length: number,
+]
+
+/** One rendition of a CMAF manifest — one file, fetched fragment by fragment. */
+export type ManifestRendition = {
+  bitrate: number
+  codec: string
+  size: number
+  /** Inclusive byte range of the MSE initialization segment (`ftyp`+`moov`). */
+  initRange: readonly [number, number]
+  fragments: readonly ManifestFragment[]
+}
+
+/** The manifest the API serves at `/tracks/{id}/manifest`. */
+export type TrackManifest = {
+  version: 1
+  timescale: number
+  durationTicks: number
+  durationMs: number
+  renditions: readonly ManifestRendition[]
+}
+
+/**
+ * One track the streaming element plays or prefetches. `key` identifies this *play* of the
+ * track — the same track queued twice gets two keys — and is what the element reports back in
+ * `statechange` and `ended`, and what the saved position is stored under.
+ */
+export type BitratePlayerSource = {
+  key: string
+  trackId: string
+  /** The plain audio file, the last fallback when neither CMAF nor HLS can play. */
+  progressiveUrl: string
+}
+
+/** One byte range of one rendition, as the CMAF loader asks for it. */
+export type BitratePlayerFetchRangeInput = {
+  trackId: string
+  bitrate: number
+  /** The rendition file's size from the manifest, for validating `Content-Range`. */
+  expectedSize: number
+  range: readonly [number, number]
+  signal: AbortSignal
+}
+
+/**
+ * Plays a track with no CMAF manifest (or no MSE) through the host's own legacy chain, such as
+ * hls.js and then the progressive file. The adapter owns that whole chain and calls
+ * `onFatalError` only once nothing in it can play.
+ */
+export type BitratePlayerLegacyAdapter = (input: {
+  media: HTMLMediaElement
+  /** The play's key, for saving the position across the adapter's own fallbacks. */
+  key: string
+  trackId: string
+  progressiveUrl: string
+  isPrefetch: boolean
+  onFatalError: () => void
+}) => { destroy: () => void }
+
+/** Where the element keeps each play's resume position (web-player: `sessionStorage`). */
+export type BitratePlayerPositionStore = {
+  save: (key: string, seconds: number) => void
+  restore: (key: string) => number | null
+  remove: (key: string) => void
+}
+
+/**
+ * Everything the streaming element needs from its host to play `source` and prefetch `next`:
+ * the manifest and byte ranges over the host's own authenticated client, an optional legacy
+ * adapter, resume storage, and whether the connection is constrained (data saver, 2G/3G).
+ */
+export type BitratePlayerStreaming = {
+  /** The track's CMAF manifest, or `null` for a track that has none. */
+  resolveManifest: (trackId: string) => Promise<TrackManifest | null>
+  fetchRange: (input: BitratePlayerFetchRangeInput) => Promise<ArrayBuffer>
+  legacy?: BitratePlayerLegacyAdapter
+  positions?: BitratePlayerPositionStore
+  isConstrained?: () => boolean
+  /** `crossorigin` for both media elements, e.g. `use-credentials` for cookie-authed media. */
+  crossOrigin?: 'anonymous' | 'use-credentials'
+}
+
+/** `status` of the streaming element; `idle` until a source is set. */
+export type BitratePlayerStatus = 'idle' | 'loading' | 'playing' | 'paused' | 'error'
+
+/** Detail of the `statechange` event — the element's playback state after every change. */
+export type BitratePlayerStateDetail = {
+  status: BitratePlayerStatus
+  /** The `key` of the source being heard, or `null`. */
+  key: string | null
+  currentTime: number
+  /** The media duration, or 0 while unknown. */
+  duration: number
+  volume: number
+  muted: boolean
+  /** The CMAF rendition being downloaded, or `null` off the CMAF path. */
+  bitrate: number | null
+  error: BitratePlayerErrorDetail | null
+}
+
+/** Detail of `ended` on the streaming element: which play just finished. */
+export type BitratePlayerEndedDetail = {
+  key: string
+}
+
 /** The custom element's dispatched event names — bubbling, composed, `detail` where noted. */
 export const BITRATE_PLAYER_EVENT = {
   PLAY: 'play',
@@ -107,6 +220,7 @@ export const BITRATE_PLAYER_EVENT = {
   ENDED: 'ended',
   ERROR: 'error',
   QUALITY_CHANGE: 'qualitychange',
+  STATE_CHANGE: 'statechange',
 } as const
 
 export type BitratePlayerEventName =
@@ -143,8 +257,25 @@ export interface BitratePlayerElement extends HTMLElement {
   onExpand: (() => void) | null
   onPictureInPicture: (() => void) | null
   onQueueOpen: (() => void) | null
+  /**
+   * Switches the element to streaming mode: two media elements, the CMAF path with adaptive
+   * bitrate, prefetch of `next` and an instant switch when `source` becomes it. Without it the
+   * element keeps the `resolveSource` path.
+   */
+  streaming: BitratePlayerStreaming | null
+  /** What plays now (streaming mode). Setting the key `next` held switches instantly. */
+  source: BitratePlayerSource | null
+  /** What to prefetch once the current track is near its end (streaming mode). */
+  next: BitratePlayerSource | null
+  volume: number
+  muted: boolean
+  /** Renders and controls another `<bitrate-player>` instead of playing anything itself. */
+  mirror: BitratePlayerElement | null
+  /** The current playback state; `statechange` fires whenever it changes. */
+  readonly state: BitratePlayerStateDetail
   play(): Promise<void>
   pause(): void
+  seek(seconds: number): void
 }
 
 /**
