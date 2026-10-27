@@ -159,7 +159,7 @@ predicate widened to the allowed statuses); a lost race is `409`.
 Agreed by the product owner on 2026-10-26:
 
 1. The artist publishes manually on Launch; there is no automatic publish on approval.
-2. The button reflects timing: "Publish now", or "Publish on <date, time> UTC" for a premiere.
+2. The button reflects timing: "Publish now", or "Publish on `<date, time>` UTC" for a premiere.
 3. Premiere precision: one UTC date and time for everyone.
 4. All-or-nothing: the release goes live only when every track converted.
 5. After release the artist can unpublish ("hide" = "remove") and republish.
