@@ -5,7 +5,7 @@ import type {
 } from '../contract'
 
 /** The optional host callbacks a control needs before it renders. */
-export type PlayerCallbacks = {
+type PlayerCallbacks = {
   onNext: (() => void) | null
   onPrevious: (() => void) | null
   onLikeToggle: (() => void) | null

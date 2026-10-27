@@ -6,9 +6,9 @@
  */
 import type { PlayerController } from './player-controller'
 
-export const PLAYER_CONTEXT = 'bitrate-player'
+const PLAYER_CONTEXT = 'bitrate-player'
 
-export const CONTEXT_REQUEST_EVENT = 'context-request'
+const CONTEXT_REQUEST_EVENT = 'context-request'
 
 type PlayerContextCallback = (controller: PlayerController) => void
 
