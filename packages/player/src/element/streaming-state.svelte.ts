@@ -38,6 +38,11 @@ export type CreateStreamingStateInput = {
 export function createStreamingState(input: CreateStreamingStateInput) {
   let player: SlotPlayer | null = $state.raw(null)
   let state: BitratePlayerStateDetail = $state.raw(IDLE_STATE)
+  /**
+   * A play/pause asked for before the `SlotPlayer` exists — the host may call `play()` right
+   * after assigning `streaming`, while the player is only created in the next effect flush.
+   */
+  let pendingIntent: 'play' | 'pause' | null = null
 
   $effect(() => {
     const media = input.getMedia()
@@ -58,6 +63,8 @@ export function createStreamingState(input: CreateStreamingStateInput) {
     untrack(() => {
       created.setVolume(input.getVolume())
       created.setMuted(input.getMuted())
+      if (pendingIntent === 'play') created.play()
+      pendingIntent = null
     })
     player = created
 
@@ -96,8 +103,14 @@ export function createStreamingState(input: CreateStreamingStateInput) {
     get state() {
       return state
     },
-    play: () => player?.play(),
-    pause: () => player?.pause(),
+    play: () => {
+      if (player) player.play()
+      else pendingIntent = 'play'
+    },
+    pause: () => {
+      if (player) player.pause()
+      else pendingIntent = 'pause'
+    },
     seek: (seconds: number) => player?.seek(seconds),
     setVolume: (volume: number) => player?.setVolume(volume),
     setMuted: (muted: boolean) => player?.setMuted(muted),

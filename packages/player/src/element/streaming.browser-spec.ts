@@ -45,6 +45,23 @@ describe('<bitrate-player> streaming mode', () => {
     document.body.replaceChildren()
   })
 
+  it('accepts play() and pause() straight after streaming is assigned, and keeps the last intent', async () => {
+    const { BITRATE_PLAYER_TAG_NAME, defineBitratePlayer } = await import('./index')
+    await defineBitratePlayer()
+    const playable = await source('k1')
+    const element = document.createElement(BITRATE_PLAYER_TAG_NAME)
+    element.chrome = 'none'
+    document.body.append(element)
+
+    /** No await from here: the component mounts a microtask after the element connects. */
+    element.streaming = streaming()
+    element.source = playable
+    expect(() => element.pause()).not.toThrow()
+    void element.play()
+
+    await expect.poll(() => element.state.status).toBe('playing')
+  })
+
   it('plays the source and reports its state with the play key', async () => {
     const element = await mountStreaming()
     const states: BitratePlayerStateDetail[] = []
