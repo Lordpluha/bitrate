@@ -61,7 +61,7 @@ export const LibraryPage = () => {
   }, [router, searchParams])
 
   return (
-    <div className="h-full overflow-y-auto px-4 pt-2 pb-3 custom-scrollbar md:px-8 md:py-6">
+    <div className="flex h-full flex-1 flex-col overflow-y-auto px-4 pt-2 pb-3 custom-scrollbar md:px-8 md:py-6">
       <div className="flex flex-col gap-5 md:gap-7">
         <div className="flex items-end justify-between gap-4">
           <div className="flex min-w-0 flex-col gap-1">
@@ -95,7 +95,7 @@ export const LibraryPage = () => {
         />
       </div>
 
-      <div className="mt-5 md:mt-7">
+      <div className="mt-5 flex flex-1 flex-col md:mt-7">
         {library.isPending ? (
           <div
             aria-label={t('library.loading')}

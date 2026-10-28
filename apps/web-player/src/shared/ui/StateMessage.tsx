@@ -57,10 +57,11 @@ export const StateMessage = ({
   <div
     aria-live={tone === 'error' ? 'assertive' : 'polite'}
     className={cn(
-      'flex flex-1 flex-col items-center justify-center px-4',
+      'flex flex-1 flex-col items-center justify-center self-stretch px-4',
       size === 'page' ? 'min-h-96' : 'min-h-0',
       className,
     )}
+    data-slot="state-message"
     role={tone === 'error' ? 'alert' : 'status'}
   >
     <div

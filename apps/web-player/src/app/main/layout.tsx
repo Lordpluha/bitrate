@@ -82,7 +82,9 @@ export default function MainLayout({ children }: PropsWithChildren) {
           {...leftResizeHandleProps}
         />
 
-        <main className="min-w-0 xl:overflow-hidden">{children}</main>
+        <main className="flex min-h-full min-w-0 flex-col xl:min-h-0 xl:overflow-hidden">
+          {children}
+        </main>
 
         {hasRightSidebar && (
           <hr
