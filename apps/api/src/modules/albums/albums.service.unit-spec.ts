@@ -41,7 +41,11 @@ describe('AlbumsService', () => {
       orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
       skip: 5,
       take: 5,
-      where: { deletedAt: null, title: { contains: 'rock', mode: 'insensitive' } },
+      where: {
+        deletedAt: null,
+        publishedAt: { not: null },
+        title: { contains: 'rock', mode: 'insensitive' },
+      },
       include: ALBUM_TRACKS_INCLUDE,
     })
     expect(result).toEqual({ data: albums, total: 1, page: 2, limit: 5 })
@@ -57,7 +61,11 @@ describe('AlbumsService', () => {
       orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
       skip: 0,
       take: 10,
-      where: { deletedAt: null, title: { contains: 'RoCk', mode: 'insensitive' } },
+      where: {
+        deletedAt: null,
+        publishedAt: { not: null },
+        title: { contains: 'RoCk', mode: 'insensitive' },
+      },
       include: ALBUM_TRACKS_INCLUDE,
     })
     expect(result).toEqual({ data: albums, total: 1, page: 1, limit: 10 })
@@ -73,7 +81,7 @@ describe('AlbumsService', () => {
       orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
       skip: 0,
       take: 10,
-      where: { deletedAt: null },
+      where: { deletedAt: null, publishedAt: { not: null } },
       include: ALBUM_TRACKS_INCLUDE,
     })
     expect(result).toEqual({ data: albums, total: 1, page: 1, limit: 10 })
@@ -89,7 +97,7 @@ describe('AlbumsService', () => {
       orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
       skip: 0,
       take: 10,
-      where: { deletedAt: null },
+      where: { deletedAt: null, publishedAt: { not: null } },
       include: ALBUM_TRACKS_INCLUDE,
     })
     expect(result).toEqual({ data: albums, total: 1, page: 1, limit: 10 })
@@ -102,7 +110,7 @@ describe('AlbumsService', () => {
     const result = await service.getById('album-1')
 
     expect(prisma.album.findFirst).toHaveBeenCalledWith({
-      where: { id: 'album-1', deletedAt: null },
+      where: { id: 'album-1', deletedAt: null, publishedAt: { not: null } },
       include: ALBUM_TRACKS_INCLUDE,
     })
     expect(result).toEqual(album)
@@ -136,7 +144,7 @@ describe('AlbumsService', () => {
     const result = await service.getById('album-unknown')
 
     expect(prisma.album.findFirst).toHaveBeenCalledWith({
-      where: { id: 'album-unknown', deletedAt: null },
+      where: { id: 'album-unknown', deletedAt: null, publishedAt: { not: null } },
       include: ALBUM_TRACKS_INCLUDE,
     })
     expect(result).toBeNull()
@@ -328,14 +336,14 @@ describe('AlbumsService', () => {
     const result = await service.findLiked('user-1', { page: 2, limit: 5 })
 
     expect(prisma.userLikedAlbum.findMany).toHaveBeenCalledWith({
-      where: { userId: 'user-1', album: { deletedAt: null } },
+      where: { userId: 'user-1', album: { deletedAt: null, publishedAt: { not: null } } },
       include: { album: { include: ALBUM_TRACKS_INCLUDE } },
       orderBy: [{ createdAt: 'desc' }, { albumId: 'desc' }],
       skip: 5,
       take: 5,
     })
     expect(prisma.userLikedAlbum.count).toHaveBeenCalledWith({
-      where: { userId: 'user-1', album: { deletedAt: null } },
+      where: { userId: 'user-1', album: { deletedAt: null, publishedAt: { not: null } } },
     })
     expect(result).toEqual({
       data: [{ ...album, tracks: [], likedAt }],
@@ -398,7 +406,10 @@ describe('AlbumsService', () => {
 
       expect(prisma.albumTrack.findMany).toHaveBeenCalledWith(
         expect.objectContaining({
-          where: { trackId: { in: [TRACK_A] }, album: { deletedAt: null } },
+          where: {
+            trackId: { in: [TRACK_A] },
+            album: { deletedAt: null, publishedAt: { not: null } },
+          },
         }),
       )
     })

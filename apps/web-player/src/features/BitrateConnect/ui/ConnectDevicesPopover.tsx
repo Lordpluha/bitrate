@@ -4,6 +4,7 @@ import { cn, Popover, PopoverContent, PopoverTrigger } from '@bitrate/ui-react'
 import { Laptop, MonitorSpeaker, Smartphone, Speaker } from 'lucide-react'
 import { useState } from 'react'
 import { Z_INDEX_CLASS } from '@/shared/constants'
+import { useI18n } from '@/shared/i18n'
 import { formatRelativeTime } from '@/shared/utils/formatRelativeTime'
 import { usePlayerDevices } from '../api/connectApi'
 import { readThisDeviceId } from '../lib/thisDevice'
@@ -31,6 +32,7 @@ export const ConnectDevicesPopover = ({
   iconSize = 22,
   triggerClassName,
 }: ConnectDevicesPopoverProps) => {
+  const { locale, t } = useI18n()
   const [isOpen, setIsOpen] = useState(false)
   const { data, isError, isPending } = usePlayerDevices(isOpen)
   const thisDeviceId = isOpen ? readThisDeviceId() : null
@@ -38,7 +40,7 @@ export const ConnectDevicesPopover = ({
   return (
     <Popover onOpenChange={setIsOpen} open={isOpen}>
       <PopoverTrigger
-        aria-label="Open Bitrate Connect"
+        aria-label={t('connect.open')}
         className={triggerClassName}
       >
         <MonitorSpeaker aria-hidden="true" size={iconSize} />
@@ -47,31 +49,31 @@ export const ConnectDevicesPopover = ({
         align="end"
         className={cn(
           Z_INDEX_CLASS.popover,
-          'w-[min(20rem,calc(100vw-2rem))] rounded-md border border-border bg-popover p-0 text-text shadow-2xl',
+          'w-[min(20rem,calc(100vw-2rem))] rounded-md border border-border bg-popover p-0 text-foreground shadow-2xl',
         )}
         positionerClassName={Z_INDEX_CLASS.popover}
         sideOffset={8}
       >
         <div className="border-b border-border px-4 py-3">
           <h2 className="font-bold">Bitrate Connect</h2>
-          <p className="text-xs leading-5 text-text-subdued">
-            Sign in on another device to continue this queue there.
+          <p className="text-xs leading-5 text-muted-foreground">
+            {t('connect.description')}
           </p>
         </div>
         <div className="max-h-80 overflow-y-auto p-2 custom-scrollbar">
           {isPending ? (
             <p
-              className="px-3 py-6 text-center text-sm text-text-subdued"
+              className="px-3 py-6 text-center text-sm text-muted-foreground"
               role="status"
             >
-              Loading devices…
+              {t('connect.loading')}
             </p>
           ) : isError ? (
             <p
-              className="px-3 py-6 text-center text-sm text-text-subdued"
+              className="px-3 py-6 text-center text-sm text-muted-foreground"
               role="status"
             >
-              Devices are unavailable right now.
+              {t('connect.unavailable')}
             </p>
           ) : (
             <ul className="grid gap-1">
@@ -86,19 +88,26 @@ export const ConnectDevicesPopover = ({
                     <Icon
                       aria-hidden="true"
                       className={
-                        device.isActive ? 'text-primary' : 'text-text-subdued'
+                        device.isActive
+                          ? 'text-primary'
+                          : 'text-muted-foreground'
                       }
                       size={20}
                     />
                     <div className="min-w-0 flex-1">
                       <p className="truncate text-sm font-bold">
                         {device.name}
-                        {isThisDevice ? ' · This browser' : ''}
+                        {isThisDevice ? t('connect.thisBrowser') : ''}
                       </p>
-                      <p className="text-xs text-text-subdued">
+                      <p className="text-xs text-muted-foreground">
                         {device.isActive
-                          ? 'Playing here last'
-                          : `Seen ${formatRelativeTime({ date: device.lastSeenAt })}`}
+                          ? t('connect.playingHere')
+                          : t('connect.seen', {
+                              time: formatRelativeTime({
+                                date: device.lastSeenAt,
+                                locale,
+                              }),
+                            })}
                       </p>
                     </div>
                   </li>

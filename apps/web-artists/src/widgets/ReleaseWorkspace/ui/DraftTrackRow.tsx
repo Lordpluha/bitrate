@@ -1,6 +1,6 @@
 import { Button } from '@bitrate/ui-react'
 import { trackStatusLabels, trackVersionLabels } from '@entities/music'
-import { releaseAudioUrl } from '@entities/release'
+import { TrackPlayer } from '@entities/release'
 import { ArrowDown, ArrowUp, CircleAlert, Music2 } from 'lucide-react'
 import {
   audioLabel,
@@ -18,6 +18,8 @@ interface TrackReorder {
 
 interface DraftTrackRowProps {
   releaseId: string
+  /** Release artwork shown by the player; null until a cover is uploaded. */
+  coverUrl: string | null
   track: TrackDraft
   index: number
   count: number
@@ -30,6 +32,7 @@ interface DraftTrackRowProps {
 /** One uploaded recording of a release, with its audio and draft actions. */
 export function DraftTrackRow({
   releaseId,
+  coverUrl,
   track,
   index,
   count,
@@ -83,16 +86,13 @@ export function DraftTrackRow({
           <span className="truncate">{audioLabel(track)}</span>
         </p>
         {track.hasAudio && (
-          <audio
-            aria-label={`Play ${track.title}`}
-            className="mt-2 w-full max-w-md"
-            controls
-            crossOrigin="use-credentials"
-            preload="none"
-            src={releaseAudioUrl(releaseId, track.id)}
-          >
-            <track kind="captions" />
-          </audio>
+          <TrackPlayer
+            className="mt-2"
+            coverUrl={coverUrl}
+            releaseId={releaseId}
+            title={track.title}
+            trackId={track.id}
+          />
         )}
       </div>
       <span className="artist-release-track-status" data-status={track.status}>

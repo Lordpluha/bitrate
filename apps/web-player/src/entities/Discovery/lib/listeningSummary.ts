@@ -1,3 +1,5 @@
+import type { I18n } from '@shared/i18n'
+import { formatNumber } from '@shared/utils/formatNumber'
 import type { z } from 'zod'
 import type {
   topArtistsSchema,
@@ -16,11 +18,10 @@ export type ListeningStat = {
 
 type SummarizeListeningInput = {
   artists: TopArtists
+  /** The tiles' labels and numbers follow the app locale. */
+  i18n: I18n
   tracks: TopTracks
 }
-
-const formatPlays = (plays: number) =>
-  `${plays.toLocaleString('en-US')} ${plays === 1 ? 'play' : 'plays'}`
 
 /**
  * The stat tiles the API can back: how many tracks and artists were played in the window
@@ -28,32 +29,38 @@ const formatPlays = (plays: number) =>
  */
 export const summarizeListening = ({
   artists,
+  i18n: { locale, t, tp },
   tracks,
 }: SummarizeListeningInput): ListeningStat[] | null => {
   const [topArtist] = artists.data
   const [topTrack] = tracks.data
   if (!topArtist || !topTrack) return null
 
+  const formatPlays = (count: number) => tp({ count, key: 'stats.plays' })
+
   return [
     {
-      label: 'Tracks',
-      sub: 'tracks played',
-      value: tracks.total.toLocaleString('en-US'),
+      label: t('stats.tracks'),
+      sub: t('stats.tracksPlayed'),
+      value: formatNumber({ locale, value: tracks.total }),
     },
     {
-      label: 'Artists',
-      sub: 'artists played',
-      value: artists.total.toLocaleString('en-US'),
+      label: t('stats.artists'),
+      sub: t('stats.artistsPlayed'),
+      value: formatNumber({ locale, value: artists.total }),
     },
     {
-      label: 'Top artist',
+      label: t('stats.topArtist'),
       sub: formatPlays(topArtist.plays),
       value: topArtist.username,
     },
     {
-      label: 'Top track',
+      label: t('stats.topTrack'),
       sub: topTrack.artist
-        ? `${formatPlays(topTrack.plays)} · ${topTrack.artist.username}`
+        ? t('stats.playsBy', {
+            artist: topTrack.artist.username,
+            plays: formatPlays(topTrack.plays),
+          })
         : formatPlays(topTrack.plays),
       value: topTrack.title,
     },

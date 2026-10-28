@@ -10,7 +10,7 @@ export const ProfileDetailsSection = () => {
   return (
     <SettingsSection title={t('settings.profile')}>
       <form className="grid max-w-160 gap-4" onSubmit={profile.handleSubmit}>
-        <label className="grid gap-2 text-sm text-text">
+        <label className="grid gap-2 text-sm text-foreground">
           {t('settings.profile.username')}
           <input
             className="h-10 rounded-md border border-border bg-background px-3 text-sm text-foreground outline-none placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring"
@@ -21,7 +21,7 @@ export const ProfileDetailsSection = () => {
             value={profile.username}
           />
         </label>
-        <label className="grid gap-2 text-sm text-text">
+        <label className="grid gap-2 text-sm text-foreground">
           {t('settings.profile.description')}
           <textarea
             className="min-h-24 rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground outline-none placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring"

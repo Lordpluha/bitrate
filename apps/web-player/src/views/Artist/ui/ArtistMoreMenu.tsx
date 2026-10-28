@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from 'react'
 import { ReportDialog } from '@/features/Report'
 import { showApiErrorToast, showApiSuccessToast } from '@/shared/api/feedback'
 import { Z_INDEX_CLASS } from '@/shared/constants'
+import { useI18n } from '@/shared/i18n'
 import { ROUTES } from '@/shared/routes'
 import { MenuItem } from '@/shared/ui'
 
@@ -19,6 +20,7 @@ export const ArtistMoreMenu = ({
   artistId,
   artistName,
 }: ArtistMoreMenuProps) => {
+  const { t } = useI18n()
   const [isOpen, setIsOpen] = useState(false)
   const [isReportOpen, setIsReportOpen] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
@@ -49,9 +51,9 @@ export const ArtistMoreMenu = ({
       await navigator.clipboard.writeText(
         new URL(ROUTES.artist(artistId), window.location.origin).href,
       )
-      showApiSuccessToast('Link copied to clipboard')
+      showApiSuccessToast(t('playlist.linkCopied'))
     } catch (error) {
-      showApiErrorToast(error, 'Failed to copy link')
+      showApiErrorToast(error, t('playlist.copyFailed'))
     } finally {
       setIsOpen(false)
     }
@@ -62,7 +64,7 @@ export const ArtistMoreMenu = ({
       <button
         aria-expanded={isOpen}
         aria-haspopup="menu"
-        aria-label={`More options for ${artistName}`}
+        aria-label={t('friends.moreOptions', { name: artistName })}
         className="flex text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
         onClick={() => setIsOpen((open) => !open)}
         type="button"
@@ -71,21 +73,21 @@ export const ArtistMoreMenu = ({
       </button>
       {isOpen ? (
         <div
-          aria-label={`${artistName} actions`}
+          aria-label={t('artist.actions', { name: artistName })}
           className={cn(
             Z_INDEX_CLASS.dropdownMenu,
-            'absolute left-0 top-[calc(100%+8px)] w-56 max-w-[calc(100vw-2rem)] rounded-md bg-popover p-1 text-sm text-text shadow-2xl',
+            'absolute left-0 top-[calc(100%+8px)] w-56 max-w-[calc(100vw-2rem)] rounded-md bg-popover p-1 text-sm text-foreground shadow-2xl',
           )}
           role="menu"
         >
           <MenuItem
             icon={<Link2 size={17} />}
-            label="Copy link to artist"
+            label={t('artist.copyLink')}
             onClick={() => void copyLink()}
           />
           <MenuItem
             icon={<Flag size={17} />}
-            label="Report"
+            label={t('playlist.report')}
             onClick={() => {
               setIsOpen(false)
               setIsReportOpen(true)

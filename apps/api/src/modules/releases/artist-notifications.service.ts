@@ -26,6 +26,7 @@ type NotificationKind =
   | 'RELEASE_SUBMITTED'
   | 'RELEASE_APPROVED'
   | 'RELEASE_RELEASED'
+  | 'PUBLISH_FAILED'
   | 'DELIVERY_LIVE'
 
 /** Which switchable category each derived notification belongs to. */
@@ -37,6 +38,7 @@ const CATEGORY_OF = {
   RELEASE_APPROVED: ArtistNotificationCategory.REVIEW,
   DELIVERY_FAILED: ArtistNotificationCategory.DELIVERY,
   RELEASE_RELEASED: ArtistNotificationCategory.DELIVERY,
+  PUBLISH_FAILED: ArtistNotificationCategory.DELIVERY,
   DELIVERY_LIVE: ArtistNotificationCategory.DELIVERY,
 } as const satisfies Record<NotificationKind, ArtistNotificationCategory>
 
@@ -132,7 +134,7 @@ export class ArtistNotificationsService {
       },
       orderBy: { dueAt: 'asc' },
       take: NOTIFICATION_LIMIT,
-      select: { id: true, title: true, dueAt: true, release: RELEASE_REF },
+      select: { id: true, title: true, dueAt: true, createdAt: true, release: RELEASE_REF },
     })
   }
 
@@ -154,7 +156,10 @@ export class ArtistNotificationsService {
       )
     }
     if (!muted.has(ArtistNotificationCategory.DELIVERY)) {
-      releaseFilters.push({ status: ReleaseStatus.RELEASED, updatedAt: { gte: since } })
+      releaseFilters.push(
+        { status: ReleaseStatus.RELEASED, updatedAt: { gte: since } },
+        { status: ReleaseStatus.PUBLISH_FAILED },
+      )
     }
     if (releaseFilters.length === 0) return none<ReleaseUpdate>()
     return this.prisma.release.findMany({
@@ -198,6 +203,7 @@ interface DueTask {
   id: string
   title: string
   dueAt: Date | null
+  createdAt: Date
   release: ReleaseRef
 }
 
@@ -222,6 +228,9 @@ const none = <T>(): Promise<T[]> => Promise.resolve([])
 function taskNotification(task: DueTask, now: Date): ArtistNotification[] {
   if (!task.dueAt) return []
   const overdue = task.dueAt < now
+  // A due-soon task notifies from the moment it entered the 48-hour window; a task created
+  // already inside the window or past its deadline notifies from its creation instead.
+  const reached = overdue ? task.dueAt : new Date(task.dueAt.getTime() - DUE_SOON_MS)
   return [
     {
       id: `task-${task.id}-${overdue ? 'overdue' : 'soon'}`,
@@ -230,8 +239,7 @@ function taskNotification(task: DueTask, now: Date): ArtistNotification[] {
       taskTitle: task.title,
       releaseId: task.release.id,
       releaseTitle: task.release.title,
-      // A due-soon task notifies from the moment it entered the 48-hour window.
-      at: overdue ? task.dueAt : new Date(task.dueAt.getTime() - DUE_SOON_MS),
+      at: reached > task.createdAt ? reached : task.createdAt,
     },
   ]
 }
@@ -248,6 +256,11 @@ const RELEASE_NOTICES: Partial<
   },
   [ReleaseStatus.READY]: { suffix: 'approved', kind: 'RELEASE_APPROVED', actionRequired: false },
   [ReleaseStatus.RELEASED]: { suffix: 'released', kind: 'RELEASE_RELEASED', actionRequired: false },
+  [ReleaseStatus.PUBLISH_FAILED]: {
+    suffix: 'publish-failed',
+    kind: 'PUBLISH_FAILED',
+    actionRequired: false,
+  },
 }
 
 function releaseNotification(item: ReleaseUpdate): ArtistNotification[] {

@@ -1,3 +1,4 @@
+import { ReleaseEntity } from '@modules/releases/entities/release.entity'
 import { applyDecorators, HttpStatus } from '@nestjs/common'
 import {
   ApiBody,
@@ -66,6 +67,38 @@ export function ApproveReleaseSwagger() {
     }),
     ApiBody({ type: ApproveReleaseDto }),
     ...decisionResponses,
+  )
+}
+
+export function RetryReleasePublishingSwagger() {
+  return applyDecorators(
+    ApiOperation({
+      summary: 'Retry publishing a release',
+      description:
+        'PUBLISH_FAILED -> PUBLISHING. Converted tracks are kept; failed ones are converted again. Recorded in the audit log. Requires releases:review.',
+    }),
+    idParam,
+    ApiResponse({ status: HttpStatus.OK, type: ReleaseEntity }),
+    ApiResponse({
+      status: HttpStatus.CONFLICT,
+      description: 'Release changed or its publishing has not failed',
+    }),
+  )
+}
+
+export function TakeDownReleaseSwagger() {
+  return applyDecorators(
+    ApiOperation({
+      summary: 'Take a release offline on Bitrate',
+      description:
+        'RELEASED or artist-hidden UNPUBLISHED -> UNPUBLISHED by Bitrate (moderation, rights claims). The artist cannot publish it again. Recorded in the audit log. Requires releases:review.',
+    }),
+    idParam,
+    ApiResponse({ status: HttpStatus.OK, type: ReleaseEntity }),
+    ApiResponse({
+      status: HttpStatus.CONFLICT,
+      description: 'Release changed or is not live on Bitrate',
+    }),
   )
 }
 

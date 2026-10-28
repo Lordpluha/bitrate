@@ -1,12 +1,19 @@
 import { PrismaService } from '@infra/prisma/prisma.service'
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common'
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common'
 import type { Prisma } from '@prisma/client'
 import type { AddReleaseContributorDto } from './dtos/add-release-contributor.dto'
+import type { ReleaseDraftVersionDto } from './dtos/release-media.dto'
 import type { ReplaceReleaseSplitsDto } from './dtos/replace-release-splits.dto'
 import type { UpdateReleaseContributorDto } from './dtos/update-release-contributor.dto'
 import type { UpdateReleaseRightsDto } from './dtos/update-release-rights.dto'
 import { RELEASE_ERRORS } from './errors'
 import { lockOwnedDraft } from './release-draft-lock'
+import { type CreditedArtist, creditArtistAlone } from './release-solo-credit'
 import { RELEASE_CONTRIBUTOR_SELECT, RELEASE_SUMMARY_SELECT } from './releases.select'
 
 /** A credit change invalidates both rights confirmations. */
@@ -88,14 +95,54 @@ export class ReleaseCreditsService {
     })
   }
 
+  /** Restores the solo credit on a draft left without credits, such as one made before it existed. */
+  creditSelf(owner: CreditedArtist, id: string, input: ReleaseDraftVersionDto) {
+    return this.prisma.$transaction(async (tx) => {
+      const release = await lockOwnedDraft(
+        tx,
+        owner.id,
+        id,
+        input.expectedUpdatedAt,
+        CLEARED_CONFIRMATIONS,
+      )
+      // Existing credits carry shares the artist divided on purpose; never overwrite them.
+      if ((await tx.releaseContributor.count({ where: { releaseId: id } })) > 0) {
+        throw new ConflictException(RELEASE_ERRORS.CREDITS_NOT_EMPTY)
+      }
+      const participant = await creditArtistAlone(tx, id, owner)
+      return { release, participant: toParticipant(participant) }
+    })
+  }
+
+  /** Removes a credit; its shares go with it, and its tasks become unassigned. */
+  removeContributor(
+    ownerArtistId: string,
+    id: string,
+    contributorId: string,
+    input: ReleaseDraftVersionDto,
+  ) {
+    return this.prisma.$transaction(async (tx) => {
+      const release = await lockOwnedDraft(
+        tx,
+        ownerArtistId,
+        id,
+        input.expectedUpdatedAt,
+        CLEARED_CONFIRMATIONS,
+      )
+      const { count } = await tx.releaseContributor.deleteMany({
+        where: { id: contributorId, releaseId: id },
+      })
+      if (count === 0) throw new NotFoundException(RELEASE_ERRORS.CREDIT_NOT_FOUND)
+      return { release, contributorId }
+    })
+  }
+
   updateRights(ownerArtistId: string, id: string, input: UpdateReleaseRightsDto) {
-    const confirmedAt = new Date()
     return this.prisma.$transaction((tx) =>
       lockOwnedDraft(tx, ownerArtistId, id, input.expectedUpdatedAt, {
         masterOwnerType: input.masterOwner?.type ?? null,
         masterOwnerName: input.masterOwner?.type === 'OTHER' ? input.masterOwner.name : null,
-        writersConfirmedAt: input.writersConfirmed ? confirmedAt : null,
-        accuracyConfirmedAt: input.accuracyConfirmed ? confirmedAt : null,
+        writersConfirmedAt: input.writersConfirmed ? new Date() : null,
       }),
     )
   }

@@ -5,7 +5,7 @@ import { selectCurrentTrack, usePlayerStore } from '@entities/Player'
 import { LegalReacceptanceDialog } from '@features/Auth/ui/LegalReacceptanceDialog'
 import { BitrateConnectSync } from '@features/BitrateConnect'
 import { AccountSettingsSync } from '@features/SyncSettings'
-import { LeftSidebar, MobileCreatePlaylistSheet } from '@widgets/LeftSidebar'
+import { LeftSidebar } from '@widgets/LeftSidebar'
 import { MainHeader } from '@widgets/MainHeader'
 import { MobileIsland } from '@widgets/MobileIsland'
 import { Player } from '@widgets/Player'
@@ -17,7 +17,6 @@ import { useMainShellResize } from './useMainShellResize'
 export default function MainLayout({ children }: PropsWithChildren) {
   const currentTrack = usePlayerStore(selectCurrentTrack)
   const hasPlayer = !!currentTrack
-  const [isMobileCreateOpen, setIsMobileCreateOpen] = useState(false)
   const [isPlayerExpanded, setIsPlayerExpanded] = useState(false)
   const {
     gridTemplateColumns,
@@ -38,8 +37,8 @@ export default function MainLayout({ children }: PropsWithChildren) {
   } = useMainShellResize({ hasPlayer })
 
   return (
-    <div className="h-dvh overflow-hidden bg-background text-text xl:flex xl:h-screen xl:flex-col xl:gap-3 xl:p-4">
-      <MainHeader onCreate={() => setIsMobileCreateOpen(true)} />
+    <div className="h-dvh overflow-hidden bg-background text-foreground xl:flex xl:h-screen xl:flex-col xl:gap-3 xl:p-4">
+      <MainHeader />
       <LegalReacceptanceDialog />
       <BitrateConnectSync />
       <AccountSettingsSync />
@@ -78,7 +77,7 @@ export default function MainLayout({ children }: PropsWithChildren) {
           aria-valuemax={leftResizeLimits.max}
           aria-valuemin={leftResizeLimits.min}
           aria-valuenow={Math.round(leftResizeLimits.value)}
-          className="relative hidden h-full w-full cursor-col-resize border-0 bg-transparent outline-none before:absolute before:left-1/2 before:top-0 before:h-full before:w-px before:-translate-x-1/2 before:bg-transparent before:transition-colors hover:before:bg-white/25 focus-visible:before:bg-white/40 active:before:bg-primary xl:block"
+          className="relative hidden h-full w-full cursor-col-resize border-0 bg-transparent outline-none before:absolute before:left-1/2 before:top-0 before:h-full before:w-px before:-translate-x-1/2 before:bg-transparent before:transition-colors hover:before:bg-border focus-visible:before:bg-ring active:before:bg-primary xl:block"
           tabIndex={0}
           {...leftResizeHandleProps}
         />
@@ -93,7 +92,7 @@ export default function MainLayout({ children }: PropsWithChildren) {
             aria-valuemin={rightResizeLimits.min}
             aria-valuenow={Math.round(rightResizeLimits.value)}
             className={cn(
-              'relative h-full w-full cursor-col-resize border-0 bg-transparent outline-none before:absolute before:left-1/2 before:top-0 before:h-full before:w-px before:-translate-x-1/2 before:bg-transparent before:transition-colors hover:before:bg-white/25 focus-visible:before:bg-white/40 active:before:bg-primary',
+              'relative h-full w-full cursor-col-resize border-0 bg-transparent outline-none before:absolute before:left-1/2 before:top-0 before:h-full before:w-px before:-translate-x-1/2 before:bg-transparent before:transition-colors hover:before:bg-border focus-visible:before:bg-ring active:before:bg-primary',
               isRightSidebarCollapsed && 'cursor-default hover:bg-transparent',
             )}
             tabIndex={0}
@@ -120,10 +119,6 @@ export default function MainLayout({ children }: PropsWithChildren) {
         )}
       </div>
 
-      <MobileCreatePlaylistSheet
-        isOpen={isMobileCreateOpen}
-        onOpenChange={setIsMobileCreateOpen}
-      />
       {!isPlayerExpanded && (
         <MobileIsland
           className="xl:hidden"

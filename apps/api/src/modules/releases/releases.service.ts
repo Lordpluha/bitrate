@@ -10,6 +10,7 @@ import {
 import { AlbumType, type Prisma, ReleaseStatus } from '@prisma/client'
 import type { CreateReleaseDto } from './dtos/create-release.dto'
 import type { ListReleasesDto } from './dtos/list-releases.dto'
+import type { ReleaseDraftVersionDto } from './dtos/release-media.dto'
 import type {
   ReviseReleaseDto,
   SubmitReleaseDto,
@@ -20,6 +21,7 @@ import type { UpdateReleaseTrackDto } from './dtos/update-release-track.dto'
 import { RELEASE_ERRORS } from './errors'
 import { lockOwnedDraft } from './release-draft-lock'
 import { releaseReadiness } from './release-readiness'
+import { type CreditedArtist, creditArtistAlone } from './release-solo-credit'
 import {
   RELEASE_SUMMARY_SELECT,
   type ReadinessRecord,
@@ -29,19 +31,27 @@ import {
   releaseWorkspaceSelect,
 } from './releases.select'
 
+/** Statuses whose release timing (`scheduledAt`) can still change. */
+const TIMING_STATUSES = [ReleaseStatus.DRAFT, ReleaseStatus.READY]
+
 @Injectable()
 export class ReleasesService {
   constructor(private readonly prisma: PrismaService) {}
 
-  createDraft(ownerArtistId: string, input: CreateReleaseDto) {
-    return this.prisma.release.create({
-      data: {
-        ownerArtistId,
-        title: input.title,
-        type: input.type ?? AlbumType.SINGLE,
-        status: ReleaseStatus.DRAFT,
-      },
-      select: RELEASE_SUMMARY_SELECT,
+  /** A new draft starts with its artist credited alone, which a solo release keeps as is. */
+  createDraft(owner: CreditedArtist, input: CreateReleaseDto) {
+    return this.prisma.$transaction(async (tx) => {
+      const release = await tx.release.create({
+        data: {
+          ownerArtistId: owner.id,
+          title: input.title,
+          type: input.type ?? AlbumType.SINGLE,
+          status: ReleaseStatus.DRAFT,
+        },
+        select: RELEASE_SUMMARY_SELECT,
+      })
+      await creditArtistAlone(tx, release.id, owner)
+      return release
     })
   }
 
@@ -71,6 +81,9 @@ export class ReleasesService {
   }
 
   async updateDraft(ownerArtistId: string, id: string, input: UpdateReleaseDto) {
+    // The release timing alone stays editable after approval, until publishing starts.
+    const timingOnly =
+      input.title === undefined && input.type === undefined && input.upc === undefined
     // Ownership, lifecycle and version are checked atomically with the write.
     const [updated] = await this.uniqueIdentifier(
       'This UPC is already used by another release',
@@ -80,7 +93,7 @@ export class ReleasesService {
             id,
             ownerArtistId,
             deletedAt: null,
-            status: ReleaseStatus.DRAFT,
+            status: timingOnly ? { in: TIMING_STATUSES } : ReleaseStatus.DRAFT,
             updatedAt: new Date(input.expectedUpdatedAt),
           },
           data: {
@@ -99,6 +112,24 @@ export class ReleasesService {
     if (updated) return updated
     await this.findOne(ownerArtistId, id)
     throw new ConflictException(RELEASE_ERRORS.CHANGED_OR_NOT_DRAFT)
+  }
+
+  /**
+   * Soft-deletes an owned draft with its recordings; their UPC and ISRCs are released for reuse.
+   * Stored masters and the cover stay referenced by the deleted rows.
+   */
+  deleteDraft(ownerArtistId: string, id: string, input: ReleaseDraftVersionDto): Promise<void> {
+    return this.prisma.$transaction(async (tx) => {
+      const deletedAt = new Date()
+      await lockOwnedDraft(tx, ownerArtistId, id, input.expectedUpdatedAt, {
+        deletedAt,
+        upc: null,
+      })
+      await tx.artistTrackDraft.updateMany({
+        where: { releaseId: id, ownerArtistId, deletedAt: null },
+        data: { deletedAt, isrc: null },
+      })
+    })
   }
 
   async workspace(ownerArtistId: string, id: string) {
@@ -120,6 +151,7 @@ export class ReleasesService {
   submit(ownerArtistId: string, id: string, input: SubmitReleaseDto) {
     return this.prisma.$transaction(async (tx) => {
       const expected = new Date(input.expectedUpdatedAt)
+      const now = new Date()
       await assertSubmittable(tx, ownerArtistId, id, expected)
       // The version guard makes the checked state and the status change one atomic step.
       const [submitted] = await tx.release.updateManyAndReturn({
@@ -130,7 +162,8 @@ export class ReleasesService {
           status: ReleaseStatus.DRAFT,
           updatedAt: expected,
         },
-        data: { status: ReleaseStatus.SUBMITTED, submittedAt: new Date() },
+        // Submitting is the artist's accuracy confirmation for the data just checked.
+        data: { status: ReleaseStatus.SUBMITTED, submittedAt: now, accuracyConfirmedAt: now },
         select: RELEASE_SUMMARY_SELECT,
       })
       if (!submitted) throw new ConflictException(RELEASE_ERRORS.CHANGED_OR_NOT_DRAFT)
@@ -246,7 +279,8 @@ function toWorkspaceView(release: ReleaseWorkspaceRecord, readinessRecord: Readi
     })),
     tracks: tracks.map(({ position, track }) => ({ ...track, position })),
     participants: contributors,
-    trackCount: _count.trackDrafts + _count.tracks,
+    // Published tracks are catalogue copies of the drafts, so they are not counted twice.
+    trackCount: Math.max(_count.trackDrafts, _count.tracks),
     participantCount: _count.contributors,
   }
 }

@@ -1,8 +1,9 @@
 'use client'
 
-import { cn } from '@bitrate/ui-react'
 import type { TrackEntity } from '@entities/Track'
+import { FilterChips } from '@shared/ui'
 import { useState } from 'react'
+import { useI18n } from '@/shared/i18n'
 import type { ArtistAlbum } from '../model/artist.types'
 import {
   COLLAPSED_RELEASE_COUNT,
@@ -24,6 +25,7 @@ export const ArtistDiscography = ({
   tracks,
   onPlayTrack,
 }: ArtistDiscographyProps) => {
+  const { t } = useI18n()
   const [activeFilter, setActiveFilter] = useState<DiscographyFilter>('popular')
   const [isExpanded, setIsExpanded] = useState(false)
   const releases = getDiscographyReleases(albums, tracks)[activeFilter]
@@ -41,7 +43,7 @@ export const ArtistDiscography = ({
     <section className="flex min-w-0 flex-col gap-3">
       <div className="flex items-center justify-between gap-4">
         <h2 className="text-[19px] leading-[1.25] font-semibold">
-          Discography
+          {t('artist.discography')}
         </h2>
         {hasOverflow && (
           <button
@@ -49,32 +51,23 @@ export const ArtistDiscography = ({
             onClick={() => setIsExpanded((value) => !value)}
             type="button"
           >
-            {isExpanded ? 'Show less' : 'Show all'}
+            {isExpanded ? t('common.showLess') : t('common.showAll')}
           </button>
         )}
       </div>
-      <fieldset className="m-0 flex min-w-0 flex-wrap gap-2 border-0 p-0">
-        <legend className="sr-only">Discography filters</legend>
-        {DISCOGRAPHY_FILTERS.map((filter) => (
-          <button
-            aria-pressed={activeFilter === filter.id}
-            className={cn(
-              'flex h-8 items-center rounded-full border px-3.5 text-[13px] text-foreground transition-colors',
-              activeFilter === filter.id
-                ? 'border-primary bg-primary font-semibold text-primary-foreground'
-                : 'border-border hover:bg-surface',
-            )}
-            key={filter.id}
-            onClick={() => changeFilter(filter.id)}
-            type="button"
-          >
-            {filter.label}
-          </button>
-        ))}
-      </fieldset>
+      <FilterChips
+        ariaLabel={t('artist.discographyFilters')}
+        chips={DISCOGRAPHY_FILTERS.map(({ id, labelKey }) => ({
+          id,
+          label: t(labelKey),
+        }))}
+        className="flex-wrap"
+        onChange={changeFilter}
+        value={activeFilter}
+      />
       {visibleReleases.length === 0 ? (
         <p className="py-10 text-sm text-muted-foreground">
-          {EMPTY_FILTER_LABELS[activeFilter]}
+          {t(EMPTY_FILTER_LABELS[activeFilter])}
         </p>
       ) : (
         <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-3">

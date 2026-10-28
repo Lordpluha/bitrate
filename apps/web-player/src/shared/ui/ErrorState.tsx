@@ -2,6 +2,7 @@
 
 import { ROUTES } from '@shared/routes'
 import { TriangleAlert } from 'lucide-react'
+import { useI18n } from '@/shared/i18n'
 import { StateMessage } from './StateMessage'
 
 export type ErrorStateProps = {
@@ -14,17 +15,23 @@ export type ErrorStateProps = {
 /** The design's error State/Message: retry when it can help, and always a way back home. */
 export const ErrorState = ({
   className,
-  description = 'Something went wrong on our side. Try again, or head back home.',
+  description,
   onRetry,
-  title = 'Something went wrong',
-}: ErrorStateProps) => (
-  <StateMessage
-    className={className}
-    description={description}
-    icon={TriangleAlert}
-    primary={onRetry ? { label: 'Try again', onClick: onRetry } : undefined}
-    secondary={{ href: ROUTES.main, label: 'Back to home' }}
-    title={title}
-    tone="error"
-  />
-)
+  title,
+}: ErrorStateProps) => {
+  const { t } = useI18n()
+
+  return (
+    <StateMessage
+      className={className}
+      description={description ?? t('error.description')}
+      icon={TriangleAlert}
+      primary={
+        onRetry ? { label: t('common.tryAgain'), onClick: onRetry } : undefined
+      }
+      secondary={{ href: ROUTES.main, label: t('common.backToHome') }}
+      title={title ?? t('error.title')}
+      tone="error"
+    />
+  )
+}

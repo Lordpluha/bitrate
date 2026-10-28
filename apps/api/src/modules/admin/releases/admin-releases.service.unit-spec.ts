@@ -1,10 +1,14 @@
 import type { StorageService } from '@infra/storage/storage.types'
-import { beforeEach, describe, expect, it } from '@jest/globals'
+import { beforeEach, describe, expect, it, jest } from '@jest/globals'
+import type { ReleasePublishingService } from '@modules/releases/release-publishing.service'
 import { ConflictException, NotFoundException } from '@nestjs/common'
 import type { Prisma } from '@prisma/client'
 import { type PrismaMock, prismaMock, resetPrismaMock } from '@test/mocks'
 import { type DeepMockProxy, mockDeep } from 'jest-mock-extended'
 import { AdminReleasesService } from './admin-releases.service'
+
+/** The publishing service pulls in the ESM-only `music-metadata`, which Jest cannot load. */
+jest.mock('music-metadata', () => ({ parseFile: jest.fn() }), { virtual: true })
 
 const RELEASE_ID = 'release-1'
 const STAFF_ID = 'staff-1'
@@ -77,7 +81,11 @@ describe('AdminReleasesService', () => {
     prisma.$transaction.mockImplementation(async (callback: unknown) =>
       (callback as (client: Prisma.TransactionClient) => unknown)(transaction),
     )
-    service = new AdminReleasesService(prisma, mockDeep<StorageService>())
+    service = new AdminReleasesService(
+      prisma,
+      mockDeep<StorageService>(),
+      mockDeep<ReleasePublishingService>(),
+    )
   })
 
   describe('detail', () => {

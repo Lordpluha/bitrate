@@ -140,6 +140,16 @@ export const useLikedTracks = (
 }
 
 /** How many songs the user liked; shares the liked-tracks cache with `useLikedTracks`. */
+/** Every liked track id, unpaged: what a like button checks against. */
+export const useLikedTrackIds = () =>
+  useTanStackQuery({
+    queryFn: getAllLikedTracks,
+    queryKey: apiQueryKeys.tracks.likedAll,
+    refetchOnWindowFocus: false,
+    retry: false,
+    select: (tracks) => new Set(tracks.map((track) => track.id)),
+  })
+
 export const useLikedTracksCount = (enabled = true) =>
   useTanStackQuery({
     enabled,

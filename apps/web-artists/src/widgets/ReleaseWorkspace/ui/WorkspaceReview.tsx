@@ -16,7 +16,8 @@ export function WorkspaceReview({ release }: WorkspaceReviewProps) {
   return (
     <section
       aria-labelledby="release-review-heading"
-      className="artist-release-workspace-panel space-y-4"
+      className="artist-release-workspace-panel artist-release-stage-main space-y-4"
+      data-tone={approved ? 'success' : 'warning'}
     >
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <h2 className="flex items-center gap-2" id="release-review-heading">

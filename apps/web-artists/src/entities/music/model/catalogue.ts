@@ -1,4 +1,5 @@
 import type { ApiSchemas } from '@bitrate/contracts'
+import { releaseStatuses } from '@shared/constants/releaseStatuses'
 import { z } from 'zod'
 
 export const trackStatuses = [
@@ -71,7 +72,7 @@ const musicReleaseSchema = z.object({
   title: z.string(),
   artistName: z.string(),
   type: z.enum(['SINGLE', 'EP', 'ALBUM', 'COMPILATION']),
-  status: z.enum(['DRAFT', 'READY', 'SUBMITTED', 'RELEASED', 'REJECTED']),
+  status: z.enum(releaseStatuses),
   cover: optionalMedia,
   isDemo: z.boolean(),
   trackCount: z.number().int().nonnegative(),

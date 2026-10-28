@@ -2,6 +2,7 @@ import { normalizePagination } from '@common/pagination'
 import { NS, TTL } from '@infra/cache/cache.constants'
 import { CacheService } from '@infra/cache/cache.service'
 import { PrismaService } from '@infra/prisma/prisma.service'
+import { PUBLIC_TRACK_WHERE } from '@modules/tracks/track-visibility'
 import type { UserEntity } from '@modules/users'
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common'
 import { PUBLIC_ARTIST_SELECT } from './artists.select'
@@ -14,8 +15,7 @@ const TOP_TRACKS_MAX = 50
 
 /** Ready, not deleted tracks where the artist is the primary or a featured credit. */
 const playableTracksOf = (artistId: ArtistEntity['id']) => ({
-  deletedAt: null,
-  processingStatus: 'READY' as const,
+  ...PUBLIC_TRACK_WHERE,
   OR: [{ artistId }, { artists: { some: { artistId } } }],
 })
 

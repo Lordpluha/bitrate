@@ -2,6 +2,7 @@
   customElement={{
     shadow: 'open',
     props: {
+      chrome: { type: 'String', attribute: 'chrome', reflect: true },
       renditions: { type: 'Array' },
       resolveSource: {},
       trackTitle: { type: 'String', attribute: 'track-title', reflect: true },
@@ -18,24 +19,37 @@
       onExpand: {},
       onPictureInPicture: {},
       onQueueOpen: {},
+      streaming: {},
+      source: {},
+      next: {},
+      volume: { type: 'Number', attribute: 'volume' },
+      muted: { type: 'Boolean', attribute: 'muted', reflect: true },
+      mirror: {},
+      labels: {},
+      mediaSession: { type: 'Boolean', attribute: 'media-session', reflect: true },
     },
+    extend: withPlayerProvider,
   }}
 />
 
+<script lang="ts" module>
+  import { withPlayerProvider } from './player-context'
+</script>
+
 <script lang="ts">
-  import { formatTime } from './lib/format-time'
-  import { playPauseLabel } from './lib/play-pause-label'
-  import { REPEAT_LABELS } from './lib/repeat-labels'
+  import ChromeLayout from './layouts/ChromeLayout.svelte'
+  import { createPlayerController, legacyStateDetail } from './create-controller'
+  import { resolveChrome } from './lib/controls'
+  import { resolveLabels } from './lib/labels'
+  import { type HostTransport, isPlayerProviderHost } from './player-context'
+  import type { PlayerController } from './player-controller'
   import type { BitratePlayerProps } from './player-props'
   import { createPlayerEngineState } from './player-state.svelte'
-  import PlayerActions from './parts/PlayerActions.svelte'
-  import QualitySelect from './parts/QualitySelect.svelte'
-  import SeekBar from './parts/SeekBar.svelte'
-  import TrackMeta from './parts/TrackMeta.svelte'
-  import TransportControls from './parts/TransportControls.svelte'
-  import VolumeControl from './parts/VolumeControl.svelte'
+  import { createMediaSession } from './media-session.svelte'
+  import { createStreamingState } from './streaming-state.svelte'
 
   let {
+    chrome = 'bar',
     renditions = [],
     resolveSource = null,
     trackTitle = '',
@@ -52,168 +66,213 @@
     onExpand = null,
     onPictureInPicture = null,
     onQueueOpen = null,
+    streaming = null,
+    source = null,
+    next = null,
+    volume = 1,
+    muted = false,
+    mirror = null,
+    labels = null,
+    mediaSession = false,
   }: BitratePlayerProps = $props()
 
   let audioEl: HTMLAudioElement | undefined = $state(undefined)
+  /** The standby element streaming mode prefetches into; rendered only in that mode. */
+  let standbyEl: HTMLAudioElement | undefined = $state(undefined)
+  let slotEl: HTMLElement | undefined = $state(undefined)
+  /** True once the host composes its own parts; the built-in layout steps aside. */
+  let composed = $state(false)
+  /** The controller of the root this one mirrors, once that root answers. */
+  let mirrored: PlayerController | null = $state.raw(null)
 
   function dispatch<T>(type: string, detail?: T): void {
     $host().dispatchEvent(new CustomEvent(type, { detail, bubbles: true, composed: true }))
   }
 
-  /** Rebinds host play()/pause() to the current engine — $host() must stay in this file. */
-  function exposeTransport(transport: { play: () => Promise<void>; pause: () => void }): void {
-    const host = $host() as HTMLElement & { play: () => Promise<void>; pause: () => void }
-    host.play = transport.play
-    host.pause = transport.pause
+  /** Rebinds the host's play()/pause()/seek() to the engine in use — $host() must stay here. */
+  function exposeTransport(transport: Partial<HostTransport>): void {
+    const host = $host()
+    if (isPlayerProviderHost(host)) host.provideTransport(transport)
   }
 
-  const player = createPlayerEngineState({
+  const legacy = createPlayerEngineState({
     getAudioEl: () => audioEl,
     getResolveSource: () => resolveSource,
     getRenditions: () => renditions,
     dispatch,
     exposeTransport,
   })
+
+  const live = createStreamingState({
+    getMedia: () => (audioEl && standbyEl ? [audioEl, standbyEl] : null),
+    getStreaming: () => streaming,
+    getSource: () => source,
+    getNext: () => next,
+    getVolume: () => volume,
+    getMuted: () => muted,
+    dispatch,
+  })
+
+  $effect(() => {
+    if (!live.active) return
+    exposeTransport({
+      play: async () => live.play(),
+      pause: () => live.pause(),
+      seek: (seconds) => live.seek(seconds),
+    })
+  })
+
+  const callbacks: PlayerController['callbacks'] = {
+    get onNext() {
+      return onNext
+    },
+    get onPrevious() {
+      return onPrevious
+    },
+    get onLikeToggle() {
+      return onLikeToggle
+    },
+    get onShuffleToggle() {
+      return onShuffleToggle
+    },
+    get onRepeatToggle() {
+      return onRepeatToggle
+    },
+    get onExpand() {
+      return onExpand
+    },
+    get onPictureInPicture() {
+      return onPictureInPicture
+    },
+    get onQueueOpen() {
+      return onQueueOpen
+    },
+  }
+
+  const resolvedLabels = $derived(resolveLabels(labels))
+
+  const controller = createPlayerController({
+    readView: () => ({
+      trackTitle,
+      artist,
+      coverUrl,
+      isLiked,
+      isShuffled,
+      repeatMode,
+      renditions,
+      callbacks,
+      labels: resolvedLabels,
+    }),
+    hasSource: () => source !== null,
+    legacy,
+    streaming: live,
+  })
+
+  /** Not named `host`: `$host` would then read as a store subscription to it. */
+  const rootElement = $host()
+  /**
+   * The host methods exist from upgrade: a host may call them right after assigning
+   * `streaming`, before the streaming player is created, which then applies the intent. The
+   * `resolveSource` engine rebinds play/pause to itself once a resolver is set.
+   */
+  exposeTransport({
+    play: async () => live.play(),
+    pause: () => live.pause(),
+    seek: (seconds) => live.seek(seconds),
+  })
+  if (isPlayerProviderHost(rootElement)) {
+    rootElement.providePlayer(controller)
+    rootElement.provideState(() => (live.active ? live.state : legacyStateDetail(legacy)))
+  }
+
+  /** A mirror renders the other root's controller and never plays anything itself. */
+  $effect(() => {
+    const target = mirror
+    if (!target || target === rootElement || !isPlayerProviderHost(target)) {
+      mirrored = null
+      return
+    }
+    let current = true
+    target.requestPlayer((answer) => {
+      if (current) mirrored = answer
+    })
+    return () => {
+      current = false
+    }
+  })
+
+  const shared = $derived(mirrored ?? controller)
+
+  /** Only an element that plays owns the session; a mirror never does. */
+  createMediaSession({
+    getEnabled: () => mediaSession && !mirror,
+    getController: () => controller,
+    handlers: {
+      play: () => {
+        if (live.active) live.play()
+        else if (!controller.playing) void legacy.onPlayPause()
+      },
+      pause: () => {
+        if (live.active) live.pause()
+        else if (controller.playing) void legacy.onPlayPause()
+      },
+      seekTo: (seconds) => {
+        if (live.active) live.seek(seconds)
+      },
+    },
+  })
+
+  $effect(() => {
+    if (isPlayerProviderHost(rootElement)) rootElement.providePlayer(shared)
+  })
+
+  function syncComposed(): void {
+    composed = slotEl instanceof HTMLSlotElement && slotEl.assignedElements().length > 0
+  }
+
+  /** Svelte's element typings carry no `onslotchange`, so the listener is attached here. */
+  $effect(() => {
+    const slot = slotEl
+    if (!slot) return
+    syncComposed()
+    slot.addEventListener('slotchange', syncComposed)
+    return () => slot.removeEventListener('slotchange', syncComposed)
+  })
 </script>
 
-<div class="root">
-  <audio bind:this={audioEl} preload="none"></audio>
+<audio bind:this={audioEl} preload="none"></audio>
+{#if streaming}
+  <audio bind:this={standbyEl} preload="none"></audio>
+{/if}
 
-  <TrackMeta
-    {coverUrl}
-    {trackTitle}
-    {artist}
-    like={{ active: isLiked, onToggle: onLikeToggle }}
-    {onPictureInPicture}
-  />
+<!--
+  A native slot for the host's part elements — `<svelte:element>`, since `<slot>` is Svelte's
+  own slot syntax. Whitespace-only text the host leaves inside the tag does not count as
+  composing: only assigned elements switch the built-in layout off.
+-->
+<svelte:element this={"slot"} bind:this={slotEl} />
 
-  <div class="transport">
-    <TransportControls
-      shuffle={{ active: isShuffled, onToggle: onShuffleToggle }}
-      {onPrevious}
-      playback={{
-        playing: player.computed.playing,
-        disabled: player.computed.preparing || player.computed.effectiveBitrate === null,
-        label: player.computed.preparing
-          ? 'Preparing…'
-          : playPauseLabel(trackTitle, player.computed.playing),
-        onToggle: player.onPlayPause,
-      }}
-      {onNext}
-      repeat={{
-        active: repeatMode !== 'off',
-        repeatOne: repeatMode === 'one',
-        label: REPEAT_LABELS[repeatMode],
-        onToggle: onRepeatToggle,
-      }}
-    />
-
-    <SeekBar
-      time={{
-        elapsedLabel: formatTime(player.playbackState.currentTime),
-        totalLabel: formatTime(player.computed.safeDuration),
-      }}
-      currentTime={player.playbackState.currentTime}
-      duration={player.computed.safeDuration}
-      progress={player.computed.seekProgress}
-      onSeek={player.onSeek}
-    />
+{#if !composed}
+  <div class="layout-container">
+    <ChromeLayout chrome={resolveChrome(chrome)} player={shared} />
   </div>
-
-  <div class="actions">
-    {#if player.computed.showQuality}
-      <QualitySelect
-        {renditions}
-        value={player.computed.effectiveBitrate}
-        disabled={player.computed.preparing}
-        onChange={player.onQualityChange}
-      />
-    {/if}
-
-    <VolumeControl
-      muted={player.playbackState.muted}
-      volume={player.playbackState.volume}
-      progress={player.computed.volumeProgress}
-      onVolume={player.onVolume}
-      onMuteToggle={player.onMuteToggle}
-    />
-
-    <PlayerActions {onQueueOpen} {onExpand} />
-  </div>
-
-  {#if player.playbackState.error}
-    <p class="error" role="alert">{player.playbackState.error.message}</p>
-  {/if}
-</div>
+{/if}
 
 <style>
   :host {
-    container-name: bitrate-player;
-    container-type: inline-size;
     display: block;
     font-family: inherit;
   }
 
-  .root {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 0.75rem 1rem;
-    color: var(--color-text, var(--color-foreground, inherit));
-    background-color: var(--color-background, transparent);
-    border-top: 1px solid var(--color-border, currentColor);
-    font-family: inherit;
-    position: relative;
-  }
-
-  .transport {
-    display: flex;
-    flex: 2 1 40%;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.5rem;
-    min-width: 0;
-    max-width: 45rem;
-  }
-
-  .actions {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 0.5rem;
-    flex: 1 1 35%;
-    min-width: 0;
-  }
-
-  .error {
-    position: absolute;
-    left: 1rem;
-    bottom: 100%;
-    margin: 0 0 0.25rem;
-    color: var(--color-destructive, crimson);
-    font-size: 0.75rem;
-  }
-
-  @container bitrate-player (max-width: 36rem) {
-    /** Quality and volume stay reachable at every width; only the total-duration readout shrinks. */
-    .root {
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      padding: 0.5rem 0.75rem;
-    }
-
-    .transport {
-      order: 3;
-      flex: 1 1 100%;
-      max-width: none;
-    }
-
-    .actions {
-      order: 2;
-      flex: 1 1 100%;
-      flex-wrap: wrap;
-      justify-content: flex-start;
-    }
+  /**
+   * The size container the built-in layouts query. Not on :host — inline-size containment
+   * would stop a host-composed element from taking its content's width in a flex row. It
+   * passes a sized host's height on, so floating fills a picture-in-picture window as it resizes.
+   */
+  .layout-container {
+    container-name: bitrate-player;
+    container-type: inline-size;
+    height: 100%;
   }
 
   @media (prefers-reduced-motion: reduce) {

@@ -1,17 +1,21 @@
 import { artistMusicKeys } from '@shared/api/artistMusicKeys'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import {
+  cancelPremiere,
+  publishRelease,
+  republishRelease,
   reviseRelease,
   saveRights,
   saveSplits,
   saveTrackIsrc,
   submitRelease,
+  unpublishRelease,
   withdrawRelease,
 } from './rights'
 import { releaseWorkspaceKey } from './useReleaseWorkspace'
 
 /**
- * Artist caches that show release state a draft write can change. Analytics, tasks,
+ * Artist caches that show release state a draft write can change. Analytics,
  * notifications, profile and sessions do not depend on it, so they are left alone.
  */
 const RELEASE_LISTING_SCOPES = [
@@ -57,3 +61,11 @@ export const useWithdrawRelease = (artistId: string) =>
   useReleaseWrite(artistId, withdrawRelease)
 export const useReviseRelease = (artistId: string) =>
   useReleaseWrite(artistId, reviseRelease)
+export const usePublishRelease = (artistId: string) =>
+  useReleaseWrite(artistId, publishRelease)
+export const useCancelPremiere = (artistId: string) =>
+  useReleaseWrite(artistId, cancelPremiere)
+export const useUnpublishRelease = (artistId: string) =>
+  useReleaseWrite(artistId, unpublishRelease)
+export const useRepublishRelease = (artistId: string) =>
+  useReleaseWrite(artistId, republishRelease)

@@ -86,6 +86,38 @@ function sendUpdate(id: string, input: ApiSchemas['UpdateReleaseDto']) {
   })
 }
 
+export interface DeleteReleaseRequest {
+  id: string
+  input: ApiSchemas['ReleaseDraftVersionDto']
+}
+
+/** Deletes a draft; only an explicit 204 confirms it. */
+export async function deleteRelease({ id, input }: DeleteReleaseRequest) {
+  const unconfirmed =
+    'Could not confirm the draft was deleted. Check Music before trying again.'
+  let result: Awaited<ReturnType<typeof sendDelete>>
+  try {
+    result = await sendDelete(id, input)
+  } catch {
+    throw new Error(unconfirmed)
+  }
+  const { status } = result.response
+  if (status === 409)
+    throw new Error(
+      'This release changed or is no longer a draft. Reload Music to see its latest status.',
+    )
+  if (status === 404) throw new Error('This release is no longer available.')
+  if (status !== 204) throw new Error(unconfirmed)
+}
+
+function sendDelete(id: string, input: ApiSchemas['ReleaseDraftVersionDto']) {
+  return clientFetchClient.DELETE('/api/v1/releases/{id}', {
+    params: { path: { id } },
+    body: input,
+    signal: writeSignal(),
+  })
+}
+
 export async function createRelease(input: CreateReleaseValues) {
   let result: Awaited<ReturnType<typeof sendDraft>>
   try {

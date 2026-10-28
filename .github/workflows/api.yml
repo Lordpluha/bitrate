@@ -64,7 +64,7 @@ permissions:
 jobs:
   api-pr:
     if: ${{ github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'pr') }}
-    uses: ./.github/workflows/api_reusable.yml
+    uses: $/.github/workflows/api_reusable.yml
     with:
       push-image: false
       image-tags: ghcr.io/lordpluha/${{ github.event.repository.name }}/api:pr-${{ github.sha }}
@@ -76,7 +76,7 @@ jobs:
 
   api-develop:
     if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/develop') || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'develop') }}
-    uses: ./.github/workflows/api_reusable.yml
+    uses: $/.github/workflows/api_reusable.yml
     with:
       push-image: true
       image-tags: |
@@ -101,7 +101,7 @@ jobs:
     # commit's subject, which only worked when a PAT pushed it: GitHub raises no
     # push event for a GITHUB_TOKEN push. See ADR-0029.
     if: ${{ github.event_name == 'workflow_dispatch' && inputs.mode == 'master' }}
-    uses: ./.github/workflows/api_reusable.yml
+    uses: $/.github/workflows/api_reusable.yml
     with:
       push-image: true
       # Three tags, and the third one is the rollback handle:

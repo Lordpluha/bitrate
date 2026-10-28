@@ -26,7 +26,6 @@ export const releaseReadinessSelect = (ownerArtistId: string) =>
     cover: true,
     masterOwnerType: true,
     writersConfirmedAt: true,
-    accuracyConfirmedAt: true,
     trackDrafts: {
       where: { ownerArtistId, deletedAt: null },
       select: { id: true, isrc: true, audioKey: true },
@@ -52,6 +51,8 @@ export const releaseWorkspaceSelect = (ownerArtistId: string) => {
     writersConfirmedAt: true,
     accuracyConfirmedAt: true,
     submittedAt: true,
+    unpublishedBy: true,
+    albumId: true,
     owner: { select: { username: true } },
     reviews: {
       orderBy: { createdAt: 'desc' },
@@ -79,6 +80,7 @@ export const releaseWorkspaceSelect = (ownerArtistId: string) => {
         audioKey: true,
         audioFileName: true,
         audioSizeBytes: true,
+        waveform: true,
       },
     },
     tracks: {

@@ -3,16 +3,18 @@
 import { useRecommendationsFeed } from '@/entities/Discovery'
 import { usePlayCollection } from '@/features/PlayCollection'
 import { MediaRow, mapDiscoveryFeedItem } from '@/features/Search'
+import { useI18n } from '@/shared/i18n'
 import { ErrorState } from '@/shared/ui/ErrorState'
 
 export const RecommendationsFeed = () => {
+  const { t } = useI18n()
   const recommendations = useRecommendationsFeed()
   const playCollection = usePlayCollection()
 
   if (recommendations.isPending) {
     return (
       <div
-        aria-label="Loading recommendations"
+        aria-label={t('main.loadingRecommendations')}
         className="flex flex-col gap-7"
         role="status"
       >
@@ -25,9 +27,9 @@ export const RecommendationsFeed = () => {
   if (recommendations.isError) {
     return (
       <ErrorState
-        description="Your recommendations could not be loaded."
+        description={t('main.recommendationsFailed')}
         onRetry={() => void recommendations.refetch()}
-        title="Recommendations are unavailable"
+        title={t('main.recommendationsUnavailable')}
       />
     )
   }

@@ -2,7 +2,10 @@ import type { ApiSchemas } from '@bitrate/contracts'
 import { clientFetchClient } from '@shared/api/fetchClient'
 import { writeSignal as signal } from '@shared/api/writeTimeout'
 import { z } from 'zod'
-import { releaseSummarySchema } from '../model/release.schema'
+import {
+  type ReleaseSummary,
+  releaseSummarySchema,
+} from '../model/release.schema'
 import { releaseBlockerSchema, rightTypes } from '../model/rights'
 import { advancedRelease, draftRelease, guardedWrite } from './guardedWrite'
 
@@ -193,3 +196,101 @@ export function reviseRelease({ id, input }: ReviseRequest) {
     },
   )
 }
+
+export interface PublishRequest {
+  id: string
+  input: ApiSchemas['ReleaseDraftVersionDto']
+}
+
+/** Starts publishing an approved release on Bitrate; confirmed once the API reports it underway. */
+export function publishRelease({ id, input }: PublishRequest) {
+  return guardedWrite(
+    () =>
+      clientFetchClient.POST('/api/v1/releases/{id}/publish', {
+        params: { path: { id } },
+        body: input,
+        signal: signal(),
+      }),
+    (data) => {
+      const parsed = releaseSummarySchema.safeParse(data)
+      return parsed.success &&
+        parsed.data.id === id &&
+        (parsed.data.status === 'PUBLISHING' ||
+          parsed.data.status === 'SCHEDULED')
+        ? parsed.data
+        : undefined
+    },
+    {
+      invalid: 'Could not publish this release. Please try again.',
+      unconfirmed:
+        'Could not confirm publishing started. Reload the release before trying again.',
+      conflict:
+        'This release changed or is no longer ready to publish. Reload it to see its latest status.',
+    },
+  )
+}
+
+/** Owner actions on a release that went live or is waiting for its premiere. */
+function launchWrite(
+  path:
+    | '/api/v1/releases/{id}/publish/cancel'
+    | '/api/v1/releases/{id}/unpublish'
+    | '/api/v1/releases/{id}/republish',
+  expected: ReleaseSummary['status'],
+  messages: { invalid: string; unconfirmed: string; conflict: string },
+) {
+  return ({ id, input }: PublishRequest) =>
+    guardedWrite(
+      () =>
+        clientFetchClient.POST(path, {
+          params: { path: { id } },
+          body: input,
+          signal: signal(),
+        }),
+      (data) => {
+        const parsed = releaseSummarySchema.safeParse(data)
+        return parsed.success &&
+          parsed.data.id === id &&
+          parsed.data.status === expected
+          ? parsed.data
+          : undefined
+      },
+      messages,
+    )
+}
+
+export const cancelPremiere = launchWrite(
+  '/api/v1/releases/{id}/publish/cancel',
+  'READY',
+  {
+    invalid: 'Could not cancel the premiere. Please try again.',
+    unconfirmed:
+      'Could not confirm the premiere was cancelled. Reload the release before trying again.',
+    conflict:
+      'This release changed or has no scheduled premiere. Reload it to see its latest status.',
+  },
+)
+
+export const unpublishRelease = launchWrite(
+  '/api/v1/releases/{id}/unpublish',
+  'UNPUBLISHED',
+  {
+    invalid: 'Could not take this release offline. Please try again.',
+    unconfirmed:
+      'Could not confirm the release went offline. Reload it before trying again.',
+    conflict:
+      'This release changed or is not live. Reload it to see its latest status.',
+  },
+)
+
+export const republishRelease = launchWrite(
+  '/api/v1/releases/{id}/republish',
+  'RELEASED',
+  {
+    invalid: 'Could not publish this release again. Please try again.',
+    unconfirmed:
+      'Could not confirm the release is live again. Reload it before trying again.',
+    conflict:
+      'This release changed or cannot be published again. Reload it to see its latest status.',
+  },
+)

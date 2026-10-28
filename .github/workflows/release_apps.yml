@@ -23,7 +23,7 @@ jobs:
     name: Apps
     permissions:
       contents: write
-    uses: ./.github/workflows/release_apps_reusable.yml
+    uses: $/.github/workflows/release_apps_reusable.yml
     with:
       tag: ${{ inputs.tag }}
     secrets:

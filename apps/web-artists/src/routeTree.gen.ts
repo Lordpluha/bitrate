@@ -22,7 +22,6 @@ import { Route as DashboardDistributionRouteImport } from './routes/dashboard.di
 import { Route as DashboardMusicRouteImport } from './routes/dashboard.music'
 import { Route as DashboardProfileRouteImport } from './routes/dashboard.profile'
 import { Route as DashboardSettingsRouteImport } from './routes/dashboard.settings'
-import { Route as DashboardTasksRouteImport } from './routes/dashboard.tasks'
 import { Route as LegalSlugRouteImport } from './routes/legal.$slug'
 import { Route as DashboardMusicReleaseIdRouteImport } from './routes/dashboard.music_.$releaseId'
 
@@ -91,11 +90,6 @@ const DashboardSettingsRoute = DashboardSettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => DashboardRoute,
 } as any)
-const DashboardTasksRoute = DashboardTasksRouteImport.update({
-  id: '/tasks',
-  path: '/tasks',
-  getParentRoute: () => DashboardRoute,
-} as any)
 const LegalSlugRoute = LegalSlugRouteImport.update({
   id: '/legal/$slug',
   path: '/legal/$slug',
@@ -120,7 +114,6 @@ export interface FileRoutesByFullPath {
   '/dashboard/music': typeof DashboardMusicRoute
   '/dashboard/profile': typeof DashboardProfileRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
-  '/dashboard/tasks': typeof DashboardTasksRoute
   '/legal/$slug': typeof LegalSlugRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/dashboard/music/$releaseId': typeof DashboardMusicReleaseIdRoute
@@ -137,7 +130,6 @@ export interface FileRoutesByTo {
   '/dashboard/music': typeof DashboardMusicRoute
   '/dashboard/profile': typeof DashboardProfileRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
-  '/dashboard/tasks': typeof DashboardTasksRoute
   '/legal/$slug': typeof LegalSlugRoute
   '/dashboard': typeof DashboardIndexRoute
   '/dashboard/music/$releaseId': typeof DashboardMusicReleaseIdRoute
@@ -156,7 +148,6 @@ export interface FileRoutesById {
   '/dashboard/music': typeof DashboardMusicRoute
   '/dashboard/profile': typeof DashboardProfileRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
-  '/dashboard/tasks': typeof DashboardTasksRoute
   '/legal/$slug': typeof LegalSlugRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/dashboard/music_/$releaseId': typeof DashboardMusicReleaseIdRoute
@@ -176,7 +167,6 @@ export interface FileRouteTypes {
     | '/dashboard/music'
     | '/dashboard/profile'
     | '/dashboard/settings'
-    | '/dashboard/tasks'
     | '/legal/$slug'
     | '/dashboard/'
     | '/dashboard/music/$releaseId'
@@ -193,7 +183,6 @@ export interface FileRouteTypes {
     | '/dashboard/music'
     | '/dashboard/profile'
     | '/dashboard/settings'
-    | '/dashboard/tasks'
     | '/legal/$slug'
     | '/dashboard'
     | '/dashboard/music/$releaseId'
@@ -211,7 +200,6 @@ export interface FileRouteTypes {
     | '/dashboard/music'
     | '/dashboard/profile'
     | '/dashboard/settings'
-    | '/dashboard/tasks'
     | '/legal/$slug'
     | '/dashboard/'
     | '/dashboard/music_/$releaseId'
@@ -321,13 +309,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardSettingsRouteImport
       parentRoute: typeof DashboardRoute
     }
-    '/dashboard/tasks': {
-      id: '/dashboard/tasks'
-      path: '/tasks'
-      fullPath: '/dashboard/tasks'
-      preLoaderRoute: typeof DashboardTasksRouteImport
-      parentRoute: typeof DashboardRoute
-    }
     '/legal/$slug': {
       id: '/legal/$slug'
       path: '/legal/$slug'
@@ -351,7 +332,6 @@ interface DashboardRouteChildren {
   DashboardMusicRoute: typeof DashboardMusicRoute
   DashboardProfileRoute: typeof DashboardProfileRoute
   DashboardSettingsRoute: typeof DashboardSettingsRoute
-  DashboardTasksRoute: typeof DashboardTasksRoute
   DashboardIndexRoute: typeof DashboardIndexRoute
   DashboardMusicReleaseIdRoute: typeof DashboardMusicReleaseIdRoute
 }
@@ -362,7 +342,6 @@ const DashboardRouteChildren: DashboardRouteChildren = {
   DashboardMusicRoute: DashboardMusicRoute,
   DashboardProfileRoute: DashboardProfileRoute,
   DashboardSettingsRoute: DashboardSettingsRoute,
-  DashboardTasksRoute: DashboardTasksRoute,
   DashboardIndexRoute: DashboardIndexRoute,
   DashboardMusicReleaseIdRoute: DashboardMusicReleaseIdRoute,
 }

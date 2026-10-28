@@ -5,6 +5,7 @@ import { ROUTES } from '@shared/routes'
 import { MediaImage } from '@shared/ui/MediaImage'
 import { Play } from 'lucide-react'
 import Link from 'next/link'
+import { useI18n } from '@/shared/i18n'
 
 interface MusicCardLgProps {
   id: string
@@ -32,11 +33,12 @@ export const MusicCardLg = ({
   isArtist,
   onPlay,
 }: MusicCardLgProps) => {
+  const { t } = useI18n()
   const href = hrefProp ?? (isArtist ? ROUTES.artist(id) : ROUTES.playlist(id))
   const imageSrc = resolveMusicCardImage(imageUrl, isArtist)
 
   return (
-    <div className="group/card relative flex min-w-45 flex-col gap-3 rounded-[14px] border border-border bg-card p-3.5 transition-colors duration-300 has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring hover:bg-secondary">
+    <div className="group/card relative flex min-w-0 flex-col gap-3 rounded-[14px] border border-border bg-card p-3.5 transition-colors duration-300 has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring hover:bg-secondary">
       <div
         className={cn(
           'relative aspect-square overflow-hidden',
@@ -54,7 +56,7 @@ export const MusicCardLg = ({
         />
         {onPlay ? (
           <button
-            aria-label={`Play ${name}`}
+            aria-label={t('common.playName', { name })}
             className="absolute right-2 bottom-2 z-10 flex size-10 translate-y-2 items-center justify-center rounded-full bg-primary text-primary-foreground opacity-0 shadow-lg transition duration-300 group-hover/card:translate-y-0 group-hover/card:opacity-100 hover:scale-105 focus-visible:translate-y-0 focus-visible:opacity-100"
             onClick={onPlay}
             type="button"

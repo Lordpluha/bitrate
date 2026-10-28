@@ -1,11 +1,11 @@
 'use client'
 
+import { LIBRARY_SORT_STORAGE_KEY } from '@shared/constants'
 import { usePersistedState } from '@shared/hooks'
 import { useState } from 'react'
 import { useI18n } from '@/shared/i18n'
 import type { LibraryItemType } from '@/widgets/LeftSidebar/model/library.types'
 import { isLibrarySort } from '@/widgets/LeftSidebar/model/sortLibraryItems'
-import { useCreateLibraryPlaylist } from '@/widgets/LeftSidebar/model/useCreateLibraryPlaylist'
 import { CreatePlaylistMenu } from './CreatePlaylistMenu'
 import { LibraryControls } from './LibraryControls'
 import { LibraryHeader } from './LibraryHeader'
@@ -28,12 +28,11 @@ export const LeftSidebar = ({
 }: LeftSidebarProps) => {
   const [selectedTypes, setSelectedTypes] = useState<LibraryItemType[]>([])
   const [storedSort, setSort] = usePersistedState<unknown>(
-    'bitrate:library-sort',
+    LIBRARY_SORT_STORAGE_KEY,
     'recent',
   )
   const sort = isLibrarySort(storedSort) ? storedSort : 'recent'
   const { t } = useI18n()
-  const playlist = useCreateLibraryPlaylist()
 
   const toggleType = (type: LibraryItemType) =>
     setSelectedTypes((previous) =>
@@ -63,10 +62,7 @@ export const LeftSidebar = ({
           <h2 className="text-[10px] tracking-wide text-muted-foreground uppercase">
             {t('library.playlists')}
           </h2>
-          <CreatePlaylistMenu
-            isPending={playlist.isPending}
-            onCreate={playlist.create}
-          />
+          <CreatePlaylistMenu />
         </div>
       )}
       {!isCollapsed && (

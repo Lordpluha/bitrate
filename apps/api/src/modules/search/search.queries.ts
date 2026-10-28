@@ -1,4 +1,5 @@
 import type { PrismaService } from '@infra/prisma/prisma.service'
+import { PUBLIC_TRACK_SQL } from '@modules/tracks/track-visibility'
 import { Prisma } from '@prisma/client'
 import type { SearchCount, SearchFilters, SearchResult, SearchType } from './search.types'
 
@@ -41,7 +42,7 @@ const albumGenre = (genre?: string) =>
 
 /** Shared `WHERE` body for the track bucket, used by both counting and listing. */
 const trackWhere = (query: string, filters: SearchFilters) => Prisma.sql`
-  WHERE t."processingStatus" = 'READY' AND t."deletedAt" IS NULL
+  WHERE ${PUBLIC_TRACK_SQL}
     AND (t.title % ${query} OR t.title ILIKE ${contains(query)}
       OR a.username ILIKE ${contains(query)})
     ${yearFilter(Prisma.sql`t."releaseDate"`, filters.year)}
@@ -59,7 +60,7 @@ const artistWhere = (query: string, filters: SearchFilters) => Prisma.sql`
 
 /** Shared `WHERE` body for the album bucket. */
 const albumWhere = (query: string, filters: SearchFilters) => Prisma.sql`
-  WHERE al."deletedAt" IS NULL AND (al.title % ${query} OR al.title ILIKE ${contains(query)})
+  WHERE al."deletedAt" IS NULL AND al."publishedAt" IS NOT NULL AND (al.title % ${query} OR al.title ILIKE ${contains(query)})
     ${yearFilter(Prisma.sql`al."releaseDate"`, filters.year)}
     ${artistFilter(filters.artist)}
     ${albumGenre(filters.genre)}

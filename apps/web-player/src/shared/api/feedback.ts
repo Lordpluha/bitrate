@@ -1,6 +1,7 @@
 'use client'
 
 import { toast } from '@bitrate/ui-react'
+import { ZodError } from 'zod'
 import { ApiRequestError, getApiErrorStatus } from './errors'
 
 const DEFAULT_ERROR_MESSAGE = 'Something went wrong. Please try again.'
@@ -41,6 +42,15 @@ const isNetworkError = (error: unknown) =>
   error instanceof TypeError &&
   error.message.toLowerCase().includes('failed to fetch')
 
+/**
+ * A failure inside the app rather than a message for the user: a response that did not match
+ * its schema, or a runtime error. Their text is for developers, never for a toast.
+ */
+const isInternalError = (error: unknown) =>
+  error instanceof ZodError ||
+  error instanceof TypeError ||
+  error instanceof SyntaxError
+
 export const getApiErrorMessage = (
   error: unknown,
   fallback = DEFAULT_ERROR_MESSAGE,
@@ -48,6 +58,8 @@ export const getApiErrorMessage = (
   if (isNetworkError(error)) {
     return 'Cannot connect to the server. Please check your connection and try again.'
   }
+
+  if (isInternalError(error)) return fallback
 
   if (error instanceof ApiRequestError) {
     return STATUS_MESSAGES[error.status] ?? error.message

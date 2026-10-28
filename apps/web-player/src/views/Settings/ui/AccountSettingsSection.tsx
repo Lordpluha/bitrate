@@ -26,7 +26,9 @@ export const AccountSettingsSection = () => {
       {user ? (
         <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4">
           <div>
-            <p className="text-sm font-semibold text-text">Email address</p>
+            <p className="text-sm font-semibold text-foreground">
+              Email address
+            </p>
             <p className="text-sm text-muted-foreground">{user.email}</p>
           </div>
           {user.emailVerifiedAt ? (

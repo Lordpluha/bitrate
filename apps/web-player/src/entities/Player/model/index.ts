@@ -1,4 +1,4 @@
-export type { SlotIndex } from './audioPlayer/audioPlayer.types'
 export * from './manifest.types'
+export * from './playerElementStore'
 export * from './playerStore'
-export * from './useAudioPlayer'
+export * from './useStreamingPlayer'

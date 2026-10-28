@@ -1,7 +1,9 @@
+import { createI18n } from '@shared/i18n'
 import { describe, expect, it } from 'vitest'
 import { getFriendRelation, getPresenceLabel } from './friendStatus'
 
 const now = new Date('2026-10-19T12:00:00.000Z')
+const i18n = createI18n({ locale: 'en' })
 const minutesAgo = (minutes: number) =>
   new Date(now.getTime() - minutes * 60_000)
 
@@ -9,6 +11,7 @@ describe('getPresenceLabel', () => {
   it('names the track a listening friend is playing', () => {
     expect(
       getPresenceLabel({
+        i18n,
         now,
         presence: {
           lastActiveAt: now,
@@ -30,6 +33,7 @@ describe('getPresenceLabel', () => {
       lastActiveAt: Date | null,
     ) =>
       getPresenceLabel({
+        i18n,
         now,
         presence: { lastActiveAt, nowPlaying: null, status },
       })
@@ -38,6 +42,20 @@ describe('getPresenceLabel', () => {
     expect(label('away', minutesAgo(12))).toBe('Away · 12 min')
     expect(label('offline', minutesAgo(120))).toBe('Last seen 2 hr. ago')
     expect(label('offline', null)).toBe('Offline')
+  })
+
+  it('speaks the app locale', () => {
+    expect(
+      getPresenceLabel({
+        i18n: createI18n({ locale: 'pl' }),
+        now,
+        presence: {
+          lastActiveAt: minutesAgo(12),
+          nowPlaying: null,
+          status: 'away',
+        },
+      }),
+    ).toBe('Zaraz wracam · 12 min')
   })
 })
 

@@ -105,7 +105,9 @@ describe('PlaylistsService (int)', () => {
         where: { id: 'playlist-1', deletedAt: null, isPublic: true },
         include: expect.objectContaining({
           tracks: expect.objectContaining({
-            where: { track: { processingStatus: 'READY', deletedAt: null } },
+            where: {
+              track: { processingStatus: 'READY', deletedAt: null, publishedAt: { not: null } },
+            },
           }),
         }),
       }),

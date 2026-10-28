@@ -4,6 +4,7 @@ import { STORAGE_SERVICE } from '@infra/storage/storage.constants'
 import type { StorageService } from '@infra/storage/storage.types'
 import { type AuditContextValue, writeTakeDownAudit } from '@modules/admin/shared'
 import { RELEASE_ERRORS } from '@modules/releases/errors'
+import { ReleasePublishingService } from '@modules/releases/release-publishing.service'
 import { type ReleaseReadiness, releaseReadiness } from '@modules/releases/release-readiness'
 import { readinessFromRecord, releaseReadinessSelect } from '@modules/releases/releases.select'
 import { ConflictException, Inject, Injectable, NotFoundException } from '@nestjs/common'
@@ -18,10 +19,11 @@ import {
   ROW_SELECT,
   type RowRecord,
 } from './admin-releases.select'
-import type {
-  ApproveReleaseDto,
-  ListAdminReleasesQueryDto,
-  RequestReleaseChangesDto,
+import {
+  ADMIN_REVIEWED_STATUSES,
+  type ApproveReleaseDto,
+  type ListAdminReleasesQueryDto,
+  type RequestReleaseChangesDto,
 } from './dtos/release-review.dto'
 
 /** What a review decision moves the release to, and the review it stores. */
@@ -40,6 +42,7 @@ export class AdminReleasesService {
   constructor(
     private readonly prisma: PrismaService,
     @Inject(STORAGE_SERVICE) private readonly storage: StorageService,
+    private readonly publishing: ReleasePublishingService,
   ) {}
 
   async list(query: ListAdminReleasesQueryDto) {
@@ -111,6 +114,49 @@ export class AdminReleasesService {
       throw new NotFoundException(RELEASE_ERRORS.AUDIO_NOT_FOUND)
     }
     return { ...object, contentType: draft.audioContentType ?? object.contentType }
+  }
+
+  /** Takes a release offline for listeners; the artist cannot undo it. Audited. */
+  async takeDown(id: string, staffId: string, audit: AuditContextValue) {
+    const current = await this.prisma.release.findFirst({
+      where: { id, deletedAt: null },
+      select: { status: true },
+    })
+    if (!current) throw new NotFoundException(RELEASE_ERRORS.NOT_FOUND)
+    const release = await this.publishing.takeDown(id)
+    await this.prisma.$transaction((tx) =>
+      writeTakeDownAudit({
+        tx,
+        entityType: 'release',
+        entityId: id,
+        action: 'release.take-down',
+        staffId,
+        before: { status: current.status },
+        after: { status: ReleaseStatus.UNPUBLISHED },
+        requestId: audit.requestId,
+        ipAddress: audit.ipAddress,
+      }),
+    )
+    return release
+  }
+
+  /** Restarts a release whose publishing failed; converted tracks are kept. Audited. */
+  async retryPublishing(id: string, staffId: string, audit: AuditContextValue) {
+    const release = await this.publishing.retry(id)
+    await this.prisma.$transaction((tx) =>
+      writeTakeDownAudit({
+        tx,
+        entityType: 'release',
+        entityId: id,
+        action: 'release.retry-publishing',
+        staffId,
+        before: { status: ReleaseStatus.PUBLISH_FAILED },
+        after: { status: ReleaseStatus.PUBLISHING },
+        requestId: audit.requestId,
+        ipAddress: audit.ipAddress,
+      }),
+    )
+    return release
   }
 
   /** Loads what the submission rules read and evaluates them for the reviewer. */
@@ -199,10 +245,7 @@ export class AdminReleasesService {
 function listWhere(query: ListAdminReleasesQueryDto): Prisma.ReleaseWhereInput {
   return {
     deletedAt: null,
-    status:
-      query.status === 'ALL'
-        ? { in: [ReleaseStatus.SUBMITTED, ReleaseStatus.READY, ReleaseStatus.REJECTED] }
-        : query.status,
+    status: query.status === 'ALL' ? { in: [...ADMIN_REVIEWED_STATUSES] } : query.status,
     ...(query.q
       ? {
           OR: [

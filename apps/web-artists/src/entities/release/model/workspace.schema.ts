@@ -48,6 +48,8 @@ export const releaseWorkspaceSchema = releaseSummarySchema
           hasAudio: z.boolean(),
           audioFileName: z.string().nullable(),
           audioSizeBytes: z.number().int().nonnegative().nullable(),
+          // Older API builds omit it; an empty waveform draws a flat placeholder.
+          waveform: z.array(z.number().min(0).max(1)).max(400).default([]),
           version: z.enum(['ORIGINAL', 'REMASTER', 'LIVE', 'DEMO']),
           status: z.enum([
             'DRAFT',
@@ -83,6 +85,10 @@ export const releaseWorkspaceSchema = releaseSummarySchema
       )
       .max(50),
     submittedAt: instant,
+    /** Who took the release offline; only the artist's own takedown can be published again. */
+    unpublishedBy: z.enum(['ARTIST', 'ADMIN']).nullable().default(null),
+    /** The player album, once the release went live. */
+    albumId: z.uuid().nullable().default(null),
     rights: z.object({
       masterOwnerType: z.enum(masterOwnerTypes).nullable(),
       masterOwnerName: z.string().nullable(),
@@ -118,7 +124,8 @@ export const releaseWorkspaceSchema = releaseSummarySchema
   })
   .refine(
     (value) =>
-      value.trackCount >= value.trackDrafts.length + value.tracks.length &&
+      value.trackCount >=
+        Math.max(value.trackDrafts.length, value.tracks.length) &&
       value.participantCount >= value.participants.length,
   ) satisfies z.ZodType<ApiSchemas['ReleaseWorkspaceEntity']>
 

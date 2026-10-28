@@ -1,14 +1,27 @@
 import { PrismaService } from '@infra/prisma/prisma.service'
+import { PUBLIC_ALBUM_WHERE } from '@modules/albums/album-visibility'
+import { PUBLIC_TRACK_WHERE } from '@modules/tracks/track-visibility'
 import { Injectable } from '@nestjs/common'
 import type {
   FollowNotificationJob,
   FriendAcceptedNotificationJob,
   FriendRequestNotificationJob,
   NewReleaseNotificationJob,
+  ReleasePublishedNotificationJob,
 } from './notifications.queue'
 
 /** Rows per insert when a release fans out to many followers. */
 const FAN_OUT_CHUNK = 1_000
+
+/** The artist whose followers hear about a release. */
+type ReleasingArtist = { id: string; username: string }
+
+/** What one follower's "New release" row says; `dedupe` names the payload key that identifies it. */
+type NewReleaseMessage = {
+  body: string
+  dedupe: 'trackId' | 'albumId'
+  payload: { trackId: string; trackTitle: string; albumId?: string; albumTitle?: string }
+}
 
 /**
  * Writes notification rows for domain events. Every method is safe to run twice: it re-reads the
@@ -124,23 +137,66 @@ export class NotificationsService {
     const track = await this.prisma.track.findFirst({
       where: {
         id: trackId,
-        processingStatus: 'READY',
-        deletedAt: null,
+        ...PUBLIC_TRACK_WHERE,
         artist: { deletedAt: null },
       },
       select: { id: true, title: true, artist: { select: { id: true, username: true } } },
     })
     if (!track) return
+    await this.notifyFollowers(track.artist, {
+      body: track.title,
+      dedupe: 'trackId',
+      payload: { trackId: track.id, trackTitle: track.title },
+    })
+  }
+
+  /**
+   * One "New release from {artist}" per follower when a whole release goes live as `albumId`.
+   * The payload keeps the track fields older clients link with, pointing at the first track.
+   */
+  async notifyReleasePublished({ albumId }: ReleasePublishedNotificationJob) {
+    const album = await this.prisma.album.findFirst({
+      where: { id: albumId, ...PUBLIC_ALBUM_WHERE, artist: { deletedAt: null } },
+      select: {
+        id: true,
+        title: true,
+        artist: { select: { id: true, username: true } },
+        tracks: {
+          where: { track: PUBLIC_TRACK_WHERE },
+          orderBy: [{ discNumber: 'asc' }, { trackNumber: 'asc' }],
+          take: 1,
+          select: { track: { select: { id: true, title: true } } },
+        },
+      },
+    })
+    const first = album?.tracks[0]?.track
+    if (!(album && first)) return
+    await this.notifyFollowers(album.artist, {
+      body: album.title,
+      dedupe: 'albumId',
+      payload: {
+        trackId: first.id,
+        trackTitle: first.title,
+        albumId: album.id,
+        albumTitle: album.title,
+      },
+    })
+  }
+
+  /** Writes the "New release" row for each follower of `artist` who does not have it yet. */
+  private async notifyFollowers(artist: ReleasingArtist, message: NewReleaseMessage) {
     const followers = await this.prisma.userFollowedArtist.findMany({
-      where: { artistId: track.artist.id, user: { deletedAt: null } },
+      where: { artistId: artist.id, user: { deletedAt: null } },
       select: { userId: true },
     })
     if (!followers.length) return
+    const key = message.payload[message.dedupe]
+    if (!key) return
     const already = await this.prisma.notification.findMany({
       where: {
         type: 'NEW_RELEASE',
         userId: { in: followers.map((f) => f.userId) },
-        payload: { path: ['trackId'], equals: track.id },
+        payload: { path: [message.dedupe], equals: key },
       },
       select: { userId: true },
     })
@@ -150,14 +206,9 @@ export class NotificationsService {
       .map((f) => ({
         userId: f.userId,
         type: 'NEW_RELEASE' as const,
-        title: `New release from ${track.artist.username}`,
-        body: track.title,
-        payload: {
-          trackId: track.id,
-          trackTitle: track.title,
-          artistId: track.artist.id,
-          artistName: track.artist.username,
-        },
+        title: `New release from ${artist.username}`,
+        body: message.body,
+        payload: { ...message.payload, artistId: artist.id, artistName: artist.username },
       }))
     for (let i = 0; i < rows.length; i += FAN_OUT_CHUNK) {
       await this.prisma.notification.createMany({ data: rows.slice(i, i + FAN_OUT_CHUNK) })

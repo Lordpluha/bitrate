@@ -26,6 +26,10 @@ on:
         required: false
         default: true
         type: boolean
+    secrets:
+      turbo-token:
+        description: Turbo remote cache token for the turbo build inside the Dockerfile
+        required: false
 
 permissions:
   contents: read
@@ -45,20 +49,22 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       # The site is configured in TypeScript (docusaurus.config.ts), so a broken config is a
       # type error rather than a runtime one. Biome does not cover apps/docs.
       - name: Setup Node.js and pnpm
         if: ${{ inputs.run-typecheck }}
-        uses: ./.github/actions/setup-node-pnpm
+        uses: $/.github/actions/setup-node-pnpm
 
       - name: Run docs typecheck
         if: ${{ inputs.run-typecheck }}
         run: pnpm --filter @bitrate/docs check-types
 
       - name: Setup Docker + registries
-        uses: ./.github/actions/setup-docker
+        uses: $/.github/actions/setup-docker
         with:
           ghcr: "true"
           ghcr-registry: ${{ env.REGISTRY }}
@@ -68,7 +74,7 @@ jobs:
       # The production target serves the prebuilt bundle from nginx on 8080 and reads no
       # configuration, so this image carries no build args and is environment-agnostic.
       - name: Build Docs Docker image
-        uses: docker/build-push-action@v7
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
         with:
           context: .
           file: ./apps/docs/Dockerfile
@@ -81,7 +87,7 @@ jobs:
           # develop's layers with its own, and a gzip mode=max export cost minutes per run.
           cache-to: ${{ inputs.cache-to-registry && format('type=registry,ref={0}/{1}/cache/docs:buildcache,mode=max,compression=zstd,ignore-error=true', env.REGISTRY, env.IMAGE_PREFIX) || '' }}
           secrets: |
-            turbo_token=${{ secrets.TURBO_TOKEN }}
+            turbo_token=${{ secrets.turbo-token }}
           target: production
 
       - name: Resolve image reference for scanning
@@ -91,7 +97,7 @@ jobs:
         run: echo "ref=$(printf '%s\n' "$TAGS" | sed -e 's/^[[:space:]]*//' -e '/^$/d' | head -n1)" >> "$GITHUB_OUTPUT"
 
       - name: Scan image
-        uses: ./.github/actions/scan-image
+        uses: $/.github/actions/scan-image
         with:
           image-ref: ${{ steps.scan-ref.outputs.ref }}
           service: docs

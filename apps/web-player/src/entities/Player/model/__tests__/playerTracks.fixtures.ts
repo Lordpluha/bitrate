@@ -25,6 +25,7 @@ const createTrack = ({
   releaseDate: null,
   lyrics: null,
   processingStatus: 'READY' as const,
+  publishedAt: '2026-01-01T00:00:00.000Z',
   processingError: null,
   processingAttempts: 0,
   processingStartedAt: null,

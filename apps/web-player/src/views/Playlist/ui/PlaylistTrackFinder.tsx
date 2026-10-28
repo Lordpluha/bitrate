@@ -41,12 +41,12 @@ export const PlaylistTrackFinder = ({
     <section className="pb-4">
       <div className="border-t border-border pt-6">
         <div className="mb-4 flex items-start justify-between gap-4">
-          <h2 className="text-xl font-bold text-text sm:text-2xl">
+          <h2 className="text-xl font-bold text-foreground sm:text-2xl">
             {t('playlist.find')}
           </h2>
           <button
             aria-label={t('playlist.hideRecommendations')}
-            className="text-text-subdued transition-colors hover:text-text"
+            className="text-muted-foreground transition-colors hover:text-foreground"
             onClick={() => setIsVisible(false)}
             type="button"
           >
@@ -55,11 +55,11 @@ export const PlaylistTrackFinder = ({
         </div>
         <label className="relative block max-w-100">
           <Search
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-text-subdued"
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
             size={18}
           />
           <input
-            className="h-10 w-full rounded bg-surface py-2 pl-10 pr-10 text-sm text-text outline-none transition-colors placeholder:text-text-subdued focus:bg-surface-hover focus:ring-2 focus:ring-white/20"
+            className="h-10 w-full rounded bg-surface py-2 pl-10 pr-10 text-sm text-foreground outline-none transition-colors placeholder:text-muted-foreground focus:bg-surface-hover focus-visible:ring-2 focus-visible:ring-ring"
             onChange={(event) => setQuery(event.target.value)}
             placeholder={t('playlist.search')}
             value={query}
@@ -67,7 +67,7 @@ export const PlaylistTrackFinder = ({
           {query.length > 0 && (
             <button
               aria-label={t('common.clear')}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-text-subdued hover:text-text"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
               onClick={() => setQuery('')}
               type="button"
             >
@@ -78,15 +78,17 @@ export const PlaylistTrackFinder = ({
 
         <div aria-live="polite" className="mt-5">
           {!shouldSearch && (
-            <p className="text-sm text-text-subdued">
+            <p className="text-sm text-muted-foreground">
               {t('playlist.findHint', { name: playlistTitle })}
             </p>
           )}
           {shouldSearch && isFetching && (
-            <p className="text-sm text-text-subdued">{t('search.searching')}</p>
+            <p className="text-sm text-muted-foreground">
+              {t('search.searching')}
+            </p>
           )}
           {shouldSearch && !isFetching && suggestedTracks.length === 0 && (
-            <p className="text-sm text-text-subdued">
+            <p className="text-sm text-muted-foreground">
               {t('playlist.noTracksFound')}
             </p>
           )}

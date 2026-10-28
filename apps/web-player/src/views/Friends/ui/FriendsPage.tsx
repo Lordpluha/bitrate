@@ -1,12 +1,13 @@
 'use client'
 
 import { Button } from '@bitrate/ui-react'
+import { useI18n } from '@shared/i18n'
 import { ROUTES } from '@shared/routes'
 import {
+  ErrorState,
   ListSkeleton,
   PageShell,
   PageTitle,
-  RetryState,
   SectionHeader,
   SegmentedTabs,
   StateMessage,
@@ -60,6 +61,7 @@ const FriendList = ({ friends }: { friends: Friend[] }) => (
  * Presence is visible to friends only; listening along waits for Jam.
  */
 export const FriendsPage = () => {
+  const { t } = useI18n()
   const [tab, setTab] = useState<FriendsTab>('all')
   const friends = useFriends()
   const incoming = useFriendRequests('incoming')
@@ -73,24 +75,36 @@ export const FriendsPage = () => {
       className="h-9 gap-2 px-4 text-sm font-medium"
       variant="default"
     >
-      <Link aria-label="Find friends" href={ROUTES.findFriends}>
+      <Link aria-label={t('friends.findFriends')} href={ROUTES.findFriends}>
         <UserPlus className="size-4" />
-        <span className="hidden sm:inline">Find friends</span>
+        <span className="hidden sm:inline">{t('friends.findFriends')}</span>
       </Link>
     </Button>
   )
 
   return (
     <PageShell>
-      <PageTitle action={findFriends} title="Friends" />
+      <PageTitle action={findFriends} title={t('friends.title')} />
 
       <div className="-mx-4 flex gap-1 overflow-x-auto px-4 md:mx-0 md:px-0">
         <SegmentedTabs
-          ariaLabel="Friends"
+          ariaLabel={t('friends.title')}
           onChange={setTab}
           tabs={[
-            { id: 'all', label: `All · ${all.length}` },
-            { id: 'online', label: `Online · ${online.length}` },
+            {
+              id: 'all',
+              label: t('friends.countLabel', {
+                count: all.length,
+                label: t('friends.all'),
+              }),
+            },
+            {
+              id: 'online',
+              label: t('friends.countLabel', {
+                count: online.length,
+                label: t('friends.online'),
+              }),
+            },
           ]}
           value={tab}
         />
@@ -98,43 +112,56 @@ export const FriendsPage = () => {
           className={segmentedTabClassName({ isActive: false })}
           href={ROUTES.friendRequests}
         >
-          Requests{requestCount ? ` · ${requestCount}` : ''}
+          {requestCount
+            ? t('friends.countLabel', {
+                count: requestCount,
+                label: t('friends.requests'),
+              })
+            : t('friends.requests')}
         </Link>
       </div>
 
       {friends.isPending ? (
-        <ListSkeleton label="Loading friends" rows={6} />
+        <ListSkeleton label={t('friends.loading')} rows={6} />
       ) : friends.isError ? (
-        <RetryState
+        <ErrorState
+          description={t('common.tryAgainSoon')}
           onRetry={() => void friends.refetch()}
-          title="Friends are unavailable right now"
+          title={t('friends.unavailable')}
         />
       ) : all.length === 0 ? (
         <StateMessage
-          description="Add people you know to see when they are online and what they are playing."
+          description={t('friends.emptyDescription')}
           icon={UsersRound}
-          primary={{ href: ROUTES.findFriends, label: 'Find friends' }}
-          title="No friends yet"
+          primary={{
+            href: ROUTES.findFriends,
+            label: t('friends.findFriends'),
+          }}
+          title={t('friends.emptyTitle')}
         />
       ) : tab === 'online' ? (
         online.length === 0 ? (
           <StateMessage
-            description="When a friend comes online, they appear here first."
+            description={t('friends.nobodyOnlineDescription')}
             icon={Moon}
-            title="Nobody is online right now"
+            title={t('friends.nobodyOnline')}
           />
         ) : (
           <section className="flex flex-col gap-3">
-            <SectionHeader title={`Online · ${online.length}`} />
+            <SectionHeader
+              title={t('friends.countLabel', {
+                count: online.length,
+                label: t('friends.online'),
+              })}
+            />
             <FriendList friends={online} />
             <p className="rounded-[10px] bg-surface px-4 py-3 text-[13px] text-muted-foreground">
-              Only friends see your online status and what you are playing.
-              Change it in{' '}
+              {t('friends.privacyNote')} {t('friends.privacyChange')}{' '}
               <Link
                 className="text-foreground underline"
                 href={ROUTES.settings}
               >
-                Privacy
+                {t('friends.privacyLink')}
               </Link>
               .
             </p>
@@ -144,7 +171,12 @@ export const FriendsPage = () => {
         <>
           {online.length > 0 ? (
             <section className="flex flex-col gap-3">
-              <SectionHeader title={`Online now · ${online.length}`} />
+              <SectionHeader
+                title={t('friends.countLabel', {
+                  count: online.length,
+                  label: t('friends.onlineNow'),
+                })}
+              />
               <div className="-mx-4 flex gap-3 overflow-x-auto px-4 pt-1 md:mx-0 md:px-1">
                 {online.slice(0, STRIP_SIZE).map(({ presence, user }) => (
                   <FriendTile key={user.id} presence={presence} user={user} />
@@ -154,13 +186,23 @@ export const FriendsPage = () => {
           ) : null}
           {online.length > 0 ? (
             <section className="flex flex-col gap-1">
-              <SectionHeader title={`Online · ${online.length}`} />
+              <SectionHeader
+                title={t('friends.countLabel', {
+                  count: online.length,
+                  label: t('friends.online'),
+                })}
+              />
               <FriendList friends={online} />
             </section>
           ) : null}
           {offline.length > 0 ? (
             <section className="flex flex-col gap-1">
-              <SectionHeader title={`Offline · ${offline.length}`} />
+              <SectionHeader
+                title={t('friends.countLabel', {
+                  count: offline.length,
+                  label: t('friends.offline'),
+                })}
+              />
               <FriendList friends={offline} />
             </section>
           ) : null}

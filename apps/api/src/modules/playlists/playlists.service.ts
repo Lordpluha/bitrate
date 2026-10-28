@@ -4,6 +4,7 @@ import { isPrismaP2002, isPrismaP2025, isPrismaP2034 } from '@common/utils/prism
 import { NS } from '@infra/cache/cache.constants'
 import { CacheService } from '@infra/cache/cache.service'
 import { PrismaService } from '@infra/prisma/prisma.service'
+import { PUBLIC_TRACK_WHERE } from '@modules/tracks/track-visibility'
 import { UserEntity } from '@modules/users'
 import {
   BadRequestException,
@@ -118,7 +119,7 @@ export class PlaylistsService {
       },
       include: {
         tracks: {
-          where: { track: { processingStatus: 'READY', deletedAt: null } },
+          where: { track: PUBLIC_TRACK_WHERE },
           include: { track: true },
           orderBy: { position: 'asc' },
         },
@@ -233,7 +234,7 @@ export class PlaylistsService {
         where,
         include: {
           tracks: {
-            where: { track: { processingStatus: 'READY', deletedAt: null } },
+            where: { track: PUBLIC_TRACK_WHERE },
             orderBy: { position: 'asc' },
             take: MINE_PREVIEW_TRACKS,
             select: { track: { select: { id: true, title: true, cover: true } } },
@@ -308,8 +309,7 @@ export class PlaylistsService {
     const readyCount = await this.prisma.track.count({
       where: {
         id: { in: trackIds },
-        processingStatus: 'READY',
-        deletedAt: null,
+        ...PUBLIC_TRACK_WHERE,
       },
     })
     if (readyCount !== trackIds.length) {

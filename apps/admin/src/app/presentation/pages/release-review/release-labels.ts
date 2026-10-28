@@ -13,7 +13,11 @@ export const RELEASE_STATUS_KEYS: Record<ReviewedReleaseStatus, string> = {
   SUBMITTED: 'release.status.SUBMITTED',
   READY: 'release.status.READY',
   REJECTED: 'release.status.REJECTED',
+  SCHEDULED: 'release.status.SCHEDULED',
+  PUBLISHING: 'release.status.PUBLISHING',
+  PUBLISH_FAILED: 'release.status.PUBLISH_FAILED',
   RELEASED: 'release.status.RELEASED',
+  UNPUBLISHED: 'release.status.UNPUBLISHED',
 }
 
 export type StatusBadgeVariant = 'success' | 'warning' | 'info' | 'destructive' | 'secondary'
@@ -23,7 +27,11 @@ export const RELEASE_STATUS_BADGES = {
   SUBMITTED: 'warning',
   READY: 'success',
   REJECTED: 'destructive',
+  SCHEDULED: 'info',
+  PUBLISHING: 'info',
+  PUBLISH_FAILED: 'destructive',
   RELEASED: 'success',
+  UNPUBLISHED: 'secondary',
 } as const satisfies Record<ReviewedReleaseStatus, StatusBadgeVariant>
 
 /** Readiness blockers by API code; the template shows an unknown code verbatim. */
@@ -33,7 +41,6 @@ export const RELEASE_BLOCKER_KEYS: Record<string, string> = {
   TRACK_AUDIO_MISSING: 'release.blocker.TRACK_AUDIO_MISSING',
   MASTER_OWNER_MISSING: 'release.blocker.MASTER_OWNER_MISSING',
   WRITERS_NOT_CONFIRMED: 'release.blocker.WRITERS_NOT_CONFIRMED',
-  ACCURACY_NOT_CONFIRMED: 'release.blocker.ACCURACY_NOT_CONFIRMED',
   CONTRIBUTOR_ROLES_MISSING: 'release.blocker.CONTRIBUTOR_ROLES_MISSING',
   SPLITS_INCOMPLETE: 'release.blocker.SPLITS_INCOMPLETE',
 }

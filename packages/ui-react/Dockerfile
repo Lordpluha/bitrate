@@ -44,6 +44,10 @@ RUN --mount=type=secret,id=turbo_token,env=TURBO_TOKEN \
 
 # Stage 3: Production
 FROM nginx:1.31-alpine AS production
+# The nginx base is rebuilt upstream only every few weeks, while Alpine ships fixes for its
+# packages (curl, brotli, ...) in between; upgrading here keeps the scan clean without
+# waiting for a new tag.
+RUN apk upgrade --no-cache
 COPY --from=build /app/packages/ui-react/storybook-static /usr/share/nginx/html
 COPY --from=build /app/packages/player/storybook-static /usr/share/nginx/html/player
 COPY --from=build /app/apps/admin/storybook-static /usr/share/nginx/html/admin

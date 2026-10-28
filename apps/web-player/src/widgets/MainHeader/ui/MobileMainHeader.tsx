@@ -1,74 +1,59 @@
 'use client'
 
-import { Plus, Search } from 'lucide-react'
+import { ChevronLeft } from 'lucide-react'
 import { usePathname } from 'next/navigation'
 import { useAuth } from '@/shared/hooks'
 import { useI18n } from '@/shared/i18n'
 import { ROUTES } from '@/shared/routes'
+import { BackButton } from '@/shared/ui/BackButton'
 import { BurgerMenu } from '@/widgets/MainHeader/ui/BurgerMenu'
 import { HeaderSearch } from '@/widgets/MainHeader/ui/HeaderSearch'
 import { NotificationsPopover } from '@/widgets/MainHeader/ui/NotificationsPopover'
 
-type MobileMainHeaderProps = {
-  onCreate?: () => void
-}
+/**
+ * Pages one step below a top-level page that have no back button of their own (album and
+ * playlist heroes carry one), so the header shows the design's back chevron instead.
+ */
+const NESTED_PAGE_PREFIXES = [
+  ROUTES.artist(''),
+  ROUTES.user(''),
+  ROUTES.podcast(''),
+  ROUTES.findFriends,
+  ROUTES.friendRequests,
+]
 
-const getPageTitleKey = (pathname: string) => {
-  if (pathname.startsWith(ROUTES.search())) return 'nav.search' as const
-  if (pathname.startsWith(ROUTES.library)) return 'library.title' as const
-  if (pathname.startsWith(ROUTES.profile)) return 'common.profile' as const
-  if (pathname.startsWith(ROUTES.recents)) return 'recents.title' as const
-  if (pathname.startsWith(ROUTES.settings)) return 'settings.title' as const
-  return null
-}
-
-export const MobileMainHeader = ({ onCreate }: MobileMainHeaderProps) => {
+/**
+ * The header below `xl`: the account menu (or Back on a nested page), the search field on the
+ * search page and the bell. Each page shows its own title and actions, so the header does not
+ * repeat them.
+ */
+export const MobileMainHeader = () => {
   const { t } = useI18n()
   const { isAuthenticated } = useAuth()
   const pathname = usePathname()
-  const titleKey = getPageTitleKey(pathname)
   const isSearch = pathname.startsWith(ROUTES.search())
-  const isLibrary = pathname.startsWith(ROUTES.library)
-
-  const focusLibrarySearch = () => {
-    document.getElementById('library-filter')?.focus()
-  }
+  const isNested = NESTED_PAGE_PREFIXES.some((prefix) =>
+    pathname.startsWith(prefix),
+  )
 
   return (
     <div className="flex h-full w-full items-center gap-3">
-      <BurgerMenu trigger="avatar" />
+      {isNested ? (
+        <BackButton
+          aria-label={t('common.back')}
+          className="flex size-10 items-center justify-center rounded-full text-foreground transition-colors hover:bg-surface"
+        >
+          <ChevronLeft aria-hidden="true" size={24} />
+        </BackButton>
+      ) : (
+        <BurgerMenu trigger="avatar" />
+      )}
       {isSearch ? (
         <HeaderSearch className="min-w-0 flex-1 w-full" />
-      ) : titleKey ? (
-        <h1 className="min-w-0 flex-1 truncate text-xl font-bold text-text">
-          {t(titleKey)}
-        </h1>
       ) : (
         <div className="flex-1" />
       )}
-
       {isAuthenticated && <NotificationsPopover />}
-
-      {isLibrary && (
-        <div className="flex items-center">
-          <button
-            aria-label={t('library.search')}
-            className="rounded-full p-2.5 text-text transition-colors hover:bg-surface"
-            onClick={focusLibrarySearch}
-            type="button"
-          >
-            <Search size={23} />
-          </button>
-          <button
-            aria-label={t('library.createPlaylist')}
-            className="rounded-full p-2.5 text-text transition-colors hover:bg-surface"
-            onClick={onCreate}
-            type="button"
-          >
-            <Plus size={25} />
-          </button>
-        </div>
-      )}
     </div>
   )
 }

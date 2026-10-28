@@ -1,9 +1,16 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core'
 import { ActivatedRoute, RouterLink } from '@angular/router'
-import { DecideReleaseUseCase, GetReleaseSubmissionUseCase } from '@application/release-review'
+import {
+  DecideReleaseUseCase,
+  GetReleaseSubmissionUseCase,
+  RetryPublishingUseCase,
+  TakeDownReleaseUseCase,
+} from '@application/release-review'
 import { SessionStore } from '@application/session'
 import {
   canDecideOnRelease,
+  canRetryPublishing,
+  canTakeDownRelease,
   normalizeReviewItems,
   REVIEW_LIMITS,
   ReleaseReviewError,
@@ -21,6 +28,7 @@ import {
   lucideDisc3,
   lucideHistory,
   lucidePencil,
+  lucideRotateCw,
   lucideShieldCheck,
   lucideUsers,
 } from '@ng-icons/lucide'
@@ -101,6 +109,7 @@ function lines(value: string): string[] {
       lucideDisc3,
       lucideHistory,
       lucidePencil,
+      lucideRotateCw,
       lucideShieldCheck,
       lucideUsers,
     }),
@@ -112,6 +121,8 @@ export class ReleaseReviewDetailPage {
   private readonly route = inject(ActivatedRoute)
   private readonly getRelease = inject(GetReleaseSubmissionUseCase)
   private readonly decide = inject(DecideReleaseUseCase)
+  private readonly retry = inject(RetryPublishingUseCase)
+  private readonly takeDownRelease = inject(TakeDownReleaseUseCase)
   private readonly transloco = inject(TranslocoService)
   private readonly locale = inject(LocaleStore).locale
 
@@ -175,6 +186,52 @@ export class ReleaseReviewDetailPage {
 
   protected decidable(release: ReleaseSubmissionDetail): boolean {
     return canDecideOnRelease(release).allowed
+  }
+
+  protected retryable(release: ReleaseSubmissionDetail): boolean {
+    return canRetryPublishing(release).allowed
+  }
+
+  protected takeDownable(release: ReleaseSubmissionDetail): boolean {
+    return canTakeDownRelease(release).allowed
+  }
+
+  /** Restarts a failed publication, then reloads to show it publishing again. */
+  protected retryPublishing(): Promise<void> {
+    return this.publicationAction(
+      (release) => this.retry.execute(release),
+      'release.decision.publishingRetried',
+    )
+  }
+
+  /** Takes a live release offline for listeners, then reloads. */
+  protected takeDown(): Promise<void> {
+    return this.publicationAction(
+      (release) => this.takeDownRelease.execute(release),
+      'release.decision.takenDown',
+    )
+  }
+
+  private async publicationAction(
+    run: (release: ReleaseSubmissionDetail) => Promise<void>,
+    notice: string,
+  ): Promise<void> {
+    const current = this.release()
+    if (!current || this.working()) return
+    this.working.set(true)
+    this.failure.set(null)
+    this.status.set(null)
+    try {
+      await run(current)
+      this.status.set({ key: notice, params: { title: current.title } })
+      await this.record.reload()
+    } catch (error) {
+      this.failure.set(this.describe(error))
+      if (error instanceof ReleaseReviewError && error.reason === 'stale')
+        await this.record.reload()
+    } finally {
+      this.working.set(false)
+    }
   }
 
   /** "Performer, Producer" in the active language; `—` for a contributor with no role. */

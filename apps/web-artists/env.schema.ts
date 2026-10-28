@@ -11,6 +11,11 @@ const envSchema = z.object({
    * (Dockerfile build arg, compose service env, CI build arg).
    */
   VITE_API_URL: z.url('Invalid API URL').default('http://localhost:3000'),
+  /**
+   * Public address of the Bitrate player, for links to a released album. Deployments map the
+   * player's `NEXT_PUBLIC_SITE_URL` to it at this app's boundary.
+   */
+  VITE_PLAYER_URL: z.url('Invalid player URL').default('http://localhost:3001'),
 })
 
 export type Env = z.infer<typeof envSchema>
@@ -19,6 +24,7 @@ export function validateEnv(): Env {
   const env = {
     NODE_ENV: process.env.NODE_ENV,
     VITE_API_URL: process.env.VITE_API_URL,
+    VITE_PLAYER_URL: process.env.VITE_PLAYER_URL,
   }
 
   const result = envSchema.safeParse(env)

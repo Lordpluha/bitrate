@@ -10,8 +10,13 @@ import { usePlayerStore } from '@entities/Player'
 import { getTrackById } from '@entities/Track'
 import { showApiErrorToast } from '@shared/api/feedback'
 import { ROUTES } from '@shared/routes'
-import { PageTitle, StateMessage, TrackRowSkeleton } from '@shared/ui'
-import { History, TriangleAlert } from 'lucide-react'
+import {
+  ErrorState,
+  PageTitle,
+  StateMessage,
+  TrackRowSkeleton,
+} from '@shared/ui'
+import { History } from 'lucide-react'
 import { useMemo } from 'react'
 import { useI18n } from '@/shared/i18n'
 import { groupListeningHistory } from '@/views/Recents/model/groupListeningHistory'
@@ -49,7 +54,7 @@ export const RecentsPage = () => {
     try {
       play(await getTrackById(trackId))
     } catch (error) {
-      showApiErrorToast(error, 'Unable to play this track.')
+      showApiErrorToast(error, t('profile.playFailed'))
     }
   }
 
@@ -83,18 +88,15 @@ export const RecentsPage = () => {
             ))}
           </div>
         ) : isError ? (
-          <StateMessage
-            description="Your listening history could not be loaded."
-            icon={TriangleAlert}
-            primary={{ label: 'Try again', onClick: () => void refetch() }}
-            title="Recents are unavailable"
-            tone="error"
+          <ErrorState
+            onRetry={() => void refetch()}
+            title={t('recents.loadFailed')}
           />
         ) : Object.keys(groups).length === 0 ? (
           <StateMessage
-            description="Tracks you play will show up here."
+            description={t('recents.emptyDescription')}
             icon={History}
-            primary={{ href: ROUTES.search(), label: 'Find something to play' }}
+            primary={{ href: ROUTES.search(), label: t('queue.find') }}
             title={t('recents.empty')}
           />
         ) : (

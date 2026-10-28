@@ -12,6 +12,7 @@ import {
   parseRangeHeader,
   selectPreferredTrackFile,
 } from './track-audio.helpers'
+import { LISTED_TRACK_WHERE } from './track-visibility'
 
 /** Renditions are transcoded to Opus, so it is the format clients get unless they ask otherwise. */
 const DEFAULT_AUDIO_FORMAT = 'opus'
@@ -38,7 +39,7 @@ export class TrackStreamingService {
     preferredBitrate?: number,
     preferredFormat = DEFAULT_AUDIO_FORMAT,
   ) {
-    const track = await this.prisma.track.findFirst({ where: { id, deletedAt: null } })
+    const track = await this.prisma.track.findFirst({ where: { id, ...LISTED_TRACK_WHERE } })
     if (!track) throw new NotFoundException('Track not found')
     if (track.processingStatus !== 'READY') {
       throw new NotFoundException('Track is not available yet')
@@ -139,7 +140,7 @@ export class TrackStreamingService {
   /** Returns the FFmpeg-generated HLS master playlist from storage. */
   async getHlsMasterPlaylist(id: TrackEntity['id']) {
     const track = await this.prisma.track.findFirst({
-      where: { id, deletedAt: null },
+      where: { id, ...LISTED_TRACK_WHERE },
       include: { audioFiles: { where: { format: DEFAULT_AUDIO_FORMAT }, take: 1 } },
     })
     if (!track) throw new NotFoundException('Track not found')
@@ -159,7 +160,7 @@ export class TrackStreamingService {
   async getHlsAsset(id: TrackEntity['id'], bitrate: number, asset: string) {
     if (!isAllowedHlsAsset(asset)) throw new NotFoundException('HLS asset not found')
 
-    const track = await this.prisma.track.findFirst({ where: { id, deletedAt: null } })
+    const track = await this.prisma.track.findFirst({ where: { id, ...LISTED_TRACK_WHERE } })
     if (!track) throw new NotFoundException('HLS asset not found')
     if (track.processingStatus !== 'READY') throw new NotFoundException('HLS asset not found')
 

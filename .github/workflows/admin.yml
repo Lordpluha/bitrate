@@ -65,8 +65,9 @@ permissions:
 jobs:
   admin-pr:
     if: ${{ github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'pr') }}
-    uses: ./.github/workflows/admin_reusable.yml
-    secrets: inherit
+    uses: $/.github/workflows/admin_reusable.yml
+    secrets:
+      turbo-token: ${{ secrets.TURBO_TOKEN }}
     with:
       push-image: false
       tags: ghcr.io/lordpluha/${{ github.event.repository.name }}/admin:pr-${{ github.sha }}
@@ -77,8 +78,9 @@ jobs:
 
   admin-develop:
     if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/develop') || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'develop') }}
-    uses: ./.github/workflows/admin_reusable.yml
-    secrets: inherit
+    uses: $/.github/workflows/admin_reusable.yml
+    secrets:
+      turbo-token: ${{ secrets.TURBO_TOKEN }}
     with:
       push-image: true
       tags: |
@@ -97,8 +99,9 @@ jobs:
     # other five. This mode is the hand-run escape hatch for rebuilding just this
     # service's `:master` image.
     if: ${{ github.event_name == 'workflow_dispatch' && inputs.mode == 'master' }}
-    uses: ./.github/workflows/admin_reusable.yml
-    secrets: inherit
+    uses: $/.github/workflows/admin_reusable.yml
+    secrets:
+      turbo-token: ${{ secrets.TURBO_TOKEN }}
     with:
       push-image: true
       # Three tags, and the third one is the rollback handle:

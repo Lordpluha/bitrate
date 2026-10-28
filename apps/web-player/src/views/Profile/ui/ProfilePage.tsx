@@ -9,6 +9,7 @@ import { getTrackById } from '@/entities/Track'
 import { useFollowedUsers } from '@/entities/User'
 import { showApiErrorToast } from '@/shared/api/feedback'
 import { useAuth } from '@/shared/hooks'
+import { useI18n } from '@/shared/i18n'
 import { ROUTES } from '@/shared/routes'
 import { LegalFooter, Skeleton, StateMessage } from '@/shared/ui'
 import { getUserAvatarUrl } from '@/shared/utils/mediaUrl'
@@ -21,6 +22,7 @@ import { ProfilePlaylistsSection } from '@/views/Profile/ui/ProfilePlaylistsSect
 import { ProfileTracksSection } from '@/views/Profile/ui/ProfileTracksSection'
 
 export const ProfilePage = () => {
+  const { t } = useI18n()
   const play = usePlayerStore((state) => state.play)
   const { user, isLoading } = useAuth()
   const { data: artistsData, isPending: isArtistsPending } = useTopArtists(
@@ -48,14 +50,14 @@ export const ProfilePage = () => {
     try {
       play(await getTrackById(track.id))
     } catch (error) {
-      showApiErrorToast(error, 'Unable to play this track.')
+      showApiErrorToast(error, t('profile.playFailed'))
     }
   }
 
   if (isLoading) {
     return (
       <div
-        aria-label="Loading profile"
+        aria-label={t('profile.loading')}
         className="flex h-full flex-col gap-7 px-4 pt-2 md:px-8 md:py-6"
         role="status"
       >
@@ -75,10 +77,10 @@ export const ProfilePage = () => {
     return (
       <div className="flex h-full flex-col px-4 md:px-8">
         <StateMessage
-          description="Log in to see your top artists, tracks and playlists."
+          description={t('profile.signInDescription')}
           icon={LogIn}
-          primary={{ href: ROUTES.auth.login, label: 'Log in' }}
-          title="Sign in to view your profile."
+          primary={{ href: ROUTES.auth.login, label: t('profile.logIn') }}
+          title={t('profile.signInTitle')}
         />
       </div>
     )
@@ -113,10 +115,10 @@ export const ProfilePage = () => {
           <div className="flex min-w-0 flex-col gap-5">
             <ProfileArtistsSection
               artists={followedArtists}
-              emptyMessage="You are not following any artists yet."
+              emptyMessage={t('profile.notFollowingArtists')}
               isPending={areFollowedArtistsPending}
-              subtitle="Artists you follow"
-              title="Following artists"
+              subtitle={t('profile.artistsYouFollow')}
+              title={t('profile.followingArtists')}
               variant="list"
             />
             <ProfileFollowingUsersSection

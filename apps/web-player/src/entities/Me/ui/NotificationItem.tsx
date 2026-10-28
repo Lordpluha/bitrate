@@ -13,11 +13,13 @@ import Link from 'next/link'
 import { useReadNotification } from '@/entities/Me/api/client/hooks'
 import type { NotificationResponse } from '@/entities/Me/api/client/me.schemas'
 import { getNotificationHref } from '@/entities/Me/lib/notificationHref'
+import { useI18n } from '@/shared/i18n'
+import { formatDate } from '@/shared/utils/formatDate'
 
-const notificationDateFormatter = new Intl.DateTimeFormat(undefined, {
+const NOTIFICATION_DATE_OPTIONS: Intl.DateTimeFormatOptions = {
   day: 'numeric',
   month: 'short',
-})
+}
 
 const ICON_BY_TYPE = {
   FOLLOW: UserPlus,
@@ -37,6 +39,7 @@ type NotificationItemProps = {
  * an unread dot. Opens its target (a profile, an artist) when it has one and marks it read.
  */
 export const NotificationItem = ({ notification }: NotificationItemProps) => {
+  const { locale, t } = useI18n()
   const readNotification = useReadNotification()
   const href = getNotificationHref(notification)
   const Icon = ICON_BY_TYPE[notification.type]
@@ -63,12 +66,16 @@ export const NotificationItem = ({ notification }: NotificationItemProps) => {
           </span>
         ) : null}
         <span className="text-xs text-muted-foreground">
-          {notificationDateFormatter.format(notification.createdAt)}
+          {formatDate({
+            date: notification.createdAt,
+            locale,
+            options: NOTIFICATION_DATE_OPTIONS,
+          })}
         </span>
       </span>
       {isUnread ? (
         <span
-          aria-label="Unread"
+          aria-label={t('common.unread')}
           className="size-2 shrink-0 rounded-full bg-primary"
           role="img"
         />

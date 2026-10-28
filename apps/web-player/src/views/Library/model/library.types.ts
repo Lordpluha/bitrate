@@ -1,8 +1,8 @@
-import type { ListeningHistoryEntry } from '@/entities/History'
 import type { PlaylistLibraryItem } from '@/entities/Playlist'
 import type { TrackEntity } from '@/entities/Track'
 
-export type LibrarySection = 'playlists' | 'liked' | 'albums' | 'history'
+/** Listening history lives on the Recents page, not in the library. */
+export type LibrarySection = 'playlists' | 'liked' | 'albums'
 
 export type SortMode = 'recent' | 'title'
 
@@ -27,8 +27,9 @@ export type LibraryAlbum = {
 
 export type LibraryData = {
   albums: LibraryAlbum[]
-  history: ListeningHistoryEntry[]
+  isError: boolean
   isPending: boolean
   playlists: LibraryPlaylist[]
+  refetch: () => void
   tracks: TrackEntity[]
 }
