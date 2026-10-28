@@ -248,6 +248,13 @@ as the only verification; run the relevant package checks before opening a PR.
 
 ### Creating a PR
 
+0. **Scope and size** — one PR changes one workspace (`apps/*` or `packages/*`), at most
+   200 files and 2000 lines (additions + deletions). Shared paths (root config, `.github`,
+   `.claude`, `infra`, `scripts`, `pencil`, `apps/docs`) may ride along; generated files
+   don't count. The `PR Scope` check enforces it — run `pnpm check:pr-scope` locally first.
+   Exemptions and how to split cross-workspace work: `.claude/rules/commit-style.md`,
+   "Commit and pull-request size".
+
 1. **Title** should be descriptive:
    ```
    feat(web-player): add playlist page
