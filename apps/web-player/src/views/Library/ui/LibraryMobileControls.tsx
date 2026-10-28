@@ -21,7 +21,7 @@ export const LibraryMobileControls = ({
     <div className="relative border-t border-border pt-4 xl:hidden">
       <div className="flex h-10 items-center justify-between">
         <button
-          className="flex min-h-10 items-center gap-2 rounded-full px-1 text-base font-semibold text-text"
+          className="flex min-h-10 items-center gap-2 rounded-full px-1 text-base font-semibold text-foreground"
           onClick={() =>
             onChange({
               sortMode: controls.sortMode === 'recent' ? 'title' : 'recent',
@@ -31,8 +31,8 @@ export const LibraryMobileControls = ({
         >
           <ArrowDownUp aria-hidden="true" size={19} />
           {controls.sortMode === 'recent'
-            ? t('library.recents')
-            : t('common.title')}
+            ? t('library.sortRecentlyAdded')
+            : t('library.sortTitle')}
         </button>
         <button
           aria-label={
@@ -40,7 +40,7 @@ export const LibraryMobileControls = ({
               ? t('library.switchGrid')
               : t('library.switchList')
           }
-          className="flex size-10 items-center justify-center rounded-full text-text hover:bg-surface"
+          className="flex size-10 items-center justify-center rounded-full text-foreground hover:bg-surface"
           onClick={() =>
             onChange({
               viewMode: controls.viewMode === 'list' ? 'grid' : 'list',
@@ -65,12 +65,12 @@ export const LibraryMobileControls = ({
       >
         <SearchIcon
           aria-hidden="true"
-          className="shrink-0 text-text-subdued"
+          className="shrink-0 text-muted-foreground"
           size={19}
         />
         <input
           aria-label={t('library.search')}
-          className="h-full min-w-0 flex-1 bg-transparent px-3 text-sm text-text outline-none"
+          className="h-full min-w-0 flex-1 bg-transparent px-3 text-sm text-foreground outline-none"
           onBlur={() => setIsSearchOpen(false)}
           onChange={(event) => onChange({ query: event.target.value })}
           onFocus={() => setIsSearchOpen(true)}
@@ -79,7 +79,7 @@ export const LibraryMobileControls = ({
         />
         <button
           aria-label={t('library.clearSearch')}
-          className="rounded-full p-1 text-text-subdued hover:text-text"
+          className="rounded-full p-1 text-muted-foreground hover:text-foreground"
           onClick={() => {
             onChange({ query: '' })
             setIsSearchOpen(false)

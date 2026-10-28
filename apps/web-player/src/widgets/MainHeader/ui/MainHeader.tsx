@@ -1,21 +1,18 @@
 'use client'
 
 import { useAuth } from '@shared/hooks'
+import { useI18n } from '@shared/i18n'
 import { ROUTES } from '@shared/routes'
 import { Logo } from '@shared/ui'
+import { ActivityPopover } from './ActivityPopover'
 import { AuthButtons } from './AuthButtons'
-import { FriendActivityPopover } from './FriendActivityPopover'
 import { HeaderSearch } from './HeaderSearch'
 import { MobileMainHeader } from './MobileMainHeader'
-import { NavLinks } from './NavLinks'
 import { NotificationsPopover } from './NotificationsPopover'
 import { ProfileButton } from './ProfileButton'
 
-type MainHeaderProps = {
-  onCreate?: () => void
-}
-
-export const MainHeader = ({ onCreate }: MainHeaderProps) => {
+export const MainHeader = () => {
+  const { t } = useI18n()
   const { user, isAuthenticated, isLoading } = useAuth()
 
   return (
@@ -32,23 +29,20 @@ export const MainHeader = ({ onCreate }: MainHeaderProps) => {
             ) : isAuthenticated && user ? (
               <>
                 <NotificationsPopover />
-                <FriendActivityPopover />
+                <ActivityPopover />
                 <ProfileButton
                   avatar={user.avatar}
-                  username={user.username || 'User'}
+                  username={user.username || t('common.user')}
                 />
               </>
             ) : (
-              <>
-                <NavLinks />
-                <AuthButtons />
-              </>
+              <AuthButtons />
             )}
           </div>
         </div>
 
         <div className="h-full w-full xl:hidden">
-          <MobileMainHeader onCreate={onCreate} />
+          <MobileMainHeader />
         </div>
       </div>
     </header>

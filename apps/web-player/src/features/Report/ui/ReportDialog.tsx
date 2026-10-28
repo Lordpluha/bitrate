@@ -92,15 +92,18 @@ export const ReportDialog = ({
         className="relative w-full max-w-md rounded-lg bg-popover p-6 shadow-2xl"
         role="dialog"
       >
-        <h2 className="text-xl font-bold text-text" id="report-dialog-title">
+        <h2
+          className="text-xl font-bold text-foreground"
+          id="report-dialog-title"
+        >
           Report {ENTITY_LABEL[entityType]}
         </h2>
-        <p className="mt-1 text-sm text-text-subdued">{entityName}</p>
+        <p className="mt-1 text-sm text-muted-foreground">{entityName}</p>
 
-        <label className="mt-5 block text-sm font-semibold text-text">
+        <label className="mt-5 block text-sm font-semibold text-foreground">
           Reason
           <select
-            className="mt-2 h-11 w-full rounded border border-white/20 bg-surface px-3 text-text outline-none focus:border-white"
+            className="mt-2 h-11 w-full rounded border border-border bg-surface px-3 text-foreground outline-none focus:border-white"
             onChange={(event) =>
               setReason(event.target.value as (typeof REPORT_REASONS)[number])
             }
@@ -114,10 +117,10 @@ export const ReportDialog = ({
           </select>
         </label>
 
-        <label className="mt-4 block text-sm font-semibold text-text">
+        <label className="mt-4 block text-sm font-semibold text-foreground">
           Details (optional)
           <textarea
-            className="mt-2 min-h-28 w-full resize-y rounded border border-white/20 bg-surface p-3 text-text outline-none focus:border-white"
+            className="mt-2 min-h-28 w-full resize-y rounded border border-border bg-surface p-3 text-foreground outline-none focus:border-white"
             maxLength={2000}
             onChange={(event) => setDetails(event.target.value)}
             value={details}
@@ -126,7 +129,7 @@ export const ReportDialog = ({
 
         <div className="mt-6 flex justify-end gap-3">
           <button
-            className="rounded-full px-5 py-2 text-sm font-bold text-text-subdued hover:text-text"
+            className="rounded-full px-5 py-2 text-sm font-bold text-muted-foreground hover:text-foreground"
             onClick={onClose}
             type="button"
           >

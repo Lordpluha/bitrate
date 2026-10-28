@@ -872,6 +872,9 @@ importers:
 
   apps/web-player:
     dependencies:
+      '@bitrate/player':
+        specifier: workspace:*
+        version: link:../../packages/player
       '@bitrate/ui-react':
         specifier: workspace:*
         version: link:../../packages/ui-react
@@ -1069,6 +1072,9 @@ importers:
         specifier: ^5.57.2
         version: 5.57.2(@typescript-eslint/types@8.71.1)
     devDependencies:
+      '@bitrate/converter':
+        specifier: workspace:*
+        version: link:../converter
       '@eslint/js':
         specifier: ^10.0.1
         version: 10.0.1(eslint@10.12.0(jiti@2.7.0)(supports-color@10.2.2))

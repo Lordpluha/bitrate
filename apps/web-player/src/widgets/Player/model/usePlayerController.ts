@@ -5,13 +5,17 @@ import {
   selectCurrentPlaylistName,
   selectMusicPlayer,
   selectRepeatMode,
-  useAudioPlayer,
   usePlayerStore,
+  useStreamingPlayer,
 } from '@entities/Player'
 import { useTrackLike } from '@entities/Track'
+import { useI18n } from '@shared/i18n'
+import { ROUTES } from '@shared/routes'
 import { getTrackCoverUrl } from '@shared/utils/mediaUrl'
-import { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
+import { useCallback, useEffect } from 'react'
 import { useFloatingPlayerWindow } from './useFloatingPlayerWindow'
+import { usePlayerElementSync } from './usePlayerElementSync'
 import { usePlayerHotkeys } from './usePlayerHotkeys'
 import { usePlayerSessionPersistence } from './usePlayerSessionPersistence'
 import { usePlaylistShuffle } from './usePlaylistShuffle'
@@ -27,6 +31,7 @@ export const usePlayerController = ({
   isExpanded,
   onExpandedChange,
 }: UsePlayerControllerInput) => {
+  const { t } = useI18n()
   const player = usePlayerStore(selectMusicPlayer)
   const currentPlaylistName = usePlayerStore(selectCurrentPlaylistName)
   const repeatMode = usePlayerStore(selectRepeatMode)
@@ -37,7 +42,7 @@ export const usePlayerController = ({
   useStreamQualityCap()
   const trackLike = useTrackLike(currentTrack?.id)
   const floatingPlayer = useFloatingPlayerWindow(currentTrack?.title)
-  const audio = useAudioPlayer()
+  const audio = useStreamingPlayer()
   const toggleShuffle = usePlaylistShuffle({
     currentQueueId: player.currentQueueId,
     currentTrack,
@@ -45,6 +50,13 @@ export const usePlayerController = ({
     playlist,
   })
   const isVisible = Boolean(currentTrack)
+
+  const router = useRouter()
+  const openQueue = useCallback(() => router.push(ROUTES.queue), [router])
+  const { changeTrack } = audio
+  /** Stable, since the playing element is handed them on every change. */
+  const playNext = useCallback(() => changeTrack('next'), [changeTrack])
+  const playPrevious = useCallback(() => changeTrack('prev'), [changeTrack])
 
   usePlayerSessionPersistence(player, currentPlaylistName)
   useRecordListenedTrack({
@@ -55,12 +67,26 @@ export const usePlayerController = ({
     currentTime: player.currentTime,
     duration: player.duration,
     isEnabled: isVisible,
-    onNext: () => audio.changeTrack('next'),
-    onPrevious: () => audio.changeTrack('prev'),
+    onNext: playNext,
+    onOpenQueue: openQueue,
+    onPrevious: playPrevious,
     onSeek: audio.onSeek,
+    onToggleLike: trackLike.toggleLike,
     onToggleShuffle: toggleShuffle,
     onTogglePlay: audio.togglePlayPause,
     volume: player.volume,
+  })
+
+  usePlayerElementSync({
+    artist: artist?.username || t('common.unknownArtist'),
+    coverUrl: (currentTrack && getTrackCoverUrl(currentTrack.cover)) || '',
+    isShuffled: player.isShuffled,
+    onNext: playNext,
+    onPrevious: playPrevious,
+    onRepeatToggle: cycleRepeatMode,
+    onShuffleToggle: toggleShuffle,
+    repeatMode,
+    title: currentTrack?.title || t('common.unknown'),
   })
 
   useEffect(() => {
@@ -70,42 +96,25 @@ export const usePlayerController = ({
   if (!currentTrack) return null
 
   const common = {
-    artist: artist?.username || 'Unknown Artist',
+    artist: artist?.username || t('common.unknownArtist'),
     coverUrl: getTrackCoverUrl(currentTrack.cover),
-    currentTime: player.currentTime,
-    duration: player.duration,
     isLiked: trackLike.isLiked,
-    isPlaying: player.isPlaying,
     onLikeToggle: trackLike.toggleLike,
-    onNext: () => audio.changeTrack('next'),
-    onPlayPause: audio.togglePlayPause,
-    onPrevious: () => audio.changeTrack('prev'),
-    title: currentTrack.title || 'Unknown',
+    onNext: playNext,
+    onPrevious: playPrevious,
+    title: currentTrack.title || t('common.unknown'),
   }
 
   return {
-    audioProps: {
-      activeSlot: audio.activeSlot,
-      bindAudioElement: audio.bindAudioElement,
-      onCanPlay: audio.handleCanPlay,
-      onEnded: audio.handleEnded,
-      onLoadedMetadata: audio.handleLoadedMetadata,
-      onPlaybackStateChange: audio.handlePlaybackStateChange,
-      onProgress: audio.handleProgress,
-      onSeeked: audio.handleSeeked,
-      onTimeUpdate: audio.handleTimeUpdate,
+    elementProps: {
+      bindElement: audio.bindElement,
     },
     desktopProps: {
       ...common,
-      isShuffled: player.isShuffled,
       isVisible,
       onExpand: () => onExpandedChange(true),
       onPictureInPicture: floatingPlayer.open,
-      onRepeatToggle: cycleRepeatMode,
-      onSeek: audio.onSeek,
-      onShuffleToggle: toggleShuffle,
       onVolumeChange: setVolume,
-      repeatMode,
       volume: player.volume,
     },
     responsiveProps: {
@@ -113,14 +122,8 @@ export const usePlayerController = ({
       floatingWindow: floatingPlayer.targetWindow,
       isExpanded,
       onCloseExpanded: () => onExpandedChange(false),
-      isShuffled: player.isShuffled,
-      onCloseFloating: floatingPlayer.close,
-      onRepeatToggle: cycleRepeatMode,
-      onSeek: audio.onSeek,
-      onShuffleToggle: toggleShuffle,
       onVolumeChange: setVolume,
-      playlistTitle: currentPlaylistName || 'Playlist',
-      repeatMode,
+      playlistTitle: currentPlaylistName || t('common.playlist'),
       volume: player.volume,
     },
   }

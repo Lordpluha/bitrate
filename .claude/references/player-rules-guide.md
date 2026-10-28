@@ -106,6 +106,20 @@ have a different environment-variable convention and a different SSR boundary; a
 reads `process.env` directly breaks on two of the three and is untestable in isolation on the
 third.
 
+`src/engine/cmaf/` is the single-file CMAF/MSE path with adaptive bitrate (ADR-0020), moved
+from web-player for #236. The host passes `fetchRange` to each `StreamLoader`, and calls
+`configureCmafEngine({ storage, debugByDefault })` once for the remembered bandwidth and the
+`player-debug` switch; without it nothing persists and tracing stays off. The quality cap
+(`setMaxStreamBitrate`) is the one other module-level setting.
+
+`src/engine/slots/` is streaming mode (ADR-0064): `SlotPlayer` drives two media elements from
+the host's `source`/`next`, with the prefetch and constrained-start thresholds in `network.ts`.
+Everything host-specific arrives in `BitratePlayerStreaming`; the host keeps the queue and its
+legacy (HLS) adapter. `src/element/streaming-state.svelte.ts` binds it to the root, and
+`create-controller.ts` picks streaming or the `resolveSource` path for layouts and parts.
+CMAF browser specs play `src/element/__fixtures__/cmaf/`, regenerated with
+`node scripts/make-cmaf-fixture.mjs` (ffmpeg on PATH).
+
 ## SSR guard and `defineBitratePlayer()`
 
 `customElements` does not exist during server rendering — but that alone is not enough.
@@ -188,6 +202,25 @@ inheritance is unaffected by shadow DOM encapsulation. So this package styles wi
 CVA. `scripts/check-design-tokens.mjs` walks `packages/player/src` (including `.svelte`
 files) and flags a literal hex colour there — not the stock-Tailwind-scale check the other
 three roots get, since this package has no Tailwind utilities to check in the first place.
+
+Variants (ADR-0063) change size and density through `--bitrate-player-*` properties that each
+fall back to the old literal, so an unset property keeps the `bar` exactly as it was: set them
+on a layout's root class, never by editing a part's defaults. Inner nodes carry `part` names
+for `::part()`. Fixed-size SVG icons scale with `scale: var(--bitrate-player-*-icon-scale)`
+rather than CSS `width`, which would override the icon's own size attributes. A layout drawn
+over cover art (`floating`) redefines the `--color-*` tokens locally, because the page theme no
+longer describes what is behind the controls.
+
+## Variants and part elements
+
+`src/element/layouts/` holds the built-in `chrome` layouts; they render the internal parts in
+`src/element/parts/` directly, inside the root's shadow tree. `src/element/elements/` holds the
+public part elements: each wraps one internal part, gets the root's controller through
+`connectPlayer($host())` (a Context Protocol `context-request`), and renders nothing without
+one. The root is extended with `withPlayerProvider` so its listener exists from upgrade, and
+`src/element/registry.ts` lists every tag, root first. A new control goes into the internal
+part, its name into the contract's control union, and its gating into both rules: the layout
+or `controls` list *and* the root callback.
 
 ## Testing — the element is tested in the browser, not jsdom; SSR safety in real Node
 

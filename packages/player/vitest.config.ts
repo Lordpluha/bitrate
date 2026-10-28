@@ -39,7 +39,14 @@ export default defineConfig({
           include: ['src/**/*.browser-spec.ts'],
           browser: {
             enabled: true,
-            provider: playwright(),
+            /**
+             * Media specs call `play()` without a user gesture, which Chromium's autoplay
+             * policy rejects in the test iframe even when muted; real hosts start playback
+             * from a click.
+             */
+            provider: playwright({
+              launchOptions: { args: ['--autoplay-policy=no-user-gesture-required'] },
+            }),
             screenshotFailures: false,
             instances: [{ browser: 'chromium' }],
           },

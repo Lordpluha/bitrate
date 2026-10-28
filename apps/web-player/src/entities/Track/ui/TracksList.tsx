@@ -14,7 +14,6 @@ import {
 
 interface TracksListProps {
   activeTrackId?: string
-  likedTrackIds?: Iterable<string>
   tracks: TrackEntity[]
   isPlaybackContextActive?: boolean
   onPlayTrack?: (track: TrackEntity, index: number) => void
@@ -27,7 +26,6 @@ interface TracksListProps {
 
 export const TracksList = ({
   activeTrackId,
-  likedTrackIds: providedLikedTrackIds,
   isPlaybackContextActive = true,
   onPlayTrack,
   onRemoveTrack,
@@ -44,13 +42,6 @@ export const TracksList = ({
   const columns = (
     showDateAdded ? TRACK_TABLE_COLUMNS : TRACK_TABLE_COLUMNS_WITHOUT_DATE
   )[viewMode]
-  const likedTrackIds = useMemo(
-    () =>
-      providedLikedTrackIds
-        ? new Set(providedLikedTrackIds)
-        : new Set<string>(),
-    [providedLikedTrackIds],
-  )
 
   return (
     <div className="flex flex-col">
@@ -75,7 +66,6 @@ export const TracksList = ({
           <TrackCard
             album={albums?.get(track.id) ?? null}
             index={index}
-            isLiked={likedTrackIds.has(track.id)}
             isPlaybackContextActive={isPlaybackContextActive}
             isPlaybackTrackActive={
               activeTrackId === undefined || activeTrackId === track.id

@@ -14,12 +14,17 @@
    *
    * The tag is rendered only after `defineBitratePlayer()` resolves: properties set on an
    * element before it upgrades are not guaranteed to survive (see `BitratePlayerElement`).
+   *
+   * `frame` sizes the box around the player, the way a host page would — `floating` and
+   * `expanded` fill whatever window they are given.
    */
   import type { BitratePlayerElement } from '../../contract'
   import { defineBitratePlayer } from '../index'
   import type { BitratePlayerProps } from '../player-props'
 
-  let props: BitratePlayerProps = $props()
+  type HostProps = BitratePlayerProps & { frame?: string }
+
+  let { frame = '', ...props }: HostProps = $props()
   let element: BitratePlayerElement | undefined = $state(undefined)
 
   $effect(() => {
@@ -31,5 +36,7 @@
 </script>
 
 {#await defineBitratePlayer() then}
-  <bitrate-player bind:this={element}></bitrate-player>
+  <div style={frame}>
+    <bitrate-player bind:this={element}></bitrate-player>
+  </div>
 {/await}

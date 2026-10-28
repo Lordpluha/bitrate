@@ -1,7 +1,7 @@
 'use client'
 
 import { MediaImage } from '@shared/ui/MediaImage'
-import { BookmarkCheck, BookmarkPlus } from 'lucide-react'
+import { BookmarkCheck, BookmarkPlus, Podcast } from 'lucide-react'
 import Link from 'next/link'
 import { useMemo } from 'react'
 import {
@@ -10,8 +10,9 @@ import {
   useUnsaveEpisode,
 } from '@/entities/Podcast'
 import { useAuth } from '@/shared/hooks'
+import { useI18n } from '@/shared/i18n'
 import { ROUTES } from '@/shared/routes'
-import { MusicCardLg } from '@/shared/ui'
+import { MusicCardLg, StateMessage } from '@/shared/ui'
 import { ErrorState } from '@/shared/ui/ErrorState'
 import { getEpisodeCoverUrl, getPodcastCoverUrl } from '@/shared/utils/mediaUrl'
 
@@ -21,6 +22,7 @@ const PODCAST_SKELETON_IDS = Array.from(
 )
 
 export const PodcastsPanel = () => {
+  const { t } = useI18n()
   const { isAuthenticated } = useAuth()
   const podcastsQuery = usePodcasts(1, 20)
   const savedQuery = useSavedEpisodes(1, 8, isAuthenticated)
@@ -33,7 +35,7 @@ export const PodcastsPanel = () => {
   if (podcastsQuery.isPending) {
     return (
       <div
-        aria-label="Loading podcasts"
+        aria-label={t('main.loadingPodcasts')}
         className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5"
         role="status"
       >
@@ -50,9 +52,9 @@ export const PodcastsPanel = () => {
   if (podcastsQuery.isError) {
     return (
       <ErrorState
-        description="The podcast catalog could not be loaded."
+        description={t('main.podcastsFailed')}
         onRetry={() => void podcastsQuery.refetch()}
-        title="Podcasts are unavailable"
+        title={t('main.podcastsUnavailable')}
       />
     )
   }
@@ -61,8 +63,11 @@ export const PodcastsPanel = () => {
     <div className="space-y-10">
       {isAuthenticated && savedQuery.data?.data.length ? (
         <section aria-labelledby="saved-episodes-title">
-          <h2 className="mb-4 text-2xl font-bold" id="saved-episodes-title">
-            Your episodes
+          <h2
+            className="mb-4 text-[22px] leading-[1.25] font-semibold text-foreground"
+            id="saved-episodes-title"
+          >
+            {t('main.yourEpisodes')}
           </h2>
           <div className="space-y-2">
             {savedQuery.data.data.map((episode) => (
@@ -82,18 +87,20 @@ export const PodcastsPanel = () => {
                   width={56}
                 />
                 <div className="min-w-0 flex-1">
-                  <p className="truncate font-semibold text-text">
+                  <p className="truncate font-semibold text-foreground">
                     {episode.title}
                   </p>
                   <Link
-                    className="truncate text-sm text-text-subdued hover:underline"
+                    className="truncate text-sm text-muted-foreground hover:underline"
                     href={ROUTES.podcast(episode.podcastId)}
                   >
                     {episode.podcast.title}
                   </Link>
                 </div>
                 <button
-                  aria-label={`Remove ${episode.title} from saved episodes`}
+                  aria-label={t('main.removeSavedEpisode', {
+                    title: episode.title,
+                  })}
                   className="rounded-full p-2 text-accent hover:bg-surface-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                   disabled={unsaveEpisode.isPending}
                   onClick={() => unsaveEpisode.mutate(episode.id)}
@@ -112,7 +119,10 @@ export const PodcastsPanel = () => {
       ) : null}
 
       <section aria-labelledby="podcast-catalog-title">
-        <h2 className="mb-4 text-2xl font-bold" id="podcast-catalog-title">
+        <h2
+          className="mb-4 text-[22px] leading-[1.25] font-semibold text-foreground"
+          id="podcast-catalog-title"
+        >
           Podcasts &amp; shows
         </h2>
         {podcastsQuery.data.data.length ? (
@@ -129,9 +139,11 @@ export const PodcastsPanel = () => {
             ))}
           </div>
         ) : (
-          <p className="py-12 text-center text-text-subdued">
-            No podcasts have been published yet.
-          </p>
+          <StateMessage
+            description={t('main.podcasts.empty')}
+            icon={Podcast}
+            title={t('main.podcasts.title')}
+          />
         )}
       </section>
     </div>

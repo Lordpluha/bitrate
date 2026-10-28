@@ -1,28 +1,36 @@
+import type { I18n } from '@shared/i18n'
 import { formatRelativeTime } from '@shared/utils/formatRelativeTime'
 import type { FriendPresence } from '@/entities/Friend/api/client/friends.schemas'
 
 type PresenceLabelInput = {
+  i18n: I18n
   now?: Date
   presence: FriendPresence
 }
 
 /** The Friend Row's status line: what they play, Online, Away · 12 min or Last seen …. */
 export const getPresenceLabel = ({
+  i18n: { locale, t },
   now = new Date(),
   presence: { lastActiveAt, nowPlaying, status },
 }: PresenceLabelInput) => {
   if (nowPlaying)
-    return `Listening to ${nowPlaying.title} · ${nowPlaying.artist.username}`
-  if (status === 'online') return 'Online'
-  if (!lastActiveAt) return 'Offline'
+    return t('presence.listeningTo', {
+      artist: nowPlaying.artist.username,
+      title: nowPlaying.title,
+    })
+  if (status === 'online') return t('presence.online')
+  if (!lastActiveAt) return t('presence.offline')
   if (status === 'away') {
     const minutes = Math.max(
       1,
       Math.floor((now.getTime() - lastActiveAt.getTime()) / 60_000),
     )
-    return `Away · ${minutes} min`
+    return t('presence.away', { minutes })
   }
-  return `Last seen ${formatRelativeTime({ date: lastActiveAt, now })}`
+  return t('presence.lastSeen', {
+    time: formatRelativeTime({ date: lastActiveAt, locale, now }),
+  })
 }
 
 /** Where the caller stands with someone: what their row's action should be. */

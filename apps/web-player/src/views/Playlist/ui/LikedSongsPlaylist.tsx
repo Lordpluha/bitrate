@@ -5,7 +5,6 @@ import { type TrackEntity, TracksList, useLikedTracks } from '@entities/Track'
 import { ROUTES } from '@shared/routes'
 import { StateMessage } from '@shared/ui'
 import { Heart, Pause, Play } from 'lucide-react'
-import { useMemo } from 'react'
 import { useI18n } from '@/shared/i18n'
 import { getPlaylistDuration } from '../utils/getPlaylistDuration'
 import { PlaylistHeader } from './PlaylistHeader'
@@ -23,10 +22,6 @@ export const LikedSongsPlaylist = ({ tracks }: LikedSongsPlaylistProps) => {
   })
   const currentTracks = likedTracks ?? tracks
   const likedSongsPlaybackId = 'liked-songs'
-  const likedTrackIds = useMemo(
-    () => currentTracks.map((track) => track.id),
-    [currentTracks],
-  )
   const togglePlay = usePlayerStore((state) => state.togglePlay)
   const isLikedContext = musicPlayer.currentPlaylistId === likedSongsPlaybackId
   const isLikedPlaying = isLikedContext && musicPlayer.isPlaying
@@ -59,7 +54,12 @@ export const LikedSongsPlaylist = ({ tracks }: LikedSongsPlaylistProps) => {
       />
       {currentTracks.length > 0 ? (
         <button
-          aria-label={`${isLikedPlaying ? 'Pause' : 'Play'} ${t('library.likedSongs')}`}
+          aria-label={t(
+            isLikedPlaying ? 'common.pauseName' : 'common.playName',
+            {
+              name: t('library.likedSongs'),
+            },
+          )}
           className="flex size-10 shrink-0 items-center justify-center self-end rounded-full bg-primary text-primary-foreground transition-transform hover:scale-105 md:size-14 md:self-start"
           onClick={handlePlay}
           type="button"
@@ -83,16 +83,15 @@ export const LikedSongsPlaylist = ({ tracks }: LikedSongsPlaylistProps) => {
         <TracksList
           activeTrackId={musicPlayer.currentTrack?.id}
           isPlaybackContextActive={isLikedContext}
-          likedTrackIds={likedTrackIds}
           onPlayTrack={playFrom}
           tracks={currentTracks}
         />
       ) : (
         <StateMessage
           className="min-h-80"
-          description="You haven't liked any songs yet. Start exploring and like your favorite tracks!"
+          description={t('playlist.likedEmptyDescription')}
           icon={Heart}
-          primary={{ href: ROUTES.search(), label: 'Find something to play' }}
+          primary={{ href: ROUTES.search(), label: t('queue.find') }}
           title={t('playlist.likedEmpty')}
         />
       )}

@@ -1,7 +1,7 @@
 'use client'
 
 import { useAuth } from '@shared/hooks'
-import { LegalFooter } from '@shared/ui'
+import { FilterChips, LegalFooter } from '@shared/ui'
 import { useMemo, useState } from 'react'
 import { useI18n } from '@/shared/i18n'
 import { greetingKey } from '@/widgets/MainPanel/model/greeting'
@@ -14,7 +14,6 @@ import { PodcastsPanel } from './PodcastsPanel'
 import { PopularArtists } from './PopularArtists'
 import { RecentlyPlayed } from './RecentlyPlayed'
 import { RecommendationsFeed } from './RecommendationsFeed'
-import { Tabs } from './Tabs'
 
 export const MainPanel = () => {
   const { t } = useI18n()
@@ -32,14 +31,16 @@ export const MainPanel = () => {
   }))
 
   const hour = useMemo(() => new Date().getHours(), [])
-  const name = user?.username || 'User'
+  const name = user?.username || t('common.user')
 
   return (
     <div className="h-full overflow-y-auto custom-scrollbar">
       <div className="flex flex-col gap-7 px-4 pt-2 pb-3 md:px-8 md:py-6">
-        <Tabs
-          onTabChange={(id) => setActiveTab(id as HomeTabId)}
-          tabs={localizedTabs}
+        <FilterChips
+          ariaLabel={t('main.sections')}
+          chips={localizedTabs}
+          onChange={setActiveTab}
+          value={activeTab}
         />
         {isAuthenticated && user && showsMusic ? (
           <div className="flex min-w-0 flex-col gap-1">

@@ -2,10 +2,19 @@
 
 import { useUserPlaylists } from '@entities/Playlist'
 import { FollowUserButton, useUserById } from '@entities/User'
+import { getApiErrorStatus } from '@shared/api/errors'
+import { useI18n } from '@shared/i18n'
 import { ROUTES } from '@shared/routes'
-import { MusicCardLg, SectionHeader, Skeleton, StateMessage } from '@shared/ui'
+import {
+  ErrorState,
+  MusicCardLg,
+  SectionHeader,
+  Skeleton,
+  StateMessage,
+} from '@shared/ui'
 import { getPlaylistCoverUrl, getUserAvatarUrl } from '@shared/utils/mediaUrl'
 import { ListMusic, UserRound } from 'lucide-react'
+import { usePlayCollection } from '@/features/PlayCollection'
 import { ProfileFollowsSection } from '@/views/Profile/ui/ProfileFollowsSection'
 import { ProfileHeader } from '@/views/Profile/ui/ProfileHeader'
 
@@ -13,15 +22,23 @@ type PublicProfilePageProps = {
   userId: string
 }
 
+/** The design's grid skeleton while a profile's playlists load. */
+const PLAYLIST_SKELETON_KEYS = Array.from(
+  { length: 5 },
+  (_, card) => `playlist-card-${card}`,
+)
+
 export const PublicProfilePage = ({ userId }: PublicProfilePageProps) => {
+  const { t } = useI18n()
   const userQuery = useUserById(userId)
   const playlistsQuery = useUserPlaylists(userId)
+  const playCollection = usePlayCollection()
   const playlists = playlistsQuery.data ?? []
 
   if (userQuery.isPending) {
     return (
       <div
-        aria-label="Loading profile"
+        aria-label={t('profile.loading')}
         className="flex h-full flex-col gap-7 px-4 pt-2 md:px-8 md:py-6"
         role="status"
       >
@@ -37,14 +54,27 @@ export const PublicProfilePage = ({ userId }: PublicProfilePageProps) => {
     )
   }
 
+  /* a missing user is not found; any other failure can be retried */
+  if (userQuery.isError && getApiErrorStatus(userQuery.error) !== 404) {
+    return (
+      <div className="flex h-full flex-col px-4 md:px-8">
+        <ErrorState
+          description={t('error.tryAgainShort')}
+          onRetry={() => void userQuery.refetch()}
+          title={t('profile.loadFailed')}
+        />
+      </div>
+    )
+  }
+
   if (userQuery.isError || !userQuery.data) {
     return (
       <div className="flex h-full flex-col px-4 md:px-8">
         <StateMessage
-          description="This profile is unavailable or no longer exists."
+          description={t('profile.notFoundDescription')}
           icon={UserRound}
-          primary={{ href: ROUTES.main, label: 'Back to home' }}
-          title="User not found"
+          primary={{ href: ROUTES.main, label: t('common.backToHome') }}
+          title={t('profile.notFound')}
         />
       </div>
     )
@@ -65,31 +95,49 @@ export const PublicProfilePage = ({ userId }: PublicProfilePageProps) => {
         />
 
         <section className="flex flex-col gap-4">
-          <SectionHeader title="Public playlists" />
+          <SectionHeader title={t('profile.publicPlaylists')} />
           {playlistsQuery.isPending ? (
-            <p className="text-sm text-muted-foreground">
-              Loading playlists...
-            </p>
+            <div
+              aria-label={t('profile.loadingPlaylistsShort')}
+              className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-5 xl:gap-5.5"
+              role="status"
+            >
+              {PLAYLIST_SKELETON_KEYS.map((key) => (
+                <Skeleton className="aspect-[4/5] rounded-[14px]" key={key} />
+              ))}
+            </div>
           ) : playlistsQuery.isError ? (
-            <p className="text-sm text-muted-foreground">
-              Playlists could not be loaded. Try again later.
-            </p>
+            <ErrorState
+              className="min-h-60"
+              description={t('error.ourSide')}
+              onRetry={() => void playlistsQuery.refetch()}
+              title={t('profile.playlistsFailed')}
+            />
           ) : playlists.length === 0 ? (
             <StateMessage
               className="min-h-60"
               icon={ListMusic}
-              title="No public playlists yet."
+              title={t('profile.noPublicPlaylists')}
             />
           ) : (
             <ul className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-5 xl:gap-5.5">
               {playlists.map((playlist) => (
                 <li className="min-w-0" key={playlist.id}>
                   <MusicCardLg
-                    description={playlist.description || 'Public playlist'}
+                    description={
+                      playlist.description || t('profile.publicPlaylist')
+                    }
                     href={ROUTES.playlist(playlist.id)}
                     id={playlist.id}
                     imageUrl={getPlaylistCoverUrl(playlist.cover)}
                     name={playlist.title}
+                    onPlay={() =>
+                      void playCollection({
+                        id: playlist.id,
+                        kind: 'playlist',
+                        title: playlist.title,
+                      })
+                    }
                   />
                 </li>
               ))}
@@ -99,12 +147,12 @@ export const PublicProfilePage = ({ userId }: PublicProfilePageProps) => {
 
         <ProfileFollowsSection
           kind="followers"
-          title="Followers"
+          title={t('profile.followers')}
           userId={user.id}
         />
         <ProfileFollowsSection
           kind="following"
-          title="Following"
+          title={t('profile.following')}
           userId={user.id}
         />
       </div>

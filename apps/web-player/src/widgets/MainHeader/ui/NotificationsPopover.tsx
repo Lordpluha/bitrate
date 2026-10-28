@@ -7,6 +7,8 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@bitrate/ui-react'
+import { StateMessage } from '@shared/ui'
+import { CircleCheck, TriangleAlert } from 'lucide-react'
 import Link from 'next/link'
 import {
   NotificationItem,
@@ -14,9 +16,11 @@ import {
   useReadAllNotifications,
 } from '@/entities/Me'
 import { Z_INDEX_CLASS } from '@/shared/constants'
+import { useI18n } from '@/shared/i18n'
 import { ROUTES } from '@/shared/routes'
 
 export const NotificationsPopover = () => {
+  const { t } = useI18n()
   const { data, isError, isPending } = useNotifications(1, 20)
   const readAll = useReadAllNotifications()
 
@@ -29,8 +33,8 @@ export const NotificationsPopover = () => {
       <PopoverTrigger
         aria-label={
           data?.unread
-            ? `Notifications, ${data.unread} unread`
-            : 'Notifications'
+            ? t('notifications.withUnread', { count: data.unread })
+            : t('notifications.title')
         }
         className="relative rounded-full p-2 text-muted-foreground transition-colors hover:bg-surface hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
       >
@@ -50,9 +54,11 @@ export const NotificationsPopover = () => {
       >
         <div className="flex items-center justify-between gap-3 border-b border-border px-4 py-3">
           <div>
-            <h2 className="text-base font-semibold">Notifications</h2>
+            <h2 className="text-base font-semibold">
+              {t('notifications.title')}
+            </h2>
             <p className="text-xs text-muted-foreground">
-              {data?.unread ?? 0} unread
+              {t('notifications.unreadCount', { count: data?.unread ?? 0 })}
             </p>
           </div>
           {Boolean(data?.unread) && (
@@ -62,7 +68,7 @@ export const NotificationsPopover = () => {
               onClick={markAllAsRead}
               type="button"
             >
-              Mark all read
+              {t('notifications.markAllRead')}
             </button>
           )}
         </div>
@@ -70,12 +76,16 @@ export const NotificationsPopover = () => {
         <div className="flex max-h-96 flex-col gap-1 overflow-y-auto p-2 custom-scrollbar">
           {isPending ? (
             <p className="px-3 py-8 text-center text-sm text-muted-foreground">
-              Loading notifications...
+              {t('notifications.loadingEllipsis')}
             </p>
           ) : isError ? (
-            <p className="px-3 py-8 text-center text-sm text-muted-foreground">
-              Notifications are unavailable right now.
-            </p>
+            <StateMessage
+              description={t('common.tryAgainSoon')}
+              icon={TriangleAlert}
+              size="compact"
+              title={t('notifications.unavailableShort')}
+              tone="error"
+            />
           ) : data?.data.length ? (
             data.data.map((notification) => (
               <NotificationItem
@@ -84,9 +94,12 @@ export const NotificationsPopover = () => {
               />
             ))
           ) : (
-            <p className="px-3 py-8 text-center text-sm text-muted-foreground">
-              You are all caught up.
-            </p>
+            <StateMessage
+              description={t('profile.updatesDescription')}
+              icon={CircleCheck}
+              size="compact"
+              title={t('profile.caughtUp')}
+            />
           )}
         </div>
         <div className="border-t border-border p-2">
@@ -94,7 +107,7 @@ export const NotificationsPopover = () => {
             className="flex h-9 items-center justify-center rounded-md text-[13px] font-semibold text-accent transition-colors hover:bg-surface"
             href={ROUTES.notifications}
           >
-            Show all
+            {t('common.showAll')}
           </Link>
         </div>
       </PopoverContent>

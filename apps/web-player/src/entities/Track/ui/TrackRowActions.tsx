@@ -5,14 +5,12 @@ import type { TrackEntity } from '../models/schema/Track.entity'
 import { LikeTrackButton } from './LikeTrackButton'
 
 type TrackRowActionsProps = {
-  isLiked: boolean
   onRemove?: () => void
   removable: boolean
   track: TrackEntity
 }
 
 export const TrackRowActions = ({
-  isLiked,
   onRemove,
   removable,
   track,
@@ -26,33 +24,25 @@ export const TrackRowActions = ({
       {removable && (
         <button
           aria-label={`Remove ${track.title} from playlist`}
-          className="rounded-full p-1 opacity-0 transition-opacity hover:bg-white/10 group-hover:opacity-100 focus-visible:opacity-100"
+          className="rounded-full p-1 opacity-0 transition-opacity hover:bg-surface group-hover:opacity-100 focus-visible:opacity-100"
           onClick={onRemove}
           type="button"
         >
           <X aria-hidden="true" size={16} />
         </button>
       )}
-      <LikeTrackButton
-        initialLiked={isLiked}
-        trackId={track.id}
-        trackTitle={track.title}
-      />
+      <LikeTrackButton trackId={track.id} trackTitle={track.title} />
       <span className="min-w-8 text-right">
         {formatDuration(track.duration ?? 0)}
       </span>
     </div>
 
     <div className="hidden shrink-0 grid-cols-[24px_auto] items-center justify-end gap-2 text-[13px] text-muted-foreground tabular-nums max-[1024px]:grid">
-      <LikeTrackButton
-        initialLiked={isLiked}
-        trackId={track.id}
-        trackTitle={track.title}
-      />
+      <LikeTrackButton trackId={track.id} trackTitle={track.title} />
       {removable ? (
         <button
           aria-label={`Remove ${track.title} from playlist`}
-          className="rounded-full p-2 transition-colors hover:bg-white/10 hover:text-text"
+          className="rounded-full p-2 transition-colors hover:bg-surface hover:text-foreground"
           onClick={onRemove}
           type="button"
         >

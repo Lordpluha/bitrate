@@ -1,6 +1,6 @@
 'use client'
 
-import { cn } from '@bitrate/ui-react'
+import { chipClassName } from '@shared/ui'
 import type { KeyboardEvent } from 'react'
 import type { searchFilterTabs } from '@/features/Search/model/search.constants'
 
@@ -52,12 +52,7 @@ export const SearchFilterTabs = ({
       {availableTabs.map((tab, index) => (
         <button
           aria-selected={activeTab === tab}
-          className={cn(
-            'flex h-8 shrink-0 items-center rounded-full border px-3.5 text-[13px] text-foreground transition-colors',
-            activeTab === tab
-              ? 'border-primary bg-primary font-semibold text-primary-foreground'
-              : 'border-border hover:bg-surface',
-          )}
+          className={chipClassName({ isActive: activeTab === tab })}
           key={tab}
           onClick={() => onTabChange(tab)}
           onKeyDown={(event) => handleKeyDown(event, index)}
