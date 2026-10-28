@@ -1,7 +1,12 @@
 import { provideZonelessChangeDetection } from '@angular/core'
 import { TestBed } from '@angular/core/testing'
 import { provideRouter } from '@angular/router'
-import { DecideReleaseUseCase, GetReleaseSubmissionUseCase } from '@application/release-review'
+import {
+  DecideReleaseUseCase,
+  GetReleaseSubmissionUseCase,
+  RetryPublishingUseCase,
+  TakeDownReleaseUseCase,
+} from '@application/release-review'
 import { SessionStore } from '@application/session'
 import type { Permission } from '@domain/access'
 import {
@@ -19,6 +24,8 @@ import { ReleaseReviewDetailPage } from './release-review-detail'
 const getRelease = vi.fn<(id: string) => Promise<ReleaseSubmissionDetail>>()
 const approve = vi.fn<(input: ApproveSubmissionInput) => Promise<SubmissionReview>>()
 const requestChanges = vi.fn<(input: RequestSubmissionChangesInput) => Promise<SubmissionReview>>()
+const retryPublishing = vi.fn<(release: ReleaseSubmissionDetail) => Promise<void>>()
+const takeDown = vi.fn<(release: ReleaseSubmissionDetail) => Promise<void>>()
 
 function release(overrides: Partial<ReleaseSubmissionDetail> = {}): ReleaseSubmissionDetail {
   return {
@@ -52,7 +59,7 @@ function release(overrides: Partial<ReleaseSubmissionDetail> = {}): ReleaseSubmi
     splits: [],
     territories: [],
     destinations: ['SPOTIFY'],
-    blockerCodes: ['ACCURACY_NOT_CONFIRMED'],
+    blockerCodes: ['WRITERS_NOT_CONFIRMED'],
     noticeCodes: [],
     reviews: [],
     ...overrides,
@@ -81,6 +88,8 @@ function create(permissions: Permission[] = ['releases:read', 'releases:review']
         useValue: { execute: getRelease, audioUrl: () => '' },
       },
       { provide: DecideReleaseUseCase, useValue: { approve, requestChanges } },
+      { provide: RetryPublishingUseCase, useValue: { execute: retryPublishing } },
+      { provide: TakeDownReleaseUseCase, useValue: { execute: takeDown } },
     ],
   })
   TestBed.inject(SessionStore).set({
@@ -110,6 +119,8 @@ describe('ReleaseReviewDetailPage', () => {
     getRelease.mockReset()
     approve.mockReset().mockResolvedValue(review)
     requestChanges.mockReset().mockResolvedValue({ ...review, decision: 'CHANGES_REQUESTED' })
+    retryPublishing.mockReset().mockResolvedValue(undefined)
+    takeDown.mockReset().mockResolvedValue(undefined)
   })
 
   it('shows the not-found message when the release does not exist', async () => {
@@ -148,7 +159,7 @@ describe('ReleaseReviewDetailPage', () => {
     const { host } = await render()
 
     expect(host.textContent).toContain('2 of 3 confirmed')
-    expect(host.textContent).toContain('Accuracy not confirmed')
+    expect(host.textContent).toContain('Writers not confirmed')
     expect(host.textContent).toContain('Ferry Lights')
     expect(host.textContent).toContain('No audio')
     expect(host.textContent).toContain('Worldwide')
@@ -214,6 +225,22 @@ describe('ReleaseReviewDetailPage', () => {
     expect(getRelease).toHaveBeenCalledTimes(2)
   })
 
+  it('shows not-found instead of the old release when it was withdrawn during the decision', async () => {
+    getRelease.mockResolvedValueOnce(release()).mockRejectedValue(new ResourceNotFoundError())
+    approve.mockRejectedValue(new ReleaseReviewError('stale'))
+    create()
+    const { fixture, host, button, dialog } = await render()
+
+    button(host, 'Approve')?.click()
+    await fixture.whenStable()
+    button(dialog(), 'Approve release')?.click()
+    await fixture.whenStable()
+
+    expect(host.textContent).toContain('Release not found')
+    expect(button(host, 'Approve')).toBeUndefined()
+    expect(button(host, 'Request changes')).toBeUndefined()
+  })
+
   it('offers no decision without releases:review, and says why', async () => {
     getRelease.mockResolvedValue(release())
     create(['releases:read'])
@@ -230,5 +257,40 @@ describe('ReleaseReviewDetailPage', () => {
 
     expect(button(host, 'Approve')).toBeUndefined()
     expect(host.textContent).toContain('isn’t awaiting review')
+  })
+
+  it('retries a failed publication and says so', async () => {
+    const failed = release({ status: 'PUBLISH_FAILED' })
+    getRelease.mockResolvedValue(failed)
+    create()
+    const { fixture, host, button } = await render()
+
+    expect(button(host, 'Take offline')).toBeUndefined()
+    button(host, 'Retry publishing')?.click()
+    await fixture.whenStable()
+
+    expect(retryPublishing).toHaveBeenCalledWith(failed)
+    expect(host.querySelector('[role="status"]')?.textContent).toContain('restarted')
+  })
+
+  it('takes a live release offline', async () => {
+    const live = release({ status: 'RELEASED' })
+    getRelease.mockResolvedValue(live)
+    create()
+    const { fixture, host, button } = await render()
+
+    expect(button(host, 'Retry publishing')).toBeUndefined()
+    button(host, 'Take offline')?.click()
+    await fixture.whenStable()
+
+    expect(takeDown).toHaveBeenCalledWith(live)
+  })
+
+  it('offers no publication actions without releases:review', async () => {
+    getRelease.mockResolvedValue(release({ status: 'PUBLISH_FAILED' }))
+    create(['releases:read'])
+    const { host, button } = await render()
+
+    expect(button(host, 'Retry publishing')).toBeUndefined()
   })
 })

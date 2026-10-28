@@ -55,6 +55,10 @@ export class AlbumEntity implements Album {
   @ApiProperty({ nullable: true })
   deletedAt: Date | null
 
+  /** When listeners could first see the album; null while its release is publishing or offline. */
+  @ApiProperty({ nullable: true })
+  publishedAt: Date | null
+
   /**
    * Artist Agreement revision the artist confirmed their rights under at creation, if recorded.
    * Kept out of the API schema: it is evidence for us, not data clients consume.

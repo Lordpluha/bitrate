@@ -18,6 +18,23 @@ export class DashboardCountsEntity {
   tracks: number
 }
 
+export class DashboardLeadTrackEntity {
+  @ApiProperty({ format: 'uuid' })
+  id: string
+
+  @ApiProperty()
+  title: string
+
+  @ApiProperty({ type: Number, nullable: true, minimum: 0 })
+  duration: number | null
+
+  @ApiProperty({
+    type: [Number],
+    description: 'Normalised peak levels (0–1) for drawing the waveform; empty until computed',
+  })
+  waveform: number[]
+}
+
 export class DashboardCurrentReleaseEntity {
   @ApiProperty({ format: 'uuid' })
   id: string
@@ -42,6 +59,13 @@ export class DashboardCurrentReleaseEntity {
 
   @ApiProperty({ minimum: 0, description: 'Submission blockers; 0 unless the release is a draft' })
   blockerCount: number
+
+  @ApiProperty({
+    type: DashboardLeadTrackEntity,
+    nullable: true,
+    description: 'First recording in running order that has an uploaded master',
+  })
+  leadTrack: DashboardLeadTrackEntity | null
 }
 
 export class DashboardAttentionEntity {

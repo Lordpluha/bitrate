@@ -1,6 +1,12 @@
 import { artistMusicKeys } from '@shared/api/artistMusicKeys'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { createRelease, getRelease, updateRelease } from './releases'
+import {
+  createRelease,
+  type DeleteReleaseRequest,
+  deleteRelease,
+  getRelease,
+  updateRelease,
+} from './releases'
 
 const releaseKeys = {
   artist: artistMusicKeys.artist,
@@ -33,6 +39,24 @@ export function useUpdateRelease(artistId: string) {
       void queryClient.invalidateQueries({
         queryKey: releaseKeys.artist(artistId),
         predicate: (query) => query.queryKey[2] !== 'detail',
+      })
+    },
+  })
+}
+
+export function useDeleteRelease(artistId: string) {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: deleteRelease,
+    retry: false,
+    onSuccess: (_, { id }: DeleteReleaseRequest) => {
+      // Reads of the deleted release would only return 404 now.
+      queryClient.removeQueries({
+        queryKey: releaseKeys.artist(artistId),
+        predicate: (query) => query.queryKey[3] === id,
+      })
+      return queryClient.invalidateQueries({
+        queryKey: releaseKeys.artist(artistId),
       })
     },
   })

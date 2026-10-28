@@ -246,6 +246,7 @@ describe('FriendsService', () => {
         deletedAt: null,
         id: 't1',
         processingStatus: 'READY',
+        publishedAt: new Date('2026-01-01T00:00:00.000Z'),
         title: 'Afterglow',
       }
       // ANA < ME < CAI: the caller is userB of the friendship with Ana, userA of Cai's.

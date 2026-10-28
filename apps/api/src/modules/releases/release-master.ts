@@ -8,6 +8,7 @@ import { storeMaster } from '@modules/tracks/audio-master'
 import { getUploadTempDir } from '@modules/tracks/audio-scratch'
 import { BadRequestException } from '@nestjs/common'
 import { ArtistTrackStatus, type Prisma } from '@prisma/client'
+import { extractWaveform } from './audio-waveform'
 import { RELEASE_ERRORS } from './errors'
 import { RELEASE_AUDIO_EXTENSION_BY_MIME } from './release-media.interceptors'
 
@@ -26,6 +27,8 @@ export interface StoredMaster {
   contentType: string
   sizeBytes: number
   duration: number | null
+  /** Normalised peaks for drawing the waveform; empty when the file could not be decoded. */
+  waveform: number[]
 }
 
 /** Moves the temporary upload into private storage; the local file is always removed. */
@@ -40,7 +43,10 @@ export async function storeReleaseMaster(
   try {
     if (!extension) throw new BadRequestException(RELEASE_ERRORS.AUDIO_TYPE_INVALID)
     const key = `release-masters/${ownerArtistId}/${randomUUID()}${extension}`
-    const duration = await probeDurationSeconds(path)
+    const [duration, waveform] = await Promise.all([
+      probeDurationSeconds(path),
+      extractWaveform(path),
+    ])
     await storeMaster({ storage, key, filePath: path, contentType: file.mimetype })
     return {
       key,
@@ -48,6 +54,7 @@ export async function storeReleaseMaster(
       contentType: file.mimetype,
       sizeBytes: file.size,
       duration,
+      waveform,
     }
   } finally {
     await rm(path, { force: true })
@@ -63,6 +70,7 @@ export function masterColumns(master: StoredMaster) {
     audioFileName: master.fileName,
     audioContentType: master.contentType,
     audioSizeBytes: master.sizeBytes,
+    waveform: master.waveform,
   } satisfies Prisma.ArtistTrackDraftUpdateManyMutationInput
 }
 

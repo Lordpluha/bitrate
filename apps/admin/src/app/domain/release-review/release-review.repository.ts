@@ -41,4 +41,8 @@ export abstract class ReleaseReviewRepository {
   abstract approve(input: ReleaseDecisionRequest): Promise<SubmissionReview>
   /** @throws {ReleaseReviewError} */
   abstract requestChanges(input: ReleaseChangesRequest): Promise<SubmissionReview>
+  /** Restarts a failed publication; converted tracks are kept. @throws {ReleaseReviewError} */
+  abstract retryPublishing(id: string): Promise<void>
+  /** Takes a release offline; the artist cannot publish it again. @throws {ReleaseReviewError} */
+  abstract takeDown(id: string): Promise<void>
 }

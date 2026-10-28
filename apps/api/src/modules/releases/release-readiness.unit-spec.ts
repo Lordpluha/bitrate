@@ -6,7 +6,6 @@ const ready: ReleaseReadinessInput = {
   cover: '/static/releases/covers/cover.jpg',
   masterOwnerType: 'ARTIST',
   writersConfirmedAt: new Date('2026-10-05T10:00:00Z'),
-  accuracyConfirmedAt: new Date('2026-10-05T10:00:00Z'),
   tracks: [{ id: 'track-1', isrc: 'USRC17607839', hasAudio: true }],
   contributors: [{ id: 'credit-1', roles: ['PERFORMER'] }],
   splits: [
@@ -25,18 +24,13 @@ describe('release readiness', () => {
     expect(releaseReadiness({ ...ready, tracks: [] }).blockers).toEqual([{ code: 'NO_TRACKS' }])
   })
 
-  it('requires the master owner and both rights confirmations', () => {
+  it('requires the master owner and the songwriter confirmation', () => {
     const { blockers } = releaseReadiness({
       ...ready,
       masterOwnerType: null,
       writersConfirmedAt: null,
-      accuracyConfirmedAt: null,
     })
-    expect(blockers).toEqual([
-      { code: 'MASTER_OWNER_MISSING' },
-      { code: 'WRITERS_NOT_CONFIRMED' },
-      { code: 'ACCURACY_NOT_CONFIRMED' },
-    ])
+    expect(blockers).toEqual([{ code: 'MASTER_OWNER_MISSING' }, { code: 'WRITERS_NOT_CONFIRMED' }])
   })
 
   it('names each contributor without a role', () => {

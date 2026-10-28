@@ -20,6 +20,12 @@ const CURRENT_RELEASE_SELECT = {
   cover: true,
   scheduledAt: true,
   updatedAt: true,
+  trackDrafts: {
+    where: { deletedAt: null, audioKey: { not: null } },
+    orderBy: [{ position: 'asc' }, { createdAt: 'asc' }, { id: 'asc' }],
+    take: 1,
+    select: { id: true, title: true, duration: true, waveform: true },
+  },
 } as const satisfies Prisma.ReleaseSelect
 
 type AttentionItem =
@@ -126,11 +132,12 @@ export class ArtistDashboardService {
       },
       currentRelease: current
         ? {
-            ...current,
+            ...current.summary,
+            leadTrack: current.leadTrack,
             blockerCount:
-              current.status === ReleaseStatus.DRAFT
-                ? (blockersById.get(current.id) ??
-                  (await this.blockerCount(ownerArtistId, current.id)))
+              current.summary.status === ReleaseStatus.DRAFT
+                ? (blockersById.get(current.summary.id) ??
+                  (await this.blockerCount(ownerArtistId, current.summary.id)))
                 : 0,
           }
         : null,
@@ -145,17 +152,20 @@ export class ArtistDashboardService {
   /** The release the artist most recently worked on, preferring one still in progress. */
   private async currentRelease(ownerArtistId: string) {
     const owned = { ownerArtistId, deletedAt: null }
-    const active = await this.prisma.release.findFirst({
-      where: { ...owned, status: { in: ACTIVE_STATUSES } },
-      orderBy: [{ updatedAt: 'desc' }, { id: 'desc' }],
-      select: CURRENT_RELEASE_SELECT,
-    })
-    if (active) return active
-    return this.prisma.release.findFirst({
-      where: owned,
-      orderBy: [{ updatedAt: 'desc' }, { id: 'desc' }],
-      select: CURRENT_RELEASE_SELECT,
-    })
+    const record =
+      (await this.prisma.release.findFirst({
+        where: { ...owned, status: { in: ACTIVE_STATUSES } },
+        orderBy: [{ updatedAt: 'desc' }, { id: 'desc' }],
+        select: CURRENT_RELEASE_SELECT,
+      })) ??
+      (await this.prisma.release.findFirst({
+        where: owned,
+        orderBy: [{ updatedAt: 'desc' }, { id: 'desc' }],
+        select: CURRENT_RELEASE_SELECT,
+      }))
+    if (!record) return null
+    const { trackDrafts, ...summary } = record
+    return { summary, leadTrack: trackDrafts[0] ?? null }
   }
 
   private async blockerCount(ownerArtistId: string, id: string): Promise<number> {

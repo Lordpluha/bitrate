@@ -26,6 +26,7 @@ export const buildTrack = (overrides: Partial<TrackEntity> = {}): TrackEntity =>
   discNumber: 1,
   language: null,
   deletedAt: null,
+  publishedAt: new Date('2026-01-01T00:00:00.000Z'),
   playbackVersion: 2,
   fragmentTimescale: 48_000,
   durationTicks: 2_880_000,

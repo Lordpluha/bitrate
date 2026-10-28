@@ -27,7 +27,6 @@ export const releaseBlockerSchema = z.discriminatedUnion('code', [
   z.object({ code: z.literal('TRACK_AUDIO_MISSING'), trackId: z.uuid() }),
   z.object({ code: z.literal('MASTER_OWNER_MISSING') }),
   z.object({ code: z.literal('WRITERS_NOT_CONFIRMED') }),
-  z.object({ code: z.literal('ACCURACY_NOT_CONFIRMED') }),
   z.object({
     code: z.literal('CONTRIBUTOR_ROLES_MISSING'),
     contributorId: z.uuid(),
@@ -110,8 +109,6 @@ export function describeBlocker(
       return 'Choose the master owner'
     case 'WRITERS_NOT_CONFIRMED':
       return 'Confirm all writers are listed'
-    case 'ACCURACY_NOT_CONFIRMED':
-      return 'Confirm the information is accurate'
     case 'CONTRIBUTOR_ROLES_MISSING':
       return `${names.contributors[blocker.contributorId] ?? 'A contributor'} needs a role`
     case 'SPLITS_INCOMPLETE':

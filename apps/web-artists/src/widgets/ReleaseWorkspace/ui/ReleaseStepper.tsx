@@ -1,0 +1,53 @@
+import {
+  type ReleaseStage,
+  type ReleaseWorkspace,
+  releaseStageLabels,
+  releaseStages,
+  stageProgress,
+  stageProgressLabels,
+} from '@entities/release'
+import { Link } from '@tanstack/react-router'
+import { Check } from 'lucide-react'
+
+interface ReleaseStepperProps {
+  release: ReleaseWorkspace
+  /** The stage on screen; every stage can be opened, whatever its progress. */
+  active: ReleaseStage
+}
+
+/** The five release stages as navigation, each showing where it stands. */
+export function ReleaseStepper({ release, active }: ReleaseStepperProps) {
+  const progress = stageProgress(release.status)
+  return (
+    <nav aria-label="Release stages" className="artist-release-stepper">
+      <ol>
+        {releaseStages.map((stage, index) => {
+          const state = progress[stage]
+          return (
+            <li data-state={state} key={stage}>
+              <Link
+                aria-current={stage === active ? 'page' : undefined}
+                params={{ releaseId: release.id }}
+                resetScroll={false}
+                search={{ step: stage }}
+                to="/dashboard/music/$releaseId"
+              >
+                <span aria-hidden="true" className="artist-release-step-mark">
+                  {state === 'complete' ? <Check /> : index + 1}
+                </span>
+                <span className="min-w-0">
+                  <span className="artist-release-step-name">
+                    {releaseStageLabels[stage]}
+                  </span>
+                  <span className="artist-release-step-state">
+                    {stageProgressLabels[state]}
+                  </span>
+                </span>
+              </Link>
+            </li>
+          )
+        })}
+      </ol>
+    </nav>
+  )
+}

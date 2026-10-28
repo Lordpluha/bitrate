@@ -141,8 +141,8 @@ export function ContributorForm({
           )}
         </fieldset>
         <p className="text-sm text-text-secondary">
-          Credits do not grant workspace access. Rights and revenue splits are
-          coming soon.
+          Credits do not grant workspace access. Shares are set in the master
+          and publishing splits.
         </p>
         {mutation.error && (
           <p className="text-sm text-destructive" role="alert">

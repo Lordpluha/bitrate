@@ -19,6 +19,7 @@ import {
   type ApproveReleaseBody,
   type RequestReleaseChangesBody,
   releaseDecisionDto,
+  retriedReleaseDto,
   releaseDetailDto,
   releasePageDto,
 } from './release-review.dto'
@@ -109,6 +110,27 @@ export class HttpReleaseReviewRepository extends ReleaseReviewRepository {
       ...(message ? { message } : {}),
     }
     return this.decide(`${this.base}/${id}/request-changes`, body)
+  }
+
+  override async retryPublishing(id: string): Promise<void> {
+    await this.publicationAction(id, 'retry-publishing')
+  }
+
+  override async takeDown(id: string): Promise<void> {
+    await this.publicationAction(id, 'unpublish')
+  }
+
+  /** Posts a body-less publication action; only the returned release's identity is checked. */
+  private async publicationAction(id: string, action: 'retry-publishing' | 'unpublish') {
+    let response: unknown
+    try {
+      response = await firstValueFrom(
+        this.http.post<unknown>(`${this.base}/${encodeURIComponent(id)}/${action}`, {}),
+      )
+    } catch (error) {
+      throw toReleaseReviewError(error)
+    }
+    retriedReleaseDto.parse(response)
   }
 
   private async decide(

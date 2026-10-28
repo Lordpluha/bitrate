@@ -1,2 +1,6 @@
 export type { WorkspaceAction } from './model/workspaceAction'
-export { ReleaseWorkspaceContent } from './ui/ReleaseWorkspaceContent'
+export { DraftStage } from './ui/DraftStage'
+export { LaunchStage } from './ui/LaunchStage'
+export { ReleaseHeader } from './ui/ReleaseHeader'
+export { ReleaseStepper } from './ui/ReleaseStepper'
+export { ReviewStage } from './ui/ReviewStage'

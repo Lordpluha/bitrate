@@ -7,7 +7,9 @@ const expectedUpdatedAt = z.iso
 
 /** Submission creates a Bitrate review request only; it never starts external delivery. */
 export const SubmitReleaseSchema = z.strictObject({
-  reviewed: z.literal(true).describe('The artist reviewed the information in this draft'),
+  reviewed: z
+    .literal(true)
+    .describe('The artist confirms the information in this draft is accurate'),
   expectedUpdatedAt,
 })
 

@@ -7,19 +7,29 @@ interface DraftEditorLoaderProps {
   artistId: string
   releaseId: string
   title: string
+  /** Statuses this editor accepts; most edits are draft-only. */
+  statuses?: readonly ReleaseSummary['status'][]
   onClose: () => void
   renderDraft: (release: ReleaseSummary) => ReactNode
 }
+
+const DRAFT_ONLY = ['DRAFT'] as const
 
 export function DraftEditorLoader({
   artistId,
   releaseId,
   title,
+  statuses = DRAFT_ONLY,
   onClose,
   renderDraft,
 }: DraftEditorLoaderProps) {
   const query = useRelease(artistId, releaseId)
-  if (query.data?.status === 'DRAFT' && !query.isPending && !query.isError)
+  if (
+    query.data &&
+    statuses.includes(query.data.status) &&
+    !query.isPending &&
+    !query.isError
+  )
     return renderDraft(query.data)
   return (
     <WorkspaceModal onClose={onClose} title={title}>
@@ -39,8 +49,8 @@ export function DraftEditorLoader({
         </div>
       ) : (
         <p role="alert">
-          This release is no longer a draft. Close the form and refresh Music to
-          review its status.
+          This release can no longer be edited here. Close the form and refresh
+          Music to review its status.
         </p>
       )}
     </WorkspaceModal>

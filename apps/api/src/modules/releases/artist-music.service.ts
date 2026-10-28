@@ -98,7 +98,8 @@ export class ArtistMusicService {
     const data = records.map(({ owner, _count, ...record }) => ({
       ...record,
       artistName: owner.username,
-      trackCount: _count.trackDrafts + _count.tracks,
+      // Published tracks are catalogue copies of the drafts, so they are not counted twice.
+      trackCount: Math.max(_count.trackDrafts, _count.tracks),
     }))
     return { data, total, page, limit }
   }

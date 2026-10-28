@@ -17,6 +17,7 @@ import {
   type RenditionStream,
   type TrackManifestPayload,
 } from './track-playback.types'
+import { PUBLIC_TRACK_WHERE } from './track-visibility'
 
 /**
  * Serves the single-file CMAF playback path: the byte-range manifest and the
@@ -38,7 +39,7 @@ export class TrackPlaybackService {
    */
   async getManifest(trackId: string): Promise<TrackManifestPayload> {
     const track = await this.prisma.track.findFirst({
-      where: { id: trackId, deletedAt: null, processingStatus: 'READY', playbackVersion: 2 },
+      where: { id: trackId, ...PUBLIC_TRACK_WHERE, playbackVersion: 2 },
       select: {
         fragmentTimescale: true,
         durationTicks: true,
@@ -124,7 +125,7 @@ export class TrackPlaybackService {
         trackId,
         format: CMAF_FORMAT,
         bitrate,
-        track: { deletedAt: null, processingStatus: 'READY', playbackVersion: 2 },
+        track: { ...PUBLIC_TRACK_WHERE, playbackVersion: 2 },
       },
       select: { url: true, size: true },
     })

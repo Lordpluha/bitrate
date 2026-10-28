@@ -37,6 +37,7 @@ const FRIEND_SELECT = {
           cover: true,
           deletedAt: true,
           processingStatus: true,
+          publishedAt: true,
           artist: { select: { id: true, username: true } },
         },
       },
@@ -261,7 +262,7 @@ function toFriendView({ createdAt, friend }: FriendshipRecord, now: Date) {
   const { devices, playerState, settings, ...user } = friend
   const track = playerState?.currentTrack
   const playable =
-    track && !track.deletedAt && track.processingStatus === 'READY'
+    track && !track.deletedAt && track.processingStatus === 'READY' && track.publishedAt
       ? { artist: track.artist, cover: track.cover, id: track.id, title: track.title }
       : null
   const presence = derivePresence({

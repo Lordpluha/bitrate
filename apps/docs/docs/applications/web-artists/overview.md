@@ -31,7 +31,6 @@ Application will be available at `http://localhost:3002`.
 | `/legal/$slug` | Terms, privacy, community, complaints, copyright, artist agreement |
 | `/dashboard` | Signed-in overview; guarded in `beforeLoad`, redirects to `/login?next=` |
 | `/dashboard/music`, `/dashboard/music/$releaseId` | Private catalogue and the release workspace ([ADR-0052](../../architecture/0052-artist-release-workspace-foundation.md), [ADR-0053](../../architecture/0053-private-artist-music-catalogue.md)) |
-| `/dashboard/tasks` | Release tasks |
 | `/dashboard/distribution` | Planned stores per release; delivery to stores is not connected |
 | `/dashboard/analytics` | Plays and listeners on Bitrate over 7, 28 or 90 days |
 | `/dashboard/profile`, `/dashboard/settings` | Public profile, account settings and signed-in devices |

@@ -9,10 +9,12 @@ export const NOTIFICATION_JOBS = {
   FRIEND_REQUEST: 'friend-request',
   FRIEND_ACCEPTED: 'friend-accepted',
   NEW_RELEASE: 'new-release',
+  RELEASE_PUBLISHED: 'release-published',
 } as const
 
 const followJobSchema = z.object({ followerId: z.uuid(), followingId: z.uuid() })
 const newReleaseJobSchema = z.object({ trackId: z.uuid() })
+const releasePublishedJobSchema = z.object({ albumId: z.uuid() })
 const friendRequestJobSchema = z.object({ requestId: z.uuid() })
 const friendAcceptedJobSchema = z.object({ accepterId: z.uuid(), requesterId: z.uuid() })
 
@@ -20,6 +22,8 @@ const friendAcceptedJobSchema = z.object({ accepterId: z.uuid(), requesterId: z.
 export type FollowNotificationJob = z.infer<typeof followJobSchema>
 /** A track was published for the first time. */
 export type NewReleaseNotificationJob = z.infer<typeof newReleaseJobSchema>
+/** A whole release went live on Bitrate as this album; followers hear about it once. */
+export type ReleasePublishedNotificationJob = z.infer<typeof releasePublishedJobSchema>
 /** Someone sent a friend request; the consumer re-reads it and skips it once it is gone. */
 export type FriendRequestNotificationJob = z.infer<typeof friendRequestJobSchema>
 /** `accepterId` accepted the request `requesterId` had sent. */
@@ -27,6 +31,7 @@ export type FriendAcceptedNotificationJob = z.infer<typeof friendAcceptedJobSche
 
 export const parseFollowJob = (data: unknown) => followJobSchema.safeParse(data)
 export const parseNewReleaseJob = (data: unknown) => newReleaseJobSchema.safeParse(data)
+export const parseReleasePublishedJob = (data: unknown) => releasePublishedJobSchema.safeParse(data)
 export const parseFriendRequestJob = (data: unknown) => friendRequestJobSchema.safeParse(data)
 export const parseFriendAcceptedJob = (data: unknown) => friendAcceptedJobSchema.safeParse(data)
 
