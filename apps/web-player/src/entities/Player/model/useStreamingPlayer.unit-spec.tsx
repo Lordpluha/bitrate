@@ -48,6 +48,7 @@ const createTrack = (id: string): TrackEntity => ({
   playbackVersion: 1,
   fragmentTimescale: null,
   durationTicks: null,
+  publishedAt: '2026-01-01T00:00:00.000Z',
 })
 
 type FakeElement = EventTarget & {
