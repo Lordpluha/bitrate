@@ -90,6 +90,11 @@ jobs:
         if: ${{ inputs.run-tests || inputs.run-e2e || inputs.run-screenshot }}
         run: pnpm --filter @bitrate/ui-react run build
 
+      # `<bitrate-player>` resolves to the player's dist/esm in tests and in the dev server.
+      - name: Build player
+        if: ${{ inputs.run-tests || inputs.run-e2e || inputs.run-screenshot }}
+        run: pnpm --filter @bitrate/player run build
+
       - name: Run web-artists typecheck
         if: ${{ inputs.run-tests }}
         run: pnpm --filter @bitrate/web-artists check-types
