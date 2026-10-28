@@ -94,7 +94,7 @@ describe('ArtistsOAuthController', () => {
     )
 
     expect(res.clearCookie).toHaveBeenCalledWith('oauth_state')
-    expect(tokenService.setAuthCookies).toHaveBeenCalledWith(res, 'at', 'rt')
+    expect(tokenService.setAuthCookies).toHaveBeenCalledWith(res, 'artist', 'at', 'rt')
     expect(res.redirect).toHaveBeenCalledWith('https://artists.example.com')
   })
 

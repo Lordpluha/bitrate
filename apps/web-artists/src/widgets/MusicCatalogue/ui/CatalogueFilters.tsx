@@ -11,6 +11,7 @@ import {
   releaseTypeLabels,
   releaseTypes,
 } from '@entities/release'
+import { NativeSelect } from '@shared/ui'
 import { ArrowDownUp, Disc3, ListFilter, RotateCcw, Search } from 'lucide-react'
 import { catalogueSortLabels } from '../model/sort'
 
@@ -63,14 +64,14 @@ export function CatalogueFilters({
           value={search.q ?? ''}
         />
       </div>
-      <label className="artist-music-filter relative">
+      <div className="artist-music-filter relative">
         <ListFilter
           aria-hidden="true"
-          className="pointer-events-none absolute left-3 top-3.5 size-4 text-text-secondary"
+          className="pointer-events-none absolute left-3 top-3.5 z-10 size-4 text-text-secondary"
         />
-        <span className="sr-only">Status filter</span>
-        <select
-          className="artist-music-control h-11 w-full pl-9 pr-6 text-xs"
+        <NativeSelect
+          aria-label="Status filter"
+          className="artist-music-control h-11 pl-9 text-xs"
           onChange={(event) =>
             onChange({
               ...search,
@@ -86,16 +87,16 @@ export function CatalogueFilters({
               {label}
             </option>
           ))}
-        </select>
-      </label>
-      <label className="artist-music-filter relative">
+        </NativeSelect>
+      </div>
+      <div className="artist-music-filter relative">
         <Disc3
           aria-hidden="true"
-          className="pointer-events-none absolute left-3 top-3.5 size-4 text-text-secondary"
+          className="pointer-events-none absolute left-3 top-3.5 z-10 size-4 text-text-secondary"
         />
-        <span className="sr-only">Type filter</span>
-        <select
-          className="artist-music-control h-11 w-full pl-9 pr-6 text-xs"
+        <NativeSelect
+          aria-label="Type filter"
+          className="artist-music-control h-11 pl-9 text-xs"
           onChange={(event) =>
             onChange({
               ...search,
@@ -111,16 +112,16 @@ export function CatalogueFilters({
               {label}
             </option>
           ))}
-        </select>
-      </label>
-      <label className="artist-music-sort relative">
+        </NativeSelect>
+      </div>
+      <div className="artist-music-sort relative">
         <ArrowDownUp
           aria-hidden="true"
-          className="pointer-events-none absolute left-3 top-3.5 size-4 text-text-secondary"
+          className="pointer-events-none absolute left-3 top-3.5 z-10 size-4 text-text-secondary"
         />
-        <span className="sr-only">Sort catalogue</span>
-        <select
-          className="artist-music-control h-11 w-full pl-9 pr-6 text-xs"
+        <NativeSelect
+          aria-label="Sort catalogue"
+          className="artist-music-control h-11 pl-9 text-xs"
           onChange={(event) =>
             onChange({
               ...search,
@@ -140,8 +141,8 @@ export function CatalogueFilters({
               {label}
             </option>
           ))}
-        </select>
-      </label>
+        </NativeSelect>
+      </div>
       <Button
         className="artist-music-reset text-xs text-text-secondary"
         onClick={() => onChange({ tab, page: 1 })}

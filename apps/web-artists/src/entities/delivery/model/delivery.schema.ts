@@ -3,6 +3,7 @@ import {
   deliveryDestinations,
   destinationLabels,
 } from '@shared/constants/destinations'
+import { releaseStatuses } from '@shared/constants/releaseStatuses'
 import { z } from 'zod'
 
 const availabilities = [
@@ -31,7 +32,7 @@ export const availabilityLabels = {
 export const releaseDeliverySchema = z.object({
   releaseId: z.uuid(),
   title: z.string(),
-  status: z.enum(['DRAFT', 'READY', 'SUBMITTED', 'RELEASED', 'REJECTED']),
+  status: z.enum(releaseStatuses),
   cover: z.string().nullable(),
   updatedAt: z.iso.datetime({ offset: true }),
   partner: z.object({ connected: z.boolean(), name: z.string().nullable() }),

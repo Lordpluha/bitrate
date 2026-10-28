@@ -9,13 +9,13 @@ async function authenticate(
 ) {
   await context.addCookies([
     {
-      name: 'access_token',
+      name: 'artist_access_token',
       value: access,
       url: 'http://localhost:3102',
       httpOnly: true,
     },
     {
-      name: 'refresh_token',
+      name: 'artist_refresh_token',
       value: refresh,
       url: 'http://localhost:3102',
       httpOnly: true,
@@ -131,7 +131,7 @@ for (const theme of ['light', 'dark', 'dim']) {
     const errors: string[] = []
     page.on('pageerror', (error) => errors.push(error.message))
     await gotoHydrated(page, `/dashboard/music/${workspaceDraftId}`)
-    const panel = page.getByRole('region', { name: 'Participants (1)' })
+    const panel = page.getByRole('region', { name: 'Credits & splits (1)' })
     await expect(panel.getByText('Needs role', { exact: true })).toBeVisible()
     const viewport = page.viewportSize()
     for (const width of [320, 768, 1440]) {
@@ -201,8 +201,8 @@ test('missing contributor role stays visible on a non-draft without an edit acti
       })
     },
   )
-  await gotoHydrated(page, `/dashboard/music/${workspaceDemoId}`)
-  const panel = page.getByRole('region', { name: 'Participants (1)' })
+  await gotoHydrated(page, `/dashboard/music/${workspaceDemoId}?step=draft`)
+  const panel = page.getByRole('region', { name: 'Credits & splits (1)' })
   await expect(panel.getByText('Needs role', { exact: true })).toBeVisible()
   await expect(
     panel.getByRole('button', { name: /Edit roles|Edit contributor/ }),
@@ -263,7 +263,7 @@ for (const theme of ['light', 'dark', 'dim']) {
       .getByRole('button', { name: 'Save contributor', exact: true })
       .click()
     await expect(dialog).not.toBeVisible()
-    const panel = page.getByRole('region', { name: 'Participants (1)' })
+    const panel = page.getByRole('region', { name: 'Credits & splits (1)' })
     await expect(
       panel.getByRole('heading', { name: 'Taylor Reid Updated', exact: true }),
     ).toBeVisible()
@@ -385,7 +385,7 @@ test('contributor editing rejects a success response for a different participant
     page.getByRole('heading', { name: 'Updated credit', exact: true }),
   ).toBeVisible()
   await expect(
-    page.getByRole('region', { name: 'Participants (1)' }),
+    page.getByRole('region', { name: 'Credits & splits (1)' }),
   ).toBeVisible()
 })
 
@@ -592,7 +592,7 @@ test('contributor editing rejects concurrent changes and reloads the current cre
     roles: ['PRODUCER'],
   })
   await expect(
-    page.getByRole('region', { name: 'Participants (1)' }),
+    page.getByRole('region', { name: 'Credits & splits (1)' }),
   ).toBeVisible()
 })
 
@@ -781,27 +781,24 @@ test('rights, splits and identifiers update the readiness checklist', async ({
   await rights.getByLabel('Another owner, such as a label').check()
   await rights.getByLabel('Master owner name').fill('North Label')
   await rights.getByLabel('All songwriters and composers are listed').check()
-  await rights.getByLabel('I confirm this information is accurate').check()
   await rights.getByRole('button', { name: 'Save rights', exact: true }).click()
   await expect(rights).not.toBeVisible()
-  await expect(page.getByText('North Label', { exact: true })).toBeVisible()
+  await expect(page.getByRole('region', { name: 'Rights' })).toContainText(
+    'Master owner: North Label',
+  )
   await expect(checklist).not.toContainText('Choose the master owner')
 
-  await page
-    .getByRole('button', { name: 'Edit master splits', exact: true })
-    .click()
-  const splits = page.getByRole('dialog', { name: 'Master splits' })
-  await splits.getByLabel('Taylor Reid').fill('120')
+  await page.getByRole('button', { name: 'Edit splits', exact: true }).click()
+  const splits = page.getByRole('dialog', { name: 'Splits' })
+  await splits.getByLabel('Taylor Reid master share').fill('120')
   await expect(splits.getByRole('alert')).toContainText(
-    'Use a share between 0.01% and 100%',
+    'use a share between 0.01% and 100%',
   )
-  await splits.getByLabel('Taylor Reid').fill('100')
-  await expect(splits.getByText('Total 100% of 100%')).toBeVisible()
+  await splits.getByLabel('Taylor Reid master share').fill('100')
+  await expect(splits.getByText('Master total 100% of 100%')).toBeVisible()
   await splits.getByRole('button', { name: 'Save splits', exact: true }).click()
   await expect(splits).not.toBeVisible()
   await expect(checklist).not.toContainText('Master splits')
-  // New splits change the rights data, so accuracy must be confirmed again.
-  await expect(checklist).toContainText('Confirm the information is accurate')
 
   await page.getByRole('button', { name: 'Edit UPC', exact: true }).click()
   const upc = page.getByRole('dialog', { name: 'Release barcode' })
@@ -811,7 +808,9 @@ test('rights, splits and identifiers update the readiness checklist', async ({
   await upc.getByRole('button', { name: 'Cancel', exact: true }).click()
 
   await expect(checklist).toContainText('Add at least one track')
-  await page.getByLabel('I reviewed the information in this draft.').check()
+  await page
+    .getByLabel('I checked this draft and confirm the information is accurate.')
+    .check()
   await expect(submit).toBeDisabled()
 })
 
@@ -880,7 +879,7 @@ for (const theme of ['light', 'dark', 'dim']) {
     })
     await save.click()
     await expect(dialog).not.toBeVisible()
-    const panel = page.getByRole('region', { name: 'Participants (1)' })
+    const panel = page.getByRole('region', { name: 'Credits & splits (1)' })
     await expect(
       panel.getByRole('heading', { name: 'Taylor Reid' }),
     ).toBeVisible()
@@ -913,7 +912,10 @@ for (const theme of ['light', 'dark', 'dim']) {
       (value) => localStorage.setItem('bitrate.artist-theme.v1', value),
       theme,
     )
-    await gotoHydrated(page, `/dashboard/music/${workspaceDraftId}`)
+    await gotoHydrated(
+      page,
+      `/dashboard/music/${workspaceDraftId}?step=deliver`,
+    )
     await page
       .getByRole('button', { name: 'Edit schedule', exact: true })
       .click()
@@ -921,7 +923,7 @@ for (const theme of ['light', 'dark', 'dim']) {
       name: 'Release timing',
       exact: true,
     })
-    await dialog.getByLabel('Set a planned release date').check()
+    await dialog.getByLabel('Premiere on a date').check()
     await dialog.getByLabel('Release date', { exact: true }).fill('2026-11-01')
     await dialog.getByLabel('Time (UTC)', { exact: true }).fill('12:30:15.125')
     await expect(
@@ -971,14 +973,14 @@ for (const theme of ['light', 'dark', 'dim']) {
     await expect(
       dialog.getByRole('button', { name: 'Save schedule', exact: true }),
     ).toBeDisabled()
-    await dialog.getByLabel('Set a planned release date').uncheck()
+    await dialog.getByLabel('Right away').check()
     await dialog
       .getByRole('button', { name: 'Save schedule', exact: true })
       .click()
     await expect(dialog).not.toBeVisible()
-    await expect(page.getByText('Not scheduled', { exact: true })).toBeVisible()
+    await expect(page.getByText('Right away', { exact: true })).toBeVisible()
     await page.reload()
-    await expect(page.getByText('Not scheduled', { exact: true })).toBeVisible()
+    await expect(page.getByText('Right away', { exact: true })).toBeVisible()
     const result = await page.request.get(
       `http://localhost:3103/api/v1/releases/${workspaceDraftId}`,
     )
@@ -999,7 +1001,10 @@ for (const failure of [409, 503, 'unconfirmed'] as const) {
   }) => {
     await authenticate(context)
     await page.request.post('http://localhost:3103/test/music')
-    await gotoHydrated(page, `/dashboard/music/${workspaceDraftId}`)
+    await gotoHydrated(
+      page,
+      `/dashboard/music/${workspaceDraftId}?step=deliver`,
+    )
     await page
       .getByRole('button', { name: 'Edit schedule', exact: true })
       .click()
@@ -1007,7 +1012,7 @@ for (const failure of [409, 503, 'unconfirmed'] as const) {
       name: 'Release timing',
       exact: true,
     })
-    await dialog.getByLabel('Set a planned release date').check()
+    await dialog.getByLabel('Premiere on a date').check()
     await dialog.getByLabel('Release date', { exact: true }).fill('2026-11-01')
     let writes = 0
     await page.route('**/api/v1/releases/*', async (route) => {
@@ -1031,7 +1036,9 @@ for (const failure of [409, 503, 'unconfirmed'] as const) {
     await expect(
       dialog.getByLabel('Release date', { exact: true }),
     ).toHaveValue('2026-11-01')
-    await expect(page.getByText('Not scheduled', { exact: true })).toBeVisible()
+    await expect(
+      page.getByRole('definition').filter({ hasText: 'Right away' }),
+    ).toBeVisible()
     await expect(
       page.getByRole('status').filter({ hasText: 'Draft updated.' }),
     ).not.toBeVisible()
@@ -1048,13 +1055,13 @@ test('release schedule validates an enabled empty date and locks dismissal while
 }) => {
   await authenticate(context)
   await page.request.post('http://localhost:3103/test/music')
-  await gotoHydrated(page, `/dashboard/music/${workspaceDraftId}`)
+  await gotoHydrated(page, `/dashboard/music/${workspaceDraftId}?step=deliver`)
   await page.getByRole('button', { name: 'Edit schedule', exact: true }).click()
   const dialog = page.getByRole('dialog', {
     name: 'Release timing',
     exact: true,
   })
-  await dialog.getByLabel('Set a planned release date').check()
+  await dialog.getByLabel('Premiere on a date').check()
   await dialog
     .getByRole('button', { name: 'Save schedule', exact: true })
     .click()
@@ -1098,13 +1105,13 @@ test('release schedule reloads the fresh version after a concurrent metadata edi
 }) => {
   await authenticate(context)
   await page.request.post('http://localhost:3103/test/music')
-  await gotoHydrated(page, `/dashboard/music/${workspaceDraftId}`)
+  await gotoHydrated(page, `/dashboard/music/${workspaceDraftId}?step=deliver`)
   await page.getByRole('button', { name: 'Edit schedule', exact: true }).click()
   const dialog = page.getByRole('dialog', {
     name: 'Release timing',
     exact: true,
   })
-  await dialog.getByLabel('Set a planned release date').check()
+  await dialog.getByLabel('Premiere on a date').check()
   await dialog.getByLabel('Release date', { exact: true }).fill('2026-11-01')
   const before = await (
     await page.request.get(
@@ -1129,7 +1136,7 @@ test('release schedule reloads the fresh version after a concurrent metadata edi
   )
   await dialog.getByRole('button', { name: 'Cancel', exact: true }).click()
   await page.getByRole('button', { name: 'Edit schedule', exact: true }).click()
-  await dialog.getByLabel('Set a planned release date').check()
+  await dialog.getByLabel('Premiere on a date').check()
   await dialog.getByLabel('Release date', { exact: true }).fill('2026-11-01')
   await dialog
     .getByRole('button', { name: 'Save schedule', exact: true })
@@ -1206,8 +1213,10 @@ test('release workspace wraps long release, recording and participant names acro
         () => document.documentElement.scrollWidth <= innerWidth,
       ),
     ).toBe(true)
-    const edit = page.getByRole('button', { name: 'Edit draft', exact: true })
-    expect((await edit.boundingBox())?.width).toBeLessThan(width)
+    const next = page.getByRole('link', {
+      name: /^(Continue|Review and submit)$/,
+    })
+    expect((await next.boundingBox())?.width).toBeLessThan(width)
   }
 })
 
@@ -1242,30 +1251,33 @@ for (const theme of ['light', 'dark', 'dim'] as const) {
     await expect(
       page.getByRole('heading', { name: 'Afterglow', level: 1 }),
     ).toBeVisible()
+    const stages = page.getByRole('navigation', { name: 'Release stages' })
+    await stages.getByRole('link', { name: /^Draft/ }).click()
+    await expect(page).toHaveURL(/step=draft/)
     await expect(
       page.getByRole('heading', { name: 'Tracks (1)', exact: true }),
     ).toBeVisible()
     await expect(
-      page.getByRole('heading', { name: 'Participants (0)', exact: true }),
+      page.getByRole('heading', { name: 'Credits & splits (0)', exact: true }),
     ).toBeVisible()
     await expect(page.getByText('Needs changes', { exact: true })).toBeVisible()
     await expect(
       page.getByText('No credited participants yet.', { exact: true }),
     ).toBeVisible()
-    await expect(page.getByText('Not scheduled', { exact: true })).toBeVisible()
+    // A non-draft keeps its edit actions visible but locked, with the reason.
     await expect(
-      page.getByRole('button', { name: 'Edit draft', exact: true }),
-    ).toHaveCount(0)
-    const waveform = page.locator('.artist-release-waveform')
+      page.getByRole('button', { name: 'Edit details', exact: true }),
+    ).toHaveAttribute('aria-disabled', 'true')
+    await stages.getByRole('link', { name: /^Deliver/ }).click()
+    await expect(page.getByText('Right away', { exact: true })).toBeVisible()
+    const waveform = page.locator('.artist-release-header-art')
     await expect(waveform).toHaveJSProperty('naturalWidth', 2172)
     await page.evaluate(() => document.fonts.ready)
-    const bounds = await page
-      .getByRole('region', { name: 'Release summary' })
-      .boundingBox()
+    const bounds = await page.locator('.artist-release-header').boundingBox()
     expect(bounds?.x).toBe(isMobile ? 24 : 296)
     expect(bounds?.width).toBe(isMobile ? 342 : 1096)
     expect(
-      Math.abs((bounds?.y ?? 0) - (isMobile ? 282 : 224)),
+      Math.abs((bounds?.y ?? 0) - (isMobile ? 168 : 120)),
     ).toBeLessThanOrEqual(2)
     await page.screenshot({
       path: `../../output/playwright/release-workspace/${theme}-${testInfo.project.name}.png`,
@@ -1307,7 +1319,7 @@ test('release workspace edits an owned draft, refreshes its summary and persists
       'No tracks yet. Upload a WAV or FLAC master to add the first one.',
     ),
   ).toBeVisible()
-  await page.getByRole('button', { name: 'Edit draft', exact: true }).click()
+  await page.getByRole('button', { name: 'Edit details', exact: true }).click()
   const dialog = page.getByRole('dialog', { name: 'Edit draft', exact: true })
   await dialog.getByLabel('Release title').fill('Workspace draft updated')
   await dialog.getByLabel('Release type').selectOption('EP')
@@ -1325,9 +1337,9 @@ test('release workspace edits an owned draft, refreshes its summary and persists
   await expect(
     page.getByRole('heading', { name: 'Workspace draft updated', level: 1 }),
   ).toBeVisible()
-  await expect(page.locator('.artist-release-page-heading')).toContainText(
-    'EP · Draft',
-  )
+  const header = page.locator('.artist-release-header')
+  await expect(header).toContainText(' · EP · ')
+  await expect(header).toContainText('Draft')
 })
 
 test('release workspace shows scheduled UTC date, real credits and bounded recording counts', async ({
@@ -1355,10 +1367,7 @@ test('release workspace shows scheduled UTC date, real credits and bounded recor
       },
     })
   })
-  await gotoHydrated(page, `/dashboard/music/${workspaceDemoId}`)
-  await expect(
-    page.getByText('Nov 1, 2026, 12:00 PM UTC', { exact: true }),
-  ).toBeVisible()
+  await gotoHydrated(page, `/dashboard/music/${workspaceDemoId}?step=draft`)
   await expect(
     page.getByText('Producer · Composer', { exact: true }),
   ).toBeVisible()
@@ -1366,6 +1375,13 @@ test('release workspace shows scheduled UTC date, real credits and bounded recor
     page.getByText('Showing 1 of 51 participants.', { exact: true }),
   ).toBeVisible()
   await expect(page.getByText(/Showing 1 of 55 tracks/)).toBeVisible()
+  await page
+    .getByRole('navigation', { name: 'Release stages' })
+    .getByRole('link', { name: /^Deliver/ })
+    .click()
+  await expect(
+    page.getByText('Nov 1, 2026, 12:00 PM UTC', { exact: true }),
+  ).toBeVisible()
 })
 
 for (const status of [404, 503, 200]) {
@@ -1472,6 +1488,83 @@ test('draft editing validates entries, cancels without saving and keeps non-draf
     .click()
   await page.getByRole('button', { name: 'Edit draft', exact: true }).click()
   await expect(page.getByLabel('Release title')).toHaveValue('Steel Ball Run')
+})
+
+test('only drafts can be deleted, after an explicit confirmation', async ({
+  page,
+  context,
+}) => {
+  await authenticate(context)
+  await page.request.post('http://localhost:3103/test/music')
+  await gotoHydrated(page, '/dashboard/music?tab=releases')
+  await page
+    .getByRole('button', { name: 'Actions for Afterglow', exact: true })
+    .click()
+  await expect(
+    page.getByRole('button', { name: 'Delete draft', exact: true }),
+  ).toHaveCount(0)
+  await page.keyboard.press('Escape')
+  await page
+    .getByRole('button', { name: 'Actions for Steel Ball Run', exact: true })
+    .click()
+  await page.getByRole('button', { name: 'Delete draft', exact: true }).click()
+  const confirm = page.getByRole('dialog', {
+    name: 'Delete draft',
+    exact: true,
+  })
+  await expect(confirm).toContainText('Steel Ball Run')
+  await confirm.getByRole('button', { name: 'Keep draft', exact: true }).click()
+  await expect(
+    page.getByRole('dialog', {
+      name: 'Actions for Steel Ball Run',
+      exact: true,
+    }),
+  ).toBeVisible()
+  await page.getByRole('button', { name: 'Delete draft', exact: true }).click()
+  await confirm
+    .getByRole('button', { name: 'Delete draft', exact: true })
+    .click()
+  await expect(confirm).not.toBeVisible()
+  await expect(
+    page.getByRole('button', { name: 'Open Steel Ball Run', exact: true }),
+  ).toHaveCount(0)
+  await gotoHydrated(page, page.url())
+  await expect(
+    page.getByRole('button', { name: 'Open Steel Ball Run', exact: true }),
+  ).toHaveCount(0)
+})
+
+test('a draft that changed elsewhere is kept and explained instead of deleted', async ({
+  page,
+  context,
+}) => {
+  await page.route('**/api/v1/releases/*', (route) =>
+    route.request().method() === 'DELETE'
+      ? route.fulfill({ status: 409, json: {} })
+      : route.continue(),
+  )
+  await authenticate(context)
+  await page.request.post('http://localhost:3103/test/music')
+  await gotoHydrated(page, '/dashboard/music?tab=releases')
+  await page
+    .getByRole('button', { name: 'Actions for Steel Ball Run', exact: true })
+    .click()
+  await page.getByRole('button', { name: 'Delete draft', exact: true }).click()
+  const confirm = page.getByRole('dialog', {
+    name: 'Delete draft',
+    exact: true,
+  })
+  await confirm
+    .getByRole('button', { name: 'Delete draft', exact: true })
+    .click()
+  await expect(confirm.getByRole('alert')).toContainText(
+    'changed or is no longer a draft',
+  )
+  await confirm.getByRole('button', { name: 'Keep draft', exact: true }).click()
+  await page.keyboard.press('Escape')
+  await expect(
+    page.getByRole('button', { name: 'Open Steel Ball Run', exact: true }),
+  ).toBeVisible()
 })
 
 for (const status of [409, 503, 200]) {
@@ -1617,7 +1710,9 @@ test('draft editing shows recoverable load errors and does not edit a newly subm
     await route.fulfill({ response, json: { ...data, status: 'SUBMITTED' } })
   })
   await dialog.getByRole('button', { name: 'Try again', exact: true }).click()
-  await expect(dialog.getByRole('alert')).toContainText('no longer a draft')
+  await expect(dialog.getByRole('alert')).toContainText(
+    'can no longer be edited here',
+  )
   await expect(dialog.getByLabel('Release title')).toHaveCount(0)
 })
 
@@ -1847,7 +1942,7 @@ for (const theme of ['light', 'dark', 'dim'] as const) {
 }
 
 for (const theme of ['light', 'dark', 'dim'] as const) {
-  test(`${theme} release drafts save through the API and appear in Music after reload`, async ({
+  test(`${theme} release drafts save through the API, open their workspace and appear in Music`, async ({
     page,
     context,
   }, testInfo) => {
@@ -1872,13 +1967,16 @@ for (const theme of ['light', 'dark', 'dim'] as const) {
     await dialog
       .getByRole('button', { name: 'Create draft', exact: true })
       .click()
-    await expect(page).toHaveURL(/\/dashboard\/music\?/)
+    await expect(page).toHaveURL(/\/dashboard\/music\/[^/?]+$/)
     await expect(
-      page.getByRole('button', { name: `Open ${title}`, exact: true }),
+      page.getByRole('heading', { name: title, level: 1 }),
     ).toBeVisible()
-    await expect(page.getByRole('status')).toContainText('Draft created')
     await expect(dialog).not.toBeVisible()
     await gotoHydrated(page, page.url())
+    await expect(
+      page.getByRole('heading', { name: title, level: 1 }),
+    ).toBeVisible()
+    await gotoHydrated(page, '/dashboard/music?tab=releases')
     await expect(
       page.getByRole('button', { name: `Open ${title}`, exact: true }),
     ).toBeVisible()
@@ -1967,7 +2065,7 @@ test('release drafts keep entered values after an API failure and allow retry', 
     .getByRole('button', { name: 'Create draft', exact: true })
     .click()
   await expect(
-    page.getByRole('button', { name: `Open ${title}`, exact: true }),
+    page.getByRole('heading', { name: title, level: 1 }),
   ).toBeVisible()
 })
 
@@ -2017,7 +2115,7 @@ test('release drafts prevent repeated submits and dismissal while saving', async
     resume()
   }
   await expect(
-    page.getByRole('button', { name: `Open ${title}`, exact: true }),
+    page.getByRole('heading', { name: title, level: 1 }),
   ).toBeVisible()
   expect(writes).toBe(1)
 })
@@ -2188,7 +2286,7 @@ test('release list belongs to the signed-in artist after signing out and switchi
     .getByRole('button', { name: 'Create draft', exact: true })
     .click()
   await expect(
-    page.getByRole('button', { name: `Open ${title}`, exact: true }),
+    page.getByRole('heading', { name: title, level: 1 }),
   ).toBeVisible()
   await openAppearance(page)
   await page.getByRole('button', { name: 'Sign out' }).click()
@@ -2338,6 +2436,7 @@ for (const theme of ['dark', 'light', 'dim'] as const) {
     await expect(page.locator('body')).toHaveCSS('overflow', 'hidden')
     await notice.getByRole('button', { name: 'Close dialog' }).click()
     for (const [name, path] of [
+      ['Distribution', 'distribution'],
       ['Analytics', 'analytics'],
       ['Profile', 'profile'],
       ['Settings', 'settings'],
@@ -2391,9 +2490,9 @@ for (const theme of ['dark', 'light', 'dim'] as const) {
     await expect(search.getByRole('status')).toHaveText(
       'Nothing matches your search.',
     )
-    await query.fill('Tasks')
-    await search.getByRole('link', { name: 'Tasks', exact: true }).click()
-    await expect(page).toHaveURL(/\/dashboard\/tasks(\?|$)/)
+    await query.fill('Analytics')
+    await search.getByRole('link', { name: 'Analytics', exact: true }).click()
+    await expect(page).toHaveURL(/\/dashboard\/analytics(\?|$)/)
     await expect(search).not.toBeVisible()
     await page
       .getByRole('button', { name: 'Search workspace', exact: true })
@@ -2401,7 +2500,10 @@ for (const theme of ['dark', 'light', 'dim'] as const) {
     await page
       .getByRole('searchbox', { name: 'Search workspace', exact: true })
       .fill('Distribution')
-    await page.getByRole('link', { name: 'Distribution', exact: true }).click()
+    await page
+      .getByRole('navigation', { name: 'Search results' })
+      .getByRole('link', { name: 'Distribution', exact: true })
+      .click()
     await expect(page).toHaveURL(/\/dashboard\/distribution(\?|$)/)
     await openAppearance(page)
     const account = page.getByRole('dialog', {
@@ -2436,7 +2538,7 @@ test('unverified artist can confirm email and then sign in', async ({
       },
     },
   )
-  await gotoHydrated(page, '/dashboard/tasks')
+  await gotoHydrated(page, '/dashboard/distribution')
   await page.getByLabel('Email Address').fill('unverified@example.test')
   await page.getByLabel('Password', { exact: true }).fill('Password123!')
   await page.getByRole('button', { name: 'Continue', exact: true }).click()
@@ -2472,7 +2574,7 @@ test('unverified artist can confirm email and then sign in', async ({
   await page.getByLabel('Email Address').fill('unverified@example.test')
   await page.getByLabel('Password', { exact: true }).fill('Password123!')
   await page.getByRole('button', { name: 'Continue', exact: true }).click()
-  await expect(page).toHaveURL(/\/dashboard\/tasks(\?|$)/)
+  await expect(page).toHaveURL(/\/dashboard\/distribution(\?|$)/)
 })
 
 test('registration explains email verification instead of reporting a completed login', async ({
@@ -2618,12 +2720,14 @@ test('server rendering isolates artist identities and disables private response 
   const [first, second] = await Promise.all([
     request.get('/dashboard', {
       headers: {
-        Cookie: 'access_token=test-valid; refresh_token=test-refresh',
+        Cookie:
+          'artist_access_token=test-valid; artist_refresh_token=test-refresh',
       },
     }),
     request.get('/dashboard', {
       headers: {
-        Cookie: 'access_token=test-other; refresh_token=test-refresh',
+        Cookie:
+          'artist_access_token=test-other; artist_refresh_token=test-refresh',
       },
     }),
   ])
@@ -2642,13 +2746,13 @@ test('server rendering isolates artist identities and disables private response 
 })
 
 test('login returns to the requested protected page', async ({ page }) => {
-  await gotoHydrated(page, '/dashboard/tasks')
+  await gotoHydrated(page, '/dashboard/distribution')
   await page.getByLabel('Email Address').fill('artist@example.test')
   await page.getByLabel('Password', { exact: true }).fill('Password123!')
   await page.getByRole('button', { name: 'Continue', exact: true }).click()
-  await expect(page).toHaveURL(/\/dashboard\/tasks(\?|$)/)
+  await expect(page).toHaveURL(/\/dashboard\/distribution(\?|$)/)
   await expect(
-    page.getByRole('heading', { name: 'Tasks', exact: true }),
+    page.getByRole('heading', { name: 'Distribution', exact: true }),
   ).toBeVisible()
 })
 
@@ -2666,7 +2770,7 @@ test('two-factor login verifies the code before returning to the protected page'
   page,
   context,
 }) => {
-  await gotoHydrated(page, '/dashboard/tasks')
+  await gotoHydrated(page, '/dashboard/distribution')
   await page.getByLabel('Email Address').fill('twofactor@example.test')
   await page.getByLabel('Password', { exact: true }).fill('Password123!')
   await page.getByRole('button', { name: 'Continue', exact: true }).click()
@@ -2680,13 +2784,13 @@ test('two-factor login verifies the code before returning to the protected page'
   await expect(page.getByText('Test artist', { exact: true })).toHaveCount(0)
   await code.fill('123456')
   await page.getByRole('button', { name: 'Verify and sign in' }).click()
-  await expect(page).toHaveURL(/\/dashboard\/tasks(\?|$)/)
+  await expect(page).toHaveURL(/\/dashboard\/distribution(\?|$)/)
   const cookies = await context.cookies()
   expect(
     cookies.find((cookie) => cookie.name === 'pending_2fa_token'),
   ).toBeUndefined()
   expect(
-    cookies.find((cookie) => cookie.name === 'access_token'),
+    cookies.find((cookie) => cookie.name === 'artist_access_token'),
   ).toMatchObject({
     value: 'test-valid',
     httpOnly: true,
@@ -2720,10 +2824,10 @@ test('expired access token refreshes on the server and relays httpOnly cookies',
   ).toBeVisible()
   const cookies = await context.cookies()
   expect(
-    cookies.find((cookie) => cookie.name === 'access_token'),
+    cookies.find((cookie) => cookie.name === 'artist_access_token'),
   ).toMatchObject({ value: 'test-valid', httpOnly: true })
   expect(
-    cookies.find((cookie) => cookie.name === 'refresh_token'),
+    cookies.find((cookie) => cookie.name === 'artist_refresh_token'),
   ).toMatchObject({ value: 'test-refresh-rotated', httpOnly: true })
 })
 

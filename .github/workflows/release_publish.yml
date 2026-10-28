@@ -33,7 +33,7 @@ permissions: {}
 jobs:
   publish:
     name: Publish
-    uses: ./.github/workflows/release_publish_reusable.yml
+    uses: $/.github/workflows/release_publish_reusable.yml
 
     # The union of what the called jobs need; each job inside narrows to its own
     # subset, so the six image jobs never hold `contents: write` and the deploy
@@ -61,4 +61,6 @@ jobs:
     # a reusable workflow may not declare `environment:`, so an explicit mapping
     # here would resolve against repository scope and pass empty strings. See
     # deploy.yml for the full reasoning.
+    # zizmor: ignore[secrets-inherit] -- environment-scoped secrets reach the called
+    # workflow's `environment:` job only through inherit; see deploy.yml.
     secrets: inherit

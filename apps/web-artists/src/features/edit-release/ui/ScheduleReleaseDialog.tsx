@@ -19,6 +19,22 @@ interface ScheduleReleaseDialogProps {
   onSaved: () => void
 }
 
+/** The timing stays editable after approval, until publishing starts. */
+const TIMING_STATUSES = ['DRAFT', 'READY'] as const
+
+const TIMING_CHOICES = [
+  {
+    planned: false,
+    label: 'Right away',
+    hint: 'It goes live as soon as you publish it.',
+  },
+  {
+    planned: true,
+    label: 'Premiere on a date',
+    hint: 'It goes live at the date and time you choose.',
+  },
+] as const
+
 export function ScheduleReleaseDialog(props: ScheduleReleaseDialogProps) {
   return (
     <DraftEditorLoader
@@ -28,6 +44,7 @@ export function ScheduleReleaseDialog(props: ScheduleReleaseDialogProps) {
       renderDraft={(release) => (
         <ScheduleReleaseForm {...props} release={release} />
       )}
+      statuses={TIMING_STATUSES}
       title="Release timing"
     />
   )
@@ -81,23 +98,37 @@ function ScheduleReleaseForm({
         onSubmit={form.handleSubmit(submit)}
       >
         <p className="text-sm text-text-secondary">
-          Save a planned date and time. This does not submit or deliver your
-          release.
+          Choose when listeners can hear it. You can change this until the
+          release is published.
         </p>
-        <label
-          className="flex items-center gap-3 text-sm"
-          htmlFor={`${id}-planned`}
-        >
-          <input
-            className="artist-release-schedule-toggle"
-            data-initial-focus
-            disabled={busy}
-            id={`${id}-planned`}
-            type="checkbox"
-            {...form.register('planned', { onChange: () => update.reset() })}
-          />
-          Set a planned release date
-        </label>
+        <fieldset className="space-y-2" disabled={busy}>
+          <legend className="sr-only">When to release</legend>
+          {TIMING_CHOICES.map((choice) => (
+            <label className="artist-release-credit-role" key={choice.label}>
+              <input
+                checked={planned === choice.planned}
+                data-initial-focus={
+                  planned === choice.planned ? true : undefined
+                }
+                name={`${id}-timing`}
+                onChange={() => {
+                  update.reset()
+                  form.setValue('planned', choice.planned, {
+                    shouldDirty: true,
+                    shouldValidate: form.formState.isSubmitted,
+                  })
+                }}
+                type="radio"
+              />
+              <span>
+                <span className="block font-medium">{choice.label}</span>
+                <span className="block text-xs text-text-secondary">
+                  {choice.hint}
+                </span>
+              </span>
+            </label>
+          ))}
+        </fieldset>
         <div className="artist-release-schedule-fields">
           {(['date', 'time'] as const).map((field) => (
             <div className="min-w-0 space-y-2" key={field}>
@@ -134,9 +165,7 @@ function ScheduleReleaseForm({
             </div>
           ))}
         </div>
-        <p className="text-sm text-text-secondary">
-          Time zone: UTC. Uncheck the planned date to clear the schedule.
-        </p>
+        <p className="text-sm text-text-secondary">Time zone: UTC.</p>
         {update.error && (
           <p className="text-sm text-destructive" role="alert">
             {update.error.message}

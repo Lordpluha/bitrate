@@ -65,8 +65,8 @@ describe('AuthController artists (int)', () => {
           const req = ctx.switchToHttp().getRequest()
           req.artist = artist
           req.user = artist
-          req[process.env.ACCESS_TOKEN_NAME ?? 'access_token'] = 'at'
-          req[process.env.REFRESH_TOKEN_NAME ?? 'refresh_token'] = 'rt'
+          req.artist_access_token = 'at'
+          req.artist_refresh_token = 'rt'
           return true
         },
       })

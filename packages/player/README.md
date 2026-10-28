@@ -2,7 +2,7 @@
 
 The Bitrate audio player as a framework-free custom element, `<bitrate-player>`, built with
 Svelte 5. Hosts in any framework mount the tag, set its properties and listen to its events;
-the element owns playback. See ADR-0039 and ADR-0062 in `apps/docs/docs/architecture/`.
+the element owns playback. See ADR-0039 and ADR-0063 in `apps/docs/docs/architecture/`.
 
 ```ts
 import '@bitrate/player' // registers <bitrate-player> and its part elements
@@ -93,7 +93,7 @@ For anything else, inner nodes expose `::part()` names: `layout`, `cover`, `meta
 ## Streaming mode
 
 Set `streaming` and the element streams CMAF with adaptive bitrate over two media elements,
-prefetching what comes next (ADR-0063). The host keeps its queue and tells the element what
+prefetching what comes next (ADR-0064). The host keeps its queue and tells the element what
 plays now and what follows, each keyed per play:
 
 ```ts

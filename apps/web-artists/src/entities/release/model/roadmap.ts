@@ -1,14 +1,15 @@
 import type { ReleaseWorkspace } from './workspace.schema'
 
-export type RoadmapState = 'done' | 'current' | 'todo' | 'later'
+type RoadmapState = 'done' | 'current' | 'todo' | 'later'
 
 interface RoadmapStep {
   key:
     | 'details'
+    | 'timing'
     | 'artwork'
     | 'audio'
     | 'credits'
-    | 'splits'
+    | 'rights'
     | 'submit'
     | 'review'
     | 'delivery'
@@ -21,6 +22,12 @@ interface RoadmapStep {
 }
 
 const AFTER_REVIEW = new Set(['READY', 'RELEASED'])
+
+const premiere = new Intl.DateTimeFormat('en-US', {
+  dateStyle: 'medium',
+  timeStyle: 'short',
+  timeZone: 'UTC',
+})
 
 /**
  * The path from a draft to a delivered release, derived only from saved data so it always
@@ -42,9 +49,14 @@ export function releaseRoadmap(release: ReleaseWorkspace): RoadmapStep[] {
     {
       key: 'details',
       label: 'Release details',
+      detail: 'Title and type saved',
+    },
+    {
+      key: 'timing',
+      label: 'Release timing',
       detail: release.scheduledAt
-        ? 'Title, type and planned date saved'
-        : 'Title and type saved · planned date optional',
+        ? `Premiere · ${premiere.format(new Date(release.scheduledAt))} UTC`
+        : 'Right away, as soon as you publish it',
     },
     {
       key: 'artwork',
@@ -65,33 +77,31 @@ export function releaseRoadmap(release: ReleaseWorkspace): RoadmapStep[] {
     },
     {
       key: 'credits',
-      label: 'Credits and rights',
+      label: 'Credits & splits',
       detail:
-        has('MASTER_OWNER_MISSING') ||
-        has('WRITERS_NOT_CONFIRMED') ||
-        has('CONTRIBUTOR_ROLES_MISSING')
-          ? 'Credit everyone, choose the master owner and confirm writers'
-          : 'Credits and master owner confirmed',
-      anchor: 'release-rights-heading',
+        has('CONTRIBUTOR_ROLES_MISSING') || has('SPLITS_INCOMPLETE')
+          ? 'Credit everyone with a role and share out 100% of master and publishing'
+          : 'Everyone credited · master and publishing at 100%',
+      anchor: 'release-credits-heading',
     },
     {
-      key: 'splits',
-      label: 'Splits',
-      detail: has('SPLITS_INCOMPLETE')
-        ? 'Allocate 100% of master and publishing'
-        : 'Master and publishing fully allocated',
+      key: 'rights',
+      label: 'Rights',
+      detail:
+        has('MASTER_OWNER_MISSING') || has('WRITERS_NOT_CONFIRMED')
+          ? 'Choose the master owner and confirm the songwriters'
+          : 'Master owner and songwriters confirmed',
       anchor: 'release-rights-heading',
     },
   ]
   const preparationDone: Record<string, boolean> = {
     details: true,
+    // Right away is a valid choice, so timing never blocks preparation.
+    timing: true,
     artwork: !has('COVER_MISSING'),
     audio: !has('NO_TRACKS') && missingAudio === 0,
-    credits:
-      !has('MASTER_OWNER_MISSING') &&
-      !has('WRITERS_NOT_CONFIRMED') &&
-      !has('CONTRIBUTOR_ROLES_MISSING'),
-    splits: !has('SPLITS_INCOMPLETE'),
+    credits: !has('CONTRIBUTOR_ROLES_MISSING') && !has('SPLITS_INCOMPLETE'),
+    rights: !has('MASTER_OWNER_MISSING') && !has('WRITERS_NOT_CONFIRMED'),
   }
 
   let currentAssigned = submitted
@@ -145,12 +155,4 @@ export function releaseRoadmap(release: ReleaseWorkspace): RoadmapStep[] {
         : 'Store delivery is coming soon',
   })
   return steps
-}
-
-export function roadmapProgress(steps: RoadmapStep[]) {
-  const counted = steps.filter((step) => step.state !== 'later')
-  return {
-    done: counted.filter((step) => step.state === 'done').length,
-    total: counted.length,
-  }
 }

@@ -772,6 +772,9 @@ importers:
 
   apps/web-artists:
     dependencies:
+      '@bitrate/player':
+        specifier: workspace:*
+        version: link:../../packages/player
       '@bitrate/ui-react':
         specifier: workspace:*
         version: link:../../packages/ui-react

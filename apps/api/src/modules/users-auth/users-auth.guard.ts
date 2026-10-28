@@ -28,7 +28,7 @@ export type { TokenRequirement } from '@modules/auth-core'
  * @returns Decorator function that sets the token requirement for the guard.
  */
 export function UserAuth(tokenRequirement: TokenRequirement = 'access') {
-  return sessionAuth(UserAuthGuard, tokenRequirement)
+  return sessionAuth(UserAuthGuard, tokenRequirement, 'user')
 }
 
 /** Allows public access while attaching the authenticated user when cookies are valid. */
@@ -79,7 +79,7 @@ export class OptionalUserAuthGuard implements CanActivate {
     const request = context.switchToHttp().getRequest<Request>()
     const { accessToken: access_token, refreshToken: refresh_token } = extractAuthCookies(
       request,
-      this.tokenService,
+      'user',
     )
     if (!access_token) return true
 

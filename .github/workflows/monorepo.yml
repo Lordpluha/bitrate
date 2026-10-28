@@ -57,7 +57,7 @@ permissions:
 
 jobs:
   gates:
-    uses: ./.github/workflows/monorepo_reusable.yml
+    uses: $/.github/workflows/monorepo_reusable.yml
     with:
       run-lint: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs['run-lint'] == 'true' || github.event_name != 'workflow_dispatch' }}
       run-types: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs['run-types'] == 'true' || github.event_name != 'workflow_dispatch' }}

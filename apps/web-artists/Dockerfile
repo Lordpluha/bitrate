@@ -71,6 +71,9 @@ FROM base AS build
 # apps/web-player); the mapping to this app's VITE_ name happens in compose and CI.
 ARG VITE_API_URL
 ENV VITE_API_URL=${VITE_API_URL}
+# Public player address (the player's NEXT_PUBLIC_SITE_URL), for links to released albums.
+ARG VITE_PLAYER_URL
+ENV VITE_PLAYER_URL=${VITE_PLAYER_URL}
 ENV NODE_ENV=production
 
 COPY --from=dependencies /app/node_modules ./node_modules

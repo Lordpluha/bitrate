@@ -1,4 +1,5 @@
 import type { ApiSchemas } from '@bitrate/contracts'
+import { releaseStatuses } from '@shared/constants/releaseStatuses'
 import { z } from 'zod'
 
 export const releaseTypes = [
@@ -19,6 +20,10 @@ export const releaseStatusLabels = {
   SUBMITTED: 'Submitted',
   RELEASED: 'Released',
   REJECTED: 'Rejected',
+  SCHEDULED: 'Scheduled',
+  PUBLISHING: 'Publishing',
+  PUBLISH_FAILED: 'Publishing failed',
+  UNPUBLISHED: 'Unpublished',
 } satisfies Record<ApiSchemas['ReleaseStatus'], string>
 
 export const createReleaseSchema = z.strictObject({
@@ -37,7 +42,7 @@ export const releaseSummarySchema = z.object({
   id: z.uuid(),
   title: z.string(),
   type: z.enum(releaseTypes),
-  status: z.enum(['DRAFT', 'READY', 'SUBMITTED', 'RELEASED', 'REJECTED']),
+  status: z.enum(releaseStatuses),
   upc: z.string().nullable(),
   scheduledAt: z.iso.datetime({ offset: true }).nullable(),
   createdAt: z.iso.datetime({ offset: true }),

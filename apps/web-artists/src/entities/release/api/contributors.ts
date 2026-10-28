@@ -1,10 +1,13 @@
 import type { ApiSchemas } from '@bitrate/contracts'
 import { clientFetchClient } from '@shared/api/fetchClient'
 import { writeSignal } from '@shared/api/writeTimeout'
+import { z } from 'zod'
 import {
   contributorResultSchema,
   participantSchema,
 } from '../model/contributor.schema'
+import { releaseSummarySchema } from '../model/release.schema'
+import { advancedRelease, guardedWrite } from './guardedWrite'
 
 export interface ContributorRequest {
   id: string
@@ -88,4 +91,77 @@ function sendContributor(
     body: input,
     signal,
   })
+}
+
+const removedContributorSchema = z.object({
+  release: releaseSummarySchema,
+  contributorId: z.uuid(),
+})
+
+export interface ContributorRemovalRequest {
+  id: string
+  contributorId: string
+  expectedUpdatedAt: string
+}
+
+export function removeContributor({
+  id,
+  contributorId,
+  expectedUpdatedAt,
+}: ContributorRemovalRequest) {
+  return guardedWrite(
+    () =>
+      clientFetchClient.DELETE(
+        '/api/v1/releases/{id}/contributors/{contributorId}',
+        {
+          params: { path: { id, contributorId } },
+          body: { expectedUpdatedAt },
+          signal: writeSignal(),
+        },
+      ),
+    (data) => {
+      const parsed = removedContributorSchema.safeParse(data)
+      return parsed.success &&
+        parsed.data.contributorId === contributorId &&
+        advancedRelease(parsed.data.release, id, expectedUpdatedAt)
+        ? parsed.data
+        : undefined
+    },
+    {
+      invalid: 'Could not remove this contributor. Please try again.',
+      unconfirmed:
+        'Could not confirm the contributor was removed. Check Participants before trying again.',
+    },
+  )
+}
+
+export interface CreditSelfRequest {
+  id: string
+  expectedUpdatedAt: string
+}
+
+/** Credits the artist alone with every writing role and 100% of both splits. */
+export function creditSelf({ id, expectedUpdatedAt }: CreditSelfRequest) {
+  return guardedWrite(
+    () =>
+      clientFetchClient.POST('/api/v1/releases/{id}/contributors/self', {
+        params: { path: { id } },
+        body: { expectedUpdatedAt },
+        signal: writeSignal(),
+      }),
+    (data) => {
+      const parsed = contributorResultSchema.safeParse(data)
+      return parsed.success &&
+        advancedRelease(parsed.data.release, id, expectedUpdatedAt)
+        ? parsed.data
+        : undefined
+    },
+    {
+      invalid: 'Could not credit you on this release. Please try again.',
+      unconfirmed:
+        'Could not confirm you were credited. Check Participants before trying again.',
+      conflict:
+        'This release changed or already credits someone. Close this and review Participants.',
+    },
+  )
 }

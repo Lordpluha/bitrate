@@ -1,10 +1,4 @@
-import {
-  ChartLine,
-  Disc3,
-  ListChecks,
-  type LucideIcon,
-  Send,
-} from 'lucide-react'
+import { ChartLine, Disc3, type LucideIcon, Send } from 'lucide-react'
 
 export interface LandingFeature {
   icon: LucideIcon
@@ -22,12 +16,6 @@ export const LANDING_FEATURES: readonly LandingFeature[] = [
     title: 'Release workspace',
     description:
       'Draft a release, credit everyone who worked on it, confirm rights and splits, and submit it for review.',
-  },
-  {
-    icon: ListChecks,
-    title: 'Release tasks',
-    description:
-      'Keep the work each release needs in one list, with due dates and status.',
   },
   {
     icon: Send,

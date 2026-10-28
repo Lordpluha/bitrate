@@ -9,7 +9,6 @@ export const ROUTES = {
   dashboard: {
     home: '/dashboard',
     music: '/dashboard/music',
-    tasks: '/dashboard/tasks',
     distribution: '/dashboard/distribution',
     analytics: '/dashboard/analytics',
     profile: '/dashboard/profile',
@@ -23,4 +22,17 @@ export const ROUTES = {
   community: '/legal/community',
   complaints: '/legal/complaints',
   copyright: '/legal/copyright',
+} as const
+
+/** Public player address; deployments map the player's `NEXT_PUBLIC_SITE_URL` to it. */
+const PLAYER_URL = import.meta.env.VITE_PLAYER_URL || 'http://localhost:3001'
+
+/** Links into the Bitrate player, which is a separate app on its own origin. */
+export const PLAYER_ROUTES = {
+  /** Mirrors `ROUTES.album` in `apps/web-player`. */
+  album: (albumId: string) =>
+    new URL(
+      `/main/album/${encodeURIComponent(albumId)}`,
+      PLAYER_URL,
+    ).toString(),
 } as const

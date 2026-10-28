@@ -10,6 +10,11 @@ interface ImportMetaEnv {
    * arg), because Vite only exposes `VITE_`-prefixed variables to client code.
    */
   readonly VITE_API_URL?: string
+  /**
+   * Public address of the Bitrate player, used for links to a released album. Deployments map
+   * the player's `NEXT_PUBLIC_SITE_URL` to it, like `VITE_API_URL` above.
+   */
+  readonly VITE_PLAYER_URL?: string
 }
 
 interface ImportMeta {

@@ -34,9 +34,6 @@ describe('UserAuthGuard', () => {
   let tokenService: DeepMockProxy<TokenService>
 
   beforeEach(() => {
-    process.env.ACCESS_TOKEN_NAME = 'access_token'
-    process.env.REFRESH_TOKEN_NAME = 'refresh_token'
-
     resetPrismaMock()
     prisma = prismaMock
     reflector = mockDeep<Reflector>()
@@ -44,10 +41,6 @@ describe('UserAuthGuard', () => {
 
     mockReset(reflector)
     mockReset(tokenService)
-
-    tokenService.getTokenName.mockImplementation((type) =>
-      type === 'access' ? 'access_token' : 'refresh_token',
-    )
 
     guard = new UserAuthGuard(prisma, reflector, tokenService)
   })
@@ -61,6 +54,23 @@ describe('UserAuthGuard', () => {
     await expect(guard.canActivate(createHttpContext(req))).rejects.toThrow(
       UNAUTHORIZED_ERRORS.ACCESS_TOKEN_REQUIRED,
     )
+  })
+
+  /** The browser sends every session on the shared cookie domain; only the user's one counts. */
+  it.each([
+    ['admin', { staff_access_token: 'staff-token', staff_refresh_token: 'staff-refresh' }],
+    ['artist', { artist_access_token: 'artist-token' }],
+    ['pre-split', { access_token: 'legacy-token', refresh_token: 'legacy-refresh' }],
+  ])('should not read an %s session as the user session', async (_label, cookies) => {
+    reflector.getAllAndOverride.mockReturnValue('access')
+
+    const req = mockDeep<Request>()
+    req.cookies = cookies
+
+    await expect(guard.canActivate(createHttpContext(req))).rejects.toThrow(
+      UNAUTHORIZED_ERRORS.ACCESS_TOKEN_REQUIRED,
+    )
+    expect(tokenService.verifyToken).not.toHaveBeenCalled()
   })
 
   it('should reject when refresh token missing', async () => {
@@ -92,8 +102,8 @@ describe('UserAuthGuard', () => {
       Request & { user?: ReturnType<typeof buildUser> } & Record<string, string>
     >()
     req.cookies = {
-      access_token: 'access-token',
-      refresh_token: 'refresh-token',
+      user_access_token: 'access-token',
+      user_refresh_token: 'refresh-token',
     }
 
     tokenService.verifyToken.mockResolvedValue({ sub: 'user-1', username: 'user', type: 'user' })
@@ -112,8 +122,8 @@ describe('UserAuthGuard', () => {
     expect(tokenService.verifyToken).toHaveBeenCalledTimes(1)
     expect(tokenService.verifyToken).toHaveBeenCalledWith('access-token')
     expect(req.user).toBeDefined()
-    expect(req.access_token).toBe('access-token')
-    expect(req.refresh_token).toBe('refresh-token')
+    expect(req.user_access_token).toBe('access-token')
+    expect(req.user_refresh_token).toBe('refresh-token')
   })
 
   it('should authorize an access request even when a co-present refresh cookie is invalid', async () => {
@@ -123,8 +133,8 @@ describe('UserAuthGuard', () => {
       Request & { user?: ReturnType<typeof buildUser> } & Record<string, string>
     >()
     req.cookies = {
-      access_token: 'access-token',
-      refresh_token: 'expired-refresh-token',
+      user_access_token: 'access-token',
+      user_refresh_token: 'expired-refresh-token',
     }
 
     tokenService.verifyToken.mockImplementation((token: string) => {
@@ -151,7 +161,7 @@ describe('UserAuthGuard', () => {
 
     const req = mockDeep<Request>()
     req.cookies = {
-      access_token: 'access-token',
+      user_access_token: 'access-token',
     }
 
     tokenService.verifyToken.mockResolvedValue({ sub: 'user-1', username: 'user', type: 'user' })
@@ -171,7 +181,7 @@ describe('UserAuthGuard', () => {
     reflector.getAllAndOverride.mockReturnValue('access')
 
     const req = mockDeep<Request>()
-    req.cookies = { access_token: 'access-token' }
+    req.cookies = { user_access_token: 'access-token' }
 
     tokenService.verifyToken.mockResolvedValue({ sub: 'user-1', username: 'user', type: 'user' })
     // A soft-deleted user is excluded by the guard's `deletedAt: null` filter, so the lookup
@@ -191,7 +201,7 @@ describe('UserAuthGuard', () => {
 
     const req = mockDeep<Request>()
     req.cookies = {
-      access_token: 'access-token',
+      user_access_token: 'access-token',
     }
 
     tokenService.verifyToken.mockRejectedValue(new Error('bad token'))

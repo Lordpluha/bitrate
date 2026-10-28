@@ -188,6 +188,7 @@ describe('ArtistsService', () => {
     const playable = {
       deletedAt: null,
       processingStatus: 'READY' as const,
+      publishedAt: { not: null },
       OR: [{ artistId }, { artists: { some: { artistId } } }],
     }
 
@@ -248,6 +249,7 @@ describe('ArtistsService', () => {
             track: {
               deletedAt: null,
               processingStatus: 'READY' as const,
+              publishedAt: { not: null },
               OR: [{ artistId }, { artists: { some: { artistId } } }],
             },
           },

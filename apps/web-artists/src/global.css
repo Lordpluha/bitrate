@@ -7,9 +7,11 @@
  * could not do.
  */
 @import "./shared/styles/workspace.css";
+@import "./entities/release/ui/TrackPlayer.css";
 @import "./widgets/ArtistDashboard/ui/ArtistDashboard.css";
 @import "./views/DashboardView/ui/DashboardView.css";
 @import "./widgets/ReleaseWorkspace/ui/ReleaseWorkspace.css";
+@import "./widgets/DashboardOverview/ui/DashboardOverview.css";
 @import "./widgets/MusicCatalogue/ui/MusicCatalogue.css";
 
 @source "./";
@@ -88,10 +90,16 @@
 }
 
 /* Workspace appearance preferences, set on <html> by the theme bootstrap and provider. */
-:root[data-density="compact"] .artist-release-workspace-panel {
+:root[data-density="compact"]
+:is(.artist-release-workspace-panel, .artist-release-header) {
   padding: 0.75rem;
 }
-:root[data-density="compact"] .artist-release-workspace-panels {
+:root[data-density="compact"]
+  :is(
+    .artist-release-workspace,
+    .artist-release-stage,
+    .artist-release-editors
+  ) {
   gap: 0.75rem;
 }
 :root[data-motion="reduced"] *,

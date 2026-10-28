@@ -1,11 +1,18 @@
 import { Button } from '@bitrate/ui-react'
-import { useReleaseWorkspace } from '@entities/release'
+import {
+  currentStage,
+  type ReleaseStage,
+  useReleaseWorkspace,
+} from '@entities/release'
 import { ROUTES } from '@shared/routes/routes'
 import { Link } from '@tanstack/react-router'
 import { ReleaseDeliveryPanel } from '@widgets/ReleaseDelivery'
-import { ReleaseTasksPanel } from '@widgets/ReleaseTasks'
 import {
-  ReleaseWorkspaceContent,
+  DraftStage,
+  LaunchStage,
+  ReleaseHeader,
+  ReleaseStepper,
+  ReviewStage,
   type WorkspaceAction,
 } from '@widgets/ReleaseWorkspace'
 import { useState } from 'react'
@@ -14,11 +21,14 @@ import { WorkspaceDialogs } from './WorkspaceDialogs'
 interface ReleaseWorkspaceViewProps {
   artistId: string
   releaseId: string
+  /** The stage named in the URL; without one the release opens on its current stage. */
+  step?: ReleaseStage
 }
 
 export function ReleaseWorkspaceView({
   artistId,
   releaseId,
+  step,
 }: ReleaseWorkspaceViewProps) {
   const query = useReleaseWorkspace(artistId, releaseId)
   const [saved, setSaved] = useState(false)
@@ -28,6 +38,7 @@ export function ReleaseWorkspaceView({
     setSaved(false)
     setDialog(next)
   }
+  const stage = step ?? (query.data ? currentStage(query.data.status) : null)
   return (
     <div aria-busy={query.isFetching} className="artist-release-workspace">
       {query.isPending ? (
@@ -62,22 +73,36 @@ export function ReleaseWorkspaceView({
               Draft updated.
             </p>
           )}
-          <ReleaseWorkspaceContent
-            artistId={artistId}
-            onAction={openDialog}
-            release={query.data}
+          <Link
+            className="artist-release-back lg:hidden"
+            search={{ tab: 'releases', page: 1 }}
+            to={ROUTES.dashboard.music}
           >
-            <ReleaseTasksPanel
+            Back to music
+          </Link>
+          <ReleaseHeader release={query.data} />
+          <ReleaseStepper active={stage ?? 'draft'} release={query.data} />
+          {stage === 'draft' && (
+            <DraftStage
               artistId={artistId}
-              participants={query.data.participants}
-              releaseId={releaseId}
+              onAction={openDialog}
+              release={query.data}
             />
+          )}
+          {stage === 'review' && (
+            <ReviewStage artistId={artistId} release={query.data} />
+          )}
+          {stage === 'deliver' && (
             <ReleaseDeliveryPanel
               artistId={artistId}
+              onSchedule={() => openDialog({ kind: 'schedule' })}
               release={query.data}
               releaseId={releaseId}
             />
-          </ReleaseWorkspaceContent>
+          )}
+          {stage === 'launch' && (
+            <LaunchStage artistId={artistId} release={query.data} />
+          )}
         </>
       )}
       {dialog && (

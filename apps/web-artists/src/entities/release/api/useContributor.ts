@@ -2,9 +2,12 @@ import { artistMusicKeys } from '@shared/api/artistMusicKeys'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import {
   type ContributorRequest,
+  creditSelf,
   getContributor,
+  removeContributor,
   saveContributor,
 } from './contributors'
+import { useReleaseWrite } from './useReleaseRights'
 
 export function useContributor(
   artistId: string,
@@ -39,3 +42,8 @@ export function useSaveContributor(artistId: string, contributorId?: string) {
       }),
   })
 }
+
+export const useRemoveContributor = (artistId: string) =>
+  useReleaseWrite(artistId, removeContributor)
+export const useCreditSelf = (artistId: string) =>
+  useReleaseWrite(artistId, creditSelf)

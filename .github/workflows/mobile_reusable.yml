@@ -80,6 +80,10 @@ on:
         required: false
         default: manual
         type: string
+    secrets:
+      expo-token:
+        description: Expo access token for EAS builds
+        required: false
 
 permissions:
   contents: read
@@ -88,15 +92,14 @@ permissions:
 jobs:
   expo-dev-server-check:
     if: ${{ inputs.run-expo-check }}
-    uses: ./.github/workflows/mobile_expo_reusable.yml
+    uses: $/.github/workflows/mobile_expo_reusable.yml
     with:
       expo-image-tag: ${{ inputs.expo-image-tag }}
       expo-container-name: ${{ inputs.expo-container-name }}
-    secrets: inherit
 
   mobile-web-build:
     if: ${{ inputs.run-mobile-web-build }}
-    uses: ./.github/workflows/mobile_web_reusable.yml
+    uses: $/.github/workflows/mobile_web_reusable.yml
     with:
       mobile-web-push: ${{ inputs.mobile-web-push }}
       mobile-web-load: ${{ inputs.mobile-web-load }}
@@ -105,14 +108,14 @@ jobs:
       mobile-web-test-image: ${{ inputs.mobile-web-test-image }}
       mobile-web-test-pull: ${{ inputs.mobile-web-test-pull }}
       mobile-web-test-container: ${{ inputs.mobile-web-test-container }}
-    secrets: inherit
 
   mobile-eas:
     if: ${{ inputs.run-eas-android || inputs.run-eas-ios }}
-    uses: ./.github/workflows/mobile_eas_reusable.yml
+    uses: $/.github/workflows/mobile_eas_reusable.yml
     with:
       run-eas-android: ${{ inputs.run-eas-android }}
       run-eas-ios: ${{ inputs.run-eas-ios }}
       eas-profile: ${{ inputs.eas-profile }}
       artifact-suffix: ${{ inputs.artifact-suffix }}
-    secrets: inherit
+    secrets:
+      expo-token: ${{ secrets.expo-token }}

@@ -72,6 +72,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          persist-credentials: false
           fetch-depth: 0
 
       - name: Read the product version and decide
@@ -131,6 +132,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          persist-credentials: false
           fetch-depth: 0
 
       # Assembled BEFORE the new tag exists, so `git tag --sort=-v:refname` names
@@ -251,7 +253,7 @@ jobs:
     if: ${{ needs.resolve.outputs.release == 'true' }}
     permissions:
       contents: write
-    uses: ./.github/workflows/release_apps_reusable.yml
+    uses: $/.github/workflows/release_apps_reusable.yml
     with:
       tag: ${{ needs.resolve.outputs.tag }}
     secrets:
@@ -271,8 +273,10 @@ jobs:
       contents: read
       packages: write
       security-events: write
-    uses: ./.github/workflows/release_images_reusable.yml
-    secrets: inherit
+    uses: $/.github/workflows/release_images_reusable.yml
+    secrets:
+      turbo-token: ${{ secrets.TURBO_TOKEN }}
+      sentry-auth-token: ${{ secrets.SENTRY_AUTH_TOKEN }}
     with:
       image-tag: ${{ needs.resolve.outputs.tag }}
       push-image: true
@@ -295,12 +299,14 @@ jobs:
     permissions:
       contents: read
       actions: read
-    uses: ./.github/workflows/deploy_reusable.yml
+    uses: $/.github/workflows/deploy_reusable.yml
     with:
       environment: ${{ inputs.environment }}
       wait-for-images: false
       run-deploy: true
       image-tag: ${{ needs.resolve.outputs.tag }}
+    # zizmor: ignore[secrets-inherit] -- environment-scoped secrets reach the called
+    # workflow's `environment:` job only through inherit; see deploy.yml.
     secrets: inherit
 
   # ---------------------------------------------------------------------------

@@ -5,22 +5,36 @@ import {
 } from '@shared/constants/destinations'
 import { z } from 'zod'
 
+/** Release tasks were dropped from the workspace; the API may still derive their notices. */
+const TASK_KINDS: readonly unknown[] = ['TASK_OVERDUE', 'TASK_DUE_SOON']
+
+const withoutTaskNotices = (items: unknown) =>
+  Array.isArray(items)
+    ? items.filter(
+        (item: unknown) =>
+          !(
+            typeof item === 'object' &&
+            item !== null &&
+            'kind' in item &&
+            TASK_KINDS.includes(item.kind)
+          ),
+      )
+    : items
+
 const notificationSchema = z.object({
   id: z.string(),
   kind: z.enum([
-    'TASK_OVERDUE',
-    'TASK_DUE_SOON',
     'CHANGES_REQUESTED',
     'DELIVERY_FAILED',
     'RELEASE_SUBMITTED',
     'RELEASE_APPROVED',
     'RELEASE_RELEASED',
+    'PUBLISH_FAILED',
     'DELIVERY_LIVE',
   ]),
   actionRequired: z.boolean(),
   releaseId: z.uuid(),
   releaseTitle: z.string(),
-  taskTitle: z.string().optional(),
   destination: z.enum(deliveryDestinations).optional(),
   at: z.iso.datetime({ offset: true }),
   unread: z.boolean(),
@@ -29,7 +43,7 @@ const notificationSchema = z.object({
 export type ArtistNotification = z.infer<typeof notificationSchema>
 
 export const notificationListSchema = z.object({
-  data: z.array(notificationSchema).max(30),
+  data: z.preprocess(withoutTaskNotices, z.array(notificationSchema).max(30)),
   unread: z.number().int().nonnegative(),
   seenAt: z.iso.datetime({ offset: true }).nullable(),
 }) satisfies z.ZodType<ApiSchemas['ArtistNotificationListEntity']>
@@ -40,10 +54,6 @@ export function describeNotification(item: ArtistNotification): string {
     ? destinationLabels[item.destination]
     : 'a store'
   switch (item.kind) {
-    case 'TASK_OVERDUE':
-      return `“${item.taskTitle ?? 'A task'}” is overdue`
-    case 'TASK_DUE_SOON':
-      return `“${item.taskTitle ?? 'A task'}” is due within two days`
     case 'CHANGES_REQUESTED':
       return 'The reviewer requested changes'
     case 'DELIVERY_FAILED':
@@ -53,7 +63,9 @@ export function describeNotification(item: ArtistNotification): string {
     case 'RELEASE_APPROVED':
       return 'Approved by Bitrate review'
     case 'RELEASE_RELEASED':
-      return 'Released'
+      return 'Live on Bitrate'
+    case 'PUBLISH_FAILED':
+      return 'Publishing failed — Bitrate has been notified'
     case 'DELIVERY_LIVE':
       return `Live on ${store}`
   }

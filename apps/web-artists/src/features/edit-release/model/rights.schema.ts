@@ -12,7 +12,6 @@ export const rightsFormSchema = z
     }),
     ownerName: z.string().trim().max(255, 'Use 255 characters or fewer'),
     writersConfirmed: z.boolean(),
-    accuracyConfirmed: z.boolean(),
   })
   .refine((value) => value.ownerType !== 'OTHER' || value.ownerName !== '', {
     path: ['ownerName'],

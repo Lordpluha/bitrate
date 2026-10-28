@@ -65,12 +65,10 @@ x-api-env: &api-env
   S3_FORCE_PATH_STYLE: "true"
   S3_REGION:
   S3_PUBLIC_URL:
-  # Token lifetimes and cookie names. Absent here, the API fell back to its schema defaults, so
+  # Token lifetimes. Absent here, the API fell back to its schema defaults, so
   # changing any of them in .env had no effect on production at all.
   JWT_ACCESS_EXPIRES_IN:
   JWT_REFRESH_EXPIRES_IN:
-  ACCESS_TOKEN_NAME:
-  REFRESH_TOKEN_NAME:
   # The parent domain the session cookies are scoped to, e.g. `.bitrate.me`. Without it the
   # cookies are host-only on the API subdomain, so the web apps' route guards never see a
   # session and every authenticated route redirects back to the login page.
@@ -139,7 +137,7 @@ services:
   # kernel OOM killer is not the thing that trims it.
   seaweedfs:
     logging: *default-logging
-    image: chrislusf/seaweedfs:4.48
+    image: chrislusf/seaweedfs:4.51
     container_name: bitrate-seaweedfs-prod
     restart: always
     entrypoint: ["/bin/sh", "-c"]
@@ -176,7 +174,7 @@ services:
   # `up -d`; an existing bucket and its objects are left untouched.
   seaweedfs-init:
     logging: *default-logging
-    image: chrislusf/seaweedfs:4.48
+    image: chrislusf/seaweedfs:4.51
     restart: "no"
     entrypoint: ["/bin/sh", "-c"]
     command:
@@ -329,11 +327,13 @@ services:
       target: production
       args:
         - VITE_API_URL=${NEXT_PUBLIC_API_URL}
+        - VITE_PLAYER_URL=${NEXT_PUBLIC_SITE_URL}
     container_name: bitrate-web-artists-prod
     restart: always
     environment:
       NODE_ENV: production
       VITE_API_URL: ${NEXT_PUBLIC_API_URL}
+      VITE_PLAYER_URL: ${NEXT_PUBLIC_SITE_URL}
       API_URL: ${API_URL:-http://api:3000}
     depends_on:
       - api

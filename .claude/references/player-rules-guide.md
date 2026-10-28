@@ -112,7 +112,7 @@ from web-player for #236. The host passes `fetchRange` to each `StreamLoader`, a
 `player-debug` switch; without it nothing persists and tracing stays off. The quality cap
 (`setMaxStreamBitrate`) is the one other module-level setting.
 
-`src/engine/slots/` is streaming mode (ADR-0063): `SlotPlayer` drives two media elements from
+`src/engine/slots/` is streaming mode (ADR-0064): `SlotPlayer` drives two media elements from
 the host's `source`/`next`, with the prefetch and constrained-start thresholds in `network.ts`.
 Everything host-specific arrives in `BitratePlayerStreaming`; the host keeps the queue and its
 legacy (HLS) adapter. `src/element/streaming-state.svelte.ts` binds it to the root, and
@@ -203,7 +203,7 @@ CVA. `scripts/check-design-tokens.mjs` walks `packages/player/src` (including `.
 files) and flags a literal hex colour there — not the stock-Tailwind-scale check the other
 three roots get, since this package has no Tailwind utilities to check in the first place.
 
-Variants (ADR-0062) change size and density through `--bitrate-player-*` properties that each
+Variants (ADR-0063) change size and density through `--bitrate-player-*` properties that each
 fall back to the old literal, so an unset property keeps the `bar` exactly as it was: set them
 on a layout's root class, never by editing a part's defaults. Inner nodes carry `part` names
 for `::part()`. Fixed-size SVG icons scale with `scale: var(--bitrate-player-*-icon-scale)`

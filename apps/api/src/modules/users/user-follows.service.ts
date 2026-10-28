@@ -2,6 +2,7 @@ import { normalizePagination } from '@common/pagination'
 import { readUserSettings } from '@common/user-settings'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import { NotificationsProducer } from '@modules/notifications'
+import { PUBLIC_TRACK_SQL, PUBLIC_TRACK_WHERE } from '@modules/tracks/track-visibility'
 import {
   BadRequestException,
   ForbiddenException,
@@ -109,8 +110,7 @@ export class UserFollowsService {
       this.prisma.track.findMany({
         where: {
           id: { in: rows.map((r) => r.trackId) },
-          deletedAt: null,
-          processingStatus: 'READY',
+          ...PUBLIC_TRACK_WHERE,
         },
         include: { artist: { select: { id: true, username: true, avatar: true } } },
       }),
@@ -139,8 +139,7 @@ export class UserFollowsService {
         LEFT JOIN "UserSettings" s ON s."userId" = h."userId"
         WHERE h."listenedAt" >= ${since}
           AND u."deletedAt" IS NULL
-          AND t."deletedAt" IS NULL
-          AND t."processingStatus" = 'READY'
+          AND ${PUBLIC_TRACK_SQL}
           AND COALESCE(s."showListeningActivity", true) = true
         ORDER BY h."userId", h."listenedAt" DESC
       ) latest

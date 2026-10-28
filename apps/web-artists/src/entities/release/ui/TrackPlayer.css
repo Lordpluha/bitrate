@@ -1,0 +1,12 @@
+/* Master playback: the <bitrate-player> host. */
+@layer utilities {
+  /* <bitrate-player> styles itself through its CSS custom-property contract. */
+  .artist-track-player {
+    overflow: hidden;
+    border: 1px solid var(--color-artist-release-border);
+    border-radius: 0.625rem;
+  }
+  .artist-track-player-pending {
+    height: 4rem;
+  }
+}
