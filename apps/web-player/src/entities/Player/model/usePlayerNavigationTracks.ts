@@ -11,7 +11,7 @@ import {
   selectQueue,
   selectRepeatMode,
   usePlayerStore,
-} from '@/entities/Player'
+} from '@/entities/Player/model/playerStore'
 
 interface PlayerNavigationTracks {
   nextTrack: PlayerState['currentTrack']

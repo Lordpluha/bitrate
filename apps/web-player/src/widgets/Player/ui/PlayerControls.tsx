@@ -1,9 +1,8 @@
 'use client'
 
 import { cn } from '@bitrate/ui-react'
-import { PlayerMirror } from '@entities/Player'
+import { PlayerMirror, usePlayerNavigationTracks } from '@entities/Player'
 import type { CSSProperties } from 'react'
-import { usePlayerNavigationTracks } from '@/widgets/Player/model/usePlayerNavigationTracks'
 import { TrackNavigationButton } from '@/widgets/Player/ui/TrackNavigationButton'
 
 /** The package draws shuffle/repeat at 16px and Play at 18px; the design's sizes scale them. */

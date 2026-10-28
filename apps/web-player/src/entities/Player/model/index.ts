@@ -1,4 +1,5 @@
 export * from './manifest.types'
 export * from './playerElementStore'
 export * from './playerStore'
+export * from './usePlayerNavigationTracks'
 export * from './useStreamingPlayer'

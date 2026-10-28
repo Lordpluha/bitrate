@@ -386,6 +386,8 @@ export const uk = {
   'player.openLyrics': 'Відкрити текст пісні',
   'player.openQueue': 'Відкрити чергу',
   'player.previous': 'Попередній трек',
+  'player.skipCueNext': 'Далі',
+  'player.skipCuePrevious': 'Назад',
   'player.quality': 'Якість',
   'player.qualityAuto': 'Авто',
   'player.qualityOption': '{kbps} кбіт/с',

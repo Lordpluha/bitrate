@@ -390,6 +390,8 @@ export const pl = {
   'player.openLyrics': 'Otwórz tekst',
   'player.openQueue': 'Otwórz kolejkę',
   'player.previous': 'Poprzedni utwór',
+  'player.skipCueNext': 'Dalej',
+  'player.skipCuePrevious': 'Wstecz',
   'player.quality': 'Jakość',
   'player.qualityAuto': 'Auto',
   'player.qualityOption': '{kbps} kb/s',

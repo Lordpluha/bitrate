@@ -372,6 +372,8 @@ export const en = {
   'player.openLyrics': 'Open lyrics',
   'player.openQueue': 'Open queue',
   'player.previous': 'Previous track',
+  'player.skipCueNext': 'Next',
+  'player.skipCuePrevious': 'Previous',
   'player.quality': 'Quality',
   'player.qualityAuto': 'Auto',
   'player.qualityOption': '{kbps} kbps',
