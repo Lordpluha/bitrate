@@ -102,6 +102,16 @@ describe('useIslandSkipGesture', () => {
     expect(onSkip).not.toHaveBeenCalled()
   })
 
+  it('keeps links and covers from starting a native drag that cancels the swipe', () => {
+    render(<Harness onSkip={vi.fn()} />)
+
+    const dragStart = fireEvent.dragStart(
+      screen.getByRole('button', { name: 'Home' }),
+    )
+
+    expect(dragStart).toBe(false)
+  })
+
   it('lets a tap reach a tab but swallows the click that ends a swipe', () => {
     const onTabClick = vi.fn()
     render(<Harness onSkip={vi.fn()} onTabClick={onTabClick} />)

@@ -1,6 +1,12 @@
 'use client'
 
-import { type MouseEvent, type PointerEvent, useRef, useState } from 'react'
+import {
+  type DragEvent,
+  type MouseEvent,
+  type PointerEvent,
+  useRef,
+  useState,
+} from 'react'
 
 /** `next` is a swipe to the left, `prev` a swipe to the right. */
 export type IslandSkipDirection = 'next' | 'prev'
@@ -67,6 +73,8 @@ export const useIslandSkipGesture = ({
       event.preventDefault()
       event.stopPropagation()
     },
+    /** A link or cover dragged natively takes the pointer over and cancels the swipe. */
+    onDragStart: (event: DragEvent<HTMLElement>) => event.preventDefault(),
     onPointerCancel: () => end(false),
     onPointerDown: (event: PointerEvent<HTMLElement>) => {
       swallowClick.current = false
