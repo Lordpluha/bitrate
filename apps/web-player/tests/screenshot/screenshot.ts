@@ -19,7 +19,7 @@ type OpenInput = {
 }
 
 /**
- * Opens a page as the signed-in fixture user (any `access_token` passes the proxy; the mock
+ * Opens a page as the signed-in fixture user (any `user_access_token` passes the proxy; the mock
  * API answers `/auth/me`) with the clock frozen, so relative times and greetings are stable.
  */
 export const openSignedIn = async ({
@@ -36,7 +36,7 @@ export const openSignedIn = async ({
   await page
     .context()
     .addCookies([
-      { name: 'access_token', url: APP_ORIGIN, value: 'screenshot' },
+      { name: 'user_access_token', url: APP_ORIGIN, value: 'screenshot' },
     ])
   await page.goto(path, { waitUntil: 'networkidle' })
 }
