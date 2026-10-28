@@ -1,136 +1,102 @@
 'use client'
 
 import { cn } from '@bitrate/ui-react'
-import { Pause, Play, Repeat, Repeat1, Shuffle } from 'lucide-react'
+import { PlayerMirror } from '@entities/Player'
+import type { CSSProperties } from 'react'
 import { usePlayerNavigationTracks } from '@/widgets/Player/model/usePlayerNavigationTracks'
-import { PlaybackProgress } from '@/widgets/Player/ui/PlaybackProgress'
 import { TrackNavigationButton } from '@/widgets/Player/ui/TrackNavigationButton'
 
-const repeatLabels: Record<'off' | 'all' | 'one', string> = {
-  all: 'Repeat one track',
-  off: 'Repeat playlist',
-  one: 'Disable repeat',
+/** The package draws shuffle/repeat at 16px and Play at 18px; the design's sizes scale them. */
+const MODE_ICON_PX = 16
+const PLAY_ICON_PX = 18
+
+type ControlsSize = 'bar' | 'large'
+
+/** The design's Transport and Seek Bar sizes, as the player element's theme variables. */
+const themeFor = (size: ControlsSize): CSSProperties => {
+  const isLarge = size === 'large'
+  const modeIcon = isLarge ? 22 : 17
+  const playIcon = isLarge ? 30 : 22
+  return {
+    /** The parts' muted colour is the design's muted-foreground, not the darker subdued text. */
+    '--color-text-subdued': 'var(--color-muted-foreground)',
+    '--bitrate-player-accent': 'var(--color-primary)',
+    '--bitrate-player-icon-button-size': `${(modeIcon + 8) / 16}rem`,
+    '--bitrate-player-icon-scale': modeIcon / MODE_ICON_PX,
+    '--bitrate-player-play-background': 'var(--color-primary)',
+    '--bitrate-player-play-foreground': 'var(--color-primary-foreground)',
+    '--bitrate-player-play-icon-scale': playIcon / PLAY_ICON_PX,
+    '--bitrate-player-play-size': isLarge ? '4.25rem' : '2.875rem',
+    '--bitrate-player-thumb-color': 'var(--color-foreground)',
+    /** The large Seek Bar shows its thumb at rest; the bar's appears on hover. */
+    '--bitrate-player-thumb-opacity': isLarge ? 1 : 0,
+    '--bitrate-player-thumb-size': isLarge ? '0.75rem' : '0.625rem',
+    '--bitrate-player-time-min-width': '1.75rem',
+    '--bitrate-player-time-size': isLarge ? '0.75rem' : '11px',
+    '--bitrate-player-track-color': 'var(--color-progress-track)',
+    '--bitrate-player-track-height': isLarge ? '0.25rem' : '0.1875rem',
+  }
 }
 
 interface PlayerControlsProps {
-  isPlaying: boolean
-  currentTime: number
-  duration: number
-  onPlayPause: () => void
   onNext: () => void
   onPrevious: () => void
-  onSeek: (time: number) => void
-  isShuffled?: boolean
-  repeatMode?: 'off' | 'all' | 'one'
-  onShuffleToggle?: () => void
-  onRepeatToggle?: () => void
   /** `bar`: the desktop player bar. `large`: the design's Transport over a stacked Seek Bar. */
-  size?: 'bar' | 'large'
+  size?: ControlsSize
 }
 
+/**
+ * The design's Transport and Seek Bar on the playing element: shuffle, Play and repeat are its
+ * parts and so follow its state, while Previous and Next stay web-player buttons for their
+ * track preview cards.
+ */
 export const PlayerControls = ({
-  isPlaying,
-  currentTime,
-  duration,
-  onPlayPause,
   onNext,
   onPrevious,
-  onSeek,
-  isShuffled = false,
-  repeatMode = 'off',
-  onShuffleToggle,
-  onRepeatToggle,
   size = 'bar',
 }: PlayerControlsProps) => {
   const { nextTrack, previousTrack } = usePlayerNavigationTracks()
   const isLarge = size === 'large'
-  const modeIconSize = isLarge ? 22 : 17
   const skipIconSize = isLarge ? 30 : 22
-  const progress = (
-    <PlaybackProgress
-      currentTime={currentTime}
-      duration={duration}
-      layout={isLarge ? 'stacked' : 'inline'}
-      onSeek={onSeek}
+  const seek = (
+    <bitrate-player-seek
+      className="w-full"
+      variant={isLarge ? 'stacked' : 'full'}
     />
   )
 
   return (
-    <div
+    <PlayerMirror
       className={cn(
         'flex flex-col items-center',
         isLarge ? 'w-full gap-5' : 'max-w-180.5 flex-1 gap-2',
       )}
+      style={themeFor(size)}
     >
-      {isLarge ? progress : null}
+      {isLarge ? seek : null}
       <div
         className={cn(
           'flex items-center',
           isLarge ? 'w-full justify-between gap-3' : 'gap-4',
         )}
       >
-        <button
-          aria-label={isShuffled ? 'Disable shuffle' : 'Enable shuffle'}
-          className={cn(
-            'p-1 hover:scale-110 transition-transform',
-            isShuffled ? 'text-primary' : 'text-muted-foreground',
-          )}
-          disabled={!onShuffleToggle}
-          onClick={onShuffleToggle}
-          type="button"
-        >
-          <Shuffle size={modeIconSize} />
-        </button>
-
+        <bitrate-player-transport controls="shuffle" />
         <TrackNavigationButton
           direction="previous"
           iconSize={skipIconSize}
           onClick={onPrevious}
           track={previousTrack}
         />
-
-        <button
-          aria-label={isPlaying ? 'Pause' : 'Play'}
-          className={cn(
-            'flex shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground transition-transform hover:scale-105',
-            isLarge ? 'size-17' : 'size-11.5',
-          )}
-          onClick={onPlayPause}
-          type="button"
-        >
-          {isPlaying ? (
-            <Pause fill="currentColor" size={skipIconSize} />
-          ) : (
-            <Play className="ml-0.5" fill="currentColor" size={skipIconSize} />
-          )}
-        </button>
-
+        <bitrate-player-transport controls="play" />
         <TrackNavigationButton
           direction="next"
           iconSize={skipIconSize}
           onClick={onNext}
           track={nextTrack}
         />
-
-        <button
-          aria-label={repeatLabels[repeatMode]}
-          className={cn(
-            'p-1 hover:scale-110 transition-transform',
-            repeatMode !== 'off' ? 'text-primary' : 'text-muted-foreground',
-          )}
-          disabled={!onRepeatToggle}
-          onClick={onRepeatToggle}
-          type="button"
-        >
-          {repeatMode === 'one' ? (
-            <Repeat1 size={modeIconSize} />
-          ) : (
-            <Repeat size={modeIconSize} />
-          )}
-        </button>
+        <bitrate-player-transport controls="repeat" />
       </div>
-
-      {isLarge ? null : progress}
-    </div>
+      {isLarge ? null : seek}
+    </PlayerMirror>
   )
 }

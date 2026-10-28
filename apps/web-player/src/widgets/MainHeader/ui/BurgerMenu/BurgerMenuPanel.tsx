@@ -6,10 +6,9 @@ import Link from 'next/link'
 import { ThemeSwitcher } from '@/features/SwitchTheme'
 import { useOverlayFocus } from '@/shared/hooks/useOverlayFocus'
 import { useI18n } from '@/shared/i18n'
-import { ROUTES } from '@/shared/routes'
+import { MOBILE_MENU_NAV } from '@/shared/routes'
 import { AuthButtons } from '../AuthButtons'
 import { InstallBtn } from '../InstallBtn'
-import { NavLinks } from '../NavLinks'
 
 type BurgerMenuPanelProps = {
   id: string
@@ -53,16 +52,18 @@ export const BurgerMenuPanel = ({
       <div className="h-full overflow-y-auto p-6 custom-scrollbar">
         <div className="mb-8 flex items-center justify-between">
           <div className="min-w-0">
-            <h2 className="text-lg font-semibold text-text">
+            <h2 className="text-lg font-semibold text-foreground">
               {t('common.menu')}
             </h2>
             {username && (
-              <p className="truncate text-sm text-text-subdued">{username}</p>
+              <p className="truncate text-sm text-muted-foreground">
+                {username}
+              </p>
             )}
           </div>
           <button
             aria-label={t('common.closeMenu')}
-            className="p-2 text-text transition-opacity hover:opacity-70"
+            className="p-2 text-foreground transition-opacity hover:opacity-70"
             onClick={onClose}
             type="button"
           >
@@ -73,25 +74,30 @@ export const BurgerMenuPanel = ({
           {isAuthenticated ? (
             <>
               <nav className="grid border-b border-border pb-6">
-                <MenuLink href={ROUTES.profile} onClick={onClose}>
-                  {t('common.profile')}
-                </MenuLink>
-                <MenuLink href={ROUTES.recents} onClick={onClose}>
-                  {t('recents.title')}
-                </MenuLink>
-                <MenuLink href={ROUTES.settings} onClick={onClose}>
-                  {t('settings.title')}
-                </MenuLink>
+                {MOBILE_MENU_NAV.map(({ href, icon: Icon, labelKey }) => (
+                  <Link
+                    className="flex items-center gap-3 rounded px-3 py-3 text-foreground transition-colors hover:bg-surface"
+                    href={href}
+                    key={href}
+                    onClick={onClose}
+                  >
+                    <Icon
+                      aria-hidden="true"
+                      className="size-4.5 shrink-0 text-muted-foreground"
+                    />
+                    {t(labelKey)}
+                  </Link>
+                ))}
               </nav>
               <div className="flex items-center justify-between border-b border-border pb-6">
-                <span className="text-sm text-text-subdued">
+                <span className="text-sm text-muted-foreground">
                   {t('common.theme')}
                 </span>
                 <ThemeSwitcher />
               </div>
               <InstallBtn />
               <button
-                className="w-full rounded-full bg-surface px-4 py-2.5 text-sm font-semibold text-text transition-colors hover:bg-surface-hover disabled:opacity-60"
+                className="w-full rounded-full bg-surface px-4 py-2.5 text-sm font-semibold text-foreground transition-colors hover:bg-surface-hover disabled:opacity-60"
                 disabled={isLogoutPending}
                 onClick={logout}
                 type="button"
@@ -101,9 +107,6 @@ export const BurgerMenuPanel = ({
             </>
           ) : (
             <>
-              <div className="border-b border-border pb-6">
-                <NavLinks />
-              </div>
               <div className="border-b border-border pb-6">
                 <InstallBtn />
               </div>
@@ -115,21 +118,3 @@ export const BurgerMenuPanel = ({
     </div>
   )
 }
-
-const MenuLink = ({
-  children,
-  href,
-  onClick,
-}: {
-  children: string
-  href: string
-  onClick: () => void
-}) => (
-  <Link
-    className="rounded px-3 py-3 text-text transition-colors hover:bg-surface"
-    href={href}
-    onClick={onClick}
-  >
-    {children}
-  </Link>
-)

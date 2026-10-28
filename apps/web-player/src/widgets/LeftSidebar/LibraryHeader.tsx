@@ -2,9 +2,10 @@
 
 import { PlusIcon, Typography } from '@bitrate/ui-react'
 import { Library, Maximize2, PanelLeftClose, PanelLeftOpen } from 'lucide-react'
+import Link from 'next/link'
 import { useI18n } from '@/shared/i18n'
+import { ROUTES } from '@/shared/routes'
 import { CreatePlaylistMenu } from '@/widgets/LeftSidebar/CreatePlaylistMenu'
-import { useCreateLibraryPlaylist } from '@/widgets/LeftSidebar/model/useCreateLibraryPlaylist'
 
 type LibraryHeaderProps = {
   isCollapsed?: boolean
@@ -20,7 +21,6 @@ export const LibraryHeader = ({
   onToggleExpanded,
 }: LibraryHeaderProps) => {
   const { t } = useI18n()
-  const playlist = useCreateLibraryPlaylist()
   const openLabel = t('library.title')
 
   if (isCollapsed) {
@@ -28,23 +28,21 @@ export const LibraryHeader = ({
       <div className="flex flex-col items-center gap-3">
         <button
           aria-label={openLabel}
-          className="rounded-md p-2 text-text-subdued transition-colors hover:bg-surface hover:text-text"
+          className="rounded-md p-2 text-muted-foreground transition-colors hover:bg-surface hover:text-foreground"
           onClick={onToggleCollapsed}
           title={openLabel}
           type="button"
         >
           <PanelLeftOpen size={22} />
         </button>
-        <button
+        <Link
           aria-label={t('library.createPlaylist')}
-          className="rounded-full bg-surface p-3 text-text transition-colors hover:bg-surface-hover"
-          disabled={playlist.isPending}
-          onClick={playlist.create}
+          className="rounded-full bg-surface p-3 text-foreground transition-colors hover:bg-surface-hover"
+          href={ROUTES.createPlaylist}
           title={t('common.create')}
-          type="button"
         >
           <PlusIcon />
-        </button>
+        </Link>
       </div>
     )
   }
@@ -55,7 +53,7 @@ export const LibraryHeader = ({
         <div className="w-0 overflow-hidden opacity-0 transition-[width,opacity] duration-200 ease-out group-hover/header:w-8 group-hover/header:opacity-100">
           <button
             aria-label={t('library.title')}
-            className="mr-2 rounded p-1 text-text-subdued transition-colors hover:bg-surface hover:text-text"
+            className="mr-2 rounded p-1 text-muted-foreground transition-colors hover:bg-surface hover:text-foreground"
             onClick={onToggleCollapsed}
             title={t('library.title')}
             type="button"
@@ -76,12 +74,7 @@ export const LibraryHeader = ({
         </Typography>
       </div>
       <div className="flex shrink-0 items-center gap-1.5">
-        {isExpanded ? (
-          <CreatePlaylistMenu
-            isPending={playlist.isPending}
-            onCreate={playlist.create}
-          />
-        ) : null}
+        {isExpanded ? <CreatePlaylistMenu /> : null}
         <button
           aria-label={t('library.title')}
           className="flex size-7 items-center justify-center rounded-[7px] border border-primary bg-secondary text-accent transition-colors hover:bg-surface"

@@ -2,7 +2,6 @@
 
 import { useMemo } from 'react'
 import { useLikedAlbums } from '@/entities/Album'
-import { useListeningHistory } from '@/entities/History'
 import { LIKED_SONGS_ID, usePlaylistLibraryItems } from '@/entities/Playlist'
 import { useLikedTracks } from '@/entities/Track'
 import type {
@@ -26,14 +25,15 @@ export const useLibraryData = ({
   query,
   sortMode,
 }: UseLibraryDataOptions): LibraryData => {
-  const { items: libraryPlaylists, isLoading: isPlaylistsPending } =
-    usePlaylistLibraryItems()
-  const { data: likedTracks, isPending: isLikedPending } = useLikedTracks()
-  const { data: albums, isPending: isAlbumsPending } = useLikedAlbums()
-  const { data: history, isPending: isHistoryPending } = useListeningHistory({
-    page: 1,
-    limit: 50,
-  })
+  const playlistItems = usePlaylistLibraryItems()
+  const libraryPlaylists = playlistItems.items
+  const isPlaylistsPending = playlistItems.isLoading
+  const liked = useLikedTracks()
+  const likedTracks = liked.data
+  const isLikedPending = liked.isPending
+  const likedAlbums = useLikedAlbums()
+  const albums = likedAlbums.data
+  const isAlbumsPending = likedAlbums.isPending
 
   const playlists = useMemo(() => {
     return libraryPlaylists
@@ -89,32 +89,24 @@ export const useLibraryData = ({
       )
   }, [albums, query, sortMode])
 
-  const historyItems = useMemo(
-    () =>
-      (history ?? [])
-        .filter((entry) => includesQuery(entry.track.title, query))
-        .sort((first, second) =>
-          compareByTitleOrDate(
-            first.track.title,
-            second.track.title,
-            first.listenedAt,
-            second.listenedAt,
-            sortMode,
-          ),
-        ),
-    [history, query, sortMode],
-  )
-
   const isPending =
     (activeSection === 'playlists' && isPlaylistsPending) ||
     (activeSection === 'liked' && isLikedPending) ||
-    (activeSection === 'albums' && isAlbumsPending) ||
-    (activeSection === 'history' && isHistoryPending)
+    (activeSection === 'albums' && isAlbumsPending)
+
+  /** Only the section on screen decides whether the page shows an error. */
+  const section =
+    activeSection === 'playlists'
+      ? playlistItems
+      : activeSection === 'liked'
+        ? liked
+        : likedAlbums
 
   return {
     albums: albumItems,
-    history: historyItems,
+    isError: section.isError,
     isPending,
+    refetch: () => void section.refetch(),
     playlists,
     tracks,
   }

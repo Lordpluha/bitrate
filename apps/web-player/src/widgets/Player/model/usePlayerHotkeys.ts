@@ -8,14 +8,17 @@ export type UsePlayerHotkeysInput = {
   duration: number
   isEnabled: boolean
   onNext: () => void
+  onOpenQueue: () => void
   onPrevious: () => void
   onSeek: (time: number) => void
+  onToggleLike: () => void
   onToggleShuffle: () => void
   onTogglePlay: () => void
   volume: number
 }
 
 const SEEK_STEP_SECONDS = 5
+const LONG_SEEK_STEP_SECONDS = 10
 const VOLUME_STEP = 0.05
 
 const INTERACTIVE_SELECTOR = [
@@ -54,18 +57,24 @@ export const isPlayerHotkeyTarget = (target: EventTarget | null) =>
 const clamp = (value: number, min: number, max: number) =>
   Math.min(max, Math.max(min, value))
 
+/** Volume up/down on the main row and the keypad, beside the arrows. */
+const VOLUME_UP_CODES = new Set(['Equal', 'NumpadAdd'])
+const VOLUME_DOWN_CODES = new Set(['Minus', 'NumpadSubtract'])
+
 /**
  * Global playback shortcuts.
- * Space toggles playback, arrows seek and change volume, M/S/R map to
- * mute, shuffle and repeat.
+ * Space toggles playback; arrows seek 5 s (10 s with Shift) and change volume, as do + and −;
+ * Ctrl/⌘ with an arrow skips tracks; M/S/R/L/Q map to mute, shuffle, repeat, like and the queue.
  */
 export const usePlayerHotkeys = ({
   currentTime,
   duration,
   isEnabled,
   onNext,
+  onOpenQueue,
   onPrevious,
   onSeek,
+  onToggleLike,
   onToggleShuffle,
   onTogglePlay,
   volume,
@@ -81,6 +90,9 @@ export const usePlayerHotkeys = ({
       if (event.altKey) return
 
       const withModifier = event.metaKey || event.ctrlKey
+      const seekStep = event.shiftKey
+        ? LONG_SEEK_STEP_SECONDS
+        : SEEK_STEP_SECONDS
 
       switch (event.code) {
         case 'Space':
@@ -93,7 +105,7 @@ export const usePlayerHotkeys = ({
             onNext()
             return
           }
-          onSeek(clamp(currentTime + SEEK_STEP_SECONDS, 0, duration || 0))
+          onSeek(clamp(currentTime + seekStep, 0, duration || 0))
           return
         case 'ArrowLeft':
           event.preventDefault()
@@ -101,7 +113,7 @@ export const usePlayerHotkeys = ({
             onPrevious()
             return
           }
-          onSeek(clamp(currentTime - SEEK_STEP_SECONDS, 0, duration || 0))
+          onSeek(clamp(currentTime - seekStep, 0, duration || 0))
           return
         case 'ArrowUp':
           event.preventDefault()
@@ -115,7 +127,21 @@ export const usePlayerHotkeys = ({
           break
       }
 
-      if (withModifier || event.shiftKey) return
+      if (withModifier) return
+
+      if (VOLUME_UP_CODES.has(event.code)) {
+        event.preventDefault()
+        setVolume(clamp(volume + VOLUME_STEP, 0, 1))
+        return
+      }
+
+      if (VOLUME_DOWN_CODES.has(event.code)) {
+        event.preventDefault()
+        setVolume(clamp(volume - VOLUME_STEP, 0, 1))
+        return
+      }
+
+      if (event.shiftKey) return
 
       if (event.code === 'KeyM') {
         event.preventDefault()
@@ -132,6 +158,18 @@ export const usePlayerHotkeys = ({
       if (event.code === 'KeyR') {
         event.preventDefault()
         cycleRepeatMode()
+        return
+      }
+
+      if (event.code === 'KeyL') {
+        event.preventDefault()
+        onToggleLike()
+        return
+      }
+
+      if (event.code === 'KeyQ') {
+        event.preventDefault()
+        onOpenQueue()
       }
     }
 
@@ -144,8 +182,10 @@ export const usePlayerHotkeys = ({
     duration,
     isEnabled,
     onNext,
+    onOpenQueue,
     onPrevious,
     onSeek,
+    onToggleLike,
     onToggleShuffle,
     onTogglePlay,
     setVolume,

@@ -1,16 +1,18 @@
 'use client'
 
 import { Button } from '@bitrate/ui-react'
-import { Skeleton } from '@shared/ui'
+import { ErrorState, Skeleton } from '@shared/ui'
 import { Plus } from 'lucide-react'
-import { useSearchParams } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
+import { LIBRARY_SORT_STORAGE_KEY } from '@/shared/constants'
+import { usePersistedState } from '@/shared/hooks/usePersistedState'
 import { useI18n } from '@/shared/i18n'
+import { ROUTES } from '@/shared/routes'
 import type { LibraryControls } from '@/views/Library/model/library.types'
 import { useLibraryData } from '@/views/Library/model/useLibraryData'
 import { AlbumLibrarySection } from '@/views/Library/ui/AlbumLibrarySection'
 import { CreatePlaylistForm } from '@/views/Library/ui/CreatePlaylistForm'
-import { HistoryLibrarySection } from '@/views/Library/ui/HistoryLibrarySection'
 import { LibraryToolbar } from '@/views/Library/ui/LibraryToolbar'
 import { LikedTracksLibrarySection } from '@/views/Library/ui/LikedTracksLibrarySection'
 import { PlaylistLibrarySection } from '@/views/Library/ui/PlaylistLibrarySection'
@@ -23,32 +25,50 @@ const LOADING_CARD_KEYS = Array.from(
 
 export const LibraryPage = () => {
   const { t } = useI18n()
+  const router = useRouter()
   const searchParams = useSearchParams()
-  const [controls, setControls] = useState<LibraryControls>({
+  const [state, setState] = useState<Omit<LibraryControls, 'sortMode'>>({
     activeSection: 'playlists',
     query: '',
-    sortMode: 'recent',
     viewMode: 'list',
   })
+  /** The same stored sort as the library panel; its "Creator" sort has no column here. */
+  const [storedSort, setStoredSort] = usePersistedState<unknown>(
+    LIBRARY_SORT_STORAGE_KEY,
+    'recent',
+  )
+  const controls: LibraryControls = {
+    ...state,
+    sortMode: storedSort === 'title' ? 'title' : 'recent',
+  }
+  const setControls = (
+    update: (current: LibraryControls) => LibraryControls,
+  ) => {
+    const { sortMode, ...next } = update(controls)
+    setState(next)
+    if (sortMode !== controls.sortMode) setStoredSort(sortMode)
+  }
   const [isCreateOpen, setIsCreateOpen] = useState(false)
   const library = useLibraryData(controls)
 
   useEffect(() => {
     if (searchParams.get('create') !== 'playlist') return
 
-    setControls((current) => ({ ...current, activeSection: 'playlists' }))
+    setState((current) => ({ ...current, activeSection: 'playlists' }))
     setIsCreateOpen(true)
-  }, [searchParams])
+    /* drop the flag so the next "Create playlist" opens the form again */
+    router.replace(ROUTES.library)
+  }, [router, searchParams])
 
   return (
     <div className="h-full overflow-y-auto px-4 pt-2 pb-3 custom-scrollbar md:px-8 md:py-6">
       <div className="flex flex-col gap-5 md:gap-7">
-        <div className="flex items-end justify-between gap-4 max-xl:hidden">
+        <div className="flex items-end justify-between gap-4">
           <div className="flex min-w-0 flex-col gap-1">
             <p className="text-xs font-semibold tracking-[1.2px] text-muted-foreground uppercase">
               {t('library.title')}
             </p>
-            <h1 className="text-[32px] leading-[1.1] font-bold text-foreground">
+            <h1 className="text-2xl leading-[1.1] font-bold text-foreground md:text-[32px]">
               {t('library.heading')}
             </h1>
           </div>
@@ -86,6 +106,12 @@ export const LibraryPage = () => {
               <Skeleton className="aspect-[4/5] rounded-[14px]" key={key} />
             ))}
           </div>
+        ) : library.isError ? (
+          <ErrorState
+            description={t('error.tryAgainShort')}
+            onRetry={library.refetch}
+            title={t('library.loadFailed')}
+          />
         ) : controls.activeSection === 'playlists' ? (
           <PlaylistLibrarySection
             playlists={library.playlists}
@@ -93,13 +119,11 @@ export const LibraryPage = () => {
           />
         ) : controls.activeSection === 'liked' ? (
           <LikedTracksLibrarySection tracks={library.tracks} />
-        ) : controls.activeSection === 'albums' ? (
+        ) : (
           <AlbumLibrarySection
             albums={library.albums}
             viewMode={controls.viewMode}
           />
-        ) : (
-          <HistoryLibrarySection history={library.history} />
         )}
       </div>
     </div>

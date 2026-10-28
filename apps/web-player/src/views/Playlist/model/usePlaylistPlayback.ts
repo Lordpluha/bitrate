@@ -3,6 +3,7 @@
 import { selectMusicPlayer, usePlayerStore } from '@/entities/Player'
 import type { TrackEntity } from '@/entities/Track'
 import { showApiSuccessToast } from '@/shared/api/feedback'
+import { useI18n } from '@/shared/i18n'
 import type { PlaylistPlayback } from '@/views/Playlist/model/playlist.types'
 import { shuffleTracks } from '@/views/Playlist/model/playlist.utils'
 
@@ -17,6 +18,7 @@ export const usePlaylistPlayback = ({
   playlistTitle,
   tracks,
 }: UsePlaylistPlaybackOptions): PlaylistPlayback => {
+  const { tp } = useI18n()
   const musicPlayer = usePlayerStore(selectMusicPlayer)
   const playPlaylist = usePlayerStore((state) => state.playPlaylist)
   const togglePlay = usePlayerStore((state) => state.togglePlay)
@@ -78,11 +80,7 @@ export const usePlaylistPlayback = ({
   const handleAddToQueue = () => {
     if (tracks.length === 0) return
     for (const track of tracks) addToQueue(track)
-    showApiSuccessToast(
-      tracks.length === 1
-        ? 'Added 1 track to the queue'
-        : `Added ${tracks.length} tracks to the queue`,
-    )
+    showApiSuccessToast(tp({ count: tracks.length, key: 'queue.addedTracks' }))
   }
 
   return {

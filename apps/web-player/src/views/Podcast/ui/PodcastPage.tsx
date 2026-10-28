@@ -8,6 +8,7 @@ import {
 import { useState } from 'react'
 import { usePodcast } from '@/entities/Podcast'
 import { useAuth } from '@/shared/hooks'
+import { useI18n } from '@/shared/i18n'
 import { ErrorState } from '@/shared/ui/ErrorState'
 import { EpisodesSection } from '@/views/Podcast/ui/EpisodesSection'
 import { PodcastAbout } from '@/views/Podcast/ui/PodcastAbout'
@@ -19,17 +20,13 @@ type PodcastPageProps = {
 
 type PodcastTab = 'about' | 'episodes'
 
-const TABS: ReadonlyArray<SegmentedTab<PodcastTab>> = [
-  { id: 'episodes', label: 'Episodes' },
-  { id: 'about', label: 'About' },
-]
-
 /**
  * The design's podcast show: cover, title, publisher and facts, then Episodes (Newest / Saved
  * filters and search) and About. Following, progress and playback of episodes are concepts and
  * wait for the backend.
  */
 export const PodcastPage = ({ podcastId }: PodcastPageProps) => {
+  const { t } = useI18n()
   const { isAuthenticated } = useAuth()
   /** Only the show and its unfiltered episode total; the Episodes tab pages the episodes. */
   const podcastQuery = usePodcast(podcastId, 1, 1)
@@ -38,7 +35,7 @@ export const PodcastPage = ({ podcastId }: PodcastPageProps) => {
   if (podcastQuery.isPending) {
     return (
       <div className="h-full overflow-hidden px-4 pt-2 md:px-8 md:py-6">
-        <CollectionSkeleton label="Loading podcast" />
+        <CollectionSkeleton label={t('podcast.loading')} />
       </div>
     )
   }
@@ -46,14 +43,18 @@ export const PodcastPage = ({ podcastId }: PodcastPageProps) => {
   if (podcastQuery.isError) {
     return (
       <ErrorState
-        description="This podcast may have been removed or is temporarily unavailable."
+        description={t('podcast.notFoundDescription')}
         onRetry={() => void podcastQuery.refetch()}
-        title="Podcast not found"
+        title={t('podcast.notFound')}
       />
     )
   }
 
   const podcast = podcastQuery.data
+  const tabs: SegmentedTab<PodcastTab>[] = [
+    { id: 'episodes', label: t('podcast.episodes') },
+    { id: 'about', label: t('podcast.about') },
+  ]
 
   return (
     <div className="h-full overflow-y-auto custom-scrollbar">
@@ -61,9 +62,9 @@ export const PodcastPage = ({ podcastId }: PodcastPageProps) => {
         <PodcastHeader podcast={podcast} />
 
         <SegmentedTabs
-          ariaLabel="Podcast sections"
+          ariaLabel={t('podcast.sections')}
           onChange={setTab}
-          tabs={TABS}
+          tabs={tabs}
           value={tab}
         />
 

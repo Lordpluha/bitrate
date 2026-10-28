@@ -2,12 +2,13 @@
 
 import { Button } from '@bitrate/ui-react'
 import { ArtistName } from '@entities/Artist'
+import { useI18n } from '@shared/i18n'
 import { ROUTES } from '@shared/routes'
 import {
+  ErrorState,
   ListSkeleton,
   PageShell,
   PageTitle,
-  RetryState,
   StateMessage,
 } from '@shared/ui'
 import { MediaImage } from '@shared/ui/MediaImage'
@@ -24,31 +25,36 @@ import { usePlayCollection } from '@/features/PlayCollection'
  * Likes and Playlists filters wait for it.
  */
 export const ActivityPage = () => {
+  const { locale, t } = useI18n()
   const activity = useFollowingActivity()
   const playCollection = usePlayCollection()
 
   return (
     <PageShell>
-      <PageTitle title="Activity" />
+      <PageTitle title={t('activity.title')} />
 
       {activity.isPending ? (
         <ListSkeleton
           className="gap-1"
-          label="Loading activity"
+          label={t('activity.loading')}
           rowClassName="h-20"
           rows={6}
         />
       ) : activity.isError ? (
-        <RetryState
+        <ErrorState
+          description={t('common.tryAgainSoon')}
           onRetry={() => void activity.refetch()}
-          title="Activity is unavailable"
+          title={t('activity.unavailable')}
         />
       ) : activity.data.length === 0 ? (
         <StateMessage
-          description="What they play shows up here, unless they keep their listening private."
+          description={t('activity.emptyDescription')}
           icon={UsersRound}
-          primary={{ href: ROUTES.search(), label: 'Find people to follow' }}
-          title="Follow listeners to see their activity"
+          primary={{
+            href: ROUTES.search(),
+            label: t('activity.findPeople'),
+          }}
+          title={t('activity.emptyTitle')}
         />
       ) : (
         <ul className="flex flex-col">
@@ -80,7 +86,7 @@ export const ActivityPage = () => {
                   >
                     {user.username}
                   </Link>{' '}
-                  {getActivityAction({ listenedAt })}
+                  {getActivityAction({ listenedAt, t })}
                 </p>
                 <p className="truncate font-semibold text-foreground">
                   {track.title}
@@ -100,7 +106,7 @@ export const ActivityPage = () => {
                   className="text-xs text-muted-foreground"
                   dateTime={listenedAt.toISOString()}
                 >
-                  {formatRelativeTime({ date: listenedAt })}
+                  {formatRelativeTime({ date: listenedAt, locale })}
                 </time>
               </div>
               <MediaImage
@@ -113,7 +119,7 @@ export const ActivityPage = () => {
                 width={52}
               />
               <Button
-                aria-label={`Play ${track.title}`}
+                aria-label={t('common.playName', { name: track.title })}
                 className="h-9 shrink-0 gap-1.5 px-3 text-sm font-medium"
                 onClick={() =>
                   void playCollection({
@@ -125,7 +131,7 @@ export const ActivityPage = () => {
                 variant="outline"
               >
                 <Play className="size-4 fill-current" />
-                <span className="hidden sm:inline">Play</span>
+                <span className="hidden sm:inline">{t('common.play')}</span>
               </Button>
             </li>
           ))}

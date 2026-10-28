@@ -1,14 +1,9 @@
+import type { BitratePlayerPositionStore } from '@bitrate/player/contract'
 import type Hls from 'hls.js'
 
 export const ACTIVE_BUFFER_SECONDS = 10
 export const PREFETCH_BUFFER_SECONDS = 10
 const POSITION_STORAGE_PREFIX = 'bitrate-player-position:'
-
-const PREFETCH_AFTER_BUFFER_SECONDS = 8
-const PREFETCH_REMAINING_SECONDS = 45
-const SLOW_NETWORK_START_BUFFER_SECONDS = 3
-const SLOW_NETWORK_PREFETCH_BUFFER_SECONDS = 8
-const SLOW_NETWORK_PREFETCH_REMAINING_SECONDS = 30
 
 type NetworkConnection = {
   effectiveType?: 'slow-2g' | '2g' | '3g' | '4g'
@@ -24,7 +19,11 @@ const getNetworkConnection = () => {
   )
 }
 
-const isSlowNetwork = () => {
+/**
+ * Data saver or a 2G/3G connection: `<bitrate-player>` reads this as `isConstrained` to delay
+ * the first play and prefetch later, and the HLS path drops to its lowest level.
+ */
+export const isSlowNetwork = () => {
   const connection = getNetworkConnection()
 
   return (
@@ -32,46 +31,6 @@ const isSlowNetwork = () => {
     connection?.effectiveType === 'slow-2g' ||
     connection?.effectiveType === '2g' ||
     connection?.effectiveType === '3g'
-  )
-}
-
-const getBufferedAhead = (element: HTMLAudioElement) => {
-  const { buffered, currentTime } = element
-
-  for (let index = 0; index < buffered.length; index += 1) {
-    if (
-      buffered.start(index) <= currentTime &&
-      buffered.end(index) >= currentTime
-    ) {
-      return buffered.end(index) - currentTime
-    }
-  }
-
-  return 0
-}
-
-export const shouldDelayInitialPlayback = (element: HTMLAudioElement) =>
-  isSlowNetwork() &&
-  element.currentTime < 1 &&
-  getBufferedAhead(element) < SLOW_NETWORK_START_BUFFER_SECONDS
-
-export const shouldPrefetchNextTrack = (element: HTMLAudioElement) => {
-  const bufferedAhead = getBufferedAhead(element)
-  const duration = element.duration
-  const remaining = duration - element.currentTime
-
-  if (!Number.isFinite(duration)) return false
-
-  if (!isSlowNetwork()) {
-    return (
-      remaining <= PREFETCH_REMAINING_SECONDS &&
-      (bufferedAhead >= PREFETCH_AFTER_BUFFER_SECONDS || element.paused)
-    )
-  }
-
-  return (
-    remaining <= SLOW_NETWORK_PREFETCH_REMAINING_SECONDS &&
-    bufferedAhead >= SLOW_NETWORK_PREFETCH_BUFFER_SECONDS
   )
 }
 
@@ -122,23 +81,18 @@ export const savePlaybackPosition = (playbackKey: string, position: number) => {
   )
 }
 
-export const removePlaybackPosition = (playbackKey: string) => {
+const removePlaybackPosition = (playbackKey: string) => {
   sessionStorage.removeItem(`${POSITION_STORAGE_PREFIX}${playbackKey}`)
 }
 
-export const restorePlaybackPosition = (
-  element: HTMLAudioElement,
-  playbackKey: string,
-) => {
-  const savedPosition = Number(
-    sessionStorage.getItem(`${POSITION_STORAGE_PREFIX}${playbackKey}`),
-  )
-
-  if (
-    Number.isFinite(savedPosition) &&
-    savedPosition > 0 &&
-    savedPosition < element.duration
-  ) {
-    element.currentTime = savedPosition
-  }
+/** `sessionStorage` resume positions per play key, in the shape the element asks for. */
+export const sessionPositionStore: BitratePlayerPositionStore = {
+  remove: removePlaybackPosition,
+  restore: (playbackKey) => {
+    const saved = Number(
+      sessionStorage.getItem(`${POSITION_STORAGE_PREFIX}${playbackKey}`),
+    )
+    return Number.isFinite(saved) && saved > 0 ? saved : null
+  },
+  save: savePlaybackPosition,
 }

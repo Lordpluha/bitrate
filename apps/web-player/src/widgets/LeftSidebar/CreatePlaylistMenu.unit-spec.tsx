@@ -1,13 +1,18 @@
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
+import { ROUTES } from '@/shared/routes'
 import { CreatePlaylistMenu } from './CreatePlaylistMenu'
 
+const navigation = vi.hoisted(() => ({ push: vi.fn() }))
+vi.mock('next/navigation', () => ({
+  useRouter: () => ({ push: navigation.push }),
+}))
+
 describe('CreatePlaylistMenu', () => {
-  it('uses disclosure semantics and closes after a successful create', async () => {
+  it('opens the new playlist form, the one way playlists are created', async () => {
     const user = userEvent.setup()
-    const onCreate = vi.fn().mockResolvedValue(true)
-    render(<CreatePlaylistMenu isPending={false} onCreate={onCreate} />)
+    render(<CreatePlaylistMenu />)
 
     const trigger = screen.getByRole('button', { name: 'Create' })
     expect(trigger).toHaveAttribute('aria-expanded', 'false')
@@ -16,22 +21,9 @@ describe('CreatePlaylistMenu', () => {
     expect(trigger).toHaveAttribute('aria-expanded', 'true')
 
     await user.click(screen.getByRole('button', { name: /Playlist/ }))
-    expect(onCreate).toHaveBeenCalledOnce()
+    expect(navigation.push).toHaveBeenCalledWith(ROUTES.createPlaylist)
     await waitFor(() =>
       expect(trigger).toHaveAttribute('aria-expanded', 'false'),
     )
-    expect(trigger).toHaveFocus()
-  })
-
-  it('keeps the options open when creation fails', async () => {
-    const user = userEvent.setup()
-    const onCreate = vi.fn().mockResolvedValue(false)
-    render(<CreatePlaylistMenu isPending={false} onCreate={onCreate} />)
-
-    const trigger = screen.getByRole('button', { name: 'Create' })
-    await user.click(trigger)
-    await user.click(screen.getByRole('button', { name: /Playlist/ }))
-
-    expect(trigger).toHaveAttribute('aria-expanded', 'true')
   })
 })

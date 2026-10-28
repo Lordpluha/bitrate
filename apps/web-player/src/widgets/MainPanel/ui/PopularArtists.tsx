@@ -44,11 +44,13 @@ export const PopularArtists = () => {
           />
           <CarouselContent className="flex">
             {loadingArtists ? (
-              <div className="text-text-subdued p-4">{t('common.loading')}</div>
+              <div className="text-muted-foreground p-4">
+                {t('common.loading')}
+              </div>
             ) : (
               artists.map((artist) => (
                 <CarouselItem
-                  className="mr-4 max-w-50 basis-auto"
+                  className="mr-4 max-w-50 basis-45 shrink-0"
                   key={artist.id}
                 >
                   <MusicCardLg

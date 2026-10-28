@@ -1,3 +1,4 @@
+import { useI18n } from '@/shared/i18n'
 import { ROUTES } from '@/shared/routes'
 import { getAlbumCoverUrl } from '@/shared/utils/mediaUrl'
 import type {
@@ -14,16 +15,20 @@ type AlbumLibrarySectionProps = {
 export const AlbumLibrarySection = ({
   albums,
   viewMode,
-}: AlbumLibrarySectionProps) => (
-  <LibraryCollectionGrid
-    items={albums.map((album) => ({
-      cover: getAlbumCoverUrl(album.cover),
-      href: ROUTES.album(album.id),
-      id: album.id,
-      playKind: 'album',
-      subtitle: 'Album',
-      title: album.title,
-    }))}
-    viewMode={viewMode}
-  />
-)
+}: AlbumLibrarySectionProps) => {
+  const { t } = useI18n()
+
+  return (
+    <LibraryCollectionGrid
+      items={albums.map((album) => ({
+        cover: getAlbumCoverUrl(album.cover),
+        href: ROUTES.album(album.id),
+        id: album.id,
+        playKind: 'album',
+        subtitle: t('common.album'),
+        title: album.title,
+      }))}
+      viewMode={viewMode}
+    />
+  )
+}

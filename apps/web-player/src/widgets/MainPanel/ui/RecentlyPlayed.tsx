@@ -7,7 +7,9 @@ import { showApiErrorToast } from '@shared/api/feedback'
 import { SectionHeader } from '@shared/ui'
 import { MediaImage } from '@shared/ui/MediaImage'
 import { getTrackCoverUrl } from '@shared/utils/mediaUrl'
+import Link from 'next/link'
 import { useI18n } from '@/shared/i18n'
+import { ROUTES } from '@/shared/routes'
 
 export const RecentlyPlayed = () => {
   const { t } = useI18n()
@@ -22,7 +24,7 @@ export const RecentlyPlayed = () => {
     try {
       play(await getTrackById(trackId))
     } catch (error) {
-      showApiErrorToast(error, 'Unable to play this track.')
+      showApiErrorToast(error, t('profile.playFailed'))
     }
   }
 
@@ -30,7 +32,14 @@ export const RecentlyPlayed = () => {
 
   return (
     <section className="relative">
-      <SectionHeader title={t('main.recentlyPlayed')} />
+      <SectionHeader
+        action={
+          <Link className="hover:text-foreground" href={ROUTES.recents}>
+            {t('common.showAll')}
+          </Link>
+        }
+        title={t('main.recentlyPlayed')}
+      />
       <div className="flex flex-col">
         {recentTracks.map((entry) => (
           <button

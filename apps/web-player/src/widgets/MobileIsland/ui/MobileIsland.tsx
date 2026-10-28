@@ -2,16 +2,17 @@
 
 import { cn } from '@bitrate/ui-react'
 import {
+  PlayerMirror,
   selectCurrentTrack,
-  selectIsPlaying,
   usePlayerStore,
 } from '@entities/Player'
 import { ROUTES } from '@shared/routes'
 import { MediaImage } from '@shared/ui/MediaImage'
 import { getTrackCoverUrl } from '@shared/utils/mediaUrl'
-import { House, Library, Pause, Play, Search } from 'lucide-react'
+import { House, Library, Search } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import type { CSSProperties } from 'react'
 import { Z_INDEX_CLASS } from '@/shared/constants'
 import { useI18n } from '@/shared/i18n'
 
@@ -19,6 +20,13 @@ type MobileIslandProps = {
   className?: string
   /** Opens the full Now Playing view from the artwork. */
   onExpand: () => void
+}
+
+/** The island's 50px Play disc: foreground on background, the package's 18px icon unscaled. */
+const ISLAND_PLAY_THEME: CSSProperties = {
+  '--bitrate-player-play-background': 'var(--color-foreground)',
+  '--bitrate-player-play-foreground': 'var(--color-background)',
+  '--bitrate-player-play-size': '3.125rem',
 }
 
 const tabClassName =
@@ -33,8 +41,6 @@ export function MobileIsland({ className, onExpand }: MobileIslandProps) {
   const { t } = useI18n()
   const pathname = usePathname()
   const currentTrack = usePlayerStore(selectCurrentTrack)
-  const isPlaying = usePlayerStore(selectIsPlaying)
-  const togglePlay = usePlayerStore((state) => state.togglePlay)
   const tabs = [
     {
       href: ROUTES.main,
@@ -108,23 +114,9 @@ export function MobileIsland({ className, onExpand }: MobileIslandProps) {
       </div>
 
       {currentTrack ? (
-        <button
-          aria-label={isPlaying ? 'Pause' : 'Play'}
-          className="flex size-12.5 shrink-0 items-center justify-center rounded-full bg-foreground text-background transition-transform active:scale-95"
-          onClick={togglePlay}
-          type="button"
-        >
-          {isPlaying ? (
-            <Pause aria-hidden="true" fill="currentColor" size={18} />
-          ) : (
-            <Play
-              aria-hidden="true"
-              className="ml-0.5"
-              fill="currentColor"
-              size={18}
-            />
-          )}
-        </button>
+        <PlayerMirror className="shrink-0" style={ISLAND_PLAY_THEME}>
+          <bitrate-player-transport controls="play" />
+        </PlayerMirror>
       ) : null}
     </nav>
   )

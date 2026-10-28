@@ -3,6 +3,7 @@
 import * as Sentry from '@sentry/nextjs'
 import { Power } from 'lucide-react'
 import { useEffect } from 'react'
+import { Logo } from '@/shared/ui/Logo'
 
 export type GlobalErrorProps = {
   error: Error & { digest?: string }
@@ -17,6 +18,7 @@ export default function GlobalError({ error, reset }: GlobalErrorProps) {
   return (
     <html lang="en">
       <body className="flex min-h-dvh flex-col items-center justify-center gap-4 bg-background px-6 text-center text-foreground">
+        <Logo wordmark />
         <span className="flex size-18 items-center justify-center rounded-full bg-error-surface text-error">
           <Power aria-hidden="true" size={30} />
         </span>

@@ -64,6 +64,8 @@ how to apply it day to day.
 | [0060](./0060-api-data-write-ownership.md) | API Prisma write ownership per module, enforced by an oxlint JS plugin with a shrinking baseline |
 | [0061](./0061-shared-account-auth-core.md) | Shared login, lockout, session, recovery-token, 2FA and guard core for listeners and artists; no account merge |
 | [0062](./0062-release-publishing-and-track-visibility.md) | Release publishing state machine, all-or-nothing go-live and `publishedAt` visibility for tracks and albums |
+| [0063](./0063-player-variants-and-part-elements.md) | Player `chrome` variants and public part elements composed through the Context Protocol |
+| [0064](./0064-player-owns-streaming-and-prefetch.md) | The player element owns streaming, prefetch and mirrors; hosts keep the queue and supply a legacy HLS adapter |
 
 Create new records from [`template.md`](./template.md). Accepted decisions are changed by
 a superseding ADR rather than silently rewriting history.

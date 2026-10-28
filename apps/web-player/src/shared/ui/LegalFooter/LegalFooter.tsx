@@ -14,7 +14,7 @@ type LegalFooterProps = {
 export const LegalFooter = ({ className, leading }: LegalFooterProps) => (
   <footer
     className={cn(
-      'flex flex-wrap items-center justify-between gap-4 border-t border-border pt-8 pb-8 text-xs text-text-subdued',
+      'flex flex-wrap items-center justify-between gap-4 border-t border-border pt-8 pb-8 text-xs text-muted-foreground',
       className,
     )}
   >
@@ -24,7 +24,7 @@ export const LegalFooter = ({ className, leading }: LegalFooterProps) => (
         {LEGAL_DOCUMENTS.map((document) => (
           <li key={document.slug}>
             <Link
-              className="transition-colors hover:text-text"
+              className="transition-colors hover:text-foreground"
               href={ROUTES.legal(document.slug)}
             >
               {document.title}

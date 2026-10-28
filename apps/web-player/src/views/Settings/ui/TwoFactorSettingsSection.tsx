@@ -31,14 +31,14 @@ export const TwoFactorSettingsSection = () => {
       {twoFactor.setup && !twoFactor.isEnabled && (
         <form className="grid max-w-160 gap-3" onSubmit={twoFactor.enable}>
           {twoFactor.setup.manualCode && (
-            <div className="rounded bg-surface p-3 text-sm text-text">
+            <div className="rounded bg-surface p-3 text-sm text-foreground">
               {t('settings.twoFactor.manualCode', {
                 code: twoFactor.setup.manualCode,
               })}
             </div>
           )}
           <label
-            className="grid gap-2 text-sm text-text"
+            className="grid gap-2 text-sm text-foreground"
             htmlFor="enable-two-factor-code"
           >
             {t('settings.twoFactor.code')}
@@ -70,7 +70,7 @@ export const TwoFactorSettingsSection = () => {
       {twoFactor.isEnabled && (
         <form className="grid max-w-160 gap-3" onSubmit={twoFactor.disable}>
           <label
-            className="text-sm text-text"
+            className="text-sm text-foreground"
             htmlFor="disable-two-factor-code"
           >
             {t('settings.twoFactor.currentCode')}

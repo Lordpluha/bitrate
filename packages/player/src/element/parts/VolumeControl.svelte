@@ -1,33 +1,26 @@
 <script lang="ts">
   import VolumeIcon from '../icons/VolumeIcon.svelte'
+  import type { PlayerController } from '../player-controller'
   import IconButton from './IconButton.svelte'
   import RangeInput from './RangeInput.svelte'
 
-  let {
-    muted,
-    volume,
-    progress,
-    onVolume,
-    onMuteToggle,
-  }: {
-    muted: boolean
-    volume: number
-    progress: number
-    onVolume: (event: Event) => void
-    onMuteToggle: () => void
-  } = $props()
+  let { player }: { player: PlayerController } = $props()
 </script>
 
-<IconButton label={muted ? 'Unmute' : 'Mute'} onClick={onMuteToggle} pressed={muted}>
-  <VolumeIcon {muted} />
+<IconButton
+  label={player.muted ? player.labels.unmute : player.labels.mute}
+  onClick={player.toggleMute}
+  pressed={player.muted}
+>
+  <VolumeIcon muted={player.muted} />
 </IconButton>
 <RangeInput
-  label="Volume"
+  label={player.labels.volume}
   max="1"
   min="0"
-  onInput={onVolume}
-  {progress}
+  onInput={player.setVolume}
+  progress={player.volumeProgress}
   step="0.01"
-  value={volume}
+  value={player.volume}
   variant="volume"
 />

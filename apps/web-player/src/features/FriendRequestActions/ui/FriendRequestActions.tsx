@@ -9,6 +9,7 @@ import {
   useDeclineFriendRequest,
   useSendFriendRequest,
 } from '@/entities/Friend'
+import { useI18n } from '@/shared/i18n'
 
 /** Where the actions sit: a Find friends search result, or the Friend requests page. */
 type FriendRequestActionPlacement = 'requests' | 'search'
@@ -29,6 +30,7 @@ export const AcceptDeclineActions = ({
   requestId,
   username,
 }: AcceptDeclineActionsProps) => {
+  const { t } = useI18n()
   const accept = useAcceptFriendRequest()
   const decline = useDeclineFriendRequest()
   const isPending = accept.isPending || decline.isPending
@@ -42,18 +44,18 @@ export const AcceptDeclineActions = ({
         onClick={() => accept.mutate(requestId, { onSuccess: onAccepted })}
         variant="default"
       >
-        Accept
+        {t('friends.accept')}
       </Button>
       {placement === 'requests' ? (
         <Button
-          aria-label={`Decline ${username}’s request`}
+          aria-label={t('friends.declineName', { name: username })}
           className={cn(actionClassName, 'max-sm:size-8 max-sm:px-0')}
           disabled={isPending}
           onClick={declineRequest}
           variant="outline"
         >
           <X className="size-4 sm:hidden" />
-          <span className="hidden sm:inline">Decline</span>
+          <span className="hidden sm:inline">{t('friends.decline')}</span>
         </Button>
       ) : (
         <Button
@@ -62,7 +64,7 @@ export const AcceptDeclineActions = ({
           onClick={declineRequest}
           variant="ghost"
         >
-          Decline
+          {t('friends.decline')}
         </Button>
       )}
     </>
@@ -81,20 +83,21 @@ export const CancelRequestAction = ({
   requestId,
   username,
 }: CancelRequestActionProps) => {
+  const { t } = useI18n()
   const cancel = useCancelFriendRequest()
   const cancelRequest = () => cancel.mutate(requestId)
 
   return placement === 'search' ? (
     <Button
-      aria-label={`Cancel the friend request to ${username}`}
+      aria-label={t('friends.cancelTo', { name: username })}
       className={actionClassName}
       disabled={cancel.isPending}
       onClick={cancelRequest}
-      title="Cancel request"
+      title={t('friends.cancelRequest')}
       variant="outline"
     >
       <Clock className="size-3.5" />
-      Requested
+      {t('friends.requested')}
     </Button>
   ) : (
     <Button
@@ -103,7 +106,7 @@ export const CancelRequestAction = ({
       onClick={cancelRequest}
       variant="ghost"
     >
-      Cancel request
+      {t('friends.cancelRequest')}
     </Button>
   )
 }
@@ -115,6 +118,7 @@ type AddFriendActionProps = {
 
 /** Send someone a friend request. */
 export const AddFriendAction = ({ onSent, userId }: AddFriendActionProps) => {
+  const { t } = useI18n()
   const send = useSendFriendRequest()
 
   return (
@@ -125,8 +129,8 @@ export const AddFriendAction = ({ onSent, userId }: AddFriendActionProps) => {
       variant="default"
     >
       <UserPlus className="size-3.5" />
-      <span className="hidden sm:inline">Add friend</span>
-      <span className="sm:hidden">Add</span>
+      <span className="hidden sm:inline">{t('friends.addFriend')}</span>
+      <span className="sm:hidden">{t('friends.add')}</span>
     </Button>
   )
 }

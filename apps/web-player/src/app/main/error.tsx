@@ -1,21 +1,11 @@
 'use client'
 
+import { useI18n } from '@shared/i18n'
 import { ErrorState } from '@shared/ui/ErrorState'
 
-export default function MainError({
-  error,
-  reset,
-}: {
-  error: Error & { digest?: string }
-  reset: () => void
-}) {
-  return (
-    <ErrorState
-      description={
-        error.message ||
-        'This page could not be loaded. Try again, or head back home.'
-      }
-      onRetry={reset}
-    />
-  )
+/** A page that failed to render: the design's error copy, never the exception's text. */
+export default function MainError({ reset }: { reset: () => void }) {
+  const { t } = useI18n()
+
+  return <ErrorState description={t('error.pageDescription')} onRetry={reset} />
 }

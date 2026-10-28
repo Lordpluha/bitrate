@@ -7,7 +7,7 @@ export default function LikedSongsNotFound() {
     <StateMessage
       description="You haven't liked any songs yet. Start exploring and like your favorite tracks!"
       icon={Heart}
-      primary={{ href: ROUTES.search(), label: 'Find something to play' }}
+      primary={{ href: ROUTES.main, label: 'Back to home' }}
       title="No liked songs found"
     />
   )

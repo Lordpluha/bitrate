@@ -52,7 +52,7 @@ export const MediaRow = ({ items, onPlayItem, title }: MediaRowProps) => {
           {canScrollPrev ? (
             <button
               aria-label={`Previous ${title}`}
-              className="pointer-events-auto absolute left-0 top-1/2 flex h-8 w-8 -translate-x-3 -translate-y-1/2 items-center justify-center rounded-full bg-background-elevated text-text ring-1 ring-border opacity-0 shadow-lg transition-opacity hover:scale-105 group-hover:opacity-100"
+              className="pointer-events-auto absolute left-0 top-1/2 flex h-8 w-8 -translate-x-3 -translate-y-1/2 items-center justify-center rounded-full bg-background-elevated text-foreground ring-1 ring-border opacity-0 shadow-lg transition-opacity hover:scale-105 group-hover:opacity-100"
               onClick={() => carouselApi?.scrollPrev()}
               type="button"
             >
@@ -62,7 +62,7 @@ export const MediaRow = ({ items, onPlayItem, title }: MediaRowProps) => {
           {canScrollNext ? (
             <button
               aria-label={`Next ${title}`}
-              className="pointer-events-auto absolute right-0 top-1/2 flex h-8 w-8 translate-x-3 -translate-y-1/2 items-center justify-center rounded-full bg-background-elevated text-text ring-1 ring-border opacity-0 shadow-lg transition-opacity hover:scale-105 group-hover:opacity-100"
+              className="pointer-events-auto absolute right-0 top-1/2 flex h-8 w-8 translate-x-3 -translate-y-1/2 items-center justify-center rounded-full bg-background-elevated text-foreground ring-1 ring-border opacity-0 shadow-lg transition-opacity hover:scale-105 group-hover:opacity-100"
               onClick={() => carouselApi?.scrollNext()}
               type="button"
             >
