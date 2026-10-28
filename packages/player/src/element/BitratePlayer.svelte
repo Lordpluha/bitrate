@@ -266,11 +266,13 @@
 
   /**
    * The size container the built-in layouts query. Not on :host — inline-size containment
-   * would stop a host-composed element from taking its content's width in a flex row.
+   * would stop a host-composed element from taking its content's width in a flex row. It
+   * passes a sized host's height on, so floating fills a picture-in-picture window as it resizes.
    */
   .layout-container {
     container-name: bitrate-player;
     container-type: inline-size;
+    height: 100%;
   }
 
   @media (prefers-reduced-motion: reduce) {

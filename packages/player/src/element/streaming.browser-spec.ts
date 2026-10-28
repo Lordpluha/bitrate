@@ -125,6 +125,24 @@ describe('<bitrate-player> streaming mode', () => {
     expect(ended).toHaveBeenCalledWith({ key: 'k1' })
   })
 
+  /**
+   * The media element pauses itself just before `ended`. Reported as a pause, a host that
+   * mirrors play state would pause the next play gapless already started.
+   */
+  it('reports a play that runs to its end as ended, not as a pause', async () => {
+    const element = await mountStreaming()
+    const ended = vi.fn()
+    const paused = vi.fn()
+    element.addEventListener('ended', ended)
+    element.addEventListener('pause', paused)
+
+    element.source = await source('k1')
+    await element.play()
+
+    await expect.poll(() => ended.mock.calls.length, { timeout: 5_000 }).toBe(1)
+    expect(paused).not.toHaveBeenCalled()
+  })
+
   it('seeks through the host method', async () => {
     const element = await mountStreaming()
     element.source = await source('k1')

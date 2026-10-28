@@ -27,7 +27,7 @@ const OVERLAYS = resolve(
 const open = async (page: Page, path = '/main/charts') => {
   await page
     .context()
-    .addCookies([{ name: 'access_token', url: APP_ORIGIN, value: 'e2e' }])
+    .addCookies([{ name: 'user_access_token', url: APP_ORIGIN, value: 'e2e' }])
   await page.goto(path)
   await expect(page.locator('bitrate-player[media-session]')).toBeAttached()
   await page.addStyleTag({ path: OVERLAYS })
@@ -95,11 +95,25 @@ test.describe('desktop', () => {
     const second = (await state(page)).key
     await expect.poll(async () => (await state(page)).status).toBe('playing')
 
+    /** Running into the next track is no pause: the button would flicker and the audio gap. */
+    await page.evaluate(() => {
+      const element = document.querySelector('bitrate-player[media-session]')
+      Reflect.set(window, '__pauses', 0)
+      element?.addEventListener('pause', () => {
+        Reflect.set(
+          window,
+          '__pauses',
+          Number(Reflect.get(window, '__pauses')) + 1,
+        )
+      })
+    })
     await page.getByRole('slider', { name: 'Seek playback' }).first().fill('11')
     await expect
       .poll(async () => (await state(page)).key, { timeout: 15_000 })
       .not.toBe(second)
     await expect.poll(async () => (await state(page)).status).toBe('playing')
+    expect(await page.evaluate(() => Reflect.get(window, '__pauses'))).toBe(0)
+    await expect(pauseButton(page)).toBeVisible()
   })
 
   test('changes the volume from the bar', async ({ page }) => {
@@ -140,6 +154,20 @@ test.describe('desktop', () => {
     await popup.getByRole('button', { exact: true, name: 'Play' }).click()
 
     await expect.poll(async () => (await state(page)).status).toBe('playing')
+
+    /** The layout fills the window and follows it when the window is resized. */
+    const layoutHeight = () =>
+      popup.evaluate(
+        () =>
+          document
+            .querySelector('bitrate-player')
+            ?.shadowRoot?.querySelector('[part="layout"]')
+            ?.getBoundingClientRect().height ?? 0,
+      )
+    await popup.setViewportSize({ height: 480, width: 400 })
+    await expect.poll(layoutHeight).toBeCloseTo(480, 0)
+    await popup.setViewportSize({ height: 640, width: 520 })
+    await expect.poll(layoutHeight).toBeCloseTo(640, 0)
   })
 })
 

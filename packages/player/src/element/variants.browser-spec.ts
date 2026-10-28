@@ -104,6 +104,22 @@ describe('<bitrate-player chrome>', () => {
     expect(backdrop?.width).toBeCloseTo(layoutBox(element).width, 0)
   })
 
+  /** The picture-in-picture window sizes the host to its viewport; the layout follows a resize. */
+  it('fills a host sized by its window, and follows it when the window resizes', async () => {
+    const element = await mountPlayer('floating')
+    element.style.height = '400px'
+    element.style.width = '480px'
+
+    await expect.poll(() => layoutBox(element).height).toBeCloseTo(400, 0)
+    expect(layoutBox(element).width).toBeCloseTo(480, 0)
+
+    element.style.height = '600px'
+    element.style.width = '640px'
+
+    await expect.poll(() => layoutBox(element).height).toBeCloseTo(600, 0)
+    expect(layoutBox(element).width).toBeCloseTo(640, 0)
+  })
+
   it('still hides a control the layout allows when its callback is missing', async () => {
     const element = await mountPlayer('floating')
     element.onPrevious = null

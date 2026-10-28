@@ -612,8 +612,12 @@ export class SlotPlayer {
       this.emit()
       this.input.onPlayingChange(true)
     })
+    /**
+     * A play that reaches its end pauses itself just before `ended`; that is the end, reported
+     * by `ended`, not a pause — reported as one, the host would pause the play gapless started.
+     */
     on('pause', () => {
-      if (!this.isHeard(index)) return
+      if (!this.isHeard(index) || media.ended) return
       this.saveActivePosition()
       this.emit()
       this.input.onPlayingChange(false)
@@ -622,6 +626,7 @@ export class SlotPlayer {
       if (index !== this.active || !this.current) return
       const { key } = this.current
       this.input.streaming.positions?.remove(key)
+      this.emit()
       this.input.onEnded({ key })
     })
   }
