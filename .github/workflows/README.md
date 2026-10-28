@@ -40,6 +40,12 @@ Current workflow map for .github/workflows.
   root-config-only change triggers at all — every other check workflow is path-filtered to one
   app or package.
 
+- pr_scope.yml — the PR scope gate: `pull_request` into develop, also on `labeled` /
+  `unlabeled` so the `pr-scope/exempt` label takes effect without a push.
+- pr_scope_reusable.yml — runs `scripts/check-pr-scope.mjs` (one workspace, ≤ 200 files,
+  ≤ 2000 lines; generated output ignored). Skipped for `release/`, `backmerge/`,
+  `changeset-release/` and `dependabot/` branches and for the exempt label.
+
 Knip's explicit entries include package source exports, platform-specific mobile files, CSS,
 service workers, and tests invoked through compiled JavaScript. Storybook loads only
 `main.ts` as configuration; its JSX preview is scanned as an entry. The narrow dependency
@@ -364,7 +370,7 @@ SmartScreen warn on first launch.
 - monitoring_health_reusable.yml / monitoring_dependency_reusable.yml / monitoring_ssl_reusable.yml — smaller reusable monitoring blocks.
 
 ## Structure Summary
-- Entry workflows: admin.yml, api.yml, desktop.yml, docs.yml, mobile.yml, player.yml, ui_react.yml, web_player.yml, web_artists.yml, security.yml, monitoring.yml, release.yml, release_publish.yml, release_images.yml, deploy.yml.
+- Entry workflows: admin.yml, api.yml, pr_scope.yml, desktop.yml, docs.yml, mobile.yml, player.yml, ui_react.yml, web_player.yml, web_artists.yml, security.yml, monitoring.yml, release.yml, release_publish.yml, release_images.yml, deploy.yml.
 - Reusable workflows: all *_reusable.yml files at the top level of .github/workflows.
 - Note: GitHub Actions requires local reusable workflows referenced via uses: $/.github/workflows/... to be stored at the top level of .github/workflows.
 

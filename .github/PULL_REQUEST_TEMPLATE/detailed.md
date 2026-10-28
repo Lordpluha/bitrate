@@ -157,6 +157,7 @@
 <!-- Complete this checklist before requesting review -->
 
 ### Code Quality
+- [ ] One workspace, ≤ 200 files, ≤ 2000 changed lines (`pnpm check:pr-scope`), or labelled `pr-scope/exempt` with the reason above
 - [ ] Code follows the project style guide
 - [ ] Biome/TSC passes without errors
 - [ ] Biome formatting applied
