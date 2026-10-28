@@ -10,7 +10,7 @@ import type { BitratePlayerErrorCode, BitratePlayerSourceResolver } from '../con
 /** The CMAF/MSE path with adaptive bitrate (ADR-0020); its storage and debug switch are injected too. */
 export * from './cmaf'
 
-/** Streaming playback over two media elements — the element's `streaming` mode (#236). */
+/** Streaming playback over two media elements — the element's `streaming` mode (issue 236). */
 export * from './slots'
 
 /** `MediaError.code` values the DOM spec defines — kept local so the engine needs no DOM lib types at module scope. */

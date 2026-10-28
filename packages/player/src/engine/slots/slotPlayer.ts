@@ -1,6 +1,6 @@
 /**
  * Two media elements that play `source` and prefetch `next`, moved out of web-player's
- * `useAudioPlayer`/`useAudioSlots`/`useAudioPlayerEvents` for #236. The host still decides what
+ * `useAudioPlayer`/`useAudioSlots`/`useAudioPlayerEvents` for issue 236. The host still decides what
  * plays and what comes next — it sets `source` and `next` keyed per play — and this owns the
  * rest: the CMAF path with adaptive bitrate, the host's legacy chain as fallback, prefetching
  * the next track into the standby element and switching to it instantly, delaying the first

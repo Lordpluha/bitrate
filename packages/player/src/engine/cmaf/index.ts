@@ -1,4 +1,4 @@
-/** The single-file CMAF playback path (ADR-0020), moved from web-player for #236. */
+/** The single-file CMAF playback path (ADR-0020), moved from web-player for issue 236. */
 export * from './adaptiveBitrate'
 export * from './bitrateSelector'
 export * from './bufferFiller'

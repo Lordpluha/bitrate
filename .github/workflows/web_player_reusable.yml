@@ -108,6 +108,11 @@ jobs:
         if: ${{ inputs.run-tests }}
         run: pnpm --filter @bitrate/ui-react run build
 
+      # `@bitrate/player` and its `/engine` entry resolve to the player's dist in tests.
+      - name: Build player
+        if: ${{ inputs.run-tests }}
+        run: pnpm --filter @bitrate/player run build
+
       - name: Generate Next.js route types
         if: ${{ inputs.run-tests }}
         run: pnpm --filter @bitrate/web-player exec next typegen

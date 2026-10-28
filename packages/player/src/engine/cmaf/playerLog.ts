@@ -11,13 +11,17 @@ import { getCmafEngineEnvironment } from './environment'
 
 const STORAGE_KEY = 'player-debug'
 
+/**
+ * DevTools `%c` styles, one colour per channel. The console is outside the element and its
+ * theme, and cannot resolve `var(--color-*)`, so the channels use named CSS colours.
+ */
 const STYLES = {
-  abr: 'color:#f59e0b;font-weight:bold',
-  buffer: 'color:#8b5cf6',
-  error: 'color:#ef4444;font-weight:bold',
-  fragment: 'color:#22c55e',
-  path: 'color:#06b6d4;font-weight:bold',
-  seek: 'color:#ec4899;font-weight:bold',
+  abr: 'color:orange;font-weight:bold',
+  buffer: 'color:mediumpurple',
+  error: 'color:tomato;font-weight:bold',
+  fragment: 'color:limegreen',
+  path: 'color:darkturquoise;font-weight:bold',
+  seek: 'color:hotpink;font-weight:bold',
 } as const
 
 export type PlayerLogChannel = keyof typeof STYLES

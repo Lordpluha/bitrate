@@ -152,12 +152,13 @@ describe('TrackAudioPlayer', () => {
   /**
    * The package grew a streaming mode, mirrors and `chrome` layouts for web-player (#235, #236).
    * The preview keeps the default bar on the single-element `resolveSource` path: binding any
-   * of these would switch it to behaviour it was never reviewed for.
+   * of these would switch it to behaviour it was never reviewed for. The element reflects its
+   * own default `chrome="bar"`, so the attribute shows the default rather than being absent.
    */
   it('stays on the default bar and the resolveSource path — no chrome, streaming or mirror bound', async () => {
     const { player } = await render()
 
-    expect(player.getAttribute('chrome')).toBeNull()
+    expect(player.getAttribute('chrome')).toBe('bar')
     for (const property of ['chrome', 'streaming', 'source', 'next', 'mirror']) {
       expect(Object.hasOwn(player, property), property).toBe(false)
     }
