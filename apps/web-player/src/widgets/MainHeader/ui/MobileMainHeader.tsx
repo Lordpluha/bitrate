@@ -11,15 +11,26 @@ import { HeaderSearch } from '@/widgets/MainHeader/ui/HeaderSearch'
 import { NotificationsPopover } from '@/widgets/MainHeader/ui/NotificationsPopover'
 
 /**
- * Pages one step below a top-level page that have no back button of their own (album and
- * playlist heroes carry one), so the header shows the design's back chevron instead.
+ * Pages the design's Mobile/Header gives a back chevron: everything opened from Home, Search,
+ * Library or the account menu. Home, Search, Library, Profile, Activity and Friends are the
+ * roots and keep the account menu.
  */
 const NESTED_PAGE_PREFIXES = [
+  ROUTES.album(''),
+  ROUTES.playlist(''),
+  ROUTES.likedSongs,
   ROUTES.artist(''),
   ROUTES.user(''),
   ROUTES.podcast(''),
   ROUTES.findFriends,
   ROUTES.friendRequests,
+  ROUTES.charts,
+  ROUTES.recents,
+  ROUTES.settings,
+  ROUTES.stats,
+  ROUTES.notifications,
+  ROUTES.queue,
+  ROUTES.lyrics,
 ]
 
 /**

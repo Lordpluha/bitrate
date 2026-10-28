@@ -1,10 +1,7 @@
 'use client'
 
-import { cn } from '@bitrate/ui-react'
 import { useImageColor } from '@shared/hooks/useImageColor'
-import { BackButton } from '@shared/ui/BackButton'
 import { MediaImage } from '@shared/ui/MediaImage'
-import { ArrowLeft } from 'lucide-react'
 import type { CSSProperties, ReactNode } from 'react'
 
 type CollectionHeaderProps = {
@@ -30,7 +27,8 @@ const dim = (value: number) => Math.round(value * WASH_STRENGTH)
 /**
  * The design system's Collection Header (playlist, album, Liked Songs): a 200px cover beside the
  * type, an Unbounded title and the owner line, on a rounded wash running from the cover's colour
- * into the card surface. Phones stack a 220px cover over the title, without the wash.
+ * into the card surface. Phones stack a 220px cover over the title, without the wash. It has no
+ * Back button: the design has none on desktop, and phones show it in the mobile header.
  */
 export const CollectionHeader = ({
   coverUrl,
@@ -49,16 +47,9 @@ export const CollectionHeader = ({
 
   return (
     <section
-      className={cn(
-        'relative flex flex-col gap-5 md:h-65 md:flex-row md:items-end md:gap-6 md:rounded-2xl md:bg-(image:--collection-wash) md:p-7 md:text-white',
-        !coverUrl && 'max-md:pt-12',
-      )}
+      className="flex flex-col gap-5 md:h-65 md:flex-row md:items-end md:gap-6 md:rounded-2xl md:bg-(image:--collection-wash) md:p-7 md:text-white"
       style={wash}
     >
-      <BackButton className="absolute top-0 left-0 flex size-8 items-center justify-center rounded-full bg-black/40 transition-colors hover:bg-black/60 md:top-7 md:left-7">
-        <ArrowLeft aria-hidden="true" className="text-white" size={20} />
-      </BackButton>
-
       {coverUrl ? (
         <div className="flex justify-center">
           <MediaImage
