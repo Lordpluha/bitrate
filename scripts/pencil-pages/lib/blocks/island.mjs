@@ -63,11 +63,6 @@ const islPlay = () =>
       [part('playIcon', I('pause', { width: 18, height: 18, fill: C.background }))],
     ),
   )
-const eqBars = (h = [6, 14, 9, 16]) =>
-  Row(
-    { name: 'Level', gap: 2, alignItems: 'end', height: 16 },
-    h.map((v) => F({ name: 'Bar', width: 3, height: v, cornerRadius: 1, fill: C.accent })),
-  )
 /** Registers this section's library components, in build order. */
 export function register(add) {
   add(
@@ -117,7 +112,6 @@ export function register(add) {
             part('title', T('Afterglow', { fontSize: 13, fontWeight: '600' })),
             part('artist', T('Nova & the Static', { fontSize: 11, fill: C.mutedForeground })),
           ]),
-          eqBars(),
           part(
             'next',
             F(

@@ -180,11 +180,6 @@ img { display: block; }
 .isl-mini .tt { flex: 1; min-width: 0; }
 .isl-mini b { display: block; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .isl-mini small { font-size: 11px; color: var(--muted); white-space: nowrap; }
-.eq { display: flex; gap: 2px; align-items: flex-end; height: 16px; margin-right: 2px; }
-.eq i { width: 3px; height: 4px; border-radius: 1px; background: var(--accent); animation: eq .9s ease-in-out infinite alternate; }
-.eq i:nth-child(2) { animation-delay: -.3s } .eq i:nth-child(3) { animation-delay: -.6s } .eq i:nth-child(4) { animation-delay: -.15s }
-@keyframes eq { to { height: 16px } }
-.paused .eq i { animation-play-state: paused; }
 .isl-live img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
 .isl-live .tt { flex: 1; min-width: 0; font-size: 13px; line-height: 1.25; }
 .isl-live .tt small { color: var(--muted); font-size: 11px; display: block; }
@@ -435,7 +430,6 @@ button.tchip { cursor: pointer; }
         </div>
         <div class="isl-mini" id="mini" aria-hidden="true">
           <span class="tt"><b id="miniT">Afterglow</b><small id="miniA">Nova &amp; the Static</small></span>
-          <span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
           <button class="isl-next" id="islNext" type="button" aria-label="Next track"><svg aria-hidden="true" class="i"><use href="#i-next"/></svg></button>
         </div>
         <div class="isl-live" id="live" aria-live="polite"></div>

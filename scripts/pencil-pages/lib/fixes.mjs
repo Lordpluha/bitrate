@@ -15,10 +15,15 @@ const FIXES = {
   QCCe4: { fontSize: 12 },
   PiTbk: { fontSize: 12 },
 }
-/** Applies FIXES in place to the library nodes under `n`. */
+/* library nodes removed on every build */
+const REMOVED = new Set([
+  'PkSIJ', // Shell/Player Bar "Spectrum": the player shows no moving waves
+])
+/** Applies FIXES in place to the library nodes under `n` and drops the REMOVED ones. */
 export const applyFixes = (n) => {
   if (Array.isArray(n)) return n.forEach(applyFixes)
   if (!n || typeof n !== 'object') return
   if (n.id && FIXES[n.id]) Object.assign(n, FIXES[n.id])
+  if (Array.isArray(n.children)) n.children = n.children.filter((c) => !REMOVED.has(c?.id))
   Object.values(n).forEach(applyFixes)
 }
