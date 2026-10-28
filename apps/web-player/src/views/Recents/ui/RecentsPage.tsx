@@ -59,23 +59,26 @@ export const RecentsPage = () => {
   }
 
   return (
-    <div className="h-full overflow-y-auto custom-scrollbar">
-      <div className="flex flex-col gap-7 px-4 pt-2 pb-3 md:px-8 md:py-6">
-        <PageTitle
-          action={
-            (history?.length ?? 0) > 0 ? (
-              <Button
-                className="h-9 px-4 text-sm font-medium"
-                disabled={clearHistory.isPending}
-                onClick={() => clearHistory.mutate()}
-                variant="ghost"
-              >
-                {t('recents.clear')}
-              </Button>
-            ) : null
-          }
-          title={t('recents.title')}
-        />
+    <div className="flex h-full flex-1 flex-col overflow-y-auto custom-scrollbar">
+      <div className="flex flex-1 flex-col gap-7 px-4 pt-2 pb-3 md:px-8 md:py-6">
+        {/* The design's error frame replaces the whole panel, title included. */}
+        {isError ? null : (
+          <PageTitle
+            action={
+              (history?.length ?? 0) > 0 ? (
+                <Button
+                  className="h-9 px-4 text-sm font-medium"
+                  disabled={clearHistory.isPending}
+                  onClick={() => clearHistory.mutate()}
+                  variant="ghost"
+                >
+                  {t('recents.clear')}
+                </Button>
+              ) : null
+            }
+            title={t('recents.title')}
+          />
+        )}
 
         {isPending ? (
           <div
@@ -89,6 +92,7 @@ export const RecentsPage = () => {
           </div>
         ) : isError ? (
           <ErrorState
+            description={t('error.tryAgainShort')}
             onRetry={() => void refetch()}
             title={t('recents.loadFailed')}
           />

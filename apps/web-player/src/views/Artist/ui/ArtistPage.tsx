@@ -88,7 +88,7 @@ export const ArtistPage = ({ artistId }: ArtistPageProps) => {
 
   return (
     <div
-      className="h-full overflow-y-auto custom-scrollbar"
+      className="flex h-full flex-1 flex-col overflow-y-auto custom-scrollbar"
       onScroll={handleScroll}
     >
       <ArtistCompactHeader
@@ -100,7 +100,7 @@ export const ArtistPage = ({ artistId }: ArtistPageProps) => {
         onTogglePlay={playback.handleTogglePlay}
       />
 
-      <div className="flex flex-col gap-5 px-4 pt-2 pb-3 md:gap-7 md:px-8 md:py-6">
+      <div className="flex flex-1 flex-col gap-5 px-4 pt-2 pb-3 md:gap-7 md:px-8 md:py-6">
         <div ref={heroRef}>
           <ArtistHero artist={artist} statsLabel={statsLabel} />
         </div>

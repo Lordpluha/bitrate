@@ -44,14 +44,17 @@ export const LikedSongsPlaylist = ({ tracks }: LikedSongsPlaylistProps) => {
 
   return (
     <>
-      <PlaylistHeader
-        author={t('library.title')}
-        duration={getPlaylistDuration(currentTracks)}
-        imageUrl="/images/liked-songs.svg"
-        title={t('library.likedSongs')}
-        tracksCount={currentTracks?.length || 0}
-        type={t('common.playlist')}
-      />
+      {/* The design's phone frame shows only the message when nothing is liked yet. */}
+      <div className={currentTracks.length > 0 ? undefined : 'max-md:hidden'}>
+        <PlaylistHeader
+          author={t('library.title')}
+          duration={getPlaylistDuration(currentTracks)}
+          imageUrl="/images/liked-songs.svg"
+          title={t('library.likedSongs')}
+          tracksCount={currentTracks?.length || 0}
+          type={t('common.playlist')}
+        />
+      </div>
       {currentTracks.length > 0 ? (
         <button
           aria-label={t(
@@ -88,7 +91,6 @@ export const LikedSongsPlaylist = ({ tracks }: LikedSongsPlaylistProps) => {
         />
       ) : (
         <StateMessage
-          className="min-h-80"
           description={t('playlist.likedEmptyDescription')}
           icon={Heart}
           primary={{ href: ROUTES.search(), label: t('queue.find') }}

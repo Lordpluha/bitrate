@@ -188,8 +188,8 @@ export const ChartsPage = () => {
   }))
 
   return (
-    <div className="h-full overflow-y-auto custom-scrollbar">
-      <div className="flex flex-col gap-5 px-4 pt-2 pb-3 md:gap-7 md:px-8 md:py-6">
+    <div className="flex h-full flex-1 flex-col overflow-y-auto custom-scrollbar">
+      <div className="flex flex-1 flex-col gap-5 px-4 pt-2 pb-3 md:gap-7 md:px-8 md:py-6">
         <PageTitle title={t('charts.title')} />
         <SegmentedTabs
           ariaLabel={t('nav.charts')}

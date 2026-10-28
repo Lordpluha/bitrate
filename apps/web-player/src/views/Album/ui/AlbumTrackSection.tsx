@@ -47,6 +47,7 @@ export const AlbumTrackSection = ({
       <section
         aria-label={t('album.actions', { title: albumTitle })}
         className="flex items-center gap-4.5"
+        hidden={tracks.length === 0}
       >
         {tracks.length > 0 ? (
           <button
@@ -80,7 +81,6 @@ export const AlbumTrackSection = ({
 
       {tracks.length === 0 ? (
         <StateMessage
-          className="min-h-80"
           description={t('album.noTracksDescription')}
           icon={Disc3}
           title={t('album.noTracks')}

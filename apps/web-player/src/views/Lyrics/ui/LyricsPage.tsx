@@ -17,7 +17,7 @@ export const LyricsPage = () => {
 
   if (!currentTrack) {
     return (
-      <div className="flex h-full flex-col px-4 md:px-8">
+      <div className="flex h-full flex-1 flex-col px-4 md:px-8">
         <StateMessage
           description="Start a track and its lyrics will appear here."
           icon={MicVocal}
@@ -36,8 +36,8 @@ export const LyricsPage = () => {
     .map((text, position) => ({ key: `line-${position}`, text }))
 
   return (
-    <div className="h-full overflow-y-auto custom-scrollbar">
-      <div className="flex flex-col gap-7 px-4 pt-2 pb-3 md:px-8 md:py-6">
+    <div className="flex h-full flex-1 flex-col overflow-y-auto custom-scrollbar">
+      <div className="flex flex-1 flex-col gap-7 px-4 pt-2 pb-3 md:px-8 md:py-6">
         <header className="flex items-center gap-3.5">
           <MediaImage
             alt=""

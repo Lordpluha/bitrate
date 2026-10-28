@@ -62,7 +62,8 @@ export const LibraryPage = () => {
 
   return (
     <div className="flex h-full flex-1 flex-col overflow-y-auto px-4 pt-2 pb-3 custom-scrollbar md:px-8 md:py-6">
-      <div className="flex flex-col gap-5 md:gap-7">
+      {/* The design's error frame replaces the whole panel, head and tabs included. */}
+      <div className="flex flex-col gap-5 md:gap-7" hidden={library.isError}>
         <div className="flex items-end justify-between gap-4">
           <div className="flex min-w-0 flex-col gap-1">
             <p className="text-xs font-semibold tracking-[1.2px] text-muted-foreground uppercase">

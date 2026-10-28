@@ -1,7 +1,7 @@
 'use client'
 
 import { StateMessage } from '@shared/ui'
-import { Music } from 'lucide-react'
+import { ListMusic } from 'lucide-react'
 import { useState } from 'react'
 import type { PlaylistWithTracks } from '@/entities/Playlist'
 import { selectCompactLibrary, useSettingsStore } from '@/entities/Settings'
@@ -48,16 +48,21 @@ export const PlaylistContent = ({ playlist }: PlaylistContentProps) => {
     tracks,
   })
 
+  const isEmpty = tracks.length === 0
+
   return (
     <>
-      <PlaylistHeader
-        author={ownerName}
-        duration={getPlaylistDuration(tracks)}
-        imageUrl={cover}
-        title={playlist.title || t('common.playlist')}
-        tracksCount={tracks.length}
-        type={playlist.isPublic ? t('playlist.public') : t('common.playlist')}
-      />
+      {/* The design's empty and finder phone frames drop the hero for the message or search. */}
+      <div className={isEmpty ? 'max-md:hidden' : undefined}>
+        <PlaylistHeader
+          author={ownerName}
+          duration={getPlaylistDuration(tracks)}
+          imageUrl={cover}
+          title={playlist.title || t('common.playlist')}
+          tracksCount={tracks.length}
+          type={playlist.isPublic ? t('playlist.public') : t('common.playlist')}
+        />
+      </div>
       <PlaylistActionBar
         details={{
           id: playlist.id,
@@ -94,11 +99,10 @@ export const PlaylistContent = ({ playlist }: PlaylistContentProps) => {
           playlistTitle={playlist.title || t('playlist.fallbackTitle')}
         />
       )}
-      {!isOwner && tracks.length === 0 && (
+      {!isOwner && isEmpty && (
         <StateMessage
-          className="min-h-80"
           description={t('playlist.findDescription')}
-          icon={Music}
+          icon={ListMusic}
           primary={{ href: ROUTES.search(), label: t('playlist.searchTracks') }}
           title={t('playlist.noTracks')}
         />

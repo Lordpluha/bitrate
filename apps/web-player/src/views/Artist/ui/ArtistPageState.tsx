@@ -46,7 +46,7 @@ export const ArtistPageState = (props: ArtistPageStateProps) => {
       props.error.status === 404)
 
   return (
-    <div className="flex h-full flex-col px-4 md:px-8">
+    <div className="flex h-full flex-1 flex-col px-4 md:px-8">
       {isNotFound ? (
         <StateMessage
           description={t('artist.notFoundDescription')}

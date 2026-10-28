@@ -39,7 +39,7 @@ export const QueuePage = () => {
 
   if (!currentTrack) {
     return (
-      <div className="flex h-full flex-col gap-7 px-4 pt-2 md:px-8 md:py-6">
+      <div className="flex h-full flex-1 flex-col gap-7 px-4 pt-2 md:px-8 md:py-6">
         <PageTitle title={t('queue.title')} />
         <StateMessage
           description={t('queue.empty.description')}
@@ -52,8 +52,8 @@ export const QueuePage = () => {
   }
 
   return (
-    <div className="h-full overflow-y-auto custom-scrollbar">
-      <div className="flex flex-col gap-7 px-4 pt-2 pb-3 md:px-8 md:py-6">
+    <div className="flex h-full flex-1 flex-col overflow-y-auto custom-scrollbar">
+      <div className="flex flex-1 flex-col gap-7 px-4 pt-2 pb-3 md:px-8 md:py-6">
         <PageTitle
           action={
             queue.length > 0 ? (

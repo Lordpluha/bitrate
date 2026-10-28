@@ -61,12 +61,15 @@ export const AlbumPage = ({ albumId }: { albumId: string }) => {
 
   return (
     <CollectionPanel>
-      <AlbumHero
-        album={album}
-        coverUrl={coverUrl}
-        duration={getAlbumDuration(tracks)}
-        trackCount={tracks.length}
-      />
+      {/* The design's empty phone frame shows only the message. */}
+      <div className={tracks.length > 0 ? undefined : 'max-md:hidden'}>
+        <AlbumHero
+          album={album}
+          coverUrl={coverUrl}
+          duration={getAlbumDuration(tracks)}
+          trackCount={tracks.length}
+        />
+      </div>
       <AlbumTrackSection
         albumId={album.id}
         albumTitle={album.title}

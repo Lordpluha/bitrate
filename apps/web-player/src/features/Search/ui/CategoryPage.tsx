@@ -35,7 +35,7 @@ export const CategoryPage = ({ category, onPlayItem }: CategoryPageProps) => {
     return (
       <div
         aria-label={`Loading ${category.name}`}
-        className="flex flex-col gap-7 px-4 pt-2 pb-3 md:px-8 md:py-6"
+        className="flex flex-1 flex-col gap-7 px-4 pt-2 pb-3 md:px-8 md:py-6"
         role="status"
       >
         <Skeleton className="h-40 rounded-2xl md:h-65" />
@@ -61,7 +61,7 @@ export const CategoryPage = ({ category, onPlayItem }: CategoryPageProps) => {
   const playlistItems = playlistsQuery.data.data.map(mapDiscoveryPlaylist)
   const chartItems = chartsQuery.data.data.map(mapDiscoveryTrack)
   return (
-    <div className="flex flex-col gap-5 px-4 pt-2 pb-3 md:gap-7 md:px-8 md:py-6">
+    <div className="flex flex-1 flex-col gap-5 px-4 pt-2 pb-3 md:gap-7 md:px-8 md:py-6">
       <CollectionHeader
         meta={[
           category.description ?? `Popular ${category.name} · Featured charts`,

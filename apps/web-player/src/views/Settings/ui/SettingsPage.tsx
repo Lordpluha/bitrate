@@ -24,7 +24,7 @@ export const SettingsPage = () => {
   }
 
   return (
-    <div className="h-full overflow-y-auto custom-scrollbar">
+    <div className="flex h-full flex-1 flex-col overflow-y-auto custom-scrollbar">
       <div className="px-4 pt-2 pb-3 md:px-8 md:py-6">
         <div className="mb-5 flex min-h-10 items-center justify-between gap-4 md:mb-7">
           <h1 className="text-2xl leading-[1.1] font-bold text-foreground md:text-[32px]">

@@ -45,16 +45,16 @@ export const SearchPage = ({ onPlayItem }: SearchPageProps) => {
 
   if (category && !hasQuery) {
     return (
-      <div className="h-full overflow-y-auto custom-scrollbar">
+      <div className="flex h-full flex-1 flex-col overflow-y-auto custom-scrollbar">
         <CategoryPage category={category} onPlayItem={onPlayItem} />
       </div>
     )
   }
 
   return (
-    <div className="h-full overflow-y-auto custom-scrollbar">
-      <div className="px-4 pt-2 pb-3 md:px-8 md:py-6">
-        <div className="flex w-full flex-col">
+    <div className="flex h-full flex-1 flex-col overflow-y-auto custom-scrollbar">
+      <div className="flex flex-1 flex-col px-4 pt-2 pb-3 md:px-8 md:py-6">
+        <div className="flex w-full flex-1 flex-col">
           {hasQuery ? (
             <SearchQueryState
               data={{

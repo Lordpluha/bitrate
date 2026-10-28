@@ -51,7 +51,7 @@ export const ActivityPage = () => {
           description={t('activity.emptyDescription')}
           icon={UsersRound}
           primary={{
-            href: ROUTES.search(),
+            href: ROUTES.findFriends,
             label: t('activity.findPeople'),
           }}
           title={t('activity.emptyTitle')}

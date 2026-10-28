@@ -11,7 +11,7 @@ import { showApiErrorToast } from '@/shared/api/feedback'
 import { useAuth } from '@/shared/hooks'
 import { useI18n } from '@/shared/i18n'
 import { ROUTES } from '@/shared/routes'
-import { LegalFooter, Skeleton, StateMessage } from '@/shared/ui'
+import { ErrorState, LegalFooter, Skeleton, StateMessage } from '@/shared/ui'
 import { getUserAvatarUrl } from '@/shared/utils/mediaUrl'
 import type { ProfileTrack } from '@/views/Profile/model/profile.types'
 import { ProfileActions } from '@/views/Profile/ui/ProfileActions'
@@ -25,18 +25,18 @@ export const ProfilePage = () => {
   const { t } = useI18n()
   const play = usePlayerStore((state) => state.play)
   const { user, isLoading } = useAuth()
-  const { data: artistsData, isPending: isArtistsPending } = useTopArtists(
-    'medium',
-    1,
-    5,
-  )
-  const { data: tracksData, isPending: areTracksPending } = useTopTracks(
-    'medium',
-    1,
-    5,
-  )
+  const topArtistsQuery = useTopArtists('medium', 1, 5)
+  const topTracksQuery = useTopTracks('medium', 1, 5)
+  const myPlaylistsQuery = useMyPlaylists()
+  const { data: artistsData, isPending: isArtistsPending } = topArtistsQuery
+  const { data: tracksData, isPending: areTracksPending } = topTracksQuery
   const { data: myPlaylistsData, isPending: arePlaylistsPending } =
-    useMyPlaylists()
+    myPlaylistsQuery
+  /** The design's error frame: the profile's own lists all failed, so nothing is worth showing. */
+  const isProfileError =
+    topArtistsQuery.isError &&
+    topTracksQuery.isError &&
+    myPlaylistsQuery.isError
   const { data: followedUsers = [], isPending: areFollowedUsersPending } =
     useFollowedUsers(!!user)
   const { data: followedArtists = [], isPending: areFollowedArtistsPending } =
@@ -58,7 +58,7 @@ export const ProfilePage = () => {
     return (
       <div
         aria-label={t('profile.loading')}
-        className="flex h-full flex-col gap-7 px-4 pt-2 md:px-8 md:py-6"
+        className="flex h-full flex-1 flex-col gap-7 px-4 pt-2 md:px-8 md:py-6"
         role="status"
       >
         <div className="flex items-end gap-7 md:py-7">
@@ -75,7 +75,7 @@ export const ProfilePage = () => {
 
   if (!user) {
     return (
-      <div className="flex h-full flex-col px-4 md:px-8">
+      <div className="flex h-full flex-1 flex-col px-4 md:px-8">
         <StateMessage
           description={t('profile.signInDescription')}
           icon={LogIn}
@@ -86,9 +86,25 @@ export const ProfilePage = () => {
     )
   }
 
+  if (isProfileError) {
+    return (
+      <div className="flex h-full flex-1 flex-col px-4 md:px-8">
+        <ErrorState
+          description={t('error.tryAgainShort')}
+          onRetry={() => {
+            void topArtistsQuery.refetch()
+            void topTracksQuery.refetch()
+            void myPlaylistsQuery.refetch()
+          }}
+          title={t('profile.loadFailed')}
+        />
+      </div>
+    )
+  }
+
   return (
-    <div className="h-full overflow-y-auto custom-scrollbar">
-      <div className="flex flex-col gap-5 px-4 pt-2 pb-3 md:px-8 md:py-6">
+    <div className="flex h-full flex-1 flex-col overflow-y-auto custom-scrollbar">
+      <div className="flex flex-1 flex-col gap-5 px-4 pt-2 pb-3 md:px-8 md:py-6">
         <ProfileHeader
           action={<ProfileActions />}
           avatarUrl={user.avatar ? getUserAvatarUrl(user.avatar) : null}

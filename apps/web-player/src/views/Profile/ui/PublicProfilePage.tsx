@@ -13,7 +13,7 @@ import {
   StateMessage,
 } from '@shared/ui'
 import { getPlaylistCoverUrl, getUserAvatarUrl } from '@shared/utils/mediaUrl'
-import { ListMusic, UserRound } from 'lucide-react'
+import { ListMusic, UserX } from 'lucide-react'
 import { usePlayCollection } from '@/features/PlayCollection'
 import { ProfileFollowsSection } from '@/views/Profile/ui/ProfileFollowsSection'
 import { ProfileHeader } from '@/views/Profile/ui/ProfileHeader'
@@ -39,7 +39,7 @@ export const PublicProfilePage = ({ userId }: PublicProfilePageProps) => {
     return (
       <div
         aria-label={t('profile.loading')}
-        className="flex h-full flex-col gap-7 px-4 pt-2 md:px-8 md:py-6"
+        className="flex h-full flex-1 flex-col gap-7 px-4 pt-2 md:px-8 md:py-6"
         role="status"
       >
         <div className="flex items-end gap-7 md:py-7">
@@ -57,7 +57,7 @@ export const PublicProfilePage = ({ userId }: PublicProfilePageProps) => {
   /* a missing user is not found; any other failure can be retried */
   if (userQuery.isError && getApiErrorStatus(userQuery.error) !== 404) {
     return (
-      <div className="flex h-full flex-col px-4 md:px-8">
+      <div className="flex h-full flex-1 flex-col px-4 md:px-8">
         <ErrorState
           description={t('error.tryAgainShort')}
           onRetry={() => void userQuery.refetch()}
@@ -69,10 +69,10 @@ export const PublicProfilePage = ({ userId }: PublicProfilePageProps) => {
 
   if (userQuery.isError || !userQuery.data) {
     return (
-      <div className="flex h-full flex-col px-4 md:px-8">
+      <div className="flex h-full flex-1 flex-col px-4 md:px-8">
         <StateMessage
           description={t('profile.notFoundDescription')}
-          icon={UserRound}
+          icon={UserX}
           primary={{ href: ROUTES.main, label: t('common.backToHome') }}
           title={t('profile.notFound')}
         />
@@ -83,8 +83,8 @@ export const PublicProfilePage = ({ userId }: PublicProfilePageProps) => {
   const user = userQuery.data
 
   return (
-    <div className="h-full overflow-y-auto custom-scrollbar">
-      <div className="flex flex-col gap-5 px-4 pt-2 pb-3 md:gap-7 md:px-8 md:py-6">
+    <div className="flex h-full flex-1 flex-col overflow-y-auto custom-scrollbar">
+      <div className="flex flex-1 flex-col gap-5 px-4 pt-2 pb-3 md:gap-7 md:px-8 md:py-6">
         <ProfileHeader
           action={
             <FollowUserButton userId={user.id} username={user.username} />

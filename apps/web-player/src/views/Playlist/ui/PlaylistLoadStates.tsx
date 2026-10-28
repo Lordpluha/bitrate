@@ -1,6 +1,6 @@
 import { ROUTES } from '@shared/routes'
 import { CollectionSkeleton, StateMessage } from '@shared/ui'
-import { Music, TriangleAlert } from 'lucide-react'
+import { ListMusic, Lock, LogIn, TriangleAlert } from 'lucide-react'
 import { ApiRequestError } from '@/shared/api/errors'
 import { useI18n } from '@/shared/i18n'
 
@@ -29,7 +29,7 @@ export const PlaylistLoadError = ({
     return (
       <StateMessage
         description={t('playlist.sessionExpiredDescription')}
-        icon={TriangleAlert}
+        icon={LogIn}
         primary={{ href: ROUTES.auth.login, label: t('profile.logIn') }}
         secondary={BACK_HOME}
         title={t('playlist.sessionExpired')}
@@ -41,7 +41,7 @@ export const PlaylistLoadError = ({
     return (
       <StateMessage
         description={t('playlist.privateDescription')}
-        icon={TriangleAlert}
+        icon={Lock}
         primary={retry}
         secondary={BACK_HOME}
         title={t('playlist.private')}
@@ -53,7 +53,7 @@ export const PlaylistLoadError = ({
     return (
       <StateMessage
         description={t('playlist.notFoundDescription')}
-        icon={Music}
+        icon={ListMusic}
         primary={BACK_HOME}
         title={t('playlist.notFound')}
       />
