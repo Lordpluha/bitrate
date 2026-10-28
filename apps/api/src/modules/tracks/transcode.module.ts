@@ -2,6 +2,7 @@ import {
   AUDIO_PROCESSING_DEAD_LETTER_QUEUE,
   AUDIO_PROCESSING_QUEUE,
 } from '@infra/queues/audio-processing.queue'
+import { RELEASE_PUBLISHING_QUEUE } from '@infra/queues/release-publishing.queue'
 import { StorageCoreModule } from '@infra/storage/storage-core.module'
 import { NotificationsQueueModule } from '@modules/notifications'
 import { BullModule } from '@nestjs/bullmq'
@@ -29,6 +30,8 @@ import { ProcessingAttemptRecorder } from './processing-attempt.recorder'
         name: AUDIO_PROCESSING_DEAD_LETTER_QUEUE,
         defaultJobOptions: { removeOnComplete: 500, removeOnFail: 1_000 },
       },
+      // Producer only: finished conversions of release tracks are reported to the API.
+      { name: RELEASE_PUBLISHING_QUEUE },
     ),
   ],
   providers: [AudioProcessingConsumer, ProcessingAttemptRecorder],

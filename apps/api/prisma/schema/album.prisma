@@ -18,6 +18,9 @@ model Album {
   totalTracks Int       @default(0)
   copyright   String?
   deletedAt   DateTime?
+  /// Listeners see the album only once this has passed; null while its release is offline.
+  /// Defaults to creation time, so albums created outside the release workflow are public.
+  publishedAt DateTime? @default(now()) @db.Timestamptz(3)
 
   /// Revision of the Artist Agreement the artist confirmed their rights under at creation, and when.
   /// Null for albums created before the confirmation was recorded.
@@ -33,6 +36,7 @@ model Album {
   artist Artist @relation(fields: [artistId], references: [id], onDelete: Cascade)
 
   likedBy UserLikedAlbum[]
+  release Release?
 
   @@index([artistId])
   @@index([title])

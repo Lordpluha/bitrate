@@ -7,6 +7,7 @@ import {
   LayoutDashboard,
   Megaphone,
   Music2,
+  Send,
   Settings2,
   UserRound,
 } from 'lucide-react'
@@ -15,6 +16,7 @@ import {
 const sections = [
   { label: 'Dashboard', to: ROUTES.dashboard.home, icon: LayoutDashboard },
   { label: 'Music', to: ROUTES.dashboard.music, icon: Music2 },
+  { label: 'Distribution', to: ROUTES.dashboard.distribution, icon: Send },
   { label: 'Promotion', action: 'promotion', icon: Megaphone },
   {
     label: 'Analytics',

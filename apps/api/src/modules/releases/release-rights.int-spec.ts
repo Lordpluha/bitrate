@@ -49,7 +49,7 @@ describe('Release rights confirmation (HTTP)', () => {
     expect(lockData()).toMatchObject({ writersConfirmedAt: null, accuracyConfirmedAt: null })
   })
 
-  it('records the artist as master owner and both confirmations', async () => {
+  it('records the artist as master owner and the songwriter confirmation', async () => {
     transactionMock.release.updateManyAndReturn.mockResolvedValue([advanced])
     const response = await request(app.getHttpServer())
       .patch(`/api/v1/releases/${draft.id}/rights`)
@@ -57,7 +57,6 @@ describe('Release rights confirmation (HTTP)', () => {
       .send({
         masterOwner: { type: 'ARTIST' },
         writersConfirmed: true,
-        accuracyConfirmed: true,
         expectedUpdatedAt: version,
       })
       .expect(200)
@@ -77,8 +76,23 @@ describe('Release rights confirmation (HTTP)', () => {
       masterOwnerType: 'ARTIST',
       masterOwnerName: null,
       writersConfirmedAt: expect.any(Date),
-      accuracyConfirmedAt: expect.any(Date),
     })
+    // Accuracy is confirmed once, by submitting the release for review.
+    expect(lockData()).not.toHaveProperty('accuracyConfirmedAt')
+  })
+
+  it('rejects the retired accuracy confirmation', async () => {
+    await request(app.getHttpServer())
+      .patch(`/api/v1/releases/${draft.id}/rights`)
+      .set('x-test-artist', ownerId)
+      .send({
+        masterOwner: { type: 'ARTIST' },
+        writersConfirmed: true,
+        accuracyConfirmed: true,
+        expectedUpdatedAt: version,
+      })
+      .expect(400)
+    expect(prismaMock.$transaction).not.toHaveBeenCalled()
   })
 
   it('records another master owner by name and clears withdrawn confirmations', async () => {
@@ -89,7 +103,6 @@ describe('Release rights confirmation (HTTP)', () => {
       .send({
         masterOwner: { type: 'OTHER', name: ' North Label ' },
         writersConfirmed: false,
-        accuracyConfirmed: false,
         expectedUpdatedAt: version,
       })
       .expect(200)
@@ -97,7 +110,6 @@ describe('Release rights confirmation (HTTP)', () => {
       masterOwnerType: 'OTHER',
       masterOwnerName: 'North Label',
       writersConfirmedAt: null,
-      accuracyConfirmedAt: null,
     })
   })
 
@@ -112,7 +124,6 @@ describe('Release rights confirmation (HTTP)', () => {
       .send({
         masterOwner,
         writersConfirmed: true,
-        accuracyConfirmed: true,
         expectedUpdatedAt: version,
       })
       .expect(400)
@@ -128,7 +139,6 @@ describe('Release rights confirmation (HTTP)', () => {
       .send({
         masterOwner: null,
         writersConfirmed: false,
-        accuracyConfirmed: false,
         expectedUpdatedAt: version,
       })
       .expect(404)
@@ -143,7 +153,6 @@ describe('Release rights confirmation (HTTP)', () => {
       .send({
         masterOwner: null,
         writersConfirmed: false,
-        accuracyConfirmed: false,
         expectedUpdatedAt: version,
       })
       .expect(409)

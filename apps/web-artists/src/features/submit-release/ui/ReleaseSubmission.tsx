@@ -27,22 +27,23 @@ export function ReleaseSubmission({
 
   if (release.status === 'SUBMITTED')
     return (
-      <div className="space-y-3">
-        <p className="font-medium" role="status">
-          Submitted for Bitrate review. External delivery has not started.
-        </p>
-        <Button
-          disabled={withdraw.isPending}
-          onClick={() => {
-            withdraw.mutate({ id: release.id, input: { expectedUpdatedAt } })
-          }}
-          variant="outline"
-        >
-          {withdraw.isPending ? 'Withdrawing…' : 'Withdraw from review'}
-        </Button>
-        <p className="text-sm text-text-secondary">
-          Withdrawing returns the release to its draft; saved details are kept.
-        </p>
+      <div className="space-y-2">
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+          <Button
+            className="rounded-full"
+            disabled={withdraw.isPending}
+            onClick={() => {
+              withdraw.mutate({ id: release.id, input: { expectedUpdatedAt } })
+            }}
+            variant="outline"
+          >
+            {withdraw.isPending ? 'Withdrawing…' : 'Withdraw from review'}
+          </Button>
+          <p className="text-sm text-text-secondary">
+            Need a change? Withdrawing returns it to the draft; nothing saved is
+            lost.
+          </p>
+        </div>
         {withdraw.error && (
           <p className="text-sm text-destructive" role="alert">
             {withdraw.error.message}
@@ -109,7 +110,9 @@ export function ReleaseSubmission({
           }}
           type="checkbox"
         />
-        <span>I reviewed the information in this draft.</span>
+        <span>
+          I checked this draft and confirm the information is accurate.
+        </span>
       </label>
       <Button
         className="artist-workspace-primary rounded-full"

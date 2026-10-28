@@ -1,7 +1,7 @@
 import { normalizePagination } from '@common/pagination'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common'
-import { DeliveryDestination, type Prisma } from '@prisma/client'
+import { DeliveryDestination, type Prisma, ReleaseStatus } from '@prisma/client'
 import {
   availabilityFromState,
   canTransition,
@@ -17,6 +17,9 @@ import { RELEASE_ERRORS } from './errors'
 import { lockOwnedDraft } from './release-draft-lock'
 
 const DESTINATIONS = Object.values(DeliveryDestination)
+
+/** The plan is editable before submission and again once Bitrate approves the release. */
+const DELIVERY_PLAN_STATUSES = [ReleaseStatus.DRAFT, ReleaseStatus.READY] as const
 
 const DELIVERY_SELECT = {
   id: true,
@@ -56,10 +59,20 @@ export class ReleaseDeliveryService {
     return this.view(record)
   }
 
-  /** Replaces the planned stores and territories of an owned draft in one versioned write. */
+  /**
+   * Replaces the planned stores and territories in one versioned write. Allowed on a draft and
+   * on an approved release, which is when delivery gets planned; never while under review.
+   */
   updatePlan(ownerArtistId: string, id: string, input: UpdateDeliveryPlanDto) {
     return this.prisma.$transaction(async (tx) => {
-      const release = await lockOwnedDraft(tx, ownerArtistId, id, input.expectedUpdatedAt)
+      const release = await lockOwnedDraft(
+        tx,
+        ownerArtistId,
+        id,
+        input.expectedUpdatedAt,
+        {},
+        DELIVERY_PLAN_STATUSES,
+      )
       await tx.releaseDestination.deleteMany({ where: { releaseId: id } })
       if (input.destinations.length > 0) {
         await tx.releaseDestination.createMany({

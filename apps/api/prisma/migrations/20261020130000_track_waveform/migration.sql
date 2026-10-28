@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "ArtistTrackDraft" ADD COLUMN     "waveform" DOUBLE PRECISION[] DEFAULT ARRAY[]::DOUBLE PRECISION[];

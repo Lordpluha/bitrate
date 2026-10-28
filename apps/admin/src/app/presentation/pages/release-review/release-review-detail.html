@@ -1,4 +1,4 @@
-@if (release(); as r) {
+@if (!notFound() && release(); as r) {
   <app-page-header
     [back]="back()"
     [eyebrow]="'release.eyebrow' | transloco"
@@ -28,6 +28,24 @@
         <button hlmBtn type="button" (click)="open('approve')">
           <ng-icon name="lucideCheck" aria-hidden="true" />
           {{ 'release.action.approve' | transloco }}
+        </button>
+      }
+      @if (canReview() && retryable(r)) {
+        <button hlmBtn type="button" [disabled]="working()" (click)="retryPublishing()">
+          <ng-icon name="lucideRotateCw" aria-hidden="true" />
+          {{ 'release.action.retryPublishing' | transloco }}
+        </button>
+      }
+      @if (canReview() && takeDownable(r)) {
+        <button
+          hlmBtn
+          variant="destructive"
+          type="button"
+          [disabled]="working()"
+          (click)="takeDown()"
+        >
+          <ng-icon name="lucideCircleAlert" aria-hidden="true" />
+          {{ 'release.action.takeDown' | transloco }}
         </button>
       }
     </ng-container>

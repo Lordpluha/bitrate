@@ -8,6 +8,7 @@ import {
   parseFriendAcceptedJob,
   parseFriendRequestJob,
   parseNewReleaseJob,
+  parseReleasePublishedJob,
 } from './notifications.queue'
 import { NotificationsService } from './notifications.service'
 
@@ -33,6 +34,12 @@ export class NotificationsConsumer extends WorkerHost {
         const parsed = parseNewReleaseJob(job.data)
         if (!parsed.success) throw new UnrecoverableError(`Malformed ${job.name} job ${job.id}`)
         await this.notifications.notifyNewRelease(parsed.data)
+        return
+      }
+      case NOTIFICATION_JOBS.RELEASE_PUBLISHED: {
+        const parsed = parseReleasePublishedJob(job.data)
+        if (!parsed.success) throw new UnrecoverableError(`Malformed ${job.name} job ${job.id}`)
+        await this.notifications.notifyReleasePublished(parsed.data)
         return
       }
       case NOTIFICATION_JOBS.FRIEND_REQUEST: {

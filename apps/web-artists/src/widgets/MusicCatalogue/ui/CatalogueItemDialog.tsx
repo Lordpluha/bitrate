@@ -1,8 +1,7 @@
 import { Button } from '@bitrate/ui-react'
 import { trackVersionLabels } from '@entities/music'
 import { type ReleaseSummary, releaseTypeLabels } from '@entities/release'
-import { EditReleaseDialog } from '@features/edit-release'
-import { useWorkspaceActions } from '@features/workspace-actions'
+import { DeleteReleaseDialog, EditReleaseDialog } from '@features/edit-release'
 import { WorkspaceModal } from '@shared/ui/WorkspaceModal/WorkspaceModal'
 import { Link } from '@tanstack/react-router'
 import {
@@ -13,7 +12,7 @@ import {
 
 export interface CatalogueDetails {
   item: CatalogueItem
-  mode: 'details' | 'actions' | 'edit'
+  mode: 'details' | 'actions' | 'edit' | 'delete'
 }
 
 interface CatalogueItemDialogProps {
@@ -31,9 +30,19 @@ export function CatalogueItemDialog({
   onChange,
   onSaved,
 }: CatalogueItemDialogProps) {
-  const { openAction } = useWorkspaceActions()
   const { item, mode } = details
   const close = () => onChange(null)
+  const editableDraft =
+    !('version' in item) && item.status === 'DRAFT' && !!artistId
+  if (mode === 'delete' && editableDraft && artistId)
+    return (
+      <DeleteReleaseDialog
+        artistId={artistId}
+        onClose={() => onChange({ ...details, mode: 'actions' })}
+        onDeleted={close}
+        release={item}
+      />
+    )
   if (mode === 'edit' && artistId)
     return (
       <EditReleaseDialog
@@ -66,26 +75,28 @@ export function CatalogueItemDialog({
           </p>
         )}
         {!('version' in item) && (
-          <Button asChild variant="outline">
-            <Link
-              onClick={close}
-              params={{ releaseId: item.id }}
-              to="/dashboard/music/$releaseId"
-            >
-              Open workspace
-            </Link>
-          </Button>
+          <div className="flex flex-wrap gap-3">
+            <Button asChild variant="outline">
+              <Link
+                onClick={close}
+                params={{ releaseId: item.id }}
+                to="/dashboard/music/$releaseId"
+              >
+                Open workspace
+              </Link>
+            </Button>
+            {editableDraft && (
+              <Button
+                className="artist-workspace-primary"
+                onClick={() => onChange({ ...details, mode: 'edit' })}
+                variant="primary"
+              >
+                Edit draft
+              </Button>
+            )}
+          </div>
         )}
-        {!('version' in item) && item.status === 'DRAFT' && artistId && (
-          <Button
-            className="artist-workspace-primary"
-            onClick={() => onChange({ ...details, mode: 'edit' })}
-            variant="primary"
-          >
-            Edit draft
-          </Button>
-        )}
-        {mode === 'actions' ? (
+        {mode === 'actions' && (
           <div className="flex flex-wrap gap-3">
             <Button
               onClick={() => onChange({ ...details, mode: 'details' })}
@@ -93,20 +104,15 @@ export function CatalogueItemDialog({
             >
               View details
             </Button>
-            <Button
-              onClick={() => {
-                close()
-                openAction('create-release')
-              }}
-              variant="outline"
-            >
-              Create release
-            </Button>
+            {editableDraft && (
+              <Button
+                onClick={() => onChange({ ...details, mode: 'delete' })}
+                variant="destructive"
+              >
+                Delete draft
+              </Button>
+            )}
           </div>
-        ) : (
-          <p className="text-sm text-text-secondary">
-            Artwork changes and track uploads are coming soon.
-          </p>
         )}
       </div>
     </WorkspaceModal>

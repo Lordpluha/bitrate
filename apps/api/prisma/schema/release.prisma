@@ -1,10 +1,22 @@
 // Artist preparation workspace; albums remain the listener-facing catalogue.
+// Publishing: READY -> PUBLISHING -> RELEASED (or PUBLISH_FAILED), READY -> SCHEDULED for a
+// premiere, RELEASED <-> UNPUBLISHED. See ADR-0062.
 enum ReleaseStatus {
   DRAFT
   READY
   SUBMITTED
   RELEASED
   REJECTED
+  SCHEDULED
+  PUBLISHING
+  PUBLISH_FAILED
+  UNPUBLISHED
+}
+
+// Who took a release offline; an admin unpublish cannot be undone by the artist.
+enum ReleaseUnpublishedBy {
+  ARTIST
+  ADMIN
 }
 
 enum ArtistTrackStatus {
@@ -25,30 +37,32 @@ enum ArtistTrackVersion {
 
 // Private preparation metadata. Public Track/audio publication remains separate.
 model ArtistTrackDraft {
-  id            String @id @default(uuid(7)) @db.Uuid
-  ownerArtistId String @db.Uuid
-  releaseId     String? @db.Uuid
-  title         String
-  version       ArtistTrackVersion @default(ORIGINAL)
-  status        ArtistTrackStatus @default(DRAFT)
-  duration      Int?
-  cover         String?
-  previewUrl    String?
+  id               String             @id @default(uuid(7)) @db.Uuid
+  ownerArtistId    String             @db.Uuid
+  releaseId        String?            @db.Uuid
+  title            String
+  version          ArtistTrackVersion @default(ORIGINAL)
+  status           ArtistTrackStatus  @default(DRAFT)
+  duration         Int?
+  cover            String?
+  previewUrl       String?
   // Compact ISO 3901 form (no hyphens); optional until a distributor assigns one.
-  isrc          String? @unique @db.VarChar(12)
+  isrc             String?            @unique @db.VarChar(12)
   // Private uploaded master in STORAGE_SERVICE; never served publicly.
-  audioKey         String? @unique
+  audioKey         String?            @unique
   audioFileName    String?
   audioContentType String?
   audioSizeBytes   Int?
+  /// Normalised peak levels (0–1) of the uploaded master, for drawing its waveform; empty until computed.
+  waveform         Float[]            @default([])
   /// Zero-based order on its release; new recordings go last.
-  position      Int     @default(0)
-  isDemo        Boolean @default(false)
-  deletedAt     DateTime?
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @default(now()) @updatedAt
+  position         Int                @default(0)
+  isDemo           Boolean            @default(false)
+  deletedAt        DateTime?
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @default(now()) @updatedAt
 
-  owner   Artist @relation(fields: [ownerArtistId], references: [id], onDelete: Restrict)
+  owner   Artist   @relation(fields: [ownerArtistId], references: [id], onDelete: Restrict)
   release Release? @relation(fields: [releaseId, ownerArtistId], references: [id, ownerArtistId], onDelete: Restrict)
 
   @@index([ownerArtistId, deletedAt, updatedAt(sort: Desc)])
@@ -199,27 +213,33 @@ enum ReleaseRightType {
 }
 
 model Release {
-  id            String        @id @default(uuid(7)) @db.Uuid
-  ownerArtistId String        @db.Uuid
-  title         String
-  cover         String?
-  isDemo        Boolean @default(false)
-  type          AlbumType     @default(SINGLE)
-  status        ReleaseStatus @default(DRAFT)
-  upc           String?       @unique @db.VarChar(13)
-  scheduledAt   DateTime?      @db.Timestamptz(3)
+  id                  String                @id @default(uuid(7)) @db.Uuid
+  ownerArtistId       String                @db.Uuid
+  title               String
+  cover               String?
+  isDemo              Boolean               @default(false)
+  type                AlbumType             @default(SINGLE)
+  status              ReleaseStatus         @default(DRAFT)
+  upc                 String?               @unique @db.VarChar(13)
+  scheduledAt         DateTime?             @db.Timestamptz(3)
   // Rights confirmation. Changing credits clears both confirmations; changing the
   // owner or splits clears accuracy, so a confirmation always describes current data.
   masterOwnerType     ReleaseMasterOwner?
   masterOwnerName     String?
-  writersConfirmedAt  DateTime? @db.Timestamptz(3)
-  accuracyConfirmedAt DateTime? @db.Timestamptz(3)
-  submittedAt         DateTime? @db.Timestamptz(3)
-  deletedAt     DateTime?
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @default(now()) @updatedAt
+  writersConfirmedAt  DateTime?             @db.Timestamptz(3)
+  accuracyConfirmedAt DateTime?             @db.Timestamptz(3)
+  submittedAt         DateTime?             @db.Timestamptz(3)
+  // First time the release went live on Bitrate; kept across unpublish/republish.
+  publishedAt         DateTime?             @db.Timestamptz(3)
+  unpublishedBy       ReleaseUnpublishedBy?
+  // The player album created when the release went live.
+  albumId             String?               @unique @db.Uuid
+  deletedAt           DateTime?
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @default(now()) @updatedAt
 
   owner        Artist               @relation("ReleaseOwner", fields: [ownerArtistId], references: [id], onDelete: Restrict)
+  album        Album?               @relation(fields: [albumId], references: [id], onDelete: Restrict)
   tracks       ReleaseTrack[]
   trackDrafts  ArtistTrackDraft[]
   contributors ReleaseContributor[]
@@ -230,8 +250,8 @@ model Release {
   deliveries   ReleaseDelivery[]
   reviews      ReleaseReview[]
 
-  @@index([ownerArtistId, deletedAt, createdAt(sort: Desc)])
   @@unique([id, ownerArtistId])
+  @@index([ownerArtistId, deletedAt, createdAt(sort: Desc)])
   @@index([status, scheduledAt])
 }
 

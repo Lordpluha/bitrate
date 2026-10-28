@@ -1,4 +1,5 @@
 import { Input } from '@bitrate/ui-react'
+import { NativeSelect } from '@shared/ui'
 import { useId } from 'react'
 import type { UseFormReturn } from 'react-hook-form'
 import {
@@ -49,10 +50,10 @@ export function ReleaseFields({
         <label className="block text-sm font-medium" htmlFor={`${id}-type`}>
           Release type
         </label>
-        <select
+        <NativeSelect
           aria-describedby={errors.type ? `${id}-type-error` : undefined}
           aria-invalid={Boolean(errors.type)}
-          className="h-11 w-full rounded-md border border-input bg-secondary px-3 text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          className="h-11 rounded-md border border-input bg-secondary pl-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           disabled={busy}
           id={`${id}-type`}
           {...form.register('type', { onChange })}
@@ -62,7 +63,7 @@ export function ReleaseFields({
               {releaseTypeLabels[type]}
             </option>
           ))}
-        </select>
+        </NativeSelect>
         {errors.type && (
           <p
             className="text-sm text-destructive"

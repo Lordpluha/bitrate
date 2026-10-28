@@ -26,7 +26,7 @@ export function ReleaseDeliverySwagger() {
 export function UpdateDeliveryPlanSwagger() {
   return applyDecorators(
     ApiOperation({
-      summary: 'Replace the delivery plan of an owned draft',
+      summary: 'Replace the delivery plan of an owned draft or approved release',
       description:
         'Sets the planned stores and territories. Saving a plan sends nothing; delivery starts only through a connected partner.',
     }),
@@ -40,7 +40,7 @@ export function UpdateDeliveryPlanSwagger() {
     }),
     ApiResponse({
       status: HttpStatus.CONFLICT,
-      description: 'Release changed since it was read or is no longer a draft',
+      description: 'Release changed since it was read, or is under review or released',
     }),
   )
 }

@@ -31,42 +31,46 @@ export function WorkspaceReadiness({
   )
   return (
     <section
-      aria-labelledby="release-readiness-heading"
-      className="artist-release-workspace-panel artist-release-readiness"
+      aria-labelledby="release-submit-heading"
+      className="artist-release-workspace-panel artist-release-stage-side artist-release-submit"
+      data-tone={blockers.length === 0 ? 'success' : undefined}
     >
-      <h2 id="release-readiness-heading">Readiness checklist</h2>
+      <div className="flex items-baseline justify-between gap-3">
+        <h2 id="release-submit-heading">
+          {blockers.length === 0 ? 'Ready for review' : 'Before review'}
+        </h2>
+        <span className="artist-release-submit-count">
+          {blockers.length} {blockers.length === 1 ? 'blocker' : 'blockers'}
+        </span>
+      </div>
       <p>
         {blockers.length === 0
-          ? 'Ready for review · 0 blockers'
-          : `${blockers.length} ${blockers.length === 1 ? 'blocker' : 'blockers'} before review`}
+          ? 'Every required step is complete.'
+          : 'Resolve these before submitting.'}
       </p>
       {blockers.length > 0 && (
-        <ul aria-label="Blockers" className="space-y-1 text-sm">
+        <ul aria-label="Blockers" className="artist-release-submit-list">
           {blockers.map((blocker) => (
             <li
-              className="flex items-center gap-2"
-              key={`${blocker.code}-${'contributorId' in blocker ? blocker.contributorId : ''}${'rightType' in blocker ? blocker.rightType : ''}`}
+              key={`${blocker.code}-${'contributorId' in blocker ? blocker.contributorId : ''}${'rightType' in blocker ? blocker.rightType : ''}${'trackId' in blocker ? blocker.trackId : ''}`}
             >
-              <CircleAlert
-                aria-hidden="true"
-                className="size-4 shrink-0 text-destructive"
-              />
+              <CircleAlert aria-hidden="true" />
               {describeBlocker(blocker, { contributors, tracks })}
             </li>
           ))}
         </ul>
       )}
       {notices.length > 0 && (
-        <ul aria-label="Notes" className="space-y-1 text-sm">
+        <ul
+          aria-label="Notes"
+          className="artist-release-submit-list"
+          data-tone="info"
+        >
           {notices.map((notice) => (
             <li
-              className="flex items-center gap-2"
               key={`${notice.code}-${'trackId' in notice ? notice.trackId : ''}`}
             >
-              <Info
-                aria-hidden="true"
-                className="size-4 shrink-0 text-accent"
-              />
+              <Info aria-hidden="true" />
               {describeNotice(notice, release)}
             </li>
           ))}

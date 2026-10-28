@@ -68,7 +68,12 @@ describe('Release submission (HTTP)', () => {
             status: 'DRAFT',
             updatedAt: draft.updatedAt,
           },
-          data: { status: 'SUBMITTED', submittedAt: expect.any(Date) },
+          // Submitting is the artist's accuracy confirmation for the data just checked.
+          data: {
+            status: 'SUBMITTED',
+            submittedAt: expect.any(Date),
+            accuracyConfirmedAt: expect.any(Date),
+          },
         }),
       )
     })
@@ -81,7 +86,6 @@ describe('Release submission (HTTP)', () => {
       } as never)
       const response = await submit({ reviewed: true, expectedUpdatedAt: version }).expect(422)
       expect(response.body.blockers).toEqual([
-        { code: 'ACCURACY_NOT_CONFIRMED' },
         { code: 'SPLITS_INCOMPLETE', rightType: 'RECORDING', totalBasisPoints: 0 },
         { code: 'SPLITS_INCOMPLETE', rightType: 'COMPOSITION', totalBasisPoints: 0 },
       ])

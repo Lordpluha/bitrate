@@ -68,7 +68,9 @@ describe('AlbumsService (int)', () => {
     const result = await service.getById(album.id)
 
     expect(prismaMock.album.findFirst).toHaveBeenCalledWith(
-      expect.objectContaining({ where: { id: album.id, deletedAt: null } }),
+      expect.objectContaining({
+        where: { id: album.id, deletedAt: null, publishedAt: { not: null } },
+      }),
     )
     expect(result).toEqual({ ...album, tracks: [] })
   })

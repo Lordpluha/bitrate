@@ -26,6 +26,8 @@ import {
   GetAdminReleaseSwagger,
   ListAdminReleasesSwagger,
   RequestReleaseChangesSwagger,
+  RetryReleasePublishingSwagger,
+  TakeDownReleaseSwagger,
 } from './decorators'
 import {
   type ApproveReleaseDto,
@@ -107,5 +109,29 @@ export class AdminReleasesController {
     @AuditContext() audit: AuditContextValue = {},
   ) {
     return this.releases.requestChanges(id, staff.id, body, audit)
+  }
+
+  @RequirePermission('releases:review')
+  @RetryReleasePublishingSwagger()
+  @HttpCode(HttpStatus.OK)
+  @Post(':id/retry-publishing')
+  retryPublishing(
+    @Param('id', ParseUUIDPipe) id: string,
+    @CurrentStaff() staff: AuthenticatedStaff,
+    @AuditContext() audit: AuditContextValue = {},
+  ) {
+    return this.releases.retryPublishing(id, staff.id, audit)
+  }
+
+  @RequirePermission('releases:review')
+  @TakeDownReleaseSwagger()
+  @HttpCode(HttpStatus.OK)
+  @Post(':id/unpublish')
+  takeDown(
+    @Param('id', ParseUUIDPipe) id: string,
+    @CurrentStaff() staff: AuthenticatedStaff,
+    @AuditContext() audit: AuditContextValue = {},
+  ) {
+    return this.releases.takeDown(id, staff.id, audit)
   }
 }

@@ -255,6 +255,7 @@ services:
       NODE_ENV: development
       # Vite видит только VITE_-префикс; общая с web-player переменная разворачивается здесь.
       VITE_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:3000}
+      VITE_PLAYER_URL: ${NEXT_PUBLIC_SITE_URL:-http://localhost:3001}
       API_URL: ${API_URL:-http://api:3000}
       PORT: 3002
     ports:

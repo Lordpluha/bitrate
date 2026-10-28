@@ -118,6 +118,7 @@ describe('NotificationsService', () => {
         where: {
           id: 't1',
           processingStatus: 'READY',
+          publishedAt: { not: null },
           deletedAt: null,
           artist: { deletedAt: null },
         },

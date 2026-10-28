@@ -39,6 +39,13 @@ export class WorkspaceTrackDraftEntity {
 
   @ApiProperty({ type: Number, nullable: true, minimum: 0 })
   audioSizeBytes: number | null
+
+  @ApiProperty({
+    type: [Number],
+    description:
+      'Normalised peak levels (0–1) of the master for drawing its waveform; empty until computed',
+  })
+  waveform: number[]
 }
 
 export class WorkspaceTrackEntity {
@@ -102,7 +109,6 @@ export class ReleaseBlockerEntity {
       'TRACK_AUDIO_MISSING',
       'MASTER_OWNER_MISSING',
       'WRITERS_NOT_CONFIRMED',
-      'ACCURACY_NOT_CONFIRMED',
       'CONTRIBUTOR_ROLES_MISSING',
       'SPLITS_INCOMPLETE',
     ],
@@ -173,6 +179,23 @@ export class ReleaseWorkspaceEntity extends MusicReleaseEntity {
 
   @ApiProperty({ type: String, format: 'date-time', nullable: true })
   submittedAt: Date | null
+
+  @ApiProperty({
+    enum: ['ARTIST', 'ADMIN'],
+    enumName: 'ReleaseUnpublishedBy',
+    nullable: true,
+    description:
+      'Who took the release offline; only the artist can publish their own takedown again',
+  })
+  unpublishedBy: 'ARTIST' | 'ADMIN' | null
+
+  @ApiProperty({
+    type: String,
+    format: 'uuid',
+    nullable: true,
+    description: 'The player album created when the release first went live',
+  })
+  albumId: string | null
 
   @ApiProperty({ type: WorkspaceRightsEntity })
   rights: WorkspaceRightsEntity

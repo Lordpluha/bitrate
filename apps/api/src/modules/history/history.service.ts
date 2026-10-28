@@ -1,6 +1,7 @@
 import { normalizePagination } from '@common/pagination'
 import { readUserSettings } from '@common/user-settings'
 import { PrismaService } from '@infra/prisma/prisma.service'
+import { PUBLIC_TRACK_SQL, PUBLIC_TRACK_WHERE } from '@modules/tracks/track-visibility'
 import type { UserEntity } from '@modules/users'
 import { Injectable } from '@nestjs/common'
 import { Prisma } from '@prisma/client'
@@ -41,7 +42,7 @@ export class HistoryService {
 
     const historyWhere = {
       userId,
-      track: { processingStatus: 'READY' as const, deletedAt: null },
+      track: PUBLIC_TRACK_WHERE,
     }
     const [latestTracks, countRows] = await Promise.all([
       this.prisma.listeningHistory.groupBy({
@@ -57,8 +58,7 @@ export class HistoryService {
         FROM "ListeningHistory" h
         JOIN "Track" t ON t.id = h."trackId"
         WHERE h."userId" = ${userId}::uuid
-          AND t."processingStatus" = 'READY'
-          AND t."deletedAt" IS NULL
+          AND ${PUBLIC_TRACK_SQL}
       `),
     ])
     const total = Number(countRows[0]?.total ?? 0n)

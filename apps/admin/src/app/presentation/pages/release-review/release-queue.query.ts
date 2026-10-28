@@ -12,6 +12,9 @@ const QUEUE_STATUSES = coveringTuple<ReleaseQueueStatus>()([
   'SUBMITTED',
   'READY',
   'REJECTED',
+  'PUBLISHING',
+  'PUBLISH_FAILED',
+  'RELEASED',
   'ALL',
 ])
 

@@ -21,7 +21,11 @@ const releaseStatusDto = contractEnum<WireReleaseStatus>()([
   'SUBMITTED',
   'READY',
   'REJECTED',
+  'SCHEDULED',
+  'PUBLISHING',
+  'PUBLISH_FAILED',
   'RELEASED',
+  'UNPUBLISHED',
 ])
 const decisionDto = contractEnum<WireReviewDecision>()(['APPROVED', 'CHANGES_REQUESTED'])
 const creditRoleDto = contractEnum<ApiSchemas['ReleaseCreditRole']>()([
@@ -47,7 +51,6 @@ const blockerCodeDto = contractEnum<ApiSchemas['ReleaseBlockerCode']>()([
   'TRACK_AUDIO_MISSING',
   'MASTER_OWNER_MISSING',
   'WRITERS_NOT_CONFIRMED',
-  'ACCURACY_NOT_CONFIRMED',
   'CONTRIBUTOR_ROLES_MISSING',
   'SPLITS_INCOMPLETE',
 ])
@@ -143,6 +146,12 @@ export const releaseDetailDto = releaseRowDto.extend({
 }) satisfies z.ZodType<ContractReleaseDetail>
 
 export type ReleaseDetailDto = z.infer<typeof releaseDetailDto>
+
+/** The release a retry moved back to PUBLISHING; only its identity and status are read. */
+export const retriedReleaseDto = z.object({
+  id: z.uuid(),
+  status: releaseStatusDto,
+}) satisfies z.ZodType<Pick<ApiSchemas['ReleaseEntity'], 'id' | 'status'>>
 
 export const releaseDecisionDto = z.object({
   release: z.object({

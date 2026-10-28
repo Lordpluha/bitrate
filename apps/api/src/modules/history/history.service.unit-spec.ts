@@ -33,7 +33,7 @@ describe('HistoryService', () => {
       expect.objectContaining({
         where: {
           userId: 'user-1',
-          track: { processingStatus: 'READY', deletedAt: null },
+          track: { processingStatus: 'READY', deletedAt: null, publishedAt: { not: null } },
         },
         skip: 20,
         take: 20,

@@ -89,7 +89,7 @@ Per-app файлы до контейнера тоже не доходят: ни 
 |---|---|---|
 | `apps/api` | Zod, `apps/api/env.schema.ts` — падает на старте | 29 переменных схемы + 3 в обход неё |
 | `apps/web-player` | Zod, `apps/web-player/env.schema.ts` — падает на сборке | 6 переменных схемы + 5 сборочных |
-| `apps/web-artists` | Zod, `apps/web-artists/env.schema.ts` | 2 переменные схемы + 1 в обход неё |
+| `apps/web-artists` | Zod, `apps/web-artists/env.schema.ts` | 3 переменные схемы + 1 в обход неё |
 | `apps/desktop` | нет | только `TAURI_DEV_HOST`, и тот ставит Tauri |
 | `apps/mobile` | нет | только `EXPO_OS`, и тот ставит Expo |
 | `apps/docs` | нет | ничего |
@@ -209,6 +209,7 @@ Per-app файлы до контейнера тоже не доходят: ни 
 |---|---|---|
 | `NODE_ENV` | нет, `development` | Next выставляет сам |
 | `NEXT_PUBLIC_API_URL` | нет, `http://localhost:3000` | Origin API |
+| `VITE_PLAYER_URL` | нет, `http://localhost:3001` | Публичный адрес плеера для ссылок на вышедшие альбомы; в compose берётся из `NEXT_PUBLIC_SITE_URL` плеера |
 
 Имена кук сессии портал берёт из `@bitrate/contracts` (`SESSION_COOKIE_NAMES.artist`), а не из
 окружения.
@@ -427,6 +428,8 @@ NEXT_PUBLIC_SITE_URL=http://localhost:3001
 # ══════════ 1. OPTIONAL, WITH A DEFAULT ══════════
 # addresses
 NEXT_PUBLIC_API_URL=http://localhost:3000
+# public Bitrate player, for links to released albums
+VITE_PLAYER_URL=http://localhost:3001
 # runtime — Next.js sets NODE_ENV itself
 #NODE_ENV=development
 ```

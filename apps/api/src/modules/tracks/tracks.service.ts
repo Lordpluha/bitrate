@@ -8,6 +8,7 @@ import { Injectable } from '@nestjs/common'
 import type { Artist } from '@prisma/client'
 import type { TrackEntity } from './entities'
 import { TrackNotFoundException } from './errors'
+import { PUBLIC_TRACK_WHERE } from './track-visibility'
 
 /** Filters accepted by the public track listing. */
 type FindAllTracksInput = PaginationInput & Pick<Partial<TrackEntity>, 'artistId' | 'title'>
@@ -30,8 +31,7 @@ export class TracksService {
       TTL.SHORT,
       async () => {
         const where = {
-          processingStatus: 'READY' as const,
-          deletedAt: null,
+          ...PUBLIC_TRACK_WHERE,
           ...(artistId ? { artistId } : {}),
           ...(title ? { title: { contains: title, mode: 'insensitive' as const } } : {}),
         }
@@ -53,7 +53,7 @@ export class TracksService {
   async like(userId: UserEntity['id'], trackId: TrackEntity['id']) {
     try {
       const track = await this.prisma.track.findFirst({
-        where: { id: trackId, processingStatus: 'READY', deletedAt: null },
+        where: { id: trackId, ...PUBLIC_TRACK_WHERE },
       })
       if (!track) throw new TrackNotFoundException(trackId)
       await this.prisma.userLikedTrack.upsert({
@@ -88,7 +88,7 @@ export class TracksService {
   /** Runs the find liked tracks operation. */
   async findLikedTracks(userId: UserEntity['id'], { page = 1, limit = 10 }: PaginationInput) {
     const pagination = normalizePagination(page, limit)
-    const where = { userId, track: { processingStatus: 'READY' as const, deletedAt: null } }
+    const where = { userId, track: PUBLIC_TRACK_WHERE }
     const [likes, total] = await this.prisma.$transaction([
       this.prisma.userLikedTrack.findMany({
         where,
@@ -111,7 +111,7 @@ export class TracksService {
   async findTrackById(id: TrackEntity['id']) {
     return await this.cache.wrap(NS.TRACKS, `id:${id}`, TTL.LONG, () =>
       this.prisma.track.findFirst({
-        where: { id, processingStatus: 'READY', deletedAt: null },
+        where: { id, ...PUBLIC_TRACK_WHERE },
       }),
     )
   }
@@ -120,7 +120,7 @@ export class TracksService {
   async findTracksByArtistId(artistId: Artist['id']) {
     return await this.cache.wrap(NS.TRACKS, `artist:${artistId}`, TTL.SHORT, () =>
       this.prisma.track.findMany({
-        where: { artistId, processingStatus: 'READY', deletedAt: null },
+        where: { artistId, ...PUBLIC_TRACK_WHERE },
       }),
     )
   }
@@ -129,8 +129,7 @@ export class TracksService {
   async findTracksByArtistName(artistUsername: Artist['username']) {
     return await this.prisma.track.findMany({
       where: {
-        processingStatus: 'READY',
-        deletedAt: null,
+        ...PUBLIC_TRACK_WHERE,
         artist: { username: artistUsername },
       },
     })

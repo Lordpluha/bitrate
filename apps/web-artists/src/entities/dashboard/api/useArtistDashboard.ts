@@ -3,7 +3,7 @@ import { clientFetchClient } from '@shared/api/fetchClient'
 import { useQuery } from '@tanstack/react-query'
 import { artistDashboardSchema } from '../model/dashboard.schema'
 
-/** Lives under the artist's music scope, so any release or task write refreshes it. */
+/** Lives under the artist's music scope, so any release write refreshes it. */
 export function useArtistDashboard(artistId: string) {
   return useQuery({
     queryKey: [...artistMusicKeys.artist(artistId), 'dashboard'],

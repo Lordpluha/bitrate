@@ -69,7 +69,7 @@ function EditReleaseForm({
       >
         <p className="text-sm leading-relaxed text-text-secondary">
           Update the draft title and release type. Your music stays unpublished.
-          Artwork and track editing are coming soon.
+          Artwork and tracks are edited in the release workspace.
         </p>
         <ReleaseFields
           busy={busy}

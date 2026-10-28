@@ -1,14 +1,23 @@
 import type { ApiSchemas } from '@bitrate/contracts'
+import { releaseStatuses } from '@shared/constants/releaseStatuses'
 import { z } from 'zod'
 
 const instant = z.iso.datetime({ offset: true })
-const releaseStatus = z.enum([
-  'DRAFT',
-  'READY',
-  'SUBMITTED',
-  'RELEASED',
-  'REJECTED',
-])
+const releaseStatus = z.enum(releaseStatuses)
+
+/** The API still reports release tasks, which the workspace no longer shows. */
+const withoutTaskAttention = (items: unknown) =>
+  Array.isArray(items)
+    ? items.filter(
+        (item: unknown) =>
+          !(
+            typeof item === 'object' &&
+            item !== null &&
+            'kind' in item &&
+            item.kind === 'OVERDUE_TASKS'
+          ),
+      )
+    : items
 
 export const artistDashboardSchema = z.object({
   counts: z.object({
@@ -28,15 +37,27 @@ export const artistDashboardSchema = z.object({
       scheduledAt: instant.nullable(),
       updatedAt: instant,
       blockerCount: z.number().int().nonnegative(),
+      leadTrack: z
+        .object({
+          id: z.uuid(),
+          title: z.string(),
+          duration: z.number().int().nonnegative().nullable(),
+          waveform: z.array(z.number().min(0).max(1)).max(400),
+        })
+        .nullable()
+        .default(null),
     })
     .nullable(),
-  attention: z.array(
-    z.object({
-      kind: z.enum(['BLOCKERS', 'CHANGES_REQUESTED', 'OVERDUE_TASKS']),
-      releaseId: z.uuid().optional(),
-      releaseTitle: z.string().optional(),
-      count: z.number().int().positive().optional(),
-    }),
+  attention: z.preprocess(
+    withoutTaskAttention,
+    z.array(
+      z.object({
+        kind: z.enum(['BLOCKERS', 'CHANGES_REQUESTED']),
+        releaseId: z.uuid().optional(),
+        releaseTitle: z.string().optional(),
+        count: z.number().int().positive().optional(),
+      }),
+    ),
   ),
   upcoming: z
     .array(
@@ -48,22 +69,7 @@ export const artistDashboardSchema = z.object({
       }),
     )
     .max(5),
-  tasks: z.object({
-    open: z.number().int().nonnegative(),
-    overdue: z.number().int().nonnegative(),
-    next: z
-      .array(
-        z.object({
-          id: z.uuid(),
-          title: z.string(),
-          status: z.enum(['TODO', 'IN_PROGRESS', 'DONE']),
-          dueAt: instant.nullable(),
-          release: z.object({ id: z.uuid(), title: z.string() }),
-        }),
-      )
-      .max(5),
-  }),
-}) satisfies z.ZodType<ApiSchemas['ArtistDashboardEntity']>
+}) satisfies z.ZodType<Omit<ApiSchemas['ArtistDashboardEntity'], 'tasks'>>
 
 export type ArtistDashboard = z.infer<typeof artistDashboardSchema>
 export type DashboardAttention = ArtistDashboard['attention'][number]

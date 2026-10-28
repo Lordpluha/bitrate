@@ -21,7 +21,7 @@ export const LandingHero = () => {
         </h1>
         <p className="text-pretty text-lg text-text-secondary">
           One workspace for the releases you put out on Bitrate: drafts, credits
-          and rights, tasks and listening analytics.
+          and rights, publishing and listening analytics.
         </p>
         <div className="flex flex-wrap gap-3">
           <Button asChild size="lg">
