@@ -30,7 +30,7 @@ test('header notifications', async ({ page }) => {
 })
 
 test('header mobile menu', async ({ page }) => {
-  await openSignedIn({ page, path: '/main/charts', viewport: MOBILE })
+  await openSignedIn({ page, path: '/main/activity', viewport: MOBILE })
   await page.getByRole('button', { name: 'Open menu' }).click()
   await snap({
     name: 'header-mobile-menu.png',

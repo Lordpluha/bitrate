@@ -17,7 +17,7 @@ export const PageShell = ({ children, width = 'narrow' }: PageShellProps) => (
     <div
       className={cn(
         'flex flex-1 flex-col gap-5 px-4 pt-2 pb-3 md:gap-6 md:px-8 md:py-6',
-        width === 'narrow' && '[&>:not([data-slot=state-message])]:max-w-190',
+        width === 'narrow' && '[&>:not([data-slot=state-message])]:max-w-174',
       )}
     >
       {children}
