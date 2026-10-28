@@ -85,7 +85,7 @@ jobs:
     # trigger there is no such question, and every run of this workflow is
     # somebody explicitly asking for a deploy of a named tag.
     name: Production
-    uses: ./.github/workflows/deploy_reusable.yml
+    uses: $/.github/workflows/deploy_reusable.yml
 
     #   contents: read  -- check out infra/, the nginx templates and the Taskfile.
     #   actions:  read  -- the await-images job reads this ref's run statuses.
@@ -105,4 +105,6 @@ jobs:
       wait-for-images: ${{ github.event_name == 'push' || inputs.mode == 'full' }}
       run-deploy: ${{ github.event_name == 'push' || inputs.mode != 'health-only' }}
       image-tag: ${{ inputs.image-tag }}
+    # zizmor: ignore[secrets-inherit] -- environment-scoped secrets reach the called
+    # workflow's `environment:` job only through inherit; see the note above.
     secrets: inherit
