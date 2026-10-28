@@ -89,6 +89,7 @@ export const FriendsPage = () => {
       <div className="-mx-4 flex gap-1 overflow-x-auto px-4 md:mx-0 md:px-0">
         <SegmentedTabs
           ariaLabel={t('friends.title')}
+          chipsOnMobile
           onChange={setTab}
           tabs={[
             {

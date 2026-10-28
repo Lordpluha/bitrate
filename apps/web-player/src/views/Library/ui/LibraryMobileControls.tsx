@@ -18,7 +18,7 @@ export const LibraryMobileControls = ({
   const isSearchVisible = isSearchOpen || controls.query.length > 0
 
   return (
-    <div className="relative border-t border-border pt-4 xl:hidden">
+    <div className="relative xl:hidden">
       <div className="flex h-10 items-center justify-between">
         <button
           className="flex min-h-10 items-center gap-2 rounded-full px-1 text-base font-semibold text-foreground"

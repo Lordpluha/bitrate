@@ -46,6 +46,7 @@ export const FriendRequestsPage = () => {
       <PageTitle title={t('friends.requestsTitle')} />
       <SegmentedTabs
         ariaLabel={t('friends.requestsTitle')}
+        chipsOnMobile
         onChange={setTab}
         tabs={[
           {

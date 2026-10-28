@@ -46,7 +46,6 @@ export const AudioSettingsSection = () => {
             }}
             options={localeLabels}
             value={language}
-            widthClassName="min-w-68"
           />
         </SettingsRow>
       </SettingsSection>
@@ -63,7 +62,6 @@ export const AudioSettingsSection = () => {
             }}
             options={qualityOptions}
             value={streamingQuality}
-            widthClassName="min-w-40"
           />
         </SettingsRow>
       </SettingsSection>

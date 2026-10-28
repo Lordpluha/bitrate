@@ -193,6 +193,7 @@ export const ChartsPage = () => {
         <PageTitle title={t('charts.title')} />
         <SegmentedTabs
           ariaLabel={t('nav.charts')}
+          chipsOnMobile
           className="-mx-4 overflow-x-auto px-4 md:mx-0 md:px-0"
           onChange={setTab}
           tabs={tabs}
