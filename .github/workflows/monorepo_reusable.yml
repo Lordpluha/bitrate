@@ -46,10 +46,12 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Setup Node.js and pnpm
-        uses: ./.github/actions/setup-node-pnpm
+        uses: $/.github/actions/setup-node-pnpm
 
       - name: Run lint
         run: pnpm lint
@@ -70,10 +72,12 @@ jobs:
     # paths, which left apps/desktop and packages/converter with no Biome gate at all.
     steps:
       - name: Checkout
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Setup Node.js and pnpm
-        uses: ./.github/actions/setup-node-pnpm
+        uses: $/.github/actions/setup-node-pnpm
 
       - name: Enable type-aware rules
         run: node scripts/biome-type-aware.mjs
@@ -88,10 +92,12 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Setup Node.js and pnpm
-        uses: ./.github/actions/setup-node-pnpm
+        uses: $/.github/actions/setup-node-pnpm
 
       - name: Run type check
         run: pnpm check-types
@@ -103,10 +109,12 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Setup Node.js and pnpm
-        uses: ./.github/actions/setup-node-pnpm
+        uses: $/.github/actions/setup-node-pnpm
 
       - name: Generate admin environment module
         run: pnpm --filter @bitrate/admin env:gen

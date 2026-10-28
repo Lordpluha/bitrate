@@ -38,7 +38,7 @@ permissions:
 
 jobs:
   svgr:
-    uses: ./.github/workflows/tooling_packages_reusable.yml
+    uses: $/.github/workflows/tooling_packages_reusable.yml
     with:
       run-biome: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs['run-biome'] == 'true' || github.event_name != 'workflow_dispatch' }}
       run-tests: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs['run-tests'] == 'true' || github.event_name != 'workflow_dispatch' }}

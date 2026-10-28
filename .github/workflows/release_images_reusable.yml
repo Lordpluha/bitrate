@@ -42,6 +42,13 @@ on:
         required: false
         default: ''
         type: string
+    secrets:
+      turbo-token:
+        description: Turbo remote cache token for the turbo build inside the Dockerfile
+        required: false
+      sentry-auth-token:
+        description: Sentry token the web-player Dockerfile uses to upload source maps
+        required: false
 
 defaults:
   run:
@@ -66,7 +73,7 @@ jobs:
       contents: read
       packages: write
       security-events: write
-    uses: ./.github/workflows/api_reusable.yml
+    uses: $/.github/workflows/api_reusable.yml
     with:
       push-image: ${{ inputs.push-image }}
       image-tags: |
@@ -77,7 +84,7 @@ jobs:
       run-biome: false
       run-tests: false
     secrets:
-      turbo-token: ${{ secrets.TURBO_TOKEN }}
+      turbo-token: ${{ secrets.turbo-token }}
 
   web-player:
     name: web-player
@@ -85,8 +92,10 @@ jobs:
       contents: read
       packages: write
       security-events: write
-    uses: ./.github/workflows/web_player_reusable.yml
-    secrets: inherit
+    uses: $/.github/workflows/web_player_reusable.yml
+    secrets:
+      turbo-token: ${{ secrets.turbo-token }}
+      sentry-auth-token: ${{ secrets.sentry-auth-token }}
     with:
       push-image: ${{ inputs.push-image }}
       tags: |
@@ -103,8 +112,9 @@ jobs:
       contents: read
       packages: write
       security-events: write
-    uses: ./.github/workflows/web_artists_reusable.yml
-    secrets: inherit
+    uses: $/.github/workflows/web_artists_reusable.yml
+    secrets:
+      turbo-token: ${{ secrets.turbo-token }}
     with:
       push-image: ${{ inputs.push-image }}
       tags: |
@@ -120,8 +130,9 @@ jobs:
       contents: read
       packages: write
       security-events: write
-    uses: ./.github/workflows/admin_reusable.yml
-    secrets: inherit
+    uses: $/.github/workflows/admin_reusable.yml
+    secrets:
+      turbo-token: ${{ secrets.turbo-token }}
     with:
       push-image: ${{ inputs.push-image }}
       tags: |
@@ -138,8 +149,9 @@ jobs:
       contents: read
       packages: write
       security-events: write
-    uses: ./.github/workflows/docs_reusable.yml
-    secrets: inherit
+    uses: $/.github/workflows/docs_reusable.yml
+    secrets:
+      turbo-token: ${{ secrets.turbo-token }}
     with:
       push-image: ${{ inputs.push-image }}
       tags: |
@@ -155,7 +167,7 @@ jobs:
       contents: read
       packages: write
       security-events: write
-    uses: ./.github/workflows/storybook_reusable.yml
+    uses: $/.github/workflows/storybook_reusable.yml
     with:
       push-image: ${{ inputs.push-image }}
       tags: |
@@ -164,4 +176,4 @@ jobs:
         ${{ inputs.moving-tag != '' && format('ghcr.io/lordpluha/{0}/storybook:{1}', github.event.repository.name, inputs.moving-tag) || '' }}
       timeout-minutes: 60
     secrets:
-      turbo-token: ${{ secrets.TURBO_TOKEN }}
+      turbo-token: ${{ secrets.turbo-token }}

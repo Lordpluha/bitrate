@@ -51,7 +51,7 @@ permissions: {}
 jobs:
   cut:
     name: Cut
-    uses: ./.github/workflows/release_reusable.yml
+    uses: $/.github/workflows/release_reusable.yml
     with:
       dry-run: ${{ inputs.dry_run }}
 

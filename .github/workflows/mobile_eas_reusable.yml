@@ -19,6 +19,10 @@ on:
         description: Artifact suffix for uploaded APK
         required: true
         type: string
+    secrets:
+      expo-token:
+        description: Expo access token for EAS builds
+        required: false
 
 permissions:
   contents: read
@@ -31,15 +35,17 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     env:
-      EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+      EXPO_TOKEN: ${{ secrets.expo-token }}
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Setup Expo
         if: env.EXPO_TOKEN != ''
-        uses: expo/expo-github-action@v9
+        uses: expo/expo-github-action@9da89d3617bb88139671bad31b09c65714c2ee06 # v9
         with:
           expo-version: latest
           eas-version: latest
@@ -47,7 +53,7 @@ jobs:
 
       - name: Setup Node.js and pnpm
         if: env.EXPO_TOKEN != ''
-        uses: ./.github/actions/setup-node-pnpm
+        uses: $/.github/actions/setup-node-pnpm
 
       - name: Build Android APK
         if: env.EXPO_TOKEN != ''
@@ -69,7 +75,7 @@ jobs:
 
       - name: Upload APK
         if: env.EXPO_TOKEN != '' && success()
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: mobile-android-apk-${{ inputs.artifact-suffix }}
           path: apps/mobile/*.apk
@@ -81,15 +87,17 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     env:
-      EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+      EXPO_TOKEN: ${{ secrets.expo-token }}
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Setup Expo
         if: env.EXPO_TOKEN != ''
-        uses: expo/expo-github-action@v9
+        uses: expo/expo-github-action@9da89d3617bb88139671bad31b09c65714c2ee06 # v9
         with:
           expo-version: latest
           eas-version: latest
@@ -97,7 +105,7 @@ jobs:
 
       - name: Setup Node.js and pnpm
         if: env.EXPO_TOKEN != ''
-        uses: ./.github/actions/setup-node-pnpm
+        uses: $/.github/actions/setup-node-pnpm
 
       - name: Build iOS IPA
         if: env.EXPO_TOKEN != ''

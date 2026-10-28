@@ -137,7 +137,7 @@ services:
   # kernel OOM killer is not the thing that trims it.
   seaweedfs:
     logging: *default-logging
-    image: chrislusf/seaweedfs:4.48
+    image: chrislusf/seaweedfs:4.51
     container_name: bitrate-seaweedfs-prod
     restart: always
     entrypoint: ["/bin/sh", "-c"]
@@ -174,7 +174,7 @@ services:
   # `up -d`; an existing bucket and its objects are left untouched.
   seaweedfs-init:
     logging: *default-logging
-    image: chrislusf/seaweedfs:4.48
+    image: chrislusf/seaweedfs:4.51
     restart: "no"
     entrypoint: ["/bin/sh", "-c"]
     command:

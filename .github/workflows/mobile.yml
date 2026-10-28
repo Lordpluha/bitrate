@@ -58,13 +58,13 @@ jobs:
     outputs:
       changed: ${{ steps.app.outputs.changed }}
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
           persist-credentials: false
 
       - id: app
-        uses: ./.github/actions/app-changed
+        uses: $/.github/actions/app-changed
         with:
           package: '@bitrate/mobile'
           app-dir: apps/mobile
@@ -73,8 +73,9 @@ jobs:
   mobile-pr:
     needs: changes
     if: ${{ !cancelled() && ((github.event_name == 'pull_request' && needs.changes.outputs.changed == 'true') || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'pr')) }}
-    uses: ./.github/workflows/mobile_reusable.yml
-    secrets: inherit
+    uses: $/.github/workflows/mobile_reusable.yml
+    secrets:
+      expo-token: ${{ secrets.EXPO_TOKEN }}
     with:
       run-expo-check: true
       expo-image-tag: mobile-expo-pr:${{ github.sha }}
@@ -94,8 +95,9 @@ jobs:
 
   mobile-develop:
     if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/develop') || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'develop') }}
-    uses: ./.github/workflows/mobile_reusable.yml
-    secrets: inherit
+    uses: $/.github/workflows/mobile_reusable.yml
+    secrets:
+      expo-token: ${{ secrets.EXPO_TOKEN }}
     with:
       run-expo-check: true
       expo-image-tag: mobile-expo-develop:${{ github.sha }}
@@ -117,8 +119,9 @@ jobs:
 
   mobile-master:
     if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/master') || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'master') }}
-    uses: ./.github/workflows/mobile_reusable.yml
-    secrets: inherit
+    uses: $/.github/workflows/mobile_reusable.yml
+    secrets:
+      expo-token: ${{ secrets.EXPO_TOKEN }}
     with:
       run-expo-check: false
       # Already built and tested on develop; nothing consumes a master mobile-web image.
