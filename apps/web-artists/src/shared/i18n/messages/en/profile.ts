@@ -1,0 +1,50 @@
+export const profile = {
+  'profile.validation.https': 'Enter a full https:// link.',
+  'profile.validation.min': 'Use at least 3 characters.',
+  'profile.validation.max': 'Use at most 50 characters.',
+  'profile.validation.chars':
+    'Use letters, digits, dots, dashes and underscores.',
+  'profile.validation.bio': 'Keep the bio under 500 characters.',
+  'profile.social.website': 'Website',
+  'profile.social.instagram': 'Instagram',
+  'profile.social.x': 'X',
+  'profile.social.youtube': 'YouTube',
+  'profile.social.tiktok': 'TikTok',
+  'profile.social.soundcloud': 'SoundCloud',
+  'profile.error.stale':
+    'Your profile changed since this page loaded. Your entries are kept; reload the page to see the latest version.',
+  'profile.error.load': 'Could not load your profile. Please try again.',
+  'profile.error.handleTaken':
+    'This handle is already taken. Choose another one.',
+  'profile.error.unconfirmed':
+    'Could not confirm your profile was saved. Reload the page before trying again.',
+  'profile.error.invalid': 'Check the highlighted fields, then try again.',
+  'profile.error.imageInvalid': 'Choose a JPEG, PNG or WebP image up to 10 MB.',
+  'profile.error.imageUnconfirmed':
+    'Could not confirm the image was saved. Reload the page before trying again.',
+  'profile.subtitle': 'How listeners see you on Bitrate.',
+  'profile.loading': 'Loading your profile…',
+  'profile.images': 'Images',
+  'profile.details': 'Details',
+  'profile.preview': 'Preview · unsaved changes are shown but not published',
+  'profile.verified': 'Verified artist',
+  'profile.noBio': 'No bio yet.',
+  'profile.photo': 'Profile photo',
+  'profile.photoHint':
+    'Square, at least 600 × 600 px. JPEG, PNG or WebP up to 10 MB.',
+  'profile.header': 'Header image',
+  'profile.headerHint':
+    'Wide, at least 2000 × 800 px. JPEG, PNG or WebP up to 10 MB.',
+  'profile.imageSize': 'Choose an image up to 10 MB.',
+  'profile.replace': 'Replace',
+  'profile.upload': 'Upload',
+  'profile.handle': 'Handle',
+  'profile.handleHint': 'Shown as @handle on your public page.',
+  'profile.country': 'Country',
+  'profile.notShown': 'Not shown',
+  'profile.bio': 'Bio',
+  'profile.links': 'Links',
+  'profile.saved': 'Profile saved.',
+  'profile.discard': 'Discard changes',
+  'profile.save': 'Save profile',
+} as const

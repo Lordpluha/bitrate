@@ -5,6 +5,7 @@ import {
   useProfileImage,
 } from '@entities/artist-account'
 import { apiBaseUrl } from '@shared/api'
+import { type TranslationKey, useI18n } from '@shared/i18n'
 import { ImagePlus } from 'lucide-react'
 import { useId, useRef, useState } from 'react'
 
@@ -23,15 +24,12 @@ interface ProfileImageFieldProps {
 }
 
 const copy = {
-  avatar: {
-    label: 'Profile photo',
-    hint: 'Square, at least 600 × 600 px. JPEG, PNG or WebP up to 10 MB.',
-  },
-  background: {
-    label: 'Header image',
-    hint: 'Wide, at least 2000 × 800 px. JPEG, PNG or WebP up to 10 MB.',
-  },
-} satisfies Record<ProfileImageKind, { label: string; hint: string }>
+  avatar: { label: 'profile.photo', hint: 'profile.photoHint' },
+  background: { label: 'profile.header', hint: 'profile.headerHint' },
+} satisfies Record<
+  ProfileImageKind,
+  { label: TranslationKey; hint: TranslationKey }
+>
 
 /** Uploads or removes one profile image immediately, with progress and a recoverable error. */
 export function ProfileImageField({
@@ -42,8 +40,9 @@ export function ProfileImageField({
   const id = useId()
   const input = useRef<HTMLInputElement>(null)
   const image = useProfileImage(artistId)
+  const { t, tMessage } = useI18n()
   const [progress, setProgress] = useState<number | null>(null)
-  const [problem, setProblem] = useState<string | null>(null)
+  const [problem, setProblem] = useState<TranslationKey | null>(null)
   const current = kind === 'avatar' ? profile.avatar : profile.backgroundImage
   const { label, hint } = copy[kind]
 
@@ -51,11 +50,11 @@ export function ProfileImageField({
     setProblem(null)
     image.reset()
     if (file && !ACCEPT.split(',').includes(file.type)) {
-      setProblem('Choose a JPEG, PNG or WebP image.')
+      setProblem('media.coverType')
       return
     }
     if (file && file.size > MAX_BYTES) {
-      setProblem('Choose an image up to 10 MB.')
+      setProblem('profile.imageSize')
       return
     }
     setProgress(file ? 0 : null)
@@ -77,7 +76,7 @@ export function ProfileImageField({
   return (
     <div className="space-y-2">
       <span className="block text-sm font-medium" id={`${id}-label`}>
-        {label}
+        {t(label)}
       </span>
       <div className="flex flex-wrap items-center gap-4">
         <div
@@ -88,7 +87,7 @@ export function ProfileImageField({
         >
           {current ? (
             <img
-              alt={kind === 'avatar' ? 'Profile photo' : 'Header image'}
+              alt={t(label)}
               className="size-full object-cover"
               src={profileImageUrl(current)}
             />
@@ -117,10 +116,12 @@ export function ProfileImageField({
               variant="outline"
             >
               {progress !== null
-                ? `Uploading… ${Math.round(progress * 100)}%`
+                ? t('media.uploadingPercent', {
+                    percent: Math.round(progress * 100),
+                  })
                 : current
-                  ? 'Replace'
-                  : 'Upload'}
+                  ? t('profile.replace')
+                  : t('profile.upload')}
             </Button>
             {current && (
               <Button
@@ -132,16 +133,16 @@ export function ProfileImageField({
                 type="button"
                 variant="ghost"
               >
-                Remove
+                {t('workspace.track.remove')}
               </Button>
             )}
           </div>
-          <p className="text-xs text-text-secondary">{hint}</p>
+          <p className="text-xs text-text-secondary">{t(hint)}</p>
         </div>
       </div>
       {(problem ?? image.error) && (
         <p className="text-sm text-destructive" role="alert">
-          {problem ?? image.error?.message}
+          {problem ? t(problem) : tMessage(image.error?.message)}
         </p>
       )}
     </div>

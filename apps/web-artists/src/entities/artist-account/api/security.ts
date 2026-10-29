@@ -1,6 +1,7 @@
 import { artistMusicKeys } from '@shared/api/artistMusicKeys'
 import { clientFetchClient } from '@shared/api/fetchClient'
 import { writeSignal as signal } from '@shared/api/writeTimeout'
+import { messageKey } from '@shared/i18n'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { z } from 'zod'
 
@@ -19,7 +20,7 @@ export function useTwoFactorSetup() {
         .catch(() => undefined)
       const parsed = setupSchema.safeParse(result?.data)
       if (!result?.response.ok || !parsed.success)
-        throw new Error('Could not start two-factor setup. Please try again.')
+        throw new Error(messageKey('account.error.twoFactorStart'))
       return parsed.data
     },
   })
@@ -43,17 +44,11 @@ export function useTwoFactorToggle(artistId: string, enable: boolean) {
           })
       ).catch(() => undefined)
       if (!result)
-        throw new Error(
-          'Could not confirm the change. Reload before trying again.',
-        )
+        throw new Error(messageKey('account.error.twoFactorUnconfirmed'))
       if (result.response.status === 400 || result.response.status === 401)
-        throw new Error(
-          'That code did not match. Enter the current 6-digit code.',
-        )
+        throw new Error(messageKey('account.error.twoFactorCode'))
       if (!result.response.ok)
-        throw new Error(
-          'Could not change two-factor sign-in. Please try again.',
-        )
+        throw new Error(messageKey('account.error.twoFactorFailed'))
     },
     onSuccess: () =>
       queryClient.invalidateQueries({
@@ -74,7 +69,7 @@ export function usePasswordResetEmail() {
         })
         .catch(() => undefined)
       if (!result?.response.ok)
-        throw new Error('Could not send the reset email. Please try again.')
+        throw new Error(messageKey('account.error.resetEmail'))
     },
   })
 }
@@ -91,7 +86,7 @@ export function useDeleteAccount(artistId: string) {
         })
         .catch(() => undefined)
       if (!result?.response.ok)
-        throw new Error('Could not delete the account. Please try again.')
+        throw new Error(messageKey('account.error.deleteAccount'))
     },
   })
 }
