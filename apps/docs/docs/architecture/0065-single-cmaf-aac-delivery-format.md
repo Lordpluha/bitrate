@@ -48,14 +48,18 @@ granularity — `UPGRADE_MIN_BUFFER` (12 s), `PREFETCH_BUFFER_SECONDS` (8 s),
 `CONSTRAINED_START_BUFFER_SECONDS` (3 s) — are restated for 10 s steps in the same change,
 since the buffer now grows a whole fragment at a time.
 
-**One delivery path.** Audio bytes leave the API only through `GET /tracks/:id/manifest` and
-`GET /tracks/:id/cmaf/:bitrate` with HTTP `Range`. Removed together, in one change:
+**One delivery path.** Listener audio leaves the API only through `GET /tracks/:id/manifest` and
+`GET /tracks/:id/cmaf/:bitrate` with HTTP `Range`. The one exception is the staff-only
+`GET /admin/tracks/:id/audio`: it already serves CMAF renditions behind an operator permission
+and exists for moderation, not listening, so listener rules do not apply to it.
+Removed together:
 
 - the progressive Opus and HLS encodes (`prepareVariants`, `generateHls`, `validateHls`) and
   their converter entry points when nothing else uses them;
 - `GET /tracks/stream/:id`, `GET /tracks/stream/:id/hls/*`, their service methods, storage-key
   helpers and contracts;
-- `AudioGateway`;
+- `AudioGateway`, `UsersAuthWsGuard` and the API's Socket.io dependencies — it is the only
+  gateway, and Bitrate Connect designs its own command channel when it needs one;
 - hls.js, `hlsLegacyAdapter` and the HLS utilities in web-player;
 - `Track.playbackVersion` and the manifest filter on it; the CMAF index columns of
   `TrackFile` become required.
@@ -64,10 +68,14 @@ A browser without MSE plays the same `.m4a` natively through `<audio>`, as ADR-0
 specified — that replaces `streaming.legacy`. Admin's `resolveSource` points at a CMAF
 rendition instead of `/stream/:id`.
 
-**Removal is immediate.** No re-encode backfill and no telemetry gate. Development and
-preprod databases and buckets are reset rather than migrated. Compatibility is proven by the
-browser test matrix — Chromium, Firefox, WebKit and the no-MSE path — instead of production
-telemetry.
+**Removal is immediate.** No re-encode backfill and no telemetry gate. A migration deletes the
+non-CMAF `TrackFile` rows and the processing attempts on removed steps, marks tracks left
+without CMAF renditions `FAILED` with a re-upload reason, then drops `playbackVersion` and the
+removed `TrackProcessingStep` values, so every environment migrates the same way instead of
+needing a database reset. Legacy objects in development and preprod buckets are removed by
+resetting the bucket. Before the production deploy the track count is confirmed to be zero.
+Compatibility is proven by the browser test matrix — Chromium, Firefox, WebKit and the no-MSE
+path — instead of production telemetry.
 
 **WebSocket is a control channel, never an audio transport.** Bitrate Connect may use a socket
 for commands (pause, transfer, session revoked); bytes always go over HTTP.
@@ -113,8 +121,9 @@ leaving one path.
 **Mandatory**
 
 - Renditions must stay aligned; the 469-frame value is changed only by a new record.
-- No new audio route may be added beside `/cmaf` without going through the same access
-  control.
+- No new listener audio route may be added beside `/cmaf` without going through the same
+  access control; the staff preview stays operator-only.
+- Stage 1 is tracked in [#422](https://github.com/Lordpluha/bitrate/issues/422).
 
 ## Alternatives considered
 
