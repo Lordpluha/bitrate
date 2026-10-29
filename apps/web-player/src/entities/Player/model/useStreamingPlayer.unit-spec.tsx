@@ -45,7 +45,6 @@ const createTrack = (id: string): TrackEntity => ({
   discNumber: 1,
   language: null,
   deletedAt: null,
-  playbackVersion: 1,
   fragmentTimescale: null,
   durationTicks: null,
   publishedAt: '2026-01-01T00:00:00.000Z',
