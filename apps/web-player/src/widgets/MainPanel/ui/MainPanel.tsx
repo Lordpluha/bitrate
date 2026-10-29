@@ -10,7 +10,6 @@ import {
   homeTabs,
 } from '@/widgets/MainPanel/model/mainPanel.constants'
 import { LibraryQuickGrid } from './LibraryQuickGrid'
-import { PodcastsPanel } from './PodcastsPanel'
 import { PopularArtists } from './PopularArtists'
 import { RecentlyPlayed } from './RecentlyPlayed'
 import { RecommendationsFeed } from './RecommendationsFeed'
@@ -19,15 +18,9 @@ export const MainPanel = () => {
   const { t } = useI18n()
   const { user, isAuthenticated } = useAuth()
   const [activeTab, setActiveTab] = useState<HomeTabId>('all')
-  const showsMusic = activeTab !== 'podcasts'
   const localizedTabs = homeTabs.map((tab) => ({
     ...tab,
-    label:
-      tab.id === 'all'
-        ? t('common.all')
-        : tab.id === 'music'
-          ? t('common.music')
-          : t('common.podcasts'),
+    label: tab.id === 'all' ? t('common.all') : t('common.music'),
   }))
 
   const hour = useMemo(() => new Date().getHours(), [])
@@ -42,7 +35,7 @@ export const MainPanel = () => {
           onChange={setActiveTab}
           value={activeTab}
         />
-        {isAuthenticated && user && showsMusic ? (
+        {isAuthenticated && user ? (
           <div className="flex min-w-0 flex-col gap-1">
             <p className="text-xs font-semibold tracking-[1.2px] text-muted-foreground uppercase">
               {t('main.madeFor')} {name}
@@ -53,15 +46,9 @@ export const MainPanel = () => {
           </div>
         ) : null}
         {activeTab === 'all' && <LibraryQuickGrid />}
-        {showsMusic ? (
-          <>
-            <RecommendationsFeed />
-            <PopularArtists />
-            {activeTab === 'all' && <RecentlyPlayed />}
-          </>
-        ) : (
-          <PodcastsPanel />
-        )}
+        <RecommendationsFeed />
+        <PopularArtists />
+        {activeTab === 'all' && <RecentlyPlayed />}
         <LegalFooter className="mt-5" />
       </div>
     </div>
