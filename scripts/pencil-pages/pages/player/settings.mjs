@@ -71,11 +71,7 @@ const settingsTiles = (mobile, { twoFaOn, sessionsError } = {}) => {
       'Audio quality',
       [
         SettingRow('Streaming quality', null, sel('Automatic')),
-        SettingRow(
-          'Normalize volume',
-          'Set the same volume level for all songs and podcasts',
-          Switch('', true),
-        ),
+        SettingRow('Normalize volume', 'Set the same volume level for all songs', Switch('', true)),
       ],
       true,
     ),
@@ -105,7 +101,7 @@ const settingsTiles = (mobile, { twoFaOn, sessionsError } = {}) => {
         ),
         SettingRow(
           'Other videos',
-          'Vertically scrolling videos, video podcasts, and videos from creators.',
+          'Vertically scrolling videos and clips from artists.',
           Switch('', false),
         ),
       ],
@@ -281,7 +277,7 @@ export const settingsPages = {
                 SettingRow('Streaming quality', null, Select(null, 'Automatic', 220)),
                 SettingRow(
                   'Normalize volume',
-                  'Set the same volume level for all songs and podcasts',
+                  'Set the same volume level for all songs',
                   Switch('', true),
                 ),
               ]),

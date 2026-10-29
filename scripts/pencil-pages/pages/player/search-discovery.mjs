@@ -41,7 +41,7 @@ const GENRES = [
   ['Rock', C.red600],
   ['Indie', C.green600],
   ['Jazz', C.blue600],
-  ['Podcasts', C.neutral700],
+  ['R&B', C.neutral700],
   ['Charts', C.purple800],
   ['Chill', C.blue800],
   ['Workout', C.red800],

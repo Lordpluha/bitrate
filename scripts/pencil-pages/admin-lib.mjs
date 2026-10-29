@@ -552,7 +552,6 @@ const NAV = [
       ['catalog', 'audio-lines', 'Catalog', '4'],
       ['albums', 'disc-album', 'Albums'],
       ['playlists', 'list-music', 'Playlists'],
-      ['podcasts', 'podcast', 'Podcasts'],
       ['genres', 'tags', 'Genres'],
     ],
   ],
