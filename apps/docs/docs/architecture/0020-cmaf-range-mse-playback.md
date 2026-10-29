@@ -1,6 +1,7 @@
 # ADR-0020: Single-file CMAF + Range index + MSE for audio playback
 
-Status: Accepted
+Status: Accepted — transitional rollout state superseded by
+[ADR-0065](./0065-single-cmaf-aac-delivery-format.md)
 
 Date: 2026-08-11
 

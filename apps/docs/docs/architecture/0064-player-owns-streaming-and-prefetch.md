@@ -1,6 +1,7 @@
 # ADR-0064: The player element owns streaming, prefetch and mirrors
 
-Status: Accepted
+Status: Accepted — legacy adapter superseded by
+[ADR-0065](./0065-single-cmaf-aac-delivery-format.md)
 
 Date: 2026-10-27
 
