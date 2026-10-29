@@ -1,3 +1,4 @@
+import { analytics } from './analytics'
 import { auth } from './auth'
 import { common } from './common'
 import { dashboard } from './dashboard'
@@ -16,6 +17,7 @@ import { workspace } from './workspace'
 
 /** The source catalog. Each workspace area keeps its keys in its own file, merged here. */
 export const en = {
+  ...analytics,
   ...auth,
   ...common,
   ...dashboard,
