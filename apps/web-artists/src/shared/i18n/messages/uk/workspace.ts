@@ -1,0 +1,222 @@
+export const workspace = {
+  'workspace.loading': 'Завантажуємо робочий простір релізу…',
+  'workspace.unavailable': 'Робочий простір релізу недоступний',
+  'workspace.returnToMusic': 'Повернутися до «Музики»',
+  'workspace.draftUpdated': 'Чернетку оновлено.',
+  'workspace.stages': 'Етапи релізу',
+  'workspace.artworkAlt': 'Обкладинка «{title}»',
+  'workspace.ready': 'Готово',
+  'workspace.needed': 'Потрібно',
+  'workspace.whatNext': 'Що далі',
+  'workspace.lock.submitted':
+    'Заблоковано, поки Bitrate перевіряє реліз. Відкличте його з перевірки, щоб редагувати.',
+  'workspace.lock.rejected':
+    'Щоб редагувати чернетку, оберіть «Почати доопрацювання» на етапі перевірки.',
+  'workspace.lock.approved': 'Схвалені релізи більше не можна редагувати.',
+  'workspace.lock.released': 'Випущені релізи більше не можна редагувати.',
+  'workspace.header.updated': 'Оновлено {date} UTC',
+  'workspace.header.nextAction': 'Наступна дія',
+  'workspace.next.prepare': 'Завершіть підготовку релізу',
+  'workspace.next.itemsLeft.one':
+    'До перевірки Bitrate залишився {count} пункт.',
+  'workspace.next.itemsLeft.few':
+    'До перевірки Bitrate залишилося {count} пункти.',
+  'workspace.next.itemsLeft.many':
+    'До перевірки Bitrate залишилося {count} пунктів.',
+  'workspace.next.itemsLeft.other':
+    'До перевірки Bitrate залишилося {count} пункту.',
+  'workspace.next.submit': 'Надішліть на перевірку Bitrate',
+  'workspace.next.submitDescription':
+    'Усе потрібне готове. Підтвердьте та надішліть.',
+  'workspace.next.submitLabel': 'Переглянути й надіслати',
+  'workspace.next.waitingDescription':
+    'Ми повідомимо вас, коли Bitrate ухвалить рішення.',
+  'workspace.next.viewReview': 'Переглянути перевірку',
+  'workspace.next.rejected': 'Внесіть запитані зміни',
+  'workspace.next.rejectedDescription':
+    'Bitrate попросив про зміни перед схваленням.',
+  'workspace.next.openFeedback': 'Відкрити відгук',
+  'workspace.next.openLaunch': 'Відкрити запуск',
+  'workspace.next.ready': 'Опублікуйте на Bitrate',
+  'workspace.next.readyDescription':
+    'Схвалено Bitrate. Публікуйте, коли будете готові.',
+  'workspace.next.scheduled': 'Прем’єру заплановано',
+  'workspace.next.scheduledDescription':
+    'Реліз з’явиться на Bitrate у час прем’єри.',
+  'workspace.next.publishing': 'Публікація на Bitrate',
+  'workspace.next.publishingDescription': 'Ваші треки готуються для плеєра.',
+  'workspace.next.failed': 'Помилка публікації',
+  'workspace.next.failedDescription':
+    'Bitrate отримав сповіщення та спробує ще раз.',
+  'workspace.next.released': 'Ваш реліз уже на Bitrate',
+  'workspace.next.releasedDescription':
+    'Поділіться ним і стежте за першими сигналами.',
+  'workspace.next.unpublished': 'Ваш реліз офлайн',
+  'workspace.next.unpublishedDescription':
+    'Слухачі не зможуть його відтворити, доки його знову не опублікують.',
+  'workspace.draft.editDetails': 'Редагувати деталі',
+  'workspace.draft.editTiming': 'Змінити дату',
+  'workspace.draft.editArtwork': 'Змінити обкладинку',
+  'workspace.draft.addArtwork': 'Додати обкладинку',
+  'workspace.draft.changeArtwork': 'Замінити обкладинку',
+  'workspace.draft.addAudio': 'Додати аудіо',
+  'workspace.draft.editTracks': 'Редагувати треки',
+  'workspace.draft.reviewCredits': 'Перевірити авторів',
+  'workspace.draft.confirmRights': 'Підтвердити права',
+  'workspace.draft.complete': 'Підготовку завершено',
+  'workspace.draft.stepsLeft.one': 'Залишився {count} крок',
+  'workspace.draft.stepsLeft.few': 'Залишилося {count} кроки',
+  'workspace.draft.stepsLeft.many': 'Залишилося {count} кроків',
+  'workspace.draft.stepsLeft.other': 'Залишилося {count} кроку',
+  'workspace.draft.master': 'Мастер',
+  'workspace.draft.duration': 'Тривалість',
+  'workspace.draft.noMaster': 'Мастера ще немає. Завантажте перший трек.',
+  'workspace.draft.checklist': 'Чек-лист готовності',
+  'workspace.draft.checklistHint':
+    'Оберіть дію, щоб повернутися до потрібного кроку.',
+  'workspace.draft.honest':
+    'Надсилання запускає перевірку Bitrate. Воно не доставляє реліз на стримінгові сервіси.',
+  'workspace.draft.submitted': 'Чернетку надіслано',
+  'workspace.draft.locked':
+    'Чернетку заблоковано, поки Bitrate її перевіряє, або після схвалення.',
+  'workspace.draft.lockedRejected':
+    'Щоб знову редагувати, оберіть «Почати доопрацювання» на етапі перевірки.',
+  'workspace.draft.openReview': 'Відкрити перевірку',
+  'workspace.readiness.ready': 'Готово до перевірки',
+  'workspace.readiness.before': 'Перед перевіркою',
+  'workspace.readiness.blockers.one': '{count} перешкода',
+  'workspace.readiness.blockers.few': '{count} перешкоди',
+  'workspace.readiness.blockers.many': '{count} перешкод',
+  'workspace.readiness.blockers.other': '{count} перешкоди',
+  'workspace.readiness.complete': 'Усі обов’язкові кроки виконано.',
+  'workspace.readiness.resolve': 'Усуньте це перед надсиланням.',
+  'workspace.readiness.blockersLabel': 'Перешкоди',
+  'workspace.readiness.notesLabel': 'Примітки',
+  'workspace.readiness.noUpc': 'UPC ще немає — код потрібен перед доставкою',
+  'workspace.readiness.noIsrc':
+    'У «{title}» ще немає ISRC — код потрібен перед доставкою',
+  'workspace.readiness.aRecording': 'Запис',
+  'workspace.tracks.title': 'Треки',
+  'workspace.tracks.description':
+    'Записи цього релізу в порядку відтворення. Завантажене аудіо залишається приватним.',
+  'workspace.tracks.emptyDraft':
+    'Треків ще немає. Завантажте мастер у WAV або FLAC, щоб додати перший.',
+  'workspace.tracks.empty': 'До цього релізу не прив’язано жодного треку.',
+  'workspace.tracks.linked': 'Прив’язаний запис · {duration}',
+  'workspace.tracks.partial':
+    'Показано {shown} з {total} треків. Тут видно до 50 записів-чернеток і 50 прив’язаних записів.',
+  'workspace.track.durationUnavailable': 'Тривалість невідома',
+  'workspace.track.isrc': 'ISRC {code}',
+  'workspace.track.noIsrc': 'ISRC ще немає',
+  'workspace.track.noAudio': 'Аудіо не завантажено',
+  'workspace.track.audioUploaded': 'Аудіо завантажено',
+  'workspace.track.moveUp': 'Перемістити «{title}» вище',
+  'workspace.track.moveDown': 'Перемістити «{title}» нижче',
+  'workspace.track.replaceAudio': 'Замінити аудіо',
+  'workspace.track.uploadAudio': 'Завантажити аудіо',
+  'workspace.track.replaceAudioFor': 'Замінити аудіо для «{title}»',
+  'workspace.track.uploadAudioFor': 'Завантажити аудіо для «{title}»',
+  'workspace.track.rename': 'Перейменувати',
+  'workspace.track.renameFor': 'Перейменувати «{title}»',
+  'workspace.track.isrcFor': 'Змінити ISRC для «{title}»',
+  'workspace.track.remove': 'Вилучити',
+  'workspace.track.removeFor': 'Вилучити «{title}»',
+  'workspace.credits.title': 'Автори та частки',
+  'workspace.credits.editSplits': 'Змінити частки',
+  'workspace.credits.description':
+    'Хто створив реліз, що саме зробив і яка його частка в мастері (записі) та видавничих правах (музиці й тексті).',
+  'workspace.credits.totals': 'Підсумки часток',
+  'workspace.credits.total': '{right}: {percent}% зі 100%',
+  'workspace.credits.none': 'Учасників ще не вказано.',
+  'workspace.credits.noneHint':
+    'Зробили все самі? Вкажіть себе за один крок; якщо працювали з іншими — додайте кожного учасника.',
+  'workspace.credits.needsRole': 'Потрібна роль',
+  'workspace.credits.noRoles': 'Ролі не вказано',
+  'workspace.credits.assignRole': 'Призначте щонайменше одну роль.',
+  'workspace.credits.editRoles': 'Змінити ролі',
+  'workspace.credits.editRolesFor': 'Змінити ролі для {name}',
+  'workspace.credits.editContributor': 'Редагувати учасника {name}',
+  'workspace.credits.removeContributor': 'Вилучити учасника',
+  'workspace.credits.removeContributorFor': 'Вилучити учасника {name}',
+  'workspace.credits.partial': 'Показано {shown} з {total} учасників.',
+  'workspace.credits.self': 'Я зробив(-ла) усе сам(-а)',
+  'workspace.credits.add': 'Додати учасника',
+  'workspace.credits.footnote':
+    'Зазначення авторства не дає доступу до робочого простору. Кожна частка має становити рівно 100% перед перевіркою.',
+  'workspace.rights.title': 'Права',
+  'workspace.rights.edit': 'Змінити права',
+  'workspace.rights.description':
+    'Кому належить запис і чи вказано всіх авторів пісні.',
+  'workspace.rights.thisArtist': '{name} (цей артист)',
+  'workspace.rights.masterOwner': 'Власник мастера: {owner}',
+  'workspace.rights.noMasterOwner': 'Власника мастера не обрано',
+  'workspace.rights.writersListed':
+    'Усіх авторів пісень і композиторів вказано',
+  'workspace.rights.confirmed': '(підтверджено)',
+  'workspace.rights.notConfirmed': '(не підтверджено)',
+  'workspace.rights.identifiers': 'Ідентифікатори',
+  'workspace.rights.optional': '· необов’язково',
+  'workspace.rights.upc': 'UPC/EAN:',
+  'workspace.rights.notProvided': 'Не вказано',
+  'workspace.rights.editUpc': 'Змінити UPC',
+  'workspace.rights.identifiersNote':
+    'Штрихкоди для магазинів та ISRC треків тут необов’язкові; ISRC кожного треку задається в розділі «Треки».',
+  'workspace.review.approved': 'Схвалено Bitrate',
+  'workspace.review.changesRequested': 'Запитано зміни',
+  'workspace.review.reviewedAt': 'Перевірено {date} UTC',
+  'workspace.review.requiredBefore': 'Обов’язково перед повторним надсиланням',
+  'workspace.review.recommendations': 'Рекомендації',
+  'workspace.review.stepSubmitted': 'Надіслано',
+  'workspace.review.stepSubmittedDetail':
+    'Чернетку заблоковано, щоб рецензент бачив саме те, що ви надіслали.',
+  'workspace.review.stepChecks': 'Bitrate перевіряє реліз',
+  'workspace.review.stepChecksDetail': 'Аудіо, обкладинку, авторів і права.',
+  'workspace.review.stepDecision': 'Рішення',
+  'workspace.review.stepDecisionDetail':
+    'Схвалено: сплануйте магазини й території. Запитано зміни: доопрацюйте та надішліть знову.',
+  'workspace.review.waiting': 'Очікуємо рецензента',
+  'workspace.review.submittedAt': 'Надіслано {date} UTC',
+  'workspace.review.progress': 'Хід перевірки',
+  'workspace.review.honest':
+    'Поки Bitrate перевіряє реліз, у магазини нічого не надсилається.',
+  'workspace.review.notSubmitted': 'Ще не надіслано',
+  'workspace.review.notSubmittedHint':
+    'Перевірка Bitrate починається, коли ви надсилаєте чернетку. Відгук і рішення з’являться тут.',
+  'workspace.review.requiredChanges.one':
+    '{count} обов’язкова зміна перед повторним надсиланням.',
+  'workspace.review.requiredChanges.few':
+    '{count} обов’язкові зміни перед повторним надсиланням.',
+  'workspace.review.requiredChanges.many':
+    '{count} обов’язкових змін перед повторним надсиланням.',
+  'workspace.review.requiredChanges.other':
+    '{count} обов’язкової зміни перед повторним надсиланням.',
+  'workspace.review.nextHint':
+    'Схвалення не доставляє реліз. Опублікуйте його на Bitrate на етапі «Запуск», а магазини й території сплануйте, коли будете готові.',
+  'workspace.review.planDelivery': 'Спланувати доставку',
+  'workspace.review.readiness': 'Готовність релізу',
+  'workspace.review.backToDraft': 'Назад до чернетки',
+  'workspace.launch.notLive': 'Стане доступно, коли реліз вийде на Bitrate.',
+  'workspace.launch.comingSoon':
+    'Незабаром з’явиться в робочому просторі артиста.',
+  'workspace.launch.publication': 'Публікація на Bitrate',
+  'workspace.launch.links': 'Посилання на реліз',
+  'workspace.launch.linksHint':
+    'Доступність показано для кожного майданчика окремо; відсутніх посилань ми не вигадуємо.',
+  'workspace.launch.primaryPage': 'Основна сторінка релізу',
+  'workspace.launch.publishedWhenLive': 'З’явиться, коли реліз вийде',
+  'workspace.launch.available': 'Доступно',
+  'workspace.launch.notLiveChip': 'Ще не вийшов',
+  'workspace.launch.copyLink': 'Копіювати посилання',
+  'workspace.launch.share': 'Поділіться посиланням на Bitrate',
+  'workspace.launch.readyToShare': 'Можна ділитися',
+  'workspace.launch.afterLive': 'Після виходу релізу',
+  'workspace.launch.promotionPlan': 'Підготуйте план просування',
+  'workspace.launch.optionalSoon': 'Необов’язково · Незабаром',
+  'workspace.launch.planPromotion': 'Спланувати просування',
+  'workspace.launch.honest':
+    'Тут як завершену показано лише публікацію на Bitrate.',
+  'workspace.launch.copied': 'Посилання скопійовано',
+  'workspace.launch.copyFailed':
+    'Не вдалося скопіювати посилання. Скопіюйте вручну: {url}',
+  'workspace.launch.openInPlayer': 'Відкрити в плеєрі',
+} as const

@@ -4,6 +4,7 @@ import {
   releaseCoverUrl,
   useReorderTracks,
 } from '@entities/release'
+import { useI18n } from '@shared/i18n'
 import { Music2, Upload } from 'lucide-react'
 import { durationLabel, isrcLabel } from '../lib/trackLabels'
 import type { WorkspaceActionHandler } from '../model/workspaceAction'
@@ -29,6 +30,7 @@ export function WorkspaceTracks({
   onAction,
 }: WorkspaceTracksProps) {
   const draft = release.status === 'DRAFT'
+  const { t, tMessage } = useI18n()
   const shown = release.trackDrafts.length + release.tracks.length
   const reorder = useReorderTracks(artistId)
   const ids = release.trackDrafts.map((track) => track.id)
@@ -47,7 +49,7 @@ export function WorkspaceTracks({
     >
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h2 id="release-tracks-heading">
-          Tracks <span>({release.trackCount})</span>
+          {t('workspace.tracks.title')} <span>({release.trackCount})</span>
         </h2>
         {draft && (
           <Button
@@ -56,17 +58,14 @@ export function WorkspaceTracks({
             variant="outline"
           >
             <Upload aria-hidden="true" className="size-4" />
-            Upload track
+            {t('music.uploadTrack')}
           </Button>
         )}
       </div>
-      <p>
-        Recordings in this release, in running order. Uploaded audio stays
-        private.
-      </p>
+      <p>{t('workspace.tracks.description')}</p>
       {reorder.error && (
         <p className="text-sm text-destructive" role="alert">
-          {reorder.error.message}
+          {tMessage(reorder.error.message)}
         </p>
       )}
       {shown === 0 ? (
@@ -74,8 +73,8 @@ export function WorkspaceTracks({
           <Music2 aria-hidden="true" className="size-5 shrink-0 text-accent" />
           <p>
             {draft
-              ? 'No tracks yet. Upload a WAV or FLAC master to add the first one.'
-              : 'No tracks linked to this release.'}
+              ? t('workspace.tracks.emptyDraft')
+              : t('workspace.tracks.empty')}
           </p>
         </div>
       ) : (
@@ -110,8 +109,12 @@ export function WorkspaceTracks({
                 <h3>
                   {track.position}. {track.title}
                 </h3>
-                <p>Linked recording · {durationLabel(track.duration)}</p>
-                <p>{isrcLabel(track.isrc)}</p>
+                <p>
+                  {t('workspace.tracks.linked', {
+                    duration: durationLabel(track.duration, t),
+                  })}
+                </p>
+                <p>{isrcLabel(track.isrc, t)}</p>
               </div>
             </li>
           ))}
@@ -119,8 +122,10 @@ export function WorkspaceTracks({
       )}
       {release.trackCount > shown && (
         <p>
-          Showing {shown} of {release.trackCount} tracks. This preview shows up
-          to 50 draft recordings and 50 linked recordings.
+          {t('workspace.tracks.partial', {
+            shown,
+            total: release.trackCount,
+          })}
         </p>
       )}
     </section>
