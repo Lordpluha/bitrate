@@ -19,6 +19,7 @@ jobs:
   scope:
     uses: ./.github/workflows/pr_scope_reusable.yml
     with:
-      base-sha: ${{ github.event.pull_request.base.sha }}
+      base-ref: ${{ github.event.pull_request.base.ref }}
+      head-sha: ${{ github.event.pull_request.head.sha }}
       head-ref: ${{ github.event.pull_request.head.ref }}
       exempt-label: ${{ contains(github.event.pull_request.labels.*.name, 'pr-scope/exempt') }}
