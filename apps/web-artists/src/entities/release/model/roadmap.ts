@@ -1,3 +1,5 @@
+import type { I18n } from '@shared/i18n'
+import { formatDateTimeUtc } from '@shared/lib/date'
 import type { ReleaseWorkspace } from './workspace.schema'
 
 type RoadmapState = 'done' | 'current' | 'todo' | 'later'
@@ -23,18 +25,15 @@ interface RoadmapStep {
 
 const AFTER_REVIEW = new Set(['READY', 'RELEASED'])
 
-const premiere = new Intl.DateTimeFormat('en-US', {
-  dateStyle: 'medium',
-  timeStyle: 'short',
-  timeZone: 'UTC',
-})
-
 /**
  * The path from a draft to a delivered release, derived only from saved data so it always
  * reflects the real stage. Preparation steps can finish in any order; the first unfinished
  * one is marked current while the release is a draft.
  */
-export function releaseRoadmap(release: ReleaseWorkspace): RoadmapStep[] {
+export function releaseRoadmap(
+  release: ReleaseWorkspace,
+  { t, tp, locale }: Pick<I18n, 't' | 'tp' | 'locale'>,
+): RoadmapStep[] {
   const blockers = release.readiness.blockers
   const has = (code: (typeof blockers)[number]['code']) =>
     blockers.some((blocker) => blocker.code === code)
@@ -48,49 +47,53 @@ export function releaseRoadmap(release: ReleaseWorkspace): RoadmapStep[] {
   const preparation: Omit<RoadmapStep, 'state'>[] = [
     {
       key: 'details',
-      label: 'Release details',
-      detail: 'Title and type saved',
+      label: t('release.roadmap.details'),
+      detail: t('release.roadmap.detailsDone'),
     },
     {
       key: 'timing',
-      label: 'Release timing',
+      label: t('release.roadmap.timing'),
       detail: release.scheduledAt
-        ? `Premiere · ${premiere.format(new Date(release.scheduledAt))} UTC`
-        : 'Right away, as soon as you publish it',
+        ? t('release.roadmap.premiere', {
+            date: formatDateTimeUtc(release.scheduledAt, locale),
+          })
+        : t('release.roadmap.rightAway'),
     },
     {
       key: 'artwork',
-      label: 'Artwork',
-      detail: release.cover ? 'Artwork uploaded' : 'Upload the cover image',
+      label: t('release.roadmap.artwork'),
+      detail: release.cover
+        ? t('release.roadmap.artworkDone')
+        : t('release.roadmap.artworkTodo'),
       anchor: 'release-preparation-heading',
     },
     {
       key: 'audio',
-      label: 'Tracks and audio',
+      label: t('release.roadmap.audio'),
       detail:
         trackTotal === 0
-          ? 'Upload the first track'
+          ? t('release.roadmap.audioFirst')
           : missingAudio > 0
-            ? `${missingAudio} ${missingAudio === 1 ? 'track needs' : 'tracks need'} audio`
-            : `${trackTotal} ${trackTotal === 1 ? 'track' : 'tracks'} with audio`,
+            ? tp({ count: missingAudio, key: 'release.roadmap.audioMissing' })
+            : tp({ count: trackTotal, key: 'release.roadmap.audioDone' }),
       anchor: 'release-tracks-heading',
     },
     {
       key: 'credits',
-      label: 'Credits & splits',
+      label: t('release.roadmap.credits'),
       detail:
         has('CONTRIBUTOR_ROLES_MISSING') || has('SPLITS_INCOMPLETE')
-          ? 'Credit everyone with a role and share out 100% of master and publishing'
-          : 'Everyone credited · master and publishing at 100%',
+          ? t('release.roadmap.creditsTodo')
+          : t('release.roadmap.creditsDone'),
       anchor: 'release-credits-heading',
     },
     {
       key: 'rights',
-      label: 'Rights',
+      label: t('release.roadmap.rights'),
       detail:
         has('MASTER_OWNER_MISSING') || has('WRITERS_NOT_CONFIRMED')
-          ? 'Choose the master owner and confirm the songwriters'
-          : 'Master owner and songwriters confirmed',
+          ? t('release.roadmap.rightsTodo')
+          : t('release.roadmap.rightsDone'),
       anchor: 'release-rights-heading',
     },
   ]
@@ -117,18 +120,18 @@ export function releaseRoadmap(release: ReleaseWorkspace): RoadmapStep[] {
 
   steps.push({
     key: 'submit',
-    label: 'Confirm and submit',
+    label: t('release.roadmap.submit'),
     state: submitted ? 'done' : currentAssigned ? 'todo' : 'current',
     detail: submitted
-      ? 'Sent for Bitrate review'
+      ? t('release.roadmap.submitted')
       : blockers.length > 0
-        ? `${blockers.length} ${blockers.length === 1 ? 'blocker' : 'blockers'} left before review`
-        : 'Confirm accuracy and submit for review',
+        ? tp({ count: blockers.length, key: 'release.roadmap.blockersLeft' })
+        : t('release.roadmap.submitTodo'),
     anchor: 'release-readiness-heading',
   })
   steps.push({
     key: 'review',
-    label: 'Bitrate review',
+    label: t('release.roadmap.review'),
     state: reviewed
       ? 'done'
       : release.status === 'SUBMITTED'
@@ -138,21 +141,21 @@ export function releaseRoadmap(release: ReleaseWorkspace): RoadmapStep[] {
           : 'todo',
     detail:
       release.status === 'REJECTED'
-        ? 'Changes requested'
+        ? t('release.roadmap.changesRequested')
         : reviewed
-          ? 'Approved'
+          ? t('release.roadmap.approved')
           : release.status === 'SUBMITTED'
-            ? 'Waiting for a reviewer'
-            : 'Starts after submission',
+            ? t('release.roadmap.waiting')
+            : t('release.roadmap.afterSubmission'),
   })
   steps.push({
     key: 'delivery',
-    label: 'Delivery to stores',
+    label: t('release.roadmap.delivery'),
     state: release.status === 'RELEASED' ? 'done' : 'later',
     detail:
       release.status === 'RELEASED'
-        ? 'Released'
-        : 'Store delivery is coming soon',
+        ? t('release.roadmap.released')
+        : t('release.roadmap.deliverySoon'),
   })
   return steps
 }

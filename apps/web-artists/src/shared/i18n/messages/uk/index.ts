@@ -3,6 +3,7 @@ import { auth } from './auth'
 import { common } from './common'
 import { labels } from './labels'
 import { music } from './music'
+import { release } from './release'
 import { settings } from './settings'
 import { shell } from './shell'
 import { workspace } from './workspace'
@@ -12,6 +13,7 @@ export const uk = {
   ...common,
   ...labels,
   ...music,
+  ...release,
   ...settings,
   ...shell,
   ...workspace,
