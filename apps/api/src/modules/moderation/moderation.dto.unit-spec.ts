@@ -12,6 +12,19 @@ describe('CreateReportSchema', () => {
     ).toBe(false)
   })
 
+  it.each(['podcast', 'episode'])(
+    'rejects %s reports because Bitrate is music-only',
+    (entityType) => {
+      expect(
+        CreateReportSchema.safeParse({
+          entityType,
+          entityId: '018f47a2-7b5d-7cc3-8d25-8aa38e5f4ea2',
+          reason: 'Harmful content',
+        }).success,
+      ).toBe(false)
+    },
+  )
+
   it('trims and validates human-entered report text', () => {
     expect(
       CreateReportSchema.parse({

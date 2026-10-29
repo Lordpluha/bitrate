@@ -2,7 +2,7 @@ import { applyDecorators, HttpStatus } from '@nestjs/common'
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger'
 import { CreateReportDto } from '../moderation.dto'
 
-/** File a moderation report against a track, album, playlist, artist, podcast, episode, or user. */
+/** File a moderation report against a track, album, playlist, artist, or user. */
 export function CreateReportSwagger() {
   return applyDecorators(
     ApiOperation({
