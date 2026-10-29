@@ -1,5 +1,25 @@
 # @bitrate/admin
 
+## 0.5.0
+
+### Minor Changes
+
+- f2ff45b: Artists can now publish an approved release on Bitrate from the Launch stage, right away or as a premiere at the planned time, take it offline and publish it again. A release goes live all at once: its tracks stay hidden from listeners until every recording has been converted, then the album and tracks appear together and followers get one notification. The workspace links to the album in the player once the release is live. Admins can retry a failed publication and take a live release down; a release taken down by Bitrate cannot be republished by the artist. Artists can also delete a release draft. Track and album responses now include `publishedAt`.
+
+### Patch Changes
+
+- 9be2b87: Moved zod to 4.6.7, multer to 2.5.0, body-parser to 1.20.9 and 2.4.0, and undici 8 to
+  8.12.2 to close the high-severity denial-of-service advisories in shipped code. nestjs-zod
+  is patched so nullable fields stay nullable strings in the API contract under zod 4.6.
+  ISO date-time strings validated by zod now need seconds, which `toISOString()` always has.
+- Updated dependencies [f5c0dec]
+- Updated dependencies [7751fcc]
+- Updated dependencies [c935ab5]
+- Updated dependencies [111ba2e]
+- Updated dependencies [2da2be0]
+- Updated dependencies [33e5f72]
+  - @bitrate/player@1.2.0
+
 ## 0.4.0
 
 ### Minor Changes

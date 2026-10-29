@@ -1,5 +1,45 @@
 # @bitrate/web-player
 
+## 1.4.0
+
+### Minor Changes
+
+- c935ab5: The player now shows the playing track on the lock screen and in the OS media controls and answers the media keys (`media-session`), starts the next track just before the current one ends instead of after a gap, and lets listeners pick the stream quality or leave it on Auto, a pick that holds for the following tracks. In web-player the quality picker sits in the now-playing view, Shift+←/→ skips 10 seconds, L likes the track, Q opens the queue, + and − change the volume, and screen readers hear which track is now playing.
+- 894e277: Translate the rest of the app into Ukrainian and Polish: Activity, Friends, Notifications, Charts, Stats, Profile, Album, Artist, Podcast, Playlist, Library, the player and the side panels now follow the chosen language, with proper plural forms. Dates, relative times and numbers are formatted in the app's language instead of a fixed English or the browser's locale.
+- 33e5f72: The player bar, the mobile island, the now-playing view and the floating window now all mirror the one `<bitrate-player>` that plays, so play, shuffle, repeat and seeking come from the same element everywhere. The bar, island and now-playing view keep their design, and Previous/Next keep their track previews. The floating window is now the element's `floating` layout, moved into the picture-in-picture window. `@bitrate/player` gained translatable `labels`, a `stacked` seek, theme variables for accent, Play button, rail, thumb and time, and optional `duration`/`startTime` on a source that are shown, and the start resumed, before the media loads. A host-composed element also keeps its content width in a flex row.
+
+### Patch Changes
+
+- 7751fcc: Moved the CMAF/MSE playback path with adaptive bitrate from web-player into `@bitrate/player/engine`. The host now supplies the storage for remembered bandwidth and the debug default through `configureCmafEngine`; web-player plays exactly as before, now through the shared engine.
+- 2da2be0: `<bitrate-player>` gained a streaming mode: with `streaming` set it plays `source` over the CMAF path with adaptive bitrate, falls back to the host's legacy adapter, prefetches `next` into a second media element and switches to it instantly, and reports `statechange`, `ended` (with the play key), `play`, `pause` and `error`. Hosts can now `seek()`, set `volume` and `muted`, read `state`, and point a second element at the first with `mirror` to render and control it. web-player now plays through this element instead of its own audio slots; playback behaves as before, and a play requested before the track had loaded no longer gets lost.
+- f2ff45b: Artists can now publish an approved release on Bitrate from the Launch stage, right away or as a premiere at the planned time, take it offline and publish it again. A release goes live all at once: its tracks stay hidden from listeners until every recording has been converted, then the album and tracks appear together and followers get one notification. The workspace links to the album in the player once the release is live. Admins can retry a failed publication and take a live release down; a release taken down by Bitrate cannot be republished by the artist. Artists can also delete a release draft. Track and album responses now include `publishedAt`.
+- bd6d23a: Gave each account kind its own session cookies: `user_access_token`/`user_refresh_token` for
+  the player, `artist_*` for the artists portal and `staff_*` for the admin panel. All of them
+  live on the shared cookie domain, so the single `access_token`/`refresh_token` pair let a
+  sign-in to one app overwrite the session of another — signing in to the admin logged the
+  player out, and the other way round. The names are now fixed in code (`SESSION_COOKIE_NAMES`,
+  mirrored in `@bitrate/contracts`) and `ACCESS_TOKEN_NAME`/`REFRESH_TOKEN_NAME` are gone.
+  Existing sessions sign in once more; the old shared cookies are cleared on the next sign-in
+  or sign-out.
+- 9be2b87: Moved zod to 4.6.7, multer to 2.5.0, body-parser to 1.20.9 and 2.4.0, and undici 8 to
+  8.12.2 to close the high-severity denial-of-service advisories in shipped code. nestjs-zod
+  is patched so nullable fields stay nullable strings in the API contract under zod 4.6.
+  ISO date-time strings validated by zod now need seconds, which `toISOString()` always has.
+- 7c791a5: Fixed layout glitches found by the new screenshot tests. Cards in profile grids no longer overlap each other, the home artist row keeps its card width, listening stats tiles fit four to a row on wide screens, and artists without a picture get a soft colour wash in the hero and the About panel instead of a stretched placeholder.
+- 4467897: Show the design's states and copy. Error pages and toasts no longer show raw exception or schema text; the library, Liked Songs, albums and profiles get their own "could not be loaded" states with Try again instead of falling back to "not found"; empty states for the library, podcasts, albums and playlists use the design's copy and actions; the artist page orders Fans also like before About; legal pages use the design's heading sizes; nested pages on mobile get a Back button.
+- b398ca8: Reach every page from every screen size: the library panel, the profile menu and the mobile menu now share one navigation list, so Charts, Activity, Friends and Your listening are on phones too. The profile menu no longer previews notifications (the bell does), the dead Premium, Support and Download links are gone, and pages on mobile show their own title once.
+- 61c6190: Give each action one behaviour. Playlists are always created through the library form; the library no longer repeats listening history (it lives on Recents, and Home links there); the library panel and page share one sort, now called "Recently added". Every like button shares the server's liked state, so a track liked beyond the first hundred shows as liked everywhere. Playlist and album cards always open on click and play from their Play button; Up Next plays context tracks from the row; the header Activity panel plays tracks like the Activity page; Sign up and Log in read the same on every header.
+- 88b9232: Draw the same pattern the same way everywhere. Filter chips, tabs, menus, page search fields and error states each come from one shared component, header popovers show the same states as their pages, and every surface uses the design's colour roles, so menus and hover states no longer turn invisible in the light theme.
+- Updated dependencies [f5c0dec]
+- Updated dependencies [7751fcc]
+- Updated dependencies [c935ab5]
+- Updated dependencies [111ba2e]
+- Updated dependencies [2da2be0]
+- Updated dependencies [9be2b87]
+- Updated dependencies [33e5f72]
+  - @bitrate/player@1.2.0
+  - @bitrate/ui-react@1.2.3
+
 ## 1.3.1
 
 ### Patch Changes
