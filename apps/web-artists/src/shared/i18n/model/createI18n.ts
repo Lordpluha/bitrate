@@ -32,8 +32,23 @@ type TranslatePlural = (input: TranslatePluralInput) => string
 export type I18n = {
   locale: Locale
   t: Translate
+  /**
+   * Translates a message that may be a catalog key — form schemas and server functions
+   * return keys — and passes anything else, such as an API error, through unchanged.
+   * Takes a form error's optional message as is; no message renders as nothing.
+   */
+  tMessage: (message: string | undefined) => string
   tp: TranslatePlural
 }
+
+/**
+ * Marks a catalog key used as a message outside React — a form schema, a server function —
+ * so the compiler checks it exists; the component renders it with `tMessage`.
+ */
+export const messageKey = (key: TranslationKey) => key
+
+const isTranslationKey = (message: string): message is TranslationKey =>
+  Object.hasOwn(en, message)
 
 const interpolate = (message: string, values?: TranslationValues) => {
   if (!values) return message
@@ -54,9 +69,14 @@ export const createI18n = ({ locale }: CreateI18nInput): I18n => {
   const pluralRules = new Intl.PluralRules(locale)
   const numberFormat = new Intl.NumberFormat(locale)
 
+  const t: Translate = (key, values) =>
+    interpolate(messages[key] ?? en[key], values)
+
   return {
     locale,
-    t: (key, values) => interpolate(messages[key] ?? en[key], values),
+    t,
+    tMessage: (message = '') =>
+      isTranslationKey(message) ? t(message) : message,
     tp: ({ count, key, values }) => {
       const message =
         messages[`${key}.${pluralRules.select(count)}`] ??

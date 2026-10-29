@@ -9,6 +9,7 @@ import {
   Typography,
 } from '@bitrate/ui-react'
 import { apiBaseUrl } from '@shared/api'
+import { Interpolate, type TranslationKey, useI18n } from '@shared/i18n'
 import { ROUTES } from '@shared/routes/routes'
 import { useState } from 'react'
 
@@ -26,19 +27,19 @@ const ACCEPTANCE_QUERY = '?acceptLegal=true&acceptArtistAgreement=true'
 
 /** One social provider a visitor can sign up with. */
 type SocialProvider = {
-  label: string
+  label: TranslationKey
   Icon: typeof GoogleIcon
   href: string
 }
 
 const PROVIDERS: SocialProvider[] = [
   {
-    label: 'Continue with Google',
+    label: 'auth.social.google',
     Icon: GoogleIcon,
     href: `${apiBaseUrl}/api/v1/artists/auth/oauth/google${ACCEPTANCE_QUERY}`,
   },
   {
-    label: 'Continue with Facebook',
+    label: 'auth.social.facebook',
     Icon: FacebookArtistIcon,
     href: `${apiBaseUrl}/api/v1/artists/auth/oauth/facebook${ACCEPTANCE_QUERY}`,
   },
@@ -50,6 +51,17 @@ const PROVIDERS: SocialProvider[] = [
  */
 export const SocialAuthButtons = () => {
   const [accepted, setAccepted] = useState(false)
+  const { t } = useI18n()
+  const legalLink = (href: string, label: string) => (
+    <a
+      className="text-primary hover:opacity-70"
+      href={href}
+      rel="noopener noreferrer"
+      target="_blank"
+    >
+      {label}
+    </a>
+  )
 
   return (
     <>
@@ -60,43 +72,18 @@ export const SocialAuthButtons = () => {
           onCheckedChange={setAccepted}
         />
         <Label className="font-normal leading-snug" htmlFor={CONSENT_ID}>
-          I am at least 16 years old, I accept the{' '}
-          <a
-            className="text-primary hover:opacity-70"
-            href={ROUTES.terms}
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            Terms of Use
-          </a>
-          ,{' '}
-          <a
-            className="text-primary hover:opacity-70"
-            href={ROUTES.community}
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            Community Guidelines
-          </a>{' '}
-          and{' '}
-          <a
-            className="text-primary hover:opacity-70"
-            href={ROUTES.artistAgreement}
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            Artist Agreement
-          </a>
-          , and I have read the{' '}
-          <a
-            className="text-primary hover:opacity-70"
-            href={ROUTES.privacy}
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            Privacy Policy
-          </a>
-          .
+          <Interpolate
+            message={t('auth.social.consent')}
+            values={{
+              terms: legalLink(ROUTES.terms, t('auth.legal.terms')),
+              community: legalLink(ROUTES.community, t('auth.legal.community')),
+              artistAgreement: legalLink(
+                ROUTES.artistAgreement,
+                t('auth.legal.artistAgreement'),
+              ),
+              privacy: legalLink(ROUTES.privacy, t('auth.legal.privacy')),
+            }}
+          />
         </Label>
       </div>
       {PROVIDERS.map(({ label, Icon, href }) => {
@@ -107,7 +94,7 @@ export const SocialAuthButtons = () => {
             </span>
             <span className="w-full text-center">
               <Typography as="p" className="leading-none" size="heading6">
-                {label}
+                {t(label)}
               </Typography>
             </span>
           </>
@@ -125,7 +112,7 @@ export const SocialAuthButtons = () => {
           </Button>
         ) : (
           <Button
-            aria-label={label}
+            aria-label={t(label)}
             className={buttonStyles}
             disabled
             key={label}

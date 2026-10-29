@@ -1,5 +1,6 @@
 import { Button } from '@bitrate/ui-react'
 import type { ArtistIdentity } from '@shared/auth/artistSession.types'
+import { useI18n } from '@shared/i18n'
 import { ROUTES } from '@shared/routes/routes'
 import { Link } from '@tanstack/react-router'
 import { Menu, X } from 'lucide-react'
@@ -14,6 +15,7 @@ interface DashboardMobileMenuProps {
 
 export function DashboardMobileMenu({ artist }: DashboardMobileMenuProps) {
   const [open, setOpen] = useState(false)
+  const { t } = useI18n()
   const dialogId = useId()
   const dialog = useRef<HTMLDialogElement>(null)
   const trigger = useRef<HTMLButtonElement>(null)
@@ -46,7 +48,7 @@ export function DashboardMobileMenu({ artist }: DashboardMobileMenuProps) {
         aria-controls={dialogId}
         aria-expanded={open}
         aria-haspopup="dialog"
-        aria-label="Open workspace menu"
+        aria-label={t('shell.openMenu')}
         className="size-11 shrink-0 bg-card text-text-secondary"
         onClick={() => setOpen(true)}
         ref={trigger}
@@ -56,7 +58,7 @@ export function DashboardMobileMenu({ artist }: DashboardMobileMenuProps) {
         <Menu aria-hidden="true" className="size-5" />
       </Button>
       <dialog
-        aria-label="Workspace menu"
+        aria-label={t('shell.menu')}
         className="artist-dashboard artist-dashboard-menu fixed inset-y-0 left-0 m-0 flex h-dvh max-h-none w-[calc(100vw-4rem)] max-w-80 flex-col rounded-none border-0 border-r border-border bg-card p-3 text-foreground shadow-none"
         id={dialogId}
         onClick={(event) => {
@@ -79,7 +81,7 @@ export function DashboardMobileMenu({ artist }: DashboardMobileMenuProps) {
       >
         <div className="flex shrink-0 items-start justify-between gap-3 px-3 pb-14 pt-3">
           <Link
-            aria-label="Bitrate for Artists dashboard"
+            aria-label={t('shell.homeLink')}
             className="flex min-h-11 items-start gap-3 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             onClick={() => setOpen(false)}
             preload={false}
@@ -95,12 +97,12 @@ export function DashboardMobileMenu({ artist }: DashboardMobileMenuProps) {
             <span>
               <span className="block text-[1.375rem]">Bitrate</span>
               <span className="block text-[0.625rem] uppercase tracking-wide text-text-secondary">
-                For artists
+                {t('shell.forArtists')}
               </span>
             </span>
           </Link>
           <Button
-            aria-label="Close workspace menu"
+            aria-label={t('shell.closeMenu')}
             className="size-11 shrink-0 bg-secondary text-text-secondary"
             onClick={() => setOpen(false)}
             size="icon"
@@ -111,7 +113,7 @@ export function DashboardMobileMenu({ artist }: DashboardMobileMenuProps) {
         </div>
         <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain">
           <p className="mb-4 px-3 text-[0.625rem] uppercase tracking-wide text-text-secondary">
-            Artist workspace
+            {t('shell.artistWorkspace')}
           </p>
           <div className="w-full max-w-56">
             <DashboardDesignNavigation onNavigate={() => setOpen(false)} />
