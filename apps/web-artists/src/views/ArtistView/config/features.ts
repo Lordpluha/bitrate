@@ -1,9 +1,10 @@
+import type { TranslationKey } from '@shared/i18n'
 import { ChartLine, Disc3, type LucideIcon, Send } from 'lucide-react'
 
 export interface LandingFeature {
   icon: LucideIcon
-  title: string
-  description: string
+  title: TranslationKey
+  description: TranslationKey
 }
 
 /**
@@ -13,20 +14,17 @@ export interface LandingFeature {
 export const LANDING_FEATURES: readonly LandingFeature[] = [
   {
     icon: Disc3,
-    title: 'Release workspace',
-    description:
-      'Draft a release, credit everyone who worked on it, confirm rights and splits, and submit it for review.',
+    title: 'landing.feature.workspace',
+    description: 'landing.feature.workspaceDescription',
   },
   {
     icon: Send,
-    title: 'Distribution plan',
-    description:
-      'Choose the stores a release is planned for. Delivery to external stores is not connected yet.',
+    title: 'landing.feature.distribution',
+    description: 'landing.feature.distributionDescription',
   },
   {
     icon: ChartLine,
-    title: 'Analytics',
-    description:
-      'Plays and listeners on Bitrate over 7, 28 or 90 days, track by track.',
+    title: 'landing.feature.analytics',
+    description: 'landing.feature.analyticsDescription',
   },
 ]
