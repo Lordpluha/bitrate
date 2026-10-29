@@ -4,6 +4,7 @@ import {
   type ReleaseWorkspace,
 } from '@entities/release'
 import { ReleaseSubmission } from '@features/submit-release'
+import { type Translate, useI18n } from '@shared/i18n'
 import { CircleAlert, Info } from 'lucide-react'
 
 interface WorkspaceReadinessProps {
@@ -11,11 +12,16 @@ interface WorkspaceReadinessProps {
   release: ReleaseWorkspace
 }
 
-function describeNotice(notice: ReleaseNotice, release: ReleaseWorkspace) {
-  if (notice.code === 'UPC_MISSING')
-    return 'No UPC yet — a code is needed before delivery'
+function describeNotice(
+  notice: ReleaseNotice,
+  release: ReleaseWorkspace,
+  t: Translate,
+) {
+  if (notice.code === 'UPC_MISSING') return t('workspace.readiness.noUpc')
   const track = release.trackDrafts.find((item) => item.id === notice.trackId)
-  return `${track?.title ?? 'A recording'} has no ISRC yet — a code is needed before delivery`
+  return t('workspace.readiness.noIsrc', {
+    title: track?.title ?? t('workspace.readiness.aRecording'),
+  })
 }
 
 export function WorkspaceReadiness({
@@ -23,6 +29,7 @@ export function WorkspaceReadiness({
   release,
 }: WorkspaceReadinessProps) {
   const { blockers, notices } = release.readiness
+  const { t, tp } = useI18n()
   const contributors = Object.fromEntries(
     release.participants.map((person) => [person.id, person.displayName]),
   )
@@ -37,19 +44,24 @@ export function WorkspaceReadiness({
     >
       <div className="flex items-baseline justify-between gap-3">
         <h2 id="release-submit-heading">
-          {blockers.length === 0 ? 'Ready for review' : 'Before review'}
+          {blockers.length === 0
+            ? t('workspace.readiness.ready')
+            : t('workspace.readiness.before')}
         </h2>
         <span className="artist-release-submit-count">
-          {blockers.length} {blockers.length === 1 ? 'blocker' : 'blockers'}
+          {tp({ count: blockers.length, key: 'workspace.readiness.blockers' })}
         </span>
       </div>
       <p>
         {blockers.length === 0
-          ? 'Every required step is complete.'
-          : 'Resolve these before submitting.'}
+          ? t('workspace.readiness.complete')
+          : t('workspace.readiness.resolve')}
       </p>
       {blockers.length > 0 && (
-        <ul aria-label="Blockers" className="artist-release-submit-list">
+        <ul
+          aria-label={t('workspace.readiness.blockersLabel')}
+          className="artist-release-submit-list"
+        >
           {blockers.map((blocker) => (
             <li
               key={`${blocker.code}-${'contributorId' in blocker ? blocker.contributorId : ''}${'rightType' in blocker ? blocker.rightType : ''}${'trackId' in blocker ? blocker.trackId : ''}`}
@@ -62,7 +74,7 @@ export function WorkspaceReadiness({
       )}
       {notices.length > 0 && (
         <ul
-          aria-label="Notes"
+          aria-label={t('workspace.readiness.notesLabel')}
           className="artist-release-submit-list"
           data-tone="info"
         >
@@ -71,7 +83,7 @@ export function WorkspaceReadiness({
               key={`${notice.code}-${'trackId' in notice ? notice.trackId : ''}`}
             >
               <Info aria-hidden="true" />
-              {describeNotice(notice, release)}
+              {describeNotice(notice, release, t)}
             </li>
           ))}
         </ul>

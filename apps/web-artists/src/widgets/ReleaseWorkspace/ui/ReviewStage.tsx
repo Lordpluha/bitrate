@@ -5,6 +5,8 @@ import {
   releaseRoadmap,
 } from '@entities/release'
 import { ReleaseSubmission } from '@features/submit-release'
+import { type TranslationKey, useI18n } from '@shared/i18n'
+import { formatDateTimeUtc } from '@shared/lib/date'
 import { Link } from '@tanstack/react-router'
 import {
   Check,
@@ -17,31 +19,28 @@ import {
 import type { ReactNode } from 'react'
 import { WorkspaceReview } from './WorkspaceReview'
 
-const submittedAt = new Intl.DateTimeFormat('en-US', {
-  dateStyle: 'medium',
-  timeStyle: 'short',
-  timeZone: 'UTC',
-})
-
 /** What happens to a submitted release, so the artist knows where it stands and what comes next. */
 const REVIEW_STEPS = [
   {
     state: 'complete',
-    title: 'Submitted',
-    detail: 'The draft is locked so the reviewer sees exactly what you sent.',
+    title: 'workspace.review.stepSubmitted',
+    detail: 'workspace.review.stepSubmittedDetail',
   },
   {
     state: 'current',
-    title: 'Bitrate checks the release',
-    detail: 'Audio, artwork, credits and rights.',
+    title: 'workspace.review.stepChecks',
+    detail: 'workspace.review.stepChecksDetail',
   },
   {
     state: 'upcoming',
-    title: 'Decision',
-    detail:
-      'Approved: plan stores and territories. Changes requested: revise and submit again.',
+    title: 'workspace.review.stepDecision',
+    detail: 'workspace.review.stepDecisionDetail',
   },
-] as const
+] as const satisfies readonly {
+  state: string
+  title: TranslationKey
+  detail: TranslationKey
+}[]
 
 function StageLink({
   release,
@@ -71,6 +70,7 @@ function StageLink({
 
 /** What Bitrate checks: the preparation steps, each ready or still open. */
 function ReadinessSummary({ release }: { release: ReleaseWorkspace }) {
+  const { t } = useI18n()
   const steps = releaseRoadmap(release).filter((step) =>
     ['artwork', 'audio', 'credits', 'rights'].includes(step.key),
   )
@@ -84,7 +84,11 @@ function ReadinessSummary({ release }: { release: ReleaseWorkspace }) {
             <CircleDashed aria-hidden="true" />
           )}
           <span>{step.label}</span>
-          <span>{step.state === 'done' ? 'Ready' : 'Needed'}</span>
+          <span>
+            {step.state === 'done'
+              ? t('workspace.ready')
+              : t('workspace.needed')}
+          </span>
         </li>
       ))}
     </ul>
@@ -100,6 +104,7 @@ interface ReviewStageProps {
 export function ReviewStage({ artistId, release }: ReviewStageProps) {
   const review = release.latestReview
   const { status } = release
+  const { t, tp, locale } = useI18n()
 
   const main =
     status === 'SUBMITTED' ? (
@@ -113,19 +118,23 @@ export function ReviewStage({ artistId, release }: ReviewStageProps) {
             <Clock aria-hidden="true" />
           </span>
           <div className="min-w-0 flex-1">
-            <h2 id="release-review-heading">Waiting for a reviewer</h2>
+            <h2 id="release-review-heading">{t('workspace.review.waiting')}</h2>
             {release.submittedAt && (
               <p>
-                Submitted {submittedAt.format(new Date(release.submittedAt))}{' '}
-                UTC
+                {t('workspace.review.submittedAt', {
+                  date: formatDateTimeUtc(release.submittedAt, locale),
+                })}
               </p>
             )}
           </div>
           <span className="artist-release-chip" data-tone="info">
-            In review
+            {t('labels.releaseStatus.inReview')}
           </span>
         </div>
-        <ol aria-label="Review progress" className="artist-release-timeline">
+        <ol
+          aria-label={t('workspace.review.progress')}
+          className="artist-release-timeline"
+        >
           {REVIEW_STEPS.map((step, index) => (
             <li data-state={step.state} key={step.title}>
               <span aria-hidden="true" className="artist-release-step-mark">
@@ -133,16 +142,16 @@ export function ReviewStage({ artistId, release }: ReviewStageProps) {
               </span>
               <span className="min-w-0">
                 <span className="artist-release-timeline-title">
-                  {step.title}
+                  {t(step.title)}
                 </span>
-                <span>{step.detail}</span>
+                <span>{t(step.detail)}</span>
               </span>
             </li>
           ))}
         </ol>
         <p className="artist-release-honest">
           <Info aria-hidden="true" />
-          Nothing is sent to stores while Bitrate reviews the release.
+          {t('workspace.review.honest')}
         </p>
         <div className="mt-5">
           <ReleaseSubmission artistId={artistId} release={release} />
@@ -156,11 +165,10 @@ export function ReviewStage({ artistId, release }: ReviewStageProps) {
         className="artist-release-workspace-panel artist-release-stage-main artist-release-empty-stage"
       >
         <Send aria-hidden="true" />
-        <h2 id="release-review-heading">Not submitted yet</h2>
-        <p>
-          Bitrate review starts when you submit the draft. Feedback and the
-          decision appear here.
-        </p>
+        <h2 id="release-review-heading">
+          {t('workspace.review.notSubmitted')}
+        </h2>
+        <p>{t('workspace.review.notSubmittedHint')}</p>
       </section>
     )
 
@@ -170,11 +178,14 @@ export function ReviewStage({ artistId, release }: ReviewStageProps) {
         aria-labelledby="release-review-next-heading"
         className="artist-release-workspace-panel artist-release-stage-side"
       >
-        <h2 id="release-review-next-heading">Review progress</h2>
+        <h2 id="release-review-next-heading">
+          {t('workspace.review.progress')}
+        </h2>
         <p>
-          {review?.requiredChanges.length ?? 0} required{' '}
-          {review?.requiredChanges.length === 1 ? 'change' : 'changes'} before
-          resubmitting.
+          {tp({
+            count: review?.requiredChanges.length ?? 0,
+            key: 'workspace.review.requiredChanges',
+          })}
         </p>
         <div className="mt-4">
           <ReleaseSubmission artistId={artistId} release={release} />
@@ -185,13 +196,10 @@ export function ReviewStage({ artistId, release }: ReviewStageProps) {
         aria-labelledby="release-review-next-heading"
         className="artist-release-workspace-panel artist-release-stage-side"
       >
-        <h2 id="release-review-next-heading">What happens next</h2>
-        <p>
-          Approval does not deliver the release. Publish it on Bitrate from
-          Launch, and plan stores and territories when you are ready.
-        </p>
+        <h2 id="release-review-next-heading">{t('workspace.whatNext')}</h2>
+        <p>{t('workspace.review.nextHint')}</p>
         <StageLink release={release} stage="deliver">
-          Plan delivery
+          {t('workspace.review.planDelivery')}
         </StageLink>
       </section>
     ) : (
@@ -199,11 +207,13 @@ export function ReviewStage({ artistId, release }: ReviewStageProps) {
         aria-labelledby="release-review-next-heading"
         className="artist-release-workspace-panel artist-release-stage-side"
       >
-        <h2 id="release-review-next-heading">Release readiness</h2>
+        <h2 id="release-review-next-heading">
+          {t('workspace.review.readiness')}
+        </h2>
         <ReadinessSummary release={release} />
         {status === 'DRAFT' && (
           <StageLink release={release} stage="draft">
-            Back to the draft
+            {t('workspace.review.backToDraft')}
           </StageLink>
         )}
       </section>

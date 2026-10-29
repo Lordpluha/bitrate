@@ -7,6 +7,7 @@ import {
   rightTypeLabels,
   rightTypes,
 } from '@entities/release'
+import { useI18n } from '@shared/i18n'
 import {
   CircleAlert,
   CircleCheck,
@@ -25,6 +26,7 @@ interface WorkspaceCreditsProps {
 /** Who made the release, their roles and their share of each right, in one place. */
 export function WorkspaceCredits({ release, onAction }: WorkspaceCreditsProps) {
   const draft = release.status === 'DRAFT'
+  const { t } = useI18n()
   const share = (contributorId: string, rightType: string) =>
     release.splits.find(
       (split) =>
@@ -43,7 +45,8 @@ export function WorkspaceCredits({ release, onAction }: WorkspaceCreditsProps) {
     >
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h2 id="release-credits-heading">
-          Credits &amp; splits <span>({release.participantCount})</span>
+          {t('workspace.credits.title')}{' '}
+          <span>({release.participantCount})</span>
         </h2>
         {draft && release.participantCount > 0 && (
           <Button
@@ -52,15 +55,15 @@ export function WorkspaceCredits({ release, onAction }: WorkspaceCreditsProps) {
             size="sm"
             variant="outline"
           >
-            Edit splits
+            {t('workspace.credits.editSplits')}
           </Button>
         )}
       </div>
-      <p>
-        Who made this release, what they did, and their share of the master (the
-        recording) and publishing (the music and lyrics).
-      </p>
-      <ul aria-label="Split totals" className="artist-release-credit-totals">
+      <p>{t('workspace.credits.description')}</p>
+      <ul
+        aria-label={t('workspace.credits.totals')}
+        className="artist-release-credit-totals"
+      >
         {totals.map(({ rightType, total }) => {
           const complete = total === FULL_SHARE_BASIS_POINTS
           return (
@@ -70,17 +73,18 @@ export function WorkspaceCredits({ release, onAction }: WorkspaceCreditsProps) {
               ) : (
                 <CircleDashed aria-hidden="true" />
               )}
-              {rightTypeLabels[rightType]} {basisPointsToPercent(total)}% of
-              100%
+              {t('workspace.credits.total', {
+                right: rightTypeLabels[rightType],
+                percent: basisPointsToPercent(total),
+              })}
             </li>
           )
         })}
       </ul>
       {release.participants.length === 0 ? (
         <p>
-          No credited participants yet.
-          {draft &&
-            ' Made everything yourself? Credit yourself in one step; working with others, add each contributor.'}
+          {t('workspace.credits.none')}
+          {draft && ` ${t('workspace.credits.noneHint')}`}
         </p>
       ) : (
         <ul className="artist-release-credit-list">
@@ -97,13 +101,13 @@ export function WorkspaceCredits({ release, onAction }: WorkspaceCreditsProps) {
                           aria-hidden="true"
                           className="size-3.5 shrink-0"
                         />
-                        Needs role
+                        {t('workspace.credits.needsRole')}
                       </span>
                     )}
                     <p>
                       {person.roles
                         .map((role) => participantRoleLabels[role])
-                        .join(' · ') || 'No roles specified'}
+                        .join(' · ') || t('workspace.credits.noRoles')}
                     </p>
                     <p className="artist-release-credit-shares">
                       {rightTypes
@@ -115,7 +119,7 @@ export function WorkspaceCredits({ release, onAction }: WorkspaceCreditsProps) {
                     </p>
                     {missingRole && (
                       <p className="artist-release-credit-helper">
-                        Assign at least one role.
+                        {t('workspace.credits.assignRole')}
                       </p>
                     )}
                   </div>
@@ -124,8 +128,12 @@ export function WorkspaceCredits({ release, onAction }: WorkspaceCreditsProps) {
                       <Button
                         aria-label={
                           missingRole
-                            ? `Edit roles for ${person.displayName}`
-                            : `Edit contributor ${person.displayName}`
+                            ? t('workspace.credits.editRolesFor', {
+                                name: person.displayName,
+                              })
+                            : t('workspace.credits.editContributor', {
+                                name: person.displayName,
+                              })
                         }
                         className="min-h-11 min-w-11"
                         onClick={() =>
@@ -138,13 +146,18 @@ export function WorkspaceCredits({ release, onAction }: WorkspaceCreditsProps) {
                         variant="ghost"
                       >
                         {missingRole ? (
-                          'Edit roles'
+                          t('workspace.credits.editRoles')
                         ) : (
                           <Pencil aria-hidden="true" className="size-4" />
                         )}
                       </Button>
                       <Button
-                        aria-label={`Remove contributor ${person.displayName}`}
+                        aria-label={t(
+                          'workspace.credits.removeContributorFor',
+                          {
+                            name: person.displayName,
+                          },
+                        )}
                         className="min-h-11 min-w-11"
                         onClick={() =>
                           onAction({
@@ -153,7 +166,7 @@ export function WorkspaceCredits({ release, onAction }: WorkspaceCreditsProps) {
                           })
                         }
                         size="icon"
-                        title="Remove contributor"
+                        title={t('workspace.credits.removeContributor')}
                         variant="ghost"
                       >
                         <Trash2 aria-hidden="true" className="size-4" />
@@ -168,8 +181,10 @@ export function WorkspaceCredits({ release, onAction }: WorkspaceCreditsProps) {
       )}
       {release.participantCount > release.participants.length && (
         <p>
-          Showing {release.participants.length} of {release.participantCount}{' '}
-          participants.
+          {t('workspace.credits.partial', {
+            shown: release.participants.length,
+            total: release.participantCount,
+          })}
         </p>
       )}
       {draft && (
@@ -181,8 +196,8 @@ export function WorkspaceCredits({ release, onAction }: WorkspaceCreditsProps) {
               size="sm"
               variant="outline"
             >
-              <UserRoundCheck aria-hidden="true" className="size-4" />I made it
-              myself
+              <UserRoundCheck aria-hidden="true" className="size-4" />
+              {t('workspace.credits.self')}
             </Button>
           )}
           <Button
@@ -191,13 +206,12 @@ export function WorkspaceCredits({ release, onAction }: WorkspaceCreditsProps) {
             size="sm"
             variant="outline"
           >
-            Add contributor
+            {t('workspace.credits.add')}
           </Button>
         </div>
       )}
       <p className="artist-release-footnote">
-        Credits do not grant workspace access. Each split must reach exactly
-        100% before review.
+        {t('workspace.credits.footnote')}
       </p>
     </section>
   )
