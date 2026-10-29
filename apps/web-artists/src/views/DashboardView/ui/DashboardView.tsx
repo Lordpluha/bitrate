@@ -1,7 +1,7 @@
 import { Button } from '@bitrate/ui-react'
 import { useArtistDashboard } from '@entities/dashboard'
 import { CreateReleaseButton } from '@features/workspace-actions'
-import { useI18n } from '@shared/i18n'
+import { Interpolate, useI18n } from '@shared/i18n'
 import { DashboardOverview } from '@widgets/DashboardOverview'
 import { Upload } from 'lucide-react'
 
@@ -11,21 +11,21 @@ interface DashboardViewProps {
 
 /** First run until a release exists, then the returning-artist overview. */
 export function DashboardView({ artistId }: DashboardViewProps) {
-  const { tMessage } = useI18n()
+  const { t, tMessage } = useI18n()
   const dashboard = useArtistDashboard(artistId)
   return (
     <div className="artist-workspace-dashboard flex flex-col">
       <div>
         <h1 className="text-[1.75rem] font-normal leading-[1.5] lg:text-[2rem]">
-          Dashboard
+          {t('shell.nav.dashboard')}
         </h1>
         <p className="mt-2 text-sm leading-[1.5] text-text-secondary lg:text-[0.9375rem]">
-          Everything you need for your next release.
+          {t('dashboard.subtitle')}
         </p>
       </div>
       {dashboard.isPending ? (
         <p className="mt-8" role="status">
-          Loading your workspace…
+          {t('dashboard.loading')}
         </p>
       ) : dashboard.isError ? (
         <div className="mt-8 space-y-3">
@@ -36,7 +36,7 @@ export function DashboardView({ artistId }: DashboardViewProps) {
             }}
             variant="outline"
           >
-            Try again
+            {t('common.tryAgain')}
           </Button>
         </div>
       ) : dashboard.data.counts.releases === 0 ? (
@@ -49,11 +49,12 @@ export function DashboardView({ artistId }: DashboardViewProps) {
 }
 
 function FirstReleasePrompt() {
+  const { t } = useI18n()
   return (
     <>
       <CreateReleaseButton className="mt-7 w-full lg:hidden" />
       <section
-        aria-label="Release workspace"
+        aria-label={t('dashboard.first.label')}
         className="artist-workspace-first-release mt-8 rounded-xl border border-border px-6 lg:mt-12 lg:px-8"
       >
         <Upload
@@ -62,23 +63,24 @@ function FirstReleasePrompt() {
         />
         <h2 className="artist-workspace-empty-title text-2xl font-normal lg:text-[1.625rem]">
           <span className="lg:hidden">
-            Your first track.
+            {t('dashboard.first.line1')}
             <br />
-            Your next step.
+            {t('dashboard.first.line2')}
           </span>
-          <span className="hidden lg:inline">Start with a finished track</span>
+          <span className="hidden lg:inline">{t('dashboard.first.title')}</span>
         </h2>
         <p className="artist-workspace-empty-description text-sm text-text-secondary lg:text-[0.9375rem]">
-          Upload your audio and artwork. We’ll help you prepare
-          <br className="hidden lg:block" /> your release details and find the
-          next step.
+          <Interpolate
+            message={t('dashboard.first.description')}
+            values={{ br: <br className="hidden lg:block" /> }}
+          />
         </p>
         <CreateReleaseButton
           className="artist-workspace-empty-action hidden w-full max-w-84 lg:inline-flex"
           first
         />
         <p className="artist-workspace-empty-reassurance hidden text-xs text-text-secondary lg:block">
-          You can finish your draft later.
+          {t('dashboard.first.reassurance')}
         </p>
       </section>
     </>

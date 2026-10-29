@@ -1,5 +1,6 @@
 import { artistMusicKeys } from '@shared/api/artistMusicKeys'
 import { clientFetchClient } from '@shared/api/fetchClient'
+import { messageKey } from '@shared/i18n'
 import { useQuery } from '@tanstack/react-query'
 import { artistDashboardSchema } from '../model/dashboard.schema'
 
@@ -18,6 +19,6 @@ async function getArtistDashboard(signal: AbortSignal) {
   })
   const parsed = artistDashboardSchema.safeParse(result.data)
   if (!result.response.ok || !parsed.success)
-    throw new Error('Could not load your dashboard. Please try again.')
+    throw new Error(messageKey('dashboard.error.load'))
   return parsed.data
 }
