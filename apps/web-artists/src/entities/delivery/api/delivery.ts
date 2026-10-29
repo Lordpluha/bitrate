@@ -2,6 +2,7 @@ import type { ApiSchemas } from '@bitrate/contracts'
 import { artistMusicKeys } from '@shared/api/artistMusicKeys'
 import { clientFetchClient } from '@shared/api/fetchClient'
 import { writeSignal } from '@shared/api/writeTimeout'
+import { messageKey } from '@shared/i18n'
 import {
   keepPreviousData,
   useMutation,
@@ -25,10 +26,10 @@ async function getReleaseDelivery(id: string, signal: AbortSignal) {
     signal,
   })
   if (result.response.status === 404)
-    throw new Error('This release is no longer available.')
+    throw new Error(messageKey('release.error.gone'))
   const parsed = releaseDeliverySchema.safeParse(result.data)
   if (!result.response.ok || !parsed.success || parsed.data.releaseId !== id)
-    throw new Error('Could not load the delivery plan. Please try again.')
+    throw new Error(messageKey('delivery.error.load'))
   return parsed.data
 }
 
@@ -39,7 +40,7 @@ async function getDistribution(page: number, signal: AbortSignal) {
   })
   const parsed = distributionPageSchema.safeParse(result.data)
   if (!result.response.ok || !parsed.success || parsed.data.page !== page)
-    throw new Error('Could not load distribution. Please try again.')
+    throw new Error(messageKey('delivery.error.loadList'))
   return parsed.data
 }
 
@@ -69,10 +70,8 @@ const planResultSchema = z.object({
   delivery: releaseDeliverySchema,
 })
 
-const STALE =
-  'This release changed or is no longer a draft. Your choices are kept here; close and reopen the form to review the latest version.'
-const UNCONFIRMED =
-  'Could not confirm the delivery plan was saved. Close this form and check the release before trying again.'
+const STALE = messageKey('delivery.error.stale')
+const UNCONFIRMED = messageKey('delivery.error.unconfirmed')
 
 interface DeliveryPlanRequest {
   id: string
@@ -95,9 +94,8 @@ async function saveDeliveryPlan({ id, input }: DeliveryPlanRequest) {
   }
   const { status } = result.response
   if (status === 409) throw new Error(STALE)
-  if (status === 404) throw new Error('This release is no longer available.')
-  if (status === 400)
-    throw new Error('Choose stores and valid countries, then try again.')
+  if (status === 404) throw new Error(messageKey('release.error.gone'))
+  if (status === 400) throw new Error(messageKey('delivery.error.invalid'))
   const parsed = planResultSchema.safeParse(result.data)
   if (
     !result.response.ok ||
