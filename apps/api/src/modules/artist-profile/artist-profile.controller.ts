@@ -24,12 +24,15 @@ import { ArtistProfileService, type ProfileImageKind } from './artist-profile.se
 import {
   ReadArtistProfileSwagger,
   RemoveProfileImageSwagger,
+  SetArtistLocaleSwagger,
   UpdateArtistProfileSwagger,
   UploadProfileImageSwagger,
 } from './decorators'
 import {
   type ProfileImageVersionDto,
   ProfileImageVersionSchema,
+  type SetArtistLocaleDto,
+  SetArtistLocaleSchema,
   type UpdateArtistProfileDto,
   UpdateArtistProfileSchema,
 } from './dtos/artist-profile.dto'
@@ -60,6 +63,18 @@ export class ArtistProfileController {
     @Body(new ZodValidationPipe(UpdateArtistProfileSchema)) input: UpdateArtistProfileDto,
   ) {
     return this.profile.update(request.artist.id, input)
+  }
+
+  // Declared before `:kind` so `locale` is never read as an image kind.
+  @SetArtistLocaleSwagger()
+  @ArtistAuth()
+  @Header('Cache-Control', 'private, no-store')
+  @Put('locale')
+  setLocale(
+    @Req() request: ArtistAuthRequest,
+    @Body(new ZodValidationPipe(SetArtistLocaleSchema)) input: SetArtistLocaleDto,
+  ) {
+    return this.profile.setLocale(request.artist.id, input.locale)
   }
 
   @UploadProfileImageSwagger()

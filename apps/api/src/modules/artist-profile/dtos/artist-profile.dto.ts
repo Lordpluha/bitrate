@@ -1,5 +1,6 @@
 import { createZodDto } from 'nestjs-zod'
 import { z } from 'zod'
+import { SUPPORTED_LOCALES } from '../../../i18n/supported-locales'
 
 const httpsLink = z
   .url({ protocol: /^https$/ })
@@ -51,5 +52,12 @@ export const UpdateArtistProfileSchema = z.strictObject({
 
 export const ProfileImageVersionSchema = z.strictObject({ expectedUpdatedAt })
 
+export const SetArtistLocaleSchema = z.strictObject({
+  locale: z
+    .enum(SUPPORTED_LOCALES)
+    .describe('Workspace language; transactional emails follow it where a template exists'),
+})
+
 export class UpdateArtistProfileDto extends createZodDto(UpdateArtistProfileSchema) {}
 export class ProfileImageVersionDto extends createZodDto(ProfileImageVersionSchema) {}
+export class SetArtistLocaleDto extends createZodDto(SetArtistLocaleSchema) {}
