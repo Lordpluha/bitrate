@@ -115,12 +115,15 @@ describe('useStreamingPlayer', () => {
     const { element } = renderPlayer()
     startPlaylist()
 
-    expect(element.streaming).not.toBeNull()
+    expect(element.streaming).toMatchObject({
+      renditionUrl: expect.any(Function),
+    })
+    expect(element.streaming).not.toHaveProperty('legacy')
     expect(element.source).toMatchObject({
       key: expect.stringContaining('p1:a:'),
-      progressiveUrl: '/audio/a.mp3',
       trackId: 'a',
     })
+    expect(element.source).not.toHaveProperty('progressiveUrl')
     expect(element.next).toMatchObject({ trackId: 'b' })
     expect(element.play).toHaveBeenCalled()
   })

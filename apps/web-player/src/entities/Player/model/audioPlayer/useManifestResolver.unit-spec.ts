@@ -33,10 +33,10 @@ describe('fetchTrackManifest', () => {
     fetchWithAuthRefresh.mockReset()
   })
 
-  it('treats only a missing manifest as a legacy track', async () => {
+  it('treats only a missing manifest as a track that cannot play yet', async () => {
     fetchWithAuthRefresh.mockResolvedValue(new Response(null, { status: 404 }))
 
-    await expect(fetchTrackManifest('legacy')).resolves.toBeNull()
+    await expect(fetchTrackManifest('unprocessed')).resolves.toBeNull()
   })
 
   it('keeps transient server failures rejectable for React Query retries', async () => {

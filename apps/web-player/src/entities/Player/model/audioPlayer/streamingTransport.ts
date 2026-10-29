@@ -3,12 +3,14 @@ import type {
   TrackManifest,
 } from '@bitrate/player/contract'
 import { configureCmafEngine } from '@bitrate/player/engine'
-import { fetchRenditionRange } from '@/entities/Player/api/client'
+import {
+  fetchRenditionRange,
+  getRenditionUrl,
+} from '@/entities/Player/api/client'
 import {
   isSlowNetwork,
   sessionPositionStore,
 } from '@/entities/Player/model/audioPlayer/audioPlayer.utils'
-import { createHlsLegacyAdapter } from '@/entities/Player/model/audioPlayer/hlsLegacyAdapter'
 
 let engineConfigured = false
 
@@ -26,14 +28,14 @@ const ensureEngineConfigured = () => {
 }
 
 type CreateStreamingTransportInput = {
-  /** The React Query-cached manifest lookup; `null` keeps a track on the legacy path. */
+  /** The React Query-cached manifest lookup; `null` for a track that cannot play yet. */
   resolveManifest: (trackId: string) => Promise<TrackManifest | null>
 }
 
 /**
  * Everything `<bitrate-player>` needs from web-player to stream: manifests and byte ranges
- * over the app's own authenticated client, the hls.js chain for tracks without a manifest,
- * `sessionStorage` resume positions, and whether the connection is slow.
+ * over the app's own authenticated client, the rendition file a browser without MSE plays
+ * natively, `sessionStorage` resume positions, and whether the connection is slow.
  */
 export const createStreamingTransport = ({
   resolveManifest,
@@ -43,8 +45,8 @@ export const createStreamingTransport = ({
     crossOrigin: 'use-credentials',
     fetchRange: fetchRenditionRange,
     isConstrained: isSlowNetwork,
-    legacy: createHlsLegacyAdapter(),
     positions: sessionPositionStore,
+    renditionUrl: getRenditionUrl,
     resolveManifest,
   }
 }
