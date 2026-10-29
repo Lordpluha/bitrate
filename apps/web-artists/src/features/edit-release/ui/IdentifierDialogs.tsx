@@ -6,6 +6,7 @@ import {
   useSaveTrackIsrc,
   useUpdateRelease,
 } from '@entities/release'
+import { type TranslationKey, useI18n } from '@shared/i18n'
 import { WorkspaceFormModal } from '@shared/ui/WorkspaceFormModal/WorkspaceFormModal'
 import { useId, useState } from 'react'
 import { isrcError, upcError } from '../model/rights.schema'
@@ -15,7 +16,7 @@ interface IdentifierDialogProps {
   label: string
   hint: string
   initial: string
-  validate: (value: string) => string | null
+  validate: (value: string) => TranslationKey | null
   pending: boolean
   error: Error | null
   onReset: () => void
@@ -37,8 +38,9 @@ function IdentifierDialog({
   onClose,
 }: IdentifierDialogProps) {
   const id = useId()
+  const { t } = useI18n()
   const [value, setValue] = useState(initial)
-  const [invalid, setInvalid] = useState<string | null>(null)
+  const [invalid, setInvalid] = useState<TranslationKey | null>(null)
   const submit = async () => {
     const problem = validate(value)
     if (problem) {
@@ -58,7 +60,7 @@ function IdentifierDialog({
       onClose={onClose}
       onSubmit={submit}
       pending={pending}
-      submitLabel="Save code"
+      submitLabel={t('editRelease.saveCode')}
       title={title}
     >
       <div className="space-y-2">
@@ -89,7 +91,7 @@ function IdentifierDialog({
             id={`${id}-error`}
             role="alert"
           >
-            {invalid}
+            {t(invalid)}
           </p>
         )}
       </div>
@@ -112,12 +114,13 @@ export function UpcDialog({
 }: ReleaseDialogProps) {
   const mutation = useUpdateRelease(artistId)
   const [expectedUpdatedAt] = useState(release.updatedAt)
+  const { t } = useI18n()
   return (
     <IdentifierDialog
       error={mutation.error}
-      hint="Optional. 12-digit UPC or 13-digit EAN. Leave empty if your distributor will assign one."
+      hint={t('editRelease.upcHint')}
       initial={release.upc ?? ''}
-      label="Release UPC/EAN"
+      label={t('editRelease.upcLabel')}
       onClose={onClose}
       onReset={() => mutation.reset()}
       onSave={async (upc) => {
@@ -128,7 +131,7 @@ export function UpcDialog({
         onSaved()
       }}
       pending={mutation.isPending}
-      title="Release barcode"
+      title={t('editRelease.upcTitle')}
       validate={upcError}
     />
   )
@@ -148,12 +151,15 @@ export function IsrcDialog({
   const mutation = useSaveTrackIsrc(artistId)
   const [expectedUpdatedAt] = useState(release.updatedAt)
   const track = release.trackDrafts.find((item) => item.id === trackId)
+  const { t } = useI18n()
   return (
     <IdentifierDialog
       error={mutation.error}
-      hint="Optional. Format CC-XXX-YY-NNNNN. Leave empty if your distributor will assign one."
+      hint={t('editRelease.isrcHint')}
       initial={track?.isrc ? formatIsrc(track.isrc) : ''}
-      label={`ISRC for ${track?.title ?? 'this recording'}`}
+      label={t('editRelease.isrcLabel', {
+        title: track?.title ?? t('editRelease.thisRecording'),
+      })}
       onClose={onClose}
       onReset={() => mutation.reset()}
       onSave={async (isrc) => {
@@ -168,7 +174,7 @@ export function IsrcDialog({
         onSaved()
       }}
       pending={mutation.isPending}
-      title="Recording ISRC"
+      title={t('editRelease.isrcTitle')}
       validate={isrcError}
     />
   )

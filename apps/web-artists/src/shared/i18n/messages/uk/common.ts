@@ -1,4 +1,6 @@
 export const common = {
+  'common.cancel': 'Скасувати',
+  'common.saving': 'Зберігаємо…',
   'common.continue': 'Продовжити',
   'common.or': 'або',
   'common.tryAgain': 'Спробувати ще раз',

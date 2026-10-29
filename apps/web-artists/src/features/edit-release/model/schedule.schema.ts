@@ -1,3 +1,4 @@
+import { messageKey } from '@shared/i18n'
 import { z } from 'zod'
 
 const dateSchema = z.iso
@@ -19,13 +20,13 @@ export const scheduleSchema = z
       ctx.addIssue({
         code: 'custom',
         path: ['date'],
-        message: 'Choose a valid release date.',
+        message: messageKey('editRelease.dateInvalid'),
       })
     if (!timeSchema.safeParse(values.time).success)
       ctx.addIssue({
         code: 'custom',
         path: ['time'],
-        message: 'Choose a valid time in UTC.',
+        message: messageKey('editRelease.timeInvalid'),
       })
   })
 

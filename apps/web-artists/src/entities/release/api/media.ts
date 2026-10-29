@@ -1,6 +1,7 @@
 import { clientFetchClient } from '@shared/api/fetchClient'
 import { uploadForm } from '@shared/api/uploadForm'
 import { writeSignal } from '@shared/api/writeTimeout'
+import { messageKey } from '@shared/i18n'
 import { z } from 'zod'
 import { releaseSummarySchema } from '../model/release.schema'
 import { advancedRelease, guardedWrite, type WriteResult } from './guardedWrite'
@@ -51,7 +52,7 @@ async function multipart(
     signal: AbortSignal.timeout(UPLOAD_TIMEOUT_MS),
   })
   if (result.status === 413)
-    throw new Error('This file is larger than the upload limit.')
+    throw new Error(messageKey('release.error.fileTooLarge'))
   return {
     response: new Response(null, { status: result.status }),
     data: result.ok ? result.data : undefined,
@@ -86,9 +87,8 @@ export function uploadCover({
         : undefined
     },
     {
-      invalid: 'Choose a JPEG, PNG or WebP image up to 20 MB.',
-      unconfirmed:
-        'Could not confirm the artwork was saved. Close this window and check the release before trying again.',
+      invalid: messageKey('release.error.coverInvalid'),
+      unconfirmed: messageKey('release.error.coverUnconfirmed'),
     },
   )
 }
@@ -115,9 +115,8 @@ export function removeCover({ id, expectedUpdatedAt }: DraftVersionRequest) {
         : undefined
     },
     {
-      invalid: 'Could not remove the artwork. Please try again.',
-      unconfirmed:
-        'Could not confirm the artwork was removed. Check the release before trying again.',
+      invalid: messageKey('release.error.coverRemoveInvalid'),
+      unconfirmed: messageKey('release.error.coverRemoveUnconfirmed'),
     },
   )
 }
@@ -167,9 +166,8 @@ export function uploadTrack({
       return parsed.data
     },
     {
-      invalid: 'Choose a WAV, FLAC, MP3 or OGG file up to 512 MB.',
-      unconfirmed:
-        'Could not confirm the audio was saved. Close this window and check the tracks before trying again.',
+      invalid: messageKey('release.error.audioInvalid'),
+      unconfirmed: messageKey('release.error.audioUnconfirmed'),
     },
   )
 }
@@ -195,9 +193,8 @@ export function removeTrack({ id, trackId, expectedUpdatedAt }: TrackRequest) {
         : undefined
     },
     {
-      invalid: 'Could not remove this recording. Please try again.',
-      unconfirmed:
-        'Could not confirm the recording was removed. Check the tracks before trying again.',
+      invalid: messageKey('release.error.recordingRemoveInvalid'),
+      unconfirmed: messageKey('release.error.recordingRemoveUnconfirmed'),
     },
   )
 }
@@ -229,9 +226,8 @@ export function renameTrack({
         : undefined
     },
     {
-      invalid: 'Enter a title of up to 255 characters.',
-      unconfirmed:
-        'Could not confirm the title was saved. Close this window and check the tracks before trying again.',
+      invalid: messageKey('release.error.titleInvalid'),
+      unconfirmed: messageKey('release.error.titleUnconfirmed'),
     },
   )
 }
@@ -267,11 +263,10 @@ export function reorderTracks({
         : undefined
     },
     {
-      invalid: 'Could not save the new order. Please try again.',
-      unconfirmed:
-        'Could not confirm the new order. Check the tracks before trying again.',
+      invalid: messageKey('release.error.reorderInvalid'),
+      unconfirmed: messageKey('release.error.reorderUnconfirmed'),
       statusMessages: {
-        422: 'A recording was added or removed meanwhile. Reload to see the latest list.',
+        422: messageKey('release.error.reorderChanged'),
       },
     },
   )

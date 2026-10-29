@@ -24,7 +24,7 @@ export function DraftEditorLoader({
   onClose,
   renderDraft,
 }: DraftEditorLoaderProps) {
-  const { tMessage } = useI18n()
+  const { t, tMessage } = useI18n()
   const query = useRelease(artistId, releaseId)
   if (
     query.data &&
@@ -36,7 +36,7 @@ export function DraftEditorLoader({
   return (
     <WorkspaceModal onClose={onClose} title={title}>
       {query.isPending ? (
-        <p role="status">Loading the latest draft…</p>
+        <p role="status">{t('editRelease.loadingDraft')}</p>
       ) : query.isError ? (
         <div className="space-y-4">
           <p role="alert">{tMessage(query.error.message)}</p>
@@ -46,14 +46,11 @@ export function DraftEditorLoader({
             }}
             variant="outline"
           >
-            Try again
+            {t('common.tryAgain')}
           </Button>
         </div>
       ) : (
-        <p role="alert">
-          This release can no longer be edited here. Close the form and refresh
-          Music to review its status.
-        </p>
+        <p role="alert">{t('editRelease.notEditable')}</p>
       )}
     </WorkspaceModal>
   )
