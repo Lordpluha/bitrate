@@ -13,8 +13,12 @@ name: "[monorepo] PR Scope Reusable"
 on:
   workflow_call:
     inputs:
-      base-sha:
-        description: Base commit of the pull request
+      base-ref:
+        description: Base branch name of the pull request
+        required: true
+        type: string
+      head-sha:
+        description: Head commit of the pull request
         required: true
         type: string
       head-ref:
@@ -63,8 +67,12 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
+      # The event's base.sha can be older than today's base tip, while the checkout is
+      # the PR merged into today's base; diffing the two counts every later base commit. The
+      # current base branch against the PR head is the diff GitHub shows.
       - name: Check PR scope
         if: steps.exempt.outputs.skip != 'true'
         env:
-          BASE_SHA: ${{ inputs.base-sha }}
-        run: node scripts/check-pr-scope.mjs "${BASE_SHA}" HEAD
+          BASE_REF: ${{ inputs.base-ref }}
+          HEAD_SHA: ${{ inputs.head-sha }}
+        run: node scripts/check-pr-scope.mjs "origin/${BASE_REF}" "${HEAD_SHA}"
