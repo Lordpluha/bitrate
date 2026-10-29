@@ -23,4 +23,9 @@ export const landing = {
   'landing.legal.privacy': 'Політика конфіденційності',
   'landing.legal.community': 'Правила спільноти',
   'landing.legal.copyright': 'Авторське право',
+  'landing.home': 'Головна Bitrate для артистів',
+  'landing.legalDraft':
+    'Чернетка — очікує юридичної перевірки. Текст у [[подвійних дужках]] ще не заповнено.',
+  'landing.legalEnglishOnly': 'Цей документ доступний лише англійською.',
+  'landing.otherDocuments': 'Інші юридичні документи',
 } as const
