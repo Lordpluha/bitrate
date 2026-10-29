@@ -119,9 +119,8 @@ player.addEventListener('ended', ({ detail }) => {
 })
 ```
 
-`streaming.legacy` and `source.progressiveUrl` still work but are deprecated: ADR-0065 removes
-the HLS and progressive formats. `seek(seconds)`, `volume`, `muted` and the read-only `state`
-complete it; `statechange`
+CMAF is the only format (ADR-0065): a track whose manifest resolves to `null` reports a playback
+error. `seek(seconds)`, `volume`, `muted` and the read-only `state` complete it; `statechange`
 (`detail`: status, key, time, duration, volume, bitrate, error) fires on every change. Call
 `configureCmafEngine({ storage, debugByDefault })` from `@bitrate/player/engine` once to keep
 the measured bandwidth between tracks.

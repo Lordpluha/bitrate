@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import type { BitratePlayerElement } from '../contract'
-import { resolveSilentSource } from './stories/fixtures'
+import { NATIVE_ONLY_MANIFEST, resolveSilentSource } from './stories/fixtures'
 
 /**
  * The lock-screen / OS media controls. Chromium's real `navigator.mediaSession` cannot report
@@ -37,12 +37,13 @@ async function mountPlayer(mediaSession: boolean): Promise<BitratePlayerElement>
   element.artist = 'Neon Avenue'
   element.coverUrl = 'https://cdn.test/cover.jpg'
   element.onNext = vi.fn()
-  element.streaming = { fetchRange: vi.fn(), resolveManifest: vi.fn(async () => null) }
-  element.source = {
-    key: 'k1',
-    progressiveUrl: await resolveSilentSource({ bitrate: null }),
-    trackId: 'k1',
+  const silent = await resolveSilentSource({ bitrate: null })
+  element.streaming = {
+    fetchRange: vi.fn(),
+    renditionUrl: () => silent,
+    resolveManifest: vi.fn(async () => NATIVE_ONLY_MANIFEST),
   }
+  element.source = { key: 'k1', trackId: 'k1' }
   await expect.poll(() => element.shadowRoot?.querySelectorAll('audio').length).toBe(2)
   return element
 }

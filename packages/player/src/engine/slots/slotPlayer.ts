@@ -3,7 +3,7 @@
  * `useAudioPlayer`/`useAudioSlots`/`useAudioPlayerEvents` for issue 236. The host still decides what
  * plays and what comes next — it sets `source` and `next` keyed per play — and this owns the
  * rest: the CMAF path with adaptive bitrate, the same CMAF file played natively as fallback
- * (or the host's deprecated legacy chain when it gives no `renditionUrl`), prefetching
+ * (ADR-0065), prefetching
  * the next track into the standby element and switching to it instantly, delaying the first
  * play on a constrained connection, and saving the resume position.
  */
@@ -59,7 +59,7 @@ type Slot = {
   media: HTMLAudioElement
   key: string | null
   loader: StreamLoader | null
-  /** The native CMAF file or the host's legacy chain, whichever plays in place of the loader. */
+  /** The natively played CMAF file, when it plays in place of the loader. */
   fallback: { destroy: () => void } | null
   bitrate: number | null
   /** The CMAF ladder of the track in this slot, lowest first. */
@@ -388,15 +388,6 @@ export class SlotPlayer {
       }
     }
 
-    const attachLegacy = () => {
-      if (slot.key !== key) return
-      try {
-        slot.fallback = this.attachLegacy(media, source, isPrefetch, stopPlayback)
-      } catch {
-        stopPlayback()
-      }
-    }
-
     let fellBack = false
     const fallBackFromCmaf = (manifest: TrackManifest) => {
       if (fellBack || slot.key !== key) return
@@ -407,7 +398,7 @@ export class SlotPlayer {
       slot.bitrate = null
       if (!isPrefetch && this.active === index) this.pendingPlay = true
       this.restoreOnMetadata(slot, source)
-      if (!this.attachNative(slot, source, manifest, stopPlayback)) attachLegacy()
+      if (!this.attachNative(slot, source, manifest, stopPlayback)) stopPlayback()
     }
 
     void this.input.streaming
@@ -415,23 +406,21 @@ export class SlotPlayer {
       .then((manifest) => {
         /** A newer track claimed this slot while the manifest was loading. */
         if (slot.key !== key) return
-        if (manifest === null) {
-          attachLegacy()
-          return
-        }
+        /** No manifest means the track cannot play yet: there is no other format to try. */
         const attached =
-          this.attachCmaf(slot, source, manifest, isPrefetch, () => fallBackFromCmaf(manifest)) ||
-          this.attachNative(slot, source, manifest, stopPlayback)
-        if (!attached) attachLegacy()
+          manifest !== null &&
+          (this.attachCmaf(slot, source, manifest, isPrefetch, () => fallBackFromCmaf(manifest)) ||
+            this.attachNative(slot, source, manifest, stopPlayback))
+        if (!attached) stopPlayback()
       })
-      .catch(attachLegacy)
+      .catch(stopPlayback)
 
     if (!isPrefetch) this.restoreOnMetadata(slot, source)
   }
 
   /**
    * Plays one CMAF rendition file through the media element itself: the listener's pin, else
-   * where the ABR would open the track. Returns false when the host gave no `renditionUrl`.
+   * where the ABR would open the track. Returns false when the manifest lists no rendition.
    */
   private attachNative(
     slot: Slot,
@@ -441,7 +430,7 @@ export class SlotPlayer {
   ): boolean {
     const { renditionUrl } = this.input.streaming
     const bitrate = this.nativeBitrate(manifest)
-    if (!renditionUrl || bitrate === undefined) return false
+    if (bitrate === undefined) return false
 
     playerLog('path', `CMAF-файл напрямую, ${bitrate}k`, { trackId: source.trackId })
     const { media } = slot
@@ -461,34 +450,6 @@ export class SlotPlayer {
     const start = pickStartBitrate({ manifest, throughputBps: readRememberedThroughput() })
     if (start === undefined) return undefined
     return capBitrate({ bitrate: start, manifest, maxBitrate: getMaxStreamBitrate() })
-  }
-
-  private attachLegacy(
-    media: HTMLAudioElement,
-    source: BitratePlayerSource,
-    isPrefetch: boolean,
-    onFatalError: () => void,
-  ): { destroy: () => void } {
-    const { progressiveUrl } = source
-    /** The caller turns this into a fatal error: nothing else is left to play. */
-    if (progressiveUrl === undefined) throw new Error(`No playable source for ${source.trackId}`)
-
-    const { legacy } = this.input.streaming
-    if (legacy) {
-      return legacy({
-        media,
-        key: source.key,
-        trackId: source.trackId,
-        progressiveUrl,
-        isPrefetch,
-        onFatalError,
-      })
-    }
-
-    media.addEventListener('error', onFatalError, { once: true })
-    media.src = progressiveUrl
-    media.load()
-    return { destroy: () => media.removeEventListener('error', onFatalError) }
   }
 
   private attachCmaf(

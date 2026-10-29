@@ -9,7 +9,6 @@ import type {
 } from '../contract'
 import { configureCmafEngine } from '../engine'
 import fixtureManifest from './__fixtures__/cmaf/manifest.json'
-import { resolveSilentSource } from './stories/fixtures'
 
 /**
  * The CMAF/MSE path end to end in Chromium, on a fixture made by the API's own
@@ -44,6 +43,10 @@ const manifest: TrackManifest = {
   })),
 }
 const renditionBytes = new Map<number, ArrayBuffer>()
+
+/** The fixture file of one rendition, as a native `<audio>` fetches it. */
+const fixtureUrl = ({ bitrate }: BitratePlayerRenditionUrlInput) =>
+  new URL(`./__fixtures__/cmaf/${bitrate}.m4a`, import.meta.url).href
 
 beforeAll(async () => {
   for (const bitrate of [64, 192]) {
@@ -96,15 +99,12 @@ async function mountCmaf(streaming: Partial<BitratePlayerStreaming>) {
   })
   element.streaming = {
     fetchRange: serveRanges(),
+    renditionUrl: fixtureUrl,
     resolveManifest: vi.fn(async () => manifest),
     ...streaming,
   }
   await expect.poll(() => element.shadowRoot?.querySelectorAll('audio').length).toBe(2)
-  element.source = {
-    key: 'k1',
-    trackId: 't1',
-    progressiveUrl: await resolveSilentSource({ bitrate: null }),
-  }
+  element.source = { key: 'k1', trackId: 't1' }
   return { bitrates, element }
 }
 
@@ -156,7 +156,7 @@ describe('<bitrate-player> CMAF path', () => {
     await expect.poll(() => bitrates.at(-1), { timeout: 5_000 }).toBe(64)
 
     /** The pin carries over to the next play instead of reopening on the top rung. */
-    element.source = { key: 'k2', trackId: 't2', progressiveUrl: '' }
+    element.source = { key: 'k2', trackId: 't2' }
     await expect.poll(() => element.state.key).toBe('k2')
     await expect.poll(() => element.state.bitrate).toBe(64)
     expect(element.state.autoBitrate).toBe(false)
@@ -204,25 +204,9 @@ describe('<bitrate-player> CMAF path', () => {
     expect(ranges).toContain(ninth)
   })
 
-  it('falls back to the progressive file when fragments cannot be loaded', async () => {
-    configureCmafEngine({ storage: fastConnection() })
-    const { element } = await mountCmaf({ fetchRange: serveRanges({ fail: true }) })
-
-    await element.play()
-
-    await expect.poll(() => heard(element).src, { timeout: 5_000 }).toMatch(/^blob:/)
-    await expect.poll(() => element.state.status, { timeout: 5_000 }).toBe('playing')
-    expect(element.state.bitrate).toBeNull()
-  })
-
   it('falls back to the same CMAF file, played natively, when fragments cannot be loaded', async () => {
     configureCmafEngine({ storage: fastConnection() })
-    const fixtureUrl = ({ bitrate }: BitratePlayerRenditionUrlInput) =>
-      new URL(`./__fixtures__/cmaf/${bitrate}.m4a`, import.meta.url).href
-    const { element } = await mountCmaf({
-      fetchRange: serveRanges({ fail: true }),
-      renditionUrl: fixtureUrl,
-    })
+    const { element } = await mountCmaf({ fetchRange: serveRanges({ fail: true }) })
 
     await element.play()
 
