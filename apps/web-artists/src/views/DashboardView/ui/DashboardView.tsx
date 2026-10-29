@@ -1,6 +1,7 @@
 import { Button } from '@bitrate/ui-react'
 import { useArtistDashboard } from '@entities/dashboard'
 import { CreateReleaseButton } from '@features/workspace-actions'
+import { useI18n } from '@shared/i18n'
 import { DashboardOverview } from '@widgets/DashboardOverview'
 import { Upload } from 'lucide-react'
 
@@ -10,6 +11,7 @@ interface DashboardViewProps {
 
 /** First run until a release exists, then the returning-artist overview. */
 export function DashboardView({ artistId }: DashboardViewProps) {
+  const { tMessage } = useI18n()
   const dashboard = useArtistDashboard(artistId)
   return (
     <div className="artist-workspace-dashboard flex flex-col">
@@ -27,7 +29,7 @@ export function DashboardView({ artistId }: DashboardViewProps) {
         </p>
       ) : dashboard.isError ? (
         <div className="mt-8 space-y-3">
-          <p role="alert">{dashboard.error.message}</p>
+          <p role="alert">{tMessage(dashboard.error.message)}</p>
           <Button
             onClick={() => {
               void dashboard.refetch()

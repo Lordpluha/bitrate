@@ -10,6 +10,7 @@ import {
 } from '@entities/artist-account'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { countries } from '@shared/constants/countries'
+import { useI18n } from '@shared/i18n'
 import { NativeSelect } from '@shared/ui'
 import { useId, useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -29,6 +30,7 @@ export function ProfileForm({
   profile,
   onValuesChange,
 }: ProfileFormProps) {
+  const { tMessage } = useI18n()
   const id = useId()
   const update = useUpdateProfile(artistId)
   const [saved, setSaved] = useState(false)
@@ -176,7 +178,7 @@ export function ProfileForm({
       </fieldset>
       {update.error && (
         <p className="text-sm text-destructive" role="alert">
-          {update.error.message}
+          {tMessage(update.error.message)}
         </p>
       )}
       {saved && !isDirty && (

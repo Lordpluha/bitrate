@@ -22,14 +22,14 @@ export function DashboardNotifications({
 }: DashboardNotificationsProps) {
   const notifications = useNotifications(artistId)
   const markSeen = useMarkNotificationsSeen(artistId)
-  const { t } = useI18n()
+  const { tMessage, t } = useI18n()
 
   if (notifications.isPending)
     return <p role="status">{t('shell.notifications.loading')}</p>
   if (notifications.isError)
     return (
       <div className="space-y-3">
-        <p role="alert">{notifications.error.message}</p>
+        <p role="alert">{tMessage(notifications.error.message)}</p>
         <Button
           onClick={() => {
             void notifications.refetch()
@@ -73,7 +73,7 @@ export function DashboardNotifications({
       </div>
       {markSeen.error && (
         <p className="text-sm text-destructive" role="alert">
-          {markSeen.error.message}
+          {tMessage(markSeen.error.message)}
         </p>
       )}
       {actions.length > 0 && (

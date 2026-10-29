@@ -1,5 +1,6 @@
 import { Button, Input } from '@bitrate/ui-react'
 import { useDeleteAccount } from '@entities/artist-account'
+import { useI18n } from '@shared/i18n'
 import { ROUTES } from '@shared/routes/routes'
 import { WorkspaceModal } from '@shared/ui/WorkspaceModal/WorkspaceModal'
 import { useId, useState } from 'react'
@@ -14,6 +15,7 @@ export function DeleteAccountSection({
   artistId,
   username,
 }: DeleteAccountSectionProps) {
+  const { tMessage } = useI18n()
   const id = useId()
   const remove = useDeleteAccount(artistId)
   const [open, setOpen] = useState(false)
@@ -82,7 +84,7 @@ export function DeleteAccountSection({
             </div>
             {remove.error && (
               <p className="text-sm text-destructive" role="alert">
-                {remove.error.message}
+                {tMessage(remove.error.message)}
               </p>
             )}
             <div className="flex flex-wrap justify-end gap-3">
