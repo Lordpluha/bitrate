@@ -10,7 +10,8 @@ import { SlotPlayer } from './slotPlayer'
 /**
  * `SlotPlayer` against two scripted media elements — jsdom cannot play audio, so each element's
  * clock, buffer and play/pause are driven by the test. MSE is absent here, so a track with a
- * manifest takes the host's legacy path; the CMAF loader itself is covered in `../cmaf`.
+ * manifest plays its CMAF file natively, or takes the host's legacy path without a
+ * `renditionUrl`; the CMAF loader itself is covered in `../cmaf`.
  */
 type ScriptedMedia = HTMLAudioElement & {
   setTiming: (timing: {
@@ -80,6 +81,21 @@ const manifest: TrackManifest = {
   version: 1,
 }
 
+/** A manifest with the production ladder; the byte layout is irrelevant off the MSE path. */
+const cmafManifest: TrackManifest = {
+  ...manifest,
+  renditions: [128, 192, 320].map((bitrate) => ({
+    bitrate,
+    codec: 'mp4a.40.2',
+    fragments: [],
+    initRange: [0, 708] as const,
+    size: 1_000,
+  })),
+}
+
+const renditionUrl = ({ trackId, bitrate }: { trackId: string; bitrate: number }) =>
+  `https://api.test/tracks/${trackId}/cmaf/${bitrate}`
+
 type Setup = {
   streaming?: Partial<BitratePlayerStreaming>
 }
@@ -136,6 +152,43 @@ describe('SlotPlayer', () => {
     expect(legacy).toHaveBeenCalledWith(
       expect.objectContaining({ isPrefetch: false, key: 'k1', media: media[0], trackId: 't1' }),
     )
+  })
+
+  it('plays the CMAF file natively when the browser has no MSE', async () => {
+    const legacy = vi.fn<BitratePlayerLegacyAdapter>(() => ({ destroy: vi.fn() }))
+    const { media, player } = setup({
+      streaming: { legacy, renditionUrl, resolveManifest: vi.fn(async () => cmafManifest) },
+    })
+
+    player.setSource(source('k1', 't1'))
+    await settle()
+
+    /** Nothing is known about the connection yet, so the lowest rung, as the ABR would start. */
+    expect(media[0].getAttribute('src')).toBe('https://api.test/tracks/t1/cmaf/128')
+    expect(legacy).not.toHaveBeenCalled()
+  })
+
+  it('stops with a fatal error when a track has neither a manifest nor a progressive file', async () => {
+    const { handlers, media, player } = setup()
+
+    player.setSource({ key: 'k1', trackId: 't1' })
+    await settle()
+
+    expect(media[0].getAttribute('src')).toBeNull()
+    expect(handlers.onFatalError).toHaveBeenCalledOnce()
+  })
+
+  it("plays the natively streamed file at the listener's pinned quality", async () => {
+    const { media, player } = setup({
+      streaming: { renditionUrl, resolveManifest: vi.fn(async () => cmafManifest) },
+    })
+
+    player.setBitrate(256)
+    player.setSource(source('k1', 't1'))
+    await settle()
+
+    /** The closest rung at or below the pin, as on the MSE path. */
+    expect(media[0].getAttribute('src')).toBe('https://api.test/tracks/t1/cmaf/192')
   })
 
   it('follows the play intent and reports the element being heard', async () => {

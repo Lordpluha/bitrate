@@ -98,10 +98,11 @@ plays now and what follows, each keyed per play:
 
 ```ts
 player.streaming = {
-  resolveManifest: (trackId) => api.manifest(trackId), // null → legacy path
+  resolveManifest: (trackId) => api.manifest(trackId),
   fetchRange: ({ trackId, bitrate, range, signal }) =>
     api.range({ trackId, bitrate, range, signal }),
-  legacy: hlsAdapter, // optional: plays tracks without a manifest
+  // without MSE, or once the loader fails, the element plays this file natively
+  renditionUrl: ({ trackId, bitrate }) => `/api/v1/tracks/${trackId}/cmaf/${bitrate}`,
   positions: sessionPositions, // optional: resume per play key
   isConstrained: () => navigator.connection?.saveData === true, // optional
   crossOrigin: 'use-credentials',
@@ -109,17 +110,18 @@ player.streaming = {
 player.source = {
   key: 'mix:t1:1',
   trackId: 't1',
-  progressiveUrl: '/t1.mp3',
   duration: 182, // optional: shown until the media loads
   startTime: 64, // optional: a restored position, shown and resumed
 }
-player.next = { key: 'mix:t2:2', trackId: 't2', progressiveUrl: '/t2.mp3' }
+player.next = { key: 'mix:t2:2', trackId: 't2' }
 player.addEventListener('ended', ({ detail }) => {
   // move the queue on, then set source to what was next: the element switches instantly
 })
 ```
 
-`seek(seconds)`, `volume`, `muted` and the read-only `state` complete it; `statechange`
+`streaming.legacy` and `source.progressiveUrl` still work but are deprecated: ADR-0065 removes
+the HLS and progressive formats. `seek(seconds)`, `volume`, `muted` and the read-only `state`
+complete it; `statechange`
 (`detail`: status, key, time, duration, volume, bitrate, error) fires on every change. Call
 `configureCmafEngine({ storage, debugByDefault })` from `@bitrate/player/engine` once to keep
 the measured bandwidth between tracks.

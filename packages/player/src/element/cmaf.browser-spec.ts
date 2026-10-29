@@ -2,6 +2,7 @@ import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest'
 import type {
   BitratePlayerElement,
   BitratePlayerFetchRangeInput,
+  BitratePlayerRenditionUrlInput,
   BitratePlayerStateDetail,
   BitratePlayerStreaming,
   TrackManifest,
@@ -210,6 +211,25 @@ describe('<bitrate-player> CMAF path', () => {
     await element.play()
 
     await expect.poll(() => heard(element).src, { timeout: 5_000 }).toMatch(/^blob:/)
+    await expect.poll(() => element.state.status, { timeout: 5_000 }).toBe('playing')
+    expect(element.state.bitrate).toBeNull()
+  })
+
+  it('falls back to the same CMAF file, played natively, when fragments cannot be loaded', async () => {
+    configureCmafEngine({ storage: fastConnection() })
+    const fixtureUrl = ({ bitrate }: BitratePlayerRenditionUrlInput) =>
+      new URL(`./__fixtures__/cmaf/${bitrate}.m4a`, import.meta.url).href
+    const { element } = await mountCmaf({
+      fetchRange: serveRanges({ fail: true }),
+      renditionUrl: fixtureUrl,
+    })
+
+    await element.play()
+
+    /** A remembered fast connection opens on the top rung, as the ABR would have. */
+    await expect
+      .poll(() => heard(element).src, { timeout: 5_000 })
+      .toBe(fixtureUrl({ bitrate: 192, trackId: 't1' }))
     await expect.poll(() => element.state.status, { timeout: 5_000 }).toBe('playing')
     expect(element.state.bitrate).toBeNull()
   })

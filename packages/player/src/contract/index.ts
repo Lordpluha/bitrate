@@ -141,8 +141,11 @@ export type TrackManifest = {
 export type BitratePlayerSource = {
   key: string
   trackId: string
-  /** The plain audio file, the last fallback when neither CMAF nor HLS can play. */
-  progressiveUrl: string
+  /**
+   * The plain audio file, the last fallback when neither CMAF nor HLS can play.
+   * @deprecated ADR-0065 removes progressive files; hosts pass `streaming.renditionUrl` instead.
+   */
+  progressiveUrl?: string
   /** The track's length in seconds, shown until the media reports its own. */
   duration?: number
   /**
@@ -160,6 +163,12 @@ export type BitratePlayerFetchRangeInput = {
   expectedSize: number
   range: readonly [number, number]
   signal: AbortSignal
+}
+
+/** One CMAF rendition file, which a media element without MSE plays whole. */
+export type BitratePlayerRenditionUrlInput = {
+  trackId: string
+  bitrate: number
 }
 
 /**
@@ -193,6 +202,13 @@ export type BitratePlayerStreaming = {
   /** The track's CMAF manifest, or `null` for a track that has none. */
   resolveManifest: (trackId: string) => Promise<TrackManifest | null>
   fetchRange: (input: BitratePlayerFetchRangeInput) => Promise<ArrayBuffer>
+  /**
+   * The URL of one CMAF rendition file. Without MSE, or once the CMAF loader fails, the element
+   * plays that file natively — the same bytes, without adaptive bitrate. Cookie-authenticated
+   * hosts pair it with `crossOrigin`.
+   */
+  renditionUrl?: (input: BitratePlayerRenditionUrlInput) => string
+  /** @deprecated ADR-0065 removes the HLS and progressive formats; use `renditionUrl`. */
   legacy?: BitratePlayerLegacyAdapter
   positions?: BitratePlayerPositionStore
   isConstrained?: () => boolean
