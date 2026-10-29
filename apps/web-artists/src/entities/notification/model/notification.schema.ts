@@ -3,6 +3,7 @@ import {
   deliveryDestinations,
   destinationLabels,
 } from '@shared/constants/destinations'
+import type { I18n } from '@shared/i18n'
 import { z } from 'zod'
 
 /** Release tasks were dropped from the workspace; the API may still derive their notices. */
@@ -48,41 +49,48 @@ export const notificationListSchema = z.object({
   seenAt: z.iso.datetime({ offset: true }).nullable(),
 }) satisfies z.ZodType<ApiSchemas['ArtistNotificationListEntity']>
 
-/** Copy lives here, not in the API, so the workspace controls wording and later translation. */
-export function describeNotification(item: ArtistNotification): string {
+/** Copy lives here, not in the API, so the workspace controls wording in every language. */
+export function describeNotification(
+  item: ArtistNotification,
+  { t }: Pick<I18n, 't'>,
+): string {
   const store = item.destination
     ? destinationLabels[item.destination]
-    : 'a store'
+    : t('notifications.aStore')
   switch (item.kind) {
     case 'CHANGES_REQUESTED':
-      return 'The reviewer requested changes'
+      return t('notifications.kind.changesRequested')
     case 'DELIVERY_FAILED':
-      return `Delivery to ${store} failed`
+      return t('notifications.kind.deliveryFailed', { store })
     case 'RELEASE_SUBMITTED':
-      return 'Submitted for Bitrate review'
+      return t('notifications.kind.submitted')
     case 'RELEASE_APPROVED':
-      return 'Approved by Bitrate review'
+      return t('notifications.kind.approved')
     case 'RELEASE_RELEASED':
-      return 'Live on Bitrate'
+      return t('notifications.kind.released')
     case 'PUBLISH_FAILED':
-      return 'Publishing failed — Bitrate has been notified'
+      return t('notifications.kind.publishFailed')
     case 'DELIVERY_LIVE':
-      return `Live on ${store}`
+      return t('notifications.kind.deliveryLive', { store })
   }
 }
 
-const relative = new Intl.RelativeTimeFormat('en', { numeric: 'auto' })
 const UNITS = [
   ['day', 86_400_000],
   ['hour', 3_600_000],
   ['minute', 60_000],
 ] as const
 
-export function notificationTime(at: string, now = Date.now()): string {
+export function notificationTime(
+  at: string,
+  { t, locale }: Pick<I18n, 't' | 'locale'>,
+  now = Date.now(),
+): string {
+  const relative = new Intl.RelativeTimeFormat(locale, { numeric: 'auto' })
   const diff = Date.parse(at) - now
   for (const [unit, ms] of UNITS) {
     if (Math.abs(diff) >= ms)
       return relative.format(Math.round(diff / ms), unit)
   }
-  return 'just now'
+  return t('notifications.justNow')
 }

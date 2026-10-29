@@ -1,6 +1,7 @@
 import { artistMusicKeys } from '@shared/api/artistMusicKeys'
 import { clientFetchClient } from '@shared/api/fetchClient'
 import { writeSignal } from '@shared/api/writeTimeout'
+import { messageKey } from '@shared/i18n'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { notificationListSchema } from '../model/notification.schema'
 import {
@@ -28,7 +29,7 @@ export function useNotifications(artistId: string) {
       )
       const parsed = notificationListSchema.safeParse(result.data)
       if (!result.response.ok || !parsed.success)
-        throw new Error('Could not load notifications. Please try again.')
+        throw new Error(messageKey('notifications.error.load'))
       return parsed.data
     },
     refetchInterval: REFRESH_MS,
@@ -45,7 +46,8 @@ export function useMarkNotificationsSeen(artistId: string) {
       const result = await clientFetchClient
         .POST('/api/v1/artist-notifications/seen', {})
         .catch(() => undefined)
-      if (!result?.response.ok) throw new Error('Could not mark as read.')
+      if (!result?.response.ok)
+        throw new Error(messageKey('notifications.error.markRead'))
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: key(artistId) }),
   })
@@ -61,9 +63,7 @@ export function useNotificationPreferences(artistId: string) {
       )
       const parsed = notificationPreferencesSchema.safeParse(result.data)
       if (!result.response.ok || !parsed.success)
-        throw new Error(
-          'Could not load notification settings. Please try again.',
-        )
+        throw new Error(messageKey('notifications.error.loadSettings'))
       return parsed.data
     },
   })
@@ -83,9 +83,7 @@ export function useSaveNotificationPreferences(artistId: string) {
         .catch(() => undefined)
       const parsed = notificationPreferencesSchema.safeParse(result?.data)
       if (!result?.response.ok || !parsed.success)
-        throw new Error(
-          'Could not save notification settings. Please try again.',
-        )
+        throw new Error(messageKey('notifications.error.saveSettings'))
       return parsed.data
     },
     onSuccess: (saved) => {
