@@ -1,10 +1,14 @@
 import type { CatalogueSearch } from '@entities/music'
+import type { TranslationKey } from '@shared/i18n'
 
 type CatalogueSort = NonNullable<CatalogueSearch['sort']>
 
-/** The control label and the footer note for each catalogue order. */
+/** Catalog keys for the control label and the footer note of each catalogue order. */
 export const catalogueSortLabels = {
-  updated: { label: 'Recently updated', note: 'Sorted by recently updated' },
-  title: { label: 'Title A–Z', note: 'Sorted by title' },
-  oldest: { label: 'Oldest updated', note: 'Sorted by oldest updated' },
-} satisfies Record<CatalogueSort, { label: string; note: string }>
+  updated: { label: 'music.sort.updated', note: 'music.sort.updatedNote' },
+  title: { label: 'music.sort.title', note: 'music.sort.titleNote' },
+  oldest: { label: 'music.sort.oldest', note: 'music.sort.oldestNote' },
+} satisfies Record<
+  CatalogueSort,
+  { label: TranslationKey; note: TranslationKey }
+>

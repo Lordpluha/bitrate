@@ -1,5 +1,6 @@
 import { Button } from '@bitrate/ui-react'
 import type { CatalogueSearch } from '@entities/music'
+import { useI18n } from '@shared/i18n'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { catalogueSortLabels } from '../model/sort'
 
@@ -27,19 +28,27 @@ export function CataloguePagination({
   sort,
   onPage,
 }: CataloguePaginationProps) {
+  const { t } = useI18n()
   return (
     <footer className="artist-music-footer" data-single-page={pages === 1}>
       <p>
-        {shown ? (page - 1) * limit + 1 : 0}–{Math.min(page * limit, total)} of{' '}
-        {total}
-        {demo ? ' · Demo data' : ''}
+        {t('music.pagination.range', {
+          from: shown ? (page - 1) * limit + 1 : 0,
+          to: Math.min(page * limit, total),
+          total,
+        })}
+        {demo ? ` · ${t('music.pagination.demo')}` : ''}
       </p>
       <nav
-        aria-label={`${tab === 'tracks' ? 'Track' : 'Release'} pages`}
+        aria-label={t(
+          tab === 'tracks'
+            ? 'music.pagination.trackPages'
+            : 'music.pagination.releasePages',
+        )}
         className="flex items-center justify-center gap-2"
       >
         <Button
-          aria-label="Previous"
+          aria-label={t('music.pagination.previous')}
           disabled={page <= 1}
           onClick={() => onPage(page - 1)}
           size="icon"
@@ -48,10 +57,10 @@ export function CataloguePagination({
           <ChevronLeft aria-hidden="true" className="size-4" />
         </Button>
         <span className="artist-workspace-nav-selected rounded-lg border px-3 py-2 text-artist-caption">
-          Page {page} of {pages}
+          {t('common.pageOf', { page, total: pages })}
         </span>
         <Button
-          aria-label="Next"
+          aria-label={t('music.pagination.next')}
           disabled={page >= pages}
           onClick={() => onPage(page + 1)}
           size="icon"
@@ -61,7 +70,7 @@ export function CataloguePagination({
         </Button>
       </nav>
       <p className="artist-music-sort-note">
-        {catalogueSortLabels[sort ?? 'updated'].note}
+        {t(catalogueSortLabels[sort ?? 'updated'].note)}
       </p>
     </footer>
   )

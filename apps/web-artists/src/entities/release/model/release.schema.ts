@@ -1,5 +1,6 @@
 import type { ApiSchemas } from '@bitrate/contracts'
 import { releaseStatuses } from '@shared/constants/releaseStatuses'
+import { messageKey, type TranslationKey } from '@shared/i18n'
 import { z } from 'zod'
 
 export const releaseTypes = [
@@ -8,30 +9,32 @@ export const releaseTypes = [
   'ALBUM',
   'COMPILATION',
 ] as const satisfies readonly ApiSchemas['ReleaseType'][]
+/** Catalog keys; render them with `t()`. */
 export const releaseTypeLabels = {
-  SINGLE: 'Single',
-  EP: 'EP',
-  ALBUM: 'Album',
-  COMPILATION: 'Compilation',
-} satisfies Record<ApiSchemas['ReleaseType'], string>
+  SINGLE: 'labels.releaseType.single',
+  EP: 'labels.releaseType.ep',
+  ALBUM: 'labels.releaseType.album',
+  COMPILATION: 'labels.releaseType.compilation',
+} satisfies Record<ApiSchemas['ReleaseType'], TranslationKey>
+/** Catalog keys; render them with `t()`. */
 export const releaseStatusLabels = {
-  DRAFT: 'Draft',
-  READY: 'Ready',
-  SUBMITTED: 'Submitted',
-  RELEASED: 'Released',
-  REJECTED: 'Rejected',
-  SCHEDULED: 'Scheduled',
-  PUBLISHING: 'Publishing',
-  PUBLISH_FAILED: 'Publishing failed',
-  UNPUBLISHED: 'Unpublished',
-} satisfies Record<ApiSchemas['ReleaseStatus'], string>
+  DRAFT: 'labels.releaseStatus.draft',
+  READY: 'labels.releaseStatus.ready',
+  SUBMITTED: 'labels.releaseStatus.submitted',
+  RELEASED: 'labels.releaseStatus.released',
+  REJECTED: 'labels.releaseStatus.rejected',
+  SCHEDULED: 'labels.releaseStatus.scheduled',
+  PUBLISHING: 'labels.releaseStatus.publishing',
+  PUBLISH_FAILED: 'labels.releaseStatus.publishFailed',
+  UNPUBLISHED: 'labels.releaseStatus.unpublished',
+} satisfies Record<ApiSchemas['ReleaseStatus'], TranslationKey>
 
 export const createReleaseSchema = z.strictObject({
   title: z
     .string()
     .trim()
-    .min(1, 'Enter a release title')
-    .max(255, 'Use 255 characters or fewer'),
+    .min(1, messageKey('music.fields.titleRequired'))
+    .max(255, messageKey('music.fields.titleTooLong')),
   type: z.enum(releaseTypes),
 }) satisfies z.ZodType<ApiSchemas['CreateReleaseDto']>
 
