@@ -9,7 +9,7 @@ type ResourceWriteAction =
  * down"/"restored" — the panel calls the same action a take-down, not a deactivation, everywhere
  * else on this screen, so the error text said something no button on the page ever did.
  */
-type ResourceKind = 'account' | 'album' | 'episode' | 'playlist' | 'podcast' | 'track'
+type ResourceKind = 'account' | 'album' | 'playlist' | 'track'
 
 /** Operator-facing copy as a transloco key and its parameters; the page translates it on show. */
 export type Notice = {
@@ -29,18 +29,14 @@ type ResourceWriteMessageInput = {
 const ALREADY_REFUSED_KEY: Record<ResourceKind, string> = {
   account: 'ui.write.already.account',
   album: 'ui.write.already.item',
-  episode: 'ui.write.already.item',
   playlist: 'ui.write.already.item',
-  podcast: 'ui.write.already.item',
   track: 'ui.write.already.item',
 }
 
 const NOT_REFUSED_KEY: Record<ResourceKind, string> = {
   account: 'ui.write.not.account',
   album: 'ui.write.not.item',
-  episode: 'ui.write.not.item',
   playlist: 'ui.write.not.item',
-  podcast: 'ui.write.not.item',
   track: 'ui.write.not.item',
 }
 

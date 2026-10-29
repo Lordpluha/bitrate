@@ -2,8 +2,8 @@ import { inject, Injectable } from '@angular/core'
 import { type ModerationEntityType, ModerationReportRepository } from '@domain/moderation'
 
 /**
- * How many open reports name one kind of content — the "Reported" figure on the Albums,
- * Playlists and Podcasts screens. Callers show it only to operators with `reports:read`, the
+ * How many open reports name one kind of content — the "Reported" figure on the Albums
+ * and Playlists screens. Callers show it only to operators with `reports:read`, the
  * permission the moderation list itself needs.
  */
 @Injectable({ providedIn: 'root' })

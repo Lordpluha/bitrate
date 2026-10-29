@@ -2,7 +2,11 @@ import type { Permission } from '@domain/access'
 import type { Staff } from '@domain/staff'
 import type { StaffDto, WirePermission } from './staff.dto'
 
-/** See `track.mapper.ts` — a permission the API grows later is a compile error at this record. */
+/**
+ * See `track.mapper.ts` — a permission the API grows later is a compile error at this record.
+ * `null` marks one the API still stores but the panel retired (ADR-0066): it is dropped on
+ * the way in, and its key goes when the contract loses it.
+ */
 const TO_DOMAIN_PERMISSION = {
   'reports:read': 'reports:read',
   'reports:advance': 'reports:advance',
@@ -39,12 +43,16 @@ const TO_DOMAIN_PERMISSION = {
   'playlists:hide': 'playlists:hide',
   'playlists:delete': 'playlists:delete',
   'playlists:restore': 'playlists:restore',
-  'podcasts:read': 'podcasts:read',
-  'podcasts:delete': 'podcasts:delete',
-  'podcasts:restore': 'podcasts:restore',
+  'podcasts:read': null,
+  'podcasts:delete': null,
+  'podcasts:restore': null,
   'releases:read': 'releases:read',
   'releases:review': 'releases:review',
-} as const satisfies Record<WirePermission, Permission>
+} as const satisfies Record<WirePermission, Permission | null>
+
+function toDomainPermissions(permissions: readonly WirePermission[]): Permission[] {
+  return permissions.flatMap((permission) => TO_DOMAIN_PERMISSION[permission] ?? [])
+}
 
 export function toStaff(dto: StaffDto): Staff {
   return {
@@ -53,6 +61,6 @@ export function toStaff(dto: StaffDto): Staff {
     username: dto.username,
     roleId: dto.roleId,
     roleName: dto.role,
-    permissions: dto.permissions.map((permission) => TO_DOMAIN_PERMISSION[permission]),
+    permissions: toDomainPermissions(dto.permissions),
   }
 }

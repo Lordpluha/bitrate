@@ -2,7 +2,11 @@ import type { Permission } from '@domain/access'
 import type { PermissionCatalogueEntry, Role } from '@domain/role'
 import type { RoleDto, RolePermissionDto, WirePermission } from './role.dto'
 
-/** See `staff.mapper.ts` — a permission the API grows later is a compile error at this record. */
+/**
+ * See `staff.mapper.ts` — a permission the API grows later is a compile error at this record.
+ * `null` marks one the API still stores but the panel retired (ADR-0066): it is dropped on
+ * the way in, and its key goes when the contract loses it.
+ */
 const TO_DOMAIN_PERMISSION = {
   'reports:read': 'reports:read',
   'reports:advance': 'reports:advance',
@@ -39,12 +43,16 @@ const TO_DOMAIN_PERMISSION = {
   'playlists:hide': 'playlists:hide',
   'playlists:delete': 'playlists:delete',
   'playlists:restore': 'playlists:restore',
-  'podcasts:read': 'podcasts:read',
-  'podcasts:delete': 'podcasts:delete',
-  'podcasts:restore': 'podcasts:restore',
+  'podcasts:read': null,
+  'podcasts:delete': null,
+  'podcasts:restore': null,
   'releases:read': 'releases:read',
   'releases:review': 'releases:review',
-} as const satisfies Record<WirePermission, Permission>
+} as const satisfies Record<WirePermission, Permission | null>
+
+function toDomainPermissions(permissions: readonly WirePermission[]): Permission[] {
+  return permissions.flatMap((permission) => TO_DOMAIN_PERMISSION[permission] ?? [])
+}
 
 export function toRole(dto: RoleDto): Role {
   return {
@@ -52,7 +60,7 @@ export function toRole(dto: RoleDto): Role {
     name: dto.name,
     description: dto.description,
     builtIn: dto.builtIn,
-    permissions: dto.permissions.map((permission) => TO_DOMAIN_PERMISSION[permission]),
+    permissions: toDomainPermissions(dto.permissions),
     holders: dto.holders,
     divergentHolders: dto.divergentHolders,
     createdAt: new Date(dto.createdAt),
@@ -60,10 +68,10 @@ export function toRole(dto: RoleDto): Role {
   }
 }
 
-export function toPermissionCatalogueEntry(dto: RolePermissionDto): PermissionCatalogueEntry {
-  return {
-    permission: TO_DOMAIN_PERMISSION[dto.id],
-    heldBy: dto.heldBy,
-    protected: dto.protected,
-  }
+/** `null` for a retired permission, which the catalogue leaves out. */
+export function toPermissionCatalogueEntry(
+  dto: RolePermissionDto,
+): PermissionCatalogueEntry | null {
+  const permission = TO_DOMAIN_PERMISSION[dto.id]
+  return permission === null ? null : { permission, heldBy: dto.heldBy, protected: dto.protected }
 }

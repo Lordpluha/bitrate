@@ -111,20 +111,6 @@ export const routes: Routes = [
           import('@presentation/pages/playlists/playlist-detail').then((m) => m.PlaylistDetailPage),
       },
       {
-        path: 'podcasts',
-        title: 'Podcasts',
-        canActivate: [requirePermission('podcasts:read')],
-        loadComponent: () =>
-          import('@presentation/pages/podcasts/podcasts').then((m) => m.PodcastsPage),
-      },
-      {
-        path: 'podcasts/:id',
-        title: 'Podcast',
-        canActivate: [requirePermission('podcasts:read')],
-        loadComponent: () =>
-          import('@presentation/pages/podcasts/podcast-detail').then((m) => m.PodcastDetailPage),
-      },
-      {
         path: 'genres',
         title: 'Genres',
         canActivate: [requirePermission('genres:read')],
