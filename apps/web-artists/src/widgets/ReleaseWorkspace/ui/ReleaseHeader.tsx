@@ -6,6 +6,7 @@ import {
   releaseStatusLabels,
   releaseTypeLabels,
 } from '@entities/release'
+import { useI18n } from '@shared/i18n'
 import { Link } from '@tanstack/react-router'
 import {
   ArrowRight,
@@ -131,6 +132,7 @@ interface ReleaseHeaderProps {
 /** Identity, status and the single next action; shared by every stage. */
 export function ReleaseHeader({ release }: ReleaseHeaderProps) {
   const action = nextAction(release)
+  const { t } = useI18n()
   const StatusIcon = statusIcons[release.status]
   const tracks = release.trackCount
   return (
@@ -156,13 +158,13 @@ export function ReleaseHeader({ release }: ReleaseHeaderProps) {
         <div className="min-w-0">
           <h1>{release.title}</h1>
           <p>
-            {release.artistName} · {releaseTypeLabels[release.type]} · {tracks}{' '}
-            {tracks === 1 ? 'track' : 'tracks'}
+            {release.artistName} · {t(releaseTypeLabels[release.type])} ·{' '}
+            {tracks} {tracks === 1 ? 'track' : 'tracks'}
           </p>
           <div className="artist-release-header-meta">
             <span className="artist-release-chip" data-status={release.status}>
               <StatusIcon aria-hidden="true" />
-              {releaseStatusLabels[release.status]}
+              {t(releaseStatusLabels[release.status])}
             </span>
             <span>
               Updated {updated.format(new Date(release.updatedAt))} UTC

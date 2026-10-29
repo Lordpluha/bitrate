@@ -2,6 +2,7 @@ import { Button } from '@bitrate/ui-react'
 import { trackVersionLabels } from '@entities/music'
 import { type ReleaseSummary, releaseTypeLabels } from '@entities/release'
 import { DeleteReleaseDialog, EditReleaseDialog } from '@features/edit-release'
+import { useI18n } from '@shared/i18n'
 import { WorkspaceModal } from '@shared/ui/WorkspaceModal/WorkspaceModal'
 import { Link } from '@tanstack/react-router'
 import {
@@ -31,6 +32,7 @@ export function CatalogueItemDialog({
   onSaved,
 }: CatalogueItemDialogProps) {
   const { item, mode } = details
+  const { t, tp } = useI18n()
   const close = () => onChange(null)
   const editableDraft =
     !('version' in item) && item.status === 'DRAFT' && !!artistId
@@ -58,21 +60,22 @@ export function CatalogueItemDialog({
   return (
     <WorkspaceModal
       onClose={close}
-      title={mode === 'actions' ? `Actions for ${item.title}` : item.title}
+      title={
+        mode === 'actions'
+          ? t('music.item.actionsFor', { title: item.title })
+          : item.title
+      }
     >
       <div className="space-y-5">
         <CatalogueStatus item={item} />
         <p className="text-sm text-text-secondary">
           {item.artistName} ·{' '}
           {'version' in item
-            ? `${trackVersionLabels[item.version]} · ${trackDuration(item.duration)}`
-            : `${releaseTypeLabels[item.type]} · ${item.trackCount} tracks`}
+            ? `${t(trackVersionLabels[item.version])} · ${trackDuration(item.duration)}`
+            : `${t(releaseTypeLabels[item.type])} · ${tp({ count: item.trackCount, key: 'common.tracks' })}`}
         </p>
         {item.isDemo && (
-          <p className="text-sm text-text-secondary">
-            Illustrative demo record. This does not represent an actual
-            publication or delivery.
-          </p>
+          <p className="text-sm text-text-secondary">{t('music.item.demo')}</p>
         )}
         {!('version' in item) && (
           <div className="flex flex-wrap gap-3">
@@ -82,7 +85,7 @@ export function CatalogueItemDialog({
                 params={{ releaseId: item.id }}
                 to="/dashboard/music/$releaseId"
               >
-                Open workspace
+                {t('music.item.openWorkspace')}
               </Link>
             </Button>
             {editableDraft && (
@@ -91,7 +94,7 @@ export function CatalogueItemDialog({
                 onClick={() => onChange({ ...details, mode: 'edit' })}
                 variant="primary"
               >
-                Edit draft
+                {t('music.item.editDraft')}
               </Button>
             )}
           </div>
@@ -102,14 +105,14 @@ export function CatalogueItemDialog({
               onClick={() => onChange({ ...details, mode: 'details' })}
               variant="outline"
             >
-              View details
+              {t('music.item.viewDetails')}
             </Button>
             {editableDraft && (
               <Button
                 onClick={() => onChange({ ...details, mode: 'delete' })}
                 variant="destructive"
               >
-                Delete draft
+                {t('music.item.deleteDraft')}
               </Button>
             )}
           </div>

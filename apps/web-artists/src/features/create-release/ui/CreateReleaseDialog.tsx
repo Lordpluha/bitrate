@@ -7,6 +7,7 @@ import {
   useCreateRelease,
 } from '@entities/release'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useI18n } from '@shared/i18n'
 import { ROUTES } from '@shared/routes/routes'
 import { WorkspaceModal } from '@shared/ui/WorkspaceModal/WorkspaceModal'
 import { Link, useNavigate } from '@tanstack/react-router'
@@ -23,6 +24,7 @@ export function CreateReleaseDialog({
 }: CreateReleaseDialogProps) {
   const create = useCreateRelease(artistId)
   const navigate = useNavigate()
+  const { t, tMessage } = useI18n()
   const form = useForm<CreateReleaseValues>({
     resolver: zodResolver(createReleaseSchema),
     defaultValues: { title: '', type: 'SINGLE' },
@@ -49,10 +51,16 @@ export function CreateReleaseDialog({
   }
 
   return (
-    <WorkspaceModal canClose={!busy} onClose={onClose} title="Create release">
+    <WorkspaceModal
+      canClose={!busy}
+      onClose={onClose}
+      title={t('music.create.title')}
+    >
       {create.isSuccess ? (
         <div className="space-y-6">
-          <p role="status">Draft created: {create.data.title}</p>
+          <p role="status">
+            {t('music.create.created', { title: create.data.title })}
+          </p>
           <Button
             asChild
             className="artist-workspace-primary"
@@ -63,7 +71,7 @@ export function CreateReleaseDialog({
               params={{ releaseId: create.data.id }}
               to="/dashboard/music/$releaseId"
             >
-              Open release
+              {t('music.create.open')}
             </Link>
           </Button>
         </div>
@@ -75,8 +83,7 @@ export function CreateReleaseDialog({
           onSubmit={form.handleSubmit(submit)}
         >
           <p className="text-sm leading-relaxed text-text-secondary">
-            Start with a title and release type. This saves a draft; it does not
-            publish your music. You add tracks and artwork next.
+            {t('music.create.intro')}
           </p>
           <ReleaseFields
             busy={busy}
@@ -86,7 +93,7 @@ export function CreateReleaseDialog({
           {create.error && (
             <div className="space-y-2">
               <p className="text-sm text-destructive" role="alert">
-                {create.error.message}
+                {tMessage(create.error.message)}
               </p>
               <Link
                 className="text-sm underline underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
@@ -94,7 +101,7 @@ export function CreateReleaseDialog({
                 search={{ page: 1 }}
                 to={ROUTES.dashboard.music}
               >
-                Check Music
+                {t('music.create.checkMusic')}
               </Link>
             </div>
           )}
@@ -105,7 +112,7 @@ export function CreateReleaseDialog({
               type="button"
               variant="outline"
             >
-              Cancel
+              {t('music.create.cancel')}
             </Button>
             <Button
               className="artist-workspace-primary"
@@ -113,7 +120,7 @@ export function CreateReleaseDialog({
               type="submit"
               variant="primary"
             >
-              {busy ? 'Creating draft…' : 'Create draft'}
+              {busy ? t('music.create.submitting') : t('music.create.submit')}
             </Button>
           </div>
         </form>

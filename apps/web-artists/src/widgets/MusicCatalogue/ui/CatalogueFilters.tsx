@@ -11,6 +11,7 @@ import {
   releaseTypeLabels,
   releaseTypes,
 } from '@entities/release'
+import { useI18n } from '@shared/i18n'
 import { NativeSelect } from '@shared/ui'
 import { ArrowDownUp, Disc3, ListFilter, RotateCcw, Search } from 'lucide-react'
 import { catalogueSortLabels } from '../model/sort'
@@ -26,26 +27,32 @@ export function CatalogueFilters({
   search,
   onChange,
 }: CatalogueFiltersProps) {
+  const { t } = useI18n()
   const statuses =
     tab === 'tracks'
       ? trackStatuses.map((value) => ({
           value,
-          label: trackStatusLabels[value],
+          label: t(trackStatusLabels[value]),
         }))
       : Object.entries(releaseStatusLabels).map(([value, label]) => ({
           value,
-          label,
+          label: t(label),
         }))
   const types =
     tab === 'tracks'
       ? trackVersions.map((value) => ({
           value,
-          label: trackVersionLabels[value],
+          label: t(trackVersionLabels[value]),
         }))
       : releaseTypes.map((value) => ({
           value,
-          label: releaseTypeLabels[value],
+          label: t(releaseTypeLabels[value]),
         }))
+  const searchLabel = t(
+    tab === 'tracks'
+      ? 'music.filter.searchTracks'
+      : 'music.filter.searchReleases',
+  )
   return (
     <div className="artist-music-filters">
       <div className="artist-music-search relative block min-w-0">
@@ -54,13 +61,13 @@ export function CatalogueFilters({
           className="absolute left-3.5 top-3.5 size-4 text-text-secondary"
         />
         <Input
-          aria-label={`Search ${tab}`}
+          aria-label={searchLabel}
           className="artist-music-control h-11 pl-11 text-[0.8125rem]"
           maxLength={100}
           onChange={(event) =>
             onChange({ ...search, q: event.target.value || undefined, page: 1 })
           }
-          placeholder={`Search ${tab}`}
+          placeholder={searchLabel}
           value={search.q ?? ''}
         />
       </div>
@@ -70,7 +77,7 @@ export function CatalogueFilters({
           className="pointer-events-none absolute left-3 top-3.5 z-10 size-4 text-text-secondary"
         />
         <NativeSelect
-          aria-label="Status filter"
+          aria-label={t('music.filter.status')}
           className="artist-music-control h-11 pl-9 text-xs"
           onChange={(event) =>
             onChange({
@@ -81,7 +88,7 @@ export function CatalogueFilters({
           }
           value={search.status ?? ''}
         >
-          <option value="">Status: All</option>
+          <option value="">{t('music.filter.statusAll')}</option>
           {statuses.map(({ value, label }) => (
             <option key={value} value={value}>
               {label}
@@ -95,7 +102,7 @@ export function CatalogueFilters({
           className="pointer-events-none absolute left-3 top-3.5 z-10 size-4 text-text-secondary"
         />
         <NativeSelect
-          aria-label="Type filter"
+          aria-label={t('music.filter.type')}
           className="artist-music-control h-11 pl-9 text-xs"
           onChange={(event) =>
             onChange({
@@ -106,7 +113,7 @@ export function CatalogueFilters({
           }
           value={search.type ?? ''}
         >
-          <option value="">Type: All</option>
+          <option value="">{t('music.filter.typeAll')}</option>
           {types.map(({ value, label }) => (
             <option key={value} value={value}>
               {label}
@@ -120,7 +127,7 @@ export function CatalogueFilters({
           className="pointer-events-none absolute left-3 top-3.5 z-10 size-4 text-text-secondary"
         />
         <NativeSelect
-          aria-label="Sort catalogue"
+          aria-label={t('music.filter.sort')}
           className="artist-music-control h-11 pl-9 text-xs"
           onChange={(event) =>
             onChange({
@@ -138,7 +145,7 @@ export function CatalogueFilters({
         >
           {Object.entries(catalogueSortLabels).map(([value, { label }]) => (
             <option key={value} value={value}>
-              {label}
+              {t(label)}
             </option>
           ))}
         </NativeSelect>
@@ -149,7 +156,7 @@ export function CatalogueFilters({
         variant="ghost"
       >
         <RotateCcw aria-hidden="true" className="size-4 shrink-0" />
-        Reset
+        {t('music.filter.reset')}
       </Button>
     </div>
   )

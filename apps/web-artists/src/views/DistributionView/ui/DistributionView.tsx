@@ -1,6 +1,7 @@
 import { Button } from '@bitrate/ui-react'
 import { territorySummary, useDistribution } from '@entities/delivery'
 import { releaseCoverUrl, releaseStatusLabels } from '@entities/release'
+import { useI18n } from '@shared/i18n'
 import { ROUTES } from '@shared/routes/routes'
 import { Link } from '@tanstack/react-router'
 import { DestinationStates } from '@widgets/ReleaseDelivery'
@@ -14,6 +15,7 @@ interface DistributionViewProps {
 /** Plans and store states of every release; never shows a release as delivered unless it was. */
 export function DistributionView({ artistId, page }: DistributionViewProps) {
   const distribution = useDistribution(artistId, page)
+  const { t } = useI18n()
   const connected = distribution.data?.data[0]?.partner.connected
   const pages = distribution.data
     ? Math.max(1, Math.ceil(distribution.data.total / distribution.data.limit))
@@ -100,7 +102,7 @@ export function DistributionView({ artistId, page }: DistributionViewProps) {
                     </Link>
                   </h2>
                   <p className="text-sm text-text-secondary">
-                    {releaseStatusLabels[delivery.status]} ·{' '}
+                    {t(releaseStatusLabels[delivery.status])} ·{' '}
                     {territorySummary(delivery)} ·{' '}
                     {delivery.sent ? 'Sent to partner' : 'Not sent'}
                   </p>
