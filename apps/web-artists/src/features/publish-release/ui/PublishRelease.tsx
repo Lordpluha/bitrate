@@ -25,6 +25,7 @@ function premiereOf(release: ReleaseWorkspace): string | null {
 /** Bitrate publication on Launch: publish an approved release and follow it going live. */
 export function PublishRelease({ artistId, release }: PublishReleaseProps) {
   const [confirming, setConfirming] = useState(false)
+  const { t, locale } = useI18n()
   switch (release.status) {
     case 'READY':
       return (
@@ -47,31 +48,23 @@ export function PublishRelease({ artistId, release }: PublishReleaseProps) {
         <LaunchAction
           action={useCancelPremiere}
           artistId={artistId}
-          label="Cancel premiere"
-          pending="Cancelling…"
+          label={t('publish.cancelPremiere')}
+          pending={t('publish.cancelling')}
           release={release}
         >
-          Premiere scheduled for{' '}
-          {release.scheduledAt
-            ? `${formatDateTimeUtc(release.scheduledAt)} UTC`
-            : 'the chosen time'}
-          . Your release goes live on Bitrate then. Cancel it to change the
-          timing.
+          {t('publish.scheduledFor', {
+            date: release.scheduledAt
+              ? `${formatDateTimeUtc(release.scheduledAt, locale)} UTC`
+              : t('publish.chosenTime'),
+          })}
         </LaunchAction>
       )
     case 'PUBLISHING':
-      return (
-        <p role="status">
-          Publishing on Bitrate… Your tracks are being prepared for the player,
-          which usually takes a few minutes. Listeners see the release once
-          every track is ready.
-        </p>
-      )
+      return <p role="status">{t('publish.publishing')}</p>
     case 'PUBLISH_FAILED':
       return (
         <p className="text-destructive" role="alert">
-          Publishing failed — Bitrate has been notified and will retry. Your
-          release stays approved.
+          {t('publish.failed')}
         </p>
       )
     case 'RELEASED':
@@ -79,29 +72,25 @@ export function PublishRelease({ artistId, release }: PublishReleaseProps) {
         <LaunchAction
           action={useUnpublishRelease}
           artistId={artistId}
-          label="Take offline"
-          pending="Taking offline…"
+          label={t('publish.takeOffline')}
+          pending={t('publish.takingOffline')}
           release={release}
         >
-          Live on Bitrate. Taking it offline stops its tracks everywhere until
-          you publish it again.
+          {t('publish.live')}
         </LaunchAction>
       )
     case 'UNPUBLISHED':
       return release.unpublishedBy === 'ADMIN' ? (
-        <p role="status">
-          Bitrate took this release offline. Contact support to discuss it.
-        </p>
+        <p role="status">{t('publish.adminOffline')}</p>
       ) : (
         <LaunchAction
           action={useRepublishRelease}
           artistId={artistId}
-          label="Publish again"
-          pending="Publishing…"
+          label={t('publish.publishAgain')}
+          pending={t('publish.publishingShort')}
           release={release}
         >
-          Offline. Publishing it again needs no new review and does not notify
-          your followers again.
+          {t('publish.offline')}
         </LaunchAction>
       )
     default:
@@ -159,21 +148,20 @@ function PublishPrompt({
   premiere: string | null
   onPublish: () => void
 }) {
+  const { t, locale } = useI18n()
   return (
     <div className="space-y-3">
-      <p>
-        Approved by Bitrate. Publishing makes your tracks playable in the
-        Bitrate player and notifies your followers once. Stores are not
-        involved.
-      </p>
+      <p>{t('publish.prompt')}</p>
       <Button
         className="artist-workspace-primary rounded-full"
         onClick={onPublish}
         variant="primary"
       >
         {premiere
-          ? `Publish on ${formatDateTimeUtc(premiere)} UTC`
-          : 'Publish now'}
+          ? t('publish.publishOn', {
+              date: formatDateTimeUtc(premiere, locale),
+            })
+          : t('publish.publishNow')}
       </Button>
     </div>
   )
@@ -188,7 +176,7 @@ function PublishDialog({
   release: ReleaseWorkspace
   onClose: () => void
 }) {
-  const { tMessage } = useI18n()
+  const { t, tMessage, locale } = useI18n()
   const publish = usePublishRelease(artistId)
   const premiere = premiereOf(release)
   const confirm = async () => {
@@ -207,23 +195,25 @@ function PublishDialog({
       canClose={!publish.isPending}
       className="artist-release-credit-modal"
       onClose={onClose}
-      title="Publish on Bitrate"
+      title={t('workspace.next.ready')}
     >
       <div aria-busy={publish.isPending} className="space-y-6">
         <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 text-sm">
-          <dt className="text-text-secondary">Release</dt>
+          <dt className="text-text-secondary">{t('publish.release')}</dt>
           <dd className="font-medium">{release.title}</dd>
-          <dt className="text-text-secondary">Tracks</dt>
+          <dt className="text-text-secondary">{t('publish.tracks')}</dt>
           <dd>{release.trackCount}</dd>
-          <dt className="text-text-secondary">Timing</dt>
+          <dt className="text-text-secondary">{t('publish.timing')}</dt>
           <dd>
             {premiere
-              ? `Premiere on ${formatDateTimeUtc(premiere)} UTC`
-              : 'Right away'}
+              ? t('publish.premiereOn', {
+                  date: formatDateTimeUtc(premiere, locale),
+                })
+              : t('editRelease.rightAway')}
           </dd>
         </dl>
         <p className="text-sm text-text-secondary">
-          Need another look? Every stage stays open until you publish.
+          {t('publish.anotherLook')}
         </p>
         {publish.error && (
           <p className="text-sm text-destructive" role="alert">
@@ -238,7 +228,7 @@ function PublishDialog({
             type="button"
             variant="outline"
           >
-            Keep reviewing
+            {t('publish.keepReviewing')}
           </Button>
           <Button
             className="artist-workspace-primary"
@@ -250,10 +240,10 @@ function PublishDialog({
             variant="primary"
           >
             {publish.isPending
-              ? 'Publishing…'
+              ? t('publish.publishingShort')
               : premiere
-                ? 'Schedule premiere'
-                : 'Publish now'}
+                ? t('publish.schedulePremiere')
+                : t('publish.publishNow')}
           </Button>
         </div>
       </div>
