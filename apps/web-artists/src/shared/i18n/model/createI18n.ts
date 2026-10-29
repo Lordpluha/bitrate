@@ -11,10 +11,7 @@ import type { Locale, TranslationValues } from './locale'
 const catalogs: Record<Locale, Messages> = { en, pl, uk }
 
 /** Looks a key up in the active catalog and fills its `{placeholders}`. */
-export type Translate = (
-  key: TranslationKey,
-  values?: TranslationValues,
-) => string
+type Translate = (key: TranslationKey, values?: TranslationValues) => string
 
 type TranslatePluralInput = {
   count: number
