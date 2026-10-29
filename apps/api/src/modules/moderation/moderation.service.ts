@@ -105,18 +105,6 @@ export class ModerationService {
           select: { id: true },
         })
         break
-      case 'podcast':
-        target = await transaction.podcast.findFirst({
-          where: { id: dto.entityId, deletedAt: null },
-          select: { id: true },
-        })
-        break
-      case 'episode':
-        target = await transaction.episode.findFirst({
-          where: { id: dto.entityId, deletedAt: null, podcast: { deletedAt: null } },
-          select: { id: true },
-        })
-        break
       case 'user':
         target = await transaction.user.findFirst({
           where: { id: dto.entityId, deletedAt: null },

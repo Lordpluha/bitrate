@@ -35,7 +35,6 @@ export const ROUTES = {
   playlist: (id: string) => `/main/playlist/${id}`,
   album: (id: string) => `/main/album/${id}`,
   artist: (id: string) => `/main/artist/${id}`,
-  podcast: (id: string) => `/main/podcast/${id}`,
   user: (id: string) => `/main/user/${id}`,
   searchCategory: (category: string) =>
     `/main/search?category=${encodeURIComponent(category)}`,

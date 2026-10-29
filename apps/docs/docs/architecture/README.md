@@ -67,6 +67,7 @@ how to apply it day to day.
 | [0063](./0063-player-variants-and-part-elements.md) | Player `chrome` variants and public part elements composed through the Context Protocol |
 | [0064](./0064-player-owns-streaming-and-prefetch.md) | The player element owns streaming, prefetch and mirrors; hosts keep the queue and supply a legacy HLS adapter |
 | [0065](./0065-single-cmaf-aac-delivery-format.md) | One stored audio format: CMAF AAC with 10-second fragments over HTTP Range; legacy Opus/HLS removed |
+| [0066](./0066-music-only-product-boundary.md) | Bitrate is music-only; podcasts and audiobooks are separate products and the podcast vertical is removed |
 
 Create new records from [`template.md`](./template.md). Accepted decisions are changed by
 a superseding ADR rather than silently rewriting history.

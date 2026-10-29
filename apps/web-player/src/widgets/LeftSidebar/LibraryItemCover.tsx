@@ -16,7 +16,6 @@ const typeGradient: Record<MusicItem['type'], string> = {
   album: 'from-chart-4 to-chart-5',
   artist: 'from-chart-2 to-chart-1',
   playlist: 'from-chart-1 to-chart-2',
-  podcast: 'from-chart-2 to-chart-3',
   single: 'from-chart-3 to-chart-5',
 }
 

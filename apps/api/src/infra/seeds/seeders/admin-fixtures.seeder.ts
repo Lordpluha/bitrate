@@ -7,7 +7,6 @@ import {
   seedArtists,
   seedAuditLogs,
   seedDeactivatedAlbum,
-  seedFixturePodcast,
   seedPlaylists,
   seedReports,
   seedRoles,
@@ -61,7 +60,6 @@ export class AdminFixturesSeeder {
       artists.fixtureArtistId,
     )
     const playlists = await seedPlaylists(this.prisma, summary, users.reporterUserId)
-    await seedFixturePodcast(this.prisma, summary)
     const unusedGenreId = await seedUnusedGenre(this.prisma, summary)
 
     const ids: FixtureIds = {

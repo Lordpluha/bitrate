@@ -34,7 +34,7 @@ checks one permission from `domain/access/permission.ts`.
 | Moderation | `moderation`, `moderation/:id` — user reports |
 | Catalog | `catalog`, `catalog/:id` — tracks, with an audio player built on `@bitrate/player` |
 | Releases | `releases`, `releases/:id` — review of artist submissions |
-| Content | `albums`, `playlists`, `podcasts` with `:id` detail — take-down and restore |
+| Content | `albums`, `playlists` with `:id` detail — take-down and restore |
 | Accounts | `artists`, `users` (listeners) with `:id` detail |
 | Genres | `genres`, `genres/new`, `genres/:id` — CRUD with guarded delete |
 | Staff | `staff`, `roles` with `new` and `:id` — roles are editable sets of permissions |

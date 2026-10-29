@@ -246,7 +246,10 @@ Concretely, and for now:
   music. That boundary is a brand commitment, not a technical limitation.
 - **Not a general-purpose social network.** Social features exist to connect a listener to an
   artist's work, not to maximise time on site.
-- **Not multi-vertical.** No podcasts, no audiobooks, no video, until the music case works.
+- **Not multi-vertical.** Music only. Podcasts and audiobooks are not part of Bitrate at all;
+  if they are ever built, they are separate products, possibly under another brand
+  ([ADR-0066](../architecture/0066-music-only-product-boundary.md)). No video until the music
+  case works.
 
 ## The mobile question
 

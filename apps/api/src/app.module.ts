@@ -20,7 +20,6 @@ import { MeModule } from '@modules/me/me.module'
 import { ModerationModule } from '@modules/moderation/moderation.module'
 import { NotificationsModule } from '@modules/notifications/notifications.module'
 import { PlaylistsModule } from '@modules/playlists/playlists.module'
-import { PodcastsModule } from '@modules/podcasts/podcasts.module'
 import { ReleasePublishingModule, ReleasesModule } from '@modules/releases'
 import { SearchModule } from '@modules/search/search.module'
 import { TracksModule } from '@modules/tracks/tracks.module'
@@ -74,7 +73,6 @@ import { i18nOptions } from './i18n/i18n.config'
     FriendsModule,
     DiscoveryModule,
     MeModule,
-    PodcastsModule,
     ReleasesModule,
     ReleasePublishingModule,
     ArtistProfileModule,

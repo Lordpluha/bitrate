@@ -9,15 +9,7 @@ export const FIXTURE_PASSWORD = 'Fixture-Only-Password-2026!'
  * exists on that module to import it through, so this is a deliberate, commented mirror rather
  * than a deep cross-module import).
  */
-export const REPORT_ENTITY_TYPES = [
-  'track',
-  'album',
-  'playlist',
-  'artist',
-  'podcast',
-  'episode',
-  'user',
-] as const
+export const REPORT_ENTITY_TYPES = ['track', 'album', 'playlist', 'artist', 'user'] as const
 
 /** One value from {@link REPORT_ENTITY_TYPES}. */
 export type ReportEntityType = (typeof REPORT_ENTITY_TYPES)[number]

@@ -42,9 +42,6 @@ export type Permission =
   | 'playlists:hide'
   | 'playlists:delete'
   | 'playlists:restore'
-  | 'podcasts:read'
-  | 'podcasts:delete'
-  | 'podcasts:restore'
   | 'releases:read'
   | 'releases:review'
 
@@ -85,9 +82,6 @@ export const PERMISSIONS = coveringTuple<Permission>()([
   'playlists:hide',
   'playlists:delete',
   'playlists:restore',
-  'podcasts:read',
-  'podcasts:delete',
-  'podcasts:restore',
   'releases:read',
   'releases:review',
 ])

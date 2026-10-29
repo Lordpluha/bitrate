@@ -10,7 +10,7 @@ export interface MusicItem {
   id: string
   title: string
   username: string
-  type: 'artist' | 'playlist' | 'album' | 'single' | 'podcast'
+  type: 'artist' | 'playlist' | 'album' | 'single'
   cover: string
   tracksCount?: number
 }
