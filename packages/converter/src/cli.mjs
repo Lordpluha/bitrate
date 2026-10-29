@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 import { parseArgs } from 'node:util'
-import { convertAudio } from './audio.mjs'
 import { convertImage } from './image.mjs'
 import { convertVideo } from './video.mjs'
 
@@ -11,19 +10,9 @@ USAGE:
   media-converter <command> [options]
 
 COMMANDS:
-  audio       Convert audio to OGG Opus format
   video       Convert video to AAC format
 	image       Convert images to WebP format
   help        Show this help message
-
-AUDIO OPTIONS:
-  -i, --input <file>       Input audio file (required)
-  -o, --output <file>      Output file (default: input with .opus extension)
-  -b, --bitrate <rate>     Audio bitrate (default: 128k)
-                           Options: 64k, 96k, 128k, 192k, 256k, 320k
-  -q, --quality <level>    Compression level 0-10 (default: 10)
-  -v, --vbr                Enable Variable Bitrate (default: CBR)
-  --application <type>     Application type: audio, voip, lowdelay (default: audio)
 
 VIDEO OPTIONS:
   -i, --input <file>       Input video file (required)
@@ -39,12 +28,6 @@ IMAGE OPTIONS:
 	--lossless               Enable lossless WebP (default: false)
 
 EXAMPLES:
-  # Convert audio to Opus with default settings (128k CBR)
-  media-converter audio -i song.mp3
-
-  # Convert audio with custom bitrate and VBR
-  media-converter audio -i song.mp3 -o output.opus -b 192k -v
-
   # Extract audio from video and convert to AAC
   media-converter video -i movie.mp4 -o audio.m4a -b 192k
 
@@ -63,9 +46,7 @@ function parseOptions(args) {
       output: { type: 'string', short: 'o' },
       bitrate: { type: 'string', short: 'b' },
       quality: { type: 'string', short: 'q' },
-      vbr: { type: 'boolean', short: 'v' },
       lossless: { type: 'boolean' },
-      application: { type: 'string' },
       profile: { type: 'string' },
       help: { type: 'boolean', short: 'h' },
     },
@@ -99,17 +80,6 @@ async function main() {
 
   try {
     switch (command) {
-      case 'audio':
-        await convertAudio({
-          input: options.input,
-          output: options.output,
-          bitrate: options.bitrate || '128k',
-          quality: options.quality ? Number.parseInt(options.quality, 10) : 10,
-          vbr: options.vbr || false,
-          application: options.application || 'audio',
-        })
-        break
-
       case 'video':
         await convertVideo({
           input: options.input,

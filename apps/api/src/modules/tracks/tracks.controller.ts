@@ -12,7 +12,6 @@ import {
   HttpCode,
   Logger,
   Param,
-  ParseEnumPipe,
   ParseIntPipe,
   ParseUUIDPipe,
   Post,
@@ -27,14 +26,11 @@ import { Throttle } from '@nestjs/throttler'
 import type { Request, Response } from 'express'
 import { ZodValidationPipe } from 'nestjs-zod'
 import {
-  GetHlsAssetSwagger,
-  GetHlsMasterPlaylistSwagger,
   GetTrackByIdSwagger,
   GetTrackManifestSwagger,
   LikeTrackSwagger,
   PostTrackSwagger,
   StreamTrackRenditionSwagger,
-  StreamTrackSwagger,
   TracksGetAllSwagger,
   TracksGetLikedSwagger,
   UnlikeTrackSwagger,
@@ -47,10 +43,8 @@ import {
   UpdateTrackSchema,
 } from './dtos/create-track.dto'
 import { TrackEntity, TrackManifestEntity, TrackManifestRenditionEntity } from './entities'
-import { type AudioStreamFormat, SUPPORTED_AUDIO_STREAM_FORMATS } from './track-audio.helpers'
 import { TrackPlaybackService } from './track-playback.service'
 import { UnsatisfiableRangeError } from './track-playback.types'
-import { TrackStreamingService } from './track-streaming.service'
 import { TrackFilesInterceptor } from './track-upload.interceptor'
 import { TrackUploadService } from './track-upload.service'
 import { TracksService } from './tracks.service'
@@ -102,7 +96,6 @@ export class TracksController {
   constructor(
     private tracksService: TracksService,
     private trackUploadService: TrackUploadService,
-    private trackStreamingService: TrackStreamingService,
     private trackPlaybackService: TrackPlaybackService,
   ) {}
 
@@ -115,72 +108,6 @@ export class TracksController {
     @Query('artistId', new ParseUUIDPipe({ optional: true })) artistId?: string,
   ) {
     return this.tracksService.findAll({ artistId, limit, page, title })
-  }
-
-  @GetHlsMasterPlaylistSwagger()
-  @UserAuth()
-  @Throttle({ default: { ttl: 60_000, limit: 600 } })
-  @Get('stream/:id/hls/master.m3u8')
-  async getHlsMasterPlaylist(
-    @Param('id', ParseUUIDPipe) id: TrackEntity['id'],
-    @Res() res: Response,
-  ) {
-    const playlist = await this.trackStreamingService.getHlsMasterPlaylist(id)
-    res.set({
-      'Content-Type': 'application/vnd.apple.mpegurl',
-      'Cache-Control': 'private, max-age=5, no-transform',
-    })
-    return res.send(playlist)
-  }
-
-  @GetHlsAssetSwagger()
-  @UserAuth()
-  @Throttle({ default: { ttl: 60_000, limit: 1_200 } })
-  @Get('stream/:id/hls/:bitrate/:asset')
-  async getHlsAsset(
-    @Param('id', ParseUUIDPipe) id: TrackEntity['id'],
-    @Param('bitrate', ParseIntPipe) bitrate: number,
-    @Param('asset') asset: string,
-    @Res() res: Response,
-  ) {
-    const data = await this.trackStreamingService.getHlsAsset(id, bitrate, asset)
-    res.set({
-      'Content-Type': data.contentType,
-      ...(data.contentLength === undefined ? {} : { 'Content-Length': data.contentLength }),
-      'Cache-Control': data.immutable
-        ? IMMUTABLE_CACHE_CONTROL
-        : 'private, max-age=30, no-transform',
-    })
-    pipeToResponse(data.stream, res, logger, 'Audio')
-  }
-
-  @StreamTrackSwagger()
-  @UserAuth()
-  @Throttle({ default: { ttl: 60_000, limit: 600 } })
-  @Get('stream/:id')
-  async streamTrack(
-    @Param('id', ParseUUIDPipe) id: TrackEntity['id'],
-    @Req() req: Request,
-    @Res() res: Response,
-    @Query('bitrate', new ParseIntPipe({ optional: true })) bitrate?: number,
-    @Query('format', new ParseEnumPipe(SUPPORTED_AUDIO_STREAM_FORMATS, { optional: true }))
-    format?: AudioStreamFormat,
-  ) {
-    const streamData = await this.trackStreamingService.getTrackStream(
-      id,
-      req.headers.range,
-      bitrate,
-      format,
-    )
-
-    sendRangeStream(res, streamData, {
-      ...(streamData.contentLength === undefined
-        ? {}
-        : { 'Content-Length': streamData.contentLength }),
-      'Cache-Control': 'private, max-age=3600, no-transform',
-      'X-Audio-Bitrate': streamData.bitrate,
-      'X-Audio-Format': streamData.format,
-    })
   }
 
   @PostTrackSwagger()

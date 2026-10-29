@@ -30,7 +30,7 @@ function buildService(): S3Service {
 
 describe('S3Service.getPresignedUrl', () => {
   it('returns a signed token URL on the API, never the object-store endpoint', async () => {
-    const url = await buildService().getPresignedUrl('tracks/t1/generations/g/hls/master.m3u8', 600)
+    const url = await buildService().getPresignedUrl('tracks/t1/generations/g/cmaf/192.m4a', 600)
 
     expect(url.startsWith(`${API_BASE_URL}/api/v1/storage/objects/`)).toBe(true)
     expect(url).not.toContain('seaweedfs.internal')

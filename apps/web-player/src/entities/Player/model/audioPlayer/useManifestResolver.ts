@@ -26,7 +26,7 @@ export const fetchTrackManifest = async (
     getApiUrl(`/api/v1/tracks/${trackId}/manifest`),
   )
 
-  /** A missing manifest marks a legacy track; other failures remain retryable. */
+  /** A missing manifest marks a track that is not playable yet; other failures remain retryable. */
   if (response.status === 404) return null
   if (!response.ok) {
     throw new ApiRequestError('Failed to fetch track manifest', response.status)
@@ -40,7 +40,7 @@ export const fetchTrackManifest = async (
  * same track is fetched once no matter how many slots ask for it.
  *
  * Returns null — rather than throwing — for tracks the API has no CMAF
- * renditions for, which is the signal to keep using the legacy HLS path.
+ * renditions for yet; the element then reports the track as unplayable.
  */
 export const useManifestResolver = () => {
   const queryClient = useQueryClient()

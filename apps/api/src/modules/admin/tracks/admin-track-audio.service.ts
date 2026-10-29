@@ -60,7 +60,7 @@ export class AdminTrackAudioService {
         trackId: id,
         format: CMAF_FORMAT,
         ...(bitrate === undefined ? {} : { bitrate }),
-        track: { processingStatus: 'READY', playbackVersion: 2 },
+        track: { processingStatus: 'READY' },
       },
       orderBy: { bitrate: 'desc' },
       select: { url: true, size: true, bitrate: true },

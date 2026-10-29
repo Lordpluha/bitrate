@@ -17,7 +17,9 @@ const PORT = Number(process.env.MOCK_API_PORT ?? 3999)
 
 /**
  * With `MOCK_CMAF=1` (the player regression suite) every track streams the two-rendition CMAF
- * fixture `packages/player` plays in its own specs; screenshots keep the plain-file path.
+ * fixture `packages/player` plays in its own specs. Screenshots get a one-rendition manifest
+ * whose codec MSE refuses, so the element plays `/cmaf/:bitrate` natively (ADR-0065) — served
+ * as the track's silent WAV, the same media and length the plain-file path used to give them.
  */
 const CMAF_ENABLED = process.env.MOCK_CMAF === '1'
 const CMAF_DIR = new URL(
@@ -649,17 +651,52 @@ const silentWav = (seconds) => {
   return wav
 }
 
-/** `/static/tracks/audio/t3.wav` → the third fixture track's length; anything else 1 s. */
-const silentWavFor = (pathname) => {
-  const track = /^\/static\/tracks\/audio\/t(\d+)\.wav$/.exec(pathname)
-  return silentWav(track ? 182 + (Number(track[1]) - 1) * 17 : 1)
+/** The silent WAV a track's natively played rendition is, by the track's own audio path. */
+const nativeAudioPath = (trackId) => {
+  const audioUrl = TRACKS.find(({ id }) => id === trackId)?.audioUrl
+  return audioUrl ? new URL(audioUrl).pathname : '/static/tracks/audio/t1.wav'
 }
+
+/** Track length in seconds for a native-only manifest; matches `silentWavFor`. */
+const nativeManifest = (trackId) => {
+  const seconds = silentSecondsFor(nativeAudioPath(trackId))
+  const durationTicks = Math.round(seconds * 48_000)
+  return {
+    version: 1,
+    timescale: 48_000,
+    durationTicks,
+    durationMs: Math.round(seconds * 1000),
+    renditions: [
+      {
+        bitrate: 128,
+        codec: 'x-screenshot-native',
+        size: 2,
+        initRange: [0, 0],
+        fragments: [[0, durationTicks, 1, 1]],
+      },
+    ],
+  }
+}
+
+/** `/static/tracks/audio/t3.wav` → the third fixture track's length; anything else 1 s. */
+const silentSecondsFor = (pathname) => {
+  const track = /^\/static\/tracks\/audio\/t(\d+)\.wav$/.exec(pathname)
+  return track ? 182 + (Number(track[1]) - 1) * 17 : 1
+}
+
+const silentWavFor = (pathname) => silentWav(silentSecondsFor(pathname))
 
 createServer((request, response) => {
   const url = new URL(request.url ?? '/', `http://localhost:${PORT}`)
   if (request.method === 'OPTIONS') return respond(request, response, 204, {})
-  if (CMAF && /^\/api\/v1\/tracks\/[^/]+\/manifest$/.test(url.pathname)) {
-    return respond(request, response, 200, CMAF.manifest)
+  const manifest = /^\/api\/v1\/tracks\/([^/]+)\/manifest$/.exec(url.pathname)
+  if (manifest) {
+    return respond(
+      request,
+      response,
+      200,
+      CMAF ? CMAF.manifest : nativeManifest(manifest[1]),
+    )
   }
   const rendition = /^\/api\/v1\/tracks\/[^/]+\/cmaf\/(\d+)$/.exec(url.pathname)
   if (CMAF && rendition) {
@@ -677,8 +714,11 @@ createServer((request, response) => {
     })
     return response.end(bytes.subarray(start, end + 1))
   }
-  if (/^\/static\/.+\.wav$/.test(url.pathname)) {
-    const wav = silentWavFor(url.pathname)
+  const wavPath = rendition
+    ? nativeAudioPath(url.pathname.split('/')[4])
+    : url.pathname
+  if (/^\/static\/.+\.wav$/.test(wavPath)) {
+    const wav = silentWavFor(wavPath)
     /** Byte ranges, so the media is seekable and a restored position can resume. */
     const range = /^bytes=(\d+)-(\d*)$/.exec(request.headers.range ?? '')
     if (range) {

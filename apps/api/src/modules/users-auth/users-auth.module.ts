@@ -8,7 +8,6 @@ import { TwoFactorService } from './two-factor.service'
 import { UserAuthService } from './user-auth.service'
 import { UsersAuthController } from './users-auth.controller'
 import { OptionalUserAuthGuard, UserAuthGuard } from './users-auth.guard'
-import { WsUserAuthGuard } from './users-auth.ws.guard'
 import { UsersOAuthController } from './users-oauth.controller'
 
 @Module({
@@ -20,8 +19,7 @@ import { UsersOAuthController } from './users-oauth.controller'
     TwoFactorService,
     UserAuthGuard,
     OptionalUserAuthGuard,
-    WsUserAuthGuard,
   ],
-  exports: [TokensModule, UserAuthService, UserAuthGuard, OptionalUserAuthGuard, WsUserAuthGuard],
+  exports: [TokensModule, UserAuthService, UserAuthGuard, OptionalUserAuthGuard],
 })
 export class UsersAuthModule {}

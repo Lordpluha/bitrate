@@ -1,6 +1,5 @@
 import type { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface'
 import { registerAs } from '@nestjs/config'
-import type { GatewayMetadata } from '@nestjs/websockets'
 import { resolveWebHosts } from './web.config'
 
 /**
@@ -51,18 +50,7 @@ const httpConfig: CorsOptions = {
   optionsSuccessStatus: 200,
 }
 
-/**
- * Common configuration for WebSocket connections
- */
-export const websocketConfig: GatewayMetadata = {
-  cors: {
-    origin: getAllowedOrigins(),
-    credentials: true,
-  },
-}
-
 /** The connections config value. */
 export const connectionsConfig = registerAs('connections', () => ({
   http: httpConfig,
-  ws: websocketConfig,
 }))

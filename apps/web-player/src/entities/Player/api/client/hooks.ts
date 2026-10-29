@@ -12,6 +12,18 @@ export type FetchRenditionRangeInput = {
   signal: AbortSignal
 }
 
+export type GetRenditionUrlInput = {
+  trackId: string
+  bitrate: number
+}
+
+/**
+ * The URL of one CMAF rendition file: fragment ranges are read from it, and a browser
+ * without MSE plays it whole through `<audio>`, authenticated by the session cookie.
+ */
+export const getRenditionUrl = ({ trackId, bitrate }: GetRenditionUrlInput) =>
+  getApiUrl(`/api/v1/tracks/${trackId}/cmaf/${bitrate}`)
+
 const CONTENT_RANGE_PATTERN = /^bytes (\d+)-(\d+)\/(\d+)$/i
 
 const parseContentRange = (value: string | null) => {
@@ -60,7 +72,7 @@ export const fetchRenditionRange = async ({
    * silent refresh instead of failing the fragment and killing playback.
    */
   const response = await fetchWithAuthRefresh(
-    getApiUrl(`/api/v1/tracks/${trackId}/cmaf/${bitrate}`),
+    getRenditionUrl({ bitrate, trackId }),
     {
       headers: { Range: `bytes=${range[0]}-${range[1]}` },
       signal,

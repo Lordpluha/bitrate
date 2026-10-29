@@ -2,7 +2,8 @@
  * Two media elements that play `source` and prefetch `next`, moved out of web-player's
  * `useAudioPlayer`/`useAudioSlots`/`useAudioPlayerEvents` for issue 236. The host still decides what
  * plays and what comes next — it sets `source` and `next` keyed per play — and this owns the
- * rest: the CMAF path with adaptive bitrate, the host's legacy chain as fallback, prefetching
+ * rest: the CMAF path with adaptive bitrate, the same CMAF file played natively as fallback
+ * (ADR-0065), prefetching
  * the next track into the standby element and switching to it instantly, delaying the first
  * play on a constrained connection, and saving the resume position.
  */
@@ -14,14 +15,25 @@ import type {
   BitratePlayerStreaming,
   TrackManifest,
 } from '../../contract'
-import { canPlayThroughMse, playerLog, StreamLoader } from '../cmaf'
+import {
+  canPlayThroughMse,
+  capBitrate,
+  getMaxStreamBitrate,
+  pickStartBitrate,
+  playerLog,
+  readRememberedThroughput,
+  StreamLoader,
+} from '../cmaf'
 import { shouldDelayInitialPlayback, shouldPrefetchNextTrack } from './network'
 
 /** Buffer target for the track being heard. */
 export const ACTIVE_BUFFER_SECONDS = 30
 
-/** The next track only needs enough to start at once; more would starve the current one. */
-const PREFETCH_BUFFER_SECONDS = 8
+/**
+ * The next track only needs enough to start at once; more would starve the current one.
+ * One whole 10-second fragment (ADR-0065) is the least a loader can hold.
+ */
+const PREFETCH_BUFFER_SECONDS = 10
 
 /** `timeupdate` fires ~4×/s; the resume position only needs about one write a second. */
 const POSITION_SAVE_INTERVAL_MS = 1000
@@ -47,7 +59,8 @@ type Slot = {
   media: HTMLAudioElement
   key: string | null
   loader: StreamLoader | null
-  legacy: { destroy: () => void } | null
+  /** The natively played CMAF file, when it plays in place of the loader. */
+  fallback: { destroy: () => void } | null
   bitrate: number | null
   /** The CMAF ladder of the track in this slot, lowest first. */
   renditions: number[]
@@ -207,10 +220,15 @@ export class SlotPlayer {
       loader.setAutoBitrate()
       return
     }
-    const pinned = this.pinnedBitrate
-    const affordable = slot.renditions.filter((bitrate) => bitrate <= pinned)
-    const target = affordable.at(-1) ?? slot.renditions[0]
+    const target = this.pinnedRendition(slot.renditions)
     if (target !== undefined) loader.setBitrate(target)
+  }
+
+  /** The closest rung at or below the pin, else the lowest; `undefined` without a pin. */
+  private pinnedRendition(ladder: readonly number[]): number | undefined {
+    const pinned = this.pinnedBitrate
+    if (pinned === null) return undefined
+    return ladder.filter((bitrate) => bitrate <= pinned).at(-1) ?? ladder[0]
   }
 
   destroy(): void {
@@ -223,7 +241,7 @@ export class SlotPlayer {
   }
 
   private emptySlot(media: HTMLAudioElement): Slot {
-    return { media, key: null, loader: null, legacy: null, bitrate: null, renditions: [] }
+    return { media, key: null, loader: null, fallback: null, bitrate: null, renditions: [] }
   }
 
   private status(heard: boolean): BitratePlayerStateDetail['status'] {
@@ -325,8 +343,8 @@ export class SlotPlayer {
   }
 
   private resetMedia(slot: Slot): void {
-    slot.legacy?.destroy()
-    slot.legacy = null
+    slot.fallback?.destroy()
+    slot.fallback = null
     slot.loader?.destroy()
     slot.loader = null
     slot.bitrate = null
@@ -338,7 +356,7 @@ export class SlotPlayer {
 
   private destroySlot(index: SlotIndex): void {
     const slot = this.slots[index]
-    if (slot.key === null && !slot.loader && !slot.legacy) return
+    if (slot.key === null && !slot.loader && !slot.fallback) return
     this.resetMedia(slot)
     slot.key = null
   }
@@ -370,17 +388,8 @@ export class SlotPlayer {
       }
     }
 
-    const attachLegacy = () => {
-      if (slot.key !== key) return
-      try {
-        slot.legacy = this.attachLegacy(media, source, isPrefetch, stopPlayback)
-      } catch {
-        stopPlayback()
-      }
-    }
-
     let fellBack = false
-    const fallBackFromCmaf = () => {
+    const fallBackFromCmaf = (manifest: TrackManifest) => {
       if (fellBack || slot.key !== key) return
       fellBack = true
       this.input.streaming.positions?.save(key, media.currentTime)
@@ -389,7 +398,7 @@ export class SlotPlayer {
       slot.bitrate = null
       if (!isPrefetch && this.active === index) this.pendingPlay = true
       this.restoreOnMetadata(slot, source)
-      attachLegacy()
+      if (!this.attachNative(slot, source, manifest, stopPlayback)) stopPlayback()
     }
 
     void this.input.streaming
@@ -397,37 +406,50 @@ export class SlotPlayer {
       .then((manifest) => {
         /** A newer track claimed this slot while the manifest was loading. */
         if (slot.key !== key) return
+        /** No manifest means the track cannot play yet: there is no other format to try. */
         const attached =
-          manifest !== null && this.attachCmaf(slot, source, manifest, isPrefetch, fallBackFromCmaf)
-        if (!attached) attachLegacy()
+          manifest !== null &&
+          (this.attachCmaf(slot, source, manifest, isPrefetch, () => fallBackFromCmaf(manifest)) ||
+            this.attachNative(slot, source, manifest, stopPlayback))
+        if (!attached) stopPlayback()
       })
-      .catch(attachLegacy)
+      .catch(stopPlayback)
 
     if (!isPrefetch) this.restoreOnMetadata(slot, source)
   }
 
-  private attachLegacy(
-    media: HTMLAudioElement,
+  /**
+   * Plays one CMAF rendition file through the media element itself: the listener's pin, else
+   * where the ABR would open the track. Returns false when the manifest lists no rendition.
+   */
+  private attachNative(
+    slot: Slot,
     source: BitratePlayerSource,
-    isPrefetch: boolean,
+    manifest: TrackManifest,
     onFatalError: () => void,
-  ): { destroy: () => void } {
-    const { legacy } = this.input.streaming
-    if (legacy) {
-      return legacy({
-        media,
-        key: source.key,
-        trackId: source.trackId,
-        progressiveUrl: source.progressiveUrl,
-        isPrefetch,
-        onFatalError,
-      })
-    }
+  ): boolean {
+    const { renditionUrl } = this.input.streaming
+    const bitrate = this.nativeBitrate(manifest)
+    if (bitrate === undefined) return false
 
+    playerLog('path', `CMAF-файл напрямую, ${bitrate}k`, { trackId: source.trackId })
+    const { media } = slot
     media.addEventListener('error', onFatalError, { once: true })
-    media.src = source.progressiveUrl
+    media.src = renditionUrl({ trackId: source.trackId, bitrate })
     media.load()
-    return { destroy: () => media.removeEventListener('error', onFatalError) }
+    slot.fallback = { destroy: () => media.removeEventListener('error', onFatalError) }
+    return true
+  }
+
+  /** The rendition a natively played file uses; it cannot switch once loading starts. */
+  private nativeBitrate(manifest: TrackManifest): number | undefined {
+    const ladder = manifest.renditions.map((rendition) => rendition.bitrate).sort((a, b) => a - b)
+    const pinned = this.pinnedRendition(ladder)
+    if (pinned !== undefined) return pinned
+
+    const start = pickStartBitrate({ manifest, throughputBps: readRememberedThroughput() })
+    if (start === undefined) return undefined
+    return capBitrate({ bitrate: start, manifest, maxBitrate: getMaxStreamBitrate() })
   }
 
   private attachCmaf(

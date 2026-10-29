@@ -1,7 +1,7 @@
 # @bitrate/converter
 
-CLI tool for media conversion using FFmpeg. Convert audio files to OGG Opus and extract audio from video files to AAC format.
-Also supports image conversion to WebP.
+FFmpeg wrapper for Bitrate: CMAF audio renditions for streaming (ADR-0065), audio extraction from
+video to AAC, and image conversion to WebP.
 
 ## Installation
 
@@ -15,45 +15,6 @@ pnpm add @bitrate/converter
 - If you prefer system FFmpeg, ensure it’s available in PATH and replace `ffmpeg-static` usage accordingly.
 
 ## CLI Usage
-
-### Audio Conversion (OGG Opus)
-
-Convert audio files to OGG Opus format with customizable bitrate and quality settings.
-
-```bash
-# Basic conversion with default settings (128k CBR)
-media-converter audio -i song.mp3
-
-# Custom bitrate
-media-converter audio -i song.mp3 -b 192k
-
-# Enable Variable Bitrate (VBR)
-media-converter audio -i song.mp3 -b 192k -v
-
-# Custom output file and quality
-media-converter audio -i song.mp3 -o output.opus -q 10
-
-# Voice optimization
-media-converter audio -i podcast.mp3 --application voip -b 64k
-```
-
-#### Audio Options
-
-| Option | Short | Description | Default |
-|--------|-------|-------------|---------|
-| `--input` | `-i` | Input audio file (required) | - |
-| `--output` | `-o` | Output file path | `input.opus` |
-| `--bitrate` | `-b` | Audio bitrate | `128k` |
-| `--quality` | `-q` | Compression level (0-10) | `10` |
-| `--vbr` | `-v` | Enable Variable Bitrate | `false` (CBR) |
-| `--application` | - | Application type | `audio` |
-
-**Bitrate options:** `64k`, `96k`, `128k`, `192k`, `256k`, `320k`
-
-**Application types:**
-- `audio` - Music and general audio (default)
-- `voip` - Voice optimization
-- `lowdelay` - Low latency for real-time
 
 ### Video Conversion (AAC)
 
@@ -117,25 +78,22 @@ media-converter image -i logo.png --lossless
 You can also use the converter in your Node.js code:
 
 ```javascript
-import { convertAudio, convertVideo } from '@bitrate/converter'
-import { convertImage } from '@bitrate/converter'
+import { convertAudioToCmaf, convertImage, convertVideo } from '@bitrate/converter'
 
-// Convert audio
-const audioResult = await convertAudio({
-  input: 'song.mp3',
-  output: 'song.opus',
-  bitrate: '192k',
-  quality: 10,
-  vbr: true,
-  application: 'audio'
+// Encode CMAF renditions in one FFmpeg run, with the byte index Range playback needs
+const cmaf = await convertAudioToCmaf({
+  input: 'song.wav',
+  outputDir: 'song.cmaf',
+  bitrates: [128, 192, 320],
 })
 
-console.log(audioResult)
+console.log(cmaf.renditions[0])
 // {
-//   input: 'song.mp3',
-//   output: 'song.opus',
-//   inputSize: '5.2 MB',
-//   outputSize: '3.1 MB'
+//   bitrate: 128,
+//   path: 'song.cmaf/128.m4a',
+//   initRange: [0, 708],
+//   fragments: [{ startTicks: 0, durationTicks: 479232, offset: 709, length: 160436 }, ...],
+//   ...
 // }
 
 // Convert video audio
@@ -172,53 +130,14 @@ console.log(imageResult)
 // }
 ```
 
-## Examples
-
-### Music Conversion
-
-```bash
-# Standard quality music (128k CBR)
-media-converter audio -i album/*.mp3 -b 128k
-
-# High quality music (192k VBR)
-media-converter audio -i song.flac -b 192k -v
-
-# Maximum quality (256k VBR, highest compression)
-media-converter audio -i song.wav -b 256k -v -q 10
-```
-
-### Voice/Podcast Conversion
-
-```bash
-# Voice optimized, low bandwidth
-media-converter audio -i podcast.mp3 --application voip -b 64k
-
-# Voice with better quality
-media-converter audio -i podcast.mp3 --application voip -b 96k -v
-```
-
-### Video Audio Extraction
-
-```bash
-# Extract audio from video
-media-converter video -i movie.mp4
-
-# High quality extraction
-media-converter video -i movie.mkv -b 256k -q 2
-
-# Low bitrate with HE-AAC
-media-converter video -i video.avi -b 64k --profile aac_he
-```
-
 ## Technical Details
 
-### OGG Opus
+### CMAF
 
-- **Codec:** libopus
-- **Container:** OGG
-- **Bitrate range:** 6-510 kbps (recommended: 64-256k)
-- **Compression levels:** 0-10 (10 = highest quality, slower)
-- **VBR vs CBR:** VBR provides better quality at same bitrate but variable file size
+- **Codec:** AAC-LC (`mp4a.40.2`), 48 kHz, stereo — pinned on every rendition
+- **Container:** fragmented MP4 with a global `sidx`, one file per bitrate
+- **Fragments:** 469 AAC frames (10.005 s); renditions share boundaries and
+  `assertAlignedRenditions` fails the run when they drift
 
 ### AAC
 

@@ -141,8 +141,6 @@ export type TrackManifest = {
 export type BitratePlayerSource = {
   key: string
   trackId: string
-  /** The plain audio file, the last fallback when neither CMAF nor HLS can play. */
-  progressiveUrl: string
   /** The track's length in seconds, shown until the media reports its own. */
   duration?: number
   /**
@@ -162,20 +160,11 @@ export type BitratePlayerFetchRangeInput = {
   signal: AbortSignal
 }
 
-/**
- * Plays a track with no CMAF manifest (or no MSE) through the host's own legacy chain, such as
- * hls.js and then the progressive file. The adapter owns that whole chain and calls
- * `onFatalError` only once nothing in it can play.
- */
-export type BitratePlayerLegacyAdapter = (input: {
-  media: HTMLMediaElement
-  /** The play's key, for saving the position across the adapter's own fallbacks. */
-  key: string
+/** One CMAF rendition file, which a media element without MSE plays whole. */
+export type BitratePlayerRenditionUrlInput = {
   trackId: string
-  progressiveUrl: string
-  isPrefetch: boolean
-  onFatalError: () => void
-}) => { destroy: () => void }
+  bitrate: number
+}
 
 /** Where the element keeps each play's resume position (web-player: `sessionStorage`). */
 export type BitratePlayerPositionStore = {
@@ -186,14 +175,20 @@ export type BitratePlayerPositionStore = {
 
 /**
  * Everything the streaming element needs from its host to play `source` and prefetch `next`:
- * the manifest and byte ranges over the host's own authenticated client, an optional legacy
- * adapter, resume storage, and whether the connection is constrained (data saver, 2G/3G).
+ * the manifest and byte ranges over the host's own authenticated client, the rendition file a
+ * media element plays natively, resume storage, and whether the connection is constrained
+ * (data saver, 2G/3G). CMAF is the only format (ADR-0065).
  */
 export type BitratePlayerStreaming = {
-  /** The track's CMAF manifest, or `null` for a track that has none. */
+  /** The track's CMAF manifest, or `null` for a track that cannot play yet. */
   resolveManifest: (trackId: string) => Promise<TrackManifest | null>
   fetchRange: (input: BitratePlayerFetchRangeInput) => Promise<ArrayBuffer>
-  legacy?: BitratePlayerLegacyAdapter
+  /**
+   * The URL of one CMAF rendition file. Without MSE, or once the CMAF loader fails, the element
+   * plays that file natively — the same bytes, without adaptive bitrate. Cookie-authenticated
+   * hosts pair it with `crossOrigin`.
+   */
+  renditionUrl: (input: BitratePlayerRenditionUrlInput) => string
   positions?: BitratePlayerPositionStore
   isConstrained?: () => boolean
   /** `crossorigin` for both media elements, e.g. `use-credentials` for cookie-authed media. */

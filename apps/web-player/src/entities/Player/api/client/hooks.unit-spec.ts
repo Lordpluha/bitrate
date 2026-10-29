@@ -6,7 +6,7 @@ const { fetchWithAuthRefresh } = vi.hoisted(() => ({
 
 vi.mock('@shared/api/client', () => ({ fetchWithAuthRefresh }))
 
-import { fetchRenditionRange } from './hooks'
+import { fetchRenditionRange, getRenditionUrl } from './hooks'
 
 const fetchRange = () =>
   fetchRenditionRange({
@@ -31,6 +31,25 @@ const response = (
       : undefined,
     status,
   })
+
+describe('getRenditionUrl', () => {
+  it('points at the rendition file the API serves for Range and native playback', () => {
+    expect(getRenditionUrl({ bitrate: 192, trackId: 'track-id' })).toMatch(
+      /\/api\/v1\/tracks\/track-id\/cmaf\/192$/,
+    )
+  })
+
+  it('is the same file the fragment ranges are read from', async () => {
+    fetchWithAuthRefresh.mockResolvedValue(response(206, [1, 2, 3]))
+
+    await fetchRange()
+
+    expect(fetchWithAuthRefresh).toHaveBeenCalledWith(
+      getRenditionUrl({ bitrate: 128, trackId: 'track-id' }),
+      expect.anything(),
+    )
+  })
+})
 
 describe('fetchRenditionRange', () => {
   beforeEach(() => {

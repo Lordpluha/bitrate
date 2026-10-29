@@ -20,7 +20,6 @@ export const trackResponseSchema = z.object({
   language: z.string().nullable(),
   lyrics: z.string().nullable(),
   playCount: z.number(),
-  playbackVersion: z.number(),
   popularity: z.number(),
   previewUrl: z.string().nullable(),
   processingAttempts: z.number(),
