@@ -20,7 +20,6 @@ const detail = {
     id: '3f2504e0-4f89-41d3-9a0c-0305e82c3303',
     title: 'Night Drive',
     deletedAt: null,
-    parentId: null,
   },
   siblingReports: [
     {

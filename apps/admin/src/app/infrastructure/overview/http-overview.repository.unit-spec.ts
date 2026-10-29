@@ -109,6 +109,29 @@ describe('HttpOverviewRepository', () => {
     })
   })
 
+  it('drops the series of entity types the panel retired (ADR-0066)', async () => {
+    const result = repository.getReportsByType(1)
+
+    http
+      .expectOne((req) => req.url === `${BASE}/reports-by-type`)
+      .flush({
+        from: '2026-09-17',
+        to: '2026-09-17',
+        days: 1,
+        dates: ['2026-09-17'],
+        series: [
+          { entityType: 'track', counts: [1], total: 1 },
+          { entityType: 'podcast', counts: [0], total: 0 },
+          { entityType: 'episode', counts: [0], total: 0 },
+        ],
+        total: 1,
+      })
+
+    await expect(result).resolves.toMatchObject({
+      series: [{ entityType: 'track', counts: [1], total: 1 }],
+    })
+  })
+
   it('rejects reports-by-type when the response fails schema validation', async () => {
     const result = repository.getReportsByType(30)
 

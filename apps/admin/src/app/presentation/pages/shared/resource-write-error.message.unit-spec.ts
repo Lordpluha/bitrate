@@ -89,14 +89,14 @@ describe('resourceWriteError', () => {
     expect(isStaleStateError(new ResourceWriteError('visibility-conflict'))).toBe(true)
   })
 
-  it('uses take-down wording for a podcast and an episode conflict', () => {
+  it('uses take-down wording for an album and a playlist conflict', () => {
     expect(
       english(
         resourceWriteError({
           error: new ResourceWriteError('already-deactivated'),
           action: 'take down',
           label: '"Signal Hour"',
-          resource: 'podcast',
+          resource: 'album',
         }),
       ),
     ).toBe('"Signal Hour" is already taken down — reloaded.')
@@ -106,11 +106,11 @@ describe('resourceWriteError', () => {
         resourceWriteError({
           error: new ResourceWriteError('not-deactivated'),
           action: 'restore',
-          label: '"Intro Episode"',
-          resource: 'episode',
+          label: '"Late Mix"',
+          resource: 'playlist',
         }),
       ),
-    ).toBe('"Intro Episode" is not taken down — reloaded.')
+    ).toBe('"Late Mix" is not taken down — reloaded.')
   })
 
   it('uses take-down wording for a track conflict rather than account wording', () => {

@@ -15,7 +15,6 @@ const GROUP_KEY: Record<string, string> = {
   genres: 'permissions.group.genres',
   overview: 'permissions.group.overview',
   playlists: 'permissions.group.playlists',
-  podcasts: 'permissions.group.podcasts',
   releases: 'permissions.group.releases',
   reports: 'permissions.group.reports',
   roles: 'permissions.group.roles',

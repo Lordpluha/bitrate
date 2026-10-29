@@ -11,8 +11,7 @@ export type ModerationSortField = 'createdAt' | 'status'
  * field stays a free string on the wire (never validated at write time) — only this filter
  * parameter is a closed set, bound to the contract in `infrastructure/moderation/report.mapper.ts`.
  */
-export type ModerationEntityType =
-  'track' | 'album' | 'playlist' | 'artist' | 'podcast' | 'episode' | 'user'
+export type ModerationEntityType = 'track' | 'album' | 'playlist' | 'artist' | 'user'
 
 /** A report a listener filed against some piece of content. */
 export type ModerationReport = {
@@ -43,8 +42,6 @@ export type ModerationSubject = {
   id: string
   title: string
   deletedAt: Date | null
-  /** The subject's owning parent, when its kind has one — an episode's podcast id. */
-  parentId: string | null
 }
 
 /** A report's full detail view — the queue row plus its resolved subject and sibling reports. */

@@ -27,8 +27,6 @@ export const MODERATION_ENTITY_TYPES = coveringTuple<ModerationEntityType>()([
   'album',
   'playlist',
   'artist',
-  'podcast',
-  'episode',
   'user',
 ])
 

@@ -50,8 +50,6 @@ const TYPE_LABEL: Record<ModerationEntityType, string> = {
   album: 'moderation.type.album',
   playlist: 'moderation.type.playlist',
   artist: 'moderation.type.artist',
-  podcast: 'moderation.type.podcast',
-  episode: 'moderation.type.episode',
   user: 'moderation.type.user',
 }
 
@@ -76,21 +74,13 @@ const ERROR: Record<'load' | 'advance', string> = {
   advance: 'report.error.advance',
 }
 
-/**
- * Subject kinds with a panel detail page to link to. An episode has no page of its own, so it
- * links to its podcast's — and renders as plain text when the report carries no podcast id.
- * Albums have no link here yet.
- */
-const SUBJECT_ROUTES: Readonly<
-  Record<string, (subject: ModerationSubject) => readonly [string, string] | null>
-> = {
-  track: ({ id }) => ['/catalog', id],
-  artist: ({ id }) => ['/artists', id],
-  user: ({ id }) => ['/users', id],
-  playlist: ({ id }) => ['/playlists', id],
-  podcast: ({ id }) => ['/podcasts', id],
-  episode: ({ parentId }) => (parentId ? ['/podcasts', parentId] : null),
-}
+/** Subject kinds with a panel detail page to link to, by route prefix. Albums have no link here yet. */
+const SUBJECT_ROUTE_PREFIX: ReadonlyMap<string, string> = new Map([
+  ['track', '/catalog'],
+  ['artist', '/artists'],
+  ['user', '/users'],
+  ['playlist', '/playlists'],
+])
 
 function isKnownType(kind: string): kind is ModerationEntityType {
   return Object.hasOwn(TYPE_LABEL, kind)
@@ -191,7 +181,8 @@ export class ReportDetailPage {
   }
 
   protected subjectLink(subject: ModerationSubject): readonly [string, string] | null {
-    return SUBJECT_ROUTES[subject.kind]?.(subject) ?? null
+    const prefix = SUBJECT_ROUTE_PREFIX.get(subject.kind)
+    return prefix === undefined ? null : [prefix, subject.id]
   }
 
   protected ask(decision: Decision): void {
