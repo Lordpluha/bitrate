@@ -42,7 +42,7 @@ goes, but it is not deprecated either.
 moderating content. Served by `apps/admin`, an Angular panel
 ([ADR-0035](apps/docs/docs/architecture/0035-admin-panel-on-angular.md)) that replaced the
 removed Kottster panel: overview and reports, moderation, catalog, release review, albums,
-playlists, podcasts, artists, listeners, genres, audit log, and staff with editable roles over
+playlists, artists, listeners, genres, audit log, and staff with editable roles over
 a fixed permission set. Its needs are throughput and correctness, not persuasion.
 
 ## Product Purpose
@@ -97,7 +97,7 @@ this question to be answered first, not assumed.
 
 - Listener web app on real data: home, search, library, artist, album, playlist and Liked
   Songs pages, queue, recents, public profiles, friends via requests, activity feed,
-  notifications, charts, listening stats, podcast pages, settings with privacy and an audio
+  notifications, charts, listening stats, settings with privacy and an audio
   quality cap.
 - Artist workspace (see Users) and the operator panel (see Users).
 
@@ -108,7 +108,11 @@ surface is worth designing, not as evidence it already works.
 
 **Not started:** mobile app beyond scaffolding, desktop app beyond scaffolding, artist
 verification, monetization/subscriptions, delivery to external stores, gapless playback,
-equalizer, offline mode, audiobooks, recommendations.
+equalizer, offline mode, recommendations.
+
+**Out of scope:** podcasts and audiobooks. Bitrate is music-only; spoken word, if ever built,
+is a separate product, possibly under another brand
+([ADR-0066](apps/docs/docs/architecture/0066-music-only-product-boundary.md)).
 
 **Technical constraints that bind design work:**
 - Web UI is Next.js App Router with Feature-Sliced Design; imports flow

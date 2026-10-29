@@ -1,6 +1,7 @@
 # ADR-0051: Operator panel resource coverage
 
-Status: Accepted
+Status: Accepted — item 10 (podcasts) is superseded by
+[ADR-0066](./0066-music-only-product-boundary.md), which removes podcasts from Bitrate.
 
 Date: 2026-10-05
 
