@@ -184,15 +184,14 @@ a platform — which is a security and governance commitment, not just an API su
 
 ## What is deliberately absent
 
-Podcasts, audiobooks, video, smart-TV and car integrations, and multi-language support appear
-in the [delivery roadmap](../guides/roadmap.md) under "Future (2027+)". They are not in this
-backlog because none of them serves
-[the job to be done](./vision.md#the-job-to-be-done). If the strategy changes so that they do,
-add them here with the reason attached.
+Video, smart-TV and car integrations, and multi-language support appear in the
+[delivery roadmap](../guides/roadmap.md) under "Future (2027+)". They are not in this backlog
+because none of them serves [the job to be done](./vision.md#the-job-to-be-done). If the
+strategy changes so that they do, add them here with the reason attached.
 
-One wrinkle worth naming rather than leaving for someone to trip over: podcasts are **not**
-absent from the code. `Podcast`, `Episode` and `UserSavedEpisode` are already models in the
-Prisma schema, with no API or UI on top of them. Either the strategy is wrong to exclude
-podcasts, or that schema is speculative weight carried by every migration — and the second is
-the more likely reading. Decide it deliberately; do not let three unused models quietly become
-a commitment.
+Podcasts and audiobooks are absent for a stronger reason: they are not part of Bitrate at all.
+[ADR-0066](../architecture/0066-music-only-product-boundary.md) makes Bitrate music-only and
+leaves spoken word to separate products, possibly under another brand. It also settles the
+podcast code that used to sit in the repository — the `Podcast`, `Episode` and
+`UserSavedEpisode` models with their API, listener and operator surfaces — by removing it
+rather than letting it quietly become a commitment.

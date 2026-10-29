@@ -94,7 +94,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
         blocks: [
           {
             kind: 'paragraph',
-            text: '3.1 Listeners may stream music and podcasts, build playlists, follow artists and use related features.',
+            text: '3.1 Listeners may stream music, build playlists, follow artists and use related features.',
           },
           {
             kind: 'paragraph',
