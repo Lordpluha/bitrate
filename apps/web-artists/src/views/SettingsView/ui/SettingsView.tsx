@@ -10,7 +10,9 @@ import {
   TwoFactorSection,
 } from '@features/account-security'
 import { NotificationPreferences } from '@features/notification-preferences'
+import { LanguagePreference } from '@features/workspace-language'
 import { AppearancePreferences, ThemeSwitcher } from '@features/workspace-theme'
+import { useI18n } from '@shared/i18n'
 import { ROUTES } from '@shared/routes/routes'
 import { Link } from '@tanstack/react-router'
 import { CircleAlert, CircleCheck } from 'lucide-react'
@@ -80,6 +82,7 @@ function SettingsSections({
   profile: ArtistProfile
 }) {
   const reset = usePasswordResetEmail()
+  const { t } = useI18n()
   return (
     <div className="grid max-w-3xl gap-4">
       <Panel id="settings-account-heading" title="Account">
@@ -148,6 +151,12 @@ function SettingsSections({
         <p className="text-xs text-text-secondary">
           Saved in this browser only.
         </p>
+      </Panel>
+      <Panel
+        id="settings-language-heading"
+        title={t('settings.language.title')}
+      >
+        <LanguagePreference />
       </Panel>
       <Panel id="settings-notifications-heading" title="Notifications">
         <NotificationPreferences artistId={artistId} />
