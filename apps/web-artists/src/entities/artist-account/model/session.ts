@@ -1,4 +1,5 @@
 import type { ApiSchemas } from '@bitrate/contracts'
+import type { Translate } from '@shared/i18n'
 import { z } from 'zod'
 
 const instant = z.iso.datetime({ offset: true })
@@ -33,10 +34,13 @@ const SYSTEMS: readonly [RegExp, string][] = [
 ]
 
 /** A readable device name from the user agent; unknown agents fall back to plain wording. */
-export function describeSessionDevice(userAgent: string | null): string {
-  if (!userAgent) return 'Unknown device'
+export function describeSessionDevice(
+  userAgent: string | null,
+  t: Translate,
+): string {
+  if (!userAgent) return t('settings.device.unknown')
   const browser = BROWSERS.find(([pattern]) => pattern.test(userAgent))?.[1]
   const system = SYSTEMS.find(([pattern]) => pattern.test(userAgent))?.[1]
-  if (browser && system) return `${browser} on ${system}`
-  return browser ?? system ?? 'Unknown browser'
+  if (browser && system) return t('settings.device.on', { browser, system })
+  return browser ?? system ?? t('settings.device.unknownBrowser')
 }

@@ -1,21 +1,38 @@
 import { cn } from '@bitrate/ui-react'
+import { type TranslationKey, useI18n } from '@shared/i18n'
 import { useWorkspaceTheme } from '@shared/theme/WorkspaceThemeProvider'
 import { useId } from 'react'
 
 interface Choice<T extends string> {
   value: T
-  label: string
-  hint: string
+  label: TranslationKey
+  hint: TranslationKey
 }
 
 const densityChoices: readonly Choice<'comfortable' | 'compact'>[] = [
-  { value: 'comfortable', label: 'Comfortable', hint: 'Roomier panels' },
-  { value: 'compact', label: 'Compact', hint: 'More on screen' },
+  {
+    value: 'comfortable',
+    label: 'settings.density.comfortable',
+    hint: 'settings.density.comfortableHint',
+  },
+  {
+    value: 'compact',
+    label: 'settings.density.compact',
+    hint: 'settings.density.compactHint',
+  },
 ]
 
 const motionChoices: readonly Choice<'system' | 'reduced'>[] = [
-  { value: 'system', label: 'System', hint: 'Follow your device' },
-  { value: 'reduced', label: 'Reduced', hint: 'No animations' },
+  {
+    value: 'system',
+    label: 'settings.motion.system',
+    hint: 'settings.motion.systemHint',
+  },
+  {
+    value: 'reduced',
+    label: 'settings.motion.reduced',
+    hint: 'settings.motion.reducedHint',
+  },
 ]
 
 function ChoiceGroup<T extends string>({
@@ -30,6 +47,7 @@ function ChoiceGroup<T extends string>({
   onChange: (next: T) => void
 }) {
   const name = useId()
+  const { t } = useI18n()
   return (
     <fieldset className="min-w-0">
       <legend className="mb-2 px-1 text-xs text-text-secondary">
@@ -56,8 +74,10 @@ function ChoiceGroup<T extends string>({
                 'peer-focus-visible:ring-2 peer-focus-visible:ring-ring peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-secondary',
               )}
             >
-              <span>{choice.label}</span>
-              <span className="text-[0.6875rem] opacity-80">{choice.hint}</span>
+              <span>{t(choice.label)}</span>
+              <span className="text-[0.6875rem] opacity-80">
+                {t(choice.hint)}
+              </span>
             </span>
           </label>
         ))}
@@ -69,17 +89,18 @@ function ChoiceGroup<T extends string>({
 /** Layout density and motion for this browser; both stay inside the artist workspace. */
 export function AppearancePreferences() {
   const { density, setDensity, motion, setMotion } = useWorkspaceTheme()
+  const { t } = useI18n()
   return (
     <div className="grid gap-4 sm:grid-cols-2">
       <ChoiceGroup
         choices={densityChoices}
-        legend="Density"
+        legend={t('settings.density')}
         onChange={setDensity}
         value={density}
       />
       <ChoiceGroup
         choices={motionChoices}
-        legend="Motion"
+        legend={t('settings.motion')}
         onChange={setMotion}
         value={motion}
       />
