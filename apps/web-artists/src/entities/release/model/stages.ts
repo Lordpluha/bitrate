@@ -1,3 +1,4 @@
+import type { TranslationKey } from '@shared/i18n'
 import type { ReleaseSummary } from './release.schema'
 
 type Status = ReleaseSummary['status']
@@ -10,19 +11,21 @@ export type ReleaseStage = (typeof releaseStages)[number]
 /** `optional`: open to the artist after approval, but never required to finish. */
 export type StageProgress = 'complete' | 'current' | 'optional' | 'upcoming'
 
+/** Catalog keys; render them with `t()`. */
 export const releaseStageLabels = {
-  draft: 'Draft',
-  review: 'Review',
-  deliver: 'Deliver',
-  launch: 'Launch',
-} satisfies Record<ReleaseStage, string>
+  draft: 'release.stage.draft',
+  review: 'release.stage.review',
+  deliver: 'release.stage.deliver',
+  launch: 'release.stage.launch',
+} satisfies Record<ReleaseStage, TranslationKey>
 
+/** Catalog keys; render them with `t()`. */
 export const stageProgressLabels = {
-  complete: 'Complete',
-  current: 'In progress',
-  optional: 'Optional',
-  upcoming: 'Not started',
-} satisfies Record<StageProgress, string>
+  complete: 'release.progress.complete',
+  current: 'release.progress.current',
+  optional: 'release.progress.optional',
+  upcoming: 'release.progress.upcoming',
+} satisfies Record<StageProgress, TranslationKey>
 
 /** Approved but not live: the artist publishes on Launch. */
 const approved = {

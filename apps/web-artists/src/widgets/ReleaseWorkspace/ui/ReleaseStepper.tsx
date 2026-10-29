@@ -39,10 +39,10 @@ export function ReleaseStepper({ release, active }: ReleaseStepperProps) {
                 </span>
                 <span className="min-w-0">
                   <span className="artist-release-step-name">
-                    {releaseStageLabels[stage]}
+                    {t(releaseStageLabels[stage])}
                   </span>
                   <span className="artist-release-step-state">
-                    {stageProgressLabels[state]}
+                    {t(stageProgressLabels[state])}
                   </span>
                 </span>
               </Link>

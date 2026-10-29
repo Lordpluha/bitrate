@@ -74,7 +74,7 @@ export function WorkspaceCredits({ release, onAction }: WorkspaceCreditsProps) {
                 <CircleDashed aria-hidden="true" />
               )}
               {t('workspace.credits.total', {
-                right: rightTypeLabels[rightType],
+                right: t(rightTypeLabels[rightType]),
                 percent: basisPointsToPercent(total),
               })}
             </li>
@@ -106,14 +106,14 @@ export function WorkspaceCredits({ release, onAction }: WorkspaceCreditsProps) {
                     )}
                     <p>
                       {person.roles
-                        .map((role) => participantRoleLabels[role])
+                        .map((role) => t(participantRoleLabels[role]))
                         .join(' · ') || t('workspace.credits.noRoles')}
                     </p>
                     <p className="artist-release-credit-shares">
                       {rightTypes
                         .map(
                           (rightType) =>
-                            `${rightTypeLabels[rightType]} ${basisPointsToPercent(share(person.id, rightType))}%`,
+                            `${t(rightTypeLabels[rightType])} ${basisPointsToPercent(share(person.id, rightType))}%`,
                         )
                         .join(' · ')}
                     </p>

@@ -1,3 +1,4 @@
+import { createI18n } from '@shared/i18n'
 import { describe, expect, it } from 'vitest'
 import {
   basisPointsToPercent,
@@ -6,6 +7,8 @@ import {
   normalizeIsrc,
   percentToBasisPoints,
 } from './rights'
+
+const { t } = createI18n({ locale: 'en' })
 
 describe('release rights model', () => {
   it.each([
@@ -49,6 +52,7 @@ describe('release rights model', () => {
       describeBlocker(
         { code: 'CONTRIBUTOR_ROLES_MISSING', contributorId: 'c1' },
         names,
+        t,
       ),
     ).toBe('Jordan Lee needs a role')
     expect(
@@ -59,10 +63,25 @@ describe('release rights model', () => {
           totalBasisPoints: 6_000,
         },
         names,
+        t,
       ),
     ).toBe('Publishing splits total 60% of 100%')
-    expect(describeBlocker({ code: 'NO_TRACKS' }, names)).toBe(
+    expect(describeBlocker({ code: 'NO_TRACKS' }, names, t)).toBe(
       'Add at least one track',
     )
+  })
+
+  it('describes a blocker in the workspace language, right name included', () => {
+    expect(
+      describeBlocker(
+        {
+          code: 'SPLITS_INCOMPLETE',
+          rightType: 'COMPOSITION',
+          totalBasisPoints: 6_000,
+        },
+        { contributors: {} },
+        createI18n({ locale: 'uk' }).t,
+      ),
+    ).toBe('Видавничі права: сума часток 60% зі 100%')
   })
 })
