@@ -7,6 +7,7 @@ import {
 } from '@bitrate/ui-react'
 import type { ArtistIdentity } from '@shared/auth/artistSession.types'
 import { useAuthContext } from '@shared/hooks'
+import { useI18n } from '@shared/i18n'
 import { LogOut } from 'lucide-react'
 
 interface DashboardAccountProps {
@@ -19,6 +20,7 @@ export function DashboardAccount({
   compact = false,
 }: DashboardAccountProps) {
   const { logout, isLoggingOut, logoutError } = useAuthContext()
+  const { t, tMessage } = useI18n()
 
   return (
     <div className="min-w-0">
@@ -41,11 +43,11 @@ export function DashboardAccount({
             {artist.username}
           </p>
           <p className="text-xs text-text-secondary lg:hidden">
-            Artist account
+            {t('shell.artistAccount')}
           </p>
         </div>
         <Button
-          aria-label="Sign out"
+          aria-label={t('shell.signOut')}
           className="shrink-0"
           disabled={isLoggingOut}
           onClick={logout}
@@ -57,7 +59,7 @@ export function DashboardAccount({
       </div>
       {logoutError && (
         <p className="mt-2 text-sm text-error" role="alert">
-          {logoutError}
+          {tMessage(logoutError)}
         </p>
       )}
     </div>

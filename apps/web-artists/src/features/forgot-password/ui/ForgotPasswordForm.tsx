@@ -3,16 +3,18 @@
 import { Button, Input, Typography, toast } from '@bitrate/ui-react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { apiBaseUrl } from '@shared/api'
+import { messageKey, useI18n } from '@shared/i18n'
 import { type SubmitHandler, useForm } from 'react-hook-form'
 import { z } from 'zod'
 
 const schema = z.object({
-  email: z.string().email('Please enter a valid email address'),
+  email: z.string().email(messageKey('auth.validation.emailInvalid')),
 })
 
 type FormData = z.infer<typeof schema>
 
 export const ForgotPasswordForm = () => {
+  const { t, tMessage } = useI18n()
   const form = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues: { email: '' },
@@ -36,36 +38,41 @@ export const ForgotPasswordForm = () => {
         const message = Array.isArray(err.message)
           ? err.message[0]
           : err.message
-        throw new Error(message || 'Unable to process request')
+        throw new Error(message || messageKey('auth.forgot.failed'))
       }
 
-      toast.success('If that email exists, a reset link was sent')
+      toast.success(t('auth.forgot.sent'))
       form.reset()
     } catch (error) {
-      const message = error instanceof Error ? error.message : 'Request failed'
-      toast.error(message)
+      toast.error(
+        tMessage(
+          error instanceof Error
+            ? error.message
+            : messageKey('auth.forgot.failed'),
+        ),
+      )
     }
   }
 
   return (
     <form className="max-w-md mx-auto" onSubmit={form.handleSubmit(onSubmit)}>
       <Typography as="h1" className="mb-4" size="heading4">
-        Forgot password
+        {t('auth.forgot.title')}
       </Typography>
 
       <label className="text-base mb-2 block" htmlFor="email">
-        Email
+        {t('auth.forgot.email')}
       </label>
       <Input id="email" variant="black" {...form.register('email')} />
       {form.formState.errors.email ? (
         <Typography as="p" className="text-red-500 text-sm mt-2">
-          {form.formState.errors.email.message}
+          {tMessage(form.formState.errors.email.message)}
         </Typography>
       ) : null}
 
       <div className="mt-6">
         <Button className="w-full" size="lg" type="submit" variant="artistCard">
-          Send reset link
+          {t('auth.forgot.submit')}
         </Button>
       </div>
     </form>

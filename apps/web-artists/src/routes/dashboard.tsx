@@ -1,4 +1,5 @@
 import { artistSessionCheck } from '@shared/auth/artistSessionCheck'
+import { useI18n } from '@shared/i18n'
 import { ROUTES } from '@shared/routes/routes'
 import { createFileRoute, Outlet, redirect } from '@tanstack/react-router'
 import {
@@ -21,12 +22,17 @@ export const Route = createFileRoute('/dashboard')({
   },
   component: DashboardLayout,
   errorComponent: DashboardSessionError,
-  pendingComponent: () => (
-    <p className="bg-background p-6 text-foreground" role="status">
-      Checking your session…
-    </p>
-  ),
+  pendingComponent: DashboardPending,
 })
+
+function DashboardPending() {
+  const { t } = useI18n()
+  return (
+    <p className="bg-background p-6 text-foreground" role="status">
+      {t('shell.checkingSession')}
+    </p>
+  )
+}
 
 function DashboardLayout() {
   const { artist } = Route.useRouteContext()

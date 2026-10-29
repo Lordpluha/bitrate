@@ -1,10 +1,14 @@
+import { auth } from './auth'
 import { common } from './common'
 import { settings } from './settings'
+import { shell } from './shell'
 
 /** The source catalog. Each workspace area keeps its keys in its own file, merged here. */
 export const en = {
+  ...auth,
   ...common,
   ...settings,
+  ...shell,
 } as const
 
 export type TranslationKey = keyof typeof en

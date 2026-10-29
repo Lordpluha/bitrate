@@ -1,4 +1,5 @@
 import { getArtistApiUrl } from '@shared/auth/artistApiUrl'
+import { messageKey } from '@shared/i18n'
 import { createServerFn } from '@tanstack/react-start'
 import {
   getCookie,
@@ -9,6 +10,7 @@ import { twoFactorFormSchema } from '../validation/TwoFactorForm.validation'
 
 type TwoFactorLoginResult =
   | { success: true }
+  /** `message` is a catalog key the form renders in the artist's language. */
   | { success: false; message: string }
 
 /** The pending token stays httpOnly; only the code and a result cross the server-function boundary. */
@@ -20,7 +22,7 @@ export const verifyTwoFactorLogin = createServerFn({ method: 'POST' })
     if (!pendingToken) {
       return {
         success: false,
-        message: 'Your sign-in attempt expired. Go back and sign in again.',
+        message: messageKey('auth.twoFactor.expired'),
       }
     }
 
@@ -39,7 +41,7 @@ export const verifyTwoFactorLogin = createServerFn({ method: 'POST' })
       if (response.status === 401 || response.status === 403) {
         return {
           success: false,
-          message: 'Invalid or expired code. Please try again.',
+          message: messageKey('auth.twoFactor.invalidCode'),
         }
       }
       if (response.ok) {
@@ -53,6 +55,6 @@ export const verifyTwoFactorLogin = createServerFn({ method: 'POST' })
     }
     return {
       success: false,
-      message: 'Could not verify your code. Please try again.',
+      message: messageKey('auth.twoFactor.failed'),
     }
   })

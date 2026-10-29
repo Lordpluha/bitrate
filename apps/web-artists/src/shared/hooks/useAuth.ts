@@ -2,6 +2,7 @@
 
 import { clientFetchClient } from '@shared/api/fetchClient'
 import { artistSessionCheck } from '@shared/auth/artistSessionCheck'
+import { messageKey } from '@shared/i18n'
 import { ROUTES } from '@shared/routes/routes'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useLocation, useMatch, useRouter } from '@tanstack/react-router'
@@ -78,7 +79,7 @@ export function useAuth() {
     logout,
     isLoggingOut: logoutMutation.isPending,
     logoutError: logoutMutation.isError
-      ? 'Could not sign out. Please try again.'
+      ? messageKey('shell.signOutFailed')
       : null,
   }
 }

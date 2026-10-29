@@ -26,7 +26,9 @@ describe('emailSchema', () => {
     const result = emailSchema.safeParse('')
 
     expect(result.success).toBe(false)
-    expect(result.error?.issues[0]?.message).toBe('Email is required')
+    expect(result.error?.issues[0]?.message).toBe(
+      'auth.validation.emailRequired',
+    )
   })
 
   it('reports a malformed address as malformed', () => {
@@ -34,7 +36,7 @@ describe('emailSchema', () => {
 
     expect(result.success).toBe(false)
     expect(result.error?.issues[0]?.message).toBe(
-      'Please enter a valid email address',
+      'auth.validation.emailInvalid',
     )
   })
 })
@@ -53,7 +55,7 @@ describe('passwordSchema', () => {
 
     expect(result.success).toBe(false)
     expect(result.error?.issues[0]?.message).toBe(
-      'Password must be at least 10 characters',
+      'auth.validation.passwordTooShort',
     )
   })
 
@@ -62,7 +64,7 @@ describe('passwordSchema', () => {
 
     expect(result.success).toBe(false)
     expect(result.error?.issues[0]?.message).toBe(
-      'Password must contain at least one letter',
+      'auth.validation.passwordLetter',
     )
   })
 
@@ -71,7 +73,7 @@ describe('passwordSchema', () => {
 
     expect(result.success).toBe(false)
     expect(result.error?.issues[0]?.message).toBe(
-      'Password must contain a number or special character',
+      'auth.validation.passwordNumberOrSymbol',
     )
   })
 })
@@ -116,7 +118,7 @@ describe('registrationSchema', () => {
         },
         'password',
       ),
-    ).toBe('Password must be at least 10 characters')
+    ).toBe('auth.validation.passwordTooShort')
   })
 
   it('rejects a malformed email even when the password is valid', () => {
@@ -130,7 +132,7 @@ describe('registrationSchema', () => {
         },
         'email',
       ),
-    ).toBe('Please enter a valid email address')
+    ).toBe('auth.validation.emailInvalid')
   })
 
   describe('legal acceptance', () => {
@@ -143,7 +145,7 @@ describe('registrationSchema', () => {
 
     it('requires the Terms of Use, Community Guidelines and Privacy Policy before the account is created', () => {
       expect(errorFor({ ...complete, acceptLegal: false }, 'acceptLegal')).toBe(
-        'You must accept the Terms of Use and Community Guidelines',
+        'auth.validation.acceptLegal',
       )
     })
 
@@ -153,7 +155,7 @@ describe('registrationSchema', () => {
           { ...complete, acceptArtistAgreement: false },
           'acceptArtistAgreement',
         ),
-      ).toBe('You must accept the Artist Agreement')
+      ).toBe('auth.validation.acceptArtistAgreement')
     })
   })
 })
