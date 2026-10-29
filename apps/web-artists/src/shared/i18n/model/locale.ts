@@ -55,3 +55,18 @@ export const resolveLocale = ({
   if (isLocale(cookie)) return cookie
   return browserLocales(acceptLanguage ?? '')[0] ?? 'en'
 }
+
+/**
+ * The workspace language in the browser, for code outside React such as API requests. The
+ * provider keeps `<html lang>` on the active language, so a switch applies at once; before it
+ * is set, the saved cookie or the browser's languages decide.
+ */
+export const clientLocale = (): Locale => {
+  if (typeof document === 'undefined') return 'en'
+  const shown = document.documentElement.lang
+  if (isLocale(shown)) return shown
+  return resolveLocale({
+    cookie: readLocaleCookie(document.cookie),
+    acceptLanguage: navigator.languages.join(','),
+  })
+}

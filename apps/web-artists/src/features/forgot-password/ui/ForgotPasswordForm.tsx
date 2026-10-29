@@ -3,7 +3,7 @@
 import { Button, Input, Typography, toast } from '@bitrate/ui-react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { apiBaseUrl } from '@shared/api'
-import { messageKey, useI18n } from '@shared/i18n'
+import { clientLocale, messageKey, useI18n } from '@shared/i18n'
 import { type SubmitHandler, useForm } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -28,7 +28,10 @@ export const ForgotPasswordForm = () => {
         {
           method: 'POST',
           credentials: 'include',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Accept-Language': clientLocale(),
+            'Content-Type': 'application/json',
+          },
           body: JSON.stringify({ email: data.email.trim().toLowerCase() }),
         },
       )

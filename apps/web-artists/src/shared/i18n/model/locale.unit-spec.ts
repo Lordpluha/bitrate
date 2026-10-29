@@ -1,5 +1,10 @@
-import { describe, expect, it } from 'vitest'
-import { LOCALE_COOKIE, readLocaleCookie, resolveLocale } from './locale'
+import { afterEach, describe, expect, it } from 'vitest'
+import {
+  clientLocale,
+  LOCALE_COOKIE,
+  readLocaleCookie,
+  resolveLocale,
+} from './locale'
 
 describe('readLocaleCookie', () => {
   it('reads the locale from a document.cookie string', () => {
@@ -33,5 +38,23 @@ describe('resolveLocale', () => {
   it('falls back to English when nothing matches', () => {
     expect(resolveLocale({ acceptLanguage: 'de-DE,fr;q=0.8' })).toBe('en')
     expect(resolveLocale({})).toBe('en')
+  })
+})
+
+describe('clientLocale', () => {
+  afterEach(() => {
+    document.documentElement.lang = ''
+  })
+
+  it('follows the language the workspace is showing', () => {
+    document.documentElement.lang = 'pl'
+    expect(clientLocale()).toBe('pl')
+  })
+
+  it('falls back to the browser languages before the page sets one', () => {
+    document.documentElement.lang = ''
+    expect(clientLocale()).toBe(
+      resolveLocale({ acceptLanguage: navigator.languages.join(',') }),
+    )
   })
 })
