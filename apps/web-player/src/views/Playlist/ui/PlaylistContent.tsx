@@ -2,12 +2,13 @@
 
 import { StateMessage } from '@shared/ui'
 import { Music } from 'lucide-react'
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import type { PlaylistWithTracks } from '@/entities/Playlist'
 import { selectCompactLibrary, useSettingsStore } from '@/entities/Settings'
-import { TracksList, useLikedTracks } from '@/entities/Track'
+import { TracksList } from '@/entities/Track'
 import { useAuth } from '@/shared/hooks'
 import { useI18n } from '@/shared/i18n'
+import { ROUTES } from '@/shared/routes'
 import type { TrackViewMode } from '@/views/Playlist/model/playlist.types'
 import { getPlaylistCover } from '@/views/Playlist/model/playlist.utils'
 import { usePlaylistActions } from '@/views/Playlist/model/usePlaylistActions'
@@ -25,19 +26,12 @@ type PlaylistContentProps = {
 export const PlaylistContent = ({ playlist }: PlaylistContentProps) => {
   const { t } = useI18n()
   const { user } = useAuth()
-  const { data: likedTracks } = useLikedTracks(1, 1000, undefined, {
-    staleTime: 5 * 60_000,
-  })
   const [isEditing, setIsEditing] = useState(false)
   const compactLibrary = useSettingsStore(selectCompactLibrary)
   const [trackViewMode, setTrackViewMode] = useState<TrackViewMode>(
     compactLibrary ? 'compact' : 'list',
   )
   const tracks = playlist.tracks ?? []
-  const likedTrackIds = useMemo(
-    () => new Set((likedTracks ?? []).map((track) => track.id)),
-    [likedTracks],
-  )
   const isOwner = Boolean(
     playlist.user?.id && user?.id && playlist.user.id === user.id,
   )
@@ -62,13 +56,13 @@ export const PlaylistContent = ({ playlist }: PlaylistContentProps) => {
         imageUrl={cover}
         title={playlist.title || t('common.playlist')}
         tracksCount={tracks.length}
-        type={t('common.playlist')}
+        type={playlist.isPublic ? t('playlist.public') : t('common.playlist')}
       />
       <PlaylistActionBar
         details={{
           id: playlist.id,
           isOwner,
-          title: playlist.title || 'playlist',
+          title: playlist.title || t('playlist.fallbackTitle'),
           tracksCount: tracks.length,
         }}
         onDelete={actions.deletePlaylist}
@@ -85,7 +79,6 @@ export const PlaylistContent = ({ playlist }: PlaylistContentProps) => {
         <TracksList
           activeTrackId={playback.currentTrackId}
           isPlaybackContextActive={playback.isActive}
-          likedTrackIds={likedTrackIds}
           onPlayTrack={playback.playTrack}
           onRemoveTrack={isOwner ? actions.removeTrack : undefined}
           removable={isOwner}
@@ -98,13 +91,15 @@ export const PlaylistContent = ({ playlist }: PlaylistContentProps) => {
           addingTrackId={actions.addingTrackId}
           existingTrackIds={actions.existingTrackIds}
           onAddTrack={actions.addTrack}
-          playlistTitle={playlist.title || 'playlist'}
+          playlistTitle={playlist.title || t('playlist.fallbackTitle')}
         />
       )}
       {!isOwner && tracks.length === 0 && (
         <StateMessage
           className="min-h-80"
+          description={t('playlist.findDescription')}
           icon={Music}
+          primary={{ href: ROUTES.search(), label: t('playlist.searchTracks') }}
           title={t('playlist.noTracks')}
         />
       )}

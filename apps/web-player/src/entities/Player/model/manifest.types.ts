@@ -1,37 +1,5 @@
 /**
- * Fragment entry as stored in the manifest: `[startTicks, durationTicks, offset, length]`.
- * Offsets are absolute byte positions inside the rendition file.
+ * The CMAF manifest type now lives with the engine in `@bitrate/player` (#236); re-exported so
+ * the slice keeps one local name for it.
  */
-type ManifestFragment = readonly [
-  startTicks: number,
-  durationTicks: number,
-  offset: number,
-  length: number,
-]
-
-export type ManifestRendition = {
-  bitrate: number
-  codec: string
-  size: number
-  /** Inclusive byte range of the MSE initialization segment (`ftyp`+`moov`). */
-  initRange: readonly [number, number]
-  fragments: readonly ManifestFragment[]
-}
-
-export type TrackManifest = {
-  version: 1
-  timescale: number
-  durationTicks: number
-  durationMs: number
-  renditions: readonly ManifestRendition[]
-}
-
-/** A fragment resolved against a rendition, ready to be requested. */
-export type ResolvedFragment = {
-  index: number
-  bitrate: number
-  startSeconds: number
-  endSeconds: number
-  /** Inclusive byte range for the HTTP `Range` header. */
-  byteRange: readonly [number, number]
-}
+export type { TrackManifest } from '@bitrate/player/engine'

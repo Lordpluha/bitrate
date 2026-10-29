@@ -7,6 +7,7 @@ import {
 } from '@entities/Player'
 import type { TrackEntity } from '@entities/Track'
 import { useState } from 'react'
+import { useI18n } from '@/shared/i18n'
 import { ArtistPopularTrackRow } from './ArtistPopularTrackRow'
 
 export type ArtistPopularTracksProps = {
@@ -25,6 +26,7 @@ export const ArtistPopularTracks = ({
   onPlayTrack,
   tracks,
 }: ArtistPopularTracksProps) => {
+  const { t } = useI18n()
   const [isExpanded, setIsExpanded] = useState(false)
   const currentTrack = usePlayerStore(selectCurrentTrack)
   const isPlaying = usePlayerStore(selectIsPlaying)
@@ -34,7 +36,9 @@ export const ArtistPopularTracks = ({
 
   return (
     <section className="flex min-w-0 flex-col gap-2">
-      <h2 className="text-[19px] leading-[1.25] font-semibold">Popular</h2>
+      <h2 className="text-[19px] leading-[1.25] font-semibold">
+        {t('artist.popular')}
+      </h2>
 
       <ul className="flex flex-col">
         {visibleTracks.map((track, index) => {
@@ -62,7 +66,7 @@ export const ArtistPopularTracks = ({
           onClick={() => setIsExpanded((value) => !value)}
           type="button"
         >
-          {isExpanded ? 'Show less' : 'See more'}
+          {isExpanded ? t('common.showLess') : t('common.seeMore')}
         </button>
       )}
     </section>

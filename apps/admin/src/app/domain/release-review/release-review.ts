@@ -5,10 +5,20 @@ import { POLICY_ALLOWED } from '../shared/policy-decision'
 export type ReleaseKind = 'ALBUM' | 'SINGLE' | 'EP' | 'COMPILATION'
 
 /** The lifecycle states a release can be in once an artist has submitted it at least once. */
-export type ReviewedReleaseStatus = 'DRAFT' | 'SUBMITTED' | 'READY' | 'REJECTED' | 'RELEASED'
+export type ReviewedReleaseStatus =
+  | 'DRAFT'
+  | 'SUBMITTED'
+  | 'READY'
+  | 'REJECTED'
+  | 'SCHEDULED'
+  | 'PUBLISHING'
+  | 'PUBLISH_FAILED'
+  | 'RELEASED'
+  | 'UNPUBLISHED'
 
 /** What the queue can be narrowed to; `ALL` is every reviewed status. */
-export type ReleaseQueueStatus = 'SUBMITTED' | 'READY' | 'REJECTED' | 'ALL'
+export type ReleaseQueueStatus =
+  'SUBMITTED' | 'READY' | 'REJECTED' | 'PUBLISHING' | 'PUBLISH_FAILED' | 'RELEASED' | 'ALL'
 
 export type ReleaseReviewDecision = 'APPROVED' | 'CHANGES_REQUESTED'
 
@@ -109,6 +119,22 @@ export type RequestSubmissionChangesInput = {
 export function canDecideOnRelease(release: ReleaseSubmission): PolicyDecision {
   if (release.status !== 'SUBMITTED') {
     return { allowed: false, reason: `"${release.title}" is not awaiting review.` }
+  }
+  return POLICY_ALLOWED
+}
+
+/** Only a release whose publishing failed can be retried; the API re-checks the status. */
+export function canRetryPublishing(release: ReleaseSubmission): PolicyDecision {
+  if (release.status !== 'PUBLISH_FAILED') {
+    return { allowed: false, reason: `Publishing "${release.title}" has not failed.` }
+  }
+  return POLICY_ALLOWED
+}
+
+/** Bitrate can take down a release that went live, including one the artist hid. */
+export function canTakeDownRelease(release: ReleaseSubmission): PolicyDecision {
+  if (release.status !== 'RELEASED' && release.status !== 'UNPUBLISHED') {
+    return { allowed: false, reason: `"${release.title}" is not live on Bitrate.` }
   }
   return POLICY_ALLOWED
 }

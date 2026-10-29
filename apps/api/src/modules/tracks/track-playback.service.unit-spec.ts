@@ -123,6 +123,7 @@ describe('TrackPlaybackService', () => {
             id: trackId,
             deletedAt: null,
             processingStatus: 'READY',
+            publishedAt: { not: null },
             playbackVersion: 2,
           }),
         }),
@@ -195,7 +196,12 @@ describe('TrackPlaybackService', () => {
       expect(prisma.trackFile.findFirst).toHaveBeenCalledWith(
         expect.objectContaining({
           where: expect.objectContaining({
-            track: { deletedAt: null, processingStatus: 'READY', playbackVersion: 2 },
+            track: {
+              deletedAt: null,
+              processingStatus: 'READY',
+              publishedAt: { not: null },
+              playbackVersion: 2,
+            },
           }),
         }),
       )

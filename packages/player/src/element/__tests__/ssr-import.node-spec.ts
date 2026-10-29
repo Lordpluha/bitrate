@@ -29,6 +29,12 @@ describe('server-side import', () => {
     expect(typeof defineBitratePlayer).toBe('function')
   })
 
+  it('exposes the part tag names from the default entry for server-rendered markup', async () => {
+    const { BITRATE_PLAYER_PART_TAG } = await import('../../index')
+
+    expect(BITRATE_PLAYER_PART_TAG.TRANSPORT).toBe('bitrate-player-transport')
+  })
+
   it('resolves defineBitratePlayer() without registering, since there is no registry to register against', async () => {
     const { defineBitratePlayer } = await import('../index')
 

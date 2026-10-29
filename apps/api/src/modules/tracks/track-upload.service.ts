@@ -47,6 +47,24 @@ type EnqueueConversionInput = {
   input: ConvertAudioJobInputProbe
 }
 
+/** One recording of an approved release, as the release workflow hands it to the catalogue. */
+export type ReleaseRecordingInput = {
+  title: string
+  duration: number | null
+  isrc: string | null
+  /** The release draft's private master; it is copied, never moved. */
+  sourceKey: string
+  contentType: string
+  /** Credited Bitrate artists other than the owner, in credit order. */
+  featuredArtistIds: string[]
+}
+
+/** A created, still unpublished release track and the conversion that makes it playable. */
+export type PendingReleaseTrack = { trackId: string; conversion: EnqueueConversionInput }
+
+/** Writes the caller's link to a new release track in the transaction that creates it. */
+export type AttachReleaseTrack = (tx: Prisma.TransactionClient, trackId: string) => Promise<unknown>
+
 /** Builds the job's input probe from a metadata read plus the source file's byte size. */
 function toInputProbe(metadata: AudioMetadata, bytes: number): ConvertAudioJobInputProbe {
   return {
@@ -223,6 +241,110 @@ export class TrackUploadService {
     await cleanupUploadedAudio(audioFile)
     await removePublicImage(this.storage, COVER_FOLDER, coverName)
     if (masterStored && audioFile) await this.discardStoredMaster(audioFile.filename)
+  }
+
+  /**
+   * Creates an unpublished catalogue track from a release master: the master is copied to the
+   * track pipeline's location, the track row and the caller's link (`attach`) are written in one
+   * transaction, and listeners see nothing until {@link publishReleaseTracks}. The conversion is
+   * returned instead of queued, so the caller starts it only once the whole release exists.
+   */
+  async createReleaseTrack(
+    artistId: ArtistEntity['id'],
+    cover: string | null,
+    recording: ReleaseRecordingInput,
+    attach: AttachReleaseTrack,
+  ): Promise<PendingReleaseTrack> {
+    const sourceFileName = `${randomUUID()}${extname(recording.sourceKey)}`
+    const tempPath = join(getUploadTempDir(), `release-${sourceFileName}`)
+    let metadata: AudioMetadata
+    let bytes: number
+    try {
+      await downloadObjectToFile(this.storage, recording.sourceKey, tempPath)
+      const [read, file] = await Promise.all([inspectAudioFile(tempPath), stat(tempPath)])
+      metadata = read
+      bytes = file.size
+      await storeMaster({
+        storage: this.storage,
+        key: getMasterKey(sourceFileName),
+        filePath: tempPath,
+        contentType: recording.contentType,
+      })
+    } finally {
+      await rm(tempPath, { force: true })
+    }
+    try {
+      const trackId = await this.prisma.$transaction(async (tx) => {
+        const track = await tx.track.create({
+          data: {
+            artistId,
+            title: recording.title,
+            audioUrl: sourceFileName,
+            cover,
+            duration: recording.duration ?? metadata.duration,
+            isrc: recording.isrc,
+            ...rightsConfirmationRecord(),
+            processingStatus: 'PROCESSING',
+            publishedAt: null,
+            artists: {
+              create: [artistId, ...recording.featuredArtistIds].map((id, position) => ({
+                artistId: id,
+                position,
+                isPrimary: position === 0,
+              })),
+            },
+          },
+          select: { id: true },
+        })
+        await attach(tx, track.id)
+        return track.id
+      })
+      return {
+        trackId,
+        conversion: {
+          trackId,
+          artistId,
+          sourceFileName,
+          bitrates: getTargetBitrates(metadata.bitrate),
+          trigger: 'UPLOAD',
+          input: toInputProbe(metadata, bytes),
+        },
+      }
+    } catch (error) {
+      await this.discardStoredMaster(sourceFileName)
+      throw error
+    }
+  }
+
+  /** Queues the conversion of a track made by {@link createReleaseTrack}. */
+  async startReleaseConversion(conversion: EnqueueConversionInput) {
+    await this.enqueueAudioConversion(conversion)
+  }
+
+  /**
+   * Makes converted release tracks visible to listeners at `publishedAt`, inside the caller's
+   * transaction. Returns how many tracks were published; callers drop caches after commit.
+   */
+  async publishReleaseTracks(
+    tx: Prisma.TransactionClient,
+    trackIds: string[],
+    publishedAt: Date,
+  ): Promise<number> {
+    const published = await tx.track.updateMany({
+      where: { id: { in: trackIds }, processingStatus: 'READY', deletedAt: null },
+      data: { publishedAt },
+    })
+    return published.count
+  }
+
+  /** Hides a release's tracks from listeners inside the caller's transaction; files are kept. */
+  async hideReleaseTracks(tx: Prisma.TransactionClient, trackIds: string[]): Promise<void> {
+    await tx.track.updateMany({ where: { id: { in: trackIds } }, data: { publishedAt: null } })
+  }
+
+  /** Drops track and search caches after a release changed what listeners can see. */
+  async invalidateCatalogueCaches() {
+    await this.invalidateTrackCaches()
   }
 
   /** Stores a new upload and queues its conversion. */

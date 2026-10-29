@@ -38,12 +38,13 @@
   input[type='range'] {
     appearance: none;
     -webkit-appearance: none;
-    height: 0.25rem;
+    height: var(--bitrate-player-track-height, 0.25rem);
     border-radius: 9999px;
     background: linear-gradient(
       to right,
-      var(--color-text, var(--color-primary, currentColor)) var(--progress, 0%),
-      var(--color-border, currentColor) var(--progress, 0%)
+      var(--bitrate-player-accent, var(--color-text, var(--color-primary, currentColor)))
+        var(--progress, 0%),
+      var(--bitrate-player-track-color, var(--color-border, currentColor)) var(--progress, 0%)
     );
     cursor: pointer;
   }
@@ -56,21 +57,27 @@
   input[type='range']::-webkit-slider-thumb {
     appearance: none;
     -webkit-appearance: none;
-    width: 0.75rem;
-    height: 0.75rem;
+    width: var(--bitrate-player-thumb-size, 0.75rem);
+    height: var(--bitrate-player-thumb-size, 0.75rem);
     border-radius: 9999px;
-    background-color: var(--color-text, var(--color-primary, currentColor));
-    opacity: 0;
+    background-color: var(
+      --bitrate-player-thumb-color,
+      var(--color-text, var(--color-primary, currentColor))
+    );
+    opacity: var(--bitrate-player-thumb-opacity, 0);
     transition: opacity 0.15s ease;
   }
 
   input[type='range']::-moz-range-thumb {
-    width: 0.75rem;
-    height: 0.75rem;
+    width: var(--bitrate-player-thumb-size, 0.75rem);
+    height: var(--bitrate-player-thumb-size, 0.75rem);
     border: none;
     border-radius: 9999px;
-    background-color: var(--color-text, var(--color-primary, currentColor));
-    opacity: 0;
+    background-color: var(
+      --bitrate-player-thumb-color,
+      var(--color-text, var(--color-primary, currentColor))
+    );
+    opacity: var(--bitrate-player-thumb-opacity, 0);
     transition: opacity 0.15s ease;
   }
 

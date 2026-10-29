@@ -70,7 +70,7 @@ jobs:
       packages: write
       security-events: write
     if: ${{ github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'pr') }}
-    uses: ./.github/workflows/storybook_reusable.yml
+    uses: $/.github/workflows/storybook_reusable.yml
     with:
       push-image: false
       tags: ghcr.io/lordpluha/${{ github.event.repository.name }}/storybook:pr-${{ github.sha }}
@@ -85,7 +85,7 @@ jobs:
       packages: write
       security-events: write
     if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/develop') || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'develop') }}
-    uses: ./.github/workflows/storybook_reusable.yml
+    uses: $/.github/workflows/storybook_reusable.yml
     with:
       push-image: true
       tags: |
@@ -104,7 +104,7 @@ jobs:
     # Release builds are dispatched, never pushed into existence (ADR-0029): a release goes
     # through release_images_reusable.yml. This mode rebuilds just this service's `:master`.
     if: ${{ github.event_name == 'workflow_dispatch' && inputs.mode == 'master' }}
-    uses: ./.github/workflows/storybook_reusable.yml
+    uses: $/.github/workflows/storybook_reusable.yml
     with:
       push-image: true
       # Three tags, and the third one is the rollback handle:

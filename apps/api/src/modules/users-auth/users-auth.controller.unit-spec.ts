@@ -50,7 +50,12 @@ describe('UsersAuthController', () => {
       await controller.login({ email: 'user@example.com', password: 'password123' }, res)
 
       expect(authService.loginUser).toHaveBeenCalledWith('user@example.com', 'password123')
-      expect(tokenService.setAuthCookies).toHaveBeenCalledWith(res, 'access-token', 'refresh-token')
+      expect(tokenService.setAuthCookies).toHaveBeenCalledWith(
+        res,
+        'user',
+        'access-token',
+        'refresh-token',
+      )
     })
 
     it('should return requires2fa flag and set pending cookie when 2FA is enabled', async () => {
@@ -92,34 +97,37 @@ describe('UsersAuthController', () => {
 
   describe('logout', () => {
     it('should call auth service and clear cookies', async () => {
-      process.env.ACCESS_TOKEN_NAME = 'access_token'
       const user = buildUser({ id: 'user-1' })
       const req = mockDeep<Request>()
-      Object.assign(req, { user, access_token: 'access-token' })
+      Object.assign(req, { user, user_access_token: 'access-token' })
       const res = createResponse()
 
       await controller.logout(req, res)
 
       expect(authService.logout).toHaveBeenCalledWith('user-1', 'access-token')
-      expect(tokenService.clearAuthCookies).toHaveBeenCalledWith(res)
+      expect(tokenService.clearAuthCookies).toHaveBeenCalledWith(res, 'user')
     })
   })
 
   describe('refresh', () => {
     it('should set rotated access and refresh tokens', async () => {
-      process.env.REFRESH_TOKEN_NAME = 'refresh_token'
       authService.refresh.mockResolvedValue({
         access_token: 'new-access',
         refresh_token: 'new-refresh',
       })
       const req = mockDeep<Request>()
-      Object.assign(req, { refresh_token: 'refresh-token' })
+      Object.assign(req, { user_refresh_token: 'refresh-token' })
       const res = createResponse()
 
       await controller.refresh(req, res)
 
       expect(authService.refresh).toHaveBeenCalledWith('refresh-token')
-      expect(tokenService.setAuthCookies).toHaveBeenCalledWith(res, 'new-access', 'new-refresh')
+      expect(tokenService.setAuthCookies).toHaveBeenCalledWith(
+        res,
+        'user',
+        'new-access',
+        'new-refresh',
+      )
     })
   })
 
@@ -219,7 +227,7 @@ describe('UsersAuthController', () => {
 
       expect(twoFactorService.verifyLoginCode).toHaveBeenCalledWith('pending', '000000')
       expect(authService.completeTwoFactorLogin).toHaveBeenCalledWith(user.id)
-      expect(tokenService.setAuthCookies).toHaveBeenCalledWith(res, 'at', 'rt')
+      expect(tokenService.setAuthCookies).toHaveBeenCalledWith(res, 'user', 'at', 'rt')
     })
   })
 })

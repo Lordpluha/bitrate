@@ -3,8 +3,18 @@ import { RELEASE_VALIDATION } from '@modules/releases/errors'
 import { createZodDto } from 'nestjs-zod'
 import { z } from 'zod'
 
-/** The review queue shows submissions by default; `ALL` covers every reviewed status. */
-export const ADMIN_RELEASE_STATUSES = ['SUBMITTED', 'READY', 'REJECTED', 'ALL'] as const
+/** Statuses a submission can reach; `ALL` covers every one of them. */
+export const ADMIN_REVIEWED_STATUSES = [
+  'SUBMITTED',
+  'READY',
+  'REJECTED',
+  'PUBLISHING',
+  'PUBLISH_FAILED',
+  'RELEASED',
+] as const
+
+/** The review queue shows submissions by default. */
+export const ADMIN_RELEASE_STATUSES = [...ADMIN_REVIEWED_STATUSES, 'ALL'] as const
 
 export const ListAdminReleasesQuerySchema = paginationQuerySchema
   .extend({

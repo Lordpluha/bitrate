@@ -41,6 +41,10 @@ on:
         required: false
         default: true
         type: boolean
+    secrets:
+      turbo-token:
+        description: Turbo remote cache token for the turbo build inside the Dockerfile
+        required: false
 
 permissions:
   contents: read
@@ -68,11 +72,13 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Setup Node.js and pnpm
         if: ${{ inputs.run-biome || inputs.run-tests || inputs.run-e2e || inputs.run-screenshot }}
-        uses: ./.github/actions/setup-node-pnpm
+        uses: $/.github/actions/setup-node-pnpm
 
       - name: Run Biome check
         if: ${{ inputs.run-biome }}
@@ -83,6 +89,11 @@ jobs:
       - name: Build ui-react
         if: ${{ inputs.run-tests || inputs.run-e2e || inputs.run-screenshot }}
         run: pnpm --filter @bitrate/ui-react run build
+
+      # `<bitrate-player>` resolves to the player's dist/esm in tests and in the dev server.
+      - name: Build player
+        if: ${{ inputs.run-tests || inputs.run-e2e || inputs.run-screenshot }}
+        run: pnpm --filter @bitrate/player run build
 
       - name: Run web-artists typecheck
         if: ${{ inputs.run-tests }}
@@ -108,14 +119,14 @@ jobs:
 
       - name: Upload screenshot test failure artifacts
         if: ${{ inputs.run-screenshot && failure() }}
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: web-artists-screenshot-diffs
           path: apps/web-artists/test-results/
           retention-days: 7
 
       - name: Setup Docker + registries
-        uses: ./.github/actions/setup-docker
+        uses: $/.github/actions/setup-docker
         with:
           ghcr: "true"
           ghcr-registry: ${{ env.REGISTRY }}
@@ -123,7 +134,7 @@ jobs:
           ghcr-password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build Web Artists Docker image
-        uses: docker/build-push-action@v7
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
         with:
           context: .
           file: ./apps/web-artists/Dockerfile
@@ -136,7 +147,7 @@ jobs:
           # develop's layers with its own, and a gzip mode=max export cost minutes per run.
           cache-to: ${{ inputs.cache-to-registry && format('type=registry,ref={0}/{1}/cache/web-artists:buildcache,mode=max,compression=zstd,ignore-error=true', env.REGISTRY, env.IMAGE_PREFIX) || '' }}
           secrets: |
-            turbo_token=${{ secrets.TURBO_TOKEN }}
+            turbo_token=${{ secrets.turbo-token }}
           build-args: |
             VITE_API_URL=${{ env.BUILD_NEXT_PUBLIC_API_URL }}
           target: production
@@ -148,7 +159,7 @@ jobs:
         run: echo "ref=$(printf '%s\n' "$TAGS" | sed -e 's/^[[:space:]]*//' -e '/^$/d' | head -n1)" >> "$GITHUB_OUTPUT"
 
       - name: Scan image
-        uses: ./.github/actions/scan-image
+        uses: $/.github/actions/scan-image
         with:
           image-ref: ${{ steps.scan-ref.outputs.ref }}
           service: web-artists

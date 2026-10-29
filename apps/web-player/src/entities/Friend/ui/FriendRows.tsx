@@ -8,6 +8,7 @@ import Link from 'next/link'
 import type { ReactNode } from 'react'
 import type { FriendPresence } from '@/entities/Friend/api/client/friends.schemas'
 import { getPresenceLabel } from '@/entities/Friend/lib/friendStatus'
+import { useI18n } from '@/shared/i18n'
 
 type PresenceTone = 'away' | 'listening' | 'offline' | 'online'
 
@@ -65,6 +66,7 @@ type FriendRowProps = {
 
 /** The design's Friend Row: presence avatar, name, status line and trailing actions. */
 export const FriendRow = ({ actions, presence, user }: FriendRowProps) => {
+  const i18n = useI18n()
   const tone = toneOf(presence)
 
   return (
@@ -90,7 +92,7 @@ export const FriendRow = ({ actions, presence, user }: FriendRowProps) => {
               tone === 'listening' ? 'text-accent' : 'text-muted-foreground',
             )}
           >
-            {getPresenceLabel({ presence })}
+            {getPresenceLabel({ i18n, presence })}
           </span>
         </span>
       </div>

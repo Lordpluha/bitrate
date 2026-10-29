@@ -8,6 +8,12 @@ import {
   parseConvertAudioJob,
   type UnrecognisedAudioJob,
 } from '@infra/queues/audio-processing.queue'
+import {
+  RELEASE_PUBLISHING_JOB_OPTIONS,
+  RELEASE_PUBLISHING_JOBS,
+  RELEASE_PUBLISHING_QUEUE,
+  type ReleaseTrackSettledJob,
+} from '@infra/queues/release-publishing.queue'
 import { STORAGE_SERVICE } from '@infra/storage/storage.constants'
 import type { StorageService } from '@infra/storage/storage.types'
 import { NotificationsProducer } from '@modules/notifications'
@@ -64,6 +70,8 @@ export class AudioProcessingConsumer extends WorkerHost implements OnModuleInit 
     private readonly deadLetterQueue: Queue<ConvertAudioJob | UnrecognisedAudioJob>,
     private readonly recorder: ProcessingAttemptRecorder,
     private readonly notifications: NotificationsProducer,
+    @InjectQueue(RELEASE_PUBLISHING_QUEUE)
+    private readonly releasePublishing: Queue<ReleaseTrackSettledJob>,
   ) {
     super()
   }
@@ -208,7 +216,29 @@ export class AudioProcessingConsumer extends WorkerHost implements OnModuleInit 
     this.logger.log(
       `Audio conversion + storage upload completed for track ${trackId}, job ${job.id}`,
     )
-    if (run.trigger === 'UPLOAD') await this.notifyTrackPublished(trackId)
+    if (await this.belongsToRelease(trackId)) await this.reportReleaseTrackSettled(trackId)
+    else if (run.trigger === 'UPLOAD') await this.notifyTrackPublished(trackId)
+  }
+
+  /** A track created by publishing a release; the release announces itself once, not per track. */
+  private async belongsToRelease(trackId: string) {
+    const link = await this.prisma.releaseTrack.findFirst({
+      where: { trackId },
+      select: { releaseId: true },
+    })
+    return !!link
+  }
+
+  /**
+   * Lets the API decide whether the track's release is now complete. Throws when the event
+   * cannot be queued, so BullMQ retries rather than leaving the release publishing forever.
+   */
+  private async reportReleaseTrackSettled(trackId: string) {
+    await this.releasePublishing.add(
+      RELEASE_PUBLISHING_JOBS.TRACK_SETTLED,
+      { trackId },
+      { ...RELEASE_PUBLISHING_JOB_OPTIONS, jobId: `track-settled-${trackId}-${Date.now()}` },
+    )
   }
 
   /** A first upload is a new release for the artist's followers; best effort, never fails the job. */
@@ -299,6 +329,9 @@ export class AudioProcessingConsumer extends WorkerHost implements OnModuleInit 
     })
 
     this.reportPermanentFailure(job.data, { jobId, attempt, failedStep }, error)
+    if (await this.belongsToRelease(job.data.trackId)) {
+      await this.reportReleaseTrackSettled(job.data.trackId)
+    }
   }
 
   /** Marks the track FAILED while this job's source is still current; false once superseded. */

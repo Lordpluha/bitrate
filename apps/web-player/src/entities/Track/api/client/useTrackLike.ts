@@ -1,20 +1,16 @@
 'use client'
 
 import { showApiSuccessToast } from '@shared/api/feedback'
-import { useCallback, useMemo } from 'react'
+import { useCallback } from 'react'
 import { useLikeTrack, useUnlikeTrack } from './useTrackLikeMutations'
-import { useLikedTracks } from './useTrackQueries'
+import { useLikedTrackIds } from './useTrackQueries'
 
-/** Like state of one track from the server's liked list, with a toggle. */
+/** Like state of one track from the server's whole liked list, with a toggle. */
 export const useTrackLike = (trackId?: string) => {
-  const { data: likedTracks } = useLikedTracks()
+  const { data: likedTrackIds } = useLikedTrackIds()
   const likeTrack = useLikeTrack()
   const unlikeTrack = useUnlikeTrack()
-  const likedTrackIds = useMemo(
-    () => new Set(likedTracks?.map((track) => track.id) ?? []),
-    [likedTracks],
-  )
-  const isLiked = trackId ? likedTrackIds.has(trackId) : false
+  const isLiked = trackId ? (likedTrackIds?.has(trackId) ?? false) : false
   const isPending = likeTrack.isPending || unlikeTrack.isPending
 
   /** Failures are toasted by the query client's mutation cache. */

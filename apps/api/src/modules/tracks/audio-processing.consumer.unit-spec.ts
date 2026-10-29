@@ -90,6 +90,7 @@ describe('AudioProcessingConsumer', () => {
       Function,
       ProcessingAttemptRecorder,
       NotificationsProducer,
+      Function,
     ])
     expect(Reflect.getMetadata('self:paramtypes', AudioProcessingConsumer)).toEqual(
       expect.arrayContaining([expect.objectContaining({ index: 1, param: STORAGE_SERVICE })]),
@@ -107,6 +108,7 @@ describe('AudioProcessingConsumer', () => {
   }
   const recorder = makeProcessingAttemptRecorderMock()
   const notifications = { trackPublished: jest.fn().mockResolvedValue(undefined as never) }
+  const releasePublishing = { add: jest.fn().mockResolvedValue(undefined as never) }
 
   beforeEach(() => {
     jest.clearAllMocks()
@@ -118,6 +120,7 @@ describe('AudioProcessingConsumer', () => {
       deadLetterQueue as never,
       recorder,
       notifications as never,
+      releasePublishing as never,
     )
     prisma.track.count.mockResolvedValue(1)
     prisma.track.update.mockResolvedValue({ id: 'track-1' } as never)

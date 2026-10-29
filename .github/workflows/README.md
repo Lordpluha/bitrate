@@ -19,8 +19,12 @@ Current workflow map for .github/workflows.
   `env:` and are read as `"$VAR"`, so nothing can be spliced into a shell word. (Some older
   mobile and desktop reusables still interpolate workflow-authored inputs directly;
   none of them read attacker-controlled context, but new code should not copy the pattern.)
-- **Third-party actions in the release and deploy chain are pinned by full commit SHA** with a
-  `# vX.Y.Z` comment. Elsewhere in the repository a major tag is still used.
+- **Every third-party action is pinned by full commit SHA** with a `# vX.Y.Z` comment (zizmor's
+  blanket `unpinned-uses` policy). Dependabot's `github-actions` updates bump the SHA and the
+  comment together. In-repo actions and reusable workflows use the self-repository form
+  `uses: $/.github/...`, which GitHub resolves at the workflow's own commit and counts as pinned.
+- **`actions/checkout` runs with `persist-credentials: false`.** No job pushes through the
+  checkout's credential: tags, releases and back-merge PRs all go through the API.
 - **No secret is ever interpolated into a `run:` string, a step `name`, an artifact or a cache
   key.** Secrets travel through `env:`.
 
@@ -35,6 +39,12 @@ Current workflow map for .github/workflows.
   This is the only workflow that runs knip outside the release cut, and the only one a
   root-config-only change triggers at all — every other check workflow is path-filtered to one
   app or package.
+
+- pr_scope.yml — the PR scope gate: `pull_request` into develop, also on `labeled` /
+  `unlabeled` so the `pr-scope/exempt` label takes effect without a push.
+- pr_scope_reusable.yml — runs `scripts/check-pr-scope.mjs` (one workspace, ≤ 200 files,
+  ≤ 2000 lines; generated output ignored). Skipped for `release/`, `backmerge/`,
+  `changeset-release/` and `dependabot/` branches and for the exempt label.
 
 Knip's explicit entries include package source exports, platform-specific mobile files, CSS,
 service workers, and tests invoked through compiled JavaScript. Storybook loads only
@@ -360,9 +370,9 @@ SmartScreen warn on first launch.
 - monitoring_health_reusable.yml / monitoring_dependency_reusable.yml / monitoring_ssl_reusable.yml — smaller reusable monitoring blocks.
 
 ## Structure Summary
-- Entry workflows: admin.yml, api.yml, desktop.yml, docs.yml, mobile.yml, player.yml, ui_react.yml, web_player.yml, web_artists.yml, security.yml, monitoring.yml, release.yml, release_publish.yml, release_images.yml, deploy.yml.
+- Entry workflows: admin.yml, api.yml, pr_scope.yml, desktop.yml, docs.yml, mobile.yml, player.yml, ui_react.yml, web_player.yml, web_artists.yml, security.yml, monitoring.yml, release.yml, release_publish.yml, release_images.yml, deploy.yml.
 - Reusable workflows: all *_reusable.yml files at the top level of .github/workflows.
-- Note: GitHub Actions requires local reusable workflows referenced via uses: ./.github/workflows/... to be stored at the top level of .github/workflows.
+- Note: GitHub Actions requires local reusable workflows referenced via uses: $/.github/workflows/... to be stored at the top level of .github/workflows.
 
 ## Published images
 

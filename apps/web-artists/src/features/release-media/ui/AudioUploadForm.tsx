@@ -65,8 +65,7 @@ export function AudioUploadForm({
         </p>
       )}
       <p className="text-sm text-text-secondary">
-        Uploading changes the track list, so you will confirm accuracy again
-        before review.
+        You confirm the whole draft is accurate when you submit it for review.
       </p>
     </WorkspaceFormModal>
   )

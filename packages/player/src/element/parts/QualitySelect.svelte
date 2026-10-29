@@ -1,23 +1,21 @@
 <script lang="ts">
-  import type { BitratePlayerRendition } from '../../contract'
+  import { AUTO_QUALITY } from '../create-controller'
+  import type { PlayerController } from '../player-controller'
 
-  let {
-    renditions,
-    value,
-    disabled,
-    onChange,
-  }: {
-    renditions: BitratePlayerRendition[]
-    value: number | null
-    disabled: boolean
-    onChange: (event: Event) => void
-  } = $props()
+  let { player }: { player: PlayerController } = $props()
 </script>
 
-<label class="quality">
-  Quality
-  <select {disabled} onchange={onChange} {value}>
-    {#each renditions as rendition (rendition.bitrate)}
+<label class="quality" part="quality">
+  {player.labels.quality}
+  <select
+    disabled={player.preparing}
+    onchange={player.changeQuality}
+    value={player.autoQuality ? AUTO_QUALITY : player.effectiveBitrate}
+  >
+    {#if player.autoQuality !== null}
+      <option value={AUTO_QUALITY}>{player.labels.qualityAuto}</option>
+    {/if}
+    {#each player.renditions as rendition (rendition.bitrate)}
       <option value={rendition.bitrate}>{rendition.label}</option>
     {/each}
   </select>

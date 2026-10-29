@@ -2,6 +2,7 @@ import { normalizePagination } from '@common/pagination'
 import { USER_SETTINGS_DEFAULTS } from '@common/user-settings'
 import { isPrismaP2002, isPrismaP2034 } from '@common/utils/prisma'
 import { PrismaService } from '@infra/prisma/prisma.service'
+import { PUBLIC_TRACK_WHERE } from '@modules/tracks/track-visibility'
 import {
   BadRequestException,
   ConflictException,
@@ -60,7 +61,7 @@ export class MeService {
     }
     if (dto.currentTrackId) {
       const track = await this.prisma.track.findFirst({
-        where: { id: dto.currentTrackId, processingStatus: 'READY', deletedAt: null },
+        where: { id: dto.currentTrackId, ...PUBLIC_TRACK_WHERE },
       })
       if (!track) throw new BadRequestException('Track is not ready for playback')
     }
@@ -81,7 +82,7 @@ export class MeService {
     })
     const uniqueIds = [...new Set(dto.trackIds)]
     const readyCount = await this.prisma.track.count({
-      where: { id: { in: uniqueIds }, processingStatus: 'READY', deletedAt: null },
+      where: { id: { in: uniqueIds }, ...PUBLIC_TRACK_WHERE },
     })
     if (readyCount !== uniqueIds.length)
       throw new BadRequestException('Queue contains unavailable tracks')

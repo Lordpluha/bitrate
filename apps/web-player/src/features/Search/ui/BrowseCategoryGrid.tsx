@@ -43,9 +43,9 @@ export const BrowseCategoryGrid = () => {
   if (isError) {
     return (
       <ErrorState
-        description="Browse categories could not be loaded from the server."
+        description="Something went wrong while searching. Try again in a moment."
         onRetry={() => void refetch()}
-        title="Browse is unavailable"
+        title="Search is unavailable"
       />
     )
   }

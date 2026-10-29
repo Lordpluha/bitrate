@@ -5,6 +5,7 @@ import { ROUTES } from '@shared/routes'
 import { MediaImage } from '@shared/ui/MediaImage'
 import { getUserAvatarUrl } from '@shared/utils/mediaUrl'
 import Link from 'next/link'
+import { useI18n } from '@/shared/i18n'
 
 type ProfileFollowsSectionProps = {
   kind: UserFollowKind
@@ -18,6 +19,7 @@ export const ProfileFollowsSection = ({
   title,
   userId,
 }: ProfileFollowsSectionProps) => {
+  const { t } = useI18n()
   const { data, isError, isPending } = useUserFollows({ kind, userId })
 
   return (
@@ -31,15 +33,19 @@ export const ProfileFollowsSection = ({
         ) : null}
       </h2>
       {isPending ? (
-        <p className="text-sm text-muted-foreground">Loading…</p>
+        <p className="text-sm text-muted-foreground">{t('common.loading')}</p>
       ) : isError ? (
         <p className="text-sm text-muted-foreground">
-          This list could not be loaded right now.
+          {t('profile.listUnavailable')}
         </p>
       ) : data.isHidden ? (
-        <p className="text-sm text-muted-foreground">This list is private.</p>
+        <p className="text-sm text-muted-foreground">
+          {t('profile.listPrivate')}
+        </p>
       ) : data.data.length === 0 ? (
-        <p className="text-sm text-muted-foreground">Nobody here yet.</p>
+        <p className="text-sm text-muted-foreground">
+          {t('profile.nobodyHere')}
+        </p>
       ) : (
         <ul className="flex flex-wrap gap-4">
           {data.data.map((person) => (

@@ -1,3 +1,4 @@
+import { createI18n } from '@shared/i18n'
 import { describe, expect, it } from 'vitest'
 import { summarizeListening } from './listeningSummary'
 
@@ -29,6 +30,7 @@ describe('summarizeListening', () => {
     expect(
       summarizeListening({
         artists: page([artist], 12),
+        i18n: createI18n({ locale: 'en' }),
         tracks: page([track], 342),
       }),
     ).toEqual([
@@ -39,9 +41,26 @@ describe('summarizeListening', () => {
     ])
   })
 
+  it('labels the tiles and groups the numbers in the app locale', () => {
+    const stats = summarizeListening({
+      artists: page([{ ...artist, plays: 5 }], 12),
+      i18n: createI18n({ locale: 'uk' }),
+      tracks: page([{ ...track, plays: 3 }], 12_345),
+    })
+
+    expect(stats?.[0]?.label).toBe('Треки')
+    expect(stats?.[0]?.value.replace(/\s/g, ' ')).toBe('12 345')
+    expect(stats?.[2]?.sub).toBe('5 прослуховувань')
+    expect(stats?.[3]?.sub).toBe('3 прослуховування · Luma Vale')
+  })
+
   it('has nothing to summarise before the first play', () => {
     expect(
-      summarizeListening({ artists: page([], 0), tracks: page([], 0) }),
+      summarizeListening({
+        artists: page([], 0),
+        i18n: createI18n({ locale: 'en' }),
+        tracks: page([], 0),
+      }),
     ).toBeNull()
   })
 })

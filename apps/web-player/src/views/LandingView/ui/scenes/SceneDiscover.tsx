@@ -327,12 +327,12 @@ export const SceneDiscover = () => {
         <span className={lc('grow')}></span>
         <span className={lc('n')}>{'1'}</span>
         <b>{c('discover.luma_vale')}</b>
-        <svg aria-hidden="true" className={lc('i', 'text-text-subdued')}>
+        <svg aria-hidden="true" className={lc('i', 'text-muted-foreground')}>
           <use href="#i-arrow" />
         </svg>
         <span className={lc('n')}>{'2'}</span>
         <b>{c('discover.mira_sol')}</b>
-        <svg aria-hidden="true" className={lc('i', 'text-text-subdued')}>
+        <svg aria-hidden="true" className={lc('i', 'text-muted-foreground')}>
           <use href="#i-arrow" />
         </svg>
         <span className={lc('n')}>{'3'}</span>

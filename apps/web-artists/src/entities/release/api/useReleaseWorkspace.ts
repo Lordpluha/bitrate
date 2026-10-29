@@ -3,6 +3,9 @@ import { clientFetchClient } from '@shared/api/fetchClient'
 import { useQuery } from '@tanstack/react-query'
 import { releaseWorkspaceSchema } from '../model/workspace.schema'
 
+/** How often a publishing release is re-read. */
+const PUBLISHING_POLL_MS = 5_000
+
 export const releaseWorkspaceKey = (artistId: string, id: string) =>
   [...artistMusicKeys.artist(artistId), 'workspace', id] as const
 
@@ -13,6 +16,9 @@ export function useReleaseWorkspace(artistId: string, id: string) {
     retry: false,
     gcTime: 0,
     staleTime: 0,
+    // Publishing finishes in the background; poll until the release leaves PUBLISHING.
+    refetchInterval: (query) =>
+      query.state.data?.status === 'PUBLISHING' ? PUBLISHING_POLL_MS : false,
   })
 }
 

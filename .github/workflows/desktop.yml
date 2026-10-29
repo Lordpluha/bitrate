@@ -64,13 +64,13 @@ jobs:
     outputs:
       changed: ${{ steps.app.outputs.changed }}
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
           persist-credentials: false
 
       - id: app
-        uses: ./.github/actions/app-changed
+        uses: $/.github/actions/app-changed
         with:
           package: '@bitrate/desktop'
           app-dir: apps/desktop
@@ -81,7 +81,7 @@ jobs:
   desktop-pr-native:
     needs: changes
     if: ${{ !cancelled() && ((github.event_name == 'pull_request' && needs.changes.outputs.changed == 'true') || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'pr')) }}
-    uses: ./.github/workflows/desktop_native_reusable.yml
+    uses: $/.github/workflows/desktop_native_reusable.yml
     with:
       artifact-prefix: desktop-pr
       # All three OSes in parallel: the slowest one sets the wall time, and with the Rust cache
@@ -90,14 +90,14 @@ jobs:
 
   desktop-develop-native:
     if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/develop') || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'develop') }}
-    uses: ./.github/workflows/desktop_native_reusable.yml
+    uses: $/.github/workflows/desktop_native_reusable.yml
     with:
       artifact-prefix: desktop-develop
       platform: all
 
   desktop-master-native:
     if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/master') || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'master') }}
-    uses: ./.github/workflows/desktop_native_reusable.yml
+    uses: $/.github/workflows/desktop_native_reusable.yml
     with:
       artifact-prefix: desktop-master
       platform: all

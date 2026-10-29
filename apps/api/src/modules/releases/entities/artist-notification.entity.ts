@@ -14,6 +14,7 @@ export class ArtistNotificationEntity {
       'RELEASE_SUBMITTED',
       'RELEASE_APPROVED',
       'RELEASE_RELEASED',
+      'PUBLISH_FAILED',
       'DELIVERY_LIVE',
     ],
     enumName: 'ArtistNotificationKind',

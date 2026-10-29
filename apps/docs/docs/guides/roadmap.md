@@ -269,7 +269,7 @@ Delivered by [ADR-0024](../architecture/0024-rebrand-to-bitrate.md).
 - [ ] CDN for audio & static assets
 - [ ] Database sharding & read replicas
 - [ ] Auto-scaling & 99.99% uptime
-- [ ] Multi-language support (EN, UA, RU, ES, FR)
+- [ ] Multi-language support (EN, UA, ES, FR)
 
 ---
 

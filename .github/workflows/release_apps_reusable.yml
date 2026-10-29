@@ -67,12 +67,14 @@ jobs:
           persist-credentials: false
 
       - name: Setup Node.js and pnpm
-        uses: ./.github/actions/setup-node-pnpm
+        uses: $/.github/actions/setup-node-pnpm
         with:
           install: "false"
 
       - name: Setup Rust
-        uses: dtolnay/rust-toolchain@stable
+        uses: dtolnay/rust-toolchain@b725eda525362e7cf34af9a7243cac1e3f01a7ec # stable
+        with:
+          toolchain: stable
 
       # Every run used to compile Tauri's whole Rust dependency tree from scratch, which is most
       # of `tauri build` on all three OSes. Keyed per OS by the host triple; only develop saves,
@@ -88,7 +90,7 @@ jobs:
       - name: Install Linux system dependencies
         if: ${{ runner.os == 'Linux' }}
         timeout-minutes: 15
-        uses: ./.github/actions/tauri-linux-deps
+        uses: $/.github/actions/tauri-linux-deps
 
       - name: Install desktop dependencies
         run: pnpm install --frozen-lockfile --filter @bitrate/desktop...
@@ -139,7 +141,7 @@ jobs:
           java-version: '17'
 
       - name: Setup Node.js and pnpm
-        uses: ./.github/actions/setup-node-pnpm
+        uses: $/.github/actions/setup-node-pnpm
         with:
           install: "false"
 

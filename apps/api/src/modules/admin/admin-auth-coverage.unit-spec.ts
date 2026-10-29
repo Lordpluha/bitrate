@@ -60,6 +60,8 @@ const ROUTE_PERMISSIONS: Record<string, Permission> = {
   'AdminReleasesController.audio': 'releases:read',
   'AdminReleasesController.approve': 'releases:review',
   'AdminReleasesController.requestChanges': 'releases:review',
+  'AdminReleasesController.retryPublishing': 'releases:review',
+  'AdminReleasesController.takeDown': 'releases:review',
   'AdminPlaylistsController.list': 'playlists:read',
   'AdminPlaylistsController.getById': 'playlists:read',
   'AdminPlaylistsController.setVisibility': 'playlists:hide',

@@ -33,7 +33,7 @@ const likedSongsItem: PlaylistLibraryItem = {
 
 export const usePlaylistLibraryItems = () => {
   const { user } = useAuth()
-  const { data: playlists, isLoading } = useMyPlaylists()
+  const { data: playlists, isError, isLoading, refetch } = useMyPlaylists()
   const { data: likedPlaylists, isLoading: areLikedLoading } =
     useLikedPlaylists(Boolean(user))
 
@@ -70,5 +70,5 @@ export const usePlaylistLibraryItems = () => {
     return result
   }, [likedPlaylists, playlists, user?.username])
 
-  return { isLoading: isLoading || areLikedLoading, items }
+  return { isError, isLoading: isLoading || areLikedLoading, items, refetch }
 }

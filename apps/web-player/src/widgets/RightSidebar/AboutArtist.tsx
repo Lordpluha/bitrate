@@ -2,6 +2,7 @@
 
 import { FollowArtistButton, useArtist } from '@entities/Artist'
 import { selectCurrentTrack, usePlayerStore } from '@entities/Player'
+import { useI18n } from '@shared/i18n'
 import { ROUTES } from '@shared/routes'
 import { MediaImage } from '@shared/ui/MediaImage'
 import { getArtistBackgroundUrl } from '@shared/utils/mediaUrl'
@@ -13,6 +14,7 @@ import {
 } from './model/ncsArtistBio'
 
 export const AboutArtist = () => {
+  const { t } = useI18n()
   const currentTrack = usePlayerStore(selectCurrentTrack)
   const { data: artist, isLoading } = useArtist(currentTrack?.artistId)
 
@@ -28,30 +30,36 @@ export const AboutArtist = () => {
     artist.backgroundImage,
     artist.avatar,
   )
+  /** Without a picture the card is a tinted wash; the placeholder glyph would fill it. */
+  const hasPicture = Boolean(artist.backgroundImage || artist.avatar)
   const ncsBioLink = artist.bio ? parseNcsArtistBioLink(artist.bio) : null
   const ncsBioPrefix = getNcsArtistBioPrefix()
 
   return (
     <div className="overflow-hidden rounded-lg bg-surface">
       <Link
-        aria-label={`Open ${artist.username} artist page`}
+        aria-label={t('sidebar.openArtist', { name: artist.username })}
         className="group block rounded-t-lg outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-text"
         href={ROUTES.artist(artist.id)}
       >
         <div className="relative aspect-[3/2] w-full overflow-hidden">
-          <MediaImage
-            alt=""
-            className="object-cover transition duration-300 group-hover:scale-[1.02] group-hover:brightness-90"
-            fallback="artist"
-            fill
-            priority
-            sizes="(max-width: 1279px) 100vw, 320px"
-            src={backgroundUrl}
-            unoptimized
-          />
+          {hasPicture ? (
+            <MediaImage
+              alt=""
+              className="object-cover transition duration-300 group-hover:scale-[1.02] group-hover:brightness-90"
+              fallback="artist"
+              fill
+              priority
+              sizes="(max-width: 1279px) 100vw, 320px"
+              src={backgroundUrl}
+              unoptimized
+            />
+          ) : (
+            <div className="absolute inset-0 bg-linear-to-br from-primary/55 via-secondary to-background" />
+          )}
           <div className="absolute inset-0 bg-black/15 transition-colors group-hover:bg-black/25" />
           <h2 className="absolute left-4 top-4 z-10 text-sm font-bold text-white drop-shadow-md">
-            About the artist
+            {t('sidebar.aboutArtist')}
           </h2>
         </div>
       </Link>
@@ -61,8 +69,8 @@ export const AboutArtist = () => {
           className="group/name flex w-fit max-w-full items-center gap-1.5 rounded-sm outline-none focus-visible:ring-2 focus-visible:ring-text"
           href={ROUTES.artist(artist.id)}
         >
-          <span className="truncate text-sm font-bold text-text group-hover/name:underline">
-            {artist.username || 'Unknown Artist'}
+          <span className="truncate text-sm font-bold text-foreground group-hover/name:underline">
+            {artist.username || t('common.unknownArtist')}
           </span>
           {artist.verified ? (
             <BadgeCheck
@@ -74,12 +82,12 @@ export const AboutArtist = () => {
         </Link>
 
         <div className="mt-3 flex items-end justify-between gap-3">
-          <p className="line-clamp-3 min-w-0 text-xs leading-relaxed text-text-subdued">
+          <p className="line-clamp-3 min-w-0 text-xs leading-relaxed text-muted-foreground">
             {ncsBioLink ? (
               <>
                 {ncsBioPrefix}{' '}
                 <a
-                  className="font-medium text-text underline decoration-text-subdued underline-offset-2 transition-colors hover:text-primary focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-text"
+                  className="font-medium text-foreground underline decoration-text-subdued underline-offset-2 transition-colors hover:text-primary focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-text"
                   href={ncsBioLink.href}
                   rel="noopener noreferrer"
                   target="_blank"
@@ -88,7 +96,7 @@ export const AboutArtist = () => {
                 </a>
               </>
             ) : (
-              artist.bio || 'Artist profile'
+              artist.bio || t('sidebar.artistProfile')
             )}
           </p>
 

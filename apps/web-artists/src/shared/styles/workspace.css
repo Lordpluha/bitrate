@@ -56,14 +56,18 @@
   }
 
   .artist-release-workspace {
+    display: grid;
+    gap: 1rem;
     min-width: 0;
     overflow-wrap: anywhere;
   }
+  /* Panels — Pencil "Workspace / *" cards: diagonal panel gradient, one-pixel release border. */
   .artist-release-workspace-panel {
+    position: relative;
     min-width: 0;
-    padding: 1rem;
+    padding: 1.125rem;
     background: linear-gradient(
-      120deg,
+      145deg,
       var(--color-artist-release-panel-start),
       var(--color-artist-release-panel-middle) 55%,
       var(--color-artist-release-panel-end)
@@ -83,7 +87,7 @@
   .artist-release-workspace-panel p,
   .artist-release-workspace-panel small,
   .artist-release-workspace-panel dl {
-    font-size: var(--text-artist-caption);
+    font-size: 0.6875rem;
     line-height: 1.6;
     color: var(--color-text-secondary);
   }
@@ -176,5 +180,36 @@
   .artist-music-record:focus-visible {
     outline: 2px solid var(--color-ring);
     outline-offset: 2px;
+  }
+
+  /* Native select: own chevron with room on the right, readable options in every theme. */
+  .artist-select {
+    position: relative;
+    display: block;
+  }
+  .artist-select-control {
+    width: 100%;
+    padding-right: 2.5rem;
+    color: var(--color-foreground);
+    appearance: none;
+    cursor: pointer;
+  }
+  .artist-select-control:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+  .artist-select-control option {
+    color: var(--color-overlay-foreground);
+    background-color: var(--color-overlay-surface);
+  }
+  .artist-select-chevron {
+    position: absolute;
+    top: 50%;
+    right: 0.875rem;
+    width: 1rem;
+    height: 1rem;
+    color: var(--color-text-secondary);
+    pointer-events: none;
+    transform: translateY(-50%);
   }
 }

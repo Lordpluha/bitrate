@@ -2,17 +2,18 @@ import { ROUTES } from '@shared/routes'
 import { CollectionSkeleton, StateMessage } from '@shared/ui'
 import { Music, TriangleAlert } from 'lucide-react'
 import { ApiRequestError } from '@/shared/api/errors'
+import { useI18n } from '@/shared/i18n'
 
-export const PlaylistLoading = () => (
-  <CollectionSkeleton label="Loading playlist" />
-)
+export const PlaylistLoading = () => {
+  const { t } = useI18n()
+
+  return <CollectionSkeleton label={t('playlist.loading')} />
+}
 
 type PlaylistLoadErrorProps = {
   error: unknown
   onRetry: () => void
 }
-
-const BACK_HOME = { href: ROUTES.main, label: 'Back to home' }
 
 /** The design's playlist error frames, chosen by the API status. */
 export const PlaylistLoadError = ({
@@ -20,16 +21,18 @@ export const PlaylistLoadError = ({
   onRetry,
 }: PlaylistLoadErrorProps) => {
   const status = error instanceof ApiRequestError ? error.status : undefined
-  const retry = { label: 'Try again', onClick: onRetry }
+  const { t } = useI18n()
+  const BACK_HOME = { href: ROUTES.main, label: t('common.backToHome') }
+  const retry = { label: t('common.tryAgain'), onClick: onRetry }
 
   if (status === 401) {
     return (
       <StateMessage
-        description="Log in again to keep listening."
+        description={t('playlist.sessionExpiredDescription')}
         icon={TriangleAlert}
-        primary={{ href: ROUTES.auth.login, label: 'Log in' }}
+        primary={{ href: ROUTES.auth.login, label: t('profile.logIn') }}
         secondary={BACK_HOME}
-        title="Your session has expired"
+        title={t('playlist.sessionExpired')}
         tone="error"
       />
     )
@@ -37,11 +40,11 @@ export const PlaylistLoadError = ({
   if (status === 403) {
     return (
       <StateMessage
-        description="Only its owner and collaborators can open it."
+        description={t('playlist.privateDescription')}
         icon={TriangleAlert}
         primary={retry}
         secondary={BACK_HOME}
-        title="Playlist is private"
+        title={t('playlist.private')}
         tone="error"
       />
     )
@@ -49,21 +52,21 @@ export const PlaylistLoadError = ({
   if (status === 404) {
     return (
       <StateMessage
-        description="This playlist may have been removed, or the link is incorrect."
+        description={t('playlist.notFoundDescription')}
         icon={Music}
         primary={BACK_HOME}
-        title="Playlist not found"
+        title={t('playlist.notFound')}
       />
     )
   }
   if (status === 429) {
     return (
       <StateMessage
-        description="Wait a few seconds, then try opening the playlist again."
+        description={t('playlist.tooManyDescription')}
         icon={TriangleAlert}
         primary={retry}
         secondary={BACK_HOME}
-        title="Too many playlist requests"
+        title={t('playlist.tooMany')}
         tone="error"
       />
     )
@@ -71,11 +74,11 @@ export const PlaylistLoadError = ({
 
   return (
     <StateMessage
-      description="Something went wrong on our side. Try again."
+      description={t('error.tryAgainShort')}
       icon={TriangleAlert}
       primary={retry}
       secondary={BACK_HOME}
-      title="Unable to load playlist"
+      title={t('playlist.loadFailed')}
       tone="error"
     />
   )

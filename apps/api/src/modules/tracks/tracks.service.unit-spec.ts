@@ -51,7 +51,7 @@ describe('TracksService', () => {
       expect(prisma.userLikedTrack.findMany).toHaveBeenCalledWith({
         where: {
           userId: 'user-1',
-          track: { processingStatus: 'READY', deletedAt: null },
+          track: { processingStatus: 'READY', deletedAt: null, publishedAt: { not: null } },
         },
         include: { track: true },
         orderBy: { createdAt: 'desc' },
@@ -75,7 +75,12 @@ describe('TracksService', () => {
       const result = await service.findTrackById('track-1')
 
       expect(prisma.track.findFirst).toHaveBeenCalledWith({
-        where: { id: 'track-1', processingStatus: 'READY', deletedAt: null },
+        where: {
+          id: 'track-1',
+          processingStatus: 'READY',
+          deletedAt: null,
+          publishedAt: { not: null },
+        },
       })
       expect(result).toBe(track)
     })
@@ -89,7 +94,12 @@ describe('TracksService', () => {
       const result = await service.findTracksByArtistId('artist-1')
 
       expect(prisma.track.findMany).toHaveBeenCalledWith({
-        where: { artistId: 'artist-1', processingStatus: 'READY', deletedAt: null },
+        where: {
+          artistId: 'artist-1',
+          processingStatus: 'READY',
+          deletedAt: null,
+          publishedAt: { not: null },
+        },
       })
       expect(result).toBe(tracks)
     })
@@ -105,6 +115,7 @@ describe('TracksService', () => {
       expect(prisma.track.findMany).toHaveBeenCalledWith({
         where: {
           processingStatus: 'READY',
+          publishedAt: { not: null },
           deletedAt: null,
           artist: { username: 'artist' },
         },

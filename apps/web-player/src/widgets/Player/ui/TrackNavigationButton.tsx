@@ -8,6 +8,7 @@ import {
 import { MediaImage } from '@shared/ui/MediaImage'
 import { SkipBack, SkipForward } from 'lucide-react'
 import type { TrackEntity } from '@/entities/Track/models/schema/Track.entity'
+import { useI18n } from '@/shared/i18n'
 import { getTrackCoverUrl } from '@/shared/utils/mediaUrl'
 
 interface TrackNavigationButtonProps {
@@ -23,8 +24,9 @@ export const TrackNavigationButton = ({
   onClick,
   track,
 }: TrackNavigationButtonProps) => {
+  const { t } = useI18n()
   const isNext = direction === 'next'
-  const label = isNext ? 'Next track' : 'Previous track'
+  const label = isNext ? t('player.next') : t('player.previous')
   const Icon = isNext ? SkipForward : SkipBack
 
   return (
@@ -51,8 +53,8 @@ export const TrackNavigationButton = ({
             width={48}
           />
           <div className="min-w-0">
-            <p className="text-xs font-medium text-text-subdued">{label}</p>
-            <p className="mt-0.5 truncate text-sm font-semibold text-text">
+            <p className="text-xs font-medium text-muted-foreground">{label}</p>
+            <p className="mt-0.5 truncate text-sm font-semibold text-foreground">
               {track.title}
             </p>
           </div>

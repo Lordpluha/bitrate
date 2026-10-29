@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { type FormEvent, useState } from 'react'
 import { useCreatePlaylist } from '@/entities/Playlist'
 import { showApiSuccessToast } from '@/shared/api/feedback'
+import { useI18n } from '@/shared/i18n'
 import { ROUTES } from '@/shared/routes'
 
 type CreatePlaylistFormProps = {
@@ -16,6 +17,7 @@ export const CreatePlaylistForm = ({
   isOpen,
   onClose,
 }: CreatePlaylistFormProps) => {
+  const { t } = useI18n()
   const router = useRouter()
   const createPlaylist = useCreatePlaylist()
   const [title, setTitle] = useState('')
@@ -36,7 +38,7 @@ export const CreatePlaylistForm = ({
       },
       {
         onSuccess: (playlist) => {
-          showApiSuccessToast('Playlist created')
+          showApiSuccessToast(t('library.playlistCreated'))
           setTitle('')
           setDescription('')
           setIsPublic(true)
@@ -51,26 +53,26 @@ export const CreatePlaylistForm = ({
 
   return (
     <form
-      aria-label="New playlist"
+      aria-label={t('library.newPlaylist')}
       className="flex w-full max-w-140 flex-col gap-4 rounded-[14px] border border-border bg-card p-6"
       onSubmit={handleSubmit}
     >
-      <h2 className="text-base font-semibold">New playlist</h2>
+      <h2 className="text-base font-semibold">{t('library.newPlaylist')}</h2>
       <input
-        aria-label="Playlist title"
+        aria-label={t('library.playlistTitle')}
         className="h-10 rounded-md border border-border bg-background px-3 text-sm text-foreground outline-none placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring"
         maxLength={80}
         onChange={(event) => setTitle(event.target.value)}
-        placeholder="Playlist title"
+        placeholder={t('library.playlistTitle')}
         required
         value={title}
       />
       <textarea
-        aria-label="Description"
+        aria-label={t('playlist.description')}
         className="min-h-20 rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground outline-none placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring"
         maxLength={240}
         onChange={(event) => setDescription(event.target.value)}
-        placeholder="Add an optional description"
+        placeholder={t('library.descriptionPlaceholder')}
         value={description}
       />
       <label className="flex items-center gap-2 text-sm text-foreground">
@@ -80,7 +82,7 @@ export const CreatePlaylistForm = ({
           onChange={(event) => setIsPublic(event.target.checked)}
           type="checkbox"
         />
-        Public playlist
+        {t('playlist.public')}
       </label>
       <div className="flex gap-2.5">
         <Button
@@ -89,7 +91,7 @@ export const CreatePlaylistForm = ({
           type="submit"
           variant="primary"
         >
-          Create
+          {t('common.create')}
         </Button>
         <Button
           className="h-9 px-6 text-sm font-medium"
@@ -97,7 +99,7 @@ export const CreatePlaylistForm = ({
           type="button"
           variant="ghost"
         >
-          Cancel
+          {t('common.cancel')}
         </Button>
       </div>
     </form>

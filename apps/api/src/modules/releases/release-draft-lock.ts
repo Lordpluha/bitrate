@@ -8,6 +8,7 @@ import { RELEASE_SUMMARY_SELECT } from './releases.select'
  *
  * Ownership, lifecycle and version are one predicate, so a write that loses a race leaves
  * nothing behind. A miss is a 404 when the release is not visible to the artist, else a 409.
+ * `statuses` widens the lifecycle for writes allowed past the draft, such as the delivery plan.
  */
 export async function lockOwnedDraft(
   tx: Prisma.TransactionClient,
@@ -15,6 +16,7 @@ export async function lockOwnedDraft(
   id: string,
   expectedUpdatedAt: string,
   data: Prisma.ReleaseUpdateManyMutationInput = {},
+  statuses: readonly ReleaseStatus[] = [ReleaseStatus.DRAFT],
 ) {
   const expected = new Date(expectedUpdatedAt)
   const [release] = await tx.release.updateManyAndReturn({
@@ -22,7 +24,7 @@ export async function lockOwnedDraft(
       id,
       ownerArtistId,
       deletedAt: null,
-      status: ReleaseStatus.DRAFT,
+      status: statuses.length === 1 ? statuses[0] : { in: [...statuses] },
       updatedAt: expected,
     },
     data: { ...data, updatedAt: new Date(Math.max(Date.now(), expected.getTime() + 1)) },

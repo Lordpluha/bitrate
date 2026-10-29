@@ -9,6 +9,7 @@ import {
   NOTIFICATION_JOB_OPTIONS,
   NOTIFICATION_JOBS,
   NOTIFICATIONS_QUEUE,
+  type ReleasePublishedNotificationJob,
 } from './notifications.queue'
 
 /** Enqueues notification work; used by the API (follows) and the transcode worker (releases). */
@@ -39,6 +40,14 @@ export class NotificationsProducer {
     await this.queue.add(NOTIFICATION_JOBS.NEW_RELEASE, job, {
       ...NOTIFICATION_JOB_OPTIONS,
       jobId: `new-release-${job.trackId}`,
+    })
+  }
+
+  /** A release went live; one job per album however often this is called. */
+  async releasePublished(job: ReleasePublishedNotificationJob) {
+    await this.queue.add(NOTIFICATION_JOBS.RELEASE_PUBLISHED, job, {
+      ...NOTIFICATION_JOB_OPTIONS,
+      jobId: `release-published-${job.albumId}`,
     })
   }
 }

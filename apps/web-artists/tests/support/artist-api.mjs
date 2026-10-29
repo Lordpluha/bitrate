@@ -60,7 +60,6 @@ function readinessOf(release, recordings) {
     ...(recordings.length === 0 ? [{ code: 'NO_TRACKS' }] : []),
     ...(rights.masterOwnerType ? [] : [{ code: 'MASTER_OWNER_MISSING' }]),
     ...(rights.writersConfirmedAt ? [] : [{ code: 'WRITERS_NOT_CONFIRMED' }]),
-    ...(rights.accuracyConfirmedAt ? [] : [{ code: 'ACCURACY_NOT_CONFIRMED' }]),
     ...['RECORDING', 'COMPOSITION']
       .filter((rightType) => total(rightType) !== 10_000)
       .map((rightType) => ({
@@ -93,7 +92,7 @@ const server = createServer(async (request, response) => {
     response.setHeader('Access-Control-Allow-Headers', 'Content-Type')
     response.setHeader(
       'Access-Control-Allow-Methods',
-      'GET, POST, PUT, PATCH, OPTIONS',
+      'GET, POST, PUT, PATCH, DELETE, OPTIONS',
     )
   }
   if (request.method === 'OPTIONS') {
@@ -113,13 +112,13 @@ const server = createServer(async (request, response) => {
   const scope = /(?:^|;\s*)e2e_scope=([^;]*)/.exec(cookie)?.[1] ?? ''
   const scoped = (key) => `${scope}\u0000${key}`
   const sessionCookies = (access, refresh) => [
-    `access_token=${access}; Path=/; HttpOnly; SameSite=Lax`,
-    `refresh_token=${refresh}; Path=/; HttpOnly; SameSite=Lax`,
+    `artist_access_token=${access}; Path=/; HttpOnly; SameSite=Lax`,
+    `artist_refresh_token=${refresh}; Path=/; HttpOnly; SameSite=Lax`,
   ]
 
   if (request.url === '/health') return json(200, { ok: true })
   if (request.url === '/test/music' && request.method === 'POST') {
-    if (!cookie.includes('access_token=test-valid')) return json(401, {})
+    if (!cookie.includes('artist_access_token=test-valid')) return json(401, {})
     releases.set(
       scoped('artist'),
       [
@@ -150,11 +149,11 @@ const server = createServer(async (request, response) => {
   }
   if (request.url?.startsWith('/api/v1/artist-music/')) {
     if (
-      !cookie.includes('access_token=test-valid') &&
-      !cookie.includes('access_token=test-other')
+      !cookie.includes('artist_access_token=test-valid') &&
+      !cookie.includes('artist_access_token=test-other')
     )
       return json(401, { message: 'Unauthorized' })
-    const owner = cookie.includes('access_token=test-other')
+    const owner = cookie.includes('artist_access_token=test-other')
       ? 'other'
       : 'artist'
     const owned = (releases.get(scoped(owner)) ?? []).map((item) => ({
@@ -200,11 +199,11 @@ const server = createServer(async (request, response) => {
   }
   if (request.url?.startsWith('/api/v1/releases/')) {
     if (
-      !cookie.includes('access_token=test-valid') &&
-      !cookie.includes('access_token=test-other')
+      !cookie.includes('artist_access_token=test-valid') &&
+      !cookie.includes('artist_access_token=test-other')
     )
       return json(401, { message: 'Unauthorized' })
-    const owner = cookie.includes('access_token=test-other')
+    const owner = cookie.includes('artist_access_token=test-other')
       ? 'other'
       : 'artist'
     const workspace = request.url.endsWith('/workspace')
@@ -228,6 +227,7 @@ const server = createServer(async (request, response) => {
         cover: null,
         isDemo: false,
         submittedAt: null,
+        unpublishedBy: null,
         ...release,
         rights,
         splits,
@@ -352,7 +352,8 @@ const server = createServer(async (request, response) => {
           masterOwnerType: input.masterOwner?.type ?? null,
           masterOwnerName: input.masterOwner?.name ?? null,
           writersConfirmedAt: input.writersConfirmed ? now : null,
-          accuracyConfirmedAt: input.accuracyConfirmed ? now : null,
+          // Accuracy is confirmed by submitting, never by the rights form.
+          accuracyConfirmedAt: release.rights?.accuracyConfirmedAt ?? null,
         }
       } else if (action === 'splits') {
         release.splits = [
@@ -378,6 +379,10 @@ const server = createServer(async (request, response) => {
         if (readiness.blockers.length > 0)
           return json(422, { message: 'Blocked', blockers: readiness.blockers })
         release.status = 'SUBMITTED'
+        release.rights = {
+          ...(release.rights ?? NO_RIGHTS),
+          accuracyConfirmedAt: now,
+        }
       } else {
         release.status = 'DRAFT'
       }
@@ -391,6 +396,22 @@ const server = createServer(async (request, response) => {
       return json(200, release)
     }
     if (request.method === 'GET') return json(200, release)
+    if (request.method === 'DELETE' && parts.length === 5) {
+      let body = ''
+      for await (const chunk of request) body += chunk
+      const input = JSON.parse(body)
+      if (
+        release.status !== 'DRAFT' ||
+        input.expectedUpdatedAt !== release.updatedAt
+      )
+        return json(409, { message: 'Release changed or is no longer a draft' })
+      releases.set(
+        scoped(owner),
+        (releases.get(scoped(owner)) ?? []).filter((item) => item.id !== id),
+      )
+      response.writeHead(204)
+      return response.end()
+    }
     if (request.method === 'PATCH') {
       let body = ''
       for await (const chunk of request) body += chunk
@@ -470,11 +491,11 @@ const server = createServer(async (request, response) => {
   }
   if (request.url?.split('?')[0] === '/api/v1/releases') {
     if (
-      !cookie.includes('access_token=test-valid') &&
-      !cookie.includes('access_token=test-other')
+      !cookie.includes('artist_access_token=test-valid') &&
+      !cookie.includes('artist_access_token=test-other')
     )
       return json(401, { message: 'Unauthorized' })
-    const owner = cookie.includes('access_token=test-other')
+    const owner = cookie.includes('artist_access_token=test-other')
       ? 'other'
       : 'artist'
     const owned = releases.get(scoped(owner)) ?? []
@@ -561,8 +582,8 @@ const server = createServer(async (request, response) => {
     if (cookie.includes('test-outage'))
       return json(503, { message: 'Unavailable' })
     if (
-      !cookie.includes('access_token=test-valid') &&
-      !cookie.includes('access_token=test-other')
+      !cookie.includes('artist_access_token=test-valid') &&
+      !cookie.includes('artist_access_token=test-other')
     ) {
       return json(401, { message: 'Unauthorized' })
     }
@@ -578,7 +599,7 @@ const server = createServer(async (request, response) => {
     request.url === '/api/v1/artists/auth/refresh' &&
     request.method === 'POST'
   ) {
-    if (!cookie.includes('refresh_token=test-refresh'))
+    if (!cookie.includes('artist_refresh_token=test-refresh'))
       return json(401, { message: 'Unauthorized' })
     response.setHeader(
       'Set-Cookie',

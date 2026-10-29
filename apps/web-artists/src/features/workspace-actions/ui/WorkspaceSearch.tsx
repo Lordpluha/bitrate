@@ -5,7 +5,7 @@ import {
 import { useDebouncedValue } from '@shared/hooks'
 import { ROUTES } from '@shared/routes/routes'
 import { Link } from '@tanstack/react-router'
-import { Disc3, ListChecks, Music2, Search } from 'lucide-react'
+import { Disc3, Music2, Search } from 'lucide-react'
 import { type ReactNode, useId, useState } from 'react'
 
 export interface WorkspaceDestination {
@@ -18,7 +18,7 @@ const SEARCH_DELAY_MS = 250
 const resultClass =
   'flex min-h-11 items-center gap-3 rounded-lg px-3 text-sm hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
 
-/** Workspace sections plus the artist's releases, tracks and tasks matching the query. */
+/** Workspace sections plus the artist's releases and tracks matching the query. */
 export function WorkspaceSearch({
   artistId,
   destinations,
@@ -39,8 +39,7 @@ export function WorkspaceSearch({
   const searching = term.length >= MIN_SEARCH_LENGTH
   const data = searching ? search.data : undefined
   const found =
-    sections.length +
-    (data ? data.releases.length + data.tracks.length + data.tasks.length : 0)
+    sections.length + (data ? data.releases.length + data.tracks.length : 0)
 
   return (
     <div className="space-y-4">
@@ -52,7 +51,7 @@ export function WorkspaceSearch({
         data-initial-focus
         id={inputId}
         onChange={(event) => setQuery(event.target.value)}
-        placeholder="Search releases, tracks, tasks and sections…"
+        placeholder="Search releases, tracks and sections…"
         type="search"
         value={query}
       />
@@ -125,26 +124,6 @@ export function WorkspaceSearch({
                 </Link>
               ),
             )}
-          </ResultGroup>
-        )}
-        {data && data.tasks.length > 0 && (
-          <ResultGroup title="Tasks">
-            {data.tasks.map((task) => (
-              <Link
-                className={resultClass}
-                key={task.id}
-                onClick={onNavigate}
-                params={{ releaseId: task.release.id }}
-                preload={false}
-                to="/dashboard/music/$releaseId"
-              >
-                <ListChecks aria-hidden="true" className="size-4 text-accent" />
-                <span className="min-w-0 flex-1 truncate">{task.title}</span>
-                <span className="truncate text-xs text-text-secondary">
-                  {task.release.title}
-                </span>
-              </Link>
-            ))}
           </ResultGroup>
         )}
       </nav>

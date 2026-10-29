@@ -22,7 +22,7 @@ export function UpdateReleaseRightsSwagger() {
     ApiOperation({
       summary: 'Confirm the rights of an owned draft',
       description:
-        'Replaces the master owner and both confirmations in one request, so each confirmation describes the saved owner. Changing credits later clears both confirmations; changing splits clears accuracy.',
+        'Replaces the master owner and the songwriter confirmation in one request. Changing credits later clears the confirmation. Accuracy is confirmed by submitting, not here.',
     }),
     ApiBody({ type: UpdateReleaseRightsDto }),
     ApiResponse({ status: HttpStatus.OK, type: ReleaseEntity }),
@@ -76,7 +76,7 @@ export function SubmitReleaseSwagger() {
     ApiOperation({
       summary: 'Submit an owned draft for Bitrate review',
       description:
-        'Re-checks every blocker in the same transaction and moves DRAFT to SUBMITTED. Creates an internal review request only; it does not deliver the release to streaming services. Missing UPC/ISRC never blocks.',
+        'Re-checks every blocker in the same transaction and moves DRAFT to SUBMITTED. The reviewed confirmation is recorded as the accuracy confirmation for the checked data. Creates an internal review request only; it does not deliver the release to streaming services. Missing UPC/ISRC never blocks.',
     }),
     ApiBody({ type: SubmitReleaseDto }),
     ApiResponse({ status: HttpStatus.OK, type: ReleaseEntity }),

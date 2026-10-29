@@ -3,7 +3,9 @@ import { readUserSettings } from '@common/user-settings'
 import { NS, TTL } from '@infra/cache/cache.constants'
 import { CacheService } from '@infra/cache/cache.service'
 import { PrismaService } from '@infra/prisma/prisma.service'
+import { PUBLIC_ALBUM_WHERE } from '@modules/albums/album-visibility'
 import { PUBLIC_ARTIST_SELECT } from '@modules/artists/artists.select'
+import { PUBLIC_TRACK_SQL, PUBLIC_TRACK_WHERE } from '@modules/tracks/track-visibility'
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common'
 import { Prisma } from '@prisma/client'
 import { DISCOVERY_ERRORS } from './errors/discovery.errors'
@@ -80,8 +82,7 @@ export class DiscoveryService {
     return this.cache.wrap(NS.RECOMMENDATIONS, `feed:${key}`, TTL.SHORT, async () => {
       const preferredGenreIds = userId ? await this.getPreferredGenreIds(userId) : []
       const trackWhere = {
-        processingStatus: 'READY' as const,
-        deletedAt: null,
+        ...PUBLIC_TRACK_WHERE,
         ...(hideExplicit ? { explicit: false } : {}),
         ...(preferredGenreIds.length > 0
           ? { genres: { some: { genreId: { in: preferredGenreIds } } } }
@@ -98,7 +99,7 @@ export class DiscoveryService {
           },
         }),
         this.prisma.album.findMany({
-          where: { deletedAt: null },
+          where: PUBLIC_ALBUM_WHERE,
           orderBy: [{ releaseDate: 'desc' }, { createdAt: 'desc' }],
           take: 12,
           include: { artist: { select: { id: true, username: true, avatar: true } } },
@@ -184,8 +185,7 @@ export class DiscoveryService {
       const tracks = await this.prisma.track.findMany({
         where: {
           id: { in: rows.map(({ id }) => id) },
-          deletedAt: null,
-          processingStatus: 'READY',
+          ...PUBLIC_TRACK_WHERE,
           artist: { deletedAt: null },
         },
         include: { artist: { select: { id: true, username: true, avatar: true } } },
@@ -240,8 +240,7 @@ export class DiscoveryService {
       JOIN "Track" t ON t.id = h."trackId"
       JOIN "Artist" a ON a.id = t."artistId"
       WHERE h."listenedAt" >= ${this.chartRangeStart(scope)}
-        AND t."deletedAt" IS NULL
-        AND t."processingStatus" = 'READY'
+        AND ${PUBLIC_TRACK_SQL}
         AND a."deletedAt" IS NULL
         ${this.countryFilter(scope, country)}
         ${genreFilter}

@@ -1,6 +1,6 @@
 import type { Component } from 'svelte'
 
-/** The custom element tag name registered by this package. */
+/** The root custom element's tag name; its part tags are `BITRATE_PLAYER_PART_TAG`. */
 export const BITRATE_PLAYER_TAG_NAME = 'bitrate-player'
 
 /**
@@ -21,7 +21,8 @@ type CompiledCustomElement = Component<Record<string, never>> & {
 let registration: Promise<void> | null = null
 
 /**
- * Registers `<bitrate-player>` against the document's custom element registry.
+ * Registers `<bitrate-player>` and its part elements (`BITRATE_PLAYER_PART_TAG`) against the
+ * document's custom element registry, root first.
  *
  * The compiled Svelte component (`BitratePlayer.svelte`) calls `customElements`-adjacent
  * runtime machinery — `svelte/internal/client`'s `create_custom_element` — at module
@@ -64,20 +65,20 @@ export function defineBitratePlayer(): Promise<void> {
     return registration
   }
 
-  registration = import('./BitratePlayer.svelte')
-    .then((module) => {
-      if (customElements.get(BITRATE_PLAYER_TAG_NAME)) {
-        return
-      }
+  registration = import('./registry')
+    .then(({ BITRATE_PLAYER_COMPONENTS }) => {
+      for (const [tagName, component] of BITRATE_PLAYER_COMPONENTS) {
+        if (customElements.get(tagName)) continue
 
-      const { element } = module.default as CompiledCustomElement
-      if (!element) {
-        throw new Error(
-          `@bitrate/player: the compiled component for <${BITRATE_PLAYER_TAG_NAME}> exposes no custom-element constructor — check that BitratePlayer.svelte declares <svelte:options customElement={{ ... }}> and that the "customElement" compiler flag is enabled.`,
-        )
-      }
+        const { element } = component as CompiledCustomElement
+        if (!element) {
+          throw new Error(
+            `@bitrate/player: the compiled component for <${tagName}> exposes no custom-element constructor — check that it declares <svelte:options customElement={{ ... }}> and that the "customElement" compiler flag is enabled.`,
+          )
+        }
 
-      customElements.define(BITRATE_PLAYER_TAG_NAME, element as CustomElementConstructor)
+        customElements.define(tagName, element as CustomElementConstructor)
+      }
     })
     .catch((error: unknown) => {
       registration = null

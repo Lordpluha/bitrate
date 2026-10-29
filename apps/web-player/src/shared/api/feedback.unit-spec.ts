@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { showApiErrorToast } from './feedback'
+import { z } from 'zod'
+import { getApiErrorMessage, showApiErrorToast } from './feedback'
 
 const { toastError } = vi.hoisted(() => ({
   toastError: vi.fn(),
@@ -35,5 +36,31 @@ describe('showApiErrorToast', () => {
     showApiErrorToast(new Error('Request failed'))
 
     expect(toastError).toHaveBeenCalledWith('Request failed')
+  })
+})
+
+describe('getApiErrorMessage', () => {
+  it('passes on what the API or our own request helpers say', () => {
+    expect(getApiErrorMessage(new Error('Failed to load friends'))).toBe(
+      'Failed to load friends',
+    )
+    expect(getApiErrorMessage({ message: 'Playlist is private' })).toBe(
+      'Playlist is private',
+    )
+  })
+
+  it('never shows a schema or runtime failure to the user', () => {
+    const parsed = z.object({ id: z.string() }).safeParse([])
+    expect(parsed.success).toBe(false)
+
+    expect(getApiErrorMessage(parsed.error, 'Unable to load.')).toBe(
+      'Unable to load.',
+    )
+    expect(
+      getApiErrorMessage(
+        new TypeError('Failed to parse URL from /api/v1/tracks/liked'),
+        'Unable to load.',
+      ),
+    ).toBe('Unable to load.')
   })
 })

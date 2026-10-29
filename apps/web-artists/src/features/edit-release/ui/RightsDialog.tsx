@@ -29,7 +29,6 @@ export function RightsDialog({
       ownerType: rights.masterOwnerType ?? undefined,
       ownerName: rights.masterOwnerName ?? '',
       writersConfirmed: rights.writersConfirmedAt !== null,
-      accuracyConfirmed: rights.accuracyConfirmedAt !== null,
     },
     mode: 'onTouched',
   })
@@ -47,7 +46,6 @@ export function RightsDialog({
               ? { type: 'OTHER', name: values.ownerName.trim() }
               : { type: 'ARTIST' },
           writersConfirmed: values.writersConfirmed,
-          accuracyConfirmed: values.accuracyConfirmed,
           expectedUpdatedAt,
         },
       })
@@ -139,7 +137,7 @@ export function RightsDialog({
           </div>
         )}
         <fieldset className="space-y-3" disabled={busy}>
-          <legend className="text-sm font-medium">Confirmations</legend>
+          <legend className="text-sm font-medium">Confirmation</legend>
           <label className="artist-release-credit-role">
             <input
               type="checkbox"
@@ -147,17 +145,10 @@ export function RightsDialog({
             />
             <span>All songwriters and composers are listed</span>
           </label>
-          <label className="artist-release-credit-role">
-            <input
-              type="checkbox"
-              {...form.register('accuracyConfirmed', { onChange: reset })}
-            />
-            <span>I confirm this information is accurate</span>
-          </label>
         </fieldset>
         <p className="text-sm text-text-secondary">
-          Changing contributors later clears both confirmations; changing splits
-          clears the accuracy confirmation.
+          Changing contributors later clears this confirmation. You confirm the
+          whole draft is accurate once, when you submit it for review.
         </p>
         {mutation.error && (
           <p className="text-sm text-destructive" role="alert">

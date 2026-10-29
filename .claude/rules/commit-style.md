@@ -172,15 +172,26 @@ one idea, reviewable in minutes — and split into arbitrary ten-file commits, e
 intermediate commit fails to compile, because the class is renamed in one place and its
 consumers in another. A cap per commit buys nothing there and costs bisectability.
 
-For a pull request:
+For a pull request — enforced by the `PR Scope` check (`.github/workflows/pr_scope.yml`,
+logic in `scripts/check-pr-scope.mjs`; run `pnpm check:pr-scope` before pushing):
 
 - **One logical change per PR.** A second idea gets a second PR, however small its diff.
-- **Fifty changed files is a soft signal**, not a limit: at that size, say in the description
-  why the change is still one idea. Generated output does not count toward it — the
-  contract, test snapshots, `pnpm-lock.yaml`.
-- **Two hundred files is the hard ceiling**, and a sweep that genuinely exceeds it (a
-  rename, a linter migration, a regeneration) says so in its title and description rather
-  than being split into parts that do not stand alone.
+- **One workspace per PR.** A PR changes files in at most one `apps/*` or `packages/*`
+  directory. Shared paths — root config, `.github`, `.claude`, `infra`, `scripts`, `pencil`
+  and `apps/docs` — never count as a second workspace, so the CI, tooling or docs a change
+  needs ride along with it. A change spanning workspaces lands as a chain of PRs, each one
+  standing alone: the producer first (`packages/ui-react`, or `apps/api`), then the
+  regenerated contract, then each consumer.
+- **At most 200 changed files and 2000 changed lines** (additions + deletions, renames
+  detected, so a pure move costs no lines). Generated or release-managed output counts toward
+  none of the limits: lockfiles, `packages/contracts/src/api/v*.ts`, `*.gen.ts`, test
+  snapshots, `.changeset/*.md`, `CHANGELOG.md`, `pencil/**`.
+- **Fifty changed files is a soft signal** below that ceiling: at that size, say in the
+  description why the change is still one idea.
+- **Exempt:** `release/`, `backmerge/`, `changeset-release/` and `dependabot/` branches, and a
+  PR carrying the `pr-scope/exempt` label. The label is for a mechanical sweep that cannot be
+  split into PRs that each stand alone (a rename, a linter migration, a regeneration); its
+  title and description say so.
 
 An earlier proposal capped a commit at ten files. It is recorded here as rejected so it is
 not reintroduced: it would have forced the DTO rename above into five commits, four of them
@@ -204,8 +215,8 @@ Before proposing a commit header:
 - Header limit is 100 characters (`commitlint.config.js`); body lines stay within the
   repository's 100-column style.
 - Never bypass the hook merely to land a malformed message.
-- Size is reviewed, not hooked. A pre-commit file-count check would fire on exactly the
-  sweeps that are legitimately large and never on the one-file diff that needs the most
-  attention, so the ceiling above is a review instruction. What a hook can check is the
-  claim that each commit stands alone: `git rebase --exec 'pnpm lint && pnpm check-types'`
-  over the branch's range, run before opening the PR.
+- Commit size is reviewed, not hooked. A pre-commit file-count check would fire on exactly
+  the sweeps that are legitimately large and never on the one-file diff that needs the most
+  attention. What a hook can check is the claim that each commit stands alone:
+  `git rebase --exec 'pnpm lint && pnpm check-types'` over the branch's range, run before
+  opening the PR. PR scope and size are checked in CI by `PR Scope` (see above).

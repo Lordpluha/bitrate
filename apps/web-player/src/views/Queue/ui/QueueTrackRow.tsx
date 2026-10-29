@@ -32,7 +32,7 @@ export const QueueTrackRow = ({
   >
     <button
       aria-label={`Play ${track.title}`}
-      className="flex justify-center text-[13px] font-semibold text-text-subdued disabled:cursor-default"
+      className="flex justify-center text-[13px] font-semibold text-muted-foreground disabled:cursor-default"
       disabled={!onPlay}
       onClick={onPlay}
       type="button"

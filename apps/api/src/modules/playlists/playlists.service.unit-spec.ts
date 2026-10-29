@@ -161,7 +161,9 @@ describe('PlaylistsService', () => {
       where: { id: 'playlist-1', deletedAt: null, isPublic: true },
       include: {
         tracks: {
-          where: { track: { processingStatus: 'READY', deletedAt: null } },
+          where: {
+            track: { processingStatus: 'READY', deletedAt: null, publishedAt: { not: null } },
+          },
           include: { track: true },
           orderBy: { position: 'asc' },
         },
@@ -191,7 +193,9 @@ describe('PlaylistsService', () => {
       },
       include: {
         tracks: {
-          where: { track: { processingStatus: 'READY', deletedAt: null } },
+          where: {
+            track: { processingStatus: 'READY', deletedAt: null, publishedAt: { not: null } },
+          },
           include: { track: true },
           orderBy: { position: 'asc' },
         },
