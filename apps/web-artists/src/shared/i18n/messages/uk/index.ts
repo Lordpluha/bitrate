@@ -1,4 +1,5 @@
 import type { Messages } from '../en'
+import { analytics } from './analytics'
 import { auth } from './auth'
 import { common } from './common'
 import { dashboard } from './dashboard'
@@ -16,6 +17,7 @@ import { shell } from './shell'
 import { workspace } from './workspace'
 
 export const uk = {
+  ...analytics,
   ...auth,
   ...common,
   ...dashboard,

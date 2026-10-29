@@ -1,0 +1,32 @@
+export const analytics = {
+  'analytics.subtitle': 'Plays and listeners on Bitrate, by UTC day.',
+  'analytics.period': 'Period',
+  'analytics.days.one': '{count} day',
+  'analytics.days.other': '{count} days',
+  'analytics.loading': 'Loading analytics…',
+  'analytics.noTracks':
+    'No data yet. Analytics start once a track of yours is published on Bitrate.',
+  'analytics.noPlays':
+    'No data yet. Nobody has played your published tracks on Bitrate so far.',
+  'analytics.plays': 'Plays',
+  'analytics.listeners': 'Listeners',
+  'analytics.source':
+    'Source: Bitrate playback by signed-in listeners. Read {date} UTC.',
+  'analytics.previous': '{change} · previous {value}',
+  'analytics.noChange': 'No change',
+  'analytics.new': 'New this period',
+  'analytics.change': '{change}% vs previous period',
+  'analytics.daily': 'Plays per day',
+  'analytics.peak': 'Peak {plays} on {date}',
+  'analytics.dayPlays.one': '{date}: {count} play',
+  'analytics.dayPlays.other': '{date}: {count} plays',
+  'analytics.showTable': 'Show as table',
+  'analytics.tableCaption': 'Plays per UTC day',
+  'analytics.dayUtc': 'Day (UTC)',
+  'analytics.top': 'Top tracks',
+  'analytics.noPlaysPeriod': 'No plays in this period.',
+  'analytics.other': 'Other services',
+  'analytics.noFigures':
+    'No figures are shown for services that are not connected.',
+  'analytics.error.load': 'Could not load analytics. Please try again.',
+} as const

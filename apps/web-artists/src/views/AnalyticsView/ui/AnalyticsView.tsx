@@ -13,12 +13,20 @@ import { ROUTES } from '@shared/routes/routes'
 import { Link } from '@tanstack/react-router'
 import { BarChart3, PlugZap } from 'lucide-react'
 
-const numberFormat = new Intl.NumberFormat('en-US')
-const dayFormat = new Intl.DateTimeFormat('en-US', {
-  month: 'short',
-  day: 'numeric',
-  timeZone: 'UTC',
-})
+/** Numbers and short UTC days in the workspace language. */
+function useFormats() {
+  const { locale } = useI18n()
+  const number = new Intl.NumberFormat(locale)
+  const day = new Intl.DateTimeFormat(locale, {
+    month: 'short',
+    day: 'numeric',
+    timeZone: 'UTC',
+  })
+  return {
+    number: (value: number) => number.format(value),
+    day: (date: string) => day.format(new Date(date)),
+  }
+}
 
 interface AnalyticsViewProps {
   artistId: string
@@ -27,7 +35,7 @@ interface AnalyticsViewProps {
 
 /** Bitrate-owned listening signals only; external services never show invented zeroes. */
 export function AnalyticsView({ artistId, days }: AnalyticsViewProps) {
-  const { tMessage } = useI18n()
+  const { t, tMessage, tp } = useI18n()
   const analytics = useArtistAnalytics(artistId, days)
   return (
     <section
@@ -37,13 +45,13 @@ export function AnalyticsView({ artistId, days }: AnalyticsViewProps) {
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <h1 className="text-[1.625rem] font-normal lg:text-[2rem]">
-            Analytics
+            {t('shell.nav.analytics')}
           </h1>
           <p className="mt-2 text-[0.9375rem] text-text-secondary">
-            Plays and listeners on Bitrate, by UTC day.
+            {t('analytics.subtitle')}
           </p>
         </div>
-        <nav aria-label="Period" className="flex gap-2">
+        <nav aria-label={t('analytics.period')} className="flex gap-2">
           {analyticsPeriods.map((period) => (
             <Link
               aria-current={period === days ? 'page' : undefined}
@@ -57,13 +65,13 @@ export function AnalyticsView({ artistId, days }: AnalyticsViewProps) {
               search={{ days: period }}
               to={ROUTES.dashboard.analytics}
             >
-              {period} days
+              {tp({ count: period, key: 'analytics.days' })}
             </Link>
           ))}
         </nav>
       </div>
       {analytics.isPending ? (
-        <p role="status">Loading analytics…</p>
+        <p role="status">{t('analytics.loading')}</p>
       ) : analytics.isError ? (
         <div className="space-y-3">
           <p role="alert">{tMessage(analytics.error.message)}</p>
@@ -73,7 +81,7 @@ export function AnalyticsView({ artistId, days }: AnalyticsViewProps) {
             }}
             variant="outline"
           >
-            Try again
+            {t('common.tryAgain')}
           </Button>
         </div>
       ) : (
@@ -84,6 +92,7 @@ export function AnalyticsView({ artistId, days }: AnalyticsViewProps) {
 }
 
 function AnalyticsBody({ data }: { data: ArtistAnalytics }) {
+  const { t, locale } = useI18n()
   if (data.state !== 'READY' || !data.totals || !data.previous)
     return (
       <div className="space-y-4">
@@ -94,8 +103,8 @@ function AnalyticsBody({ data }: { data: ArtistAnalytics }) {
           />
           <p className="text-sm">
             {data.state === 'NO_TRACKS'
-              ? 'No data yet. Analytics start once a track of yours is published on Bitrate.'
-              : 'No data yet. Nobody has played your published tracks on Bitrate so far.'}
+              ? t('analytics.noTracks')
+              : t('analytics.noPlays')}
           </p>
         </div>
         <ExternalSources data={data} />
@@ -105,12 +114,12 @@ function AnalyticsBody({ data }: { data: ArtistAnalytics }) {
     <div className="space-y-4">
       <div className="grid gap-4 sm:grid-cols-2">
         <StatTile
-          label="Plays"
+          label={t('analytics.plays')}
           previous={data.previous.plays}
           value={data.totals.plays}
         />
         <StatTile
-          label="Listeners"
+          label={t('analytics.listeners')}
           previous={data.previous.listeners}
           value={data.totals.listeners}
         />
@@ -119,8 +128,9 @@ function AnalyticsBody({ data }: { data: ArtistAnalytics }) {
       <TopTracks data={data} />
       <ExternalSources data={data} />
       <p className="text-xs text-text-secondary">
-        Source: Bitrate playback by signed-in listeners. Read{' '}
-        {formatDateTimeUtc(data.freshness)} UTC.
+        {t('analytics.source', {
+          date: formatDateTimeUtc(data.freshness, locale),
+        })}
       </p>
     </div>
   )
@@ -135,13 +145,17 @@ function StatTile({
   value: number
   previous: number
 }) {
+  const { t } = useI18n()
+  const format = useFormats()
   return (
     <div className="artist-release-workspace-panel">
       <p className="text-sm text-text-secondary">{label}</p>
-      <p className="mt-1 text-3xl">{numberFormat.format(value)}</p>
+      <p className="mt-1 text-3xl">{format.number(value)}</p>
       <p className="mt-1 text-xs text-text-secondary">
-        {changeLabel(value, previous)} · previous{' '}
-        {numberFormat.format(previous)}
+        {t('analytics.previous', {
+          change: changeLabel(value, previous, t),
+          value: format.number(previous),
+        })}
       </p>
     </div>
   )
@@ -149,6 +163,8 @@ function StatTile({
 
 /** One series of magnitudes: single-hue thin bars on a baseline, hover values, table view. */
 function DailyPlays({ data }: { data: ArtistAnalytics }) {
+  const { t, tp } = useI18n()
+  const format = useFormats()
   const max = Math.max(1, ...data.daily.map((day) => day.plays))
   const peak = data.daily.reduce(
     (best, day) => (day.plays > best.plays ? day : best),
@@ -160,11 +176,13 @@ function DailyPlays({ data }: { data: ArtistAnalytics }) {
       className="artist-release-workspace-panel space-y-4"
     >
       <div className="flex flex-wrap items-baseline justify-between gap-2">
-        <h2 id="analytics-daily-heading">Plays per day</h2>
+        <h2 id="analytics-daily-heading">{t('analytics.daily')}</h2>
         {peak.plays > 0 && (
           <p className="text-xs text-text-secondary">
-            Peak {numberFormat.format(peak.plays)} on{' '}
-            {dayFormat.format(new Date(peak.date))}
+            {t('analytics.peak', {
+              plays: format.number(peak.plays),
+              date: format.day(peak.date),
+            })}
           </p>
         )}
       </div>
@@ -176,7 +194,11 @@ function DailyPlays({ data }: { data: ArtistAnalytics }) {
           <div
             className="group relative flex h-full min-w-0 flex-1 items-end"
             key={day.date}
-            title={`${dayFormat.format(new Date(day.date))}: ${numberFormat.format(day.plays)} plays`}
+            title={tp({
+              count: day.plays,
+              key: 'analytics.dayPlays',
+              values: { date: format.day(day.date) },
+            })}
           >
             <div
               className="w-full rounded-t bg-accent opacity-80 group-hover:opacity-100"
@@ -191,37 +213,31 @@ function DailyPlays({ data }: { data: ArtistAnalytics }) {
         aria-hidden="true"
         className="flex justify-between text-xs text-text-secondary"
       >
-        <span>
-          {dayFormat.format(new Date(data.daily[0]?.date ?? data.period.from))}
-        </span>
-        <span>
-          {dayFormat.format(
-            new Date(data.daily.at(-1)?.date ?? data.period.to),
-          )}
-        </span>
+        <span>{format.day(data.daily[0]?.date ?? data.period.from)}</span>
+        <span>{format.day(data.daily.at(-1)?.date ?? data.period.to)}</span>
       </div>
       <details>
         <summary className="cursor-pointer text-sm underline">
-          Show as table
+          {t('analytics.showTable')}
         </summary>
         <table className="mt-3 w-full text-sm">
-          <caption className="sr-only">Plays per UTC day</caption>
+          <caption className="sr-only">{t('analytics.tableCaption')}</caption>
           <thead>
             <tr className="text-left text-text-secondary">
               <th className="py-1 font-normal" scope="col">
-                Day (UTC)
+                {t('analytics.dayUtc')}
               </th>
               <th className="py-1 text-right font-normal" scope="col">
-                Plays
+                {t('analytics.plays')}
               </th>
             </tr>
           </thead>
           <tbody>
             {data.daily.map((day) => (
               <tr className="border-t border-border" key={day.date}>
-                <td className="py-1">{dayFormat.format(new Date(day.date))}</td>
+                <td className="py-1">{format.day(day.date)}</td>
                 <td className="py-1 text-right tabular-nums">
-                  {numberFormat.format(day.plays)}
+                  {format.number(day.plays)}
                 </td>
               </tr>
             ))}
@@ -233,26 +249,30 @@ function DailyPlays({ data }: { data: ArtistAnalytics }) {
 }
 
 function TopTracks({ data }: { data: ArtistAnalytics }) {
+  const { t } = useI18n()
+  const format = useFormats()
   return (
     <section
       aria-labelledby="analytics-top-heading"
       className="artist-release-workspace-panel space-y-3"
     >
-      <h2 id="analytics-top-heading">Top tracks</h2>
+      <h2 id="analytics-top-heading">{t('analytics.top')}</h2>
       {data.topTracks.length === 0 ? (
-        <p className="text-sm text-text-secondary">No plays in this period.</p>
+        <p className="text-sm text-text-secondary">
+          {t('analytics.noPlaysPeriod')}
+        </p>
       ) : (
         <table className="w-full text-sm">
           <thead>
             <tr className="text-left text-text-secondary">
               <th className="py-1 font-normal" scope="col">
-                Track
+                {t('music.table.track')}
               </th>
               <th className="py-1 text-right font-normal" scope="col">
-                Plays
+                {t('analytics.plays')}
               </th>
               <th className="py-1 text-right font-normal" scope="col">
-                Listeners
+                {t('analytics.listeners')}
               </th>
             </tr>
           </thead>
@@ -261,10 +281,10 @@ function TopTracks({ data }: { data: ArtistAnalytics }) {
               <tr className="border-t border-border" key={track.trackId}>
                 <td className="max-w-0 truncate py-2 pr-3">{track.title}</td>
                 <td className="py-2 text-right tabular-nums">
-                  {numberFormat.format(track.plays)}
+                  {format.number(track.plays)}
                 </td>
                 <td className="py-2 text-right tabular-nums">
-                  {numberFormat.format(track.listeners)}
+                  {format.number(track.listeners)}
                 </td>
               </tr>
             ))}
@@ -276,12 +296,13 @@ function TopTracks({ data }: { data: ArtistAnalytics }) {
 }
 
 function ExternalSources({ data }: { data: ArtistAnalytics }) {
+  const { t } = useI18n()
   return (
     <section
       aria-labelledby="analytics-external-heading"
       className="artist-release-workspace-panel space-y-3"
     >
-      <h2 id="analytics-external-heading">Other services</h2>
+      <h2 id="analytics-external-heading">{t('analytics.other')}</h2>
       <ul className="grid gap-2 sm:grid-cols-3">
         {data.external.map((item) => (
           <li
@@ -291,14 +312,12 @@ function ExternalSources({ data }: { data: ArtistAnalytics }) {
             <span>{destinationLabels[item.source]}</span>
             <span className="flex items-center gap-1 text-xs text-text-secondary">
               <PlugZap aria-hidden="true" className="size-3.5" />
-              Not connected
+              {t('delivery.availability.notConnected')}
             </span>
           </li>
         ))}
       </ul>
-      <p className="text-xs text-text-secondary">
-        No figures are shown for services that are not connected.
-      </p>
+      <p className="text-xs text-text-secondary">{t('analytics.noFigures')}</p>
     </section>
   )
 }
