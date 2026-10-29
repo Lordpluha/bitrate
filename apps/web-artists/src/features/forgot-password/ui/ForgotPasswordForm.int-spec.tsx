@@ -46,6 +46,22 @@ describe('ForgotPasswordForm', () => {
     })
   })
 
+  it('asks the API to answer in the workspace language', async () => {
+    fetchMock.mockResolvedValue({ ok: true, json: async () => ({}) })
+    document.documentElement.lang = 'uk'
+
+    render(<ForgotPasswordForm />)
+    await userEvent.type(screen.getByLabelText('Email'), 'artist@bitrate.me')
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Send reset link' }),
+    )
+
+    await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1))
+    const [, init] = fetchMock.mock.calls[0] as [string, RequestInit]
+    expect(init.headers).toMatchObject({ 'Accept-Language': 'uk' })
+    document.documentElement.lang = ''
+  })
+
   /**
    * Pins today's behaviour, which is not quite what the submit handler suggests: it calls
    * `.trim()`, but the schema validates the untrimmed value, so a pasted address with a

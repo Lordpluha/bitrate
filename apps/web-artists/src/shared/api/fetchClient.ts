@@ -1,8 +1,10 @@
 'use client'
 
 import type { ApiPaths } from '@bitrate/contracts'
+import { clientLocale } from '@shared/i18n'
 import { ROUTES } from '@shared/routes/routes'
 import createClient, { type Middleware } from 'openapi-fetch'
+import { createLocaleMiddleware } from './localeMiddleware'
 import { redirectsToLoginOnExpiry } from './sessionRedirect'
 
 let refreshPromise: Promise<boolean> | null = null
@@ -85,4 +87,8 @@ export const clientFetchClient = createClient<ApiPaths>({
   credentials: 'include',
 })
 
-clientFetchClient.use(authRefreshMiddleware)
+// The language goes on first, so a request the auth middleware retries carries it too.
+clientFetchClient.use(
+  createLocaleMiddleware(clientLocale),
+  authRefreshMiddleware,
+)
