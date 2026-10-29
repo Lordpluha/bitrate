@@ -109,4 +109,5 @@ export const music = {
   'music.search.sections': 'Sections',
   'music.search.searching': 'Searching…',
   'music.search.empty': 'Nothing matches your search.',
+  'music.search.unavailable': 'Search is unavailable right now.',
 } as const
