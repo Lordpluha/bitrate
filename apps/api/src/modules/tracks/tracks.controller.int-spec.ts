@@ -1,4 +1,3 @@
-import { Readable } from 'node:stream'
 import { afterAll, beforeAll, beforeEach, describe, expect, it, jest } from '@jest/globals'
 import { ArtistAuthGuard } from '@modules/artists-auth/artists-auth.guard'
 import { UserAuthGuard } from '@modules/users-auth/users-auth.guard'
@@ -7,7 +6,6 @@ import { Test, type TestingModule } from '@nestjs/testing'
 import request from 'supertest'
 import { buildTrack } from './__tests__/fixtures/tracks.fixtures'
 import { TrackPlaybackService } from './track-playback.service'
-import { TrackStreamingService } from './track-streaming.service'
 import { TrackUploadService } from './track-upload.service'
 import { TracksController } from './tracks.controller'
 import { TracksService } from './tracks.service'
@@ -27,15 +25,6 @@ const makeUploadMock = () =>
     update: jest.fn(),
   }) as unknown as jest.Mocked<TrackUploadService>
 
-const makeStreamingMock = () =>
-  ({
-    getTrackStream: jest.fn(),
-    getTrackAudioStream: jest.fn(),
-    getTrackStreamUrl: jest.fn(),
-    getHlsMasterPlaylist: jest.fn(),
-    getHlsAsset: jest.fn(),
-  }) as unknown as jest.Mocked<TrackStreamingService>
-
 const makePlaybackMock = () =>
   ({
     getManifest: jest.fn(),
@@ -46,19 +35,16 @@ describe('TracksController (int)', () => {
   let app: INestApplication
   let service: jest.Mocked<TracksService>
   let uploadService: jest.Mocked<TrackUploadService>
-  let streamingService: jest.Mocked<TrackStreamingService>
 
   beforeAll(async () => {
     service = makeServiceMock()
     uploadService = makeUploadMock()
-    streamingService = makeStreamingMock()
 
     const module: TestingModule = await Test.createTestingModule({
       controllers: [TracksController],
       providers: [
         { provide: TracksService, useValue: service },
         { provide: TrackUploadService, useValue: uploadService },
-        { provide: TrackStreamingService, useValue: streamingService },
         { provide: TrackPlaybackService, useValue: makePlaybackMock() },
       ],
     })
@@ -91,7 +77,6 @@ describe('TracksController (int)', () => {
   beforeEach(() => {
     service.findAll.mockReset()
     service.findTrackById.mockReset()
-    streamingService.getTrackStream.mockReset()
     uploadService.create.mockReset()
     uploadService.update.mockReset()
     service.findLikedTracks.mockReset()
@@ -136,130 +121,12 @@ describe('TracksController (int)', () => {
     expect(service.findLikedTracks).toHaveBeenCalledWith('user-1', expect.any(Object))
   })
 
-  it('GET /tracks/stream/:id should pipe audio stream and return 200', async () => {
-    const mockStream = new Readable({
-      read() {
-        this.push(null)
-      },
-    })
-    streamingService.getTrackStream.mockResolvedValue({
-      stream: mockStream,
-      contentType: 'audio/mpeg',
-      contentLength: 0,
-      fileSize: 0,
-      start: 0,
-      end: 0,
-      isPartial: false,
-    } as never)
-
-    const res = await request(app.getHttpServer()).get(
-      '/tracks/stream/f47ac10b-58cc-4372-a567-0e02b2c3d479',
-    )
-
-    expect(res.status).toBe(200)
-    expect(streamingService.getTrackStream).toHaveBeenCalledWith(
-      'f47ac10b-58cc-4372-a567-0e02b2c3d479',
-      undefined,
-      undefined,
-      undefined,
-    )
-    expect(res.headers['content-type']).toContain('audio/mpeg')
-    expect(res.headers['accept-ranges']).toBe('bytes')
-  })
-
-  it('GET /tracks/stream/:id with Range header should return 206', async () => {
-    const mockStream = new Readable({
-      read() {
-        this.push(Buffer.alloc(512))
-        this.push(null)
-      },
-    })
-    streamingService.getTrackStream.mockResolvedValue({
-      stream: mockStream,
-      contentType: 'audio/mpeg',
-      contentLength: 512,
-      fileSize: 2048,
-      start: 0,
-      end: 511,
-      isPartial: true,
-    } as never)
-
-    const res = await request(app.getHttpServer())
-      .get('/tracks/stream/f47ac10b-58cc-4372-a567-0e02b2c3d479')
-      .set('Range', 'bytes=0-511')
-
-    expect(res.status).toBe(206)
-    expect(streamingService.getTrackStream).toHaveBeenCalledWith(
-      'f47ac10b-58cc-4372-a567-0e02b2c3d479',
-      'bytes=0-511',
-      undefined,
-      undefined,
-    )
-    expect(res.headers['content-range']).toBe('bytes 0-511/2048')
-  })
-
-  it('GET /tracks/stream/:id with a supported format should pass it through', async () => {
-    const mockStream = new Readable({
-      read() {
-        this.push(null)
-      },
-    })
-    streamingService.getTrackStream.mockResolvedValue({
-      stream: mockStream,
-      contentType: 'audio/mpeg',
-      contentLength: 0,
-      fileSize: 0,
-      start: 0,
-      end: 0,
-      isPartial: false,
-    } as never)
-
-    const res = await request(app.getHttpServer())
-      .get('/tracks/stream/f47ac10b-58cc-4372-a567-0e02b2c3d479')
-      .query({ format: 'mp3' })
-
-    expect(res.status).toBe(200)
-    expect(streamingService.getTrackStream).toHaveBeenCalledWith(
-      'f47ac10b-58cc-4372-a567-0e02b2c3d479',
-      undefined,
-      undefined,
-      'mp3',
-    )
-  })
-
-  it('GET /tracks/stream/:id with an unsupported format should return 400', async () => {
-    const res = await request(app.getHttpServer())
-      .get('/tracks/stream/f47ac10b-58cc-4372-a567-0e02b2c3d479')
-      .query({ format: 'exe' })
-
-    expect(res.status).toBe(400)
-    expect(streamingService.getTrackStream).not.toHaveBeenCalled()
-  })
-
-  it('GET /tracks/stream/:id should omit Content-Length when the length is unknown', async () => {
-    const mockStream = new Readable({
-      read() {
-        this.push(Buffer.from('audio-bytes'))
-        this.push(null)
-      },
-    })
-    streamingService.getTrackStream.mockResolvedValue({
-      stream: mockStream,
-      contentType: 'audio/mpeg',
-      contentLength: undefined,
-      fileSize: undefined,
-      start: 0,
-      end: undefined,
-      isPartial: false,
-    } as never)
-
-    const res = await request(app.getHttpServer()).get(
-      '/tracks/stream/f47ac10b-58cc-4372-a567-0e02b2c3d479',
-    )
-
-    expect(res.status).toBe(200)
-    expect(res.headers['content-length']).toBeUndefined()
-    expect(res.headers['transfer-encoding']).toBe('chunked')
+  it.each([
+    '/tracks/stream/f47ac10b-58cc-4372-a567-0e02b2c3d479',
+    '/tracks/stream/f47ac10b-58cc-4372-a567-0e02b2c3d479/hls/master.m3u8',
+    '/tracks/stream/f47ac10b-58cc-4372-a567-0e02b2c3d479/hls/192/segment_00000.m4s',
+  ])('GET %s no longer exists: CMAF is the only audio route (ADR-0065)', async (path) => {
+    await request(app.getHttpServer()).get(path).expect(404)
   })
 
   it('PUT /tracks/:id should call uploadService.update and return 200', async () => {

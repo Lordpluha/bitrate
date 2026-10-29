@@ -27,7 +27,7 @@ export type ProcessingErrorClassification = {
 const INVALID_INPUT_PATTERN = /invalid audio bitrate/i
 
 /** A message pattern raised when an encoder produced no usable output. */
-const EMPTY_OUTPUT_PATTERN = /converted audio file is empty|hls playlist has no/i
+const EMPTY_OUTPUT_PATTERN = /converted audio file is empty/i
 
 /** Error constructor names produced by the S3-compatible storage SDK. */
 const STORAGE_ERROR_NAME_PATTERN = /^S3/

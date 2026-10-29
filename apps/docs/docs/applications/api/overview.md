@@ -12,7 +12,6 @@ NestJS backend — основа всей платформы.
 - **PostgreSQL 16** через Prisma ORM
 - **Redis** — сессии, BullMQ очереди
 - **BullMQ** — фоновая обработка аудио
-- **Socket.io** — real-time события
 - **Swagger** — авто-документация на `/swagger`
 - **Sentry** — мониторинг ошибок
 
@@ -114,7 +113,7 @@ users/avatars/     # Аватары пользователей
 | artists-auth | `/api/v1/artists/auth` | То же для артистов |
 | users | `/api/v1/users` | Профиль пользователя |
 | artists | `/api/v1/artists` | Страницы артистов, подписки |
-| tracks | `/api/v1/tracks` | Загрузка, CMAF/Range-стриминг (HLS — запасной путь), like |
+| tracks | `/api/v1/tracks` | Загрузка, CMAF/Range-стриминг (единственный формат, ADR-0065), like |
 | albums | `/api/v1/albums` | Альбомы, like |
 | playlists | `/api/v1/playlists` | Плейлисты, треки в плейлисте |
 | search | `/api/v1/search` | Full-text поиск |

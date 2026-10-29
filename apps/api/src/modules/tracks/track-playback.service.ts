@@ -39,7 +39,7 @@ export class TrackPlaybackService {
    */
   async getManifest(trackId: string): Promise<TrackManifestPayload> {
     const track = await this.prisma.track.findFirst({
-      where: { id: trackId, ...PUBLIC_TRACK_WHERE, playbackVersion: 2 },
+      where: { id: trackId, ...PUBLIC_TRACK_WHERE },
       select: {
         fragmentTimescale: true,
         durationTicks: true,
@@ -125,7 +125,7 @@ export class TrackPlaybackService {
         trackId,
         format: CMAF_FORMAT,
         bitrate,
-        track: { ...PUBLIC_TRACK_WHERE, playbackVersion: 2 },
+        track: PUBLIC_TRACK_WHERE,
       },
       select: { url: true, size: true },
     })

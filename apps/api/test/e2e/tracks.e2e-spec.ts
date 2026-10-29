@@ -47,9 +47,9 @@ describe('TracksController (e2e)', () => {
     await request(app.getHttpServer()).post('/tracks').expect(401)
   })
 
-  it('GET /tracks/stream/:id should return 401 without auth', async () => {
+  it('GET /tracks/:id/cmaf/:bitrate should return 401 without auth', async () => {
     await request(app.getHttpServer())
-      .get('/tracks/stream/f47ac10b-58cc-4372-a567-0e02b2c3d479')
+      .get('/tracks/f47ac10b-58cc-4372-a567-0e02b2c3d479/cmaf/192')
       .expect(401)
   })
 

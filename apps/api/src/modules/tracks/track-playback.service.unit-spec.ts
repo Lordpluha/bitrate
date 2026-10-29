@@ -124,10 +124,11 @@ describe('TrackPlaybackService', () => {
             deletedAt: null,
             processingStatus: 'READY',
             publishedAt: { not: null },
-            playbackVersion: 2,
           }),
         }),
       )
+      const [query] = prisma.track.findFirst.mock.calls[0] as [{ where: object }]
+      expect(query.where).not.toHaveProperty('playbackVersion')
     })
   })
 
@@ -200,7 +201,6 @@ describe('TrackPlaybackService', () => {
               deletedAt: null,
               processingStatus: 'READY',
               publishedAt: { not: null },
-              playbackVersion: 2,
             },
           }),
         }),

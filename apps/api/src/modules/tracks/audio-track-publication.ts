@@ -4,48 +4,15 @@ import {
   CMAF_CODEC,
   CMAF_FORMAT,
   type PreparedCmafPackage,
-  type PreparedVariant,
   StaleAudioJobError,
 } from './audio-artifact.types'
-
-/** Playback version stamped on tracks served by the CMAF pipeline. */
-const CMAF_PLAYBACK_VERSION = 2
 
 /** Everything needed to turn a finished conversion into a playable track. */
 export type PublishTrackFilesInput = {
   prisma: PrismaService
   trackId: string
   sourceFileName: string
-  format: string
-  variants: PreparedVariant[]
   cmafPackage: PreparedCmafPackage
-}
-
-/** Replaces the progressive rows of one track with the freshly encoded variants. */
-async function replaceProgressiveFiles(
-  tx: Prisma.TransactionClient,
-  trackId: string,
-  format: string,
-  variants: PreparedVariant[],
-) {
-  await tx.trackFile.deleteMany({
-    where: { trackId, format, bitrate: { notIn: variants.map((variant) => variant.bitrate) } },
-  })
-
-  for (const variant of variants) {
-    await tx.trackFile.upsert({
-      where: { trackId_format_bitrate: { trackId, format, bitrate: variant.bitrate } },
-      update: { codec: variant.codec, url: variant.audioKey, size: variant.size },
-      create: {
-        trackId,
-        format,
-        bitrate: variant.bitrate,
-        codec: variant.codec,
-        url: variant.audioKey,
-        size: variant.size,
-      },
-    })
-  }
 }
 
 /** Replaces the CMAF rows of one track, including each rendition's byte index. */
@@ -94,12 +61,9 @@ export async function publishTrackFiles({
   prisma,
   trackId,
   sourceFileName,
-  format,
-  variants,
   cmafPackage,
 }: PublishTrackFilesInput): Promise<void> {
   await prisma.$transaction(async (tx) => {
-    await replaceProgressiveFiles(tx, trackId, format, variants)
     await replaceCmafFiles(tx, trackId, cmafPackage)
 
     const published = await tx.track.updateMany({
@@ -108,7 +72,6 @@ export async function publishTrackFiles({
         processingStatus: 'READY',
         processingError: null,
         processingFinishedAt: new Date(),
-        playbackVersion: CMAF_PLAYBACK_VERSION,
         fragmentTimescale: cmafPackage.timescale,
         durationTicks: cmafPackage.durationTicks,
       },

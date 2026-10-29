@@ -4,22 +4,14 @@ import { StorageModule } from '@infra/storage/storage.module'
 import { TokensModule } from '@modules/tokens/tokens.module'
 import { UsersAuthModule } from '@modules/users-auth/users-auth.module'
 import { Module } from '@nestjs/common'
-import { AudioGateway } from './audio.gateway'
 import { TrackPlaybackService } from './track-playback.service'
-import { TrackStreamingService } from './track-streaming.service'
 import { TrackUploadService } from './track-upload.service'
 import { TracksController } from './tracks.controller'
 import { TracksService } from './tracks.service'
 import { TranscodeModule } from './transcode.module'
 
 @Module({
-  providers: [
-    TracksService,
-    TrackUploadService,
-    TrackStreamingService,
-    TrackPlaybackService,
-    AudioGateway,
-  ],
+  providers: [TracksService, TrackUploadService, TrackPlaybackService],
   controllers: [TracksController],
   imports: [
     PrismaModule,
@@ -29,12 +21,6 @@ import { TranscodeModule } from './transcode.module'
     StorageModule,
     TranscodeModule,
   ],
-  exports: [
-    TracksService,
-    TrackUploadService,
-    TrackStreamingService,
-    TrackPlaybackService,
-    AudioGateway,
-  ],
+  exports: [TracksService, TrackUploadService, TrackPlaybackService],
 })
 export class TracksModule {}
