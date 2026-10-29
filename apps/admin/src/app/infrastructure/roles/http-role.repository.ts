@@ -69,8 +69,6 @@ export class HttpRoleRepository extends RoleRepository {
   override async listPermissionCatalogue(): Promise<PermissionCatalogueEntry[]> {
     const response = await firstValueFrom(this.http.get<unknown>(`${this.base}/permissions`))
 
-    return rolePermissionListDto
-      .parse(response)
-      .flatMap((dto) => toPermissionCatalogueEntry(dto) ?? [])
+    return rolePermissionListDto.parse(response).map(toPermissionCatalogueEntry)
   }
 }

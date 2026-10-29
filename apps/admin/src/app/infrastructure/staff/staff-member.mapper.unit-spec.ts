@@ -59,23 +59,6 @@ describe('toStaffMember', () => {
     expect(toStaffMember(dto).permissions).toEqual([])
   })
 
-  it('drops a permission the API still stores but the panel retired (ADR-0066)', () => {
-    const dto = staffMemberDto.parse({
-      id: '3f2504e0-4f89-41d3-9a0c-0305e82c3301',
-      email: 'ops@bitrate.me',
-      username: 'ops',
-      role: { ...ROLE, permissions: ['reports:read', 'podcasts:read'] },
-      permissions: ['podcasts:read', 'reports:read'],
-      deletedAt: null,
-      createdAt: '2026-09-01T09:00:00.000Z',
-    })
-
-    const member = toStaffMember(dto)
-
-    expect(member.role.permissions).toEqual(['reports:read'])
-    expect(member.permissions).toEqual(['reports:read'])
-  })
-
   it('parses a page envelope', () => {
     const page = staffMemberPageDto.parse({
       data: [

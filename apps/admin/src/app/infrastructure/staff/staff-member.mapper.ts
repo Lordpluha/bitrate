@@ -7,11 +7,7 @@ import type {
   WireStaffSortField,
 } from './staff-member.dto'
 
-/**
- * See `staff.mapper.ts` — a permission the API grows later is a compile error at this record.
- * `null` marks one the API still stores but the panel retired (ADR-0066): it is dropped on
- * the way in, and its key goes when the contract loses it.
- */
+/** See `staff.mapper.ts` — a permission the API grows later is a compile error at this record. */
 const TO_DOMAIN_PERMISSION = {
   'reports:read': 'reports:read',
   'reports:advance': 'reports:advance',
@@ -48,16 +44,9 @@ const TO_DOMAIN_PERMISSION = {
   'playlists:hide': 'playlists:hide',
   'playlists:delete': 'playlists:delete',
   'playlists:restore': 'playlists:restore',
-  'podcasts:read': null,
-  'podcasts:delete': null,
-  'podcasts:restore': null,
   'releases:read': 'releases:read',
   'releases:review': 'releases:review',
-} as const satisfies Record<StaffMemberWirePermission, Permission | null>
-
-function toDomainPermissions(permissions: readonly StaffMemberWirePermission[]): Permission[] {
-  return permissions.flatMap((permission) => TO_DOMAIN_PERMISSION[permission] ?? [])
-}
+} as const satisfies Record<StaffMemberWirePermission, Permission>
 
 /** See `artist.mapper.ts`'s `TO_WIRE_SORT`. */
 const TO_WIRE_SORT = {
@@ -74,7 +63,7 @@ function toStaffMemberRole(dto: StaffMemberRoleDto): StaffMemberRole {
   return {
     id: dto.id,
     name: dto.name,
-    permissions: toDomainPermissions(dto.permissions),
+    permissions: dto.permissions.map((permission) => TO_DOMAIN_PERMISSION[permission]),
   }
 }
 
@@ -84,7 +73,7 @@ export function toStaffMember(dto: StaffMemberDto): StaffMember {
     email: dto.email,
     username: dto.username,
     role: toStaffMemberRole(dto.role),
-    permissions: toDomainPermissions(dto.permissions),
+    permissions: dto.permissions.map((permission) => TO_DOMAIN_PERMISSION[permission]),
     deactivatedAt: dto.deletedAt ? new Date(dto.deletedAt) : null,
     createdAt: new Date(dto.createdAt),
   }
