@@ -1,5 +1,20 @@
 # @bitrate/contracts
 
+## 1.5.0
+
+### Minor Changes
+
+- f2ff45b: Artists can now publish an approved release on Bitrate from the Launch stage, right away or as a premiere at the planned time, take it offline and publish it again. A release goes live all at once: its tracks stay hidden from listeners until every recording has been converted, then the album and tracks appear together and followers get one notification. The workspace links to the album in the player once the release is live. Admins can retry a failed publication and take a live release down; a release taken down by Bitrate cannot be republished by the artist. Artists can also delete a release draft. Track and album responses now include `publishedAt`.
+- f2ff45b: Accuracy is now confirmed once, by submitting the release for review, instead of in the rights form. A new release draft now credits its artist as performer, composer and lyricist with 100% of the master and publishing splits, so a solo release needs no credit or split work before review. A draft without credits, such as one created earlier, offers "I made it myself" to add the same credit in one step. Contributors can now be removed from a draft; their shares go with them. The release timing is now chosen in the draft — right away, or a premiere on a date and time in UTC — and can still be changed after Bitrate approves the release; Deliver is marked optional once approved. Select menus in the workspace keep readable options in every theme and their arrow clear of the edge.
+- bd6d23a: Gave each account kind its own session cookies: `user_access_token`/`user_refresh_token` for
+  the player, `artist_*` for the artists portal and `staff_*` for the admin panel. All of them
+  live on the shared cookie domain, so the single `access_token`/`refresh_token` pair let a
+  sign-in to one app overwrite the session of another — signing in to the admin logged the
+  player out, and the other way round. The names are now fixed in code (`SESSION_COOKIE_NAMES`,
+  mirrored in `@bitrate/contracts`) and `ACCESS_TOKEN_NAME`/`REFRESH_TOKEN_NAME` are gone.
+  Existing sessions sign in once more; the old shared cookies are cleared on the next sign-in
+  or sign-out.
+
 ## 1.4.0
 
 ### Minor Changes
