@@ -1,6 +1,7 @@
 import { QueryClientProvider } from '@shared/api/reactQueryClient'
 import { SITE_DESCRIPTION, SITE_NAME } from '@shared/constants'
 import { AuthProvider } from '@shared/hooks'
+import { getRequestLocale, I18nProvider } from '@shared/i18n'
 import { WorkspaceThemeProvider } from '@shared/theme/WorkspaceThemeProvider'
 import { WorkspaceThemeScript } from '@shared/theme/WorkspaceThemeScript'
 import {
@@ -14,6 +15,10 @@ import type { ReactNode } from 'react'
 import appCss from '../global.css?url'
 
 export const Route = createRootRoute({
+  // A loader, not beforeLoad: its result is dehydrated, so hydration reuses the server's locale.
+  loader: () => ({ locale: getRequestLocale() }),
+  // The provider owns the locale after the first render; the picker updates it in place.
+  shouldReload: false,
   head: () => ({
     meta: [
       { charSet: 'utf-8' },
@@ -62,11 +67,12 @@ function RootComponent() {
 }
 
 function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
+  const { locale } = Route.useLoaderData()
   return (
     <html
       className="dark"
       data-scroll-behavior="smooth"
-      lang="en"
+      lang={locale}
       suppressHydrationWarning
     >
       <head>
@@ -74,11 +80,13 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
         <HeadContent />
       </head>
       <body className="antialiased">
-        <QueryClientProvider>
-          <AuthProvider>
-            <WorkspaceThemeProvider>{children}</WorkspaceThemeProvider>
-          </AuthProvider>
-        </QueryClientProvider>
+        <I18nProvider initialLocale={locale}>
+          <QueryClientProvider>
+            <AuthProvider>
+              <WorkspaceThemeProvider>{children}</WorkspaceThemeProvider>
+            </AuthProvider>
+          </QueryClientProvider>
+        </I18nProvider>
         <Scripts />
       </body>
     </html>
