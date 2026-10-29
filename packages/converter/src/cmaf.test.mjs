@@ -110,7 +110,7 @@ describe('convertAudioToCmaf', () => {
     expect(args.filter((arg) => arg === '2')).toHaveLength(2)
   })
 
-  it('aligns fragments to whole AAC frames', async () => {
+  it('cuts ~10-second fragments on a whole AAC frame by default (ADR-0065)', async () => {
     await convertAudioToCmaf({
       input: '/music/track.mp3',
       outputDir: '/music/track.cmaf',
@@ -120,8 +120,8 @@ describe('convertAudioToCmaf', () => {
     const [, args] = execaMock.mock.calls[0]
     const fragDuration = args[args.indexOf('-frag_duration') + 1]
 
-    /** 192 frames x 1024 samples / 48000 Hz = 4.096 s exactly. */
-    expect(fragDuration).toBe('4096000')
+    /** 469 frames x 1024 samples / 48000 Hz = 10.005333… s, rounded down to whole microseconds. */
+    expect(fragDuration).toBe('10005333')
   })
 
   it('honours a custom fragment length in frames', async () => {

@@ -12,11 +12,12 @@ const SAMPLE_RATE = 48000
 const CHANNELS = 2
 
 /**
- * Fragment length in whole AAC frames. 192 frames = 4.096 s at 48 kHz, which
- * keeps the boundary on an exact frame edge — a fractional target lets FFmpeg
- * round differently per rendition and the fragments stop lining up.
+ * Fragment length in whole AAC frames: 469 frames = 10.005 s at 48 kHz, the closest whole-frame
+ * length to the 10 s ADR-0065 asks for (exactly 10 s is 468.75 frames). Keeping the boundary on a
+ * frame edge matters — a fractional target lets FFmpeg round differently per rendition and the
+ * fragments stop lining up.
  */
-const DEFAULT_FRAGMENT_FRAMES = 192
+const DEFAULT_FRAGMENT_FRAMES = 469
 
 /**
  * @param {number} frames
@@ -33,7 +34,7 @@ const framesToMicroseconds = (frames) =>
  * @param {string} options.input
  * @param {string} options.outputDir
  * @param {number[]} options.bitrates - kbps, e.g. [128, 192, 320]
- * @param {number} [options.fragmentFrames=192]
+ * @param {number} [options.fragmentFrames=469]
  * @param {number} [options.timeoutMs]
  * @param {(message: string) => void} [options.onLog] - Optional log sink (default: no-op)
  * @returns {Promise<{outputDir: string, timescale: number, durationTicks: number, renditions: {bitrate: number, path: string, size: number, initRange: [number, number], indexRange: [number, number], fragments: {startTicks: number, durationTicks: number, offset: number, length: number}[]}[]}>}
