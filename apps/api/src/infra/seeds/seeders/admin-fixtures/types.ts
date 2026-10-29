@@ -16,8 +16,6 @@ export type AdminFixturesPrismaClient = Pick<
   | 'album'
   | 'playlist'
   | 'genre'
-  | 'podcast'
-  | 'episode'
   | 'moderationReport'
   | 'auditLog'
 >
@@ -31,7 +29,6 @@ export type AdminFixturesSummary = {
   tracks: number
   albums: number
   playlists: number
-  podcasts: number
   genres: number
   reports: number
   auditLogs: number
@@ -46,7 +43,6 @@ export const emptySummary = (): AdminFixturesSummary => ({
   tracks: 0,
   albums: 0,
   playlists: 0,
-  podcasts: 0,
   genres: 0,
   reports: 0,
   auditLogs: 0,

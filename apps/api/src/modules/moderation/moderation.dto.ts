@@ -1,15 +1,7 @@
 import { createZodDto } from 'nestjs-zod'
 import { z } from 'zod'
 
-export const MODERATION_ENTITY_TYPES = [
-  'track',
-  'album',
-  'playlist',
-  'artist',
-  'podcast',
-  'episode',
-  'user',
-] as const
+export const MODERATION_ENTITY_TYPES = ['track', 'album', 'playlist', 'artist', 'user'] as const
 
 export const CreateReportSchema = z.object({
   entityType: z.enum(MODERATION_ENTITY_TYPES),
