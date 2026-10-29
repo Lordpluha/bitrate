@@ -1,5 +1,19 @@
 # @bitrate/player
 
+## 1.2.0
+
+### Minor Changes
+
+- f5c0dec: Added layout variants and composable parts. `<bitrate-player chrome="…">` now renders `bar` (the default, unchanged), `mini`, `expanded`, `floating` or `none`, and each layout shows only the controls it allows and the host has a callback for. Hosts can also build their own layout from new part elements (`bitrate-player-cover`, `-meta`, `-transport`, `-seek`, `-volume`, `-actions`, `-quality`, `-error`) that read the nearest player, with `controls` attributes to narrow their buttons. Sizes and colours are tunable through `--bitrate-player-*` custom properties and `::part()`.
+- 7751fcc: Moved the CMAF/MSE playback path with adaptive bitrate from web-player into `@bitrate/player/engine`. The host now supplies the storage for remembered bandwidth and the debug default through `configureCmafEngine`; web-player plays exactly as before, now through the shared engine.
+- c935ab5: The player now shows the playing track on the lock screen and in the OS media controls and answers the media keys (`media-session`), starts the next track just before the current one ends instead of after a gap, and lets listeners pick the stream quality or leave it on Auto, a pick that holds for the following tracks. In web-player the quality picker sits in the now-playing view, Shift+←/→ skips 10 seconds, L likes the track, Q opens the queue, + and − change the volume, and screen readers hear which track is now playing.
+- 2da2be0: `<bitrate-player>` gained a streaming mode: with `streaming` set it plays `source` over the CMAF path with adaptive bitrate, falls back to the host's legacy adapter, prefetches `next` into a second media element and switches to it instantly, and reports `statechange`, `ended` (with the play key), `play`, `pause` and `error`. Hosts can now `seek()`, set `volume` and `muted`, read `state`, and point a second element at the first with `mirror` to render and control it. web-player now plays through this element instead of its own audio slots; playback behaves as before, and a play requested before the track had loaded no longer gets lost.
+- 33e5f72: The player bar, the mobile island, the now-playing view and the floating window now all mirror the one `<bitrate-player>` that plays, so play, shuffle, repeat and seeking come from the same element everywhere. The bar, island and now-playing view keep their design, and Previous/Next keep their track previews. The floating window is now the element's `floating` layout, moved into the picture-in-picture window. `@bitrate/player` gained translatable `labels`, a `stacked` seek, theme variables for accent, Play button, rail, thumb and time, and optional `duration`/`startTime` on a source that are shown, and the start resumed, before the media loads. A host-composed element also keeps its content width in a flex row.
+
+### Patch Changes
+
+- 111ba2e: The floating layout now fills a picture-in-picture window and follows it when the window is resized, instead of keeping its minimum height. In streaming mode a track that plays to its end is reported only as `ended`, not also as a pause, so a host that mirrors play state no longer pauses the next track gapless already started, which had caused a gap and a flickering Play button at every track change.
+
 ## 1.1.1
 
 ### Patch Changes
