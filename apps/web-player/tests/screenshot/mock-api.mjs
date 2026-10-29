@@ -193,33 +193,6 @@ const ALBUMS = [
   album('al2', 'Coastlines', TRACKS.slice(3, 6), { type: 'EP' }),
 ]
 
-const podcast = {
-  _count: { episodes: 3 },
-  cover: null,
-  createdAt: ago(60 * 24 * 300),
-  description: 'Practical recording, mixing and songwriting conversations.',
-  explicit: false,
-  id: 'pod1',
-  language: 'en',
-  publisher: 'Open Sessions',
-  title: 'Studio Sessions',
-  updatedAt: ago(60 * 24 * 5),
-}
-const episode = (index) => ({
-  audioUrl: `http://localhost:${PORT}/static/episodes/e${index}.wav`,
-  cover: null,
-  createdAt: ago(60 * 24 * (7 * index)),
-  description: 'How a mix comes together, from rough demo to master.',
-  duration: 2400 + index * 300,
-  explicit: false,
-  id: `e${index}`,
-  podcastId: 'pod1',
-  releaseDate: ago(60 * 24 * (7 * index)),
-  title: ['Mixing in mono', 'The first take', 'Writing on the road'][index - 1],
-  updatedAt: ago(60 * 24 * (7 * index)),
-})
-const EPISODES = [1, 2, 3].map(episode)
-
 const notification = (id, type, title, body, minutes, read) => ({
   body,
   createdAt: ago(minutes),
@@ -482,7 +455,6 @@ const ROUTES = [
     }),
   ],
   ['PUT', /^\/api\/v1\/me\/player(\/queue)?$/, () => ({})],
-  ['GET', /^\/api\/v1\/me\/episodes$/, () => page([])],
   ['GET', /^\/api\/v1\/me\/top\/tracks$/, () => page(TRACKS, 342)],
   [
     'GET',
@@ -627,12 +599,6 @@ const ROUTES = [
         50,
       ),
   ],
-  [
-    'GET',
-    /^\/api\/v1\/podcasts\/([^/]+)$/,
-    () => ({ ...podcast, episodes: page(EPISODES) }),
-  ],
-  ['GET', /^\/api\/v1\/podcasts$/, () => page([podcast])],
 ]
 
 /** CORS for the browser's credentialed requests: `*` is not allowed there, so echo back. */
