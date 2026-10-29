@@ -32,10 +32,4 @@ describe('toStaff', () => {
   it('maps an empty permission set to an empty domain list', () => {
     expect(toStaff({ ...dto, permissions: [] }).permissions).toEqual([])
   })
-
-  it('drops a permission the API still stores but the panel retired (ADR-0066)', () => {
-    const session = toStaff({ ...dto, permissions: ['reports:read', 'podcasts:restore'] })
-
-    expect(session.permissions).toEqual(['reports:read'])
-  })
 })

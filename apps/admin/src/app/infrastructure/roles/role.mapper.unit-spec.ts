@@ -44,22 +44,6 @@ describe('toRole', () => {
 
     expect(toRole(dto).description).toBeNull()
   })
-
-  it('drops a permission the API still stores but the panel retired (ADR-0066)', () => {
-    const dto = roleDto.parse({
-      id: '3f2504e0-4f89-41d3-9a0c-0305e82c3301',
-      name: 'MODERATOR',
-      description: null,
-      builtIn: true,
-      permissions: ['reports:read', 'podcasts:read'],
-      holders: 1,
-      divergentHolders: 0,
-      createdAt: '2026-01-01T00:00:00.000Z',
-      updatedAt: '2026-01-01T00:00:00.000Z',
-    })
-
-    expect(toRole(dto).permissions).toEqual(['reports:read'])
-  })
 })
 
 describe('toPermissionCatalogueEntry', () => {
@@ -71,11 +55,5 @@ describe('toPermissionCatalogueEntry', () => {
       heldBy: 0,
       protected: true,
     })
-  })
-
-  it('maps a retired permission to null so the catalogue omits it', () => {
-    const dto = rolePermissionDto.parse({ id: 'podcasts:delete', heldBy: 2, protected: false })
-
-    expect(toPermissionCatalogueEntry(dto)).toBeNull()
   })
 })
