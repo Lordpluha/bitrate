@@ -8,6 +8,8 @@ export {
   isLocale,
   LOCALE_COOKIE,
   localeLabels,
+  readLocaleCookie,
+  supportedLocales,
 } from './model/locale'
 export { I18nProvider, useI18n } from './ui/I18nProvider'
 export { Interpolate } from './ui/Interpolate'
