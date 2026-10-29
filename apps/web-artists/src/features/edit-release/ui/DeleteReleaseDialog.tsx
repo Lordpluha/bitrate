@@ -1,6 +1,6 @@
 import { Button } from '@bitrate/ui-react'
 import { useDeleteRelease } from '@entities/release'
-import { useI18n } from '@shared/i18n'
+import { Interpolate, useI18n } from '@shared/i18n'
 import { WorkspaceModal } from '@shared/ui/WorkspaceModal/WorkspaceModal'
 
 interface DeleteReleaseDialogProps {
@@ -16,7 +16,7 @@ export function DeleteReleaseDialog({
   onClose,
   onDeleted,
 }: DeleteReleaseDialogProps) {
-  const { tMessage } = useI18n()
+  const { t, tMessage } = useI18n()
   const remove = useDeleteRelease(artistId)
   const confirm = async () => {
     try {
@@ -34,12 +34,14 @@ export function DeleteReleaseDialog({
       canClose={!remove.isPending}
       className="artist-release-credit-modal"
       onClose={onClose}
-      title="Delete draft"
+      title={t('music.item.deleteDraft')}
     >
       <div aria-busy={remove.isPending} className="space-y-6">
         <p>
-          Delete <strong>{release.title}</strong> and its recordings? This
-          cannot be undone.
+          <Interpolate
+            message={t('editRelease.deleteConfirm')}
+            values={{ title: <strong>{release.title}</strong> }}
+          />
         </p>
         {remove.error && (
           <p className="text-sm text-destructive" role="alert">
@@ -54,7 +56,7 @@ export function DeleteReleaseDialog({
             type="button"
             variant="outline"
           >
-            Keep draft
+            {t('editRelease.keepDraft')}
           </Button>
           <Button
             disabled={remove.isPending}
@@ -64,7 +66,9 @@ export function DeleteReleaseDialog({
             type="button"
             variant="destructive"
           >
-            {remove.isPending ? 'Deleting…' : 'Delete draft'}
+            {remove.isPending
+              ? t('editRelease.deleting')
+              : t('music.item.deleteDraft')}
           </Button>
         </div>
       </div>

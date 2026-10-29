@@ -1,11 +1,11 @@
+import { messageKey, type TranslationKey } from '@shared/i18n'
 import {
   type ReleaseSummary,
   releaseSummarySchema,
 } from '../model/release.schema'
 import { identifierConflict } from './releases'
 
-const STALE =
-  'This release changed or is no longer a draft. Your entries are kept here; close and reopen the form to review the latest version.'
+const STALE = messageKey('release.error.stale')
 
 export interface WriteResult {
   response: Response
@@ -13,13 +13,14 @@ export interface WriteResult {
   error?: unknown
 }
 
+/** Catalog keys the thrown errors carry; screens render them with `tMessage`. */
 export interface WriteMessages {
-  invalid: string
-  unconfirmed: string
-  conflict?: string
+  invalid: TranslationKey
+  unconfirmed: TranslationKey
+  conflict?: TranslationKey
   /** Statuses this write explains itself, checked first; a function reads the error body. */
   statusMessages?: Partial<
-    Record<number, string | ((error: unknown) => string)>
+    Record<number, TranslationKey | ((error: unknown) => TranslationKey)>
   >
 }
 
@@ -43,7 +44,7 @@ export async function guardedWrite<T>(
     throw new Error(
       identifierConflict(result.error) ?? messages.conflict ?? STALE,
     )
-  if (status === 404) throw new Error('This release is no longer available.')
+  if (status === 404) throw new Error(messageKey('release.error.gone'))
   if (status === 400) throw new Error(messages.invalid)
   const confirmed = result.response.ok ? confirm(result.data) : undefined
   if (confirmed === undefined) throw new Error(messages.unconfirmed)

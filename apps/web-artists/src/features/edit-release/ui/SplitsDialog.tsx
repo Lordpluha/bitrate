@@ -8,7 +8,7 @@ import {
   rightTypes,
   useSaveSplits,
 } from '@entities/release'
-import { useI18n } from '@shared/i18n'
+import { Interpolate, useI18n } from '@shared/i18n'
 import { WorkspaceModal } from '@shared/ui/WorkspaceModal/WorkspaceModal'
 import { useId, useState } from 'react'
 import { parseShares } from '../model/rights.schema'
@@ -64,11 +64,12 @@ export function SplitsDialog({
       (sum, share) => sum + share.shareBasisPoints,
       0,
     )
+    const right = t(rightTypeLabels[rightType])
     const problem =
       shares === null
-        ? `${t(rightTypeLabels[rightType])}: use a share between 0.01% and 100% with up to two decimals.`
+        ? t('editRelease.shareFormat', { right })
         : total !== undefined && total > FULL_SHARE_BASIS_POINTS
-          ? `${t(rightTypeLabels[rightType])} shares cannot exceed 100%.`
+          ? t('editRelease.shareOverflow', { right })
           : null
     return { rightType, shares, total, problem }
   })
@@ -103,7 +104,7 @@ export function SplitsDialog({
       canClose={!busy}
       className="artist-release-credit-modal"
       onClose={onClose}
-      title="Splits"
+      title={t('editRelease.splitsTitle')}
     >
       <form
         aria-busy={busy}
@@ -115,21 +116,24 @@ export function SplitsDialog({
         }}
       >
         <p className="text-sm text-text-secondary">
-          <strong>Master</strong> is the money from the recording itself;{' '}
-          <strong>publishing</strong> is the money for the music and lyrics.
-          Each column must reach exactly 100% before review; a draft can stay
-          below.
+          <Interpolate
+            message={t('editRelease.splitsIntro')}
+            values={{
+              master: <strong>{t('editRelease.masterTerm')}</strong>,
+              publishing: <strong>{t('editRelease.publishingTerm')}</strong>,
+            }}
+          />
         </p>
         {release.participants.length === 0 ? (
-          <p role="status">Add contributors before assigning splits.</p>
+          <p role="status">{t('editRelease.noContributors')}</p>
         ) : (
           <fieldset className="space-y-3" disabled={busy}>
-            <legend className="sr-only">Shares in percent</legend>
+            <legend className="sr-only">{t('editRelease.sharesLegend')}</legend>
             <div
               aria-hidden="true"
               className="grid grid-cols-[minmax(0,1fr)_6.5rem_6.5rem] gap-3 text-xs text-text-secondary"
             >
-              <span>Contributor</span>
+              <span>{t('editRelease.contributor')}</span>
               {rightTypes.map((rightType) => (
                 <span className="text-right" key={rightType}>
                   {t(rightTypeLabels[rightType])}
@@ -147,7 +151,10 @@ export function SplitsDialog({
                 {rightTypes.map((rightType) => (
                   <div className="flex items-center gap-1" key={rightType}>
                     <Input
-                      aria-label={`${participant.displayName} ${t(rightTypeLabels[rightType]).toLowerCase()} share`}
+                      aria-label={t('editRelease.shareLabel', {
+                        name: participant.displayName,
+                        right: t(rightTypeLabels[rightType]).toLowerCase(),
+                      })}
                       className="w-full text-right"
                       data-initial-focus={
                         index === 0 && rightType === 'RECORDING'
@@ -179,9 +186,11 @@ export function SplitsDialog({
         <ul aria-live="polite" className="space-y-1 text-sm font-medium">
           {columns.map(({ rightType, total }) => (
             <li key={rightType}>
-              {t(rightTypeLabels[rightType])} total{' '}
-              {total === undefined ? '—' : `${basisPointsToPercent(total)}%`} of
-              100%
+              {t('editRelease.total', {
+                right: t(rightTypeLabels[rightType]),
+                total:
+                  total === undefined ? '—' : `${basisPointsToPercent(total)}%`,
+              })}
             </li>
           ))}
         </ul>
@@ -202,7 +211,7 @@ export function SplitsDialog({
             type="button"
             variant="outline"
           >
-            Cancel
+            {t('common.cancel')}
           </Button>
           <Button
             className="artist-workspace-primary"
@@ -210,7 +219,7 @@ export function SplitsDialog({
             type="submit"
             variant="primary"
           >
-            {busy ? 'Saving splits…' : 'Save splits'}
+            {busy ? t('editRelease.savingSplits') : t('editRelease.saveSplits')}
           </Button>
         </div>
       </form>
