@@ -7,7 +7,7 @@ import {
   useRemoveCover,
   useUploadCover,
 } from '@entities/release'
-import { useI18n } from '@shared/i18n'
+import { type TranslationKey, useI18n } from '@shared/i18n'
 import { WorkspaceModal } from '@shared/ui/WorkspaceModal/WorkspaceModal'
 import { useEffect, useState } from 'react'
 import { MediaFilePicker, UploadProgress, useFileDrop } from './MediaFilePicker'
@@ -26,12 +26,12 @@ export function CoverDialog({
   onClose,
   onSaved,
 }: CoverDialogProps) {
-  const { tMessage } = useI18n()
+  const { t, tMessage } = useI18n()
   const upload = useUploadCover(artistId)
   const remove = useRemoveCover(artistId)
   const [expectedUpdatedAt] = useState(release.updatedAt)
   const [file, setFile] = useState<File | null>(null)
-  const [problem, setProblem] = useState<string | null>(null)
+  const [problem, setProblem] = useState<TranslationKey | null>(null)
   const [progress, setProgress] = useState<number | null>(null)
   const [preview, setPreview] = useState<string | null>(null)
   const pending = upload.isPending || remove.isPending
@@ -60,7 +60,7 @@ export function CoverDialog({
 
   const submit = async () => {
     if (!file) {
-      setProblem('Choose an image to upload.')
+      setProblem('media.chooseImage')
       return
     }
     const fileProblem = coverFileProblem(file)
@@ -98,7 +98,7 @@ export function CoverDialog({
       canClose={!pending}
       className="artist-release-credit-modal"
       onClose={onClose}
-      title="Release artwork"
+      title={t('media.artworkTitle')}
     >
       <form
         aria-busy={pending}
@@ -113,7 +113,9 @@ export function CoverDialog({
           {shown ? (
             <img
               alt={
-                file ? 'Selected artwork preview' : `${release.title} artwork`
+                file
+                  ? t('media.previewAlt')
+                  : t('workspace.artworkAlt', { title: release.title })
               }
               className={cn(
                 'aspect-square w-48 rounded-lg border border-border object-cover',
@@ -128,7 +130,7 @@ export function CoverDialog({
                 drop.over && 'border-accent',
               )}
             >
-              No artwork yet. Drop an image here.
+              {t('media.noArtwork')}
             </div>
           )}
         </div>
@@ -136,8 +138,8 @@ export function CoverDialog({
           accept={COVER_ACCEPT}
           disabled={pending}
           file={file}
-          hint="Square JPEG, PNG or WebP, up to 20 MB. Stores ask for at least 3000 × 3000 px."
-          label="Artwork image"
+          hint={t('media.coverHint')}
+          label={t('media.artworkImage')}
           onChange={choose}
           problem={problem}
         />
@@ -157,7 +159,9 @@ export function CoverDialog({
               type="button"
               variant="ghost"
             >
-              {remove.isPending ? 'Removing…' : 'Remove artwork'}
+              {remove.isPending
+                ? t('editRelease.removing')
+                : t('media.removeArtwork')}
             </Button>
           ) : (
             <span />
@@ -169,7 +173,7 @@ export function CoverDialog({
               type="button"
               variant="outline"
             >
-              Cancel
+              {t('common.cancel')}
             </Button>
             <Button
               className="artist-workspace-primary"
@@ -177,7 +181,7 @@ export function CoverDialog({
               type="submit"
               variant="primary"
             >
-              {upload.isPending ? 'Uploading…' : 'Save artwork'}
+              {upload.isPending ? t('media.uploading') : t('media.saveArtwork')}
             </Button>
           </div>
         </div>

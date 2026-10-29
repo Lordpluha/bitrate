@@ -37,14 +37,14 @@ describe('playableAudioUrl', () => {
     const refresh = vi.fn(async () => false)
 
     await expect(playableAudioUrl(URL, { probe, refresh })).rejects.toThrow(
-      'Your session has expired. Sign in again to listen.',
+      'media.player.sessionExpired',
     )
   })
 
   it('reports a master that is gone', async () => {
     await expect(
       playableAudioUrl(URL, { probe: probeWith(404), refresh: vi.fn() }),
-    ).rejects.toThrow('This recording is no longer available.')
+    ).rejects.toThrow('media.player.gone')
   })
 
   it.each([500, 403])(
@@ -52,7 +52,7 @@ describe('playableAudioUrl', () => {
     async (status) => {
       await expect(
         playableAudioUrl(URL, { probe: probeWith(status), refresh: vi.fn() }),
-      ).rejects.toThrow('Could not load this recording. Try again.')
+      ).rejects.toThrow('media.player.failed')
     },
   )
 
@@ -63,6 +63,6 @@ describe('playableAudioUrl', () => {
 
     await expect(
       playableAudioUrl(URL, { probe, refresh: vi.fn() }),
-    ).rejects.toThrow('Could not load this recording. Try again.')
+    ).rejects.toThrow('media.player.failed')
   })
 })
