@@ -3,6 +3,7 @@ import {
   type ReleaseWorkspace,
   useUploadTrack,
 } from '@entities/release'
+import type { TranslationKey } from '@shared/i18n'
 import { useState } from 'react'
 
 interface AudioUploadTarget {
@@ -23,7 +24,7 @@ export function useAudioUpload(
   const upload = useUploadTrack(artistId)
   const [expectedUpdatedAt] = useState(release.updatedAt)
   const [file, setFile] = useState<File | null>(null)
-  const [problem, setProblem] = useState<string | null>(null)
+  const [problem, setProblem] = useState<TranslationKey | null>(null)
   const [progress, setProgress] = useState<number | null>(null)
 
   const choose = (next: File | null) => {
@@ -36,7 +37,7 @@ export function useAudioUpload(
   /** Narrows to a valid file, explaining the problem otherwise. */
   const validFile = (): File | null => {
     if (!file) {
-      setProblem('Choose an audio file to upload.')
+      setProblem('media.chooseAudio')
       return null
     }
     const fileProblem = audioFileProblem(file)

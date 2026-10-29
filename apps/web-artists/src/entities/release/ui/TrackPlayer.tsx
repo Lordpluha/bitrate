@@ -65,12 +65,21 @@ export function TrackPlayer({
   className,
 }: TrackPlayerProps) {
   const ref = useRef<BitratePlayerElement>(null)
-  const { t } = useI18n()
+  const { t, tMessage } = useI18n()
   const defined = useBitratePlayerDefined()
   // The element rebuilds its engine whenever the resolver changes, so keep it per track.
   const resolveSource = useMemo<BitratePlayerSourceResolver>(
-    () => () => playableAudioUrl(releaseAudioUrl(releaseId, trackId)),
-    [releaseId, trackId],
+    () => () =>
+      // The player shows a rejection's message as is, so it gets the translated text.
+      playableAudioUrl(releaseAudioUrl(releaseId, trackId)).catch(
+        (error: unknown) => {
+          throw new Error(
+            tMessage(error instanceof Error ? error.message : undefined),
+            { cause: error },
+          )
+        },
+      ),
+    [releaseId, trackId, tMessage],
   )
 
   useEffect(() => {

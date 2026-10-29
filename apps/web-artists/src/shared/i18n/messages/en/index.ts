@@ -2,6 +2,7 @@ import { auth } from './auth'
 import { common } from './common'
 import { editRelease } from './editRelease'
 import { labels } from './labels'
+import { media } from './media'
 import { music } from './music'
 import { publish } from './publish'
 import { release } from './release'
@@ -16,6 +17,7 @@ export const en = {
   ...common,
   ...editRelease,
   ...labels,
+  ...media,
   ...music,
   ...publish,
   ...release,

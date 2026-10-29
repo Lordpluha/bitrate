@@ -1,5 +1,6 @@
 import { Button, cn } from '@bitrate/ui-react'
 import { formatBytes } from '@entities/release'
+import { type TranslationKey, useI18n } from '@shared/i18n'
 import { type DragEvent, useId, useRef, useState } from 'react'
 
 const carriesFiles = (event: DragEvent<HTMLElement>) =>
@@ -39,7 +40,8 @@ interface MediaFilePickerProps {
   hint: string
   accept: string
   file: File | null
-  problem: string | null
+  /** A catalog key explaining why the chosen file cannot be used. */
+  problem: TranslationKey | null
   disabled: boolean
   onChange: (file: File | null) => void
 }
@@ -57,6 +59,7 @@ export function MediaFilePicker({
   const id = useId()
   const input = useRef<HTMLInputElement>(null)
   const drop = useFileDrop(disabled, onChange)
+  const { t } = useI18n()
   return (
     <div
       className={cn(
@@ -87,12 +90,12 @@ export function MediaFilePicker({
           type="button"
           variant="outline"
         >
-          {file ? 'Choose another file' : 'Choose file'}
+          {file ? t('media.chooseAnother') : t('media.chooseFile')}
         </Button>
         <span className="min-w-0 truncate text-sm text-text-secondary">
           {file
             ? `${file.name} · ${formatBytes(file.size)}`
-            : 'No file chosen, or drop a file here'}
+            : t('media.noFile')}
         </span>
       </div>
       <p className="text-sm text-text-secondary" id={`${id}-hint`}>
@@ -100,7 +103,7 @@ export function MediaFilePicker({
       </p>
       {problem && (
         <p className="text-sm text-destructive" id={`${id}-error`} role="alert">
-          {problem}
+          {t(problem)}
         </p>
       )}
     </div>
@@ -113,18 +116,21 @@ interface UploadProgressProps {
 
 /** Upload progress; the final stretch is server-side storage, so 100% reads "Saving…". */
 export function UploadProgress({ fraction }: UploadProgressProps) {
+  const { t } = useI18n()
   if (fraction === null) return null
   const percent = Math.round(fraction * 100)
   return (
     <div className="space-y-1">
       <progress
-        aria-label="Upload progress"
+        aria-label={t('media.progress')}
         className="h-2 w-full overflow-hidden rounded-full accent-accent"
         max={100}
         value={percent}
       />
       <p aria-live="polite" className="text-sm text-text-secondary">
-        {percent < 100 ? `Uploading… ${percent}%` : 'Saving…'}
+        {percent < 100
+          ? t('media.uploadingPercent', { percent })
+          : t('common.saving')}
       </p>
     </div>
   )
