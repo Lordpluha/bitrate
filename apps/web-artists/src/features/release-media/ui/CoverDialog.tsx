@@ -7,6 +7,7 @@ import {
   useRemoveCover,
   useUploadCover,
 } from '@entities/release'
+import { useI18n } from '@shared/i18n'
 import { WorkspaceModal } from '@shared/ui/WorkspaceModal/WorkspaceModal'
 import { useEffect, useState } from 'react'
 import { MediaFilePicker, UploadProgress, useFileDrop } from './MediaFilePicker'
@@ -25,6 +26,7 @@ export function CoverDialog({
   onClose,
   onSaved,
 }: CoverDialogProps) {
+  const { tMessage } = useI18n()
   const upload = useUploadCover(artistId)
   const remove = useRemoveCover(artistId)
   const [expectedUpdatedAt] = useState(release.updatedAt)
@@ -142,7 +144,7 @@ export function CoverDialog({
         <UploadProgress fraction={progress} />
         {error && (
           <p className="text-sm text-destructive" role="alert">
-            {error.message}
+            {tMessage(error.message)}
           </p>
         )}
         <div className="flex flex-wrap justify-between gap-3">

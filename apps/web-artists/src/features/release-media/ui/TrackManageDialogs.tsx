@@ -4,6 +4,7 @@ import {
   useRemoveTrack,
   useRenameTrack,
 } from '@entities/release'
+import { useI18n } from '@shared/i18n'
 import { WorkspaceModal } from '@shared/ui/WorkspaceModal/WorkspaceModal'
 import { useId, useState } from 'react'
 
@@ -24,6 +25,7 @@ export function RenameTrackDialog({
   onClose,
   onSaved,
 }: TrackDialogProps) {
+  const { tMessage } = useI18n()
   const id = useId()
   const rename = useRenameTrack(artistId)
   const [expectedUpdatedAt] = useState(release.updatedAt)
@@ -98,7 +100,7 @@ export function RenameTrackDialog({
         </div>
         {rename.error && (
           <p className="text-sm text-destructive" role="alert">
-            {rename.error.message}
+            {tMessage(rename.error.message)}
           </p>
         )}
         <div className="flex flex-wrap justify-end gap-3">
@@ -131,6 +133,7 @@ export function RemoveTrackDialog({
   onClose,
   onSaved,
 }: TrackDialogProps) {
+  const { tMessage } = useI18n()
   const remove = useRemoveTrack(artistId)
   const [expectedUpdatedAt] = useState(release.updatedAt)
   const track = release.trackDrafts.find((item) => item.id === trackId)
@@ -159,7 +162,7 @@ export function RemoveTrackDialog({
         </p>
         {remove.error && (
           <p className="text-sm text-destructive" role="alert">
-            {remove.error.message}
+            {tMessage(remove.error.message)}
           </p>
         )}
         <div className="flex flex-wrap justify-end gap-3">

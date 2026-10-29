@@ -30,7 +30,7 @@ export function ContributorForm({
   onSaved,
 }: ContributorFormProps) {
   const id = useId()
-  const { t } = useI18n()
+  const { tMessage, t } = useI18n()
   const mutation = useSaveContributor(artistId, participant?.id)
   const [expectedUpdatedAt] = useState(release.updatedAt)
   const form = useForm<ContributorValues>({
@@ -148,7 +148,7 @@ export function ContributorForm({
         </p>
         {mutation.error && (
           <p className="text-sm text-destructive" role="alert">
-            {mutation.error.message}
+            {tMessage(mutation.error.message)}
           </p>
         )}
         <div className="flex flex-wrap justify-end gap-3">

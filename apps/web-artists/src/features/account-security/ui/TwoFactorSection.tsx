@@ -1,5 +1,6 @@
 import { Button, Input } from '@bitrate/ui-react'
 import { useTwoFactorSetup, useTwoFactorToggle } from '@entities/artist-account'
+import { useI18n } from '@shared/i18n'
 import { ShieldCheck, ShieldOff } from 'lucide-react'
 import { useId, useState } from 'react'
 
@@ -12,6 +13,7 @@ interface TwoFactorSectionProps {
 
 /** Enrol with an authenticator app (QR or manual key + code), or turn it off with a code. */
 export function TwoFactorSection({ artistId, enabled }: TwoFactorSectionProps) {
+  const { tMessage } = useI18n()
   const id = useId()
   const setup = useTwoFactorSetup()
   const toggle = useTwoFactorToggle(artistId, !enabled)
@@ -79,7 +81,7 @@ export function TwoFactorSection({ artistId, enabled }: TwoFactorSectionProps) {
       </div>
       {setup.error && (
         <p className="text-sm text-destructive" role="alert">
-          {setup.error.message}
+          {tMessage(setup.error.message)}
         </p>
       )}
       {enrolling && setup.data && (

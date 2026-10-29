@@ -1,6 +1,7 @@
 import { Button, Input } from '@bitrate/ui-react'
 import { type ReleaseWorkspace, useSaveRights } from '@entities/release'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useI18n } from '@shared/i18n'
 import { WorkspaceModal } from '@shared/ui/WorkspaceModal/WorkspaceModal'
 import { useId, useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -19,6 +20,7 @@ export function RightsDialog({
   onClose,
   onSaved,
 }: RightsDialogProps) {
+  const { tMessage } = useI18n()
   const id = useId()
   const mutation = useSaveRights(artistId)
   const [expectedUpdatedAt] = useState(release.updatedAt)
@@ -152,7 +154,7 @@ export function RightsDialog({
         </p>
         {mutation.error && (
           <p className="text-sm text-destructive" role="alert">
-            {mutation.error.message}
+            {tMessage(mutation.error.message)}
           </p>
         )}
         <div className="flex flex-wrap justify-end gap-3">

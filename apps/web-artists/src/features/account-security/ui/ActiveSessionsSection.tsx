@@ -6,6 +6,7 @@ import {
   useRevokeOtherSessions,
   useRevokeSession,
 } from '@entities/artist-account'
+import { useI18n } from '@shared/i18n'
 import { Laptop, Smartphone } from 'lucide-react'
 
 const usedFormat = new Intl.DateTimeFormat('en-US', {
@@ -29,6 +30,7 @@ function lastSeen(session: ArtistSession) {
 export function ActiveSessionsSection({
   artistId,
 }: ActiveSessionsSectionProps) {
+  const { tMessage } = useI18n()
   const sessions = useArtistSessions(artistId)
   const revoke = useRevokeSession(artistId)
   const revokeOthers = useRevokeOtherSessions(artistId)
@@ -65,7 +67,7 @@ export function ActiveSessionsSection({
       ) : sessions.isError ? (
         <div className="flex flex-wrap items-center gap-3">
           <p className="text-sm text-destructive" role="alert">
-            {sessions.error.message}
+            {tMessage(sessions.error.message)}
           </p>
           <Button
             onClick={() => {

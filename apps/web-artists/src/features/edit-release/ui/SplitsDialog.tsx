@@ -53,7 +53,7 @@ export function SplitsDialog({
   onSaved,
 }: SplitsDialogProps) {
   const id = useId()
-  const { t } = useI18n()
+  const { tMessage, t } = useI18n()
   const mutation = useSaveSplits(artistId)
   const [version, setVersion] = useState(release.updatedAt)
   const [saved, setSaved] = useState(() => savedValues(release))
@@ -192,7 +192,7 @@ export function SplitsDialog({
         )}
         {mutation.error && (
           <p className="text-sm text-destructive" role="alert">
-            {mutation.error.message}
+            {tMessage(mutation.error.message)}
           </p>
         )}
         <div className="flex flex-wrap justify-end gap-3">
