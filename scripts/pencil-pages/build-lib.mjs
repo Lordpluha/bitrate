@@ -26,7 +26,6 @@ import * as cursor from './lib/blocks/cursor.mjs'
 import * as toasts from './lib/blocks/toasts.mjs'
 import * as notFound from './lib/blocks/not-found.mjs'
 import * as assistant from './lib/blocks/assistant.mjs'
-import * as podcast from './lib/blocks/podcast.mjs'
 import * as island from './lib/blocks/island.mjs'
 import * as notifications from './lib/blocks/notifications.mjs'
 import * as contextMenu from './lib/blocks/context-menu.mjs'
@@ -53,7 +52,6 @@ const SECTIONS = [
   toasts,
   notFound,
   assistant,
-  podcast,
   island,
   notifications,
   contextMenu,

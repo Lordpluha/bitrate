@@ -152,7 +152,7 @@ export const libraryPages = {
               libHead(),
               Row({ width: 'fill_container', justifyContent: 'end' }, [
                 Menu([
-                  ['Playlist — Create a playlist with songs or episodes'],
+                  ['Playlist — Create a playlist with songs'],
                   ["Blend — Combine your friends' tastes into a playlist", 'disabled'],
                   ['Folder — Organize your playlists', 'disabled'],
                 ]),
@@ -314,7 +314,7 @@ export const libraryPages = {
             }),
             Panel([
               Tx('H3', "Let's find something for your playlist"),
-              Input(null, 'Search for songs or episodes', 420),
+              Input(null, 'Search for songs', 420),
               ...TRACKS.slice(0, 3).map((t) =>
                 Row({ width: 'fill_container', gap: 12 }, [
                   MobileTrack(t[0], t[1], t[4]),
@@ -328,7 +328,7 @@ export const libraryPages = {
             'Finder',
             [
               Tx('H3', "Let's find something for your playlist"),
-              Input(null, 'Search for songs or episodes'),
+              Input(null, 'Search for songs'),
               ...TRACKS.slice(0, 4).map((t) =>
                 Row({ width: 'fill_container', gap: 8 }, [
                   MobileTrack(t[0], t[1], t[4]),

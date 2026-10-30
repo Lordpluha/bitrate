@@ -141,7 +141,7 @@ const libHead = (active) => [
   ]),
   /* the filter row scrolls sideways when it overflows: it bleeds past the edge so the cut chip shows there is more */
   L({ name: 'Filter Scroller', width: 374, clip: true }, [
-    Chips(['Everything', 'Jam · 2', 'Saved', 'Podcasts', 'Downloads', 'Offline'], active),
+    Chips(['Everything', 'Jam · 2', 'Saved', 'Downloads', 'Offline'], active),
   ]),
 ]
 const lateSet = () =>
