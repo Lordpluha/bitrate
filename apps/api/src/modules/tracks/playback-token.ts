@@ -7,7 +7,7 @@ import { createHmac, timingSafeEqual } from 'node:crypto'
 const SIGNATURE_DOMAIN = 'bitrate-playback.v1.'
 
 /** Who may read which track, for which session. */
-export type PlaybackTokenClaims = {
+type PlaybackTokenClaims = {
   sessionId: string
   userId: string
   trackId: string

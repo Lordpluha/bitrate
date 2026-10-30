@@ -104,7 +104,8 @@ export class PlaybackSessionService {
 
   /** @throws ForbiddenException for a missing, forged, expired, other-track or revoked token. */
   async authorize(token: string | undefined, trackId: string): Promise<AuthorizedPlaybackSession> {
-    const claims = token ? verifyPlaybackToken(token, this.secret) : null
+    // Always verify: an absent token is an empty string, which never passes the signature check.
+    const claims = verifyPlaybackToken(token ?? '', this.secret)
     if (!claims || claims.trackId !== trackId) {
       throw new ForbiddenException(PLAYBACK_ERRORS.SESSION_REQUIRED)
     }

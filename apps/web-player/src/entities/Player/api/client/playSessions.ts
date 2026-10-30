@@ -1,9 +1,9 @@
 'use client'
 
-import { z } from 'zod'
 import { fetchWithAuthRefresh } from '@shared/api/client'
 import { ApiRequestError } from '@shared/api/errors'
 import { getApiUrl } from '@shared/utils/mediaUrl'
+import { z } from 'zod'
 import { trackManifestSchema } from './trackManifest.schema'
 
 const playSessionSchema = z.object({
