@@ -2,6 +2,7 @@ import { MailService } from '@infra/mail/mail.service'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import { afterAll, beforeAll, beforeEach, describe, expect, it, jest } from '@jest/globals'
 import { TokenService } from '@modules/tokens/token.service'
+import { PlaybackSessionService } from '@modules/tracks/playback-session.service'
 import { buildUser } from '@modules/users/__tests__/fixtures/users.fixtures'
 import { UsersPrivateService } from '@modules/users/users.private.service'
 import { UsersService } from '@modules/users/users.service'
@@ -66,6 +67,7 @@ describe('UserAuthService (int)', () => {
           provide: MailService,
           useValue: { sendVerificationEmail: jest.fn(), sendPasswordResetEmail: jest.fn() },
         },
+        { provide: PlaybackSessionService, useValue: { revokeUser: jest.fn() } },
       ],
     }).compile()
 

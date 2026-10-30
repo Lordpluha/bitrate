@@ -1,6 +1,6 @@
 export * from './get-liked-tracks.decorator'
 export * from './get-track-by-id.decorator'
-export * from './get-track-manifest.decorator'
+export * from './open-play-session.decorator'
 export * from './get-tracks.decorator'
 export * from './like-track.decorator'
 export * from './post-track.decorator'

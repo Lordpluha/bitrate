@@ -85,7 +85,6 @@ export const apiQueryKeys = {
     liked: (params: { page?: number; limit?: number }) =>
       ['tracks', 'liked', params] as const,
     likedAll: ['tracks', 'liked', 'all'] as const,
-    manifest: (trackId: string) => ['tracks', 'manifest', trackId] as const,
     list: (params: {
       artistId?: string
       page?: number

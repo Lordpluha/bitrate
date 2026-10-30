@@ -4,6 +4,7 @@ import { BadRequestException } from '@nestjs/common'
 import type { JwtService } from '@nestjs/jwt'
 import { type PrismaMock, prismaMock, resetPrismaMock } from '@test/mocks'
 import { type DeepMockProxy, mockDeep, mockReset } from 'jest-mock-extended'
+import type { PlaybackSessionService } from '../tracks/playback-session.service'
 import type { TokenService } from '../tokens/token.service'
 import { buildUser } from '../users/__tests__/fixtures/users.fixtures'
 import type { UsersPrivateService } from '../users/users.private.service'
@@ -36,6 +37,7 @@ describe('UserAuthService', () => {
   let jwt: DeepMockProxy<JwtService>
   let token: DeepMockProxy<TokenService>
   let mail: DeepMockProxy<MailService>
+  let playbackSessions: DeepMockProxy<PlaybackSessionService>
 
   beforeEach(() => {
     resetPrismaMock()
@@ -53,7 +55,8 @@ describe('UserAuthService', () => {
     mockReset(token)
     mockReset(mail)
 
-    service = new UserAuthService(users, usersPrivate, jwt, prisma, token, mail)
+    playbackSessions = mockDeep<PlaybackSessionService>()
+    service = new UserAuthService(users, usersPrivate, jwt, prisma, token, mail, playbackSessions)
   })
 
   /** Stands in for the atomic increment, which returns the row's new counter value. */
@@ -245,6 +248,15 @@ describe('UserAuthService', () => {
         where: { userId: user.id, access_token: 'hashed-token' },
       })
     })
+
+    it("ends the user's playback sessions", async () => {
+      users.findById.mockResolvedValue(buildUser({ id: 'user-1' }))
+      token.hashToken.mockReturnValue('hashed-token')
+
+      await service.logout('user-1', 'access-token')
+
+      expect(playbackSessions.revokeUser).toHaveBeenCalledWith('user-1')
+    })
   })
 
   describe('forgotPassword', () => {
@@ -321,6 +333,23 @@ describe('UserAuthService', () => {
       await expect(service.resetPassword('raw-token', 'newpass')).rejects.toThrow(
         'Invalid or expired reset token',
       )
+      expect(playbackSessions.revokeUser).not.toHaveBeenCalled()
+    })
+
+    it('ends the playback sessions of the account whose password was reset', async () => {
+      token.hashToken.mockReturnValue('hashed-token')
+      token.hashPassword.mockResolvedValue('new-hashed')
+      prisma.userPasswordReset.findUnique.mockResolvedValue({
+        id: 'r-1',
+        userId: 'user-1',
+        token: 'hashed-token',
+        expiresAt: new Date(Date.now() + 60_000),
+        createdAt: new Date(),
+      })
+
+      await service.resetPassword('raw-token', 'newpass')
+
+      expect(playbackSessions.revokeUser).toHaveBeenCalledWith('user-1')
     })
 
     it('should update password and delete reset record', async () => {

@@ -21,6 +21,7 @@ import { TokenService } from '../tokens/token.service'
 import { UsersService } from '../users/users.service'
 import type { RegistrationDto } from './dtos'
 import type { UserSessionEntity } from './entities'
+import { PlaybackSessionService } from '@modules/tracks/playback-session.service'
 import { UserAuthStore, type UserSessionClient } from './user-auth.store'
 
 @Injectable()
@@ -35,6 +36,7 @@ export class UserAuthService {
     private prisma: PrismaService,
     private token: TokenService,
     private mail: MailService,
+    private playbackSessions: PlaybackSessionService,
   ) {
     this.core = new AccountAuthCore(new UserAuthStore(prisma, users, usersPrivate), token, jwt, {
       audience: 'user',
@@ -94,8 +96,12 @@ export class UserAuthService {
     return this.core.refresh(refresh_token, undefined)
   }
 
-  logout(userId: UserSessionEntity['userId'], access_token: UserSessionEntity['access_token']) {
-    return this.core.logout(userId, access_token)
+  async logout(
+    userId: UserSessionEntity['userId'],
+    access_token: UserSessionEntity['access_token'],
+  ) {
+    await this.core.logout(userId, access_token)
+    await this.playbackSessions.revokeUser(userId)
   }
 
   /** Runs the forgot password operation. Unknown emails return silently. */
@@ -111,8 +117,9 @@ export class UserAuthService {
     )
   }
 
-  resetPassword(rawToken: string, newPassword: string) {
-    return this.core.resetPassword(rawToken, newPassword)
+  async resetPassword(rawToken: string, newPassword: string) {
+    const userId = await this.core.resetPassword(rawToken, newPassword)
+    await this.playbackSessions.revokeUser(userId)
   }
 
   /** Verifies an email token once and removes all outstanding tokens for the user. */

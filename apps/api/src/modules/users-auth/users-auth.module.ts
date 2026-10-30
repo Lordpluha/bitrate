@@ -7,11 +7,18 @@ import { OAuthService } from './oauth.service'
 import { TwoFactorService } from './two-factor.service'
 import { UserAuthService } from './user-auth.service'
 import { UsersAuthController } from './users-auth.controller'
+import { PlaybackSessionsModule } from '@modules/tracks/playback-sessions.module'
 import { OptionalUserAuthGuard, UserAuthGuard } from './users-auth.guard'
 import { UsersOAuthController } from './users-oauth.controller'
 
 @Module({
-  imports: [PrismaModule, forwardRef(() => UsersModule), TokensModule, MailModule],
+  imports: [
+    PrismaModule,
+    forwardRef(() => UsersModule),
+    TokensModule,
+    MailModule,
+    PlaybackSessionsModule,
+  ],
   controllers: [UsersAuthController, UsersOAuthController],
   providers: [
     UserAuthService,

@@ -124,7 +124,7 @@ export type ManifestRendition = {
   fragments: readonly ManifestFragment[]
 }
 
-/** The manifest the API serves at `/tracks/{id}/manifest`. */
+/** The manifest the API returns from `POST /tracks/{id}/play-sessions`. */
 export type TrackManifest = {
   version: 1
   timescale: number
