@@ -1,7 +1,10 @@
 import { Button, cn } from '@bitrate/ui-react'
 import { CreateReleaseDialog } from '@features/create-release'
 import { WorkspaceActionsProvider } from '@features/workspace-actions'
-import { AccountLocaleSync } from '@features/workspace-language'
+import {
+  AccountLocaleSync,
+  LanguagePreference,
+} from '@features/workspace-language'
 import { ThemeSwitcher } from '@features/workspace-theme'
 import type { ArtistIdentity } from '@shared/auth/artistSession.types'
 import { useI18n } from '@shared/i18n'
@@ -16,6 +19,7 @@ import { DashboardCommands } from './DashboardCommands'
 import { DashboardDesignNavigation } from './DashboardDesignNavigation'
 import { DashboardMobileMenu } from './DashboardMobileMenu'
 import { DashboardNotifications } from './DashboardNotifications'
+import { DashboardSettingsLink } from './DashboardSettingsLink'
 import { DashboardSupport } from './DashboardSupport'
 
 interface ArtistDashboardProps {
@@ -41,8 +45,14 @@ export function ArtistDashboard({ artist, children }: ArtistDashboardProps) {
 
   return (
     <WorkspaceActionsProvider
-      accountContent={<DashboardAccount artist={artist} />}
-      appearanceContent={<ThemeSwitcher />}
+      accountContent={(onNavigate) => (
+        <>
+          <DashboardAccount artist={artist} />
+          <ThemeSwitcher />
+          <LanguagePreference artistId={artist.id} />
+          <DashboardSettingsLink onNavigate={onNavigate} />
+        </>
+      )}
       artistId={artist.id}
       createReleaseDialog={(onClose) => (
         <CreateReleaseDialog artistId={artist.id} onClose={onClose} />

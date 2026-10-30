@@ -14,15 +14,13 @@ export function WorkspaceActionsProvider({
   children,
   destinations,
   accountContent,
-  appearanceContent,
   createReleaseDialog,
   notificationsContent,
 }: {
   artistId: string
   children: ReactNode
   destinations: readonly WorkspaceDestination[]
-  accountContent: ReactNode
-  appearanceContent: ReactNode
+  accountContent: (onNavigate: () => void) => ReactNode
   createReleaseDialog: (onClose: () => void) => ReactNode
   notificationsContent: (onNavigate: () => void) => ReactNode
 }) {
@@ -68,10 +66,7 @@ export function WorkspaceActionsProvider({
               ) : action === 'notifications' ? (
                 notificationsContent(close)
               ) : action === 'account' ? (
-                <div className="space-y-6">
-                  {accountContent}
-                  {appearanceContent}
-                </div>
+                <div className="space-y-6">{accountContent(close)}</div>
               ) : (
                 <div className="space-y-6">
                   {action !== 'upload-track' && (
