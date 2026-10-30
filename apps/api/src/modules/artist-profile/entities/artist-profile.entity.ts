@@ -54,6 +54,12 @@ export class ArtistProfileEntity {
   @ApiProperty()
   emailVerified: boolean
 
+  @ApiProperty({
+    enum: ['en', 'uk', 'pl'],
+    description: 'Workspace language; transactional emails follow it where a template exists',
+  })
+  locale: string
+
   @ApiProperty({ type: String, format: 'date-time' })
   updatedAt: Date
 }

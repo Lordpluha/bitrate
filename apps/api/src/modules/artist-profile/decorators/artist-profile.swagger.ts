@@ -1,6 +1,10 @@
 import { applyDecorators, HttpStatus } from '@nestjs/common'
 import { ApiBody, ApiConsumes, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger'
-import { ProfileImageVersionDto, UpdateArtistProfileDto } from '../dtos/artist-profile.dto'
+import {
+  ProfileImageVersionDto,
+  SetArtistLocaleDto,
+  UpdateArtistProfileDto,
+} from '../dtos/artist-profile.dto'
 import { ArtistProfileEntity } from '../entities/artist-profile.entity'
 
 const kindParam = ApiParam({ name: 'kind', enum: ['avatar', 'background'] })
@@ -26,6 +30,19 @@ export function UpdateArtistProfileSwagger() {
     ApiResponse({ status: HttpStatus.OK, type: ArtistProfileEntity }),
     ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Invalid fields or links' }),
     versionConflict,
+  )
+}
+
+export function SetArtistLocaleSwagger() {
+  return applyDecorators(
+    ApiOperation({
+      summary: 'Set the workspace language',
+      description:
+        'A preference, not profile content: no version is required and the profile version is left unchanged.',
+    }),
+    ApiBody({ type: SetArtistLocaleDto }),
+    ApiResponse({ status: HttpStatus.OK, type: ArtistProfileEntity }),
+    ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Unsupported language' }),
   )
 }
 

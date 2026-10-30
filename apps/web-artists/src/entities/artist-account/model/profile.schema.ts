@@ -42,6 +42,7 @@ export const artistProfileSchema = z.object({
   verified: z.boolean(),
   twoFactorEnabled: z.boolean(),
   emailVerified: z.boolean(),
+  locale: z.enum(['en', 'uk', 'pl']),
   updatedAt: z.iso.datetime({ offset: true }),
 }) satisfies z.ZodType<ApiSchemas['ArtistProfileEntity']>
 
