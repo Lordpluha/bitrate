@@ -1,7 +1,10 @@
 import { Button, cn } from '@bitrate/ui-react'
 import { CreateReleaseDialog } from '@features/create-release'
 import { WorkspaceActionsProvider } from '@features/workspace-actions'
-import { AccountLocaleSync } from '@features/workspace-language'
+import {
+  AccountLocaleSync,
+  LanguagePreference,
+} from '@features/workspace-language'
 import { ThemeSwitcher } from '@features/workspace-theme'
 import type { ArtistIdentity } from '@shared/auth/artistSession.types'
 import { useI18n } from '@shared/i18n'
@@ -46,6 +49,7 @@ export function ArtistDashboard({ artist, children }: ArtistDashboardProps) {
         <>
           <DashboardAccount artist={artist} />
           <ThemeSwitcher />
+          <LanguagePreference artistId={artist.id} />
           <DashboardSettingsLink onNavigate={onNavigate} />
         </>
       )}

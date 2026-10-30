@@ -2315,6 +2315,18 @@ test('account dialog opens the settings page and closes on the way', async ({
   await expect(account).toHaveCount(0)
 })
 
+test('account dialog switches the workspace language', async ({
+  page,
+  context,
+}) => {
+  await authenticate(context)
+  await gotoHydrated(page, '/dashboard')
+  await openAppearance(page)
+  const account = page.getByRole('dialog', { name: 'Artist account' })
+  await account.getByLabel('Language').selectOption('pl')
+  await expect(page.locator('html')).toHaveAttribute('lang', 'pl')
+})
+
 test('workspace theme switches all three palettes and persists across navigation and reload', async ({
   page,
   context,
