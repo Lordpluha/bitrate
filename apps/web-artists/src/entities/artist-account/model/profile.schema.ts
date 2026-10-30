@@ -1,5 +1,5 @@
 import type { ApiSchemas } from '@bitrate/contracts'
-import { messageKey, type TranslationKey } from '@shared/i18n'
+import { messageKey, supportedLocales, type TranslationKey } from '@shared/i18n'
 import { z } from 'zod'
 
 export const socialLinkKeys = [
@@ -44,6 +44,7 @@ export const artistProfileSchema = z.object({
   verified: z.boolean(),
   twoFactorEnabled: z.boolean(),
   emailVerified: z.boolean(),
+  locale: z.enum(supportedLocales),
   updatedAt: z.iso.datetime({ offset: true }),
 }) satisfies z.ZodType<ApiSchemas['ArtistProfileEntity']>
 

@@ -3,6 +3,10 @@ export const settings = {
   'settings.language.label': 'Język interfejsu',
   'settings.language.description':
     'Język Twojego obszaru roboczego. Zapisywany w tej przeglądarce.',
+  'settings.language.accountDescription':
+    'Zapisywany na Twoim koncie, więc inne urządzenia też go przejmą.',
+  'settings.language.accountFailed':
+    'Zmieniono na tym urządzeniu, ale nie zapisano na koncie. Spróbuj później.',
   'settings.subtitle':
     'Twoje konto, bezpieczeństwo i ustawienia obszaru roboczego.',
   'settings.loading': 'Wczytywanie ustawień…',

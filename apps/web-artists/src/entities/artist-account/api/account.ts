@@ -3,7 +3,7 @@ import { artistMusicKeys } from '@shared/api/artistMusicKeys'
 import { clientFetchClient } from '@shared/api/fetchClient'
 import { uploadForm } from '@shared/api/uploadForm'
 import { writeSignal } from '@shared/api/writeTimeout'
-import { messageKey, type TranslationKey } from '@shared/i18n'
+import { type Locale, messageKey, type TranslationKey } from '@shared/i18n'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { z } from 'zod'
 import {
@@ -175,4 +175,32 @@ export function useProfileImage(artistId: string) {
       )
     },
   )
+}
+
+/**
+ * Stores the workspace language on the account, so other devices and transactional emails
+ * follow it. The API leaves the profile version alone, so an open profile form stays valid.
+ */
+export function useSetAccountLocale(artistId: string) {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: async (locale: Locale) => {
+      const result = await clientFetchClient
+        .PUT('/api/v1/artist-profile/locale', {
+          body: { locale },
+          signal: writeSignal(),
+        })
+        .catch(() => undefined)
+      const parsed = artistProfileSchema.safeParse(result?.data)
+      if (
+        !result?.response.ok ||
+        !parsed.success ||
+        parsed.data.locale !== locale
+      )
+        throw new Error(messageKey('settings.language.accountFailed'))
+      return parsed.data
+    },
+    onSuccess: (profile) =>
+      queryClient.setQueryData(accountKeys.profile(artistId), profile),
+  })
 }
