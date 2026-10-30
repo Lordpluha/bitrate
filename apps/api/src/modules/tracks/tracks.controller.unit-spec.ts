@@ -3,6 +3,7 @@ import { finished } from 'node:stream/promises'
 import { beforeEach, describe, expect, it, jest } from '@jest/globals'
 import { BadRequestException } from '@nestjs/common'
 import { buildAudioFile, buildTrack } from './__tests__/fixtures/tracks.fixtures'
+import { PlaybackPacingError } from './playback-session.service'
 import type { TrackPlaybackService } from './track-playback.service'
 import type { TrackUploadService } from './track-upload.service'
 import { TracksController } from './tracks.controller'
@@ -42,7 +43,7 @@ const makeStreamResponse = () =>
 
 const makePlaybackServiceMock = () =>
   ({
-    getManifest: jest.fn(),
+    openSession: jest.fn(),
     getRenditionStream: jest.fn(),
   }) as unknown as jest.Mocked<TrackPlaybackService>
 
@@ -88,10 +89,77 @@ describe('TracksController', () => {
     } as never)
     const res = makeStreamResponse()
 
-    await controller.streamRendition('track-1', 192, { headers: {} } as never, res as never)
+    await controller.streamRendition(
+      'track-1',
+      192,
+      'signed',
+      { headers: {} } as never,
+      res as never,
+    )
 
     await expect(finished(res)).rejects.toThrow('storage connection reset')
     expect(res.destroyed).toBe(true)
+  })
+
+  it('openPlaySession opens a session for the signed-in user and the given device', async () => {
+    const session = { manifest: {}, token: 'signed', expiresAt: 1 }
+    playbackService.openSession.mockResolvedValue(session as never)
+
+    const result = await controller.openPlaySession(
+      'track-1',
+      { user: { id: 'user-1' } } as never,
+      { deviceId: 'device-1' },
+    )
+
+    expect(playbackService.openSession).toHaveBeenCalledWith({
+      trackId: 'track-1',
+      userId: 'user-1',
+      deviceId: 'device-1',
+    })
+    expect(result).toBe(session)
+  })
+
+  it('streamRendition hands the session token and Range to the service', async () => {
+    playbackService.getRenditionStream.mockResolvedValue({
+      stream: Readable.from([]),
+      contentType: 'audio/mp4',
+      contentLength: 708,
+      isPartial: true,
+      start: 0,
+      end: 707,
+      fileSize: 133_586,
+    } as never)
+
+    await controller.streamRendition(
+      'track-1',
+      192,
+      'signed',
+      { headers: { range: 'bytes=0-' } } as never,
+      makeStreamResponse() as never,
+    )
+
+    expect(playbackService.getRenditionStream).toHaveBeenCalledWith({
+      trackId: 'track-1',
+      bitrate: 192,
+      rangeHeader: 'bytes=0-',
+      token: 'signed',
+    })
+  })
+
+  it('streamRendition answers 429 with Retry-After when the session is ahead of real time', async () => {
+    playbackService.getRenditionStream.mockRejectedValue(new PlaybackPacingError(7))
+    const res = { set: jest.fn(), status: jest.fn().mockReturnThis(), send: jest.fn() }
+
+    await controller.streamRendition(
+      'track-1',
+      192,
+      'signed',
+      { headers: {} } as never,
+      res as never,
+    )
+
+    expect(res.status).toHaveBeenCalledWith(429)
+    expect(res.set).toHaveBeenCalledWith({ 'Retry-After': '7' })
   })
 
   it('postTrack should throw BadRequestException when audio file is missing', async () => {

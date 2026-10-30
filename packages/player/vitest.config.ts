@@ -1,6 +1,7 @@
 import { svelte } from '@sveltejs/vite-plugin-svelte'
 import { playwright } from '@vitest/browser-playwright'
 import { defineConfig } from 'vitest/config'
+import { cappedCmafFixture } from './scripts/capped-cmaf-fixture.mjs'
 
 export default defineConfig({
   test: {
@@ -49,6 +50,37 @@ export default defineConfig({
             }),
             screenshotFailures: false,
             instances: [{ browser: 'chromium' }],
+          },
+        },
+      },
+      {
+        /**
+         * A plain `<audio>` against the API's exact-or-paced range rule (ADR-0067), in the
+         * engines that play without MSE in production. WebKit takes no Chromium flag; it allows
+         * muted playback without a gesture.
+         */
+        plugins: [
+          cappedCmafFixture({
+            fixtureDir: new URL('./src/element/__fixtures__/cmaf/', import.meta.url),
+          }),
+        ],
+        test: {
+          name: 'native',
+          globals: true,
+          fileParallelism: false,
+          include: ['src/**/*.native-spec.ts'],
+          browser: {
+            enabled: true,
+            screenshotFailures: false,
+            instances: [
+              {
+                browser: 'chromium',
+                provider: playwright({
+                  launchOptions: { args: ['--autoplay-policy=no-user-gesture-required'] },
+                }),
+              },
+              { browser: 'webkit', provider: playwright() },
+            ],
           },
         },
       },

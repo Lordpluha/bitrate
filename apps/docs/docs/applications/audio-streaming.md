@@ -18,20 +18,31 @@ lets the player switch bitrate mid-track without a gap.
 
 ## Endpoints
 
-A manifest describes the renditions and their fragment index; the player then requests byte
-ranges of the rendition file itself:
+Every play opens a **playback session** ([ADR-0067](../architecture/0067-playback-sessions.md)):
+it returns the manifest — the renditions and their fragment index — and a token that every
+request for the rendition file must carry:
 
 ```text
-GET /api/v1/tracks/:trackId/manifest
-GET /api/v1/tracks/:trackId/cmaf/:bitrate
-Range: bytes=0-1048575
+POST /api/v1/tracks/:trackId/play-sessions          → { manifest, token, expiresAt }
+GET  /api/v1/tracks/:trackId/cmaf/:bitrate?t=<token>
+Range: bytes=892-25024
 ```
 
-These are the only routes that serve listener audio. Both require the user access-token cookie;
-cross-origin clients must send credentials. Operators preview a track through the staff-only
-`GET /api/v1/admin/tracks/:id/audio`, which serves the same CMAF files.
+These are the only routes that serve listener audio. Opening a session needs the user
+access-token cookie; the rendition route needs only the token, which lasts the track plus
+15 minutes and is revoked on logout, password reset, sign-in revocation and staff take-down. A track that cannot play yet answers
+`404` to the session request.
 
-A track with no manifest (`404`) is not playable yet — it is still processing or failed.
+The rendition route never hands out a track at once:
+
+- a `Range` of at most one fragment (~10 s) is served exactly — every request the MSE loader makes;
+- a missing or longer range gets one response to the end of the file, released no faster than
+  real time after a 60-second allowance — what a native `<audio>` asks for;
+- a listener ahead of that budget gets `429` with `Retry-After` on an exact request. The budget is
+  shared by all of the listener's sessions for the track, so opening more sessions does not help.
+
+Operators preview a track through the staff-only `GET /api/v1/admin/tracks/:id/audio`, which
+serves the same CMAF files without sessions.
 
 ## Browser playback
 

@@ -8,6 +8,7 @@ import {
 } from '@infra/mail/templates/mail-locale'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import { AccountAuthCore, type SignInAccount } from '@modules/auth-core'
+import { PlaybackSessionService } from '@modules/tracks/playback-session.service'
 import { UsersPrivateService } from '@modules/users/users.private.service'
 import {
   BadRequestException,
@@ -35,6 +36,7 @@ export class UserAuthService {
     private prisma: PrismaService,
     private token: TokenService,
     private mail: MailService,
+    private playbackSessions: PlaybackSessionService,
   ) {
     this.core = new AccountAuthCore(new UserAuthStore(prisma, users, usersPrivate), token, jwt, {
       audience: 'user',
@@ -94,8 +96,12 @@ export class UserAuthService {
     return this.core.refresh(refresh_token, undefined)
   }
 
-  logout(userId: UserSessionEntity['userId'], access_token: UserSessionEntity['access_token']) {
-    return this.core.logout(userId, access_token)
+  async logout(
+    userId: UserSessionEntity['userId'],
+    access_token: UserSessionEntity['access_token'],
+  ) {
+    await this.core.logout(userId, access_token)
+    await this.playbackSessions.revokeUser(userId)
   }
 
   /** Runs the forgot password operation. Unknown emails return silently. */
@@ -111,8 +117,9 @@ export class UserAuthService {
     )
   }
 
-  resetPassword(rawToken: string, newPassword: string) {
-    return this.core.resetPassword(rawToken, newPassword)
+  async resetPassword(rawToken: string, newPassword: string) {
+    const userId = await this.core.resetPassword(rawToken, newPassword)
+    await this.playbackSessions.revokeUser(userId)
   }
 
   /** Verifies an email token once and removes all outstanding tokens for the user. */
@@ -150,6 +157,8 @@ export class UserAuthService {
   async revokeSession(userId: string, sessionId: string) {
     const result = await this.prisma.userSession.deleteMany({ where: { id: sessionId, userId } })
     if (result.count === 0) throw new BadRequestException('Session not found')
+    // Playback tokens are not tied to one sign-in; the current device reopens its session on 403.
+    await this.playbackSessions.revokeUser(userId)
   }
 
   /** Revokes all sessions except the current one. */
@@ -157,6 +166,7 @@ export class UserAuthService {
     await this.prisma.userSession.deleteMany({
       where: { userId, access_token: { not: this.token.hashToken(accessToken) } },
     })
+    await this.playbackSessions.revokeUser(userId)
   }
 
   private async issueEmailVerification(

@@ -1,64 +1,22 @@
 'use client'
 
-import { useQueryClient } from '@tanstack/react-query'
 import { useCallback } from 'react'
-import { ZodError } from 'zod'
-import { trackManifestSchema } from '@/entities/Player/api/client'
+import { openPlaySession } from '@/entities/Player/api/client'
 import type { TrackManifest } from '@/entities/Player/model/manifest.types'
-import { fetchWithAuthRefresh } from '@/shared/api/client'
-import { ApiRequestError, shouldRetryApiQuery } from '@/shared/api/errors'
-import { apiQueryKeys } from '@/shared/api/queryKeys'
-import { getApiUrl } from '@/shared/utils/mediaUrl'
-
-const MANIFEST_STALE_TIME_MS = 5 * 60 * 1000
-const MANIFEST_GC_TIME_MS = 30 * 60 * 1000
-
-export const shouldRetryTrackManifest = (
-  failureCount: number,
-  error: unknown,
-) =>
-  error instanceof ZodError ? false : shouldRetryApiQuery(failureCount, error)
-
-export const fetchTrackManifest = async (
-  trackId: string,
-): Promise<TrackManifest | null> => {
-  const response = await fetchWithAuthRefresh(
-    getApiUrl(`/api/v1/tracks/${trackId}/manifest`),
-  )
-
-  /** A missing manifest marks a track that is not playable yet; other failures remain retryable. */
-  if (response.status === 404) return null
-  if (!response.ok) {
-    throw new ApiRequestError('Failed to fetch track manifest', response.status)
-  }
-
-  return trackManifestSchema.parse(await response.json())
-}
 
 /**
- * Resolves a track's playback manifest through the React Query cache, so the
- * same track is fetched once no matter how many slots ask for it.
+ * Resolves a track's manifest by opening a playback session for this play (ADR-0067): the
+ * session's token, remembered per track, authorises every rendition request that follows.
+ * Not cached — a session is one play, not immutable track data.
  *
- * Returns null — rather than throwing — for tracks the API has no CMAF
- * renditions for yet; the element then reports the track as unplayable.
+ * Returns null — rather than throwing — when the track cannot play yet or the session cannot
+ * be opened; the element then reports the track as unplayable.
  */
-export const useManifestResolver = () => {
-  const queryClient = useQueryClient()
-
-  return useCallback(
-    async (trackId: string): Promise<TrackManifest | null> => {
-      try {
-        return await queryClient.fetchQuery({
-          queryKey: apiQueryKeys.tracks.manifest(trackId),
-          queryFn: () => fetchTrackManifest(trackId),
-          staleTime: MANIFEST_STALE_TIME_MS,
-          gcTime: MANIFEST_GC_TIME_MS,
-          retry: shouldRetryTrackManifest,
-        })
-      } catch {
-        return null
-      }
-    },
-    [queryClient],
-  )
-}
+export const useManifestResolver = () =>
+  useCallback(async (trackId: string): Promise<TrackManifest | null> => {
+    try {
+      return (await openPlaySession({ trackId }))?.manifest ?? null
+    } catch {
+      return null
+    }
+  }, [])

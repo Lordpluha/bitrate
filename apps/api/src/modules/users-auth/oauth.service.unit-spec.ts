@@ -7,6 +7,7 @@ import type { JwtService } from '@nestjs/jwt'
 import { type PrismaMock, prismaMock, resetPrismaMock } from '@test/mocks'
 import { mockDeep } from 'jest-mock-extended'
 import type { TokenService } from '../tokens/token.service'
+import type { PlaybackSessionService } from '../tracks/playback-session.service'
 import type { UsersPrivateService } from '../users/users.private.service'
 import type { UsersService } from '../users/users.service'
 import { OAuthService } from './oauth.service'
@@ -42,6 +43,7 @@ describe('OAuthService', () => {
       prisma,
       token,
       mockDeep<MailService>(),
+      mockDeep<PlaybackSessionService>(),
     )
     service = new OAuthService(prisma, auth, mockDeep<ConfigService<AppConfig>>())
   })

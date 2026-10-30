@@ -1,16 +1,13 @@
+import { renderHook } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { trackManifestSchema } from '@/entities/Player/api/client'
 
-const { fetchWithAuthRefresh } = vi.hoisted(() => ({
-  fetchWithAuthRefresh: vi.fn(),
+const { openPlaySession } = vi.hoisted(() => ({
+  openPlaySession: vi.fn(),
 }))
 
-vi.mock('@/shared/api/client', () => ({ fetchWithAuthRefresh }))
+vi.mock('@/entities/Player/api/client', () => ({ openPlaySession }))
 
-import {
-  fetchTrackManifest,
-  shouldRetryTrackManifest,
-} from './useManifestResolver'
+import { useManifestResolver } from './useManifestResolver'
 
 const manifest = {
   durationMs: 1_000,
@@ -28,43 +25,37 @@ const manifest = {
   version: 1,
 }
 
-describe('fetchTrackManifest', () => {
+const resolve = (trackId: string) =>
+  renderHook(() => useManifestResolver()).result.current(trackId)
+
+describe('useManifestResolver', () => {
   beforeEach(() => {
-    fetchWithAuthRefresh.mockReset()
+    openPlaySession.mockReset()
   })
 
-  it('treats only a missing manifest as a track that cannot play yet', async () => {
-    fetchWithAuthRefresh.mockResolvedValue(new Response(null, { status: 404 }))
-
-    await expect(fetchTrackManifest('unprocessed')).resolves.toBeNull()
-  })
-
-  it('keeps transient server failures rejectable for React Query retries', async () => {
-    fetchWithAuthRefresh.mockResolvedValue(new Response(null, { status: 503 }))
-
-    await expect(fetchTrackManifest('temporary-failure')).rejects.toMatchObject(
-      {
-        status: 503,
-      },
-    )
-  })
-
-  it('parses a valid manifest', async () => {
-    fetchWithAuthRefresh.mockResolvedValue(Response.json(manifest))
-
-    await expect(fetchTrackManifest('ready')).resolves.toMatchObject({
-      version: 1,
+  it('opens a playback session for every play and hands the element its manifest', async () => {
+    openPlaySession.mockResolvedValue({
+      expiresAt: 1,
+      manifest,
+      token: 'signed',
     })
+
+    await expect(resolve('track-1')).resolves.toEqual(manifest)
+    await resolve('track-1')
+
+    expect(openPlaySession).toHaveBeenCalledTimes(2)
+    expect(openPlaySession).toHaveBeenCalledWith({ trackId: 'track-1' })
   })
 
-  it('does not retry a deterministic manifest schema failure', () => {
-    let schemaError: unknown
-    try {
-      trackManifestSchema.parse({})
-    } catch (error) {
-      schemaError = error
-    }
+  it('resolves null for a track that cannot play yet', async () => {
+    openPlaySession.mockResolvedValue(null)
 
-    expect(shouldRetryTrackManifest(0, schemaError)).toBe(false)
+    await expect(resolve('not-ready')).resolves.toBeNull()
+  })
+
+  it('resolves null when the session cannot be opened, so the element reports the track', async () => {
+    openPlaySession.mockRejectedValue(new Error('503'))
+
+    await expect(resolve('track-2')).resolves.toBeNull()
   })
 })

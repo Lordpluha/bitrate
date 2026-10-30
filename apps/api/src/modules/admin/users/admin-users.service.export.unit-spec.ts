@@ -28,7 +28,7 @@ describe('AdminUsersService.exportCsv', () => {
   beforeEach(() => {
     resetPrismaMock()
     prisma = prismaMock
-    service = new AdminUsersService(prisma)
+    service = new AdminUsersService(prisma, { revokeUser: async () => undefined } as never)
   })
 
   it('writes the exact approved header and formats dates, booleans and nulls', async () => {
