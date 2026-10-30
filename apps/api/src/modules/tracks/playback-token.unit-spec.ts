@@ -1,5 +1,5 @@
-import { afterEach, describe, expect, it, jest } from '@jest/globals'
 import { createSignedStorageToken } from '@infra/storage/signed-storage-token'
+import { afterEach, describe, expect, it, jest } from '@jest/globals'
 import { createPlaybackToken, verifyPlaybackToken } from './playback-token'
 
 const SECRET = 'test-secret-at-least-32-characters-long'

@@ -27,6 +27,16 @@ class FakeRedis {
     })
   }
 
+  hsetnx(key: string, field: string, value: string | number) {
+    return this.reply(() => {
+      const hash = this.hashes.get(key) ?? new Map<string, string>()
+      if (hash.has(field)) return 0
+      hash.set(field, String(value))
+      this.hashes.set(key, hash)
+      return 1
+    })
+  }
+
   hget(key: string, field: string) {
     return this.reply(() => this.hashes.get(key)?.get(field) ?? null)
   }
@@ -154,7 +164,29 @@ describe('PlaybackSessionService', () => {
 
     for (let request = 0; request < 50; request++) await service.charge(session, 0)
 
-    expect(await redis.hget(`playback:session:${session.sessionId}`, 'servedMs')).toBe('0')
+    expect((await redis.hget('playback:budget:user-1:track-1', 'servedMs')) ?? '0').toBe('0')
+  })
+
+  it('shares one budget across every session the user opens for a track', async () => {
+    jest.useFakeTimers({ now: new Date('2026-10-30T12:00:00Z') })
+    const first = await service.authorize((await open()).token, 'track-1')
+    for (let fragment = 0; fragment < 6; fragment++) await service.charge(first, 10_000)
+
+    const second = await service.authorize((await open()).token, 'track-1')
+
+    await expect(service.charge(second, 10_000)).rejects.toBeInstanceOf(PlaybackPacingError)
+    const otherTrack = await service.authorize((await open('track-2')).token, 'track-2')
+    await expect(service.charge(otherTrack, 10_000)).resolves.toBeUndefined()
+  })
+
+  it('refuses to charge a session revoked mid-stream and never brings it back', async () => {
+    const { token } = await open()
+    const session = await service.authorize(token, 'track-1')
+
+    await service.revokeUser('user-1')
+
+    await expect(service.charge(session, 10_000)).rejects.toThrow(ForbiddenException)
+    await expect(service.authorize(token, 'track-1')).rejects.toThrow(ForbiddenException)
   })
 
   it('keeps playing on the signed token alone while Redis is down, and reports it', async () => {

@@ -13,9 +13,9 @@ import {
 import { parseRendition } from './cmaf-manifest'
 import { resolveRange } from './cmaf-range'
 import { PLAYBACK_ERRORS } from './errors'
-import { type AuthorizedPlaybackSession, PlaybackSessionService } from './playback-session.service'
 import { pacedChunks } from './paced-stream'
 import { planRenditionResponse, type RenditionSegment, renditionSegments } from './playback-segment'
+import { type AuthorizedPlaybackSession, PlaybackSessionService } from './playback-session.service'
 import {
   CMAF_CONTENT_TYPE,
   CMAF_FORMAT,

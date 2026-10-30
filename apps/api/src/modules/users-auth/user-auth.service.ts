@@ -8,6 +8,7 @@ import {
 } from '@infra/mail/templates/mail-locale'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import { AccountAuthCore, type SignInAccount } from '@modules/auth-core'
+import { PlaybackSessionService } from '@modules/tracks/playback-session.service'
 import { UsersPrivateService } from '@modules/users/users.private.service'
 import {
   BadRequestException,
@@ -21,7 +22,6 @@ import { TokenService } from '../tokens/token.service'
 import { UsersService } from '../users/users.service'
 import type { RegistrationDto } from './dtos'
 import type { UserSessionEntity } from './entities'
-import { PlaybackSessionService } from '@modules/tracks/playback-session.service'
 import { UserAuthStore, type UserSessionClient } from './user-auth.store'
 
 @Injectable()
@@ -157,6 +157,8 @@ export class UserAuthService {
   async revokeSession(userId: string, sessionId: string) {
     const result = await this.prisma.userSession.deleteMany({ where: { id: sessionId, userId } })
     if (result.count === 0) throw new BadRequestException('Session not found')
+    // Playback tokens are not tied to one sign-in; the current device reopens its session on 403.
+    await this.playbackSessions.revokeUser(userId)
   }
 
   /** Revokes all sessions except the current one. */
@@ -164,6 +166,7 @@ export class UserAuthService {
     await this.prisma.userSession.deleteMany({
       where: { userId, access_token: { not: this.token.hashToken(accessToken) } },
     })
+    await this.playbackSessions.revokeUser(userId)
   }
 
   private async issueEmailVerification(

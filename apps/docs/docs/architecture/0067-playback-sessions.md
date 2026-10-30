@@ -22,9 +22,10 @@ opens its own session; a session is not a counted listen.
 
 **Hybrid token.** An HMAC-SHA256-signed token (the pattern of `signed-storage-token.ts`, with a
 `bitrate-playback.v1.` domain prefix so storage tokens never verify) carries the session id, user,
-track and expiry. A Redis hash `playback:session:<id>` marks the session alive and counts the audio
-it has received; `playback:user:<id>` lists a user's sessions. The signature rejects forgery;
-deleting the key revokes. Both live for the track's duration plus 15 minutes; on a 403 web-player
+track and expiry. A Redis hash `playback:session:<id>` marks the session alive;
+`playback:user:<id>` lists a user's sessions; `playback:budget:<user>:<track>` counts the audio all
+of that listener's sessions for the track have received, so opening more sessions buys no extra
+audio. The signature rejects forgery; deleting the session key revokes. Both live for the track's duration plus 15 minutes; on a 403 web-player
 opens one new session and retries. The optional Bitrate Connect `deviceId` is stored for stage 3.
 
 **Transport.** The token travels as `?t=` on every rendition request — MSE and native `<audio>`
@@ -32,7 +33,10 @@ alike — and `/cmaf` authorises by it alone, without the cookie a native elemen
 is redacted in the API's request logs (pino serializer) and nginx's access log (`map` on
 `$request`).
 
-**Revocation.** Logout and password reset delete all of the user's sessions.
+**Revocation.** Logout, password reset, revoking a sign-in (one session or all others), a staff
+session revocation and a take-down delete all of the user's playback sessions; a device that still
+has its sign-in opens a new one on the 403. Charging a revoked session fails closed, so a paced
+response in flight stops and the session cannot reappear.
 
 **What a response may carry (D15).** A `Range` of at most the rendition's largest fragment
 (~10 s) is served exactly — every request the MSE loader makes — and charged before any byte is
@@ -43,8 +47,8 @@ closed range (`NotSupportedError`) and, under a byte cap, made one request witho
 stalled waiting for the rest. A paced long response keeps it working while the track still cannot
 be fetched whole at once.
 
-**Pacing (D16).** A session may receive at most the seconds since it opened plus 60 seconds of
-audio. Beyond that an exact request gets 429 with `Retry-After`, and a paced response waits inside
+**Pacing (D16).** A listener's sessions for one track may together receive at most the seconds
+since the first of them opened plus 60 seconds of audio. Beyond that an exact request gets 429 with `Retry-After`, and a paced response waits inside
 the stream.
 
 **Redis outage (D18).** A validly signed, unexpired token still plays; revocation and pacing pause

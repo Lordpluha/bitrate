@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it } from '@jest/globals'
+import { beforeEach, describe, expect, it, jest } from '@jest/globals'
 import type { Prisma } from '@prisma/client'
 import { type PrismaMock, prismaMock, resetPrismaMock } from '@test/mocks'
 import { type DeepMockProxy, mockDeep } from 'jest-mock-extended'
@@ -15,6 +15,7 @@ const STAFF_ID = 'staff-1'
 describe('AdminUsersService', () => {
   let service: AdminUsersService
   let prisma: PrismaMock
+  let playbackSessions: { revokeUser: jest.Mock<(userId: string) => Promise<void>> }
   let transaction: DeepMockProxy<Prisma.TransactionClient>
 
   beforeEach(() => {
@@ -24,7 +25,8 @@ describe('AdminUsersService', () => {
     prisma.$transaction.mockImplementation(async (callback: unknown) =>
       (callback as (client: Prisma.TransactionClient) => unknown)(transaction),
     )
-    service = new AdminUsersService(prisma)
+    playbackSessions = { revokeUser: jest.fn(async (_userId: string) => undefined) }
+    service = new AdminUsersService(prisma, playbackSessions as never)
   })
 
   describe('findAll', () => {
@@ -260,6 +262,19 @@ describe('AdminUsersService', () => {
         }),
       )
     })
+
+    it("ends the user's playback sessions once the take-down commits", async () => {
+      prisma.user.findFirst.mockResolvedValue(buildUser({ deletedAt: null }) as never)
+      transaction.user.updateMany.mockResolvedValue({ count: 1 })
+      transaction.userSession.deleteMany.mockResolvedValue({ count: 0 } as never)
+      transaction.user.findFirstOrThrow.mockResolvedValue(
+        buildAdminUser({ deletedAt: new Date() }) as never,
+      )
+
+      await service.softDelete('user-1', STAFF_ID)
+
+      expect(playbackSessions.revokeUser).toHaveBeenCalledWith('user-1')
+    })
   })
 
   describe('restore', () => {
@@ -319,6 +334,7 @@ describe('AdminUsersService', () => {
         where: { userId: 'user-1' },
       })
       expect(result).toEqual({ revoked: 4 })
+      expect(playbackSessions.revokeUser).toHaveBeenCalledWith('user-1')
       expect(transaction.auditLog.create).toHaveBeenCalledWith(
         expect.objectContaining({
           data: expect.objectContaining({ action: 'admin-users.revoke-sessions' }),

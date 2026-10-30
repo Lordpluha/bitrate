@@ -1,6 +1,6 @@
 import { setTimeout as delay } from 'node:timers/promises'
-import { PlaybackPacingError } from './playback-session.service'
 import { audioMsBetween, type RenditionSegment } from './playback-segment'
+import { PlaybackPacingError } from './playback-session.service'
 
 /** Input for {@link pacedChunks}. */
 export type PacedChunksInput = {

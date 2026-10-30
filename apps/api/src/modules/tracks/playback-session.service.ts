@@ -16,6 +16,8 @@ const PACING_ALLOWANCE_MS = 60_000
 
 const sessionKey = (sessionId: string) => `playback:session:${sessionId}`
 const userSessionsKey = (userId: string) => `playback:user:${userId}`
+/** One pacing budget per listener and track, so opening more sessions buys no extra audio. */
+const budgetKey = (userId: string, trackId: string) => `playback:budget:${userId}:${trackId}`
 
 /** Input for {@link PlaybackSessionService.open}. */
 export type OpenPlaybackSessionInput = {
@@ -50,7 +52,7 @@ export class PlaybackPacingError extends Error {
 
 /**
  * Playback sessions (ADR-0065 stage 2): a signed token per play, a Redis record that keeps it
- * revocable and counts the audio it has received, and real-time pacing on top of that count.
+ * revocable, and real-time pacing against a budget the listener's sessions for a track share.
  * While Redis is unreachable a validly signed, unexpired token still plays (D18); revocation and
  * pacing resume with Redis.
  */
@@ -78,15 +80,18 @@ export class PlaybackSessionService {
     const ttlSeconds = Math.ceil(durationMs / 1000) + SESSION_GRACE_SECONDS
     const key = sessionKey(sessionId)
     const userKey = userSessionsKey(userId)
+    const budget = budgetKey(userId, trackId)
 
     await this.redis.hset(key, {
       userId,
       trackId,
       ...(deviceId ? { deviceId } : {}),
       openedAtMs: Date.now(),
-      servedMs: 0,
     })
     await this.redis.expire(key, ttlSeconds)
+    // The first session for the track starts the clock; later ones join it.
+    await this.redis.hsetnx(budget, 'openedAtMs', Date.now())
+    await this.redis.expire(budget, ttlSeconds)
     await this.redis.sadd(userKey, sessionId)
     if ((await this.redis.ttl(userKey)) < ttlSeconds) await this.redis.expire(userKey, ttlSeconds)
 
@@ -118,31 +123,42 @@ export class PlaybackSessionService {
   }
 
   /**
-   * Counts `audioMs` against the session and refuses it when the session would be more than
-   * {@link PACING_ALLOWANCE_MS} ahead of the time since it opened (D16).
+   * Counts `audioMs` against the listener's budget for the track and refuses it when that budget
+   * would be more than {@link PACING_ALLOWANCE_MS} ahead of the time since its first session
+   * opened (D16). Fails closed: a session revoked mid-stream stops being served.
    * @throws PlaybackPacingError with the seconds until the request would fit.
+   * @throws ForbiddenException when the session or its budget no longer exists.
    */
   async charge(session: AuthorizedPlaybackSession, audioMs: number): Promise<void> {
     if (session.degraded || audioMs <= 0) return
-    const key = sessionKey(session.sessionId)
+    const budget = budgetKey(session.userId, session.trackId)
 
-    let refusal: PlaybackPacingError | null = null
+    let refusal: PlaybackPacingError | ForbiddenException | null = null
     try {
-      const served = await this.redis.hincrby(key, 'servedMs', audioMs)
-      const openedAtMs = Number(await this.redis.hget(key, 'openedAtMs'))
-      const allowanceMs = Date.now() - openedAtMs + PACING_ALLOWANCE_MS
+      if ((await this.redis.exists(sessionKey(session.sessionId))) === 0) {
+        throw new ForbiddenException(PLAYBACK_ERRORS.SESSION_ENDED)
+      }
+      const served = await this.redis.hincrby(budget, 'servedMs', audioMs)
+      const openedAt = await this.redis.hget(budget, 'openedAtMs')
+      if (openedAt === null) {
+        // HINCRBY recreated an expired budget without its clock: drop it rather than pace on NaN.
+        await this.redis.del(budget)
+        throw new ForbiddenException(PLAYBACK_ERRORS.SESSION_ENDED)
+      }
+      const allowanceMs = Date.now() - Number(openedAt) + PACING_ALLOWANCE_MS
       if (served > allowanceMs) {
-        await this.redis.hincrby(key, 'servedMs', -audioMs)
+        await this.redis.hincrby(budget, 'servedMs', -audioMs)
         refusal = new PlaybackPacingError(Math.ceil((served - allowanceMs) / 1000))
       }
     } catch (error) {
+      if (error instanceof ForbiddenException) throw error
       this.reportDegraded('charge', error)
       return
     }
     if (refusal) throw refusal
   }
 
-  /** Ends every session of a user: logout and password resets call this (D11). */
+  /** Ends every session of a user: logout, password reset and sign-in revocation call this (D11). */
   async revokeUser(userId: string): Promise<void> {
     const userKey = userSessionsKey(userId)
     try {

@@ -12,6 +12,7 @@ import {
   type TakeDownActor,
   type TakeDownDirection,
 } from '@modules/admin/shared'
+import { PlaybackSessionService } from '@modules/tracks/playback-session.service'
 import { Injectable } from '@nestjs/common'
 import type { Prisma } from '@prisma/client'
 import type { ADMIN_USERS_SORT_FIELDS } from './dtos'
@@ -43,7 +44,10 @@ type AdminUserRow = Prisma.UserGetPayload<{ select: typeof ADMIN_USER_SAFE_SELEC
 /** Handles the operator-facing user directory. */
 @Injectable()
 export class AdminUsersService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly playbackSessions: PlaybackSessionService,
+  ) {}
 
   /** Builds the shared `where` clause for listing and counting. */
   private buildWhere({ status, q }: Omit<ListUsersInput, 'page' | 'limit'>) {
@@ -238,14 +242,17 @@ export class AdminUsersService {
     return this.transition('restore', id, { staffId, reason, ...auditContext })
   }
 
-  /** Revokes every session of a user — see {@link revokeAccountSessions}. */
-  revokeSessions(
+  /**
+   * Revokes every session of a user — see {@link revokeAccountSessions} — and the playback
+   * tokens those sessions opened, which outlive a sign-in otherwise.
+   */
+  async revokeSessions(
     id: string,
     staffId: string,
     reason?: string,
     auditContext: AuditContextValue = {},
   ): Promise<AdminRevokeSessionsResultEntity> {
-    return revokeAccountSessions({
+    const result = await revokeAccountSessions({
       prisma: this.prisma,
       exists: async () =>
         !!(await this.prisma.user.findFirst({ where: { id }, select: { id: true } })),
@@ -255,16 +262,18 @@ export class AdminUsersService {
       entityId: id,
       actor: { staffId, reason, ...auditContext },
     })
+    await this.playbackSessions.revokeUser(id)
+    return result
   }
 
   /** Takes a user down or restores it, with its audit row — see {@link runTakeDownTransition}. */
-  private transition(
+  private async transition(
     direction: TakeDownDirection,
     id: string,
     actor: TakeDownActor,
   ): Promise<AdminUserRow> {
     const takeDown = direction === 'take-down'
-    return runTakeDownTransition({
+    const row = await runTakeDownTransition({
       prisma: this.prisma,
       direction,
       current: () => this.prisma.user.findFirst({ where: { id }, select: { deletedAt: true } }),
@@ -281,5 +290,7 @@ export class AdminUsersService {
         takeDown ? new UserAlreadyDeletedException(id) : new UserNotDeletedException(id),
       audit: { entityType: 'admin-users', entityId: id, ...actor },
     })
+    if (takeDown) await this.playbackSessions.revokeUser(id)
+    return row
   }
 }

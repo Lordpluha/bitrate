@@ -1,8 +1,8 @@
 import { Readable } from 'node:stream'
 import { describe, expect, it, jest } from '@jest/globals'
 import { pacedChunks } from './paced-stream'
-import { PlaybackPacingError } from './playback-session.service'
 import { renditionSegments } from './playback-segment'
+import { PlaybackPacingError } from './playback-session.service'
 
 /** Two 10-second fragments of 1000 bytes each, right after a 100-byte init segment. */
 const segments = renditionSegments(

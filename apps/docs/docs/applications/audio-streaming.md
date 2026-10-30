@@ -30,7 +30,7 @@ Range: bytes=892-25024
 
 These are the only routes that serve listener audio. Opening a session needs the user
 access-token cookie; the rendition route needs only the token, which lasts the track plus
-15 minutes and is revoked on logout and password reset. A track that cannot play yet answers
+15 minutes and is revoked on logout, password reset, sign-in revocation and staff take-down. A track that cannot play yet answers
 `404` to the session request.
 
 The rendition route never hands out a track at once:
@@ -38,7 +38,8 @@ The rendition route never hands out a track at once:
 - a `Range` of at most one fragment (~10 s) is served exactly — every request the MSE loader makes;
 - a missing or longer range gets one response to the end of the file, released no faster than
   real time after a 60-second allowance — what a native `<audio>` asks for;
-- a session ahead of that budget gets `429` with `Retry-After` on an exact request.
+- a listener ahead of that budget gets `429` with `Retry-After` on an exact request. The budget is
+  shared by all of the listener's sessions for the track, so opening more sessions does not help.
 
 Operators preview a track through the staff-only `GET /api/v1/admin/tracks/:id/audio`, which
 serves the same CMAF files without sessions.

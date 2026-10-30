@@ -4,8 +4,8 @@ import { BadRequestException } from '@nestjs/common'
 import type { JwtService } from '@nestjs/jwt'
 import { type PrismaMock, prismaMock, resetPrismaMock } from '@test/mocks'
 import { type DeepMockProxy, mockDeep, mockReset } from 'jest-mock-extended'
-import type { PlaybackSessionService } from '../tracks/playback-session.service'
 import type { TokenService } from '../tokens/token.service'
+import type { PlaybackSessionService } from '../tracks/playback-session.service'
 import { buildUser } from '../users/__tests__/fixtures/users.fixtures'
 import type { UsersPrivateService } from '../users/users.private.service'
 import type { UsersService } from '../users/users.service'
@@ -254,6 +254,25 @@ describe('UserAuthService', () => {
       token.hashToken.mockReturnValue('hashed-token')
 
       await service.logout('user-1', 'access-token')
+
+      expect(playbackSessions.revokeUser).toHaveBeenCalledWith('user-1')
+    })
+  })
+
+  describe('revoking sign-in sessions', () => {
+    it("ends the user's playback sessions when one session is revoked", async () => {
+      prisma.userSession.deleteMany.mockResolvedValue({ count: 1 })
+
+      await service.revokeSession('user-1', 'session-1')
+
+      expect(playbackSessions.revokeUser).toHaveBeenCalledWith('user-1')
+    })
+
+    it("ends the user's playback sessions when the other sessions are revoked", async () => {
+      prisma.userSession.deleteMany.mockResolvedValue({ count: 2 })
+      token.hashToken.mockReturnValue('hashed-token')
+
+      await service.revokeOtherSessions('user-1', 'access-token')
 
       expect(playbackSessions.revokeUser).toHaveBeenCalledWith('user-1')
     })
