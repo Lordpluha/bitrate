@@ -78,6 +78,8 @@ export const settings = {
   'settings.sessions.signOutOthers': 'Вийти на інших пристроях',
   'settings.sessions.loading': 'Завантажуємо пристрої…',
   'settings.sessions.signOutDevice': 'Вийти на {device}',
+  'settings.sessions.showAll': 'Показати всі пристрої ({count})',
+  'settings.sessions.showFewer': 'Згорнути',
   'settings.device.unknown': 'Невідомий пристрій',
   'settings.device.on': '{browser} на {system}',
   'settings.device.unknownBrowser': 'Невідомий браузер',

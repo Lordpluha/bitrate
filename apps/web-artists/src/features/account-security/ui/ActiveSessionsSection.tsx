@@ -8,12 +8,16 @@ import {
 } from '@entities/artist-account'
 import { type I18n, useI18n } from '@shared/i18n'
 import { Laptop, Smartphone } from 'lucide-react'
+import { useState } from 'react'
 
 interface ActiveSessionsSectionProps {
   artistId: string
 }
 
 const MOBILE = /Android|iPhone|iPad|iPod/
+
+/** Other devices listed before the rest fold behind "Show all". */
+const COLLAPSED_OTHERS = 3
 
 function lastSeen(
   session: ArtistSession,
@@ -38,8 +42,20 @@ export function ActiveSessionsSection({
   const sessions = useArtistSessions(artistId)
   const revoke = useRevokeSession(artistId)
   const revokeOthers = useRevokeOtherSessions(artistId)
+  const [expanded, setExpanded] = useState(false)
   const others =
     sessions.data?.filter((session) => !session.current).length ?? 0
+  const collapsible = others > COLLAPSED_OTHERS
+  const folded = new Set(
+    expanded
+      ? []
+      : (sessions.data ?? [])
+          .filter((session) => !session.current)
+          .slice(COLLAPSED_OTHERS)
+          .map((session) => session.id),
+  )
+  const visible =
+    sessions.data?.filter((session) => !folded.has(session.id)) ?? []
   const busy = revoke.isPending || revokeOthers.isPending
 
   return (
@@ -90,7 +106,7 @@ export function ActiveSessionsSection({
         </div>
       ) : (
         <ul aria-busy={busy} className="divide-y divide-border">
-          {sessions.data.map((session) => {
+          {visible.map((session) => {
             const Icon = MOBILE.test(session.userAgent ?? '')
               ? Smartphone
               : Laptop
@@ -128,6 +144,20 @@ export function ActiveSessionsSection({
             )
           })}
         </ul>
+      )}
+      {sessions.isSuccess && collapsible && (
+        <Button
+          aria-expanded={expanded}
+          onClick={() => setExpanded((open) => !open)}
+          size="sm"
+          variant="ghost"
+        >
+          {expanded
+            ? t('settings.sessions.showFewer')
+            : t('settings.sessions.showAll', {
+                count: sessions.data.length,
+              })}
+        </Button>
       )}
       {(revoke.error ?? revokeOthers.error) && (
         <p className="text-sm text-destructive" role="alert">
