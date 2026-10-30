@@ -16,6 +16,7 @@ import { DashboardCommands } from './DashboardCommands'
 import { DashboardDesignNavigation } from './DashboardDesignNavigation'
 import { DashboardMobileMenu } from './DashboardMobileMenu'
 import { DashboardNotifications } from './DashboardNotifications'
+import { DashboardSettingsLink } from './DashboardSettingsLink'
 import { DashboardSupport } from './DashboardSupport'
 
 interface ArtistDashboardProps {
@@ -41,8 +42,13 @@ export function ArtistDashboard({ artist, children }: ArtistDashboardProps) {
 
   return (
     <WorkspaceActionsProvider
-      accountContent={<DashboardAccount artist={artist} />}
-      appearanceContent={<ThemeSwitcher />}
+      accountContent={(onNavigate) => (
+        <>
+          <DashboardAccount artist={artist} />
+          <ThemeSwitcher />
+          <DashboardSettingsLink onNavigate={onNavigate} />
+        </>
+      )}
       artistId={artist.id}
       createReleaseDialog={(onClose) => (
         <CreateReleaseDialog artistId={artist.id} onClose={onClose} />

@@ -2302,6 +2302,19 @@ test('release list belongs to the signed-in artist after signing out and switchi
   expect(refreshes).toBe(0)
 })
 
+test('account dialog opens the settings page and closes on the way', async ({
+  page,
+  context,
+}) => {
+  await authenticate(context)
+  await gotoHydrated(page, '/dashboard')
+  await openAppearance(page)
+  const account = page.getByRole('dialog', { name: 'Artist account' })
+  await account.getByRole('link', { name: 'Settings', exact: true }).click()
+  await expect(page).toHaveURL(/\/dashboard\/settings$/)
+  await expect(account).toHaveCount(0)
+})
+
 test('workspace theme switches all three palettes and persists across navigation and reload', async ({
   page,
   context,
