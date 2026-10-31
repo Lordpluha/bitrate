@@ -5,13 +5,11 @@ const ready: ReleaseReadinessInput = {
   upc: '036000291452',
   cover: '/static/releases/covers/cover.jpg',
   masterOwnerType: 'ARTIST',
-  writersConfirmedAt: new Date('2026-10-05T10:00:00Z'),
   tracks: [{ id: 'track-1', isrc: 'USRC17607839', hasAudio: true }],
   contributors: [{ id: 'credit-1', roles: ['PERFORMER'] }],
   splits: [
-    { rightType: 'RECORDING', shareBasisPoints: 10_000 },
-    { rightType: 'COMPOSITION', shareBasisPoints: 6_000 },
-    { rightType: 'COMPOSITION', shareBasisPoints: 4_000 },
+    { rightType: 'RECORDING', shareBasisPoints: 6_000 },
+    { rightType: 'RECORDING', shareBasisPoints: 4_000 },
   ],
 }
 
@@ -24,13 +22,9 @@ describe('release readiness', () => {
     expect(releaseReadiness({ ...ready, tracks: [] }).blockers).toEqual([{ code: 'NO_TRACKS' }])
   })
 
-  it('requires the master owner and the songwriter confirmation', () => {
-    const { blockers } = releaseReadiness({
-      ...ready,
-      masterOwnerType: null,
-      writersConfirmedAt: null,
-    })
-    expect(blockers).toEqual([{ code: 'MASTER_OWNER_MISSING' }, { code: 'WRITERS_NOT_CONFIRMED' }])
+  it('requires the master owner but no songwriter confirmation', () => {
+    const { blockers } = releaseReadiness({ ...ready, masterOwnerType: null })
+    expect(blockers).toEqual([{ code: 'MASTER_OWNER_MISSING' }])
   })
 
   it('names each contributor without a role', () => {
@@ -41,15 +35,22 @@ describe('release readiness', () => {
     expect(blockers).toEqual([{ code: 'CONTRIBUTOR_ROLES_MISSING', contributorId: 'credit-2' }])
   })
 
-  it('requires exactly 100% for each right type', () => {
+  it('requires exactly 100% of the master', () => {
     const { blockers } = releaseReadiness({
       ...ready,
       splits: [{ rightType: 'RECORDING', shareBasisPoints: 9_999 }],
     })
     expect(blockers).toEqual([
       { code: 'SPLITS_INCOMPLETE', rightType: 'RECORDING', totalBasisPoints: 9_999 },
-      { code: 'SPLITS_INCOMPLETE', rightType: 'COMPOSITION', totalBasisPoints: 0 },
     ])
+  })
+
+  it('ignores publishing shares, which artists no longer split', () => {
+    const { blockers } = releaseReadiness({
+      ...ready,
+      splits: [...ready.splits, { rightType: 'COMPOSITION', shareBasisPoints: 2_500 }],
+    })
+    expect(blockers).toEqual([])
   })
 
   it('reports missing identifiers as notices that do not block submission', () => {
