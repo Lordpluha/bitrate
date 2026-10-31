@@ -37,7 +37,8 @@ export function releaseRoadmap(
   const blockers = release.readiness.blockers
   const has = (code: (typeof blockers)[number]['code']) =>
     blockers.some((blocker) => blocker.code === code)
-  const trackTotal = release.trackDrafts.length + release.tracks.length
+  // Drafts and linked tracks list the same recordings, so they are not added together.
+  const trackTotal = Math.max(release.trackDrafts.length, release.tracks.length)
   const missingAudio = blockers.filter(
     (blocker) => blocker.code === 'TRACK_AUDIO_MISSING',
   ).length
@@ -90,10 +91,9 @@ export function releaseRoadmap(
     {
       key: 'rights',
       label: t('release.roadmap.rights'),
-      detail:
-        has('MASTER_OWNER_MISSING') || has('WRITERS_NOT_CONFIRMED')
-          ? t('release.roadmap.rightsTodo')
-          : t('release.roadmap.rightsDone'),
+      detail: has('MASTER_OWNER_MISSING')
+        ? t('release.roadmap.rightsTodo')
+        : t('release.roadmap.rightsDone'),
       anchor: 'release-rights-heading',
     },
   ]
@@ -104,7 +104,7 @@ export function releaseRoadmap(
     artwork: !has('COVER_MISSING'),
     audio: !has('NO_TRACKS') && missingAudio === 0,
     credits: !has('CONTRIBUTOR_ROLES_MISSING') && !has('SPLITS_INCOMPLETE'),
-    rights: !has('MASTER_OWNER_MISSING') && !has('WRITERS_NOT_CONFIRMED'),
+    rights: !has('MASTER_OWNER_MISSING'),
   }
 
   let currentAssigned = submitted

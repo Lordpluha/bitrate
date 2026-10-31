@@ -12,6 +12,18 @@ export const publish = {
   'publish.confirmAccurate':
     'Я перевірив(-ла) цю чернетку й підтверджую, що дані точні.',
   'publish.submitting': 'Надсилаємо…',
+  'publish.review': 'Переглянути й надіслати',
+  'publish.preview.title': 'Перевірте реліз перед перевіркою',
+  'publish.preview.intro':
+    'Саме це побачить Bitrate під час перевірки. Якщо щось не так, поверніться до чернетки й виправте.',
+  'publish.preview.tracks': 'Треки',
+  'publish.preview.credits': 'Автори та частки мастера',
+  'publish.preview.owner': 'Власник мастера',
+  'publish.preview.identifiers': 'Ідентифікатори',
+  'publish.preview.noIsrc': 'Без ISRC',
+  'publish.preview.audioReady': 'Аудіо завантажено',
+  'publish.preview.noAudio': 'Немає аудіо',
+  'publish.preview.back': 'Повернутися до редагування',
   'publish.submit': 'Надіслати на перевірку',
   'publish.blockers.one': 'Усуньте {count} перешкоду перед надсиланням.',
   'publish.blockers.few': 'Усуньте {count} перешкоди перед надсиланням.',

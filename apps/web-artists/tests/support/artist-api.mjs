@@ -60,8 +60,7 @@ function readinessOf(release, recordings) {
   const blockers = [
     ...(recordings.length === 0 ? [{ code: 'NO_TRACKS' }] : []),
     ...(rights.masterOwnerType ? [] : [{ code: 'MASTER_OWNER_MISSING' }]),
-    ...(rights.writersConfirmedAt ? [] : [{ code: 'WRITERS_NOT_CONFIRMED' }]),
-    ...['RECORDING', 'COMPOSITION']
+    ...['RECORDING']
       .filter((rightType) => total(rightType) !== 10_000)
       .map((rightType) => ({
         code: 'SPLITS_INCOMPLETE',
@@ -352,7 +351,13 @@ const server = createServer(async (request, response) => {
         release.rights = {
           masterOwnerType: input.masterOwner?.type ?? null,
           masterOwnerName: input.masterOwner?.name ?? null,
-          writersConfirmedAt: input.writersConfirmed ? now : null,
+          // Optional now: omitted keeps whatever was stored.
+          writersConfirmedAt:
+            input.writersConfirmed === undefined
+              ? (release.rights?.writersConfirmedAt ?? null)
+              : input.writersConfirmed
+                ? now
+                : null,
           // Accuracy is confirmed by submitting, never by the rights form.
           accuracyConfirmedAt: release.rights?.accuracyConfirmedAt ?? null,
         }

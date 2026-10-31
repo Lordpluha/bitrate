@@ -5,7 +5,7 @@ import {
   participantRoleLabels,
   type ReleaseWorkspace,
   rightTypeLabels,
-  rightTypes,
+  splitRightTypes,
 } from '@entities/release'
 import { useI18n } from '@shared/i18n'
 import {
@@ -32,7 +32,7 @@ export function WorkspaceCredits({ release, onAction }: WorkspaceCreditsProps) {
       (split) =>
         split.contributorId === contributorId && split.rightType === rightType,
     )?.shareBasisPoints ?? 0
-  const totals = rightTypes.map((rightType) => ({
+  const totals = splitRightTypes.map((rightType) => ({
     rightType,
     total: release.splits
       .filter((split) => split.rightType === rightType)
@@ -110,7 +110,7 @@ export function WorkspaceCredits({ release, onAction }: WorkspaceCreditsProps) {
                         .join(' · ') || t('workspace.credits.noRoles')}
                     </p>
                     <p className="artist-release-credit-shares">
-                      {rightTypes
+                      {splitRightTypes
                         .map(
                           (rightType) =>
                             `${t(rightTypeLabels[rightType])} ${basisPointsToPercent(share(person.id, rightType))}%`,

@@ -10,9 +10,11 @@
 @import "./entities/release/ui/TrackPlayer.css";
 @import "./widgets/ArtistDashboard/ui/ArtistDashboard.css";
 @import "./views/DashboardView/ui/DashboardView.css";
+@import "./views/AnalyticsView/ui/AnalyticsView.css";
 @import "./widgets/ReleaseWorkspace/ui/ReleaseWorkspace.css";
 @import "./widgets/DashboardOverview/ui/DashboardOverview.css";
 @import "./widgets/MusicCatalogue/ui/MusicCatalogue.css";
+@import "./features/submit-release/ui/SubmitPreviewDialog.css";
 
 @source "./";
 @source "../node_modules/@bitrate/ui-react/src";
@@ -89,6 +91,17 @@
   }
 }
 
+/* Decorative artwork is drawn for dark surfaces; on the light theme it reads as stray photos. */
+:root.light
+:is(
+  .artist-dash-art,
+  .artist-music-surface-art,
+  .artist-music-surface-veil,
+  .artist-release-header-art,
+  .artist-release-destinations-art
+) {
+  display: none;
+}
 /* Workspace appearance preferences, set on <html> by the theme bootstrap and provider. */
 :root[data-density="compact"]
 :is(.artist-release-workspace-panel, .artist-release-header) {
@@ -101,6 +114,44 @@
     .artist-release-editors
   ) {
   gap: 0.75rem;
+}
+/* Page entrance: content blocks blur-fade in, siblings staggered. New blocks (route changes,
+   data arriving after a loading state) animate on insertion, so no script is involved. */
+#workspace-content :first-child {
+  --reveal-index: 0;
+}
+#workspace-content :nth-child(2) {
+  --reveal-index: 1;
+}
+#workspace-content :nth-child(3) {
+  --reveal-index: 2;
+}
+#workspace-content :nth-child(4) {
+  --reveal-index: 3;
+}
+#workspace-content :nth-child(5) {
+  --reveal-index: 4;
+}
+#workspace-content :nth-child(n + 6) {
+  --reveal-index: 5;
+}
+@media (prefers-reduced-motion: no-preference) {
+  :root:not([data-motion="reduced"])
+    #workspace-content
+    :is(
+      .artist-release-workspace-panel,
+      .artist-release-header,
+      .artist-release-stepper,
+      .artist-workspace-first-release,
+      [data-reveal]
+    ),
+  :root:not([data-motion="reduced"]) #workspace-content > * > :first-child {
+    animation: var(
+      --animate-reveal,
+      reveal 0.6s cubic-bezier(0.22, 1, 0.36, 1) backwards
+    );
+    animation-delay: calc(var(--reveal-index, 0) * 60ms);
+  }
 }
 :root[data-motion="reduced"] *,
 :root[data-motion="reduced"] *::before,

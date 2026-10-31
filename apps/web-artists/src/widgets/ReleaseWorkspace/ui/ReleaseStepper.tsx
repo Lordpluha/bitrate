@@ -34,18 +34,17 @@ export function ReleaseStepper({ release, active }: ReleaseStepperProps) {
                 search={{ step: stage }}
                 to="/dashboard/music/$releaseId"
               >
-                <span aria-hidden="true" className="artist-release-step-mark">
+                <span aria-hidden="true" className="artist-release-step-dot">
                   {state === 'complete' ? <Check /> : index + 1}
                 </span>
-                <span className="min-w-0">
-                  <span className="artist-release-step-name">
-                    {t(releaseStageLabels[stage])}
-                  </span>
-                  <span className="artist-release-step-state">
-                    {t(stageProgressLabels[state])}
-                  </span>
+                <span className="artist-release-step-name">
+                  {t(releaseStageLabels[stage])}
                 </span>
+                <span className="sr-only">{t(stageProgressLabels[state])}</span>
               </Link>
+              {index < releaseStages.length - 1 && (
+                <span aria-hidden="true" className="artist-release-step-line" />
+              )}
             </li>
           )
         })}

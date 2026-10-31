@@ -16,6 +16,11 @@ export const workspaceMotions = ['system', 'reduced'] as const
 export type WorkspaceMotion = (typeof workspaceMotions)[number]
 export const workspaceMotionStorageKey = 'bitrate.artist-motion.v1'
 
+/** Quiet interface sounds on hover and press; on by default, off silences them. */
+export const workspaceSounds = ['on', 'off'] as const
+export type WorkspaceSound = (typeof workspaceSounds)[number]
+export const workspaceSoundStorageKey = 'bitrate.artist-sound.v1'
+
 export function parseStored<T extends string>(
   options: readonly T[],
   value: string | null,

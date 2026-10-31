@@ -28,9 +28,9 @@ export function RightsDialog({
   const form = useForm<RightsFormValues>({
     resolver: zodResolver(rightsFormSchema),
     defaultValues: {
-      ownerType: rights.masterOwnerType ?? undefined,
+      // Most artists own their recording, so that answer starts selected.
+      ownerType: rights.masterOwnerType ?? 'ARTIST',
       ownerName: rights.masterOwnerName ?? '',
-      writersConfirmed: rights.writersConfirmedAt !== null,
     },
     mode: 'onTouched',
   })
@@ -47,7 +47,6 @@ export function RightsDialog({
             values.ownerType === 'OTHER'
               ? { type: 'OTHER', name: values.ownerName.trim() }
               : { type: 'ARTIST' },
-          writersConfirmed: values.writersConfirmed,
           expectedUpdatedAt,
         },
       })
@@ -140,18 +139,6 @@ export function RightsDialog({
             )}
           </div>
         )}
-        <fieldset className="space-y-3" disabled={busy}>
-          <legend className="text-sm font-medium">
-            {t('editRelease.confirmation')}
-          </legend>
-          <label className="artist-release-credit-role">
-            <input
-              type="checkbox"
-              {...form.register('writersConfirmed', { onChange: reset })}
-            />
-            <span>{t('workspace.rights.writersListed')}</span>
-          </label>
-        </fieldset>
         <p className="text-sm text-text-secondary">
           {t('editRelease.rightsNote')}
         </p>
