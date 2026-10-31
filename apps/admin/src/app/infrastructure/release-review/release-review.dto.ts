@@ -89,8 +89,6 @@ const releaseReviewDto = z.object({
   id: z.uuid(),
   decision: decisionDto,
   message: z.string().nullable(),
-  requiredChanges: z.array(z.string()),
-  recommendations: z.array(z.string()),
   createdAt: z.iso.datetime({ offset: true }),
   reviewerUsername: z.string().nullable(),
 }) satisfies z.ZodType<ApiSchemas['AdminReleaseReviewEntity']>

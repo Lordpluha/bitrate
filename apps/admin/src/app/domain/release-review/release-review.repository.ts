@@ -17,8 +17,7 @@ export type ReleaseDecisionRequest = {
 }
 
 export type ReleaseChangesRequest = ReleaseDecisionRequest & {
-  requiredChanges: string[]
-  recommendations: string[]
+  message: string
 }
 
 /** Why the API refused a decision; read from the status code in the adapter only. */
