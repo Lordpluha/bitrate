@@ -2,6 +2,8 @@
 @theme {
   --animate-gradient-shift: gradientShift 60s ease infinite;
   --animate-spin: spin 1s linear infinite;
+  /* Blur-fade entrance for content blocks; `backwards` holds the first frame during a stagger delay. */
+  --animate-reveal: reveal 0.6s cubic-bezier(0.22, 1, 0.36, 1) backwards;
 }
 
 /* Keyframes */
@@ -29,5 +31,18 @@
   }
   100% {
     transform: rotate(360deg);
+  }
+}
+
+@keyframes reveal {
+  from {
+    opacity: 0;
+    filter: blur(6px);
+    transform: translateY(0.75rem) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: none;
   }
 }
