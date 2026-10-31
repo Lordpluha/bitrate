@@ -253,7 +253,10 @@ as the only verification; run the relevant package checks before opening a PR.
    `.claude`, `infra`, `scripts`, `pencil`, `apps/docs`) may ride along; generated files
    don't count. The `PR Scope` check enforces it — run `pnpm check:pr-scope` locally first.
    A PR may carry several features in that workspace; fill it up to those limits rather
-   than opening a chain of small PRs split by screen. Exemptions and how to split cross-workspace work: `.claude/rules/commit-style.md`,
+   than opening a chain of small PRs split by screen. One feature spanning several
+   workspaces may land as one PR only with the maintainer's approval and the
+   `pr-scope/multi-workspace` label. Exemptions and how to split cross-workspace work:
+   `.claude/rules/commit-style.md`,
    "Commit and pull-request size".
 
 1. **Title** should be descriptive:

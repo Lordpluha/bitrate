@@ -44,7 +44,8 @@ Current workflow map for .github/workflows.
   `unlabeled` so the `pr-scope/exempt` label takes effect without a push.
 - pr_scope_reusable.yml — runs `scripts/check-pr-scope.mjs` (one workspace, ≤ 200 files,
   ≤ 3000 lines; generated output ignored). Skipped for `release/`, `backmerge/`,
-  `changeset-release/` and `dependabot/` branches and for the exempt label.
+  `changeset-release/` and `dependabot/` branches and for the exempt label;
+  `pr-scope/multi-workspace` lifts only the workspace limit (one user-approved feature).
 
 Knip's explicit entries include package source exports, platform-specific mobile files, CSS,
 service workers, and tests invoked through compiled JavaScript. Storybook loads only

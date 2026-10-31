@@ -192,6 +192,15 @@ logic in `scripts/check-pr-scope.mjs`; run `pnpm check:pr-scope` before pushing)
   needs ride along with it. A change spanning workspaces lands as a chain of PRs, each one
   standing alone: the producer first (`packages/ui-react`, or `apps/api`), then the
   regenerated contract, then each consumer.
+- **Several workspaces in one PR — only with the user's approval.** When one feature spans
+  workspaces, including closely related parts of it (an API endpoint, its contract and the
+  web-artists screen that calls it), it may land as one PR instead of a chain. An agent
+  never decides this alone. Before combining workspaces, ask the user, naming the
+  workspaces and the feature that ties them together. Unrelated work in different
+  workspaces is never combined. An approved PR carries the `pr-scope/multi-workspace`
+  label, and its description names the feature and the approval. The label lifts only the
+  workspace limit; the file and line limits still apply. Locally:
+  `pnpm check:pr-scope -- --multi-workspace`.
 - **At most 200 changed files and 3000 changed lines** (additions + deletions, renames
   detected, so a pure move costs no lines). Generated or release-managed output counts toward
   none of the limits: lockfiles, `packages/contracts/src/api/v*.ts`, `*.gen.ts`, test

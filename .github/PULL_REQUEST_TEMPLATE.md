@@ -25,7 +25,7 @@ Closes #
 
 ## Checklist
 
-- [ ] One workspace, ≤ 200 files, ≤ 3000 changed lines (`pnpm check:pr-scope`)
+- [ ] One workspace (or several for one feature, user-approved, labelled `pr-scope/multi-workspace`), ≤ 200 files, ≤ 3000 changed lines (`pnpm check:pr-scope`)
 - [ ] `pnpm lint`, `pnpm check-types` and the affected tests pass locally
 - [ ] Changeset added, or the change is not user/consumer-visible (docs, rules, tests, chore)
 - [ ] Docs updated — `apps/docs` for behaviour, an ADR for an architectural decision

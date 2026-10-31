@@ -9,6 +9,9 @@ name: "[monorepo] PR Scope Reusable"
 #   - dependabot/*  grouped dependency bumps across workspace manifests
 #   - any PR labelled `pr-scope/exempt` — a mechanical sweep (rename, linter migration,
 #     regeneration) whose description says why it cannot be split into PRs that stand alone.
+#
+# A PR labelled `pr-scope/multi-workspace` (one feature across workspaces, approved by the
+# user) is still checked, with only the workspace limit lifted.
 
 on:
   workflow_call:
@@ -23,6 +26,11 @@ on:
         type: string
       exempt-label:
         description: Whether the pull request carries the pr-scope/exempt label
+        required: false
+        default: false
+        type: boolean
+      multi-workspace-label:
+        description: Whether the pull request carries the pr-scope/multi-workspace label
         required: false
         default: false
         type: boolean
@@ -67,4 +75,10 @@ jobs:
         if: steps.exempt.outputs.skip != 'true'
         env:
           BASE_SHA: ${{ inputs.base-sha }}
-        run: node scripts/check-pr-scope.mjs "${BASE_SHA}" HEAD
+          MULTI_WORKSPACE: ${{ inputs.multi-workspace-label }}
+        run: |
+          if [ "${MULTI_WORKSPACE}" = "true" ]; then
+            node scripts/check-pr-scope.mjs --multi-workspace "${BASE_SHA}" HEAD
+          else
+            node scripts/check-pr-scope.mjs "${BASE_SHA}" HEAD
+          fi
