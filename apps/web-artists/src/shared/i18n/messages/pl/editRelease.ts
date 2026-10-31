@@ -16,12 +16,12 @@ export const editRelease = {
   'editRelease.saveChanges': 'Zapisz zmiany',
   'editRelease.savingChanges': 'Zapisywanie zmian…',
   'editRelease.removeConfirm':
-    'Usunąć {name} z wydania? Udziały tej osoby w masterze i prawach wydawniczych zostaną usunięte, więc podziały znów muszą sumować się do 100%.',
+    'Usunąć {name} z wydania? Udział tej osoby w masterze zostanie usunięty, więc podział znów musi sumować się do 100%.',
   'editRelease.thisContributor': 'tego uczestnika',
   'editRelease.keepContributor': 'Zachowaj uczestnika',
   'editRelease.removing': 'Usuwanie…',
   'editRelease.creditSelf':
-    'Wymienić {name} jako wykonawcę, kompozytora i autora tekstu ze 100% udziałów w masterze i prawach wydawniczych. Współtwórców możesz dodać i podzielić udziały później.',
+    'Wymienić {name} jako wykonawcę, kompozytora i autora tekstu ze 100% mastera. Współtwórców możesz dodać i podzielić udział później.',
   'editRelease.crediting': 'Dodawanie…',
   'editRelease.creditMe': 'Wymień tylko mnie',
   'editRelease.contributorIntro':
@@ -30,7 +30,7 @@ export const editRelease = {
   'editRelease.roles': 'Przypisane role',
   'editRelease.rolesHint': 'Wybierz co najmniej jedną rolę.',
   'editRelease.contributorNote':
-    'Wymienienie jako twórca nie daje dostępu do obszaru roboczego. Udziały ustawia się w podziale mastera i praw wydawniczych.',
+    'Wymienienie jako twórca nie daje dostępu do obszaru roboczego. Udziały ustawia się w podziale mastera.',
   'editRelease.saveContributor': 'Zapisz uczestnika',
   'editRelease.savingContributor': 'Zapisywanie uczestnika…',
   'editRelease.saveCode': 'Zapisz kod',
@@ -46,15 +46,14 @@ export const editRelease = {
     'Opcjonalne. Format CC-XXX-YY-NNNNN. Zostaw puste, jeśli przypisze go Twój dystrybutor.',
   'editRelease.rightsTitle': 'Potwierdzenie praw',
   'editRelease.rightsIntro':
-    'Przed weryfikacją potwierdź, co jest prawdą w przypadku tego szkicu.',
+    'Przed weryfikacją potwierdź, do kogo należy nagranie.',
   'editRelease.masterQuestion': 'Kto kontroluje nagranie master?',
   'editRelease.otherOwner': 'Inny właściciel, np. wytwórnia',
   'editRelease.ownerName': 'Nazwa właściciela mastera',
   'editRelease.ownerTypeRequired': 'Wybierz, kto kontroluje nagranie master.',
   'editRelease.ownerNameRequired': 'Wpisz nazwę właściciela mastera.',
-  'editRelease.confirmation': 'Potwierdzenie',
   'editRelease.rightsNote':
-    'Późniejsza zmiana uczestników usunie to potwierdzenie. Poprawność całego szkicu potwierdzasz raz — przy przesyłaniu do weryfikacji.',
+    'Poprawność całego szkicu potwierdzasz raz, przesyłając go do weryfikacji.',
   'editRelease.saveRights': 'Zapisz prawa',
   'editRelease.savingRights': 'Zapisywanie praw…',
   'editRelease.rightAway': 'Od razu',
@@ -74,9 +73,8 @@ export const editRelease = {
   'editRelease.savingSchedule': 'Zapisywanie terminu…',
   'editRelease.splitsTitle': 'Udziały',
   'editRelease.splitsIntro':
-    '{master} to przychód z samego nagrania; {publishing} to przychód za muzykę i tekst. Każda kolumna musi wynosić dokładnie 100% przed weryfikacją; w szkicu może być mniej.',
+    '{master} to przychód z samego nagrania. Przed weryfikacją udziały muszą wynosić dokładnie 100%; w szkicu może być mniej.',
   'editRelease.masterTerm': 'Master',
-  'editRelease.publishingTerm': 'prawa wydawnicze',
   'editRelease.noContributors':
     'Dodaj uczestników przed przypisaniem udziałów.',
   'editRelease.sharesLegend': 'Udziały w procentach',

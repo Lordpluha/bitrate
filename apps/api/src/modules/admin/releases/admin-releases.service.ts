@@ -88,9 +88,7 @@ export class AdminReleasesService {
       status: ReleaseStatus.REJECTED,
       review: {
         decision: ReleaseReviewDecision.CHANGES_REQUESTED,
-        message: input.message ?? null,
-        requiredChanges: input.requiredChanges,
-        recommendations: input.recommendations,
+        message: input.message,
       },
     })
   }

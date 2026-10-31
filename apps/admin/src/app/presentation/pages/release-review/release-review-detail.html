@@ -169,7 +169,7 @@
     <app-tile
       icon="lucideShieldCheck"
       [title]="'release.rights.title' | transloco"
-      [meta]="'release.rights.meta' | transloco: { done: confirmed(), all: 3 }"
+      [meta]="'release.rights.meta' | transloco: { done: confirmed(), all: 2 }"
       [span]="2"
     >
       <ul class="flex flex-col">
@@ -201,10 +201,7 @@
           </span>
         </li>
         @for (
-          check of [
-            { label: 'release.rights.writers', at: r.writersConfirmedAt },
-            { label: 'release.rights.accuracy', at: r.accuracyConfirmedAt },
-          ];
+          check of [{ label: 'release.rights.accuracy', at: r.accuracyConfirmedAt }];
           track check.label
         ) {
           <li class="flex gap-3 border-b border-glass-line py-2.5 last:border-b-0">
@@ -422,21 +419,7 @@
                   </span>
                 </p>
                 @if (review.message) {
-                  <p class="whitespace-pre-line">{{ review.message }}</p>
-                }
-                @if (review.requiredChanges.length > 0) {
-                  <ol class="list-decimal space-y-1 ps-5">
-                    @for (item of review.requiredChanges; track item) {
-                      <li>{{ item }}</li>
-                    }
-                  </ol>
-                }
-                @if (review.recommendations.length > 0) {
-                  <ul class="list-disc space-y-1 ps-5 text-muted-foreground">
-                    @for (item of review.recommendations; track item) {
-                      <li>{{ item }}</li>
-                    }
-                  </ul>
+                  <div class="app-markdown text-sm" [innerHTML]="review.message | markdown"></div>
                 }
               </div>
             </li>
@@ -447,7 +430,7 @@
   </app-tile-grid>
 
   <hlm-dialog [state]="mode() ? 'open' : 'closed'" (closed)="cancel()">
-    <hlm-dialog-content *hlmDialogPortal="let ctx" class="sm:max-w-lg">
+    <hlm-dialog-content *hlmDialogPortal="let ctx" class="sm:max-w-2xl">
       <form
         class="grid gap-4"
         [attr.aria-busy]="working()"
@@ -471,61 +454,26 @@
           </p>
         </hlm-dialog-header>
 
-        @if (mode() === 'changes') {
-          <div class="space-y-1.5">
-            <label hlmLabel for="review-required">{{
-              'release.decision.required' | transloco
-            }}</label>
-            <textarea
-              #requiredField
-              id="review-required"
-              class="w-full min-w-0 rounded-xl border border-glass-line bg-foreground/5 px-3 py-2 text-sm outline-none transition-[border-color,box-shadow] placeholder:text-muted-foreground focus-visible:border-primary/60 focus-visible:ring-3 focus-visible:ring-primary/20 disabled:opacity-50"
-              rows="4"
-              aria-describedby="review-required-hint"
-              [placeholder]="'release.decision.requiredPlaceholder' | transloco"
-              [disabled]="working()"
-              [value]="requiredText()"
-              (input)="requiredText.set(requiredField.value)"
-            ></textarea>
-            <p id="review-required-hint" class="text-xs text-muted-foreground">
-              {{
-                'release.decision.requiredHint'
-                  | transloco
-                    : {
-                        count: requiredCount(),
-                        max: limits.maxItems,
-                        length: limits.itemMaxLength,
-                      }
-              }}
-            </p>
-          </div>
-          <div class="space-y-1.5">
-            <label hlmLabel for="review-recommendations">{{
-              'release.decision.recommendations' | transloco
-            }}</label>
-            <textarea
-              #recommendationsField
-              id="review-recommendations"
-              class="w-full min-w-0 rounded-xl border border-glass-line bg-foreground/5 px-3 py-2 text-sm outline-none transition-[border-color,box-shadow] focus-visible:border-primary/60 focus-visible:ring-3 focus-visible:ring-primary/20 disabled:opacity-50"
-              rows="3"
-              [disabled]="working()"
-              [value]="recommendationText()"
-              (input)="recommendationText.set(recommendationsField.value)"
-            ></textarea>
-          </div>
-        }
         <div class="space-y-1.5">
-          <label hlmLabel for="review-message">{{ 'release.decision.message' | transloco }}</label>
-          <textarea
-            #messageField
-            id="review-message"
-            class="w-full min-w-0 rounded-xl border border-glass-line bg-foreground/5 px-3 py-2 text-sm outline-none transition-[border-color,box-shadow] focus-visible:border-primary/60 focus-visible:ring-3 focus-visible:ring-primary/20 disabled:opacity-50"
-            rows="3"
-            [attr.maxlength]="limits.messageMaxLength"
+          <label hlmLabel for="review-message">{{
+            (mode() === 'changes' ? 'release.decision.feedback' : 'release.decision.message')
+              | transloco
+          }}</label>
+          <app-markdown-editor
+            inputId="review-message"
+            describedBy="review-message-hint"
+            [rows]="mode() === 'changes' ? 8 : 4"
+            [maxLength]="limits.messageMaxLength"
+            [required]="mode() === 'changes'"
+            [placeholder]="
+              mode() === 'changes' ? ('release.decision.feedbackPlaceholder' | transloco) : ''
+            "
             [disabled]="working()"
-            [value]="message()"
-            (input)="message.set(messageField.value)"
-          ></textarea>
+            [(value)]="message"
+          />
+          <p id="review-message-hint" class="text-xs text-muted-foreground">
+            {{ 'release.decision.feedbackHint' | transloco: { max: limits.messageMaxLength } }}
+          </p>
         </div>
 
         <hlm-dialog-footer>
@@ -536,7 +484,7 @@
             hlmBtn
             type="submit"
             [variant]="mode() === 'approve' ? 'default' : 'destructive'"
-            [disabled]="working() || (mode() === 'changes' && requiredCount() === 0)"
+            [disabled]="working() || (mode() === 'changes' && !hasFeedback())"
           >
             {{
               working()

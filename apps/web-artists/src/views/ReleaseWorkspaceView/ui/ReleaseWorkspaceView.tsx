@@ -82,7 +82,7 @@ export function ReleaseWorkspaceView({
           >
             {t('shell.backToMusic')}
           </Link>
-          <ReleaseHeader release={query.data} />
+          <ReleaseHeader onAction={openDialog} release={query.data} />
           <ReleaseStepper active={stage ?? 'draft'} release={query.data} />
           {stage === 'draft' && (
             <DraftStage
@@ -97,7 +97,6 @@ export function ReleaseWorkspaceView({
           {stage === 'deliver' && (
             <ReleaseDeliveryPanel
               artistId={artistId}
-              onSchedule={() => openDialog({ kind: 'schedule' })}
               release={query.data}
               releaseId={releaseId}
             />

@@ -87,8 +87,6 @@ export function toSubmissionReview(dto: ReleaseReviewDto): SubmissionReview {
     id: dto.id,
     decision: TO_DOMAIN_DECISION[dto.decision],
     message: dto.message,
-    requiredChanges: dto.requiredChanges,
-    recommendations: dto.recommendations,
     createdAt: new Date(dto.createdAt),
     reviewerUsername: dto.reviewerUsername,
   }

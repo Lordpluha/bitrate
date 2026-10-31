@@ -18,6 +18,14 @@ export const rightTypes = [
   'COMPOSITION',
 ] as const satisfies readonly RightType[]
 
+/**
+ * The rights artists split: the master only. Publishing stays in {@link rightTypes} so
+ * existing API data still parses, but it is neither shown nor required.
+ */
+export const splitRightTypes = [
+  'RECORDING',
+] as const satisfies readonly RightType[]
+
 export const masterOwnerTypes = [
   'ARTIST',
   'OTHER',

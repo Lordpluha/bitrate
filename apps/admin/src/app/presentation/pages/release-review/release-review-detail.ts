@@ -11,7 +11,6 @@ import {
   canDecideOnRelease,
   canRetryPublishing,
   canTakeDownRelease,
-  normalizeReviewItems,
   REVIEW_LIMITS,
   ReleaseReviewError,
   type ReleaseSubmissionDetail,
@@ -32,10 +31,18 @@ import {
   lucideShieldCheck,
   lucideUsers,
 } from '@ng-icons/lucide'
-import { KvRow, PageHeader, Skeleton, StateMessage, Tile, TileGrid } from '@presentation/components'
+import {
+  KvRow,
+  MarkdownEditor,
+  PageHeader,
+  Skeleton,
+  StateMessage,
+  Tile,
+  TileGrid,
+} from '@presentation/components'
 import { LocaleStore } from '@presentation/navigation'
 import { formatClockDuration } from '@presentation/pages/shared/duration.formatter'
-import { ElapsedPipe, LocalizedDatePipe } from '@presentation/pipes'
+import { ElapsedPipe, LocalizedDatePipe, MarkdownPipe } from '@presentation/pipes'
 import { createDetailResource } from '@presentation/state'
 import { HlmBadgeImports } from '@spartan-ng/helm/badge'
 import { HlmButtonImports } from '@spartan-ng/helm/button'
@@ -70,10 +77,6 @@ const FAILURE: Record<'stale' | 'not-found' | 'invalid' | 'notAllowed' | 'other'
   other: 'release.error.save',
 }
 
-function lines(value: string): string[] {
-  return normalizeReviewItems(value.split('\n'))
-}
-
 /**
  * Over 100 lines: the decision dialogs' armed state and failure reporting describe one reviewer
  * action on one submission, so they stay together.
@@ -89,6 +92,8 @@ function lines(value: string): string[] {
     HlmTableImports,
     KvRow,
     LocalizedDatePipe,
+    MarkdownEditor,
+    MarkdownPipe,
     NgIcon,
     PageHeader,
     RouterLink,
@@ -149,12 +154,11 @@ export class ReleaseReviewDetailPage {
   protected readonly failure = this.record.failure
   protected readonly status = signal<Notice | null>(null)
   protected readonly mode = signal<DecisionMode>(null)
+  /** The reviewer's Markdown feedback; required when requesting changes. */
   protected readonly message = signal('')
-  protected readonly requiredText = signal('')
-  protected readonly recommendationText = signal('')
   protected readonly working = signal(false)
 
-  protected readonly requiredCount = computed(() => lines(this.requiredText()).length)
+  protected readonly hasFeedback = computed(() => this.message().trim().length > 0)
   protected readonly back = computed(() => ({ link: '/releases', label: this.t('releases.title') }))
   protected readonly failureText = computed(() => {
     const key = this.failure()
@@ -165,11 +169,11 @@ export class ReleaseReviewDetailPage {
     return notice === null ? null : this.t(notice.key, notice.params)
   })
 
-  /** How many of the three rights confirmations the artist has made. */
+  /** How many of the two rights confirmations (master owner, accuracy) the artist has made. */
   protected readonly confirmed = computed(() => {
     const r = this.release()
     if (!r) return 0
-    return [r.masterOwnerType, r.writersConfirmedAt, r.accuracyConfirmedAt].filter(Boolean).length
+    return [r.masterOwnerType, r.accuracyConfirmedAt].filter(Boolean).length
   })
   protected readonly totalLength = computed(() =>
     (this.release()?.tracks ?? []).reduce((sum, track) => sum + (track.durationSeconds ?? 0), 0),
@@ -272,18 +276,11 @@ export class ReleaseReviewDetailPage {
         await this.decide.approve({ release: current, message: this.message() })
         this.status.set({ key: 'release.decision.approved', params: { title: current.title } })
       } else {
-        await this.decide.requestChanges({
-          release: current,
-          requiredChanges: lines(this.requiredText()),
-          recommendations: lines(this.recommendationText()),
-          message: this.message(),
-        })
+        await this.decide.requestChanges({ release: current, message: this.message() })
         this.status.set({ key: 'release.decision.changesSent', params: { title: current.title } })
       }
       this.mode.set(null)
       this.message.set('')
-      this.requiredText.set('')
-      this.recommendationText.set('')
       await this.record.reload()
     } catch (error) {
       this.mode.set(null)

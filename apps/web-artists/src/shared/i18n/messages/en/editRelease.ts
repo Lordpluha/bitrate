@@ -15,12 +15,12 @@ export const editRelease = {
   'editRelease.saveChanges': 'Save changes',
   'editRelease.savingChanges': 'Saving changes…',
   'editRelease.removeConfirm':
-    'Remove {name} from the release? Their master and publishing shares are removed, so the splits must add up to 100% again.',
+    'Remove {name} from the release? Their master share is removed, so the split must add up to 100% again.',
   'editRelease.thisContributor': 'this contributor',
   'editRelease.keepContributor': 'Keep contributor',
   'editRelease.removing': 'Removing…',
   'editRelease.creditSelf':
-    'Credit {name} as performer, composer and lyricist with 100% of the master and publishing splits. You can add collaborators and divide the shares later.',
+    'Credit {name} as performer, composer and lyricist with 100% of the master. You can add collaborators and divide the share later.',
   'editRelease.crediting': 'Crediting…',
   'editRelease.creditMe': 'Credit me alone',
   'editRelease.contributorIntro':
@@ -29,7 +29,7 @@ export const editRelease = {
   'editRelease.roles': 'Assigned roles',
   'editRelease.rolesHint': 'Choose at least one role.',
   'editRelease.contributorNote':
-    'Credits do not grant workspace access. Shares are set in the master and publishing splits.',
+    'Credits do not grant workspace access. Shares are set in the master split.',
   'editRelease.saveContributor': 'Save contributor',
   'editRelease.savingContributor': 'Saving contributor…',
   'editRelease.saveCode': 'Save code',
@@ -44,16 +44,14 @@ export const editRelease = {
   'editRelease.isrcHint':
     'Optional. Format CC-XXX-YY-NNNNN. Leave empty if your distributor will assign one.',
   'editRelease.rightsTitle': 'Rights confirmation',
-  'editRelease.rightsIntro':
-    'Confirm what is true for this draft before review.',
+  'editRelease.rightsIntro': 'Confirm who owns the recording before review.',
   'editRelease.masterQuestion': 'Who controls the master recording?',
   'editRelease.otherOwner': 'Another owner, such as a label',
   'editRelease.ownerName': 'Master owner name',
   'editRelease.ownerTypeRequired': 'Choose who controls the master recording.',
   'editRelease.ownerNameRequired': 'Enter the master owner’s name.',
-  'editRelease.confirmation': 'Confirmation',
   'editRelease.rightsNote':
-    'Changing contributors later clears this confirmation. You confirm the whole draft is accurate once, when you submit it for review.',
+    'You confirm the whole draft is accurate once, when you submit it for review.',
   'editRelease.saveRights': 'Save rights',
   'editRelease.savingRights': 'Saving rights…',
   'editRelease.rightAway': 'Right away',
@@ -72,9 +70,8 @@ export const editRelease = {
   'editRelease.savingSchedule': 'Saving schedule…',
   'editRelease.splitsTitle': 'Splits',
   'editRelease.splitsIntro':
-    '{master} is the money from the recording itself; {publishing} is the money for the music and lyrics. Each column must reach exactly 100% before review; a draft can stay below.',
+    '{master} is the money from the recording itself. The shares must reach exactly 100% before review; a draft can stay below.',
   'editRelease.masterTerm': 'Master',
-  'editRelease.publishingTerm': 'publishing',
   'editRelease.noContributors': 'Add contributors before assigning splits.',
   'editRelease.sharesLegend': 'Shares in percent',
   'editRelease.contributor': 'Contributor',

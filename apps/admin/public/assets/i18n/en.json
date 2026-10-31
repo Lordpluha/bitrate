@@ -175,7 +175,23 @@
       "failed": "Couldn’t start playback — press Play to continue."
     },
     "yes": "Yes",
-    "no": "No"
+    "no": "No",
+    "markdown": {
+      "toolbar": "Formatting",
+      "write": "Write",
+      "preview": "Preview",
+      "previewEmpty": "Nothing to preview yet.",
+      "bold": "Bold (Ctrl+B)",
+      "italic": "Italic (Ctrl+I)",
+      "strike": "Strikethrough",
+      "heading": "Heading",
+      "bulletList": "Bulleted list",
+      "numberedList": "Numbered list",
+      "quote": "Quote",
+      "code": "Code",
+      "link": "Link (Ctrl+K)",
+      "linkText": "link text"
+    }
   },
   "moderation": {
     "batch": {
@@ -561,13 +577,11 @@
       "approveDesc": "The artist sees the decision in their workspace, and their delivery plan can go ahead. Approval does not deliver the release.",
       "approveAction": "Approve release",
       "changesTitle": "Request changes",
-      "changesDesc": "The artist sees each line as a task and resubmits when every one is done.",
+      "changesDesc": "The artist sees your feedback in their workspace and resubmits once it is addressed.",
       "changesAction": "Send to artist",
-      "required": "Required changes",
-      "requiredHint": "{count} of up to {max} · one change per line, up to {length} characters each.",
-      "requiredPlaceholder": "Replace the artwork: it contains a third-party logo",
-      "requiredMissing": "Add at least one change",
-      "recommendations": "Recommendations (optional), one per line",
+      "feedback": "What should the artist change?",
+      "feedbackPlaceholder": "**Artwork:** replace it, it contains a third-party logo.",
+      "feedbackHint": "Markdown: bold, italics, lists, quotes and links. Up to {max} characters.",
       "message": "Note to the artist (optional)",
       "saving": "Saving…",
       "approved": "“{title}” was approved. The artist sees the decision now.",

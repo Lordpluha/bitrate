@@ -11,7 +11,7 @@ import {
 } from '@features/account-security'
 import { NotificationPreferences } from '@features/notification-preferences'
 import { LanguagePreference } from '@features/workspace-language'
-import { AppearancePreferences, ThemeSwitcher } from '@features/workspace-theme'
+import { AppearancePreferences } from '@features/workspace-theme'
 import { useI18n } from '@shared/i18n'
 import { ROUTES } from '@shared/routes/routes'
 import { Link } from '@tanstack/react-router'
@@ -149,7 +149,6 @@ function SettingsSections({
         <ActiveSessionsSection artistId={artistId} />
       </Panel>
       <Panel id="settings-appearance-heading" title={t('settings.appearance')}>
-        <ThemeSwitcher />
         <AppearancePreferences />
         <p className="text-xs text-text-secondary">
           {t('settings.browserOnly')}

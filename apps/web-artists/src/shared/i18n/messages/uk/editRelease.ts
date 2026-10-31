@@ -15,12 +15,12 @@ export const editRelease = {
   'editRelease.saveChanges': 'Зберегти зміни',
   'editRelease.savingChanges': 'Зберігаємо зміни…',
   'editRelease.removeConfirm':
-    'Вилучити {name} з релізу? Частки цієї особи в мастері та видавничих правах буде видалено, тож суми часток знову мають становити 100%.',
+    'Вилучити {name} з релізу? Частку цієї особи в мастері буде видалено, тож сума часток знову має становити 100%.',
   'editRelease.thisContributor': 'цього учасника',
   'editRelease.keepContributor': 'Залишити учасника',
   'editRelease.removing': 'Вилучаємо…',
   'editRelease.creditSelf':
-    'Вказати {name} як виконавця, композитора й автора тексту зі 100% часток мастера та видавничих прав. Співавторів можна додати й розподілити частки пізніше.',
+    'Вказати {name} як виконавця, композитора й автора тексту зі 100% мастера. Співавторів можна додати й розподілити частку пізніше.',
   'editRelease.crediting': 'Вказуємо…',
   'editRelease.creditMe': 'Вказати лише мене',
   'editRelease.contributorIntro':
@@ -29,7 +29,7 @@ export const editRelease = {
   'editRelease.roles': 'Призначені ролі',
   'editRelease.rolesHint': 'Оберіть щонайменше одну роль.',
   'editRelease.contributorNote':
-    'Зазначення авторства не дає доступу до робочого простору. Частки задаються в розподілі мастера та видавничих прав.',
+    'Зазначення авторства не дає доступу до робочого простору. Частки задаються в розподілі мастера.',
   'editRelease.saveContributor': 'Зберегти учасника',
   'editRelease.savingContributor': 'Зберігаємо учасника…',
   'editRelease.saveCode': 'Зберегти код',
@@ -46,15 +46,14 @@ export const editRelease = {
     'Необов’язково. Формат CC-XXX-YY-NNNNN. Залиште порожнім, якщо код призначить ваш дистриб’ютор.',
   'editRelease.rightsTitle': 'Підтвердження прав',
   'editRelease.rightsIntro':
-    'Підтвердьте, що відповідає дійсності для цієї чернетки, перед перевіркою.',
+    'Підтвердьте, кому належить запис, перед перевіркою.',
   'editRelease.masterQuestion': 'Хто контролює мастер-запис?',
   'editRelease.otherOwner': 'Інший власник, наприклад лейбл',
   'editRelease.ownerName': 'Назва власника мастера',
   'editRelease.ownerTypeRequired': 'Оберіть, хто контролює мастер-запис.',
   'editRelease.ownerNameRequired': 'Введіть назву власника мастера.',
-  'editRelease.confirmation': 'Підтвердження',
   'editRelease.rightsNote':
-    'Зміна учасників пізніше скине це підтвердження. Точність усієї чернетки ви підтверджуєте один раз — під час надсилання на перевірку.',
+    'Точність усієї чернетки ви підтверджуєте один раз, коли надсилаєте її на перевірку.',
   'editRelease.saveRights': 'Зберегти права',
   'editRelease.savingRights': 'Зберігаємо права…',
   'editRelease.rightAway': 'Одразу',
@@ -73,9 +72,8 @@ export const editRelease = {
   'editRelease.savingSchedule': 'Зберігаємо дату…',
   'editRelease.splitsTitle': 'Частки',
   'editRelease.splitsIntro':
-    '{master} — це дохід від самого запису; {publishing} — дохід за музику й текст. Кожен стовпець має становити рівно 100% перед перевіркою; у чернетці сума може бути меншою.',
+    '{master} — це дохід від самого запису. Перед перевіркою частки мають становити рівно 100%; у чернетці сума може бути меншою.',
   'editRelease.masterTerm': 'Мастер',
-  'editRelease.publishingTerm': 'видавничі права',
   'editRelease.noContributors':
     'Додайте учасників, перш ніж розподіляти частки.',
   'editRelease.sharesLegend': 'Частки у відсотках',

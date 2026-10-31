@@ -855,6 +855,52 @@ describe('Release drafts (HTTP)', () => {
     expect(prismaMock.artistTrackDraft.count).toHaveBeenCalledWith({ where })
   })
 
+  it('shows a recording without its own artwork with the cover of its live release', async () => {
+    const recording = (
+      id: string,
+      cover: string | null,
+      release: { cover: string | null; deletedAt: Date | null },
+    ) => ({
+      id,
+      title: 'Night Signal',
+      version: 'ORIGINAL',
+      status: 'READY',
+      duration: 200,
+      cover,
+      previewUrl: null,
+      isDemo: false,
+      updatedAt: new Date('2026-10-27T10:00:00.000Z'),
+      owner: { username: 'artist' },
+      release: { id: '019a0000-0000-7000-8000-000000000200', title: 'AI Phonk', ...release },
+    })
+    prismaMock.artistTrackDraft.findMany.mockResolvedValue([
+      recording('019a0000-0000-7000-8000-000000000001', null, {
+        cover: 'release.webp',
+        deletedAt: null,
+      }),
+      recording('019a0000-0000-7000-8000-000000000002', 'own.webp', {
+        cover: 'release.webp',
+        deletedAt: null,
+      }),
+      recording('019a0000-0000-7000-8000-000000000003', null, {
+        cover: 'release.webp',
+        deletedAt: new Date('2026-10-28T10:00:00.000Z'),
+      }),
+    ] as never)
+    prismaMock.artistTrackDraft.count.mockResolvedValue(3)
+
+    const response = await request(app.getHttpServer())
+      .get('/api/v1/artist-music/tracks')
+      .set('x-test-artist', ownerId)
+      .expect(200)
+
+    expect(response.body.data.map((track: { cover: string | null }) => track.cover)).toEqual([
+      'release.webp',
+      'own.webp',
+      null,
+    ])
+  })
+
   it('counts only the current artist’s active private recordings and releases', async () => {
     prismaMock.artistTrackDraft.count.mockResolvedValue(6)
     prismaMock.release.count.mockResolvedValue(3)
@@ -962,7 +1008,13 @@ describe('Release drafts (HTTP)', () => {
     expect(response.body).toMatchObject({ title: draft.title, status: 'DRAFT', type: 'SINGLE' })
     expect(transactionMock.release.create).toHaveBeenCalledWith(
       expect.objectContaining({
-        data: { ownerArtistId: ownerId, title: draft.title, type: 'SINGLE', status: 'DRAFT' },
+        data: {
+          ownerArtistId: ownerId,
+          title: draft.title,
+          type: 'SINGLE',
+          status: 'DRAFT',
+          masterOwnerType: 'ARTIST',
+        },
       }),
     )
     expect(response.headers['cache-control']).toBe('private, no-store')

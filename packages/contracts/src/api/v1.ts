@@ -4101,7 +4101,7 @@ export interface paths {
     put?: never
     /**
      * Request changes to a submitted release
-     * @description SUBMITTED -> REJECTED with required changes and optional recommendations; the artist revises and resubmits. Requires releases:review.
+     * @description SUBMITTED -> REJECTED with Markdown feedback on what to change; the artist revises and resubmits. Requires releases:review.
      */
     post: operations['AdminReleasesController_requestChanges_v1']
     delete?: never
@@ -5483,9 +5483,8 @@ export interface components {
     ReleaseReviewDecision: 'APPROVED' | 'CHANGES_REQUESTED'
     WorkspaceReviewEntity: {
       decision: components['schemas']['ReleaseReviewDecision']
+      /** @description Reviewer feedback in Markdown */
       message: string | null
-      requiredChanges: string[]
-      recommendations: string[]
       /** Format: date-time */
       createdAt: string
     }
@@ -5591,8 +5590,8 @@ export interface components {
               }
           )
         | null
-      /** @description All songwriters and composers are credited */
-      writersConfirmed: boolean
+      /** @description Deprecated: no longer required; omit it to leave the stored value unchanged */
+      writersConfirmed?: boolean
       /**
        * Format: date-time
        * @description Release version read before editing
@@ -8221,9 +8220,8 @@ export interface components {
       /** Format: uuid */
       id: string
       decision: components['schemas']['ReleaseReviewDecision']
+      /** @description Reviewer feedback in Markdown */
       message: string | null
-      requiredChanges: string[]
-      recommendations: string[]
       /** Format: date-time */
       createdAt: string
       reviewerUsername: string | null
@@ -8258,7 +8256,7 @@ export interface components {
       reviews: components['schemas']['AdminReleaseReviewEntity'][]
     }
     ApproveReleaseDto: {
-      /** @description Optional note to the artist */
+      /** @description Optional note to the artist, in Markdown */
       message?: string
       /**
        * Format: date-time
@@ -8278,15 +8276,8 @@ export interface components {
       review: components['schemas']['AdminReleaseReviewEntity']
     }
     RequestReleaseChangesDto: {
-      /** @description Changes the artist must make before resubmitting */
-      requiredChanges: string[]
-      /**
-       * @description Optional suggestions
-       * @default []
-       */
-      recommendations: string[]
-      /** @description Optional note to the artist */
-      message?: string
+      /** @description What the artist must change before resubmitting, in Markdown */
+      message: string
       /**
        * Format: date-time
        * @description Release version the reviewer looked at

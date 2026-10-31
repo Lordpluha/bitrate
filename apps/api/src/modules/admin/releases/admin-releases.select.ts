@@ -18,8 +18,6 @@ export const REVIEW_SELECT = {
   id: true,
   decision: true,
   message: true,
-  requiredChanges: true,
-  recommendations: true,
   createdAt: true,
   staff: { select: { username: true } },
 } as const satisfies Prisma.ReleaseReviewSelect

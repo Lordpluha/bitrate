@@ -31,6 +31,7 @@ export {
   useUpdateRelease,
 } from './api/useReleases'
 export { useReleaseWorkspace } from './api/useReleaseWorkspace'
+export { playableAudioUrl } from './model/audioSource'
 export {
   type ContributorValues,
   contributorRoles,
@@ -43,6 +44,7 @@ export {
   COVER_ACCEPT,
   coverFileProblem,
   formatBytes,
+  releaseAudioUrl,
   releaseCoverUrl,
   titleFromFileName,
 } from './model/media'
@@ -56,7 +58,6 @@ export {
 } from './model/release.schema'
 export {
   basisPointsToPercent,
-  describeBlocker,
   FULL_SHARE_BASIS_POINTS,
   formatIsrc,
   isValidUpc,
@@ -64,7 +65,7 @@ export {
   percentToBasisPoints,
   type ReleaseNotice,
   rightTypeLabels,
-  rightTypes,
+  splitRightTypes,
 } from './model/rights'
 export { releaseRoadmap } from './model/roadmap'
 export {

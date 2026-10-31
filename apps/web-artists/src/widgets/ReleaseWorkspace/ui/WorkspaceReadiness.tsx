@@ -1,15 +1,12 @@
-import {
-  describeBlocker,
-  type ReleaseNotice,
-  type ReleaseWorkspace,
-} from '@entities/release'
+import type { ReleaseNotice, ReleaseWorkspace } from '@entities/release'
 import { ReleaseSubmission } from '@features/submit-release'
 import { type Translate, useI18n } from '@shared/i18n'
-import { CircleAlert, Info } from 'lucide-react'
+import { Info } from 'lucide-react'
 
 interface WorkspaceReadinessProps {
   artistId: string
   release: ReleaseWorkspace
+  onReview: () => void
 }
 
 function describeNotice(
@@ -24,54 +21,16 @@ function describeNotice(
   })
 }
 
+/** Notes that do not block review, then the submission itself. */
 export function WorkspaceReadiness({
   artistId,
   release,
+  onReview,
 }: WorkspaceReadinessProps) {
-  const { blockers, notices } = release.readiness
-  const { t, tp } = useI18n()
-  const contributors = Object.fromEntries(
-    release.participants.map((person) => [person.id, person.displayName]),
-  )
-  const tracks = Object.fromEntries(
-    release.trackDrafts.map((track) => [track.id, track.title]),
-  )
+  const { notices } = release.readiness
+  const { t } = useI18n()
   return (
-    <section
-      aria-labelledby="release-submit-heading"
-      className="artist-release-workspace-panel artist-release-stage-side artist-release-submit"
-      data-tone={blockers.length === 0 ? 'success' : undefined}
-    >
-      <div className="flex items-baseline justify-between gap-3">
-        <h2 id="release-submit-heading">
-          {blockers.length === 0
-            ? t('workspace.readiness.ready')
-            : t('workspace.readiness.before')}
-        </h2>
-        <span className="artist-release-submit-count">
-          {tp({ count: blockers.length, key: 'workspace.readiness.blockers' })}
-        </span>
-      </div>
-      <p>
-        {blockers.length === 0
-          ? t('workspace.readiness.complete')
-          : t('workspace.readiness.resolve')}
-      </p>
-      {blockers.length > 0 && (
-        <ul
-          aria-label={t('workspace.readiness.blockersLabel')}
-          className="artist-release-submit-list"
-        >
-          {blockers.map((blocker) => (
-            <li
-              key={`${blocker.code}-${'contributorId' in blocker ? blocker.contributorId : ''}${'rightType' in blocker ? blocker.rightType : ''}${'trackId' in blocker ? blocker.trackId : ''}`}
-            >
-              <CircleAlert aria-hidden="true" />
-              {describeBlocker(blocker, { contributors, tracks }, t)}
-            </li>
-          ))}
-        </ul>
-      )}
+    <div className="artist-release-submit" id="release-submit-heading">
       {notices.length > 0 && (
         <ul
           aria-label={t('workspace.readiness.notesLabel')}
@@ -88,7 +47,11 @@ export function WorkspaceReadiness({
           ))}
         </ul>
       )}
-      <ReleaseSubmission artistId={artistId} release={release} />
-    </section>
+      <ReleaseSubmission
+        artistId={artistId}
+        onReview={onReview}
+        release={release}
+      />
+    </div>
   )
 }

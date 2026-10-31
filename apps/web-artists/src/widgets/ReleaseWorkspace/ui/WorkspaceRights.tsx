@@ -25,7 +25,7 @@ function Confirmation({ done, label }: { done: boolean; label: string }) {
   )
 }
 
-/** Who owns the recording and the confirmations review needs, then the optional barcode. */
+/** Who owns the recording, then the optional barcode. */
 export function WorkspaceRights({ release, onAction }: WorkspaceRightsProps) {
   const draft = release.status === 'DRAFT'
   const { t } = useI18n()
@@ -61,10 +61,6 @@ export function WorkspaceRights({ release, onAction }: WorkspaceRightsProps) {
               ? t('workspace.rights.masterOwner', { owner })
               : t('workspace.rights.noMasterOwner')
           }
-        />
-        <Confirmation
-          done={rights.writersConfirmedAt !== null}
-          label={t('workspace.rights.writersListed')}
         />
       </ul>
       <div className="artist-release-identifiers">

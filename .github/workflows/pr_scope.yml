@@ -1,7 +1,8 @@
 name: "[monorepo] PR Scope"
 
-# One pull request, one workspace, at most 200 files and 2000 changed lines.
-# Labelled/unlabelled re-run the gate so adding or removing `pr-scope/exempt` takes effect
+# One pull request, one workspace, at most 200 files and 3000 changed lines.
+# `pr-scope/multi-workspace` lifts only the workspace limit, for one user-approved feature.
+# Labelled/unlabelled re-run the gate so adding or removing either label takes effect
 # without a new push; nothing else listens to those events, so no other workflow re-runs.
 on:
   pull_request:
@@ -22,3 +23,4 @@ jobs:
       base-sha: ${{ github.event.pull_request.base.sha }}
       head-ref: ${{ github.event.pull_request.head.ref }}
       exempt-label: ${{ contains(github.event.pull_request.labels.*.name, 'pr-scope/exempt') }}
+      multi-workspace-label: ${{ contains(github.event.pull_request.labels.*.name, 'pr-scope/multi-workspace') }}

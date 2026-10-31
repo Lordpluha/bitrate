@@ -59,39 +59,17 @@ export const workspace = {
   'workspace.draft.editTiming': 'Zmień termin',
   'workspace.draft.editArtwork': 'Edytuj okładkę',
   'workspace.draft.addArtwork': 'Dodaj okładkę',
-  'workspace.draft.changeArtwork': 'Zmień okładkę',
   'workspace.draft.addAudio': 'Dodaj audio',
   'workspace.draft.editTracks': 'Edytuj utwory',
   'workspace.draft.reviewCredits': 'Sprawdź twórców',
   'workspace.draft.confirmRights': 'Potwierdź prawa',
-  'workspace.draft.complete': 'Przygotowanie zakończone',
-  'workspace.draft.stepsLeft.one': 'Został {count} krok',
-  'workspace.draft.stepsLeft.few': 'Zostały {count} kroki',
-  'workspace.draft.stepsLeft.many': 'Zostało {count} kroków',
-  'workspace.draft.stepsLeft.other': 'Zostało {count} kroku',
-  'workspace.draft.master': 'Master',
-  'workspace.draft.duration': 'Czas trwania',
-  'workspace.draft.noMaster': 'Brak mastera. Prześlij pierwszy utwór.',
+  'workspace.draft.progress': 'Gotowe {done} z {total}',
   'workspace.draft.checklist': 'Lista gotowości',
   'workspace.draft.checklistHint':
     'Wybierz działanie, aby wrócić do konkretnego kroku.',
   'workspace.draft.honest':
     'Przesłanie rozpoczyna weryfikację Bitrate. Nie dostarcza wydania do serwisów streamingowych.',
   'workspace.draft.submitted': 'Szkic przesłany',
-  'workspace.draft.locked':
-    'Szkic jest zablokowany podczas weryfikacji Bitrate lub po zatwierdzeniu.',
-  'workspace.draft.lockedRejected':
-    'Aby znów edytować, wybierz „Rozpocznij poprawki” na etapie weryfikacji.',
-  'workspace.draft.openReview': 'Otwórz weryfikację',
-  'workspace.readiness.ready': 'Gotowe do weryfikacji',
-  'workspace.readiness.before': 'Przed weryfikacją',
-  'workspace.readiness.blockers.one': '{count} blokada',
-  'workspace.readiness.blockers.few': '{count} blokady',
-  'workspace.readiness.blockers.many': '{count} blokad',
-  'workspace.readiness.blockers.other': '{count} blokady',
-  'workspace.readiness.complete': 'Wszystkie wymagane kroki są ukończone.',
-  'workspace.readiness.resolve': 'Rozwiąż to przed przesłaniem.',
-  'workspace.readiness.blockersLabel': 'Blokady',
   'workspace.readiness.notesLabel': 'Uwagi',
   'workspace.readiness.noUpc': 'Brak kodu UPC — będzie potrzebny przed dostawą',
   'workspace.readiness.noIsrc':
@@ -125,7 +103,7 @@ export const workspace = {
   'workspace.credits.title': 'Twórcy i udziały',
   'workspace.credits.editSplits': 'Edytuj udziały',
   'workspace.credits.description':
-    'Kto stworzył to wydanie, co zrobił i jaki ma udział w masterze (nagraniu) oraz prawach wydawniczych (muzyce i tekście).',
+    'Kto stworzył to wydanie, co zrobił i jaki ma udział w masterze (nagraniu).',
   'workspace.credits.totals': 'Sumy udziałów',
   'workspace.credits.total': '{right}: {percent}% ze 100%',
   'workspace.credits.none': 'Brak wymienionych uczestników.',
@@ -146,13 +124,10 @@ export const workspace = {
     'Wymienienie jako twórca nie daje dostępu do obszaru roboczego. Każdy podział musi wynosić dokładnie 100% przed weryfikacją.',
   'workspace.rights.title': 'Prawa',
   'workspace.rights.edit': 'Edytuj prawa',
-  'workspace.rights.description':
-    'Do kogo należy nagranie i czy wymieniono wszystkich autorów.',
+  'workspace.rights.description': 'Do kogo należy nagranie.',
   'workspace.rights.thisArtist': '{name} (ten artysta)',
   'workspace.rights.masterOwner': 'Właściciel mastera: {owner}',
   'workspace.rights.noMasterOwner': 'Nie wybrano właściciela mastera',
-  'workspace.rights.writersListed':
-    'Wymieniono wszystkich autorów tekstów i kompozytorów',
   'workspace.rights.confirmed': '(potwierdzone)',
   'workspace.rights.notConfirmed': '(niepotwierdzone)',
   'workspace.rights.identifiers': 'Identyfikatory',
@@ -165,8 +140,6 @@ export const workspace = {
   'workspace.review.approved': 'Zatwierdzone przez Bitrate',
   'workspace.review.changesRequested': 'Poproszono o zmiany',
   'workspace.review.reviewedAt': 'Zweryfikowano {date} UTC',
-  'workspace.review.requiredBefore': 'Wymagane przed ponownym przesłaniem',
-  'workspace.review.recommendations': 'Rekomendacje',
   'workspace.review.stepSubmitted': 'Przesłano',
   'workspace.review.stepSubmittedDetail':
     'Szkic jest zablokowany, aby weryfikujący widział dokładnie to, co przesłałeś(-aś).',
@@ -183,21 +156,14 @@ export const workspace = {
   'workspace.review.notSubmitted': 'Jeszcze nie przesłano',
   'workspace.review.notSubmittedHint':
     'Weryfikacja Bitrate zaczyna się po przesłaniu szkicu. Uwagi i decyzja pojawią się tutaj.',
-  'workspace.review.requiredChanges.one':
-    '{count} wymagana zmiana przed ponownym przesłaniem.',
-  'workspace.review.requiredChanges.few':
-    '{count} wymagane zmiany przed ponownym przesłaniem.',
-  'workspace.review.requiredChanges.many':
-    '{count} wymaganych zmian przed ponownym przesłaniem.',
-  'workspace.review.requiredChanges.other':
-    '{count} wymaganej zmiany przed ponownym przesłaniem.',
+  'workspace.review.reviseHint':
+    'Wprowadź zmiany z opinii powyżej i prześlij wydanie ponownie.',
   'workspace.review.nextHint':
     'Zatwierdzenie nie dostarcza wydania. Opublikuj je w Bitrate na etapie Premiera, a sklepy i terytoria zaplanuj, gdy będziesz gotowy(-a).',
   'workspace.review.planDelivery': 'Zaplanuj dostawę',
   'workspace.review.readiness': 'Gotowość wydania',
   'workspace.review.backToDraft': 'Wróć do szkicu',
   'workspace.launch.notLive': 'Dostępne, gdy wydanie pojawi się w Bitrate.',
-  'workspace.launch.comingSoon': 'Wkrótce w obszarze roboczym artysty.',
   'workspace.launch.publication': 'Publikacja w Bitrate',
   'workspace.launch.links': 'Linki do wydania',
   'workspace.launch.linksHint':
@@ -212,8 +178,8 @@ export const workspace = {
   'workspace.launch.readyToShare': 'Gotowe do udostępnienia',
   'workspace.launch.afterLive': 'Po publikacji wydania',
   'workspace.launch.promotionPlan': 'Przygotuj plan promocji',
-  'workspace.launch.optionalSoon': 'Opcjonalne · Wkrótce',
-  'workspace.launch.planPromotion': 'Zaplanuj promocję',
+  'workspace.launch.optional': 'Opcjonalnie',
+  'workspace.launch.soon': 'Wkrótce',
   'workspace.launch.honest':
     'Jako ukończona pokazana jest tu tylko publikacja w Bitrate.',
   'workspace.launch.copied': 'Link skopiowany',

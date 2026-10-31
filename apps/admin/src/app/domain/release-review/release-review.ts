@@ -24,9 +24,7 @@ export type ReleaseReviewDecision = 'APPROVED' | 'CHANGES_REQUESTED'
 
 /** Mirrors the API's limits on a review, so the form refuses what the API would. */
 export const REVIEW_LIMITS = {
-  itemMaxLength: 500,
-  messageMaxLength: 2000,
-  maxItems: 20,
+  messageMaxLength: 5000,
 } as const
 
 /** A submission as one row of the review queue. */
@@ -69,9 +67,8 @@ type SubmissionSplit = {
 export type SubmissionReview = {
   id: string
   decision: ReleaseReviewDecision
+  /** Reviewer feedback in Markdown. */
   message: string | null
-  requiredChanges: string[]
-  recommendations: string[]
   createdAt: Date
   /** `null` once the reviewing operator's account is gone. */
   reviewerUsername: string | null
@@ -110,9 +107,8 @@ export type ApproveSubmissionInput = {
 
 export type RequestSubmissionChangesInput = {
   release: ReleaseSubmission
-  requiredChanges: string[]
-  recommendations: string[]
-  message?: string
+  /** What the artist must change, in Markdown. */
+  message: string
 }
 
 /** Only SUBMITTED releases can be decided; the API re-checks the version on write. */
@@ -137,20 +133,4 @@ export function canTakeDownRelease(release: ReleaseSubmission): PolicyDecision {
     return { allowed: false, reason: `"${release.title}" is not live on Bitrate.` }
   }
   return POLICY_ALLOWED
-}
-
-/**
- * Trims, drops blanks and duplicates, keeping the reviewer's order — the API rejects duplicates,
- * and a list the reviewer typed with an accidental repeat should not fail for it.
- */
-export function normalizeReviewItems(items: readonly string[]): string[] {
-  const seen = new Set<string>()
-  const result: string[] = []
-  for (const raw of items) {
-    const item = raw.trim()
-    if (!item || seen.has(item)) continue
-    seen.add(item)
-    result.push(item)
-  }
-  return result
 }

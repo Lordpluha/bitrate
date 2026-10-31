@@ -23,7 +23,7 @@ const soloCredit = {
   roles: soloRoles,
 }
 const fullShares = (contributorId: string) =>
-  (['RECORDING', 'COMPOSITION'] as const).map((rightType) => ({
+  (['RECORDING'] as const).map((rightType) => ({
     releaseId: draft.id,
     contributorId,
     rightType,

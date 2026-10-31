@@ -7,7 +7,7 @@ import {
   NotFoundException,
   UnprocessableEntityException,
 } from '@nestjs/common'
-import { AlbumType, type Prisma, ReleaseStatus } from '@prisma/client'
+import { AlbumType, type Prisma, ReleaseMasterOwner, ReleaseStatus } from '@prisma/client'
 import type { CreateReleaseDto } from './dtos/create-release.dto'
 import type { ListReleasesDto } from './dtos/list-releases.dto'
 import type { ReleaseDraftVersionDto } from './dtos/release-media.dto'
@@ -47,6 +47,8 @@ export class ReleasesService {
           title: input.title,
           type: input.type ?? AlbumType.SINGLE,
           status: ReleaseStatus.DRAFT,
+          // Most artists own their recording; another owner is a choice in the rights step.
+          masterOwnerType: ReleaseMasterOwner.ARTIST,
         },
         select: RELEASE_SUMMARY_SELECT,
       })
