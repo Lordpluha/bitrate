@@ -43,7 +43,7 @@ Current workflow map for .github/workflows.
 - pr_scope.yml — the PR scope gate: `pull_request` into develop, also on `labeled` /
   `unlabeled` so the `pr-scope/exempt` label takes effect without a push.
 - pr_scope_reusable.yml — runs `scripts/check-pr-scope.mjs` (one workspace, ≤ 200 files,
-  ≤ 2000 lines; generated output ignored). Skipped for `release/`, `backmerge/`,
+  ≤ 3000 lines; generated output ignored). Skipped for `release/`, `backmerge/`,
   `changeset-release/` and `dependabot/` branches and for the exempt label.
 
 Knip's explicit entries include package source exports, platform-specific mobile files, CSS,

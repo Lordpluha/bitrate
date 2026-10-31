@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Pull request scope gate: one PR changes at most one workspace, 200 files and 2000 lines.
+ * Pull request scope gate: one PR changes at most one workspace, 200 files and 3000 lines.
  *
  * - A workspace is a directory directly under apps/ or packages/. Everything else (root
  *   config, .github, .claude, infra, scripts, pencil) is shared and never counts as a second
@@ -21,7 +21,7 @@ import { execFileSync } from 'node:child_process'
 
 const MAX_WORKSPACES = 1
 const MAX_FILES = 200
-const MAX_LINES = 2000
+const MAX_LINES = 3000
 
 const IGNORED = [
   /(^|\/)pnpm-lock\.yaml$/,

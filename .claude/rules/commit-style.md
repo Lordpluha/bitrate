@@ -79,7 +79,7 @@ Design work uses the existing types/scopes above — there is no `design` type.
 - **Pencil design sources** (`pencil/**`: `.pen` files, `DESIGN.md`, generated images) are
   design assets, not app behavior — type `chore`, scope `design`, e.g.
   `chore(design): restore the Pencil design sources on the redesign branch`. No changeset.
-- A redesign touching several workspaces at once still follows "one logical change per PR"
+- A redesign touching several workspaces at once still follows "one workspace per PR"
   below — split by workspace unless the change is genuinely one atomic idea (e.g. a shared
   token rename consumed everywhere).
 
@@ -175,19 +175,29 @@ consumers in another. A cap per commit buys nothing there and costs bisectabilit
 For a pull request — enforced by the `PR Scope` check (`.github/workflows/pr_scope.yml`,
 logic in `scripts/check-pr-scope.mjs`; run `pnpm check:pr-scope` before pushing):
 
-- **One logical change per PR.** A second idea gets a second PR, however small its diff.
+- **Several changes per PR are fine.** One PR may carry several features, fixes or sweeps
+  in the same workspace while it stays within the limits below. Its description lists
+  each one, and each commit still stands on its own (the commit rule above), so each part
+  can still be reviewed and reverted on its own.
+- **Fill PRs; don't fragment them.** Keep work in one PR up to the limits below. Aim for
+  several hundred to ~3000 lines. Split only when the next part would go over a limit,
+  belongs to another workspace, or must ship earlier. Never split by UI area just to keep
+  diffs small. A chain of 100–600-line PRs costs a rebase, a CI run and a review round for
+  each link. Before opening a stacked follow-up, add the work to the open PR unless that
+  would break a limit. A PR under ~300 lines is fine when it must ship on its own (an
+  urgent fix, a producer for a consumer chain). It is not fine as one slice of larger work.
 - **One workspace per PR.** A PR changes files in at most one `apps/*` or `packages/*`
   directory. Shared paths — root config, `.github`, `.claude`, `infra`, `scripts`, `pencil`
   and `apps/docs` — never count as a second workspace, so the CI, tooling or docs a change
   needs ride along with it. A change spanning workspaces lands as a chain of PRs, each one
   standing alone: the producer first (`packages/ui-react`, or `apps/api`), then the
   regenerated contract, then each consumer.
-- **At most 200 changed files and 2000 changed lines** (additions + deletions, renames
+- **At most 200 changed files and 3000 changed lines** (additions + deletions, renames
   detected, so a pure move costs no lines). Generated or release-managed output counts toward
   none of the limits: lockfiles, `packages/contracts/src/api/v*.ts`, `*.gen.ts`, test
   snapshots, `.changeset/*.md`, `CHANGELOG.md`, `pencil/**`.
 - **Fifty changed files is a soft signal** below that ceiling: at that size, say in the
-  description why the change is still one idea.
+  description what it contains and how to review it part by part.
 - **Exempt:** `release/`, `backmerge/`, `changeset-release/` and `dependabot/` branches, and a
   PR carrying the `pr-scope/exempt` label. The label is for a mechanical sweep that cannot be
   split into PRs that each stand alone (a rename, a linter migration, a regeneration); its
