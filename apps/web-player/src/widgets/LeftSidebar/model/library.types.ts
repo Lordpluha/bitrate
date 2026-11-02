@@ -1,5 +1,5 @@
 /** Kinds of entries the library sidebar can list. */
-export type LibraryItemType = 'artist' | 'playlist' | 'podcast'
+export type LibraryItemType = 'artist' | 'playlist'
 
 /**
  * One row in the library sidebar, normalised across the entity it came from so

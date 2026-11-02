@@ -1,17 +1,16 @@
-import { join } from 'node:path'
 import type { PrismaService } from '@infra/prisma/prisma.service'
 import type { ConvertAudioJob } from '@infra/queues/audio-processing.queue'
 import type { StorageService } from '@infra/storage/storage.types'
 import type { TrackProcessingStep } from '@prisma/client'
 import type { Job } from 'bullmq'
 import { uploadArtifacts } from './audio-artifact-storage'
-import { generateCmaf, generateHls, prepareVariants, validateHls } from './audio-encoding'
+import { generateCmaf } from './audio-encoding'
 import { getAudioGenerationRoot } from './audio-storage-keys'
 import { publishTrackFiles } from './audio-track-publication'
 import type { ProcessingAttemptRecorder } from './processing-attempt.recorder'
 
-/** Progress checkpoints reported once encoding has finished. */
-const PROGRESS = { hlsReady: 92, cmafReady: 94, uploaded: 98, done: 100 } as const
+/** Progress checkpoints; the single CMAF encode is most of the job's work. */
+const PROGRESS = { cmafReady: 90, uploaded: 98, done: 100 } as const
 
 /**
  * Mutable step marker the caller reads back after a phase throws — this is how
@@ -43,10 +42,11 @@ export type RunConversionPhasesInput = {
 export type ConversionOutcome = 'PUBLISHED' | 'SUPERSEDED'
 
 /**
- * Runs the encode → package → upload → publish sequence for one claimed job, updating
- * `ctx` before each phase so the caller can attribute a thrown error to the right step.
+ * Runs the encode → upload → publish sequence for one claimed job, updating `ctx` before
+ * each phase so the caller can attribute a thrown error to the right step. Only CMAF is
+ * encoded (ADR-0065).
  *
- * Each of the two staleness checkpoints (after progressive encoding, after upload) writes
+ * Each of the two staleness checkpoints (after encoding, after upload) writes
  * its own SUPERSEDED row and returns rather than throwing — a superseded generation is not
  * a failure. `StaleAudioJobError` from the conditional publish is left to the caller: it
  * needs the storage cleanup that already lived in the consumer's catch block.
@@ -67,37 +67,20 @@ export async function runConversionPhases(
     jobId,
     attempt,
   } = input
-  const { format, bitrates } = job.data
+  const { bitrates } = job.data
 
-  ctx.step = 'PROGRESSIVE_ENCODE'
-  const variants = await prepareVariants(job, inputPath, temporaryRoot, (bitrate) => {
-    ctx.stepDetail = bitrate
-  })
+  ctx.step = 'CMAF_ENCODE'
+  ctx.stepDetail = undefined
+  const generationRoot = getAudioGenerationRoot(trackId, sourceFileName)
+  const cmafPackage = await generateCmaf(generationRoot, inputPath, temporaryRoot, bitrates)
+  await job.updateProgress(PROGRESS.cmafReady)
   if (!(await input.isStillCurrent(job))) {
     await recorder.supersede({ trackId, jobId, attempt, step: ctx.step })
     return 'SUPERSEDED'
   }
 
-  /**
-   * Generates one aligned multi-bitrate HLS package.
-   * Superseded by the CMAF package below; kept until the CMAF path ships. See ADR-0020.
-   */
-  ctx.step = 'HLS_ENCODE'
-  ctx.stepDetail = undefined
-  const temporaryHlsPath = join(temporaryRoot, 'hls')
-  await generateHls(inputPath, temporaryHlsPath, bitrates)
-
-  ctx.step = 'HLS_VALIDATE'
-  await validateHls(temporaryHlsPath, bitrates)
-  await job.updateProgress(PROGRESS.hlsReady)
-
-  ctx.step = 'CMAF_ENCODE'
-  const generationRoot = getAudioGenerationRoot(trackId, sourceFileName)
-  const cmafPackage = await generateCmaf(generationRoot, inputPath, temporaryRoot, bitrates)
-  await job.updateProgress(PROGRESS.cmafReady)
-
   ctx.step = 'UPLOAD'
-  await uploadArtifacts({ storage, generationRoot, variants, temporaryHlsPath, cmafPackage })
+  await uploadArtifacts({ storage, generationRoot, cmafPackage })
   await job.updateProgress(PROGRESS.uploaded)
 
   if (!(await input.isStillCurrent(job))) {
@@ -107,7 +90,7 @@ export async function runConversionPhases(
   }
 
   ctx.step = 'PUBLISH'
-  await publishTrackFiles({ prisma, trackId, sourceFileName, format, variants, cmafPackage })
+  await publishTrackFiles({ prisma, trackId, sourceFileName, cmafPackage })
   await job.updateProgress(PROGRESS.done)
 
   return 'PUBLISHED'
