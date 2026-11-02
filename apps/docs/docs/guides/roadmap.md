@@ -164,7 +164,8 @@ Follows the staged operator-panel plan; overview, detail pages and take-down/res
 
 - [x] Vendored `dialog`, `select`, `tabs`, `toast` primitives
 - [x] Genres CRUD with guarded delete
-- [x] Albums, public playlists and podcasts — list, detail, take-down and restore
+- [x] Albums, public playlists and podcasts — list, detail, take-down and restore (podcasts
+  later removed: Bitrate is music-only, [ADR-0066](../architecture/0066-music-only-product-boundary.md))
 - [x] ADR addendum: operator panel resource coverage
 - [x] Bulk actions on moderation, catalog and users
 - [x] CSV export for operator lists
@@ -247,8 +248,9 @@ Delivered by [ADR-0024](../architecture/0024-rebrand-to-bitrate.md).
 - [ ] Share functionality
 
 ### Content
-- [ ] Podcasts
-- [ ] Audiobooks
+Podcasts and audiobooks are out of scope for Bitrate — see
+[ADR-0066](../architecture/0066-music-only-product-boundary.md).
+
 - [ ] Music videos
 - [ ] Radio stations
 

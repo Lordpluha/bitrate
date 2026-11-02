@@ -98,19 +98,6 @@ describe('ModerationService', () => {
     })
   })
 
-  it('requires both an episode and its podcast to be active', async () => {
-    transaction.episode.findFirst.mockResolvedValue(null)
-
-    await expect(service.createReport(REPORTER_ID, reportDto('episode'))).rejects.toThrow(
-      NotFoundException,
-    )
-
-    expect(transaction.episode.findFirst).toHaveBeenCalledWith({
-      where: { id: TARGET_ID, deletedAt: null, podcast: { deletedAt: null } },
-      select: { id: true },
-    })
-  })
-
   it('rejects self-reporting an account', async () => {
     const dto = { ...reportDto('user'), entityId: REPORTER_ID }
 
@@ -134,10 +121,10 @@ describe('ModerationService', () => {
   it('enforces a per-reporter hourly database rate policy', async () => {
     const now = Date.UTC(2026, 7, 18, 12)
     jest.spyOn(Date, 'now').mockReturnValue(now)
-    transaction.podcast.findFirst.mockResolvedValue({ id: TARGET_ID } as never)
+    transaction.artist.findFirst.mockResolvedValue({ id: TARGET_ID } as never)
     transaction.moderationReport.count.mockResolvedValue(10)
 
-    const result = service.createReport(REPORTER_ID, reportDto('podcast'))
+    const result = service.createReport(REPORTER_ID, reportDto('artist'))
 
     await expect(result).rejects.toBeInstanceOf(HttpException)
     await result.catch((error: HttpException) => expect(error.getStatus()).toBe(429))

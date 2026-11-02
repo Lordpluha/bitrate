@@ -25,7 +25,6 @@ export const buildTrack = (overrides: Partial<Track> = {}): Track => ({
   processingAttempts: 0,
   processingStartedAt: null,
   processingFinishedAt: null,
-  playbackVersion: 2,
   fragmentTimescale: null,
   durationTicks: null,
   rightsConfirmedVersion: null,
