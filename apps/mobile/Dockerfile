@@ -2,7 +2,7 @@
 
 # Stage 1: Base
 FROM node:26-alpine AS base
-RUN corepack enable && corepack prepare pnpm@12.7.0 --activate
+RUN npm install -g pnpm@12.7.0
 WORKDIR /app
 
 # Stage 2: Dependencies
