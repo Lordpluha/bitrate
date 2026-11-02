@@ -1,7 +1,8 @@
 /**
  * Regenerates the CMAF fixture the streaming browser specs play: a short tone encoded by the
  * same `convertAudioToCmaf` the API's processing pipeline runs, at two bitrates, plus the
- * manifest in the shape `/tracks/{id}/manifest` serves (ADR-0020). Needs ffmpeg on PATH.
+ * manifest in the shape `POST /tracks/{id}/play-sessions` returns (ADR-0020, ADR-0067).
+ * Needs ffmpeg on PATH.
  *
  *   node scripts/make-cmaf-fixture.mjs
  */

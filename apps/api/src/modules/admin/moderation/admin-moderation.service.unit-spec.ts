@@ -104,7 +104,6 @@ describe('AdminModerationService', () => {
         id: 'track-1',
         title: 'A Song',
         deletedAt: null,
-        parentId: null,
       })
       expect(result.siblingReports).toEqual([])
     })
@@ -153,38 +152,7 @@ describe('AdminModerationService', () => {
         id: 'artist-1',
         title: 'dj-test',
         deletedAt: null,
-        parentId: null,
       })
-    })
-
-    it('resolves a podcast subject', async () => {
-      const report = { ...REPORT, entityType: 'podcast', entityId: 'podcast-1' }
-      prisma.moderationReport.findFirst.mockResolvedValue(report as never)
-      prisma.podcast.findUnique.mockResolvedValue({
-        id: 'podcast-1',
-        title: 'A Podcast',
-        deletedAt: null,
-      } as never)
-
-      const result = await service.findById('report-1')
-
-      expect(result.subject?.kind).toBe('podcast')
-    })
-
-    it('resolves an episode subject, with its parent podcast id', async () => {
-      const report = { ...REPORT, entityType: 'episode', entityId: 'episode-1' }
-      prisma.moderationReport.findFirst.mockResolvedValue(report as never)
-      prisma.episode.findUnique.mockResolvedValue({
-        id: 'episode-1',
-        title: 'An Episode',
-        deletedAt: null,
-        podcastId: 'podcast-1',
-      } as never)
-
-      const result = await service.findById('report-1')
-
-      expect(result.subject?.kind).toBe('episode')
-      expect(result.subject?.parentId).toBe('podcast-1')
     })
 
     it('resolves a user subject by username', async () => {
@@ -203,7 +171,6 @@ describe('AdminModerationService', () => {
         id: 'user-2',
         title: 'listener-2',
         deletedAt: null,
-        parentId: null,
       })
     })
 
