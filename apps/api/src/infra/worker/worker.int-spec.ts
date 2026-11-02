@@ -150,7 +150,6 @@ describe('transcode worker (int)', () => {
         artistId,
         sourceFileName,
         masterKey,
-        format: 'opus',
         bitrates: ['128k'],
       },
       { attempts: 1 },

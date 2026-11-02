@@ -5,24 +5,22 @@ import type {
   BitratePlayerStateDetail,
   BitratePlayerStreaming,
 } from '../contract'
-import { resolveSilentSource } from './stories/fixtures'
+import { NATIVE_ONLY_MANIFEST, resolveSilentSource } from './stories/fixtures'
 
 /**
- * Streaming mode against real media in Chromium: tracks without a manifest play from their
- * progressive file (an in-memory one-second silent WAV), which exercises the two-slot logic —
- * prefetch, the instant switch and `ended` — without a CMAF fixture.
+ * Streaming mode against real media in Chromium: every track's manifest names a codec MSE
+ * refuses, so the element plays its rendition natively (an in-memory one-second silent WAV),
+ * which exercises the two-slot logic — prefetch, the instant switch and `ended` — without a CMAF
+ * fixture.
  */
 const silentUrl = () => resolveSilentSource({ bitrate: null })
 
-const source = async (key: string): Promise<BitratePlayerSource> => ({
-  key,
-  trackId: key,
-  progressiveUrl: await silentUrl(),
-})
+const source = async (key: string): Promise<BitratePlayerSource> => ({ key, trackId: key })
 
-const streaming = (): BitratePlayerStreaming => ({
+const streaming = (renditionFile: string): BitratePlayerStreaming => ({
   fetchRange: vi.fn(),
-  resolveManifest: vi.fn(async () => null),
+  renditionUrl: () => renditionFile,
+  resolveManifest: vi.fn(async () => NATIVE_ONLY_MANIFEST),
 })
 
 async function mountStreaming(): Promise<BitratePlayerElement> {
@@ -31,7 +29,7 @@ async function mountStreaming(): Promise<BitratePlayerElement> {
   const element = document.createElement(BITRATE_PLAYER_TAG_NAME)
   element.chrome = 'none'
   document.body.append(element)
-  element.streaming = streaming()
+  element.streaming = streaming(await silentUrl())
   await expect.poll(() => element.shadowRoot?.querySelectorAll('audio').length).toBe(2)
   return element
 }
@@ -49,12 +47,13 @@ describe('<bitrate-player> streaming mode', () => {
     const { BITRATE_PLAYER_TAG_NAME, defineBitratePlayer } = await import('./index')
     await defineBitratePlayer()
     const playable = await source('k1')
+    const transport = streaming(await silentUrl())
     const element = document.createElement(BITRATE_PLAYER_TAG_NAME)
     element.chrome = 'none'
     document.body.append(element)
 
     /** No await from here: the component mounts a microtask after the element connects. */
-    element.streaming = streaming()
+    element.streaming = transport
     element.source = playable
     expect(() => element.pause()).not.toThrow()
     void element.play()

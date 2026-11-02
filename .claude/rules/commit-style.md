@@ -191,7 +191,8 @@ logic in `scripts/check-pr-scope.mjs`; run `pnpm check:pr-scope` before pushing)
 - **Exempt:** `release/`, `backmerge/`, `changeset-release/` and `dependabot/` branches, and a
   PR carrying the `pr-scope/exempt` label. The label is for a mechanical sweep that cannot be
   split into PRs that each stand alone (a rename, a linter migration, a regeneration); its
-  title and description say so.
+  title and description say so. Apply it only if `gh label list` shows it; never create it —
+  ask the owner instead (see `CLAUDE.md`, command boundaries).
 
 An earlier proposal capped a commit at ten files. It is recorded here as rejected so it is
 not reintroduced: it would have forced the DTO rename above into five commits, four of them

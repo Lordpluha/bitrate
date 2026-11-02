@@ -1,4 +1,4 @@
-export type HomeTabId = 'all' | 'music' | 'podcasts'
+export type HomeTabId = 'all' | 'music'
 
 export type HomeTab = {
   id: HomeTabId
@@ -8,5 +8,4 @@ export type HomeTab = {
 export const homeTabs: HomeTab[] = [
   { id: 'all', label: 'All' },
   { id: 'music', label: 'Music' },
-  { id: 'podcasts', label: 'Podcasts' },
 ]

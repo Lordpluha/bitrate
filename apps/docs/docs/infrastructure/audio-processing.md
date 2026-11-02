@@ -19,9 +19,8 @@ POST /api/v1/tracks
         ↓
 AudioProcessor worker (BullMQ)
         ↓
-FFmpeg конвертирует progressive fallback в Opus: 128 / 192 / 320 kbps
-        ↓
-Один FFmpeg-процесс создаёт AAC HLS с выровненными 4-секундными .m4s сегментами
+Один FFmpeg-процесс создаёт CMAF (fMP4, AAC-LC): по файлу на 128 / 192 / 320 kbps
+с выровненными фрагментами и байтовым индексом
         ↓
 Файлы загружаются в S3-compatible object storage
         ↓
@@ -29,7 +28,7 @@ TrackFile записи создаются в БД
         ↓
 Track.processingStatus → "READY"
         ↓
-GET /api/v1/tracks/stream/:id/hls/master.m3u8
+GET /api/v1/tracks/:id/manifest + GET /api/v1/tracks/:id/cmaf/:bitrate (Range)
 ```
 
 ## BullMQ очередь
@@ -74,36 +73,26 @@ const TARGET_AUDIO_BITRATES = [128, 192, 320] // kbps
 
 ## Структура файлов
 
+CMAF — единственный формат хранения ([ADR-0065](../architecture/0065-single-cmaf-aac-delivery-format.md)).
+Каждая загрузка пишется в собственное неизменяемое поколение:
+
 ```
-tracks/:trackId/
-├── audio/
-│   ├── 128k.opus
-│   ├── 192k.opus
-│   └── 320k.opus
-├── hls/
-│   ├── master.m3u8         # Master playlist
-│   ├── 128/
-│   │   ├── index.m3u8
-│   │   ├── init_0.mp4
-│   │   ├── segment_00000.m4s
-│   │   └── segment_00001.m4s
-│   ├── 192/
-│   │   └── ...
-│   └── 320/
-│       └── ...
+tracks/:trackId/generations/:generation/
+└── cmaf/
+    ├── 128.m4a
+    ├── 192.m4a
+    └── 320.m4a
 ```
 
-## HLS стриминг
+## Стриминг
 
 ```http
-# Master playlist (список качеств)
-GET /api/v1/tracks/stream/:id/hls/master.m3u8
+# Список качеств и индекс фрагментов
+GET /api/v1/tracks/:id/manifest
 
-# Плейлист конкретного качества
-GET /api/v1/tracks/stream/:id/hls/:bitrate/index.m3u8
-
-# Сегмент
-GET /api/v1/tracks/stream/:id/hls/:bitrate/segment_00000.m4s
+# Байтовый диапазон файла одного качества
+GET /api/v1/tracks/:id/cmaf/:bitrate
+Range: bytes=0-1048575
 ```
 
 Подробнее о стриминге на клиенте: [Audio Streaming](../applications/audio-streaming)
