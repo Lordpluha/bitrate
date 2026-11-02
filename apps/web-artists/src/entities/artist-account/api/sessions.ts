@@ -1,6 +1,7 @@
 import { artistMusicKeys } from '@shared/api/artistMusicKeys'
 import { clientFetchClient } from '@shared/api/fetchClient'
 import { writeSignal as signal } from '@shared/api/writeTimeout'
+import { messageKey } from '@shared/i18n'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { z } from 'zod'
 import { artistSessionSchema } from '../model/session'
@@ -26,9 +27,7 @@ export function useArtistSessions(artistId: string) {
       )
       const parsed = sessionListSchema.safeParse(result.data)
       if (!result.response.ok || !parsed.success)
-        throw new Error(
-          'Could not load your signed-in devices. Please try again.',
-        )
+        throw new Error(messageKey('account.error.loadSessions'))
       return parsed.data
     },
     staleTime: 0,
@@ -48,15 +47,13 @@ export function useRevokeSession(artistId: string) {
         })
         .catch(() => undefined)
       if (!result)
-        throw new Error(
-          'Could not confirm the sign-out. Reload to check the list.',
-        )
+        throw new Error(messageKey('account.error.signOutUnconfirmed'))
       // Already gone elsewhere is the outcome the artist asked for.
       if (result.response.status === 404) return
       if (result.response.status === 409)
-        throw new Error('That is this device. Use Sign out to end it.')
+        throw new Error(messageKey('account.error.thisDevice'))
       if (!result.response.ok)
-        throw new Error('Could not sign out that device. Please try again.')
+        throw new Error(messageKey('account.error.signOutFailed'))
     },
     onSettled: () =>
       queryClient.invalidateQueries({ queryKey: sessionKeys.all(artistId) }),
@@ -76,9 +73,7 @@ export function useRevokeOtherSessions(artistId: string) {
         .catch(() => undefined)
       const parsed = revokedSchema.safeParse(result?.data)
       if (!result?.response.ok || !parsed.success)
-        throw new Error(
-          'Could not sign out the other devices. Please try again.',
-        )
+        throw new Error(messageKey('account.error.signOutOthers'))
       return parsed.data.revoked
     },
     onSettled: () =>

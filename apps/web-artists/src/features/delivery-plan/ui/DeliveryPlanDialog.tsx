@@ -1,6 +1,6 @@
 import { Input } from '@bitrate/ui-react'
 import { type ReleaseDelivery, useSaveDeliveryPlan } from '@entities/delivery'
-import { countries, countryName } from '@shared/constants/countries'
+import { countriesFor, countryName } from '@shared/constants/countries'
 import {
   type DeliveryDestination,
   deliveryDestinations,
@@ -31,7 +31,8 @@ export function DeliveryPlanDialog({
 }: DeliveryPlanDialogProps) {
   const id = useId()
   const save = useSaveDeliveryPlan(artistId)
-  const { t } = useI18n()
+  const { t, locale } = useI18n()
+  const countries = countriesFor(locale)
   const [stores, setStores] = useState<Set<DeliveryDestination>>(
     () =>
       new Set(
@@ -160,7 +161,10 @@ export function DeliveryPlanDialog({
                 ? t('delivery.noCountries')
                 : t('delivery.selected', {
                     count: selected.size,
-                    names: `${[...selected].slice(0, 6).map(countryName).join(', ')}${selected.size > 6 ? '…' : ''}`,
+                    names: `${[...selected]
+                      .slice(0, 6)
+                      .map((code) => countryName(code, locale))
+                      .join(', ')}${selected.size > 6 ? '…' : ''}`,
                   })}
             </p>
             <ul className="max-h-56 space-y-1 overflow-y-auto rounded-md border border-border p-2">

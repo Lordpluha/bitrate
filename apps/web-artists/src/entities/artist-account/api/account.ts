@@ -3,6 +3,7 @@ import { artistMusicKeys } from '@shared/api/artistMusicKeys'
 import { clientFetchClient } from '@shared/api/fetchClient'
 import { uploadForm } from '@shared/api/uploadForm'
 import { writeSignal } from '@shared/api/writeTimeout'
+import { messageKey, type TranslationKey } from '@shared/i18n'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { z } from 'zod'
 import {
@@ -10,8 +11,7 @@ import {
   artistProfileSchema,
 } from '../model/profile.schema'
 
-const STALE =
-  'Your profile changed since this page loaded. Your entries are kept; reload the page to see the latest version.'
+const STALE = messageKey('profile.error.stale')
 
 const accountKeys = {
   profile: (artistId: string) =>
@@ -27,7 +27,7 @@ export function useArtistProfile(artistId: string) {
       })
       const parsed = artistProfileSchema.safeParse(result.data)
       if (!result.response.ok || !parsed.success)
-        throw new Error('Could not load your profile. Please try again.')
+        throw new Error(messageKey('profile.error.load'))
       return parsed.data
     },
     staleTime: 0,
@@ -40,14 +40,14 @@ function confirmProfile(
   ok: boolean,
   data: unknown,
   expectedUpdatedAt: string,
-  messages: { invalid: string; unconfirmed: string },
+  messages: { invalid: TranslationKey; unconfirmed: TranslationKey },
 ) {
   if (status === 409) {
     const parsed = z.object({ code: z.string() }).safeParse(data)
     throw new Error(
       parsed.success &&
         parsed.data.code === 'errors.artist_profile.username_taken'
-        ? 'This handle is already taken. Choose another one.'
+        ? messageKey('profile.error.handleTaken')
         : STALE,
     )
   }
@@ -81,8 +81,7 @@ export interface ProfileUpdateRequest {
 
 export function useUpdateProfile(artistId: string) {
   return useProfileWrite(artistId, async ({ input }: ProfileUpdateRequest) => {
-    const unconfirmed =
-      'Could not confirm your profile was saved. Reload the page before trying again.'
+    const unconfirmed = messageKey('profile.error.unconfirmed')
     const send = () =>
       clientFetchClient.PATCH('/api/v1/artist-profile', {
         body: input,
@@ -100,7 +99,7 @@ export function useUpdateProfile(artistId: string) {
       result.response.ok ? result.data : result.error,
       input.expectedUpdatedAt,
       {
-        invalid: 'Check the highlighted fields, then try again.',
+        invalid: messageKey('profile.error.invalid'),
         unconfirmed,
       },
     )
@@ -127,9 +126,8 @@ export function useProfileImage(artistId: string) {
       onProgress,
     }: ProfileImageRequest) => {
       const messages = {
-        invalid: 'Choose a JPEG, PNG or WebP image up to 10 MB.',
-        unconfirmed:
-          'Could not confirm the image was saved. Reload the page before trying again.',
+        invalid: messageKey('profile.error.imageInvalid'),
+        unconfirmed: messageKey('profile.error.imageUnconfirmed'),
       }
       if (file === null) {
         const send = () =>

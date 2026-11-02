@@ -4,19 +4,28 @@ const COUNTRY_CODES =
     ' ',
   )
 
-const names = new Intl.DisplayNames(['en'], { type: 'region' })
-
 interface Country {
   code: string
   name: string
 }
 
-/** Countries sorted by English name; the name falls back to the code when unknown. */
-export const countries: Country[] = COUNTRY_CODES.map((code) => ({
-  code,
-  name: names.of(code) ?? code,
-})).sort((a, b) => a.name.localeCompare(b.name, 'en'))
+/** A country's name in `locale`, falling back to the code when the runtime does not know it. */
+export function countryName(code: string, locale = 'en'): string {
+  return new Intl.DisplayNames([locale], { type: 'region' }).of(code) ?? code
+}
 
-export function countryName(code: string): string {
-  return names.of(code) ?? code
+const byLocale = new Map<string, Country[]>()
+
+/** Every country named and sorted in `locale`; built once per language. */
+export function countriesFor(locale: string): Country[] {
+  let list = byLocale.get(locale)
+  if (!list) {
+    const names = new Intl.DisplayNames([locale], { type: 'region' })
+    list = COUNTRY_CODES.map((code) => ({
+      code,
+      name: names.of(code) ?? code,
+    })).sort((a, b) => a.name.localeCompare(b.name, locale))
+    byLocale.set(locale, list)
+  }
+  return list
 }

@@ -23,18 +23,20 @@ interface ProfileViewProps {
 
 /** Public artist profile editor with a live preview that never implies the draft is saved. */
 export function ProfileView({ artistId }: ProfileViewProps) {
-  const { tMessage } = useI18n()
+  const { t, tMessage } = useI18n()
   const profile = useArtistProfile(artistId)
   return (
     <section className="artist-music space-y-6">
       <div>
-        <h1 className="text-[1.625rem] font-normal lg:text-[2rem]">Profile</h1>
+        <h1 className="text-[1.625rem] font-normal lg:text-[2rem]">
+          {t('shell.nav.profile')}
+        </h1>
         <p className="mt-2 text-[0.9375rem] text-text-secondary">
-          How listeners see you on Bitrate.
+          {t('profile.subtitle')}
         </p>
       </div>
       {profile.isPending ? (
-        <p role="status">Loading your profile…</p>
+        <p role="status">{t('profile.loading')}</p>
       ) : profile.isError ? (
         <div className="space-y-3">
           <p role="alert">{tMessage(profile.error.message)}</p>
@@ -44,7 +46,7 @@ export function ProfileView({ artistId }: ProfileViewProps) {
             }}
             variant="outline"
           >
-            Try again
+            {t('common.tryAgain')}
           </Button>
         </div>
       ) : (
@@ -61,6 +63,7 @@ function ProfileEditor({
   artistId: string
   profile: ArtistProfile
 }) {
+  const { t } = useI18n()
   const [draft, setDraft] = useState<ProfileFormValues>(() =>
     profileFormDefaults(profile),
   )
@@ -71,7 +74,7 @@ function ProfileEditor({
           aria-labelledby="profile-images-heading"
           className="artist-release-workspace-panel space-y-5"
         >
-          <h2 id="profile-images-heading">Images</h2>
+          <h2 id="profile-images-heading">{t('profile.images')}</h2>
           <ProfileImageField
             artistId={artistId}
             kind="avatar"
@@ -87,7 +90,7 @@ function ProfileEditor({
           aria-labelledby="profile-details-heading"
           className="artist-release-workspace-panel space-y-5"
         >
-          <h2 id="profile-details-heading">Details</h2>
+          <h2 id="profile-details-heading">{t('profile.details')}</h2>
           <ProfileForm
             artistId={artistId}
             onValuesChange={setDraft}
@@ -107,11 +110,12 @@ function ProfilePreview({
   profile: ArtistProfile
   draft: ProfileFormValues
 }) {
+  const { t, locale } = useI18n()
   const links = socialLinkKeys.filter((key) => draft[key].trim() !== '')
   return (
     <aside aria-labelledby="profile-preview-heading" className="space-y-2">
       <h2 className="text-sm text-text-secondary" id="profile-preview-heading">
-        Preview · unsaved changes are shown but not published
+        {t('profile.preview')}
       </h2>
       <div className="artist-release-workspace-panel overflow-hidden p-0">
         <div className="h-28 bg-secondary">
@@ -140,19 +144,19 @@ function ProfilePreview({
               @{draft.username.trim() || profile.username}
               {profile.verified && (
                 <BadgeCheck
-                  aria-label="Verified artist"
+                  aria-label={t('profile.verified')}
                   className="size-5 text-accent"
                 />
               )}
             </p>
             {draft.country && (
               <p className="text-sm text-text-secondary">
-                {countryName(draft.country)}
+                {countryName(draft.country, locale)}
               </p>
             )}
           </div>
           <p className="whitespace-pre-line text-sm text-text-secondary">
-            {draft.bio.trim() || 'No bio yet.'}
+            {draft.bio.trim() || t('profile.noBio')}
           </p>
           {links.length > 0 && (
             <ul className="flex flex-wrap gap-2">
@@ -161,7 +165,7 @@ function ProfilePreview({
                   className="rounded-full border border-border px-3 py-1 text-xs"
                   key={key}
                 >
-                  {socialLinkLabels[key]}
+                  {t(socialLinkLabels[key])}
                 </li>
               ))}
             </ul>
