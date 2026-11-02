@@ -103,7 +103,8 @@ function NotificationGroup({
   items: ArtistNotification[]
   onNavigate: () => void
 }) {
-  const { t } = useI18n()
+  const i18n = useI18n()
+  const { t } = i18n
   return (
     <section className="space-y-1">
       <h3 className="text-xs uppercase tracking-wide text-text-secondary">
@@ -138,7 +139,7 @@ function NotificationGroup({
                       item.unread && 'font-medium',
                     )}
                   >
-                    {describeNotification(item)}
+                    {describeNotification(item, i18n)}
                     {item.unread && (
                       <span className="sr-only">
                         {' '}
@@ -147,7 +148,7 @@ function NotificationGroup({
                     )}
                   </span>
                   <span className="block truncate text-xs text-text-secondary">
-                    {item.releaseTitle} · {notificationTime(item.at)}
+                    {item.releaseTitle} · {notificationTime(item.at, i18n)}
                   </span>
                 </span>
                 {item.unread && (

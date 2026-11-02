@@ -17,7 +17,7 @@ interface NotificationPreferencesProps {
 export function NotificationPreferences({
   artistId,
 }: NotificationPreferencesProps) {
-  const { tMessage } = useI18n()
+  const { t, tMessage } = useI18n()
   const id = useId()
   const preferences = useNotificationPreferences(artistId)
   const save = useSaveNotificationPreferences(artistId)
@@ -84,10 +84,10 @@ export function NotificationPreferences({
               <tr className="border-t border-border" key={category}>
                 <th className="py-3 pr-3 text-left font-normal" scope="row">
                   <label className="block" htmlFor={inputId}>
-                    {label.title}
+                    {t(label.title)}
                   </label>
                   <span className="block text-xs text-text-secondary">
-                    {label.hint}
+                    {t(label.hint)}
                   </span>
                 </th>
                 <td className="py-3 text-center">
