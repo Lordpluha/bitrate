@@ -78,6 +78,8 @@ export const settings = {
   'settings.sessions.signOutOthers': 'Wyloguj inne urządzenia',
   'settings.sessions.loading': 'Wczytywanie urządzeń…',
   'settings.sessions.signOutDevice': 'Wyloguj {device}',
+  'settings.sessions.showAll': 'Pokaż wszystkie urządzenia ({count})',
+  'settings.sessions.showFewer': 'Pokaż mniej',
   'settings.device.unknown': 'Nieznane urządzenie',
   'settings.device.on': '{browser} na {system}',
   'settings.device.unknownBrowser': 'Nieznana przeglądarka',
