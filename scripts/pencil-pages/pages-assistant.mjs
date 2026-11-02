@@ -123,7 +123,7 @@ export const assistant = {
 
 /* every page outside the player docks the assistant button bottom-right */
 export const withAssistant = (frame, mobile) => {
-  if (!frame || frame.type !== 'frame') return frame
+  if (frame?.type !== 'frame') return frame
   const { children = [], layout, gap, padding, justifyContent, alignItems, ...rest } = frame
   const inner = {
     type: 'frame',
