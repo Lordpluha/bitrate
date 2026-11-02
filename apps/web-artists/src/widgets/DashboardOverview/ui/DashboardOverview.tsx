@@ -12,6 +12,7 @@ import {
   releaseTypeLabels,
   TrackPlayer,
 } from '@entities/release'
+import { useI18n } from '@shared/i18n'
 import { ROUTES } from '@shared/routes/routes'
 import { Link } from '@tanstack/react-router'
 import {
@@ -128,6 +129,7 @@ function CurrentRelease({
 }: {
   release: ArtistDashboard['currentRelease']
 }) {
+  const { t } = useI18n()
   if (!release)
     return (
       <section
@@ -163,11 +165,11 @@ function CurrentRelease({
           <div className="flex flex-wrap items-start justify-between gap-2">
             <p className="artist-dash-current-title">{release.title}</p>
             <span className="artist-release-chip" data-status={release.status}>
-              {releaseStatusLabels[release.status]}
+              {t(releaseStatusLabels[release.status])}
             </span>
           </div>
           <p>
-            {releaseTypeLabels[release.type]}
+            {t(releaseTypeLabels[release.type])}
             {release.scheduledAt
               ? ` · Planned ${plannedDate.format(new Date(release.scheduledAt))}`
               : ' · No planned date'}
@@ -300,6 +302,7 @@ function YourReleases({
   artistId: string
   counts: ArtistDashboard['counts']
 }) {
+  const { t } = useI18n()
   const releases = useMusicCatalogue(artistId, 'releases', {
     page: 1,
     sort: 'updated',
@@ -355,7 +358,7 @@ function YourReleases({
                   {release.title}
                 </span>
                 <span className="artist-dash-releases-type">
-                  {releaseTypeLabels[release.type]}
+                  {t(releaseTypeLabels[release.type])}
                   {'trackCount' in release &&
                     ` · ${release.trackCount} ${release.trackCount === 1 ? 'track' : 'tracks'}`}
                 </span>
@@ -363,7 +366,7 @@ function YourReleases({
                   className="artist-dash-releases-status"
                   data-status={release.status}
                 >
-                  {releaseStatusLabels[release.status]}
+                  {t(releaseStatusLabels[release.status])}
                 </span>
                 <ChevronRight aria-hidden="true" />
               </Link>

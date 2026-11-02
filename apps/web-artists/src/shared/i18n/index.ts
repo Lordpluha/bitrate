@@ -1,4 +1,5 @@
 export type { TranslationKey } from './messages/en'
+export type { Translate } from './model/createI18n'
 export { messageKey } from './model/createI18n'
 export { getRequestLocale } from './model/getRequestLocale'
 export { isLocale, localeLabels } from './model/locale'

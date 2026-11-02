@@ -1,6 +1,7 @@
 import { Button } from '@bitrate/ui-react'
 import { trackStatusLabels, trackVersionLabels } from '@entities/music'
 import { TrackPlayer } from '@entities/release'
+import { useI18n } from '@shared/i18n'
 import { ArrowDown, ArrowUp, CircleAlert, Music2 } from 'lucide-react'
 import {
   audioLabel,
@@ -40,6 +41,7 @@ export function DraftTrackRow({
   reorder,
   onAction,
 }: DraftTrackRowProps) {
+  const { t } = useI18n()
   return (
     <li>
       {reorder ? (
@@ -72,7 +74,8 @@ export function DraftTrackRow({
       <div className="min-w-0 flex-1 space-y-1">
         <h3>{track.title}</h3>
         <p>
-          {trackVersionLabels[track.version]} · {durationLabel(track.duration)}
+          {t(trackVersionLabels[track.version])} ·{' '}
+          {durationLabel(track.duration)}
           {track.isDemo ? ' · Demo' : ''}
         </p>
         <p>{isrcLabel(track.isrc)}</p>
@@ -96,7 +99,7 @@ export function DraftTrackRow({
         )}
       </div>
       <span className="artist-release-track-status" data-status={track.status}>
-        {trackStatusLabels[track.status]}
+        {t(trackStatusLabels[track.status])}
       </span>
       {editable && (
         <div className="flex flex-wrap gap-2">

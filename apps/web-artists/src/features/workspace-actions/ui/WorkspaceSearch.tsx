@@ -3,6 +3,7 @@ import {
   useWorkspaceSearch,
 } from '@entities/workspace-search'
 import { useDebouncedValue } from '@shared/hooks'
+import { useI18n } from '@shared/i18n'
 import { ROUTES } from '@shared/routes/routes'
 import { Link } from '@tanstack/react-router'
 import { Disc3, Music2, Search } from 'lucide-react'
@@ -29,6 +30,7 @@ export function WorkspaceSearch({
   onNavigate: () => void
 }) {
   const inputId = useId()
+  const { t, tMessage } = useI18n()
   const [query, setQuery] = useState('')
   const debounced = useDebouncedValue(query, SEARCH_DELAY_MS)
   const search = useWorkspaceSearch(artistId, debounced)
@@ -44,23 +46,23 @@ export function WorkspaceSearch({
   return (
     <div className="space-y-4">
       <label className="sr-only" htmlFor={inputId}>
-        Search workspace
+        {t('shell.search')}
       </label>
       <input
         className="h-11 w-full rounded-lg border border-input bg-background px-3 text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         data-initial-focus
         id={inputId}
         onChange={(event) => setQuery(event.target.value)}
-        placeholder="Search releases, tracks and sections…"
+        placeholder={t('music.search.placeholder')}
         type="search"
         value={query}
       />
       <nav
-        aria-label="Search results"
+        aria-label={t('music.search.results')}
         className="max-h-[60vh] space-y-4 overflow-y-auto"
       >
         {sections.length > 0 && (
-          <ResultGroup title="Sections">
+          <ResultGroup title={t('music.search.sections')}>
             {sections.map(({ label, to }) => (
               <Link
                 className={resultClass}
@@ -79,7 +81,7 @@ export function WorkspaceSearch({
           </ResultGroup>
         )}
         {data && data.releases.length > 0 && (
-          <ResultGroup title="Releases">
+          <ResultGroup title={t('music.tabs.releases')}>
             {data.releases.map((release) => (
               <Link
                 className={resultClass}
@@ -96,7 +98,7 @@ export function WorkspaceSearch({
           </ResultGroup>
         )}
         {data && data.tracks.length > 0 && (
-          <ResultGroup title="Tracks">
+          <ResultGroup title={t('music.tabs.tracks')}>
             {data.tracks.map((track) =>
               track.releaseId ? (
                 <Link
@@ -129,11 +131,11 @@ export function WorkspaceSearch({
       </nav>
       <p className="text-sm text-text-secondary" role="status">
         {searching && search.isError
-          ? search.error.message
+          ? tMessage(search.error.message)
           : searching && (search.isFetching || query !== debounced)
-            ? 'Searching…'
+            ? t('music.search.searching')
             : found === 0
-              ? 'Nothing matches your search.'
+              ? t('music.search.empty')
               : ''}
       </p>
     </div>

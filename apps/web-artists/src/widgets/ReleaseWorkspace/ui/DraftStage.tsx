@@ -5,6 +5,7 @@ import {
   releaseRoadmap,
   releaseTypeLabels,
 } from '@entities/release'
+import { useI18n } from '@shared/i18n'
 import { formatDuration } from '@shared/lib/format'
 import { LockedButton } from '@shared/ui'
 import { Link } from '@tanstack/react-router'
@@ -54,6 +55,7 @@ interface DraftStageProps {
 /** Stage 1: everything the artist prepares before asking Bitrate to review. */
 export function DraftStage({ artistId, release, onAction }: DraftStageProps) {
   const lock = editLockReason(release.status)
+  const { t } = useI18n()
   const steps = releaseRoadmap(release).filter((step) =>
     PREPARATION.has(step.key),
   )
@@ -130,7 +132,7 @@ export function DraftStage({ artistId, release, onAction }: DraftStageProps) {
               <p>{release.artistName}</p>
               <p className="artist-release-proof-meta">
                 <span className="artist-release-chip">
-                  {releaseTypeLabels[release.type]}
+                  {t(releaseTypeLabels[release.type])}
                 </span>
                 {release.trackCount}{' '}
                 {release.trackCount === 1 ? 'track' : 'tracks'}

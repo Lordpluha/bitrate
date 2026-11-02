@@ -10,18 +10,13 @@ import {
   releaseStatusLabels,
   releaseTypeLabels,
 } from '@entities/release'
+import { type Translate, useI18n } from '@shared/i18n'
 import { formatDuration } from '@shared/lib/format'
 import { Circle, Ellipsis, Music2, Pause, Play } from 'lucide-react'
 
 export type CatalogueItem = MusicTrack | MusicRelease
 
-const shortDate = new Intl.DateTimeFormat('en', {
-  month: 'short',
-  day: '2-digit',
-  timeZone: 'UTC',
-})
-
-function catalogueDate(value: string) {
+function catalogueDate(value: string, t: Translate, locale: string) {
   const date = new Date(value)
   const today = new Date()
   const day = Date.UTC(
@@ -34,25 +29,30 @@ function catalogueDate(value: string) {
       Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate())) /
       86_400_000,
   )
-  if (elapsed === 0) return 'Today'
-  if (elapsed === 1) return 'Yesterday'
-  if (elapsed === 2) return '2 days ago'
-  return shortDate.format(date)
+  if (elapsed === 0) return t('music.date.today')
+  if (elapsed === 1) return t('music.date.yesterday')
+  if (elapsed === 2) return t('music.date.twoDaysAgo')
+  return new Intl.DateTimeFormat(locale, {
+    month: 'short',
+    day: '2-digit',
+    timeZone: 'UTC',
+  }).format(date)
 }
 
 function catalogueStatus(item: CatalogueItem) {
   if ('version' in item) return trackStatusLabels[item.status]
-  if (item.status === 'RELEASED') return 'Published'
-  if (item.status === 'REJECTED') return 'Needs changes'
-  if (item.status === 'SUBMITTED') return 'In review'
+  if (item.status === 'RELEASED') return 'labels.trackStatus.published'
+  if (item.status === 'REJECTED') return 'labels.trackStatus.needsChanges'
+  if (item.status === 'SUBMITTED') return 'labels.releaseStatus.inReview'
   return releaseStatusLabels[item.status]
 }
 
 export function CatalogueStatus({ item }: { item: CatalogueItem }) {
+  const { t } = useI18n()
   return (
     <span className="artist-music-badge" data-status={item.status}>
       <Circle aria-hidden="true" className="size-3 shrink-0" />
-      {catalogueStatus(item)}
+      {t(catalogueStatus(item))}
     </span>
   )
 }
@@ -78,28 +78,50 @@ export function CatalogueTable({
   onDetails,
   onActions,
 }: CatalogueTableProps) {
+  const { t, locale } = useI18n()
+  const date = (value: string) => catalogueDate(value, t, locale)
   return (
     <table className="artist-music-table" data-tab={tab}>
-      <caption className="sr-only">Your {tab}</caption>
+      <caption className="sr-only">
+        {t(
+          tab === 'tracks'
+            ? 'music.table.yourTracks'
+            : 'music.table.yourReleases',
+        )}
+      </caption>
       <thead className="sr-only @min-[900px]:not-sr-only">
         <tr>
           {tab === 'tracks' && (
             <th className="artist-music-play-cell">
-              <span className="sr-only">Preview</span>
+              <span className="sr-only">{t('music.table.preview')}</span>
             </th>
           )}
           <th className="artist-music-title-cell" scope="col">
-            {tab === 'tracks' ? 'Track' : 'Release'}
+            {t(tab === 'tracks' ? 'music.table.track' : 'music.table.release')}
           </th>
           <th scope="col">
-            {tab === 'tracks' ? 'Version · duration' : 'Type'}
+            {t(
+              tab === 'tracks'
+                ? 'music.table.versionDuration'
+                : 'music.table.type',
+            )}
           </th>
-          <th scope="col">Status</th>
-          <th scope="col">{tab === 'tracks' ? 'Updated' : 'Tracks'}</th>
-          <th scope="col">{tab === 'tracks' ? 'Release' : 'Release date'}</th>
-          {tab === 'releases' && <th scope="col">Updated</th>}
+          <th scope="col">{t('music.table.status')}</th>
+          <th scope="col">
+            {t(tab === 'tracks' ? 'music.table.updated' : 'music.table.tracks')}
+          </th>
+          <th scope="col">
+            {t(
+              tab === 'tracks'
+                ? 'music.table.release'
+                : 'music.table.releaseDate',
+            )}
+          </th>
+          {tab === 'releases' && (
+            <th scope="col">{t('music.table.updated')}</th>
+          )}
           <th className="artist-music-actions-cell">
-            <span className="sr-only">Actions</span>
+            <span className="sr-only">{t('music.table.actions')}</span>
           </th>
         </tr>
       </thead>
@@ -115,7 +137,10 @@ export function CatalogueTable({
               {isTrack && (
                 <td className="artist-music-play-cell">
                   <Button
-                    aria-label={`${playing ? 'Pause' : 'Play'} ${item.title}`}
+                    aria-label={t(
+                      playing ? 'music.table.pause' : 'music.table.play',
+                      { title: item.title },
+                    )}
                     aria-pressed={playing}
                     disabled={!item.previewUrl}
                     onClick={() => onPlay(item)}
@@ -123,9 +148,9 @@ export function CatalogueTable({
                     title={
                       item.previewUrl
                         ? item.isDemo
-                          ? 'Play illustrative sample audio'
-                          : 'Play preview'
-                        : 'No preview available'
+                          ? t('music.table.playSample')
+                          : t('music.table.playPreview')
+                        : t('music.table.noPreview')
                     }
                     variant="ghost"
                   >
@@ -139,7 +164,7 @@ export function CatalogueTable({
               )}
               <td className="artist-music-title-cell">
                 <button
-                  aria-label={`Open ${item.title}`}
+                  aria-label={t('music.table.open', { title: item.title })}
                   className="artist-music-record"
                   onClick={() => onDetails(item)}
                   type="button"
@@ -173,38 +198,34 @@ export function CatalogueTable({
               </td>
               <td className="artist-music-version-cell">
                 {isTrack
-                  ? `${trackVersionLabels[item.version]} · ${trackDuration(item.duration)}`
-                  : releaseTypeLabels[item.type]}
+                  ? `${t(trackVersionLabels[item.version])} · ${trackDuration(item.duration)}`
+                  : t(releaseTypeLabels[item.type])}
               </td>
               <td className="artist-music-status-cell">
                 <CatalogueStatus item={item} />
               </td>
               <td className="artist-music-updated-cell">
                 {isTrack ? (
-                  <time dateTime={item.updatedAt}>
-                    {catalogueDate(item.updatedAt)}
-                  </time>
+                  <time dateTime={item.updatedAt}>{date(item.updatedAt)}</time>
                 ) : (
                   item.trackCount
                 )}
               </td>
               <td className="artist-music-release-cell">
                 {isTrack
-                  ? (item.release?.title ?? 'Unreleased')
+                  ? (item.release?.title ?? t('music.table.unreleased'))
                   : item.scheduledAt
-                    ? catalogueDate(item.scheduledAt)
-                    : 'Not scheduled'}
+                    ? date(item.scheduledAt)
+                    : t('music.table.notScheduled')}
               </td>
               {!isTrack && (
                 <td className="artist-music-release-updated">
-                  <time dateTime={item.updatedAt}>
-                    {catalogueDate(item.updatedAt)}
-                  </time>
+                  <time dateTime={item.updatedAt}>{date(item.updatedAt)}</time>
                 </td>
               )}
               <td className="artist-music-actions-cell">
                 <Button
-                  aria-label={`Actions for ${item.title}`}
+                  aria-label={t('music.item.actionsFor', { title: item.title })}
                   onClick={() => onActions(item)}
                   size="icon"
                   variant="ghost"

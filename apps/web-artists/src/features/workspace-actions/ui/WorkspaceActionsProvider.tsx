@@ -1,4 +1,5 @@
 import { Button } from '@bitrate/ui-react'
+import { useI18n } from '@shared/i18n'
 import { WorkspaceModal } from '@shared/ui/WorkspaceModal/WorkspaceModal'
 import { type ReactNode, useEffect, useState } from 'react'
 import {
@@ -26,6 +27,7 @@ export function WorkspaceActionsProvider({
   notificationsContent: (onNavigate: () => void) => ReactNode
 }) {
   const [action, setAction] = useState<WorkspaceAction | null>(null)
+  const { t } = useI18n()
 
   useEffect(() => {
     const openSearch = (event: KeyboardEvent) => {
@@ -41,13 +43,13 @@ export function WorkspaceActionsProvider({
   const close = () => setAction(null)
   const title =
     action === 'search'
-      ? 'Search workspace'
+      ? t('shell.search')
       : action === 'account'
-        ? 'Artist account'
+        ? t('shell.artistAccount')
         : action === 'create-release'
-          ? 'Create release'
+          ? t('music.create.title')
           : action
-            ? workspaceNotices[action].title
+            ? t(workspaceNotices[action].title)
             : ''
 
   return (
@@ -74,18 +76,18 @@ export function WorkspaceActionsProvider({
                 <div className="space-y-6">
                   {action !== 'upload-track' && (
                     <p className="text-sm font-medium text-accent">
-                      Coming soon
+                      {t('music.actions.comingSoon')}
                     </p>
                   )}
                   <p className="text-sm leading-relaxed text-text-secondary">
-                    {workspaceNotices[action].description}
+                    {t(workspaceNotices[action].description)}
                   </p>
                   <Button
                     className="artist-workspace-primary"
                     onClick={close}
                     variant="primary"
                   >
-                    Got it
+                    {t('music.actions.gotIt')}
                   </Button>
                 </div>
               )}

@@ -1,3 +1,4 @@
+import type { TranslationKey } from '@shared/i18n'
 import { createContext, useContext } from 'react'
 
 export type WorkspaceAction =
@@ -19,24 +20,25 @@ export function useWorkspaceActions() {
   return context
 }
 
+/** Catalog keys for the dialogs of actions that only explain themselves. */
 export const workspaceNotices = {
   'upload-track': {
-    title: 'Upload track',
-    description:
-      'Tracks are uploaded inside a release. Create a release, or open one from Music, then use Upload track in its workspace.',
+    title: 'music.uploadTrack',
+    description: 'music.actions.uploadTrack',
   },
   notifications: {
-    title: 'Notifications',
-    description: 'Deadlines, review results and delivery updates.',
+    title: 'shell.notifications',
+    description: 'music.actions.notifications',
   },
   promotion: {
-    title: 'Promotion',
-    description:
-      'Promotion tools are coming soon. Campaigns and paid promotion are not available yet.',
+    title: 'shell.nav.promotion',
+    description: 'music.actions.promotion',
   },
   support: {
-    title: 'Help & support',
-    description:
-      'The support center is coming soon. No support request has been sent.',
+    title: 'shell.support',
+    description: 'music.actions.support',
   },
-} as const
+} as const satisfies Record<
+  string,
+  { title: TranslationKey; description: TranslationKey }
+>
