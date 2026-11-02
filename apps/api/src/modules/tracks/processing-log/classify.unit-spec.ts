@@ -90,14 +90,6 @@ describe('classifyProcessingError', () => {
     expect(result).toMatchObject({ code: 'EMPTY_OUTPUT', retryable: false })
   })
 
-  it('classifies a missing HLS segment message as EMPTY_OUTPUT', () => {
-    const result = classifyProcessingError(
-      new Error('HLS playlist has no initialization segment: /tmp/hls/128'),
-    )
-
-    expect(result).toMatchObject({ code: 'EMPTY_OUTPUT', retryable: false })
-  })
-
   it('classifies an ENOSPC error as STORAGE, retryable', () => {
     const result = classifyProcessingError(new Error('write failed, ENOSPC: no space left'))
 

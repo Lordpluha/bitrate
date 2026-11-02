@@ -39,7 +39,6 @@ const ICON = {
   search: 'search',
   refresh: 'refresh-cw',
   album: 'disc-album',
-  podcast: 'podcast',
   tags: 'tags',
   plus: 'plus',
   mic: 'mic-vocal',

@@ -45,7 +45,6 @@ const toSource = ({
 }: ToSourceInput): BitratePlayerSource => ({
   duration: track.duration ?? undefined,
   key: getPlaybackKey(track.id, playlistId, playbackSequence),
-  progressiveUrl: track.audioUrl,
   startTime,
   trackId: track.id,
 })

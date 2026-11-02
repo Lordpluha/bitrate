@@ -10,7 +10,7 @@ export const CreatePlaylistActions = ({
 }: CreatePlaylistActionsProps) => (
   <>
     <CreateMenuItem
-      description="Create a playlist with songs or episodes"
+      description="Create a playlist with songs"
       icon={<Music2 size={24} />}
       onClick={onCreate}
       title="Playlist"
