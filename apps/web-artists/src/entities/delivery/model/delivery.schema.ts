@@ -4,6 +4,7 @@ import {
   destinationLabels,
 } from '@shared/constants/destinations'
 import { releaseStatuses } from '@shared/constants/releaseStatuses'
+import type { I18n, TranslationKey } from '@shared/i18n'
 import { z } from 'zod'
 
 const availabilities = [
@@ -18,16 +19,16 @@ const availabilities = [
 
 export type DestinationAvailability = (typeof availabilities)[number]
 
-/** Every label says plainly whether anything was sent. */
+/** Every label says plainly whether anything was sent. Catalog keys; render with `t()`. */
 export const availabilityLabels = {
-  NOT_CONNECTED: 'Not connected',
-  UNAVAILABLE: 'Unavailable',
-  NOT_SENT: 'Not sent',
-  PENDING: 'Pending',
-  LIVE: 'Live',
-  FAILED: 'Failed',
-  TAKEN_DOWN: 'Taken down',
-} satisfies Record<DestinationAvailability, string>
+  NOT_CONNECTED: 'delivery.availability.notConnected',
+  UNAVAILABLE: 'delivery.availability.unavailable',
+  NOT_SENT: 'delivery.availability.notSent',
+  PENDING: 'delivery.availability.pending',
+  LIVE: 'delivery.availability.live',
+  FAILED: 'delivery.availability.failed',
+  TAKEN_DOWN: 'delivery.availability.takenDown',
+} satisfies Record<DestinationAvailability, TranslationKey>
 
 export const releaseDeliverySchema = z.object({
   releaseId: z.uuid(),
@@ -61,14 +62,22 @@ export const distributionPageSchema = z.object({
   limit: z.number().int().positive(),
 })
 
-export function plannedSummary(delivery: ReleaseDelivery): string {
+export function plannedSummary(
+  delivery: ReleaseDelivery,
+  { t }: Pick<I18n, 't'>,
+): string {
   const planned = delivery.destinations.filter((item) => item.planned)
-  if (planned.length === 0) return 'No stores planned'
+  if (planned.length === 0) return t('delivery.noStores')
   return planned.map((item) => destinationLabels[item.destination]).join(', ')
 }
 
-export function territorySummary(delivery: ReleaseDelivery): string {
-  if (delivery.territories.mode === 'WORLDWIDE') return 'Worldwide'
-  const count = delivery.territories.countries.length
-  return `${count} ${count === 1 ? 'country' : 'countries'}`
+export function territorySummary(
+  delivery: ReleaseDelivery,
+  { t, tp }: Pick<I18n, 't' | 'tp'>,
+): string {
+  if (delivery.territories.mode === 'WORLDWIDE') return t('delivery.worldwide')
+  return tp({
+    count: delivery.territories.countries.length,
+    key: 'delivery.countries',
+  })
 }

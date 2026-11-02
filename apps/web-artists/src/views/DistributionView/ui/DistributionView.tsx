@@ -15,7 +15,8 @@ interface DistributionViewProps {
 /** Plans and store states of every release; never shows a release as delivered unless it was. */
 export function DistributionView({ artistId, page }: DistributionViewProps) {
   const distribution = useDistribution(artistId, page)
-  const { tMessage, t } = useI18n()
+  const i18n = useI18n()
+  const { tMessage, t } = i18n
   const connected = distribution.data?.data[0]?.partner.connected
   const pages = distribution.data
     ? Math.max(1, Math.ceil(distribution.data.total / distribution.data.limit))
@@ -28,24 +29,20 @@ export function DistributionView({ artistId, page }: DistributionViewProps) {
     >
       <div>
         <h1 className="text-[1.625rem] font-normal lg:text-[2rem]">
-          Distribution
+          {t('shell.nav.distribution')}
         </h1>
         <p className="mt-2 text-[0.9375rem] text-text-secondary">
-          Where your releases are planned to go, and what stores report back.
+          {t('delivery.page.subtitle')}
         </p>
       </div>
       {connected === false && (
         <div className="artist-release-inset rounded-lg border border-border p-4">
           <Info aria-hidden="true" className="size-5 shrink-0 text-accent" />
-          <p className="text-sm">
-            No distribution partner is connected yet, so nothing has been sent
-            to a streaming service. You can already plan stores and territories;
-            delivery starts once a partner is connected.
-          </p>
+          <p className="text-sm">{t('delivery.page.noPartner')}</p>
         </div>
       )}
       {distribution.isPending ? (
-        <p role="status">Loading distribution…</p>
+        <p role="status">{t('delivery.page.loading')}</p>
       ) : distribution.isError ? (
         <div className="space-y-3">
           <p role="alert">{tMessage(distribution.error.message)}</p>
@@ -55,20 +52,20 @@ export function DistributionView({ artistId, page }: DistributionViewProps) {
             }}
             variant="outline"
           >
-            Try again
+            {t('common.tryAgain')}
           </Button>
         </div>
       ) : distribution.data.data.length === 0 ? (
         <div className="flex items-start gap-3 rounded-lg border border-border p-5">
           <Send aria-hidden="true" className="size-5 shrink-0 text-accent" />
           <div className="space-y-2">
-            <p>No releases yet. Create a release to plan its delivery.</p>
+            <p>{t('delivery.page.empty')}</p>
             <Link
               className="underline"
               search={{ tab: 'releases', page: 1 }}
               to={ROUTES.dashboard.music}
             >
-              Open Music
+              {t('delivery.page.openMusic')}
             </Link>
           </div>
         </div>
@@ -103,8 +100,10 @@ export function DistributionView({ artistId, page }: DistributionViewProps) {
                   </h2>
                   <p className="text-sm text-text-secondary">
                     {t(releaseStatusLabels[delivery.status])} ·{' '}
-                    {territorySummary(delivery)} ·{' '}
-                    {delivery.sent ? 'Sent to partner' : 'Not sent'}
+                    {territorySummary(delivery, i18n)} ·{' '}
+                    {delivery.sent
+                      ? t('delivery.page.sent')
+                      : t('delivery.availability.notSent')}
                   </p>
                 </div>
               </div>
@@ -115,7 +114,7 @@ export function DistributionView({ artistId, page }: DistributionViewProps) {
       )}
       {distribution.data && pages > 1 && (
         <nav
-          aria-label="Distribution pages"
+          aria-label={t('delivery.page.pages')}
           className="flex items-center justify-between gap-3"
         >
           {page > 1 ? (
@@ -124,13 +123,13 @@ export function DistributionView({ artistId, page }: DistributionViewProps) {
               search={{ page: page - 1 }}
               to={ROUTES.dashboard.distribution}
             >
-              Previous
+              {t('music.pagination.previous')}
             </Link>
           ) : (
             <span />
           )}
           <span className="text-sm text-text-secondary">
-            Page {page} of {pages}
+            {t('common.pageOf', { page, total: pages })}
           </span>
           {page < pages ? (
             <Link
@@ -138,7 +137,7 @@ export function DistributionView({ artistId, page }: DistributionViewProps) {
               search={{ page: page + 1 }}
               to={ROUTES.dashboard.distribution}
             >
-              Next
+              {t('music.pagination.next')}
             </Link>
           ) : (
             <span />

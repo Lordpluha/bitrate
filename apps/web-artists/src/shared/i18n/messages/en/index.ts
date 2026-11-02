@@ -1,5 +1,6 @@
 import { auth } from './auth'
 import { common } from './common'
+import { delivery } from './delivery'
 import { editRelease } from './editRelease'
 import { labels } from './labels'
 import { media } from './media'
@@ -15,6 +16,7 @@ import { workspace } from './workspace'
 export const en = {
   ...auth,
   ...common,
+  ...delivery,
   ...editRelease,
   ...labels,
   ...media,

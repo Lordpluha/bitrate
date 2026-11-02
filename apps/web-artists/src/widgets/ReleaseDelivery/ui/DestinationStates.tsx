@@ -5,6 +5,7 @@ import {
   type ReleaseDelivery,
 } from '@entities/delivery'
 import { destinationLabels } from '@shared/constants/destinations'
+import { useI18n } from '@shared/i18n'
 
 /** Live and failed carry meaning; everything else is neutral so nothing looks sent by accident. */
 const tone: Record<DestinationAvailability, string> = {
@@ -27,11 +28,16 @@ export function DestinationStates({
   delivery,
   plannedOnly = false,
 }: DestinationStatesProps) {
+  const { t } = useI18n()
   const items = plannedOnly
     ? delivery.destinations.filter((item) => item.planned)
     : delivery.destinations
   if (items.length === 0)
-    return <p className="text-sm text-text-secondary">No stores planned.</p>
+    return (
+      <p className="text-sm text-text-secondary">
+        {t('delivery.noStoresShort')}
+      </p>
+    )
   return (
     <ul className="grid gap-2 sm:grid-cols-2">
       {items.map((item) => (
@@ -45,14 +51,14 @@ export function DestinationStates({
           <span>
             {destinationLabels[item.destination]}
             {!item.planned && (
-              <span className="sr-only"> (not in the plan)</span>
+              <span className="sr-only"> {t('delivery.notInPlanSr')}</span>
             )}
           </span>
           <span
             className={cn('text-xs', tone[item.availability])}
             title={item.message ?? undefined}
           >
-            {availabilityLabels[item.availability]}
+            {t(availabilityLabels[item.availability])}
           </span>
         </li>
       ))}
