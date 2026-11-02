@@ -21,7 +21,7 @@ function attempt(overrides: Partial<ProcessingAttempt> = {}): ProcessingAttempt 
     finishedAt: new Date('2026-09-01T10:10:00.000Z'),
     durationMs: 600_000,
     lastProgress: 40,
-    failedStep: 'HLS_ENCODE',
+    failedStep: 'CMAF_ENCODE',
     stepDetail: '192k',
     errorCode: 'TIMEOUT',
     errorName: 'FfmpegError',

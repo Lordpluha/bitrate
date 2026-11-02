@@ -66,10 +66,6 @@ export const DATA_OWNERS = {
   /** The genre catalogue is curated by staff only; no public module edits it. */
   genre: ['admin/genres'],
 
-  podcast: ['podcasts'],
-  episode: ['podcasts'],
-  userSavedEpisode: ['podcasts'],
-
   listeningHistory: ['history'],
   searchHistory: ['search'],
   /** `notifications` creates rows from queued domain events; `me` marks them read. */

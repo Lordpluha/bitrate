@@ -44,9 +44,6 @@ const TO_DOMAIN_PERMISSION = {
   'playlists:hide': 'playlists:hide',
   'playlists:delete': 'playlists:delete',
   'playlists:restore': 'playlists:restore',
-  'podcasts:read': 'podcasts:read',
-  'podcasts:delete': 'podcasts:delete',
-  'podcasts:restore': 'podcasts:restore',
   'releases:read': 'releases:read',
   'releases:review': 'releases:review',
 } as const satisfies Record<StaffMemberWirePermission, Permission>

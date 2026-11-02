@@ -63,11 +63,7 @@ export class TrackEntity implements Track {
   @ApiProperty()
   processingFinishedAt: Date | null
 
-  /** 1 = legacy HLS pipeline, 2 = single-file CMAF + Range index (ADR-0020). */
-  @ApiProperty()
-  playbackVersion: number
-
-  /** Fragment timescale shared by every CMAF rendition; null on legacy tracks. */
+  /** Fragment timescale shared by every CMAF rendition; null until the first publish. */
   @ApiProperty()
   fragmentTimescale: number | null
 

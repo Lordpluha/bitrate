@@ -11,8 +11,6 @@ export type StaticMediaFolder =
   | 'artists/avatars'
   | 'artists/backgrounds'
   | 'playlists/covers'
-  | 'podcasts/covers'
-  | 'episodes/covers'
   | 'tracks/covers'
   | 'users/avatars'
 
@@ -110,12 +108,6 @@ export const getTrackCoverUrl = (value: string | null | undefined) =>
 
 export const getAlbumCoverUrl = (value: string | null | undefined) =>
   getStaticMediaUrl(value, 'albums/covers', getMediaFallback('album'))
-
-export const getPodcastCoverUrl = (value: string | null | undefined) =>
-  getStaticMediaUrl(value, 'podcasts/covers', getMediaFallback('album'))
-
-export const getEpisodeCoverUrl = (value: string | null | undefined) =>
-  getStaticMediaUrl(value, 'episodes/covers', getMediaFallback('track'))
 
 export const getUserAvatarUrl = (value: string | null | undefined) =>
   getStaticMediaUrl(value, 'users/avatars', getMediaFallback('user'))
