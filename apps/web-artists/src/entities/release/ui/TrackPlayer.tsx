@@ -2,10 +2,10 @@ import { BITRATE_PLAYER_TAG_NAME } from '@bitrate/player'
 import {
   BITRATE_PLAYER_EVENT,
   type BitratePlayerElement,
-  type BitratePlayerRendition,
   type BitratePlayerSourceResolver,
 } from '@bitrate/player/contract'
 import { cn } from '@bitrate/ui-react'
+import { useI18n } from '@shared/i18n'
 import {
   type DetailedHTMLProps,
   type HTMLAttributes,
@@ -27,11 +27,6 @@ declare module 'react' {
     }
   }
 }
-
-/** A draft master is served as uploaded, so the player gets a single quality to play. */
-const MASTER_RENDITIONS: BitratePlayerRendition[] = [
-  { bitrate: 0, label: 'Master' },
-]
 
 /** Only one master plays at a time across every player on the page. */
 let audible: BitratePlayerElement | null = null
@@ -70,6 +65,7 @@ export function TrackPlayer({
   className,
 }: TrackPlayerProps) {
   const ref = useRef<BitratePlayerElement>(null)
+  const { t } = useI18n()
   const defined = useBitratePlayerDefined()
   // The element rebuilds its engine whenever the resolver changes, so keep it per track.
   const resolveSource = useMemo<BitratePlayerSourceResolver>(
@@ -80,13 +76,14 @@ export function TrackPlayer({
   useEffect(() => {
     const element = ref.current
     if (!defined || !element) return
-    element.renditions = MASTER_RENDITIONS
+    // A draft master is served as uploaded, so the player gets a single quality to play.
+    element.renditions = [{ bitrate: 0, label: t('release.master') }]
     element.trackTitle = title
     element.coverUrl = coverUrl ?? ''
     if (element.resolveSource !== resolveSource) {
       element.resolveSource = resolveSource
     }
-  }, [defined, title, coverUrl, resolveSource])
+  }, [defined, title, coverUrl, resolveSource, t])
 
   useEffect(() => {
     const element = ref.current

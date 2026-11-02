@@ -70,8 +70,9 @@ function StageLink({
 
 /** What Bitrate checks: the preparation steps, each ready or still open. */
 function ReadinessSummary({ release }: { release: ReleaseWorkspace }) {
-  const { t } = useI18n()
-  const steps = releaseRoadmap(release).filter((step) =>
+  const i18n = useI18n()
+  const { t } = i18n
+  const steps = releaseRoadmap(release, i18n).filter((step) =>
     ['artwork', 'audio', 'credits', 'rights'].includes(step.key),
   )
   return (

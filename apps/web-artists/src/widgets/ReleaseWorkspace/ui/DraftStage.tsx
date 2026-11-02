@@ -55,8 +55,9 @@ interface DraftStageProps {
 /** Stage 1: everything the artist prepares before asking Bitrate to review. */
 export function DraftStage({ artistId, release, onAction }: DraftStageProps) {
   const lock = editLockReason(release.status)
-  const { t, tp } = useI18n()
-  const steps = releaseRoadmap(release).filter((step) =>
+  const i18n = useI18n()
+  const { t, tp } = i18n
+  const steps = releaseRoadmap(release, i18n).filter((step) =>
     PREPARATION.has(step.key),
   )
   const left = steps.filter((step) => step.state !== 'done').length

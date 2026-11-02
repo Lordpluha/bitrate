@@ -9,6 +9,7 @@ import {
   useSaveContributor,
 } from '@entities/release'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useI18n } from '@shared/i18n'
 import { WorkspaceModal } from '@shared/ui/WorkspaceModal/WorkspaceModal'
 import { useId, useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -29,6 +30,7 @@ export function ContributorForm({
   onSaved,
 }: ContributorFormProps) {
   const id = useId()
+  const { t } = useI18n()
   const mutation = useSaveContributor(artistId, participant?.id)
   const [expectedUpdatedAt] = useState(release.updatedAt)
   const form = useForm<ContributorValues>({
@@ -126,7 +128,7 @@ export function ContributorForm({
                     onChange: () => mutation.reset(),
                   })}
                 />
-                <span>{participantRoleLabels[role]}</span>
+                <span>{t(participantRoleLabels[role])}</span>
               </label>
             ))}
           </div>

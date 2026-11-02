@@ -67,7 +67,7 @@ export function WorkspaceReadiness({
               key={`${blocker.code}-${'contributorId' in blocker ? blocker.contributorId : ''}${'rightType' in blocker ? blocker.rightType : ''}${'trackId' in blocker ? blocker.trackId : ''}`}
             >
               <CircleAlert aria-hidden="true" />
-              {describeBlocker(blocker, { contributors, tracks })}
+              {describeBlocker(blocker, { contributors, tracks }, t)}
             </li>
           ))}
         </ul>

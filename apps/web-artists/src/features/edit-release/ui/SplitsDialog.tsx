@@ -8,6 +8,7 @@ import {
   rightTypes,
   useSaveSplits,
 } from '@entities/release'
+import { useI18n } from '@shared/i18n'
 import { WorkspaceModal } from '@shared/ui/WorkspaceModal/WorkspaceModal'
 import { useId, useState } from 'react'
 import { parseShares } from '../model/rights.schema'
@@ -52,6 +53,7 @@ export function SplitsDialog({
   onSaved,
 }: SplitsDialogProps) {
   const id = useId()
+  const { t } = useI18n()
   const mutation = useSaveSplits(artistId)
   const [version, setVersion] = useState(release.updatedAt)
   const [saved, setSaved] = useState(() => savedValues(release))
@@ -64,9 +66,9 @@ export function SplitsDialog({
     )
     const problem =
       shares === null
-        ? `${rightTypeLabels[rightType]}: use a share between 0.01% and 100% with up to two decimals.`
+        ? `${t(rightTypeLabels[rightType])}: use a share between 0.01% and 100% with up to two decimals.`
         : total !== undefined && total > FULL_SHARE_BASIS_POINTS
-          ? `${rightTypeLabels[rightType]} shares cannot exceed 100%.`
+          ? `${t(rightTypeLabels[rightType])} shares cannot exceed 100%.`
           : null
     return { rightType, shares, total, problem }
   })
@@ -130,7 +132,7 @@ export function SplitsDialog({
               <span>Contributor</span>
               {rightTypes.map((rightType) => (
                 <span className="text-right" key={rightType}>
-                  {rightTypeLabels[rightType]}
+                  {t(rightTypeLabels[rightType])}
                 </span>
               ))}
             </div>
@@ -145,7 +147,7 @@ export function SplitsDialog({
                 {rightTypes.map((rightType) => (
                   <div className="flex items-center gap-1" key={rightType}>
                     <Input
-                      aria-label={`${participant.displayName} ${rightTypeLabels[rightType].toLowerCase()} share`}
+                      aria-label={`${participant.displayName} ${t(rightTypeLabels[rightType]).toLowerCase()} share`}
                       className="w-full text-right"
                       data-initial-focus={
                         index === 0 && rightType === 'RECORDING'
@@ -177,7 +179,7 @@ export function SplitsDialog({
         <ul aria-live="polite" className="space-y-1 text-sm font-medium">
           {columns.map(({ rightType, total }) => (
             <li key={rightType}>
-              {rightTypeLabels[rightType]} total{' '}
+              {t(rightTypeLabels[rightType])} total{' '}
               {total === undefined ? '—' : `${basisPointsToPercent(total)}%`} of
               100%
             </li>
