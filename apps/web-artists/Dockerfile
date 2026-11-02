@@ -1,14 +1,14 @@
 # Multi-stage Dockerfile для Web Artists (TanStack Start + Vite)
 
 # Stage 1: Base
-FROM node:24-alpine AS base
+FROM node:26-alpine AS base
 ENV PNPM_HOME=/pnpm
 ENV PATH=$PNPM_HOME:$PATH
 # Vercel Remote Cache team id — not a secret, it only identifies which team's cache to read/
 # write. TURBO_TOKEN is the credential and arrives per RUN below via --mount=type=secret, so
 # it never lands in an image layer.
 ENV TURBO_TEAM=team_Ao32Preb1GI1Ohd56uSdfxEZ
-RUN corepack enable && corepack prepare pnpm@12.7.0 --activate && pnpm config set store-dir /pnpm/store
+RUN npm install -g pnpm@12.7.0 && pnpm config set store-dir /pnpm/store
 WORKDIR /app
 
 # Stage 2: Dependencies

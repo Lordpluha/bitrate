@@ -74,9 +74,9 @@ export const GroupsAndSeparator: Story = {
           </hlm-select-group>
           <hlm-select-separator />
           <hlm-select-group>
-            <hlm-select-label>Spoken</hlm-select-label>
-            <hlm-select-item value="podcast">Podcast</hlm-select-item>
-            <hlm-select-item value="episode" [disabled]="true">Episode</hlm-select-item>
+            <hlm-select-label>Collections</hlm-select-label>
+            <hlm-select-item value="playlist">Playlist</hlm-select-item>
+            <hlm-select-item value="genre" [disabled]="true">Genre</hlm-select-item>
           </hlm-select-group>
         </hlm-select-content>
       </hlm-select>

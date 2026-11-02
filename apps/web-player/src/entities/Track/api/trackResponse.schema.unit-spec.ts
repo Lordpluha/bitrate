@@ -20,7 +20,6 @@ describe('trackResponseSchema', () => {
       language: null,
       lyrics: null,
       playCount: 0,
-      playbackVersion: 1,
       popularity: 0,
       previewUrl: null,
       processingAttempts: 0,

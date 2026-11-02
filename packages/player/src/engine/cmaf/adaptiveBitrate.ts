@@ -22,8 +22,11 @@ const EWMA_ALPHA = 0.35
 /** Only spend this share of measured bandwidth, leaving room for jitter. */
 const SAFETY_FACTOR = 0.75
 
-/** Seconds of buffer below which we stop considering an upgrade. */
-const UPGRADE_MIN_BUFFER = 12
+/**
+ * Seconds of buffer below which we stop considering an upgrade: two 10-second fragments
+ * (ADR-0065), since the buffer grows a whole fragment at a time.
+ */
+const UPGRADE_MIN_BUFFER = 20
 
 /** How long throughput must support a higher rendition before upgrading. */
 const UPGRADE_STABLE_MS = 8_000

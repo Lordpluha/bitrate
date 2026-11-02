@@ -52,8 +52,6 @@ const TO_WIRE_ENTITY_TYPE = {
   album: 'album',
   playlist: 'playlist',
   artist: 'artist',
-  podcast: 'podcast',
-  episode: 'episode',
   user: 'user',
 } as const satisfies Record<ModerationEntityType, NonNullable<WireModerationEntityType>>
 
@@ -85,7 +83,6 @@ function toModerationSubject(dto: SubjectDto | null): ModerationSubject | null {
     id: dto.id,
     title: dto.title,
     deletedAt: dto.deletedAt === null ? null : new Date(dto.deletedAt),
-    parentId: dto.parentId,
   }
 }
 

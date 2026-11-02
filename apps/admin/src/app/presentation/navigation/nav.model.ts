@@ -117,13 +117,6 @@ export const NAV_SECTIONS: readonly NavSection[] = [
       },
       {
         kind: 'link',
-        path: '/podcasts',
-        label: 'nav.podcasts',
-        icon: 'lucidePodcast',
-        permission: 'podcasts:read',
-      },
-      {
-        kind: 'link',
         path: '/genres',
         label: 'nav.genres',
         icon: 'lucideTags',
