@@ -1,4 +1,5 @@
 import { Button } from '@bitrate/ui-react'
+import { useI18n } from '@shared/i18n'
 import { WorkspaceModal } from '@shared/ui/WorkspaceModal/WorkspaceModal'
 import type { FormEvent, ReactNode } from 'react'
 
@@ -33,6 +34,7 @@ export function WorkspaceFormModal({
   className = 'space-y-6',
   children,
 }: WorkspaceFormModalProps) {
+  const { tMessage } = useI18n()
   return (
     <WorkspaceModal
       canClose={!pending}
@@ -52,7 +54,7 @@ export function WorkspaceFormModal({
         {children}
         {error && (
           <p className="text-sm text-destructive" role="alert">
-            {error.message}
+            {tMessage(error.message)}
           </p>
         )}
         <div className="flex flex-wrap justify-end gap-3">

@@ -6,6 +6,7 @@ import {
   useRepublishRelease,
   useUnpublishRelease,
 } from '@entities/release'
+import { useI18n } from '@shared/i18n'
 import { formatDateTimeUtc } from '@shared/lib/date'
 import { WorkspaceModal } from '@shared/ui/WorkspaceModal/WorkspaceModal'
 import { type ReactNode, useState } from 'react'
@@ -124,6 +125,7 @@ function LaunchAction({
   pending: string
   children: ReactNode
 }) {
+  const { tMessage } = useI18n()
   const write = action(artistId)
   return (
     <div className="space-y-3">
@@ -143,7 +145,7 @@ function LaunchAction({
       </Button>
       {write.error && (
         <p className="text-sm text-destructive" role="alert">
-          {write.error.message}
+          {tMessage(write.error.message)}
         </p>
       )}
     </div>
@@ -186,6 +188,7 @@ function PublishDialog({
   release: ReleaseWorkspace
   onClose: () => void
 }) {
+  const { tMessage } = useI18n()
   const publish = usePublishRelease(artistId)
   const premiere = premiereOf(release)
   const confirm = async () => {
@@ -224,7 +227,7 @@ function PublishDialog({
         </p>
         {publish.error && (
           <p className="text-sm text-destructive" role="alert">
-            {publish.error.message}
+            {tMessage(publish.error.message)}
           </p>
         )}
         <div className="flex flex-wrap justify-end gap-3">

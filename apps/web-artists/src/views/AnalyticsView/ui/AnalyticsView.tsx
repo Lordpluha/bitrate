@@ -7,6 +7,7 @@ import {
   useArtistAnalytics,
 } from '@entities/analytics'
 import { destinationLabels } from '@shared/constants/destinations'
+import { useI18n } from '@shared/i18n'
 import { formatDateTimeUtc } from '@shared/lib/date'
 import { ROUTES } from '@shared/routes/routes'
 import { Link } from '@tanstack/react-router'
@@ -26,6 +27,7 @@ interface AnalyticsViewProps {
 
 /** Bitrate-owned listening signals only; external services never show invented zeroes. */
 export function AnalyticsView({ artistId, days }: AnalyticsViewProps) {
+  const { tMessage } = useI18n()
   const analytics = useArtistAnalytics(artistId, days)
   return (
     <section
@@ -64,7 +66,7 @@ export function AnalyticsView({ artistId, days }: AnalyticsViewProps) {
         <p role="status">Loading analytics…</p>
       ) : analytics.isError ? (
         <div className="space-y-3">
-          <p role="alert">{analytics.error.message}</p>
+          <p role="alert">{tMessage(analytics.error.message)}</p>
           <Button
             onClick={() => {
               void analytics.refetch()

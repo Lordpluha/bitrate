@@ -6,6 +6,7 @@ import {
   useNotificationPreferences,
   useSaveNotificationPreferences,
 } from '@entities/notification'
+import { useI18n } from '@shared/i18n'
 import { useId } from 'react'
 
 interface NotificationPreferencesProps {
@@ -16,6 +17,7 @@ interface NotificationPreferencesProps {
 export function NotificationPreferences({
   artistId,
 }: NotificationPreferencesProps) {
+  const { tMessage } = useI18n()
   const id = useId()
   const preferences = useNotificationPreferences(artistId)
   const save = useSaveNotificationPreferences(artistId)
@@ -30,7 +32,7 @@ export function NotificationPreferences({
     return (
       <div className="flex flex-wrap items-center gap-3">
         <p className="text-sm text-destructive" role="alert">
-          {preferences.error.message}
+          {tMessage(preferences.error.message)}
         </p>
         <Button
           onClick={() => {
@@ -116,7 +118,7 @@ export function NotificationPreferences({
       </p>
       {save.error && (
         <p className="text-sm text-destructive" role="alert">
-          {save.error.message}
+          {tMessage(save.error.message)}
         </p>
       )}
     </div>

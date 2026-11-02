@@ -1,5 +1,6 @@
 import { Button } from '@bitrate/ui-react'
 import { useContributor } from '@entities/release'
+import { useI18n } from '@shared/i18n'
 import { WorkspaceModal } from '@shared/ui/WorkspaceModal/WorkspaceModal'
 import { ContributorForm } from './ContributorForm'
 
@@ -18,6 +19,7 @@ export function EditContributorDialog({
   onClose,
   onSaved,
 }: EditContributorDialogProps) {
+  const { tMessage } = useI18n()
   const query = useContributor(artistId, releaseId, contributorId)
   if (
     query.data &&
@@ -40,7 +42,7 @@ export function EditContributorDialog({
         <p role="status">Loading the latest contributor…</p>
       ) : query.isError ? (
         <div className="space-y-4">
-          <p role="alert">{query.error.message}</p>
+          <p role="alert">{tMessage(query.error.message)}</p>
           <Button
             onClick={() => {
               void query.refetch()

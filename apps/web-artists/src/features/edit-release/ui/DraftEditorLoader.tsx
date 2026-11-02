@@ -1,5 +1,6 @@
 import { Button } from '@bitrate/ui-react'
 import { type ReleaseSummary, useRelease } from '@entities/release'
+import { useI18n } from '@shared/i18n'
 import { WorkspaceModal } from '@shared/ui/WorkspaceModal/WorkspaceModal'
 import type { ReactNode } from 'react'
 
@@ -23,6 +24,7 @@ export function DraftEditorLoader({
   onClose,
   renderDraft,
 }: DraftEditorLoaderProps) {
+  const { tMessage } = useI18n()
   const query = useRelease(artistId, releaseId)
   if (
     query.data &&
@@ -37,7 +39,7 @@ export function DraftEditorLoader({
         <p role="status">Loading the latest draft…</p>
       ) : query.isError ? (
         <div className="space-y-4">
-          <p role="alert">{query.error.message}</p>
+          <p role="alert">{tMessage(query.error.message)}</p>
           <Button
             onClick={() => {
               void query.refetch()

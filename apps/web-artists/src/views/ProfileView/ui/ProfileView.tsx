@@ -13,6 +13,7 @@ import {
   profileImageUrl,
 } from '@features/edit-profile'
 import { countryName } from '@shared/constants/countries'
+import { useI18n } from '@shared/i18n'
 import { BadgeCheck, UserRound } from 'lucide-react'
 import { useState } from 'react'
 
@@ -22,6 +23,7 @@ interface ProfileViewProps {
 
 /** Public artist profile editor with a live preview that never implies the draft is saved. */
 export function ProfileView({ artistId }: ProfileViewProps) {
+  const { tMessage } = useI18n()
   const profile = useArtistProfile(artistId)
   return (
     <section className="artist-music space-y-6">
@@ -35,7 +37,7 @@ export function ProfileView({ artistId }: ProfileViewProps) {
         <p role="status">Loading your profile…</p>
       ) : profile.isError ? (
         <div className="space-y-3">
-          <p role="alert">{profile.error.message}</p>
+          <p role="alert">{tMessage(profile.error.message)}</p>
           <Button
             onClick={() => {
               void profile.refetch()

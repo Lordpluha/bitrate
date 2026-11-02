@@ -4,6 +4,7 @@ import {
   useCreditSelf,
   useRemoveContributor,
 } from '@entities/release'
+import { useI18n } from '@shared/i18n'
 import { WorkspaceModal } from '@shared/ui/WorkspaceModal/WorkspaceModal'
 import { useState } from 'react'
 
@@ -25,6 +26,7 @@ export function RemoveContributorDialog({
   onClose,
   onSaved,
 }: RemoveContributorDialogProps) {
+  const { tMessage } = useI18n()
   const remove = useRemoveContributor(artistId)
   const [expectedUpdatedAt] = useState(release.updatedAt)
   const person = release.participants.find((item) => item.id === contributorId)
@@ -57,7 +59,7 @@ export function RemoveContributorDialog({
         </p>
         {remove.error && (
           <p className="text-sm text-destructive" role="alert">
-            {remove.error.message}
+            {tMessage(remove.error.message)}
           </p>
         )}
         <div className="flex flex-wrap justify-end gap-3">
@@ -92,6 +94,7 @@ export function CreditSelfDialog({
   onClose,
   onSaved,
 }: CreditDialogProps) {
+  const { tMessage } = useI18n()
   const credit = useCreditSelf(artistId)
   const [expectedUpdatedAt] = useState(release.updatedAt)
 
@@ -119,7 +122,7 @@ export function CreditSelfDialog({
         </p>
         {credit.error && (
           <p className="text-sm text-destructive" role="alert">
-            {credit.error.message}
+            {tMessage(credit.error.message)}
           </p>
         )}
         <div className="flex flex-wrap justify-end gap-3">

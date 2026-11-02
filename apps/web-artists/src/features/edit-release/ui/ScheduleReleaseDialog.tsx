@@ -1,6 +1,7 @@
 import { Button, Input } from '@bitrate/ui-react'
 import { type ReleaseSummary, useUpdateRelease } from '@entities/release'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useI18n } from '@shared/i18n'
 import { WorkspaceModal } from '@shared/ui/WorkspaceModal/WorkspaceModal'
 import { useId, useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -56,6 +57,7 @@ function ScheduleReleaseForm({
   onClose,
   onSaved,
 }: ScheduleReleaseDialogProps & { release: ReleaseSummary }) {
+  const { tMessage } = useI18n()
   const id = useId()
   const update = useUpdateRelease(artistId)
   const form = useForm<ScheduleValues>({
@@ -168,7 +170,7 @@ function ScheduleReleaseForm({
         <p className="text-sm text-text-secondary">Time zone: UTC.</p>
         {update.error && (
           <p className="text-sm text-destructive" role="alert">
-            {update.error.message}
+            {tMessage(update.error.message)}
           </p>
         )}
         <div className="flex flex-wrap justify-end gap-3">

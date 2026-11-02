@@ -1,5 +1,6 @@
 import { Button } from '@bitrate/ui-react'
 import { useDeleteRelease } from '@entities/release'
+import { useI18n } from '@shared/i18n'
 import { WorkspaceModal } from '@shared/ui/WorkspaceModal/WorkspaceModal'
 
 interface DeleteReleaseDialogProps {
@@ -15,6 +16,7 @@ export function DeleteReleaseDialog({
   onClose,
   onDeleted,
 }: DeleteReleaseDialogProps) {
+  const { tMessage } = useI18n()
   const remove = useDeleteRelease(artistId)
   const confirm = async () => {
     try {
@@ -41,7 +43,7 @@ export function DeleteReleaseDialog({
         </p>
         {remove.error && (
           <p className="text-sm text-destructive" role="alert">
-            {remove.error.message}
+            {tMessage(remove.error.message)}
           </p>
         )}
         <div className="flex flex-wrap justify-end gap-3">

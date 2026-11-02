@@ -15,7 +15,7 @@ interface DistributionViewProps {
 /** Plans and store states of every release; never shows a release as delivered unless it was. */
 export function DistributionView({ artistId, page }: DistributionViewProps) {
   const distribution = useDistribution(artistId, page)
-  const { t } = useI18n()
+  const { tMessage, t } = useI18n()
   const connected = distribution.data?.data[0]?.partner.connected
   const pages = distribution.data
     ? Math.max(1, Math.ceil(distribution.data.total / distribution.data.limit))
@@ -48,7 +48,7 @@ export function DistributionView({ artistId, page }: DistributionViewProps) {
         <p role="status">Loading distribution…</p>
       ) : distribution.isError ? (
         <div className="space-y-3">
-          <p role="alert">{distribution.error.message}</p>
+          <p role="alert">{tMessage(distribution.error.message)}</p>
           <Button
             onClick={() => {
               void distribution.refetch()

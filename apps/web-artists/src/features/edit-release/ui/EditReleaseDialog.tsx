@@ -7,6 +7,7 @@ import {
   useUpdateRelease,
 } from '@entities/release'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useI18n } from '@shared/i18n'
 import { WorkspaceModal } from '@shared/ui/WorkspaceModal/WorkspaceModal'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -39,6 +40,7 @@ function EditReleaseForm({
   onClose,
   onSaved,
 }: EditReleaseDialogProps & { release: ReleaseSummary }) {
+  const { tMessage } = useI18n()
   const update = useUpdateRelease(artistId)
   const form = useForm<CreateReleaseValues>({
     resolver: zodResolver(createReleaseSchema),
@@ -78,7 +80,7 @@ function EditReleaseForm({
         />
         {update.error && (
           <p className="text-sm text-destructive" role="alert">
-            {update.error.message}
+            {tMessage(update.error.message)}
           </p>
         )}
         <div className="flex flex-wrap justify-end gap-3">

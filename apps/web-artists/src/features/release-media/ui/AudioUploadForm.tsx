@@ -1,5 +1,6 @@
 import { cn } from '@bitrate/ui-react'
 import { AUDIO_ACCEPT } from '@entities/release'
+import { useI18n } from '@shared/i18n'
 import { WorkspaceFormModal } from '@shared/ui/WorkspaceFormModal/WorkspaceFormModal'
 import type { ReactNode } from 'react'
 import type { AudioUpload } from '../model/useAudioUpload'
@@ -27,6 +28,7 @@ export function AudioUploadForm({
   intro,
   children,
 }: AudioUploadFormProps) {
+  const { tMessage } = useI18n()
   const drop = useFileDrop(audio.pending, audio.choose)
   return (
     <WorkspaceFormModal
@@ -61,7 +63,7 @@ export function AudioUploadForm({
       <UploadProgress fraction={audio.progress} />
       {audio.error && (
         <p className="text-sm text-destructive" role="alert">
-          {audio.error.message}
+          {tMessage(audio.error.message)}
         </p>
       )}
       <p className="text-sm text-text-secondary">

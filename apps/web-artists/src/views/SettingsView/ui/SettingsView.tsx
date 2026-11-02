@@ -24,6 +24,7 @@ interface SettingsViewProps {
 
 /** Account identity, security, appearance and account removal, separate from the public profile. */
 export function SettingsView({ artistId }: SettingsViewProps) {
+  const { tMessage } = useI18n()
   const profile = useArtistProfile(artistId)
   return (
     <section className="artist-music space-y-6">
@@ -37,7 +38,7 @@ export function SettingsView({ artistId }: SettingsViewProps) {
         <p role="status">Loading settings…</p>
       ) : profile.isError ? (
         <div className="space-y-3">
-          <p role="alert">{profile.error.message}</p>
+          <p role="alert">{tMessage(profile.error.message)}</p>
           <Button
             onClick={() => {
               void profile.refetch()
@@ -82,7 +83,7 @@ function SettingsSections({
   profile: ArtistProfile
 }) {
   const reset = usePasswordResetEmail()
-  const { t } = useI18n()
+  const { tMessage, t } = useI18n()
   return (
     <div className="grid max-w-3xl gap-4">
       <Panel id="settings-account-heading" title="Account">
@@ -130,7 +131,7 @@ function SettingsSections({
             </p>
             {reset.error && (
               <p className="text-sm text-destructive" role="alert">
-                {reset.error.message}
+                {tMessage(reset.error.message)}
               </p>
             )}
           </div>

@@ -9,6 +9,7 @@ import {
 import type { ReleaseWorkspace } from '@entities/release'
 import { DeliveryPlanDialog } from '@features/delivery-plan'
 import { destinationLabels } from '@shared/constants/destinations'
+import { useI18n } from '@shared/i18n'
 import { LockedButton } from '@shared/ui'
 import {
   CalendarDays,
@@ -101,6 +102,7 @@ export function ReleaseDeliveryPanel({
   release,
   onSchedule,
 }: ReleaseDeliveryPanelProps) {
+  const { tMessage } = useI18n()
   const delivery = useReleaseDelivery(artistId, releaseId)
   const [editing, setEditing] = useState(false)
   const lock = planLockReason(release.status)
@@ -124,7 +126,7 @@ export function ReleaseDeliveryPanel({
         className="artist-release-workspace-panel space-y-2"
       >
         <h2 id="release-delivery-heading">Delivery plan</h2>
-        <p role="alert">{delivery.error.message}</p>
+        <p role="alert">{tMessage(delivery.error.message)}</p>
         <Button
           onClick={() => {
             void delivery.refetch()

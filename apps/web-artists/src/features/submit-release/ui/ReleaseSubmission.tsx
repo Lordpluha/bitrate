@@ -5,6 +5,7 @@ import {
   useSubmitRelease,
   useWithdrawRelease,
 } from '@entities/release'
+import { useI18n } from '@shared/i18n'
 import { useId, useState } from 'react'
 
 interface ReleaseSubmissionProps {
@@ -17,6 +18,7 @@ export function ReleaseSubmission({
   artistId,
   release,
 }: ReleaseSubmissionProps) {
+  const { tMessage } = useI18n()
   const id = useId()
   const submit = useSubmitRelease(artistId)
   const withdraw = useWithdrawRelease(artistId)
@@ -46,7 +48,7 @@ export function ReleaseSubmission({
         </div>
         {withdraw.error && (
           <p className="text-sm text-destructive" role="alert">
-            {withdraw.error.message}
+            {tMessage(withdraw.error.message)}
           </p>
         )}
       </div>
@@ -71,7 +73,7 @@ export function ReleaseSubmission({
         </Button>
         {revise.error && (
           <p className="text-sm text-destructive" role="alert">
-            {revise.error.message}
+            {tMessage(revise.error.message)}
           </p>
         )}
       </div>
@@ -129,7 +131,7 @@ export function ReleaseSubmission({
       </p>
       {submit.error && (
         <p className="text-sm text-destructive" role="alert">
-          {submit.error.message}
+          {tMessage(submit.error.message)}
         </p>
       )}
     </form>
