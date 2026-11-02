@@ -1,5 +1,6 @@
 import { Input } from '@bitrate/ui-react'
 import { type ReleaseWorkspace, titleFromFileName } from '@entities/release'
+import { type TranslationKey, useI18n } from '@shared/i18n'
 import { useId, useState } from 'react'
 import { useAudioUpload } from '../model/useAudioUpload'
 import { AudioUploadForm } from './AudioUploadForm'
@@ -21,9 +22,10 @@ export function AddTrackDialog({
   onSaved,
 }: TrackUploadDialogProps) {
   const id = useId()
+  const { t } = useI18n()
   const [title, setTitle] = useState('')
   const [titleTouched, setTitleTouched] = useState(false)
-  const [titleProblem, setTitleProblem] = useState<string | null>(null)
+  const [titleProblem, setTitleProblem] = useState<TranslationKey | null>(null)
   const audio = useAudioUpload(artistId, release, (file) => {
     if (titleTouched) return
     setTitle(titleFromFileName(file.name))
@@ -35,7 +37,7 @@ export function AddTrackDialog({
     if (!file) return
     const trimmed = title.trim()
     if (trimmed === '') {
-      setTitleProblem('Enter a title for this recording.')
+      setTitleProblem('media.enterTitle')
       return
     }
     if (await audio.send(file, { title: trimmed })) onSaved()
@@ -46,12 +48,12 @@ export function AddTrackDialog({
       audio={audio}
       onClose={onClose}
       onSubmit={submit}
-      submitLabel="Upload track"
-      title="Upload track"
+      submitLabel={t('music.uploadTrack')}
+      title={t('music.uploadTrack')}
     >
       <div className="space-y-2">
         <label className="block text-sm font-medium" htmlFor={`${id}-title`}>
-          Track title
+          {t('media.trackTitle')}
         </label>
         <Input
           aria-describedby={titleProblem ? `${id}-title-error` : undefined}
@@ -74,7 +76,7 @@ export function AddTrackDialog({
             id={`${id}-title-error`}
             role="alert"
           >
-            {titleProblem}
+            {t(titleProblem)}
           </p>
         )}
       </div>
@@ -95,6 +97,7 @@ export function ReplaceAudioDialog({
   onSaved,
 }: ReplaceAudioDialogProps) {
   const audio = useAudioUpload(artistId, release)
+  const { t } = useI18n()
   const existing = release.trackDrafts.find((track) => track.id === trackId)
 
   const submit = async () => {
@@ -108,14 +111,21 @@ export function ReplaceAudioDialog({
       intro={
         <p className="text-sm text-text-secondary">
           {existing?.hasAudio
-            ? `The current file${existing.audioFileName ? ` (${existing.audioFileName})` : ''} of ${existing.title} is replaced once the new one is saved.`
-            : `Add the master for ${existing?.title ?? 'this recording'}.`}
+            ? existing.audioFileName
+              ? t('media.replaceCurrentNamed', {
+                  file: existing.audioFileName,
+                  title: existing.title,
+                })
+              : t('media.replaceCurrent', { title: existing.title })
+            : t('media.addMaster', {
+                title: existing?.title ?? t('editRelease.thisRecording'),
+              })}
         </p>
       }
       onClose={onClose}
       onSubmit={submit}
-      submitLabel="Replace audio"
-      title="Replace audio"
+      submitLabel={t('workspace.track.replaceAudio')}
+      title={t('workspace.track.replaceAudio')}
     />
   )
 }

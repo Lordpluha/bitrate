@@ -28,14 +28,14 @@ export function AudioUploadForm({
   intro,
   children,
 }: AudioUploadFormProps) {
-  const { tMessage } = useI18n()
+  const { t, tMessage } = useI18n()
   const drop = useFileDrop(audio.pending, audio.choose)
   return (
     <WorkspaceFormModal
       onClose={onClose}
       onSubmit={onSubmit}
       pending={audio.pending}
-      pendingLabel="Uploading…"
+      pendingLabel={t('media.uploading')}
       submitDisabled={!audio.file}
       submitLabel={submitLabel}
       title={title}
@@ -48,14 +48,14 @@ export function AudioUploadForm({
         )}
         {...drop.handlers}
       >
-        {audio.file ? audio.file.name : 'Drop an audio file here'}
+        {audio.file ? audio.file.name : t('media.dropAudio')}
       </div>
       <MediaFilePicker
         accept={AUDIO_ACCEPT}
         disabled={audio.pending}
         file={audio.file}
-        hint="WAV or FLAC masters are preferred; MP3 and OGG are accepted. Up to 512 MB. The file stays private to your workspace."
-        label="Audio file"
+        hint={t('media.audioHint')}
+        label={t('media.audioFile')}
         onChange={audio.choose}
         problem={audio.problem}
       />
@@ -66,9 +66,7 @@ export function AudioUploadForm({
           {tMessage(audio.error.message)}
         </p>
       )}
-      <p className="text-sm text-text-secondary">
-        You confirm the whole draft is accurate when you submit it for review.
-      </p>
+      <p className="text-sm text-text-secondary">{t('media.confirmNote')}</p>
     </WorkspaceFormModal>
   )
 }
