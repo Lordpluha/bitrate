@@ -1,6 +1,7 @@
 import { MailModule } from '@infra/mail/mail.module'
 import { PrismaModule } from '@infra/prisma/prisma.module'
 import { TokensModule } from '@modules/tokens/tokens.module'
+import { PlaybackSessionsModule } from '@modules/tracks/playback-sessions.module'
 import { forwardRef, Module } from '@nestjs/common'
 import { UsersModule } from '../users/users.module'
 import { OAuthService } from './oauth.service'
@@ -11,7 +12,13 @@ import { OptionalUserAuthGuard, UserAuthGuard } from './users-auth.guard'
 import { UsersOAuthController } from './users-oauth.controller'
 
 @Module({
-  imports: [PrismaModule, forwardRef(() => UsersModule), TokensModule, MailModule],
+  imports: [
+    PrismaModule,
+    forwardRef(() => UsersModule),
+    TokensModule,
+    MailModule,
+    PlaybackSessionsModule,
+  ],
   controllers: [UsersAuthController, UsersOAuthController],
   providers: [
     UserAuthService,

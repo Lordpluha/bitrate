@@ -823,20 +823,20 @@ export interface paths {
     patch?: never
     trace?: never
   }
-  '/api/v1/tracks/{id}/manifest': {
+  '/api/v1/tracks/{id}/play-sessions': {
     parameters: {
       query?: never
       header?: never
       path?: never
       cookie?: never
     }
-    /**
-     * Get the byte-range playback manifest for a track
-     * @description Returns the fragment index every CMAF rendition is addressed by. Immutable for a given track, so it can be cached indefinitely. See ADR-0020.
-     */
-    get: operations['TracksController_getManifest_v1']
+    get?: never
     put?: never
-    post?: never
+    /**
+     * Open a playback session for a track
+     * @description Returns the byte-range manifest and a signed token. Every rendition request must carry it as `?t=`; it lasts the track plus 15 minutes and is revoked on logout and password reset. See ADR-0067.
+     */
+    post: operations['TracksController_openPlaySession_v1']
     delete?: never
     options?: never
     head?: never
@@ -851,8 +851,8 @@ export interface paths {
       cookie?: never
     }
     /**
-     * Stream bytes of one CMAF rendition
-     * @description Serves the rendition file, honoring an inclusive `bytes=` Range. The player asks for one fragment at a time using offsets from the manifest.
+     * Authorised by the session token alone (D9): a native `<audio>` cannot refresh a cookie.
+     * @description Serves bytes for a playback session (`?t=` from `POST /tracks/:id/play-sessions`). A `Range` of at most the largest fragment (~10 s) is served exactly; a missing or longer range gets one response to the end of the file, released no faster than the session budget: real time since it opened plus 60 s of audio. See ADR-0067.
      */
     get: operations['TracksController_streamRendition_v1']
     put?: never
@@ -4535,6 +4535,20 @@ export interface components {
       /** @description Renditions ordered from the lowest bitrate to the highest. */
       renditions: components['schemas']['TrackManifestRenditionEntity'][]
     }
+    PlaySessionEntity: {
+      /** @description The track's byte-range playback manifest. */
+      manifest: components['schemas']['TrackManifestEntity']
+      /**
+       * @description Signed token for `GET /tracks/:id/cmaf/:bitrate?t=…`.
+       * @example eyJzaWQiOiIuLi4ifQ.c2lnbmF0dXJl
+       */
+      token: string
+      /**
+       * @description When the token stops working, in Unix seconds.
+       * @example 1793300000
+       */
+      expiresAt: number
+    }
     CreateTrackDto: {
       /** @description Track title */
       title: string
@@ -4574,6 +4588,13 @@ export interface components {
        * @description Cover image file
        */
       cover?: string
+    }
+    OpenPlaySessionDto: {
+      /**
+       * Format: uuid
+       * @description The Bitrate Connect device playing, as registered at `/me/player/devices`
+       */
+      deviceId?: string
     }
     PlaylistTrackEntity: {
       /** @description The id value. */
@@ -14769,7 +14790,7 @@ export interface operations {
       }
     }
   }
-  TracksController_getManifest_v1: {
+  TracksController_openPlaySession_v1: {
     parameters: {
       query?: never
       header?: never
@@ -14779,17 +14800,25 @@ export interface operations {
       }
       cookie?: never
     }
-    requestBody?: never
+    requestBody?: {
+      content: {
+        'application/json': components['schemas']['OpenPlaySessionDto']
+      }
+    }
     responses: {
-      200: {
+      201: {
         headers: {
           [name: string]: unknown
         }
         content: {
-          'application/json': components['schemas']['TrackManifestEntity']
+          'application/json': components['schemas']['PlaySessionEntity']
         }
       }
-      /** @description Unauthorized */
+      /**
+       * @description Unauthorized
+       *
+       *     Not signed in
+       */
       401: {
         headers: {
           [name: string]: unknown
@@ -14847,7 +14876,7 @@ export interface operations {
         }
         content?: never
       }
-      /** @description Too many requests */
+      /** @description Too many sessions opened */
       429: {
         headers: {
           [name: string]: unknown
@@ -14922,7 +14951,10 @@ export interface operations {
   }
   TracksController_streamRendition_v1: {
     parameters: {
-      query?: never
+      query: {
+        /** @description Playback session token */
+        t: unknown
+      }
       header?: {
         /** @description Inclusive byte window, e.g. `bytes=929-100915` */
         Range?: string
@@ -14937,16 +14969,7 @@ export interface operations {
     }
     requestBody?: never
     responses: {
-      /** @description Whole rendition file */
-      200: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'audio/mp4': string
-        }
-      }
-      /** @description Requested byte range */
+      /** @description The requested fragment, or the rest of the file at real-time pace */
       206: {
         headers: {
           [name: string]: unknown
@@ -14955,42 +14978,12 @@ export interface operations {
           'audio/mp4': string
         }
       }
-      /** @description Unauthorized */
-      401: {
+      /** @description Missing, forged, expired, revoked or other-track session token */
+      403: {
         headers: {
           [name: string]: unknown
         }
-        content: {
-          'application/json': {
-            /** @example 401 */
-            statusCode?: number
-            /**
-             * @example errors.auth.invalid_or_expired_token
-             * @enum {string}
-             */
-            message?:
-              | 'errors.auth.access_token_required'
-              | 'errors.auth.refresh_token_required'
-              | 'errors.auth.invalid_token_requirement'
-              | 'errors.auth.invalid_or_expired_token'
-              | 'errors.auth.user_not_found'
-              | 'errors.auth.session_not_found'
-            /** @example Unauthorized */
-            error?: string
-            /**
-             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
-             * @example errors.auth.invalid_or_expired_token
-             * @enum {string}
-             */
-            code?:
-              | 'errors.auth.access_token_required'
-              | 'errors.auth.refresh_token_required'
-              | 'errors.auth.invalid_token_requirement'
-              | 'errors.auth.invalid_or_expired_token'
-              | 'errors.auth.user_not_found'
-              | 'errors.auth.session_not_found'
-          }
-        }
+        content?: never
       }
       /** @description Rendition not found */
       404: {
@@ -15013,7 +15006,14 @@ export interface operations {
         }
         content?: never
       }
-      /** @description Too many requests */
+      /** @description Range outside the file */
+      416: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description The session is ahead of real time; retry after `Retry-After` seconds */
       429: {
         headers: {
           [name: string]: unknown

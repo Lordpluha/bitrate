@@ -3,7 +3,7 @@ import { CacheModule } from '@infra/cache/cache.module'
 import { AuditInterceptor } from '@infra/observability/audit.interceptor'
 import { loggerOptions } from '@infra/observability/logger.config'
 import { MetricsInterceptor } from '@infra/observability/metrics.interceptor'
-import { MetricsService } from '@infra/observability/metrics.service'
+import { ObservabilityModule } from '@infra/observability/observability.module'
 import { RedisThrottlerStorage } from '@infra/observability/redis-throttler.storage'
 import { PrismaModule } from '@infra/prisma/prisma.module'
 import { bullRootAsyncOptions } from '@infra/queues/bull-root.options'
@@ -44,6 +44,7 @@ import { i18nOptions } from './i18n/i18n.config'
 
 @Module({
   imports: [
+    ObservabilityModule,
     SentryModule.forRoot(),
     LoggerModule.forRoot(loggerOptions),
     I18nModule.forRoot(i18nOptions),
@@ -81,7 +82,6 @@ import { i18nOptions } from './i18n/i18n.config'
   ],
   controllers: [AppController],
   providers: [
-    MetricsService,
     { provide: APP_GUARD, useClass: ThrottlerGuard },
     { provide: APP_INTERCEPTOR, useClass: MetricsInterceptor },
     { provide: APP_INTERCEPTOR, useClass: HttpCacheInterceptor },

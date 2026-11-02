@@ -1,13 +1,20 @@
+import { Readable } from 'node:stream'
 import type { PrismaService } from '@infra/prisma/prisma.service'
 import type { StorageService } from '@infra/storage/storage.types'
 import { beforeEach, describe, expect, it } from '@jest/globals'
-import { NotFoundException, ServiceUnavailableException } from '@nestjs/common'
+import { ForbiddenException, NotFoundException, ServiceUnavailableException } from '@nestjs/common'
 import { type DeepMockProxy, mockDeep } from 'jest-mock-extended'
+import {
+  type AuthorizedPlaybackSession,
+  PlaybackPacingError,
+  type PlaybackSessionService,
+} from './playback-session.service'
 import { TrackPlaybackService } from './track-playback.service'
 
 describe('TrackPlaybackService', () => {
   let prisma: DeepMockProxy<PrismaService>
   let storage: DeepMockProxy<StorageService>
+  let sessions: DeepMockProxy<PlaybackSessionService>
   let service: TrackPlaybackService
 
   const trackId = '00000000-0000-0000-0000-000000000001'
@@ -15,7 +22,8 @@ describe('TrackPlaybackService', () => {
   beforeEach(() => {
     prisma = mockDeep<PrismaService>()
     storage = mockDeep<StorageService>()
-    service = new TrackPlaybackService(prisma, storage)
+    sessions = mockDeep<PlaybackSessionService>()
+    service = new TrackPlaybackService(prisma, storage, sessions)
   })
 
   describe('getManifest', () => {
@@ -132,67 +140,161 @@ describe('TrackPlaybackService', () => {
     })
   })
 
+  describe('openSession', () => {
+    it('returns the manifest with a token from a session sized to the track', async () => {
+      prisma.track.findFirst.mockResolvedValue({
+        fragmentTimescale: 48_000,
+        durationTicks: 480_000,
+        audioFiles: [
+          {
+            bitrate: 128,
+            codec: 'mp4a.40.2',
+            size: 70_000,
+            initRangeStart: 0,
+            initRangeEnd: 707,
+            fragments: [[0, 480_000, 929, 66_238]],
+          },
+        ],
+      } as never)
+      sessions.open.mockResolvedValue({ token: 'signed', expiresAt: 1_900_000_000 })
+
+      const result = await service.openSession({ trackId, userId: 'user-1', deviceId: 'device-1' })
+
+      expect(sessions.open).toHaveBeenCalledWith({
+        userId: 'user-1',
+        trackId,
+        deviceId: 'device-1',
+        durationMs: 10_000,
+      })
+      expect(result).toMatchObject({ token: 'signed', expiresAt: 1_900_000_000 })
+      expect(result.manifest.renditions.map(({ bitrate }) => bitrate)).toEqual([128])
+    })
+
+    it('opens no session for a track that cannot play', async () => {
+      prisma.track.findFirst.mockResolvedValue(null as never)
+
+      await expect(service.openSession({ trackId, userId: 'user-1' })).rejects.toThrow(
+        NotFoundException,
+      )
+      expect(sessions.open).not.toHaveBeenCalled()
+    })
+  })
+
   describe('getRenditionStream', () => {
-    const file = { url: 'tracks/x/cmaf/192.m4a', size: 1_456_523 }
+    /** Init 0-707, a sidx gap, then two 10-second fragments. */
+    const file = {
+      url: 'tracks/x/cmaf/192.m4a',
+      bitrate: 192,
+      codec: 'mp4a.40.2',
+      size: 133_586,
+      initRangeStart: 0,
+      initRangeEnd: 707,
+      fragments: [
+        [0, 480_000, 929, 66_238],
+        [480_000, 480_000, 67_167, 66_419],
+      ],
+      track: { fragmentTimescale: 48_000 },
+    }
+    const session: AuthorizedPlaybackSession = {
+      sessionId: 'session-1',
+      userId: 'user-1',
+      trackId,
+      degraded: false,
+    }
+    const stream = (rangeHeader?: string) =>
+      service.getRenditionStream({ trackId, bitrate: 192, rangeHeader, token: 'signed' })
 
     beforeEach(() => {
-      storage.getObjectStream.mockResolvedValue({
-        stream: {} as never,
-        contentType: 'audio/mp4',
-      } as never)
+      prisma.trackFile.findFirst.mockResolvedValue(file as never)
+      sessions.authorize.mockResolvedValue(session)
+      sessions.charge.mockResolvedValue(undefined)
+      storage.getObjectStream.mockImplementation((_key, range) => {
+        const [, from, to] = /^bytes=(\d+)-(\d+)$/.exec(range ?? '') ?? []
+        return Promise.resolve({
+          stream: Readable.from([Buffer.alloc(Number(to) - Number(from) + 1)]),
+          contentType: 'application/octet-stream',
+        } as never)
+      })
     })
 
-    it('reads the file size from the database rather than probing storage', async () => {
-      prisma.trackFile.findFirst.mockResolvedValue(file as never)
+    const drain = async (readable: NodeJS.ReadableStream) => {
+      let bytes = 0
+      for await (const chunk of readable as AsyncIterable<Buffer>) bytes += chunk.length
+      return bytes
+    }
 
-      const result = await service.getRenditionStream(trackId, 192, 'bytes=929-100915')
+    it('checks the session for this track before reading anything', async () => {
+      sessions.authorize.mockRejectedValue(new ForbiddenException())
 
-      expect(storage.getObjectMeta).not.toHaveBeenCalled()
-      expect(storage.getObjectStream).toHaveBeenCalledTimes(1)
-      expect(result.fileSize).toBe(file.size)
+      await expect(stream('bytes=929-67166')).rejects.toThrow(ForbiddenException)
+
+      expect(sessions.authorize).toHaveBeenCalledWith('signed', trackId)
+      expect(storage.getObjectStream).not.toHaveBeenCalled()
     })
 
-    it('forwards the resolved window to storage as a Range', async () => {
-      prisma.trackFile.findFirst.mockResolvedValue(file as never)
+    it('answers a request without Range with the whole file, paced, as a native element expects', async () => {
+      const result = await stream(undefined)
 
-      await service.getRenditionStream(trackId, 192, 'bytes=929-100915')
+      expect(storage.getObjectStream).toHaveBeenCalledWith(file.url, 'bytes=0-133585')
+      expect(result).toMatchObject({ start: 0, end: 133_585, isPartial: true, fileSize: file.size })
+      expect(sessions.charge).not.toHaveBeenCalled()
 
-      expect(storage.getObjectStream).toHaveBeenCalledWith(file.url, 'bytes=929-100915')
+      expect(await drain(result.stream)).toBe(file.size)
+      const charged = sessions.charge.mock.calls.reduce((sum, [, audioMs]) => sum + audioMs, 0)
+      expect(charged).toBe(20_000)
+    })
+
+    it('streams an oversized range to the end of the file instead of serving it at once', async () => {
+      const result = await stream('bytes=929-133585')
+
+      expect(storage.getObjectStream).toHaveBeenCalledWith(file.url, 'bytes=929-133585')
+      expect(result.contentLength).toBe(132_657)
+      expect(sessions.charge).not.toHaveBeenCalled()
+    })
+
+    it('holds a paced response back while the session is ahead of real time, then releases it', async () => {
+      sessions.charge.mockRejectedValueOnce(new PlaybackPacingError(0))
+
+      const result = await stream(undefined)
+
+      expect(await drain(result.stream)).toBe(file.size)
+      expect(sessions.charge).toHaveBeenCalledTimes(2)
+    })
+
+    it("charges the session for the fragment's ten seconds", async () => {
+      await stream('bytes=67167-133585')
+
+      expect(sessions.charge).toHaveBeenCalledWith(session, 10_000)
+    })
+
+    it('reads nothing from storage when the session is ahead of real time', async () => {
+      sessions.charge.mockRejectedValue(new PlaybackPacingError(7))
+
+      await expect(stream('bytes=929-67166')).rejects.toBeInstanceOf(PlaybackPacingError)
+
+      expect(storage.getObjectStream).not.toHaveBeenCalled()
     })
 
     it('serves audio/mp4 even when storage reports a generic type', async () => {
-      prisma.trackFile.findFirst.mockResolvedValue(file as never)
-      storage.getObjectStream.mockResolvedValue({
-        stream: {} as never,
-        contentType: 'application/octet-stream',
-      } as never)
-
-      const result = await service.getRenditionStream(trackId, 192, undefined)
+      const result = await stream('bytes=0-707')
 
       expect(result.contentType).toBe('audio/mp4')
-    })
-
-    it('omits the Range when the whole object is requested', async () => {
-      prisma.trackFile.findFirst.mockResolvedValue(file as never)
-
-      const result = await service.getRenditionStream(trackId, 192, undefined)
-
-      expect(storage.getObjectStream).toHaveBeenCalledWith(file.url, undefined)
-      expect(result.isPartial).toBe(false)
     })
 
     it('reports a missing rendition', async () => {
       prisma.trackFile.findFirst.mockResolvedValue(null as never)
 
-      await expect(service.getRenditionStream(trackId, 192)).rejects.toThrow(
-        /no 192k CMAF rendition/,
-      )
+      await expect(stream()).rejects.toThrow(/no 192k CMAF rendition/)
     })
 
-    it('does not serve a rendition from a deleted, processing, or legacy track', async () => {
-      prisma.trackFile.findFirst.mockResolvedValue(file as never)
+    it('refuses to serve a rendition whose stored byte index is broken', async () => {
+      prisma.trackFile.findFirst.mockResolvedValue({ ...file, fragments: 'broken' } as never)
 
-      await service.getRenditionStream(trackId, 192)
+      await expect(stream('bytes=929-67166')).rejects.toThrow(ServiceUnavailableException)
+    })
+
+    it('does not serve a rendition from a deleted, processing, or unpublished track', async () => {
+      await stream()
 
       expect(prisma.trackFile.findFirst).toHaveBeenCalledWith(
         expect.objectContaining({

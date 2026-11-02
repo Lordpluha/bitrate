@@ -4,6 +4,7 @@ import { StorageModule } from '@infra/storage/storage.module'
 import { TokensModule } from '@modules/tokens/tokens.module'
 import { UsersAuthModule } from '@modules/users-auth/users-auth.module'
 import { Module } from '@nestjs/common'
+import { PlaybackSessionsModule } from './playback-sessions.module'
 import { TrackPlaybackService } from './track-playback.service'
 import { TrackUploadService } from './track-upload.service'
 import { TracksController } from './tracks.controller'
@@ -20,6 +21,7 @@ import { TranscodeModule } from './transcode.module'
     TokensModule,
     StorageModule,
     TranscodeModule,
+    PlaybackSessionsModule,
   ],
   exports: [TracksService, TrackUploadService, TrackPlaybackService],
 })

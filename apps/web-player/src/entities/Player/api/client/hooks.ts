@@ -3,6 +3,7 @@
 import { fetchWithAuthRefresh } from '@shared/api/client'
 import { ApiRequestError } from '@shared/api/errors'
 import { getApiUrl } from '@shared/utils/mediaUrl'
+import { openPlaySession, playSessionToken } from './playSessions'
 
 export type FetchRenditionRangeInput = {
   trackId: string
@@ -18,11 +19,43 @@ export type GetRenditionUrlInput = {
 }
 
 /**
- * The URL of one CMAF rendition file: fragment ranges are read from it, and a browser
- * without MSE plays it whole through `<audio>`, authenticated by the session cookie.
+ * The URL of one CMAF rendition file with the track's newest playback session token
+ * (ADR-0067): fragment ranges are read from it, and a browser without MSE plays it
+ * through `<audio>`.
  */
 export const getRenditionUrl = ({ trackId, bitrate }: GetRenditionUrlInput) =>
-  getApiUrl(`/api/v1/tracks/${trackId}/cmaf/${bitrate}`)
+  getApiUrl(
+    `/api/v1/tracks/${trackId}/cmaf/${bitrate}?t=${encodeURIComponent(
+      playSessionToken({ trackId }) ?? '',
+    )}`,
+  )
+
+/** Wait when a 429 names no usable `Retry-After`. */
+const DEFAULT_RETRY_AFTER_SECONDS = 1
+
+type WaitForRetryInput = {
+  retryAfter: string | null
+  signal: AbortSignal
+}
+
+/** Waits the `Retry-After` a paced session asked for, unless the request is aborted. */
+const waitForRetry = ({ retryAfter, signal }: WaitForRetryInput) =>
+  new Promise<void>((resolve, reject) => {
+    const seconds = Number(retryAfter)
+    const delayMs =
+      Number.isFinite(seconds) && seconds >= 0
+        ? seconds * 1000
+        : DEFAULT_RETRY_AFTER_SECONDS * 1000
+    const timer = setTimeout(resolve, delayMs)
+    signal.addEventListener(
+      'abort',
+      () => {
+        clearTimeout(timer)
+        reject(signal.reason)
+      },
+      { once: true },
+    )
+  })
 
 const CONTENT_RANGE_PATTERN = /^bytes (\d+)-(\d+)\/(\d+)$/i
 
@@ -71,13 +104,32 @@ export const fetchRenditionRange = async ({
    * on the page is a quick click. `fetchWithAuthRefresh` retries once after a
    * silent refresh instead of failing the fragment and killing playback.
    */
-  const response = await fetchWithAuthRefresh(
-    getRenditionUrl({ bitrate, trackId }),
-    {
-      headers: { Range: `bytes=${range[0]}-${range[1]}` },
-      signal,
-    },
-  )
+  let reopened = false
+  let response: Response
+  while (true) {
+    response = await fetchWithAuthRefresh(
+      getRenditionUrl({ bitrate, trackId }),
+      {
+        headers: { Range: `bytes=${range[0]}-${range[1]}` },
+        signal,
+      },
+    )
+    /** An expired or revoked session: open one new session and retry once (D8). */
+    if (response.status === 403 && !reopened) {
+      reopened = true
+      await openPlaySession({ trackId })
+      continue
+    }
+    /** The session is ahead of real time (D16): wait as asked and retry. */
+    if (response.status === 429) {
+      await waitForRetry({
+        retryAfter: response.headers.get('Retry-After'),
+        signal,
+      })
+      continue
+    }
+    break
+  }
 
   if (response.status === 416) {
     throw new ApiRequestError(

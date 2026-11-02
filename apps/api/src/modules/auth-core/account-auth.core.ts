@@ -143,8 +143,11 @@ export class AccountAuthCore<Account extends AuthCredentials, Client> {
     return { account, rawToken }
   }
 
-  /** Sets a new password from a valid reset token and signs the account out everywhere. */
-  async resetPassword(rawToken: string, newPassword: string) {
+  /**
+   * Sets a new password from a valid reset token and signs the account out everywhere.
+   * @returns the id of the account whose password changed.
+   */
+  async resetPassword(rawToken: string, newPassword: string): Promise<string> {
     const hashed = this.token.hashToken(rawToken)
     const reset = await this.store.findPasswordReset(hashed)
 
@@ -157,6 +160,7 @@ export class AccountAuthCore<Account extends AuthCredentials, Client> {
       hashed,
       await this.token.hashPassword(newPassword),
     )
+    return reset.accountId
   }
 
   /** Verifies an email token once and removes all outstanding tokens for the account. */
