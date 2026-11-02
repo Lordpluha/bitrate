@@ -20,12 +20,3 @@ export function formatClockDuration(seconds: number | null): string {
   const minutes = Math.floor(seconds / SECONDS_PER_MINUTE)
   return `${minutes}:${String(seconds % SECONDS_PER_MINUTE).padStart(2, '0')}`
 }
-
-/**
- * An episode's length in whole minutes (at least one), for a translated "{count} min"; `null`
- * when unknown.
- */
-export function wholeMinutes(seconds: number | null): number | null {
-  if (seconds === null) return null
-  return Math.max(Math.round(seconds / SECONDS_PER_MINUTE), 1)
-}

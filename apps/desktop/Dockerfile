@@ -2,8 +2,8 @@
 # Используется в основном для CI/CD и кросс-компиляции
 
 # Stage 1: Base
-FROM node:24-alpine AS base
-RUN corepack enable && corepack prepare pnpm@12.7.0 --activate
+FROM node:26-alpine AS base
+RUN npm install -g pnpm@12.7.0
 WORKDIR /app
 
 # Stage 2: Dependencies (Node.js)

@@ -135,7 +135,6 @@ export class TrackUploadService {
           artistId,
           sourceFileName,
           masterKey: getMasterKey(sourceFileName),
-          format: 'opus',
           bitrates,
           trigger,
           input,
