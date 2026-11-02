@@ -5,6 +5,7 @@ import { labels } from './labels'
 import { music } from './music'
 import { settings } from './settings'
 import { shell } from './shell'
+import { workspace } from './workspace'
 
 export const uk = {
   ...auth,
@@ -13,4 +14,5 @@ export const uk = {
   ...music,
   ...settings,
   ...shell,
+  ...workspace,
 } satisfies Messages

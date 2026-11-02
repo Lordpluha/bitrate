@@ -1,5 +1,6 @@
 import { Button } from '@bitrate/ui-react'
 import type { ReleaseWorkspace } from '@entities/release'
+import { useI18n } from '@shared/i18n'
 import { CircleCheck, CircleDashed } from 'lucide-react'
 import type { WorkspaceActionHandler } from '../model/workspaceAction'
 
@@ -10,12 +11,15 @@ interface WorkspaceRightsProps {
 
 function Confirmation({ done, label }: { done: boolean; label: string }) {
   const Icon = done ? CircleCheck : CircleDashed
+  const { t } = useI18n()
   return (
     <li data-done={done}>
       <Icon aria-hidden="true" />
       <span>{label}</span>
       <span className="sr-only">
-        {done ? '(confirmed)' : '(not confirmed)'}
+        {done
+          ? t('workspace.rights.confirmed')
+          : t('workspace.rights.notConfirmed')}
       </span>
     </li>
   )
@@ -24,10 +28,11 @@ function Confirmation({ done, label }: { done: boolean; label: string }) {
 /** Who owns the recording and the confirmations review needs, then the optional barcode. */
 export function WorkspaceRights({ release, onAction }: WorkspaceRightsProps) {
   const draft = release.status === 'DRAFT'
+  const { t } = useI18n()
   const { rights } = release
   const owner =
     rights.masterOwnerType === 'ARTIST'
-      ? `${release.artistName} (this artist)`
+      ? t('workspace.rights.thisArtist', { name: release.artistName })
       : rights.masterOwnerName
   return (
     <section
@@ -35,7 +40,7 @@ export function WorkspaceRights({ release, onAction }: WorkspaceRightsProps) {
       className="artist-release-workspace-panel artist-release-rights"
     >
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h2 id="release-rights-heading">Rights</h2>
+        <h2 id="release-rights-heading">{t('workspace.rights.title')}</h2>
         {draft && (
           <Button
             className="rounded-full"
@@ -43,28 +48,34 @@ export function WorkspaceRights({ release, onAction }: WorkspaceRightsProps) {
             size="sm"
             variant="outline"
           >
-            Edit rights
+            {t('workspace.rights.edit')}
           </Button>
         )}
       </div>
-      <p>Who owns the recording, and that every songwriter is credited.</p>
+      <p>{t('workspace.rights.description')}</p>
       <ul className="artist-release-rights-list">
         <Confirmation
           done={owner !== null}
-          label={owner ? `Master owner: ${owner}` : 'Master owner not chosen'}
+          label={
+            owner
+              ? t('workspace.rights.masterOwner', { owner })
+              : t('workspace.rights.noMasterOwner')
+          }
         />
         <Confirmation
           done={rights.writersConfirmedAt !== null}
-          label="All songwriters and composers are listed"
+          label={t('workspace.rights.writersListed')}
         />
       </ul>
       <div className="artist-release-identifiers">
         <h3>
-          Identifiers <span>· optional</span>
+          {t('workspace.rights.identifiers')}{' '}
+          <span>{t('workspace.rights.optional')}</span>
         </h3>
         <div className="flex flex-wrap items-center justify-between gap-2">
           <p>
-            UPC/EAN: <span>{release.upc ?? 'Not provided'}</span>
+            {t('workspace.rights.upc')}{' '}
+            <span>{release.upc ?? t('workspace.rights.notProvided')}</span>
           </p>
           {draft && (
             <Button
@@ -72,14 +83,11 @@ export function WorkspaceRights({ release, onAction }: WorkspaceRightsProps) {
               size="sm"
               variant="link"
             >
-              Edit UPC
+              {t('workspace.rights.editUpc')}
             </Button>
           )}
         </div>
-        <p>
-          Store barcodes and track ISRCs are optional here; each track's ISRC is
-          set in Tracks.
-        </p>
+        <p>{t('workspace.rights.identifiersNote')}</p>
       </div>
     </section>
   )

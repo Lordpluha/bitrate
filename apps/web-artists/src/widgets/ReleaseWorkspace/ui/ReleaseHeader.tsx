@@ -6,7 +6,8 @@ import {
   releaseStatusLabels,
   releaseTypeLabels,
 } from '@entities/release'
-import { useI18n } from '@shared/i18n'
+import { type I18n, type Translate, useI18n } from '@shared/i18n'
+import { formatDateTimeUtc } from '@shared/lib/date'
 import { Link } from '@tanstack/react-router'
 import {
   ArrowRight,
@@ -17,12 +18,6 @@ import {
   Music2,
   PencilLine,
 } from 'lucide-react'
-
-const updated = new Intl.DateTimeFormat('en-US', {
-  dateStyle: 'medium',
-  timeStyle: 'short',
-  timeZone: 'UTC',
-})
 
 type Status = ReleaseWorkspace['status']
 
@@ -47,80 +42,85 @@ interface NextAction {
   hash?: string
 }
 
-function nextAction(release: ReleaseWorkspace): NextAction {
+function nextAction(
+  release: ReleaseWorkspace,
+  t: Translate,
+  tp: I18n['tp'],
+): NextAction {
   const blockers = release.readiness.blockers.length
+  const launch = {
+    label: t('workspace.next.openLaunch'),
+    stage: 'launch',
+  } as const
   switch (release.status) {
     case 'DRAFT':
       return blockers > 0
         ? {
-            title: 'Finish preparing your release',
-            description: `${blockers} ${blockers === 1 ? 'item is' : 'items are'} left before Bitrate review.`,
-            label: 'Continue',
+            title: t('workspace.next.prepare'),
+            description: tp({
+              count: blockers,
+              key: 'workspace.next.itemsLeft',
+            }),
+            label: t('common.continue'),
             stage: 'draft',
             hash: 'release-checklist-heading',
           }
         : {
-            title: 'Submit for Bitrate review',
-            description: 'Everything required is ready. Confirm and submit.',
-            label: 'Review and submit',
+            title: t('workspace.next.submit'),
+            description: t('workspace.next.submitDescription'),
+            label: t('workspace.next.submitLabel'),
             stage: 'draft',
             hash: 'release-submit-heading',
           }
     case 'SUBMITTED':
       return {
-        title: 'Waiting for a reviewer',
-        description: 'You will be notified when Bitrate decides.',
-        label: 'View review',
+        title: t('workspace.review.waiting'),
+        description: t('workspace.next.waitingDescription'),
+        label: t('workspace.next.viewReview'),
         stage: 'review',
       }
     case 'REJECTED':
       return {
-        title: 'Address the requested changes',
-        description: 'Bitrate asked for changes before approval.',
-        label: 'Open feedback',
+        title: t('workspace.next.rejected'),
+        description: t('workspace.next.rejectedDescription'),
+        label: t('workspace.next.openFeedback'),
         stage: 'review',
       }
     case 'READY':
       return {
-        title: 'Publish on Bitrate',
-        description: 'Approved by Bitrate. Publish when you are ready.',
-        label: 'Open launch',
-        stage: 'launch',
+        title: t('workspace.next.ready'),
+        description: t('workspace.next.readyDescription'),
+        ...launch,
       }
     case 'SCHEDULED':
       return {
-        title: 'Premiere scheduled',
-        description: 'Your release goes live on Bitrate at the premiere time.',
-        label: 'Open launch',
-        stage: 'launch',
+        title: t('workspace.next.scheduled'),
+        description: t('workspace.next.scheduledDescription'),
+        ...launch,
       }
     case 'PUBLISHING':
       return {
-        title: 'Publishing on Bitrate',
-        description: 'Your tracks are being prepared for the player.',
-        label: 'Open launch',
-        stage: 'launch',
+        title: t('workspace.next.publishing'),
+        description: t('workspace.next.publishingDescription'),
+        ...launch,
       }
     case 'PUBLISH_FAILED':
       return {
-        title: 'Publishing failed',
-        description: 'Bitrate has been notified and will retry.',
-        label: 'Open launch',
-        stage: 'launch',
+        title: t('workspace.next.failed'),
+        description: t('workspace.next.failedDescription'),
+        ...launch,
       }
     case 'RELEASED':
       return {
-        title: 'Your release is live on Bitrate',
-        description: 'Share it and follow the first signals.',
-        label: 'Open launch',
-        stage: 'launch',
+        title: t('workspace.next.released'),
+        description: t('workspace.next.releasedDescription'),
+        ...launch,
       }
     case 'UNPUBLISHED':
       return {
-        title: 'Your release is offline',
-        description: 'Listeners cannot play it until it is published again.',
-        label: 'Open launch',
-        stage: 'launch',
+        title: t('workspace.next.unpublished'),
+        description: t('workspace.next.unpublishedDescription'),
+        ...launch,
       }
   }
 }
@@ -131,8 +131,8 @@ interface ReleaseHeaderProps {
 
 /** Identity, status and the single next action; shared by every stage. */
 export function ReleaseHeader({ release }: ReleaseHeaderProps) {
-  const action = nextAction(release)
-  const { t } = useI18n()
+  const { t, tp, locale } = useI18n()
+  const action = nextAction(release, t, tp)
   const StatusIcon = statusIcons[release.status]
   const tracks = release.trackCount
   return (
@@ -146,7 +146,7 @@ export function ReleaseHeader({ release }: ReleaseHeaderProps) {
       <div className="artist-release-header-identity">
         {release.cover ? (
           <img
-            alt={`${release.title} artwork`}
+            alt={t('workspace.artworkAlt', { title: release.title })}
             className="artist-release-cover"
             src={releaseCoverUrl(release.cover)}
           />
@@ -159,7 +159,7 @@ export function ReleaseHeader({ release }: ReleaseHeaderProps) {
           <h1>{release.title}</h1>
           <p>
             {release.artistName} · {t(releaseTypeLabels[release.type])} ·{' '}
-            {tracks} {tracks === 1 ? 'track' : 'tracks'}
+            {tp({ count: tracks, key: 'common.tracks' })}
           </p>
           <div className="artist-release-header-meta">
             <span className="artist-release-chip" data-status={release.status}>
@@ -167,14 +167,18 @@ export function ReleaseHeader({ release }: ReleaseHeaderProps) {
               {t(releaseStatusLabels[release.status])}
             </span>
             <span>
-              Updated {updated.format(new Date(release.updatedAt))} UTC
+              {t('workspace.header.updated', {
+                date: formatDateTimeUtc(release.updatedAt, locale),
+              })}
             </span>
           </div>
         </div>
       </div>
       <div className="artist-release-header-action">
         <div className="min-w-0">
-          <p className="artist-release-eyebrow">Next action</p>
+          <p className="artist-release-eyebrow">
+            {t('workspace.header.nextAction')}
+          </p>
           <h2>{action.title}</h2>
           <p>{action.description}</p>
         </div>

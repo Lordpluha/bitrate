@@ -47,7 +47,7 @@ export function DraftTrackRow({
       {reorder ? (
         <div className="flex shrink-0 flex-col items-center">
           <Button
-            aria-label={`Move ${track.title} up`}
+            aria-label={t('workspace.track.moveUp', { title: track.title })}
             disabled={reorder.pending || index === 0}
             onClick={() => reorder.onMove(-1)}
             size="icon"
@@ -59,7 +59,7 @@ export function DraftTrackRow({
             {index + 1}
           </span>
           <Button
-            aria-label={`Move ${track.title} down`}
+            aria-label={t('workspace.track.moveDown', { title: track.title })}
             disabled={reorder.pending || index === count - 1}
             onClick={() => reorder.onMove(1)}
             size="icon"
@@ -75,10 +75,10 @@ export function DraftTrackRow({
         <h3>{track.title}</h3>
         <p>
           {t(trackVersionLabels[track.version])} ·{' '}
-          {durationLabel(track.duration)}
-          {track.isDemo ? ' · Demo' : ''}
+          {durationLabel(track.duration, t)}
+          {track.isDemo ? ` · ${t('labels.trackVersion.demo')}` : ''}
         </p>
-        <p>{isrcLabel(track.isrc)}</p>
+        <p>{isrcLabel(track.isrc, t)}</p>
         <p className="flex items-center gap-1">
           {!track.hasAudio && (
             <CircleAlert
@@ -86,7 +86,7 @@ export function DraftTrackRow({
               className="size-4 shrink-0 text-destructive"
             />
           )}
-          <span className="truncate">{audioLabel(track)}</span>
+          <span className="truncate">{audioLabel(track, t)}</span>
         </p>
         {track.hasAudio && (
           <TrackPlayer
@@ -104,25 +104,32 @@ export function DraftTrackRow({
       {editable && (
         <div className="flex flex-wrap gap-2">
           <Button
-            aria-label={`${track.hasAudio ? 'Replace audio' : 'Upload audio'} for ${track.title}`}
+            aria-label={t(
+              track.hasAudio
+                ? 'workspace.track.replaceAudioFor'
+                : 'workspace.track.uploadAudioFor',
+              { title: track.title },
+            )}
             onClick={() => onAction({ kind: 'track-audio', trackId: track.id })}
             size="sm"
             variant="outline"
           >
-            {track.hasAudio ? 'Replace audio' : 'Upload audio'}
+            {track.hasAudio
+              ? t('workspace.track.replaceAudio')
+              : t('workspace.track.uploadAudio')}
           </Button>
           <Button
-            aria-label={`Rename ${track.title}`}
+            aria-label={t('workspace.track.renameFor', { title: track.title })}
             onClick={() =>
               onAction({ kind: 'track-rename', trackId: track.id })
             }
             size="sm"
             variant="outline"
           >
-            Rename
+            {t('workspace.track.rename')}
           </Button>
           <Button
-            aria-label={`Edit ISRC for ${track.title}`}
+            aria-label={t('workspace.track.isrcFor', { title: track.title })}
             onClick={() => onAction({ kind: 'isrc', trackId: track.id })}
             size="sm"
             variant="outline"
@@ -130,14 +137,14 @@ export function DraftTrackRow({
             ISRC
           </Button>
           <Button
-            aria-label={`Remove ${track.title}`}
+            aria-label={t('workspace.track.removeFor', { title: track.title })}
             onClick={() =>
               onAction({ kind: 'track-remove', trackId: track.id })
             }
             size="sm"
             variant="ghost"
           >
-            Remove
+            {t('workspace.track.remove')}
           </Button>
         </div>
       )}

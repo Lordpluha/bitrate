@@ -4,6 +4,7 @@ import { labels } from './labels'
 import { music } from './music'
 import { settings } from './settings'
 import { shell } from './shell'
+import { workspace } from './workspace'
 
 /** The source catalog. Each workspace area keeps its keys in its own file, merged here. */
 export const en = {
@@ -13,6 +14,7 @@ export const en = {
   ...music,
   ...settings,
   ...shell,
+  ...workspace,
 } as const
 
 export type TranslationKey = keyof typeof en
