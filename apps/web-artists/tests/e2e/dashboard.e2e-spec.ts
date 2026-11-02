@@ -1401,12 +1401,16 @@ test('release workspace shows scheduled UTC date, real credits and bounded recor
     page.getByText('Showing 1 of 51 participants.', { exact: true }),
   ).toBeVisible()
   await expect(page.getByText(/Showing 1 of 55 tracks/)).toBeVisible()
+  // The timing panel lives on the draft step; Deliver only repeats it in the pre-flight checks.
+  await expect(
+    page.getByText('Nov 1, 2026, 12:00 PM UTC', { exact: true }),
+  ).toBeVisible()
   await page
     .getByRole('navigation', { name: 'Release stages' })
     .getByRole('link', { name: /^Deliver/ })
     .click()
   await expect(
-    page.getByText('Nov 1, 2026, 12:00 PM UTC', { exact: true }),
+    page.getByText('Premiere Nov 1, 2026, 12:00 PM UTC', { exact: true }),
   ).toBeVisible()
 })
 
