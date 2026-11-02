@@ -1,6 +1,7 @@
 'use client'
 
 import { Button, Input, Typography } from '@bitrate/ui-react'
+import { useI18n } from '@shared/i18n'
 import { ROUTES } from '@shared/routes/routes'
 import { SocialAuthButtons } from '@shared/ui'
 import { Link } from '@tanstack/react-router'
@@ -16,42 +17,45 @@ export type RegistrationEmailStepProps = {
 export const RegistrationEmailStep = ({
   form,
   onSubmit,
-}: RegistrationEmailStepProps) => (
-  <form className="flex flex-col gap-2" onSubmit={onSubmit}>
-    <label className="text-xl font-normal" htmlFor="registration-email">
-      Email Address
-    </label>
-    <Input
-      className="text-xl! hover:border-white py-2"
-      id="registration-email"
-      placeholder="example@gmail.com"
-      variant="black"
-      {...form.register('email')}
-    />
-    {form.formState.errors.email ? (
-      <Typography as="p" className="text-red-500 text-sm" size={'body'}>
-        {form.formState.errors.email.message}
-      </Typography>
-    ) : null}
+}: RegistrationEmailStepProps) => {
+  const { t, tMessage } = useI18n()
+  return (
+    <form className="flex flex-col gap-2" onSubmit={onSubmit}>
+      <label className="text-xl font-normal" htmlFor="registration-email">
+        {t('auth.emailAddress')}
+      </label>
+      <Input
+        className="text-xl! hover:border-white py-2"
+        id="registration-email"
+        placeholder="example@gmail.com"
+        variant="black"
+        {...form.register('email')}
+      />
+      {form.formState.errors.email ? (
+        <Typography as="p" className="text-red-500 text-sm" size={'body'}>
+          {tMessage(form.formState.errors.email.message)}
+        </Typography>
+      ) : null}
 
-    <div className="mt-4 flex flex-col items-stretch gap-4">
-      <Button size={'xl'} type="submit" variant="primary">
-        Continue
-      </Button>
+      <div className="mt-4 flex flex-col items-stretch gap-4">
+        <Button size={'xl'} type="submit" variant="primary">
+          {t('common.continue')}
+        </Button>
 
-      <div className="flex items-center justify-center gap-2">
-        <span className="text-2xl">or</span>
+        <div className="flex items-center justify-center gap-2">
+          <span className="text-2xl">{t('common.or')}</span>
+        </div>
+
+        <SocialAuthButtons />
+
+        <p className="text-lg text-center">
+          {t('auth.registration.haveAccount')}{' '}
+          <Link className="font-bold" to={ROUTES.auth.login}>
+            <br />
+            {t('auth.registration.logIn')}
+          </Link>
+        </p>
       </div>
-
-      <SocialAuthButtons />
-
-      <p className="text-lg text-center">
-        Already have an account?{' '}
-        <Link className="font-bold" to={ROUTES.auth.login}>
-          <br />
-          Log in.
-        </Link>
-      </p>
-    </div>
-  </form>
-)
+    </form>
+  )
+}

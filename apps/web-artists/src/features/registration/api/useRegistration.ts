@@ -1,4 +1,5 @@
 import { apiBaseUrl, clientFetchClient } from '@shared/api'
+import { messageKey } from '@shared/i18n'
 import {
   type UseMutationOptions,
   useMutation,
@@ -24,7 +25,7 @@ export async function checkArtistEmailAvailability(email: string) {
   )
 
   if (!response.ok) {
-    throw new Error('Unable to verify this email right now')
+    throw new Error(messageKey('auth.registration.emailCheckFailed'))
   }
 
   const data = (await response.json()) as EmailAvailabilityResponse
@@ -60,7 +61,7 @@ export const useRegistration = (
           ? errorData.message[0]
           : errorData.message
 
-        throw new Error(errorMessage || 'Registration failed')
+        throw new Error(errorMessage || messageKey('auth.registration.failed'))
       }
 
       return response.data

@@ -2,6 +2,7 @@
 
 import { toast } from '@bitrate/ui-react'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { messageKey, type TranslationKey, useI18n } from '@shared/i18n'
 import { ROUTES } from '@shared/routes/routes'
 import { useNavigate } from '@tanstack/react-router'
 import { useMemo, useState } from 'react'
@@ -28,19 +29,17 @@ export type PasswordRules = {
 /** Shortest password the API will accept. */
 const MIN_PASSWORD_LENGTH = 10
 
-const EMAIL_TAKEN_MESSAGE =
-  'This email is already registered. Please log in instead.'
+const EMAIL_TAKEN_MESSAGE = messageKey('auth.registration.emailTaken')
 
 /** Returns the first unmet password requirement, or `null` when all are met. */
-const firstPasswordProblem = (password: string): string | null => {
-  if (!password) return 'Please enter a password'
+const firstPasswordProblem = (password: string): TranslationKey | null => {
+  if (!password) return 'auth.validation.passwordEmpty'
   if (password.length < MIN_PASSWORD_LENGTH) {
-    return `Password must be at least ${MIN_PASSWORD_LENGTH} characters`
+    return 'auth.validation.passwordTooShort'
   }
-  if (!/[A-Za-z]/.test(password))
-    return 'Password must contain at least one letter'
+  if (!/[A-Za-z]/.test(password)) return 'auth.validation.passwordLetter'
   if (!/[0-9]|[^A-Za-z0-9]/.test(password)) {
-    return 'Password must contain a number or special character'
+    return 'auth.validation.passwordNumberOrSymbol'
   }
   return null
 }
@@ -53,11 +52,12 @@ const firstPasswordProblem = (password: string): string | null => {
  */
 export const useRegistrationForm = () => {
   const navigate = useNavigate()
+  const { t, tMessage } = useI18n()
   const [step, setStep] = useState<RegistrationStep>('email')
 
   const { mutate: registerUser, isPending } = useRegistration({
     onSuccess: (_data, { email }) => {
-      toast.success('Account created. Verify your email before signing in.')
+      toast.success(t('auth.registration.created'))
       void navigate({ to: ROUTES.auth.verifyEmail, search: { email } })
     },
     onError: (error) => {
@@ -68,7 +68,7 @@ export const useRegistrationForm = () => {
         return
       }
 
-      toast.error(error.message || 'Registration failed')
+      toast.error(tMessage(error.message))
     },
   })
 
@@ -101,7 +101,7 @@ export const useRegistrationForm = () => {
     try {
       if (!(await checkArtistEmailAvailability(email))) {
         form.setError('email', { type: 'server', message: EMAIL_TAKEN_MESSAGE })
-        toast.error(EMAIL_TAKEN_MESSAGE)
+        toast.error(t(EMAIL_TAKEN_MESSAGE))
         return
       }
 
@@ -109,16 +109,18 @@ export const useRegistrationForm = () => {
       setStep('password')
     } catch (error) {
       const message =
-        error instanceof Error ? error.message : 'Unable to verify email'
+        error instanceof Error
+          ? error.message
+          : messageKey('auth.registration.emailCheckFailed')
       form.setError('email', { type: 'server', message })
-      toast.error(message)
+      toast.error(tMessage(message))
     }
   }
 
   const submitPassword: SubmitHandler<RegistrationFormData> = async (data) => {
     const problem = firstPasswordProblem(data.password)
     if (problem) {
-      toast.error(problem)
+      toast.error(t(problem))
       return
     }
 

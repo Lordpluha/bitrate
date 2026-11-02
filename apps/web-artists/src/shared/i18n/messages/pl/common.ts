@@ -1,4 +1,9 @@
 export const common = {
+  'common.continue': 'Kontynuuj',
+  'common.or': 'lub',
+  'common.tryAgain': 'Spróbuj ponownie',
+  'common.verifying': 'Weryfikacja…',
+  'common.sending': 'Wysyłanie…',
   'common.pageOf': 'Strona {page} z {total}',
   'common.tracks.one': '{count} utwór',
   'common.tracks.few': '{count} utwory',

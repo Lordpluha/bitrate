@@ -14,6 +14,18 @@ describe('createI18n', () => {
     ).toBe('Page 2 of 5')
   })
 
+  it('translates a message that is a catalog key, as a form schema stores it', () => {
+    expect(
+      createI18n({ locale: 'pl' }).tMessage('settings.language.title'),
+    ).toBe('Język')
+  })
+
+  it('passes through a message that is not a catalog key, such as an API error', () => {
+    expect(createI18n({ locale: 'uk' }).tMessage('Username is taken')).toBe(
+      'Username is taken',
+    )
+  })
+
   it('chooses the plural form by the locale rules', () => {
     const { tp } = createI18n({ locale: 'uk' })
 

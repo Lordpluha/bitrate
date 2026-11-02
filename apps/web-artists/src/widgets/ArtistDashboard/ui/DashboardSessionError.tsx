@@ -1,10 +1,12 @@
 import { Button } from '@bitrate/ui-react'
+import { useI18n } from '@shared/i18n'
 import { ROUTES } from '@shared/routes/routes'
 import { Link, useRouter } from '@tanstack/react-router'
 
 /** Session outages do not render the shell or pretend the visitor has signed out. */
 export function DashboardSessionError() {
   const router = useRouter()
+  const { t } = useI18n()
   return (
     <main className="flex min-h-dvh items-center justify-center bg-background p-6 text-foreground">
       <div
@@ -12,10 +14,10 @@ export function DashboardSessionError() {
         role="alert"
       >
         <h1 className="text-2xl font-semibold">
-          We couldn't check your session
+          {t('shell.sessionError.title')}
         </h1>
         <p className="text-text-secondary">
-          Your workspace is temporarily unavailable. Try again in a moment.
+          {t('shell.sessionError.description')}
         </p>
         <div className="flex flex-wrap gap-3">
           <Button
@@ -24,10 +26,10 @@ export function DashboardSessionError() {
             }}
             variant="primary"
           >
-            Try again
+            {t('common.tryAgain')}
           </Button>
           <Button asChild variant="outline">
-            <Link to={ROUTES.landing}>Back to Bitrate</Link>
+            <Link to={ROUTES.landing}>{t('shell.backToBitrate')}</Link>
           </Button>
         </div>
       </div>

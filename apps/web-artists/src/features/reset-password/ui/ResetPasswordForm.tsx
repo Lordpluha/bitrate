@@ -3,6 +3,7 @@
 import { Button, Input, Typography, toast } from '@bitrate/ui-react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { apiBaseUrl } from '@shared/api'
+import { messageKey, useI18n } from '@shared/i18n'
 import { ROUTES } from '@shared/routes/routes'
 import { useNavigate, useSearch } from '@tanstack/react-router'
 import { type SubmitHandler, useForm } from 'react-hook-form'
@@ -10,11 +11,11 @@ import { z } from 'zod'
 
 const schema = z
   .object({
-    password: z.string().min(6, 'Password must be at least 6 characters'),
-    confirm: z.string().min(1, 'Confirm password'),
+    password: z.string().min(6, messageKey('auth.reset.passwordTooShort')),
+    confirm: z.string().min(1, messageKey('auth.reset.confirm')),
   })
   .refine((v) => v.password === v.confirm, {
-    message: 'Passwords do not match',
+    message: messageKey('auth.reset.mismatch'),
     path: ['confirm'],
   })
 
@@ -24,6 +25,7 @@ type ResetPasswordSearch = { token?: string }
 
 export const ResetPasswordForm = () => {
   const navigate = useNavigate()
+  const { t, tMessage } = useI18n()
   const search = useSearch({ strict: false }) as ResetPasswordSearch
   const token = search.token || ''
 
@@ -34,7 +36,7 @@ export const ResetPasswordForm = () => {
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     if (!token) {
-      toast.error('Missing token')
+      toast.error(t('auth.reset.missingToken'))
       return
     }
 
@@ -54,25 +56,30 @@ export const ResetPasswordForm = () => {
         const message = Array.isArray(err.message)
           ? err.message[0]
           : err.message
-        throw new Error(message || 'Unable to reset password')
+        throw new Error(message || messageKey('auth.reset.failed'))
       }
 
-      toast.success('Password updated — please log in')
+      toast.success(t('auth.reset.done'))
       void navigate({ to: ROUTES.auth.login })
     } catch (error) {
-      const message = error instanceof Error ? error.message : 'Reset failed'
-      toast.error(message)
+      toast.error(
+        tMessage(
+          error instanceof Error
+            ? error.message
+            : messageKey('auth.reset.failed'),
+        ),
+      )
     }
   }
 
   return (
     <form className="max-w-md mx-auto" onSubmit={form.handleSubmit(onSubmit)}>
       <Typography as="h1" className="mb-4" size="heading4">
-        Reset password
+        {t('auth.reset.title')}
       </Typography>
 
       <label className="text-base mb-2 block" htmlFor="password">
-        New password
+        {t('auth.reset.newPassword')}
       </label>
       <Input
         id="password"
@@ -82,12 +89,12 @@ export const ResetPasswordForm = () => {
       />
       {form.formState.errors.password ? (
         <Typography as="p" className="text-red-500 text-sm mt-2">
-          {form.formState.errors.password.message}
+          {tMessage(form.formState.errors.password.message)}
         </Typography>
       ) : null}
 
       <label className="text-base mb-2 block mt-4" htmlFor="confirm">
-        Confirm password
+        {t('auth.reset.confirm')}
       </label>
       <Input
         id="confirm"
@@ -97,13 +104,13 @@ export const ResetPasswordForm = () => {
       />
       {form.formState.errors.confirm ? (
         <Typography as="p" className="text-red-500 text-sm mt-2">
-          {form.formState.errors.confirm.message}
+          {tMessage(form.formState.errors.confirm.message)}
         </Typography>
       ) : null}
 
       <div className="mt-6">
         <Button className="w-full" size="lg" type="submit" variant="artistCard">
-          Set new password
+          {t('auth.reset.submit')}
         </Button>
       </div>
     </form>

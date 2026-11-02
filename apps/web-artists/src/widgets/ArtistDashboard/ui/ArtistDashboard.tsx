@@ -3,10 +3,11 @@ import { CreateReleaseDialog } from '@features/create-release'
 import { WorkspaceActionsProvider } from '@features/workspace-actions'
 import { ThemeSwitcher } from '@features/workspace-theme'
 import type { ArtistIdentity } from '@shared/auth/artistSession.types'
+import { useI18n } from '@shared/i18n'
 import { ROUTES } from '@shared/routes/routes'
 import { Link, useLocation } from '@tanstack/react-router'
 import { PanelLeftClose, PanelLeftOpen } from 'lucide-react'
-import { type ReactNode, useState } from 'react'
+import { type ReactNode, useMemo, useState } from 'react'
 import { dashboardNavigation } from '../config/navigation'
 import { DashboardAccount } from './DashboardAccount'
 import { DashboardAccountMenu } from './DashboardAccountMenu'
@@ -24,9 +25,18 @@ interface ArtistDashboardProps {
 export function ArtistDashboard({ artist, children }: ArtistDashboardProps) {
   const [compact, setCompact] = useState(false)
   const pathname = useLocation({ select: (location) => location.pathname })
-  const title =
-    dashboardNavigation.find((item) => item.to === pathname)?.label ??
-    (pathname.startsWith(`${ROUTES.dashboard.music}/`) ? 'Music' : 'Workspace')
+  const { t } = useI18n()
+  const current =
+    dashboardNavigation.find((item) => item.to === pathname) ??
+    (pathname.startsWith(`${ROUTES.dashboard.music}/`)
+      ? dashboardNavigation.find((item) => item.to === ROUTES.dashboard.music)
+      : undefined)
+  const title = t(current?.label ?? 'shell.workspace')
+  const destinations = useMemo(
+    () =>
+      dashboardNavigation.map((item) => ({ ...item, label: t(item.label) })),
+    [t],
+  )
 
   return (
     <WorkspaceActionsProvider
@@ -36,23 +46,23 @@ export function ArtistDashboard({ artist, children }: ArtistDashboardProps) {
       createReleaseDialog={(onClose) => (
         <CreateReleaseDialog artistId={artist.id} onClose={onClose} />
       )}
-      destinations={dashboardNavigation}
+      destinations={destinations}
       notificationsContent={(onNavigate) => (
         <DashboardNotifications artistId={artist.id} onNavigate={onNavigate} />
       )}
     >
       <div
         className="artist-dashboard flex min-h-dvh bg-background text-foreground"
-        data-workspace-page={title}
+        data-workspace-page={current?.page ?? 'workspace'}
       >
         <a
           className="sr-only z-50 rounded-lg bg-primary p-3 text-primary-foreground focus:not-sr-only focus:fixed focus:left-4 focus:top-4"
           href="#workspace-content"
         >
-          Skip to content
+          {t('shell.skipToContent')}
         </a>
         <aside
-          aria-label="Workspace sidebar"
+          aria-label={t('shell.sidebar')}
           className={cn(
             'artist-dashboard-sidebar sticky top-0 hidden h-dvh shrink-0 flex-col border-r border-border bg-card p-4 lg:flex',
             compact ? 'w-20' : 'w-64',
@@ -61,7 +71,7 @@ export function ArtistDashboard({ artist, children }: ArtistDashboardProps) {
         >
           <div className="artist-workspace-brand-row flex items-start justify-between">
             <Link
-              aria-label="Bitrate for Artists dashboard"
+              aria-label={t('shell.homeLink')}
               className="artist-workspace-brand mb-8 flex min-h-11 items-center gap-3 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               preload={false}
               to={ROUTES.dashboard.home}
@@ -73,13 +83,15 @@ export function ArtistDashboard({ artist, children }: ArtistDashboardProps) {
                     Bitrate
                   </span>
                   <span className="text-[0.625rem] uppercase leading-[1.5] text-text-secondary">
-                    For artists
+                    {t('shell.forArtists')}
                   </span>
                 </span>
               )}
             </Link>
             <Button
-              aria-label={compact ? 'Expand sidebar' : 'Collapse sidebar'}
+              aria-label={
+                compact ? t('shell.expandSidebar') : t('shell.collapseSidebar')
+              }
               className="size-8 shrink-0 rounded-full border border-input bg-secondary text-text-secondary"
               onClick={() => setCompact(!compact)}
               size="icon"
@@ -95,7 +107,7 @@ export function ArtistDashboard({ artist, children }: ArtistDashboardProps) {
           <div className="artist-workspace-design-navigation flex w-full flex-col">
             {!compact && (
               <p className="mb-4 px-3 text-[0.625rem] uppercase leading-[1.5] text-text-secondary">
-                Artist workspace
+                {t('shell.artistWorkspace')}
               </p>
             )}
             <DashboardDesignNavigation compact={compact} />
@@ -110,7 +122,7 @@ export function ArtistDashboard({ artist, children }: ArtistDashboardProps) {
             <div className="flex min-w-0 items-center gap-2 lg:hidden">
               <DashboardMobileMenu artist={artist} />
               <Link
-                aria-label="Bitrate for Artists dashboard"
+                aria-label={t('shell.homeLink')}
                 className="flex items-center gap-2 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 preload={false}
                 to={ROUTES.dashboard.home}
@@ -127,7 +139,7 @@ export function ArtistDashboard({ artist, children }: ArtistDashboardProps) {
             </div>
             <div className="hidden lg:block">
               <p className="text-sm text-text-secondary">
-                Workspace{' '}
+                {t('shell.workspace')}{' '}
                 <span aria-hidden="true" className="mx-2">
                   /
                 </span>{' '}
