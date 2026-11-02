@@ -34,7 +34,7 @@ operated by [[OPERATOR_NAME]], [[OPERATOR_ADDRESS]], registration number [[OPERA
 
 ## 3. The service
 
-3.1 Listeners may stream music and podcasts, build playlists, follow artists and use related features.
+3.1 Listeners may stream music, build playlists, follow artists and use related features.
 
 3.2 Artists may upload and publish their own recordings under the [Artist Agreement](./artist-agreement.md).
 

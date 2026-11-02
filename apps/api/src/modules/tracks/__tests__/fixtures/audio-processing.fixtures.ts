@@ -24,7 +24,6 @@ export const jobData = {
   artistId: 'artist-1',
   sourceFileName: 'track.mp3',
   masterKey: 'masters/track.mp3',
-  format: 'opus',
   bitrates: ['128k', '192k'],
 }
 

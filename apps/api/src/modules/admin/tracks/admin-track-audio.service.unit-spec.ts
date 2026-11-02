@@ -52,7 +52,7 @@ describe('AdminTrackAudioService', () => {
           where: expect.objectContaining({
             trackId,
             format: 'cmaf',
-            track: { processingStatus: 'READY', playbackVersion: 2 },
+            track: { processingStatus: 'READY' },
           }),
           orderBy: { bitrate: 'desc' },
         }),

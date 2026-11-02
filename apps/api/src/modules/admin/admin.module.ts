@@ -7,7 +7,6 @@ import { AdminGenresModule } from './genres'
 import { AdminModerationModule } from './moderation'
 import { AdminOverviewModule } from './overview'
 import { AdminPlaylistsModule } from './playlists'
-import { AdminPodcastsModule } from './podcasts'
 import { AdminReleasesModule } from './releases'
 import { AdminRolesModule } from './roles'
 import { AdminStaffModule } from './staff'
@@ -29,7 +28,6 @@ import { AdminUsersModule } from './users'
     AdminGenresModule,
     AdminAlbumsModule,
     AdminPlaylistsModule,
-    AdminPodcastsModule,
     AdminReleasesModule,
   ],
 })
