@@ -1,5 +1,6 @@
 export * from './ArtistLogo'
 export * from './LockedButton/LockedButton'
+export * from './MarkdownText'
 export * from './NativeSelect/NativeSelect'
 export * from './NotFound'
 export * from './SocialAuthButtons'

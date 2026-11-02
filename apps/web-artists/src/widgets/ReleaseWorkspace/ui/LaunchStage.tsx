@@ -4,7 +4,7 @@ import { PublishRelease } from '@features/publish-release'
 import { useI18n } from '@shared/i18n'
 import { PLAYER_ROUTES } from '@shared/routes/routes'
 import { LockedButton } from '@shared/ui'
-import { ExternalLink, Info, Link2, Megaphone, Share2 } from 'lucide-react'
+import { ExternalLink, Link2, Megaphone, Share2 } from 'lucide-react'
 
 interface LaunchStageProps {
   artistId: string
@@ -64,10 +64,12 @@ export function LaunchStage({ artistId, release }: LaunchStageProps) {
         className="artist-release-workspace-panel artist-release-stage-side"
       >
         <h2 id="release-launch-next-heading">{t('workspace.whatNext')}</h2>
-        <ul className="artist-release-rows">
-          <li>
-            <Share2 aria-hidden="true" />
-            <span className="min-w-0">
+        <ol className="artist-release-next">
+          <li data-state={live ? 'ready' : 'waiting'}>
+            <span className="artist-release-next-icon">
+              <Share2 aria-hidden="true" />
+            </span>
+            <span className="artist-release-next-text">
               <span className="artist-release-row-title">
                 {t('workspace.launch.share')}
               </span>
@@ -78,25 +80,22 @@ export function LaunchStage({ artistId, release }: LaunchStageProps) {
               </span>
             </span>
           </li>
-          <li>
-            <Megaphone aria-hidden="true" />
-            <span className="min-w-0">
+          <li data-state="soon">
+            <span className="artist-release-next-icon">
+              <Megaphone aria-hidden="true" />
+            </span>
+            <span className="artist-release-next-text">
               <span className="artist-release-row-title">
                 {t('workspace.launch.promotionPlan')}
               </span>
-              <span>{t('workspace.launch.optionalSoon')}</span>
+              <span>{t('workspace.launch.optional')}</span>
+            </span>
+            <span className="artist-release-chip">
+              {t('workspace.launch.soon')}
             </span>
           </li>
-        </ul>
-        <LockedButton
-          className="mt-4 w-full rounded-full"
-          reason={live ? t('workspace.launch.comingSoon') : notLive}
-          variant="outline"
-        >
-          {t('workspace.launch.planPromotion')}
-        </LockedButton>
-        <p className="artist-release-honest">
-          <Info aria-hidden="true" />
+        </ol>
+        <p className="artist-release-footnote">
           {t('workspace.launch.honest')}
         </p>
       </section>
@@ -117,7 +116,7 @@ function PlayerLinkActions({ albumId }: { albumId: string }) {
     }
   }
   return (
-    <span className="flex flex-wrap gap-2">
+    <div className="artist-release-row-actions">
       <Button
         onClick={() => {
           void copy()
@@ -127,12 +126,12 @@ function PlayerLinkActions({ albumId }: { albumId: string }) {
       >
         {t('workspace.launch.copyLink')}
       </Button>
-      <Button asChild size="sm" variant="outline">
+      <Button asChild className="gap-1.5" size="sm" variant="outline">
         <a href={url} rel="noopener noreferrer" target="_blank">
           {t('workspace.launch.openInPlayer')}
           <ExternalLink aria-hidden="true" className="size-4" />
         </a>
       </Button>
-    </span>
+    </div>
   )
 }

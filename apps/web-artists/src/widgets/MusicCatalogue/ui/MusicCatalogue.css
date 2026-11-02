@@ -207,6 +207,37 @@
     text-align: right;
   }
 
+  /* Release cards pair their facts left and right, like track cards. */
+  .artist-music-table[data-tab="releases"] .artist-music-updated-cell {
+    grid-row: 2;
+    grid-column: 2 / 4;
+    justify-self: end;
+  }
+  .artist-music-table[data-tab="releases"] .artist-music-release-cell {
+    grid-row: 4;
+    grid-column: 2;
+  }
+  .artist-music-table[data-tab="releases"] .artist-music-release-updated {
+    grid-row: 4;
+    grid-column: 2 / 4;
+    justify-self: end;
+  }
+  /* On cards the play button sits on the cover instead of underneath it. */
+  @container (max-width: 899.98px) {
+    .artist-music-table[data-tab="tracks"] .artist-music-play-cell {
+      z-index: 1;
+      grid-row: 1;
+      grid-column: 1;
+      align-self: start;
+      justify-self: center;
+      margin-top: 0.5rem;
+    }
+    .artist-music-table[data-tab="tracks"] .artist-music-play-cell > button {
+      color: white;
+      background: color-mix(in srgb, black 50%, transparent);
+      border-radius: 9999px;
+    }
+  }
   .artist-music-badge {
     display: inline-flex;
     gap: 0.5rem;
@@ -398,6 +429,132 @@
     }
     .artist-music-table[data-tab="releases"] td {
       height: 5.5rem;
+    }
+  }
+  /* Mini player: pinned to the bottom of the catalogue while a track is chosen. */
+  .artist-music-player {
+    position: sticky;
+    bottom: 1rem;
+    z-index: 5;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto auto;
+    gap: 0.5rem 0.875rem;
+    align-items: center;
+    padding: 0.625rem 0.75rem;
+    background: color-mix(in srgb, var(--color-card) 92%, transparent);
+    border: 1px solid var(--color-artist-release-border);
+    border-radius: var(--radius-artist-panel);
+    box-shadow: var(--shadow-artist-release-panel);
+    backdrop-filter: blur(12px);
+  }
+  .artist-music-player-cover {
+    width: 2.75rem;
+    height: 2.75rem;
+    object-fit: cover;
+    border-radius: 0.5rem;
+  }
+  .artist-music-player-cover-empty {
+    display: grid;
+    place-items: center;
+    color: var(--color-accent);
+    background: var(--color-secondary);
+  }
+  .artist-music-player-cover-empty :where(svg) {
+    width: 1.125rem;
+    height: 1.125rem;
+  }
+  .artist-music-player-toggle {
+    border-radius: 9999px;
+  }
+  .artist-music-player-close {
+    grid-row: 1;
+    grid-column: 4;
+  }
+  .artist-music-player-timeline {
+    display: flex;
+    grid-column: 1 / -1;
+    gap: 0.625rem;
+    align-items: center;
+    font-size: 0.6875rem;
+    color: var(--color-text-secondary);
+  }
+  .artist-music-player-volume {
+    display: none;
+    gap: 0.25rem;
+    align-items: center;
+  }
+  .artist-music-player-volume input {
+    width: 6rem;
+    height: 0.25rem;
+    appearance: none;
+    cursor: pointer;
+    border-radius: 9999px;
+  }
+  .artist-music-player-volume input::-webkit-slider-thumb {
+    width: 0.75rem;
+    height: 0.75rem;
+    appearance: none;
+    background: var(--color-foreground);
+    border: 0;
+    border-radius: 9999px;
+  }
+  .artist-music-player-volume input::-moz-range-thumb {
+    width: 0.75rem;
+    height: 0.75rem;
+    background: var(--color-foreground);
+    border: 0;
+    border-radius: 9999px;
+  }
+  .artist-music-player-volume input:focus-visible {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 4px;
+  }
+  .artist-music-player-timeline input {
+    flex: 1;
+    min-width: 0;
+    height: 0.25rem;
+    appearance: none;
+    cursor: pointer;
+    border-radius: 9999px;
+  }
+  .artist-music-player-timeline input:disabled {
+    cursor: default;
+    opacity: 0.5;
+  }
+  .artist-music-player-timeline input::-webkit-slider-thumb {
+    width: 0.75rem;
+    height: 0.75rem;
+    appearance: none;
+    background: var(--color-foreground);
+    border: 0;
+    border-radius: 9999px;
+  }
+  .artist-music-player-timeline input::-moz-range-thumb {
+    width: 0.75rem;
+    height: 0.75rem;
+    background: var(--color-foreground);
+    border: 0;
+    border-radius: 9999px;
+  }
+  .artist-music-player-timeline input:focus-visible {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 4px;
+  }
+  @variant md {
+    .artist-music-player {
+      grid-template-columns: auto minmax(10rem, 16rem) auto minmax(0, 1fr) auto auto;
+    }
+    .artist-music-player-volume {
+      display: flex;
+      grid-row: 1;
+      grid-column: 5;
+    }
+    .artist-music-player-timeline {
+      grid-row: 1;
+      grid-column: 4;
+    }
+    .artist-music-player-close {
+      grid-column: 6;
     }
   }
 }

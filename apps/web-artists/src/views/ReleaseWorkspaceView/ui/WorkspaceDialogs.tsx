@@ -18,6 +18,8 @@ import {
   RenameTrackDialog,
   ReplaceAudioDialog,
 } from '@features/release-media'
+import { SubmitPreviewDialog } from '@features/submit-release'
+import { useNavigate } from '@tanstack/react-router'
 import type { WorkspaceAction } from '@widgets/ReleaseWorkspace'
 
 interface WorkspaceDialogsProps {
@@ -39,6 +41,7 @@ export function WorkspaceDialogs({
   onClose,
   onSaved,
 }: WorkspaceDialogsProps) {
+  const navigate = useNavigate()
   const own = { artistId, onClose, onSaved }
   switch (dialog.kind) {
     case 'edit':
@@ -68,7 +71,23 @@ export function WorkspaceDialogs({
     case 'isrc':
       return <IsrcDialog {...props} trackId={dialog.trackId} />
     case 'cover':
-      return <CoverDialog {...props} />
+      return <CoverDialog {...props} initialFile={dialog.file} />
+    case 'submit':
+      return (
+        <SubmitPreviewDialog
+          artistId={artistId}
+          onClose={onClose}
+          onSubmitted={() => {
+            // A submitted draft is waiting on Bitrate, so the Review stage is what comes next.
+            void navigate({
+              to: '/dashboard/music/$releaseId',
+              params: { releaseId },
+              search: { step: 'review' },
+            })
+          }}
+          release={release}
+        />
+      )
     case 'track-add':
       return <AddTrackDialog {...props} />
     case 'track-audio':

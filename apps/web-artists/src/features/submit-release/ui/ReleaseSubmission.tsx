@@ -2,28 +2,29 @@ import { Button } from '@bitrate/ui-react'
 import {
   type ReleaseWorkspace,
   useReviseRelease,
-  useSubmitRelease,
   useWithdrawRelease,
 } from '@entities/release'
 import { useI18n } from '@shared/i18n'
-import { useId, useState } from 'react'
+import { useState } from 'react'
+import { SubmitPreviewDialog } from './SubmitPreviewDialog'
 
 interface ReleaseSubmissionProps {
   artistId: string
   release: ReleaseWorkspace
+  /** Opens the page's submit preview; without it this block opens its own. */
+  onReview?: () => void
 }
 
 /** Creates, withdraws or reopens a Bitrate review request; never starts external delivery. */
 export function ReleaseSubmission({
   artistId,
   release,
+  onReview,
 }: ReleaseSubmissionProps) {
   const { t, tMessage, tp } = useI18n()
-  const id = useId()
-  const submit = useSubmitRelease(artistId)
   const withdraw = useWithdrawRelease(artistId)
   const revise = useReviseRelease(artistId)
-  const [reviewed, setReviewed] = useState(false)
+  const [previewing, setPreviewing] = useState(false)
   const blockers = release.readiness.blockers.length
   const expectedUpdatedAt = release.updatedAt
 
@@ -91,49 +92,27 @@ export function ReleaseSubmission({
   if (release.status !== 'DRAFT') return null
 
   return (
-    <form
-      aria-busy={submit.isPending}
-      className="space-y-3"
-      noValidate
-      onSubmit={(event) => {
-        event.preventDefault()
-        submit.mutate({
-          id: release.id,
-          input: { reviewed: true, expectedUpdatedAt },
-        })
-      }}
-    >
-      <label className="artist-release-credit-role">
-        <input
-          aria-describedby={`${id}-hint`}
-          checked={reviewed}
-          disabled={submit.isPending}
-          onChange={(event) => {
-            submit.reset()
-            setReviewed(event.target.checked)
-          }}
-          type="checkbox"
-        />
-        <span>{t('publish.confirmAccurate')}</span>
-      </label>
+    <div className="space-y-3">
       <Button
         className="artist-workspace-primary rounded-full"
-        disabled={submit.isPending || blockers > 0 || !reviewed}
-        type="submit"
+        disabled={blockers > 0}
+        onClick={() => (onReview ? onReview() : setPreviewing(true))}
         variant="primary"
       >
-        {submit.isPending ? t('publish.submitting') : t('publish.submit')}
+        {t('publish.review')}
       </Button>
-      <p className="text-sm text-text-secondary" id={`${id}-hint`}>
+      <p className="text-sm text-text-secondary">
         {blockers > 0
           ? tp({ count: blockers, key: 'publish.blockers' })
           : t('publish.submitHint')}
       </p>
-      {submit.error && (
-        <p className="text-sm text-destructive" role="alert">
-          {tMessage(submit.error.message)}
-        </p>
+      {previewing && (
+        <SubmitPreviewDialog
+          artistId={artistId}
+          onClose={() => setPreviewing(false)}
+          release={release}
+        />
       )}
-    </form>
+    </div>
   )
 }

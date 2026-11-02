@@ -15,7 +15,6 @@ export const rightsFormSchema = z
       .string()
       .trim()
       .max(255, messageKey('release.error.nameTooLong')),
-    writersConfirmed: z.boolean(),
   })
   .refine((value) => value.ownerType !== 'OTHER' || value.ownerName !== '', {
     path: ['ownerName'],

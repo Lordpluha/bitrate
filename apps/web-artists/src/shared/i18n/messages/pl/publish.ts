@@ -12,6 +12,18 @@ export const publish = {
   'publish.confirmAccurate':
     'Sprawdziłem(-am) ten szkic i potwierdzam, że dane są poprawne.',
   'publish.submitting': 'Przesyłanie…',
+  'publish.review': 'Sprawdź i prześlij',
+  'publish.preview.title': 'Sprawdź wydanie przed weryfikacją',
+  'publish.preview.intro':
+    'Dokładnie to zobaczy Bitrate podczas weryfikacji. Jeśli coś się nie zgadza, wróć do szkicu i popraw.',
+  'publish.preview.tracks': 'Utwory',
+  'publish.preview.credits': 'Twórcy i udziały w masterze',
+  'publish.preview.owner': 'Właściciel mastera',
+  'publish.preview.identifiers': 'Identyfikatory',
+  'publish.preview.noIsrc': 'Brak ISRC',
+  'publish.preview.audioReady': 'Audio przesłane',
+  'publish.preview.noAudio': 'Brak audio',
+  'publish.preview.back': 'Wróć do edycji',
   'publish.submit': 'Prześlij do weryfikacji',
   'publish.blockers.one': 'Rozwiąż {count} blokadę przed przesłaniem.',
   'publish.blockers.few': 'Rozwiąż {count} blokady przed przesłaniem.',

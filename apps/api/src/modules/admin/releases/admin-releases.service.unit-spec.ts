@@ -47,8 +47,6 @@ const DETAIL = {
       id: 'review-1',
       decision: 'CHANGES_REQUESTED',
       message: 'Fix cover',
-      requiredChanges: ['cover'],
-      recommendations: [],
       createdAt: new Date(),
       staff: null,
     },
@@ -148,9 +146,7 @@ describe('AdminReleasesService', () => {
       transaction.releaseReview.create.mockResolvedValue({
         id: 'review-2',
         decision: 'CHANGES_REQUESTED',
-        message: 'Fix it',
-        requiredChanges: ['cover'],
-        recommendations: [],
+        message: '**Cover** must be at least 3000 px square.',
         createdAt: new Date(),
         staff: { username: 'mod' },
       } as never)
@@ -160,9 +156,7 @@ describe('AdminReleasesService', () => {
         STAFF_ID,
         {
           expectedUpdatedAt: EXPECTED_UPDATED_AT,
-          message: 'Fix it',
-          requiredChanges: ['cover'],
-          recommendations: [],
+          message: '**Cover** must be at least 3000 px square.',
         },
         AUDIT,
       )
@@ -190,7 +184,7 @@ describe('AdminReleasesService', () => {
           entityId: RELEASE_ID,
           ipAddress: '127.0.0.1',
           metadata: {
-            reason: 'Fix it',
+            reason: '**Cover** must be at least 3000 px square.',
             before: { status: 'SUBMITTED' },
             after: { status: 'REJECTED' },
             requestId: 'req-1',

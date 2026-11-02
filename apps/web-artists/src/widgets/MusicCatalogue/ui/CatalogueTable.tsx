@@ -13,6 +13,7 @@ import {
 import { type Translate, useI18n } from '@shared/i18n'
 import { formatDuration } from '@shared/lib/format'
 import { Circle, Ellipsis, Music2, Pause, Play } from 'lucide-react'
+import { canPreview } from '../model/usePreviewPlayer'
 
 export type CatalogueItem = MusicTrack | MusicRelease
 
@@ -78,7 +79,7 @@ export function CatalogueTable({
   onDetails,
   onActions,
 }: CatalogueTableProps) {
-  const { t, locale } = useI18n()
+  const { t, tp, locale } = useI18n()
   const date = (value: string) => catalogueDate(value, t, locale)
   return (
     <table className="artist-music-table" data-tab={tab}>
@@ -142,7 +143,7 @@ export function CatalogueTable({
                       { title: item.title },
                     )}
                     aria-pressed={playing}
-                    disabled={!item.previewUrl}
+                    disabled={!canPreview(item)}
                     onClick={() => onPlay(item)}
                     size="icon"
                     title={
@@ -150,7 +151,9 @@ export function CatalogueTable({
                         ? item.isDemo
                           ? t('music.table.playSample')
                           : t('music.table.playPreview')
-                        : t('music.table.noPreview')
+                        : item.release
+                          ? t('music.table.playMaster')
+                          : t('music.table.noPreview')
                     }
                     variant="ghost"
                   >
@@ -208,7 +211,7 @@ export function CatalogueTable({
                 {isTrack ? (
                   <time dateTime={item.updatedAt}>{date(item.updatedAt)}</time>
                 ) : (
-                  item.trackCount
+                  tp({ count: item.trackCount, key: 'common.tracks' })
                 )}
               </td>
               <td className="artist-music-release-cell">

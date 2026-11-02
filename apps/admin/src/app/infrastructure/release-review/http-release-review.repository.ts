@@ -100,14 +100,10 @@ export class HttpReleaseReviewRepository extends ReleaseReviewRepository {
     id,
     expectedUpdatedAt,
     message,
-    requiredChanges,
-    recommendations,
   }: ReleaseChangesRequest): Promise<SubmissionReview> {
     const body: RequestReleaseChangesBody = {
       expectedUpdatedAt: expectedUpdatedAt.toISOString(),
-      requiredChanges,
-      recommendations,
-      ...(message ? { message } : {}),
+      message,
     }
     return this.decide(`${this.base}/${id}/request-changes`, body)
   }

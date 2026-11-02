@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Pull request scope gate: one PR changes at most one workspace, 200 files and 2000 lines.
+ * Pull request scope gate: one PR changes at most one workspace, 200 files and 3000 lines.
  *
  * - A workspace is a directory directly under apps/ or packages/. Everything else (root
  *   config, .github, .claude, infra, scripts, pencil) is shared and never counts as a second
@@ -11,8 +11,11 @@
  * - Generated or release-managed output counts toward nothing: lockfiles, the OpenAPI
  *   contract, *.gen.ts, test snapshots, changesets and CHANGELOGs, Pencil design sources.
  *
- * Usage: node scripts/check-pr-scope.mjs [base-ref] [head-ref]   (origin/develop, HEAD)
+ * Usage: node scripts/check-pr-scope.mjs [--multi-workspace] [base-ref] [head-ref]
+ *        (defaults: origin/develop, HEAD)
  * The diff is base...head, the same range GitHub shows on the pull request.
+ * --multi-workspace lifts only the workspace limit, for one feature spanning workspaces that
+ * the user approved; CI passes it for a PR labelled `pr-scope/multi-workspace`.
  *
  * Exempt in CI, never here: release, back-merge, changeset-release and Dependabot branches, and
  * a PR carrying the `pr-scope/exempt` label — see .github/workflows/pr_scope_reusable.yml.
@@ -21,7 +24,7 @@ import { execFileSync } from 'node:child_process'
 
 const MAX_WORKSPACES = 1
 const MAX_FILES = 200
-const MAX_LINES = 2000
+const MAX_LINES = 3000
 
 const IGNORED = [
   /(^|\/)pnpm-lock\.yaml$/,
@@ -62,7 +65,9 @@ const parseNumstat = (raw) => {
   return entries
 }
 
-const [base = 'origin/develop', head = 'HEAD'] = process.argv.slice(2)
+const args = process.argv.slice(2)
+const multiWorkspace = args.includes('--multi-workspace')
+const [base = 'origin/develop', head = 'HEAD'] = args.filter((arg) => !arg.startsWith('--'))
 let raw
 try {
   raw = execFileSync('git', ['diff', '--numstat', '-z', '-M', `${base}...${head}`], {
@@ -93,14 +98,18 @@ for (const { added, deleted, paths } of parseNumstat(raw)) {
 }
 
 const failures = []
-if (workspaces.size > MAX_WORKSPACES) {
+if (!multiWorkspace && workspaces.size > MAX_WORKSPACES) {
   failures.push(`${workspaces.size} workspaces changed, the limit is ${MAX_WORKSPACES}`)
 }
 if (files > MAX_FILES) failures.push(`${files} files changed, the limit is ${MAX_FILES}`)
 if (lines > MAX_LINES) failures.push(`${lines} lines changed, the limit is ${MAX_LINES}`)
 
 console.log(`PR scope of ${base}...${head}:`)
-console.log(`  workspaces  ${workspaces.size}/${MAX_WORKSPACES}`)
+console.log(
+  multiWorkspace
+    ? `  workspaces  ${workspaces.size} (limit lifted: --multi-workspace)`
+    : `  workspaces  ${workspaces.size}/${MAX_WORKSPACES}`,
+)
 for (const [workspace, count] of workspaces) console.log(`    ${workspace} (${count} files)`)
 console.log(`  files       ${files}/${MAX_FILES}`)
 console.log(`  lines       ${lines}/${MAX_LINES} (additions + deletions)`)

@@ -12,6 +12,18 @@ export const publish = {
   'publish.confirmAccurate':
     'I checked this draft and confirm the information is accurate.',
   'publish.submitting': 'Submitting…',
+  'publish.review': 'Review and submit',
+  'publish.preview.title': 'Check your release before review',
+  'publish.preview.intro':
+    'This is exactly what Bitrate will review. Go back to the draft to fix anything that is off.',
+  'publish.preview.tracks': 'Tracks',
+  'publish.preview.credits': 'Credits and master split',
+  'publish.preview.owner': 'Master owner',
+  'publish.preview.identifiers': 'Identifiers',
+  'publish.preview.noIsrc': 'No ISRC',
+  'publish.preview.audioReady': 'Audio uploaded',
+  'publish.preview.noAudio': 'No audio',
+  'publish.preview.back': 'Back to editing',
   'publish.submit': 'Submit for review',
   'publish.blockers.one': 'Resolve {count} blocker before submission.',
   'publish.blockers.other': 'Resolve {count} blockers before submission.',

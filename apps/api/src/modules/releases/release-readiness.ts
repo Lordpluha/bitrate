@@ -1,13 +1,20 @@
 import { type ReleaseCreditRole, type ReleaseMasterOwner, ReleaseRightType } from '@prisma/client'
 
-/** 10,000 basis points is 100%; each right type must be fully allocated before submission. */
+/** 10,000 basis points is 100%; each split right must be fully allocated before submission. */
 export const FULL_SHARE_BASIS_POINTS = 10_000
+
+/**
+ * The rights artists split on a release: the master only. Publishing (COMPOSITION) stays in
+ * the schema for existing rows but is neither required nor created.
+ */
+export const SPLIT_RIGHT_TYPES = [
+  ReleaseRightType.RECORDING,
+] as const satisfies readonly ReleaseRightType[]
 
 export interface ReleaseReadinessInput {
   upc: string | null
   cover: string | null
   masterOwnerType: ReleaseMasterOwner | null
-  writersConfirmedAt: Date | null
   tracks: { id: string; isrc: string | null; hasAudio: boolean }[]
   contributors: { id: string; roles: ReleaseCreditRole[] }[]
   splits: { rightType: ReleaseRightType; shareBasisPoints: number }[]
@@ -18,7 +25,6 @@ type ReleaseBlocker =
   | { code: 'COVER_MISSING' }
   | { code: 'TRACK_AUDIO_MISSING'; trackId: string }
   | { code: 'MASTER_OWNER_MISSING' }
-  | { code: 'WRITERS_NOT_CONFIRMED' }
   | { code: 'CONTRIBUTOR_ROLES_MISSING'; contributorId: string }
   | { code: 'SPLITS_INCOMPLETE'; rightType: ReleaseRightType; totalBasisPoints: number }
 
@@ -42,13 +48,12 @@ export function releaseReadiness(input: ReleaseReadinessInput): ReleaseReadiness
     if (!track.hasAudio) blockers.push({ code: 'TRACK_AUDIO_MISSING', trackId: track.id })
   }
   if (!input.masterOwnerType) blockers.push({ code: 'MASTER_OWNER_MISSING' })
-  if (!input.writersConfirmedAt) blockers.push({ code: 'WRITERS_NOT_CONFIRMED' })
   for (const contributor of input.contributors) {
     if (contributor.roles.length === 0) {
       blockers.push({ code: 'CONTRIBUTOR_ROLES_MISSING', contributorId: contributor.id })
     }
   }
-  for (const rightType of Object.values(ReleaseRightType)) {
+  for (const rightType of SPLIT_RIGHT_TYPES) {
     const totalBasisPoints = splitTotal(input.splits, rightType)
     if (totalBasisPoints !== FULL_SHARE_BASIS_POINTS) {
       blockers.push({ code: 'SPLITS_INCOMPLETE', rightType, totalBasisPoints })

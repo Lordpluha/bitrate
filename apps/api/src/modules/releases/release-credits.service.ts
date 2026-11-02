@@ -142,7 +142,9 @@ export class ReleaseCreditsService {
       lockOwnedDraft(tx, ownerArtistId, id, input.expectedUpdatedAt, {
         masterOwnerType: input.masterOwner?.type ?? null,
         masterOwnerName: input.masterOwner?.type === 'OTHER' ? input.masterOwner.name : null,
-        writersConfirmedAt: input.writersConfirmed ? new Date() : null,
+        ...(input.writersConfirmed === undefined
+          ? {}
+          : { writersConfirmedAt: input.writersConfirmed ? new Date() : null }),
       }),
     )
   }

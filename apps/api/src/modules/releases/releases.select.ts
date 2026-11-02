@@ -25,7 +25,6 @@ export const releaseReadinessSelect = (ownerArtistId: string) =>
     upc: true,
     cover: true,
     masterOwnerType: true,
-    writersConfirmedAt: true,
     trackDrafts: {
       where: { ownerArtistId, deletedAt: null },
       select: { id: true, isrc: true, audioKey: true },
@@ -60,8 +59,6 @@ export const releaseWorkspaceSelect = (ownerArtistId: string) => {
       select: {
         decision: true,
         message: true,
-        requiredChanges: true,
-        recommendations: true,
         createdAt: true,
       },
     },

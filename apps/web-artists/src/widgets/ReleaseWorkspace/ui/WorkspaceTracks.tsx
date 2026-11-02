@@ -31,7 +31,10 @@ export function WorkspaceTracks({
 }: WorkspaceTracksProps) {
   const draft = release.status === 'DRAFT'
   const { t, tMessage } = useI18n()
-  const shown = release.trackDrafts.length + release.tracks.length
+  // Drafts and linked tracks are the same recordings seen twice; linked ones show only for
+  // releases that have no drafts.
+  const linked = release.trackDrafts.length === 0 ? release.tracks : []
+  const shown = release.trackDrafts.length + linked.length
   const reorder = useReorderTracks(artistId)
   const ids = release.trackDrafts.map((track) => track.id)
   // Partial lists cannot be reordered safely; the API needs every recording.
@@ -53,6 +56,7 @@ export function WorkspaceTracks({
         </h2>
         {draft && (
           <Button
+            className="gap-1.5"
             onClick={() => onAction({ kind: 'track-add' })}
             size="sm"
             variant="outline"
@@ -99,22 +103,21 @@ export function WorkspaceTracks({
               track={track}
             />
           ))}
-          {release.tracks.map((track) => (
+          {linked.map((track) => (
             <li key={track.id}>
-              <Music2
-                aria-hidden="true"
-                className="size-5 shrink-0 text-accent"
-              />
-              <div>
-                <h3>
-                  {track.position}. {track.title}
-                </h3>
-                <p>
-                  {t('workspace.tracks.linked', {
-                    duration: durationLabel(track.duration, t),
-                  })}
-                </p>
-                <p>{isrcLabel(track.isrc, t)}</p>
+              <div className="artist-release-track-head">
+                <span className="artist-release-track-index">
+                  {track.position}
+                </span>
+                <div className="min-w-0 flex-1">
+                  <h3>{track.title}</h3>
+                  <p>
+                    {t('workspace.tracks.linked', {
+                      duration: durationLabel(track.duration, t),
+                    })}{' '}
+                    · {isrcLabel(track.isrc, t)}
+                  </p>
+                </div>
               </div>
             </li>
           ))}

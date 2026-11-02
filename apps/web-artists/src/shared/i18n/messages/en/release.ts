@@ -41,13 +41,11 @@ export const release = {
   'release.roadmap.audioDone.other': '{count} tracks with audio',
   'release.roadmap.credits': 'Credits & splits',
   'release.roadmap.creditsTodo':
-    'Credit everyone with a role and share out 100% of master and publishing',
-  'release.roadmap.creditsDone':
-    'Everyone credited · master and publishing at 100%',
+    'Credit everyone with a role and share out 100% of the master',
+  'release.roadmap.creditsDone': 'Everyone credited · master at 100%',
   'release.roadmap.rights': 'Rights',
-  'release.roadmap.rightsTodo':
-    'Choose the master owner and confirm the songwriters',
-  'release.roadmap.rightsDone': 'Master owner and songwriters confirmed',
+  'release.roadmap.rightsTodo': 'Choose who owns the master',
+  'release.roadmap.rightsDone': 'Master owner chosen',
   'release.roadmap.submit': 'Confirm and submit',
   'release.roadmap.submitted': 'Sent for Bitrate review',
   'release.roadmap.blockersLeft.one': '{count} blocker left before review',

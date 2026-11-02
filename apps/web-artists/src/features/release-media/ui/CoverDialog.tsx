@@ -15,6 +15,8 @@ import { MediaFilePicker, UploadProgress, useFileDrop } from './MediaFilePicker'
 interface CoverDialogProps {
   artistId: string
   release: ReleaseWorkspace
+  /** A file chosen before the dialog opened, such as one dropped on the release header. */
+  initialFile?: File
   onClose: () => void
   onSaved: () => void
 }
@@ -23,6 +25,7 @@ interface CoverDialogProps {
 export function CoverDialog({
   artistId,
   release,
+  initialFile,
   onClose,
   onSaved,
 }: CoverDialogProps) {
@@ -30,8 +33,10 @@ export function CoverDialog({
   const upload = useUploadCover(artistId)
   const remove = useRemoveCover(artistId)
   const [expectedUpdatedAt] = useState(release.updatedAt)
-  const [file, setFile] = useState<File | null>(null)
-  const [problem, setProblem] = useState<TranslationKey | null>(null)
+  const [file, setFile] = useState<File | null>(initialFile ?? null)
+  const [problem, setProblem] = useState<TranslationKey | null>(() =>
+    initialFile ? coverFileProblem(initialFile) : null,
+  )
   const [progress, setProgress] = useState<number | null>(null)
   const [preview, setPreview] = useState<string | null>(null)
   const pending = upload.isPending || remove.isPending

@@ -54,35 +54,17 @@ export const workspace = {
   'workspace.draft.editTiming': 'Edit timing',
   'workspace.draft.editArtwork': 'Edit artwork',
   'workspace.draft.addArtwork': 'Add artwork',
-  'workspace.draft.changeArtwork': 'Change artwork',
   'workspace.draft.addAudio': 'Add audio',
   'workspace.draft.editTracks': 'Edit tracks',
   'workspace.draft.reviewCredits': 'Review credits',
   'workspace.draft.confirmRights': 'Confirm rights',
-  'workspace.draft.complete': 'Preparation complete',
-  'workspace.draft.stepsLeft.one': '{count} step left',
-  'workspace.draft.stepsLeft.other': '{count} steps left',
-  'workspace.draft.master': 'Master',
-  'workspace.draft.duration': 'Duration',
-  'workspace.draft.noMaster': 'No master yet. Upload the first track.',
+  'workspace.draft.progress': '{done} of {total} ready',
   'workspace.draft.checklist': 'Readiness checklist',
   'workspace.draft.checklistHint':
     'Choose an action to return to the exact step.',
   'workspace.draft.honest':
     'Submission starts Bitrate review. It does not deliver this release to streaming services.',
   'workspace.draft.submitted': 'Draft submitted',
-  'workspace.draft.locked':
-    'The draft is locked while Bitrate reviews it or after approval.',
-  'workspace.draft.lockedRejected':
-    'Choose Start revising on the Review step to edit it again.',
-  'workspace.draft.openReview': 'Open review',
-  'workspace.readiness.ready': 'Ready for review',
-  'workspace.readiness.before': 'Before review',
-  'workspace.readiness.blockers.one': '{count} blocker',
-  'workspace.readiness.blockers.other': '{count} blockers',
-  'workspace.readiness.complete': 'Every required step is complete.',
-  'workspace.readiness.resolve': 'Resolve these before submitting.',
-  'workspace.readiness.blockersLabel': 'Blockers',
   'workspace.readiness.notesLabel': 'Notes',
   'workspace.readiness.noUpc': 'No UPC yet — a code is needed before delivery',
   'workspace.readiness.noIsrc':
@@ -116,7 +98,7 @@ export const workspace = {
   'workspace.credits.title': 'Credits & splits',
   'workspace.credits.editSplits': 'Edit splits',
   'workspace.credits.description':
-    'Who made this release, what they did, and their share of the master (the recording) and publishing (the music and lyrics).',
+    'Who made this release, what they did, and their share of the master (the recording).',
   'workspace.credits.totals': 'Split totals',
   'workspace.credits.total': '{right} {percent}% of 100%',
   'workspace.credits.none': 'No credited participants yet.',
@@ -137,12 +119,10 @@ export const workspace = {
     'Credits do not grant workspace access. Each split must reach exactly 100% before review.',
   'workspace.rights.title': 'Rights',
   'workspace.rights.edit': 'Edit rights',
-  'workspace.rights.description':
-    'Who owns the recording, and that every songwriter is credited.',
+  'workspace.rights.description': 'Who owns the recording.',
   'workspace.rights.thisArtist': '{name} (this artist)',
   'workspace.rights.masterOwner': 'Master owner: {owner}',
   'workspace.rights.noMasterOwner': 'Master owner not chosen',
-  'workspace.rights.writersListed': 'All songwriters and composers are listed',
   'workspace.rights.confirmed': '(confirmed)',
   'workspace.rights.notConfirmed': '(not confirmed)',
   'workspace.rights.identifiers': 'Identifiers',
@@ -155,8 +135,6 @@ export const workspace = {
   'workspace.review.approved': 'Approved by Bitrate',
   'workspace.review.changesRequested': 'Changes requested',
   'workspace.review.reviewedAt': 'Reviewed {date} UTC',
-  'workspace.review.requiredBefore': 'Required before resubmitting',
-  'workspace.review.recommendations': 'Recommendations',
   'workspace.review.stepSubmitted': 'Submitted',
   'workspace.review.stepSubmittedDetail':
     'The draft is locked so the reviewer sees exactly what you sent.',
@@ -173,10 +151,8 @@ export const workspace = {
   'workspace.review.notSubmitted': 'Not submitted yet',
   'workspace.review.notSubmittedHint':
     'Bitrate review starts when you submit the draft. Feedback and the decision appear here.',
-  'workspace.review.requiredChanges.one':
-    '{count} required change before resubmitting.',
-  'workspace.review.requiredChanges.other':
-    '{count} required changes before resubmitting.',
+  'workspace.review.reviseHint':
+    'Make the changes from the review above, then submit again.',
   'workspace.review.nextHint':
     'Approval does not deliver the release. Publish it on Bitrate from Launch, and plan stores and territories when you are ready.',
   'workspace.review.planDelivery': 'Plan delivery',
@@ -184,7 +160,6 @@ export const workspace = {
   'workspace.review.backToDraft': 'Back to the draft',
   'workspace.launch.notLive':
     'Available once the release goes live on Bitrate.',
-  'workspace.launch.comingSoon': 'Coming soon to the artist workspace.',
   'workspace.launch.publication': 'Bitrate publication',
   'workspace.launch.links': 'Release links',
   'workspace.launch.linksHint':
@@ -198,8 +173,8 @@ export const workspace = {
   'workspace.launch.readyToShare': 'Ready to share',
   'workspace.launch.afterLive': 'After the release goes live',
   'workspace.launch.promotionPlan': 'Prepare a promotion plan',
-  'workspace.launch.optionalSoon': 'Optional · Coming soon',
-  'workspace.launch.planPromotion': 'Plan promotion',
+  'workspace.launch.optional': 'Optional',
+  'workspace.launch.soon': 'Coming soon',
   'workspace.launch.honest':
     'Only Bitrate publication is shown as complete here.',
   'workspace.launch.copied': 'Link copied',

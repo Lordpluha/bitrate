@@ -2,7 +2,6 @@ import { inject, Injectable } from '@angular/core'
 import {
   type ApproveSubmissionInput,
   canDecideOnRelease,
-  normalizeReviewItems,
   ReleaseReviewRepository,
   type RequestSubmissionChangesInput,
   type SubmissionReview,
@@ -31,28 +30,21 @@ export class DecideReleaseUseCase {
   }
 
   /**
-   * @throws {ActionNotAllowedError} When the release is not awaiting review or no required
-   * change was given.
+   * @throws {ActionNotAllowedError} When the release is not awaiting review or the feedback is
+   * empty.
    */
-  requestChanges({
-    release,
-    requiredChanges,
-    recommendations,
-    message,
-  }: RequestSubmissionChangesInput): Promise<SubmissionReview> {
+  requestChanges({ release, message }: RequestSubmissionChangesInput): Promise<SubmissionReview> {
     const decision = canDecideOnRelease(release)
     if (!decision.allowed) throw new ActionNotAllowedError(decision.reason)
-    const required = normalizeReviewItems(requiredChanges)
-    if (required.length === 0) {
-      throw new ActionNotAllowedError('List at least one change the artist must make.')
+    const feedback = optionalText(message)
+    if (!feedback) {
+      throw new ActionNotAllowedError('Tell the artist what to change.')
     }
 
     return this.releases.requestChanges({
       id: release.id,
       expectedUpdatedAt: release.updatedAt,
-      requiredChanges: required,
-      recommendations: normalizeReviewItems(recommendations),
-      message: optionalText(message),
+      message: feedback,
     })
   }
 }

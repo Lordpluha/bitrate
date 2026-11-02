@@ -1,11 +1,10 @@
-import type { ApiSchemas } from '@bitrate/contracts'
 import { Button, Input } from '@bitrate/ui-react'
 import {
   basisPointsToPercent,
   FULL_SHARE_BASIS_POINTS,
   type ReleaseWorkspace,
   rightTypeLabels,
-  rightTypes,
+  splitRightTypes,
   useSaveSplits,
 } from '@entities/release'
 import { Interpolate, useI18n } from '@shared/i18n'
@@ -13,7 +12,7 @@ import { WorkspaceModal } from '@shared/ui/WorkspaceModal/WorkspaceModal'
 import { useId, useState } from 'react'
 import { parseShares } from '../model/rights.schema'
 
-type RightType = ApiSchemas['ReleaseRightType']
+type RightType = (typeof splitRightTypes)[number]
 /** Entered percent per contributor, for each right. */
 type ShareValues = Record<RightType, Record<string, string>>
 
@@ -39,13 +38,13 @@ function savedValues(release: ReleaseWorkspace): ShareValues {
         ]
       }),
     )
-  return { RECORDING: column('RECORDING'), COMPOSITION: column('COMPOSITION') }
+  return { RECORDING: column('RECORDING') }
 }
 
 const sameColumn = (a: Record<string, string>, b: Record<string, string>) =>
   Object.keys(a).every((key) => a[key].trim() === (b[key] ?? '').trim())
 
-/** Master and publishing shares side by side; saving writes each changed right in turn. */
+/** Master shares per contributor; saving writes each changed right in turn. */
 export function SplitsDialog({
   artistId,
   release,
@@ -58,7 +57,7 @@ export function SplitsDialog({
   const [version, setVersion] = useState(release.updatedAt)
   const [saved, setSaved] = useState(() => savedValues(release))
   const [values, setValues] = useState(() => savedValues(release))
-  const columns = rightTypes.map((rightType) => {
+  const columns = splitRightTypes.map((rightType) => {
     const shares = parseShares(values[rightType])
     const total = shares?.reduce(
       (sum, share) => sum + share.shareBasisPoints,
@@ -120,7 +119,6 @@ export function SplitsDialog({
             message={t('editRelease.splitsIntro')}
             values={{
               master: <strong>{t('editRelease.masterTerm')}</strong>,
-              publishing: <strong>{t('editRelease.publishingTerm')}</strong>,
             }}
           />
         </p>
@@ -131,10 +129,10 @@ export function SplitsDialog({
             <legend className="sr-only">{t('editRelease.sharesLegend')}</legend>
             <div
               aria-hidden="true"
-              className="grid grid-cols-[minmax(0,1fr)_6.5rem_6.5rem] gap-3 text-xs text-text-secondary"
+              className="grid grid-cols-[minmax(0,1fr)_6.5rem] gap-3 text-xs text-text-secondary"
             >
               <span>{t('editRelease.contributor')}</span>
-              {rightTypes.map((rightType) => (
+              {splitRightTypes.map((rightType) => (
                 <span className="text-right" key={rightType}>
                   {t(rightTypeLabels[rightType])}
                 </span>
@@ -142,13 +140,13 @@ export function SplitsDialog({
             </div>
             {release.participants.map((participant, index) => (
               <div
-                className="grid grid-cols-[minmax(0,1fr)_6.5rem_6.5rem] items-center gap-3"
+                className="grid grid-cols-[minmax(0,1fr)_6.5rem] items-center gap-3"
                 key={participant.id}
               >
                 <span className="truncate text-sm font-medium">
                   {participant.displayName}
                 </span>
-                {rightTypes.map((rightType) => (
+                {splitRightTypes.map((rightType) => (
                   <div className="flex items-center gap-1" key={rightType}>
                     <Input
                       aria-label={t('editRelease.shareLabel', {

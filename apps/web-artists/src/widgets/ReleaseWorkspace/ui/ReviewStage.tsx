@@ -103,9 +103,9 @@ interface ReviewStageProps {
 
 /** Stage 2: the Bitrate review request, its decision and what to do about it. */
 export function ReviewStage({ artistId, release }: ReviewStageProps) {
-  const review = release.latestReview
   const { status } = release
-  const { t, tp, locale } = useI18n()
+  const review = release.latestReview
+  const { t, locale } = useI18n()
 
   const main =
     status === 'SUBMITTED' ? (
@@ -182,12 +182,7 @@ export function ReviewStage({ artistId, release }: ReviewStageProps) {
         <h2 id="release-review-next-heading">
           {t('workspace.review.progress')}
         </h2>
-        <p>
-          {tp({
-            count: review?.requiredChanges.length ?? 0,
-            key: 'workspace.review.requiredChanges',
-          })}
-        </p>
+        <p>{t('workspace.review.reviseHint')}</p>
         <div className="mt-4">
           <ReleaseSubmission artistId={artistId} release={release} />
         </div>

@@ -107,7 +107,7 @@ export function RequestReleaseChangesSwagger() {
     ApiOperation({
       summary: 'Request changes to a submitted release',
       description:
-        'SUBMITTED -> REJECTED with required changes and optional recommendations; the artist revises and resubmits. Requires releases:review.',
+        'SUBMITTED -> REJECTED with Markdown feedback on what to change; the artist revises and resubmits. Requires releases:review.',
     }),
     ApiBody({ type: RequestReleaseChangesDto }),
     ...decisionResponses,

@@ -25,6 +25,7 @@ import {
 } from './CatalogueItemDialog'
 import { CataloguePagination } from './CataloguePagination'
 import { type CatalogueItem, CatalogueTable } from './CatalogueTable'
+import { PreviewBar } from './PreviewBar'
 
 export function MusicCatalogue({ search }: { search: CatalogueSearch }) {
   const { artist } = useAuthContext()
@@ -199,11 +200,20 @@ export function MusicCatalogue({ search }: { search: CatalogueSearch }) {
           )}
         </div>
       </div>
-      {preview.active && preview.playing && (
-        <p className="text-xs text-text-secondary" role="status">
-          {t('music.playing', { title: preview.active.title })}
-          {preview.active.isDemo ? ` · ${t('music.sampleAudio')}` : ''}
-        </p>
+      {preview.active && preview.source && (
+        <PreviewBar
+          duration={preview.duration}
+          muted={preview.muted}
+          onClose={preview.close}
+          onMute={preview.toggleMute}
+          onSeek={preview.seek}
+          onToggle={() => preview.active && preview.toggle(preview.active)}
+          onVolume={preview.setVolume}
+          playing={preview.playing}
+          time={preview.time}
+          track={preview.active}
+          volume={preview.volume}
+        />
       )}
       {preview.playError && (
         <p className="text-sm text-destructive" role="alert">
@@ -212,11 +222,12 @@ export function MusicCatalogue({ search }: { search: CatalogueSearch }) {
       )}
       <audio
         key={preview.active?.id}
+        {...preview.audioEvents}
         onEnded={preview.stop}
         onError={preview.fail}
         preload="none"
         ref={preview.audioRef}
-        src={preview.active?.previewUrl ?? undefined}
+        src={preview.source ?? undefined}
       >
         <track kind="captions" />
       </audio>

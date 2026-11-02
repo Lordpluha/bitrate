@@ -117,9 +117,8 @@ export const releaseWorkspaceSchema = releaseSummarySchema
     latestReview: z
       .object({
         decision: z.enum(['APPROVED', 'CHANGES_REQUESTED']),
+        /** Reviewer feedback in Markdown. */
         message: z.string().nullable(),
-        requiredChanges: z.array(z.string()),
-        recommendations: z.array(z.string()),
         createdAt: z.iso.datetime({ offset: true }),
       })
       .nullable(),

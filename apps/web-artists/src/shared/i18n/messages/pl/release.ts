@@ -44,13 +44,11 @@ export const release = {
   'release.roadmap.audioDone.other': '{count} utworu z audio',
   'release.roadmap.credits': 'Twórcy i udziały',
   'release.roadmap.creditsTodo':
-    'Przypisz rolę każdemu uczestnikowi i rozdziel 100% mastera i praw wydawniczych',
-  'release.roadmap.creditsDone':
-    'Wszyscy wymienieni · master i prawa wydawnicze na 100%',
+    'Przypisz rolę każdemu uczestnikowi i rozdziel 100% mastera',
+  'release.roadmap.creditsDone': 'Wszyscy wymienieni · master na 100%',
   'release.roadmap.rights': 'Prawa',
-  'release.roadmap.rightsTodo':
-    'Wybierz właściciela mastera i potwierdź autorów utworów',
-  'release.roadmap.rightsDone': 'Właściciel mastera i autorzy potwierdzeni',
+  'release.roadmap.rightsTodo': 'Wybierz właściciela mastera',
+  'release.roadmap.rightsDone': 'Właściciel mastera wybrany',
   'release.roadmap.submit': 'Potwierdź i prześlij',
   'release.roadmap.submitted': 'Przesłano do weryfikacji Bitrate',
   'release.roadmap.blockersLeft.one':

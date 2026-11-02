@@ -58,39 +58,17 @@ export const workspace = {
   'workspace.draft.editTiming': 'Змінити дату',
   'workspace.draft.editArtwork': 'Змінити обкладинку',
   'workspace.draft.addArtwork': 'Додати обкладинку',
-  'workspace.draft.changeArtwork': 'Замінити обкладинку',
   'workspace.draft.addAudio': 'Додати аудіо',
   'workspace.draft.editTracks': 'Редагувати треки',
   'workspace.draft.reviewCredits': 'Перевірити авторів',
   'workspace.draft.confirmRights': 'Підтвердити права',
-  'workspace.draft.complete': 'Підготовку завершено',
-  'workspace.draft.stepsLeft.one': 'Залишився {count} крок',
-  'workspace.draft.stepsLeft.few': 'Залишилося {count} кроки',
-  'workspace.draft.stepsLeft.many': 'Залишилося {count} кроків',
-  'workspace.draft.stepsLeft.other': 'Залишилося {count} кроку',
-  'workspace.draft.master': 'Мастер',
-  'workspace.draft.duration': 'Тривалість',
-  'workspace.draft.noMaster': 'Мастера ще немає. Завантажте перший трек.',
+  'workspace.draft.progress': 'Готово {done} з {total}',
   'workspace.draft.checklist': 'Чек-лист готовності',
   'workspace.draft.checklistHint':
     'Оберіть дію, щоб повернутися до потрібного кроку.',
   'workspace.draft.honest':
     'Надсилання запускає перевірку Bitrate. Воно не доставляє реліз на стримінгові сервіси.',
   'workspace.draft.submitted': 'Чернетку надіслано',
-  'workspace.draft.locked':
-    'Чернетку заблоковано, поки Bitrate її перевіряє, або після схвалення.',
-  'workspace.draft.lockedRejected':
-    'Щоб знову редагувати, оберіть «Почати доопрацювання» на етапі перевірки.',
-  'workspace.draft.openReview': 'Відкрити перевірку',
-  'workspace.readiness.ready': 'Готово до перевірки',
-  'workspace.readiness.before': 'Перед перевіркою',
-  'workspace.readiness.blockers.one': '{count} перешкода',
-  'workspace.readiness.blockers.few': '{count} перешкоди',
-  'workspace.readiness.blockers.many': '{count} перешкод',
-  'workspace.readiness.blockers.other': '{count} перешкоди',
-  'workspace.readiness.complete': 'Усі обов’язкові кроки виконано.',
-  'workspace.readiness.resolve': 'Усуньте це перед надсиланням.',
-  'workspace.readiness.blockersLabel': 'Перешкоди',
   'workspace.readiness.notesLabel': 'Примітки',
   'workspace.readiness.noUpc': 'UPC ще немає — код потрібен перед доставкою',
   'workspace.readiness.noIsrc':
@@ -124,7 +102,7 @@ export const workspace = {
   'workspace.credits.title': 'Автори та частки',
   'workspace.credits.editSplits': 'Змінити частки',
   'workspace.credits.description':
-    'Хто створив реліз, що саме зробив і яка його частка в мастері (записі) та видавничих правах (музиці й тексті).',
+    'Хто створив реліз, що саме зробив і яка його частка в мастері (записі).',
   'workspace.credits.totals': 'Підсумки часток',
   'workspace.credits.total': '{right}: {percent}% зі 100%',
   'workspace.credits.none': 'Учасників ще не вказано.',
@@ -145,13 +123,10 @@ export const workspace = {
     'Зазначення авторства не дає доступу до робочого простору. Кожна частка має становити рівно 100% перед перевіркою.',
   'workspace.rights.title': 'Права',
   'workspace.rights.edit': 'Змінити права',
-  'workspace.rights.description':
-    'Кому належить запис і чи вказано всіх авторів пісні.',
+  'workspace.rights.description': 'Кому належить запис.',
   'workspace.rights.thisArtist': '{name} (цей артист)',
   'workspace.rights.masterOwner': 'Власник мастера: {owner}',
   'workspace.rights.noMasterOwner': 'Власника мастера не обрано',
-  'workspace.rights.writersListed':
-    'Усіх авторів пісень і композиторів вказано',
   'workspace.rights.confirmed': '(підтверджено)',
   'workspace.rights.notConfirmed': '(не підтверджено)',
   'workspace.rights.identifiers': 'Ідентифікатори',
@@ -164,8 +139,6 @@ export const workspace = {
   'workspace.review.approved': 'Схвалено Bitrate',
   'workspace.review.changesRequested': 'Запитано зміни',
   'workspace.review.reviewedAt': 'Перевірено {date} UTC',
-  'workspace.review.requiredBefore': 'Обов’язково перед повторним надсиланням',
-  'workspace.review.recommendations': 'Рекомендації',
   'workspace.review.stepSubmitted': 'Надіслано',
   'workspace.review.stepSubmittedDetail':
     'Чернетку заблоковано, щоб рецензент бачив саме те, що ви надіслали.',
@@ -182,22 +155,14 @@ export const workspace = {
   'workspace.review.notSubmitted': 'Ще не надіслано',
   'workspace.review.notSubmittedHint':
     'Перевірка Bitrate починається, коли ви надсилаєте чернетку. Відгук і рішення з’являться тут.',
-  'workspace.review.requiredChanges.one':
-    '{count} обов’язкова зміна перед повторним надсиланням.',
-  'workspace.review.requiredChanges.few':
-    '{count} обов’язкові зміни перед повторним надсиланням.',
-  'workspace.review.requiredChanges.many':
-    '{count} обов’язкових змін перед повторним надсиланням.',
-  'workspace.review.requiredChanges.other':
-    '{count} обов’язкової зміни перед повторним надсиланням.',
+  'workspace.review.reviseHint':
+    'Внесіть зміни з відгуку вище й надішліть реліз знову.',
   'workspace.review.nextHint':
     'Схвалення не доставляє реліз. Опублікуйте його на Bitrate на етапі «Запуск», а магазини й території сплануйте, коли будете готові.',
   'workspace.review.planDelivery': 'Спланувати доставку',
   'workspace.review.readiness': 'Готовність релізу',
   'workspace.review.backToDraft': 'Назад до чернетки',
   'workspace.launch.notLive': 'Стане доступно, коли реліз вийде на Bitrate.',
-  'workspace.launch.comingSoon':
-    'Незабаром з’явиться в робочому просторі артиста.',
   'workspace.launch.publication': 'Публікація на Bitrate',
   'workspace.launch.links': 'Посилання на реліз',
   'workspace.launch.linksHint':
@@ -211,8 +176,8 @@ export const workspace = {
   'workspace.launch.readyToShare': 'Можна ділитися',
   'workspace.launch.afterLive': 'Після виходу релізу',
   'workspace.launch.promotionPlan': 'Підготуйте план просування',
-  'workspace.launch.optionalSoon': 'Необов’язково · Незабаром',
-  'workspace.launch.planPromotion': 'Спланувати просування',
+  'workspace.launch.optional': 'Необовʼязково',
+  'workspace.launch.soon': 'Незабаром',
   'workspace.launch.honest':
     'Тут як завершену показано лише публікацію на Bitrate.',
   'workspace.launch.copied': 'Посилання скопійовано',

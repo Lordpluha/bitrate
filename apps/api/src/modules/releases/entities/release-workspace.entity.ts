@@ -151,14 +151,8 @@ export class WorkspaceReviewEntity {
   @ApiProperty({ enum: ReleaseReviewDecision, enumName: 'ReleaseReviewDecision' })
   decision: ReleaseReviewDecision
 
-  @ApiProperty({ type: String, nullable: true })
+  @ApiProperty({ type: String, nullable: true, description: 'Reviewer feedback in Markdown' })
   message: string | null
-
-  @ApiProperty({ type: [String] })
-  requiredChanges: string[]
-
-  @ApiProperty({ type: [String] })
-  recommendations: string[]
 
   @ApiProperty({ type: String, format: 'date-time' })
   createdAt: Date

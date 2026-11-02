@@ -1,0 +1,277 @@
+/* Analytics: a 2:1 bento of the plays chart, three stat tiles, top tracks and sources. */
+@layer utilities {
+  .artist-analytics-grid {
+    display: grid;
+    gap: 1rem;
+    align-items: stretch;
+  }
+  @variant lg {
+    .artist-analytics-grid {
+      grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+      gap: 1.5rem;
+    }
+  }
+  .artist-analytics-side {
+    display: grid;
+    gap: 1rem;
+  }
+  @variant sm {
+    .artist-analytics-side {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+  @variant lg {
+    .artist-analytics-side {
+      grid-template-rows: repeat(3, minmax(0, 1fr));
+      grid-template-columns: minmax(0, 1fr);
+      gap: 1.5rem;
+    }
+  }
+
+  /* Panel text defaults to small secondary copy, so figures need the panel in their selector. */
+  .artist-release-workspace-panel .artist-analytics-label {
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+  }
+  .artist-release-workspace-panel .artist-analytics-hero-value {
+    font-size: 3rem;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.1;
+    color: var(--color-foreground);
+    letter-spacing: -0.02em;
+  }
+  .artist-analytics-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+    justify-content: center;
+  }
+  .artist-release-workspace-panel .artist-analytics-value {
+    font-size: 1.75rem;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.15;
+    color: var(--color-foreground);
+    letter-spacing: -0.01em;
+  }
+  .artist-release-workspace-panel .artist-analytics-hint {
+    font-size: 0.75rem;
+  }
+
+  .artist-analytics-change {
+    display: inline-flex;
+    gap: 0.25rem;
+    align-items: center;
+    padding: 0.1875rem 0.5rem;
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+    white-space: nowrap;
+    background: var(--color-secondary);
+    border-radius: 9999px;
+  }
+  .artist-analytics-stat .artist-analytics-change {
+    align-self: flex-start;
+  }
+  .artist-analytics-change :where(svg) {
+    flex-shrink: 0;
+    width: 0.875rem;
+    height: 0.875rem;
+  }
+  .artist-analytics-change[data-trend="up"] :where(svg) {
+    color: var(--color-artist-status-ready);
+  }
+
+  /* Chart: HTML gridlines and crosshair over an SVG that stretches to the plot. */
+  .artist-analytics-chart {
+    margin-top: 1.75rem;
+  }
+  .artist-analytics-plot {
+    position: relative;
+    height: 14rem;
+    color: var(--color-accent);
+  }
+  .artist-analytics-gridline {
+    position: absolute;
+    inset-inline: 0;
+    border-top: 1px solid var(--color-border);
+  }
+  .artist-analytics-gridline > span {
+    position: absolute;
+    bottom: 0.25rem;
+    left: 0;
+    font-size: 0.625rem;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-text-secondary);
+  }
+  .artist-analytics-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+  .artist-analytics-crosshair {
+    position: absolute;
+    inset-block: 0;
+    width: 1px;
+    pointer-events: none;
+    background: var(--color-text-secondary);
+    opacity: 0.45;
+  }
+  .artist-analytics-dot {
+    position: absolute;
+    width: 0.625rem;
+    height: 0.625rem;
+    pointer-events: none;
+    background: currentColor;
+    border-radius: 9999px;
+    box-shadow: 0 0 0 2px var(--color-card);
+    transform: translate(-50%, -50%);
+  }
+  /* Sits above the point, or below it when the point is near the top of the plot. */
+  .artist-analytics-tooltip {
+    --tooltip-x: -50%;
+    --tooltip-y: calc(-100% - 0.75rem);
+    position: absolute;
+    z-index: 1;
+    padding: 0.375rem 0.625rem;
+    font-size: 0.75rem;
+    line-height: 1.35;
+    color: var(--color-text-secondary);
+    white-space: nowrap;
+    pointer-events: none;
+    background: var(--color-card);
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+    box-shadow: 0 8px 24px color-mix(in srgb, black 25%, transparent);
+    transform: translate(var(--tooltip-x), var(--tooltip-y));
+  }
+  .artist-analytics-tooltip[data-below] {
+    --tooltip-y: 0.75rem;
+  }
+  .artist-analytics-tooltip[data-edge="start"] {
+    --tooltip-x: 0.75rem;
+  }
+  .artist-analytics-tooltip[data-edge="end"] {
+    --tooltip-x: calc(-100% - 0.75rem);
+  }
+  .artist-analytics-tooltip strong {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-foreground);
+  }
+  .artist-analytics-hit {
+    position: absolute;
+    inset: 0;
+    cursor: crosshair;
+    border-radius: 0.5rem;
+  }
+  .artist-analytics-hit:focus-visible {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 4px;
+  }
+  .artist-analytics-axis {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.5rem;
+    font-size: 0.625rem;
+    color: var(--color-text-secondary);
+  }
+  .artist-analytics-table > summary {
+    width: fit-content;
+    margin-top: 1rem;
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+  }
+  .artist-analytics-table > summary:hover {
+    color: var(--color-foreground);
+  }
+
+  /* Top tracks: rank, title over a share bar, then plays and listeners. */
+  .artist-analytics-top {
+    width: 100%;
+    margin-top: 0.75rem;
+    font-size: 0.8125rem;
+    table-layout: fixed;
+    border-collapse: collapse;
+  }
+  .artist-analytics-top th {
+    padding-bottom: 0.5rem;
+    font-size: 0.625rem;
+    font-weight: 400;
+    color: var(--color-text-secondary);
+    text-align: left;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .artist-analytics-top th:first-child {
+    width: 2rem;
+  }
+  .artist-analytics-top :is(th, td):nth-child(n + 3) {
+    width: 5.5rem;
+    text-align: right;
+  }
+  @variant max-sm {
+    .artist-analytics-top :is(th, td):nth-child(n + 3) {
+      width: 3.75rem;
+    }
+    .artist-analytics-top th:first-child {
+      width: 1.5rem;
+    }
+  }
+  .artist-analytics-top td {
+    padding-block: 0.625rem;
+    vertical-align: middle;
+    border-top: 1px solid var(--color-border);
+  }
+  .artist-analytics-top td:nth-child(2) {
+    padding-right: 1rem;
+  }
+  .artist-analytics-rank {
+    font-variant-numeric: tabular-nums;
+    color: var(--color-text-secondary);
+  }
+  .artist-analytics-bar {
+    display: block;
+    height: 0.25rem;
+    margin-top: 0.4rem;
+    overflow: hidden;
+    background: var(--color-secondary);
+    border-radius: 9999px;
+  }
+  .artist-analytics-bar > span {
+    display: block;
+    height: 100%;
+    background: var(--color-accent);
+    border-radius: inherit;
+  }
+
+  .artist-analytics-empty {
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+    align-items: center;
+    justify-content: center;
+    min-height: 16rem;
+    text-align: center;
+  }
+  .artist-release-workspace-panel.artist-analytics-empty p {
+    max-width: 26rem;
+    font-size: 0.875rem;
+  }
+  .artist-analytics-empty-icon {
+    display: grid;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    color: var(--color-accent);
+    background: var(--color-secondary);
+    border-radius: 9999px;
+  }
+  .artist-analytics-empty .artist-analytics-empty-icon :where(svg) {
+    width: 1.375rem;
+    height: 1.375rem;
+  }
+}

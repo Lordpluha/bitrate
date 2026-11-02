@@ -37,6 +37,14 @@ test.beforeEach(async ({ context }, testInfo) => {
   ])
 })
 
+/** Phones fold the readiness checklist by default; unfold it before using its actions. */
+async function openChecklist(page: Page) {
+  const fold = page
+    .getByRole('region', { name: 'Readiness checklist' })
+    .locator('button[aria-expanded="false"]')
+  if (await fold.isVisible()) await fold.click()
+}
+
 async function openNavigation(page: Page) {
   if (await page.getByRole('dialog', { name: 'Workspace menu' }).isVisible())
     return
@@ -767,26 +775,33 @@ test('rights, splits and identifiers update the readiness checklist', async ({
 }) => {
   await seedCredit(page, context)
   await gotoHydrated(page, `/dashboard/music/${workspaceDraftId}`)
-  const checklist = page.getByRole('list', { name: 'Blockers' })
-  await expect(checklist).toContainText('Choose the master owner')
-  await expect(checklist).toContainText('Master splits total 0% of 100%')
+  const checklist = page.getByRole('region', { name: 'Readiness checklist' })
+  await expect(checklist).toContainText('Choose who owns the master')
+  await expect(checklist).toContainText(
+    'Credit everyone with a role and share out 100% of the master',
+  )
+  await openChecklist(page)
   const submit = page.getByRole('button', {
-    name: 'Submit for review',
+    name: 'Review and submit',
     exact: true,
   })
   await expect(submit).toBeDisabled()
 
   await page.getByRole('button', { name: 'Edit rights', exact: true }).click()
   const rights = page.getByRole('dialog', { name: 'Rights confirmation' })
+  // The artist is preselected as master owner; choosing another owner needs a name.
+  await expect(rights.getByLabel(/this artist/)).toBeChecked()
   await rights.getByLabel('Another owner, such as a label').check()
   await rights.getByLabel('Master owner name').fill('North Label')
-  await rights.getByLabel('All songwriters and composers are listed').check()
+  await expect(
+    rights.getByLabel('All songwriters and composers are listed'),
+  ).toHaveCount(0)
   await rights.getByRole('button', { name: 'Save rights', exact: true }).click()
   await expect(rights).not.toBeVisible()
   await expect(page.getByRole('region', { name: 'Rights' })).toContainText(
     'Master owner: North Label',
   )
-  await expect(checklist).not.toContainText('Choose the master owner')
+  await expect(checklist).toContainText('Master owner chosen')
 
   await page.getByRole('button', { name: 'Edit splits', exact: true }).click()
   const splits = page.getByRole('dialog', { name: 'Splits' })
@@ -798,7 +813,7 @@ test('rights, splits and identifiers update the readiness checklist', async ({
   await expect(splits.getByText('Master total 100% of 100%')).toBeVisible()
   await splits.getByRole('button', { name: 'Save splits', exact: true }).click()
   await expect(splits).not.toBeVisible()
-  await expect(checklist).not.toContainText('Master splits')
+  await expect(checklist).toContainText('Everyone credited · master at 100%')
 
   await page.getByRole('button', { name: 'Edit UPC', exact: true }).click()
   const upc = page.getByRole('dialog', { name: 'Release barcode' })
@@ -807,10 +822,8 @@ test('rights, splits and identifiers update the readiness checklist', async ({
   await expect(upc.getByRole('alert')).toContainText('valid check digit')
   await upc.getByRole('button', { name: 'Cancel', exact: true }).click()
 
-  await expect(checklist).toContainText('Add at least one track')
-  await page
-    .getByLabel('I checked this draft and confirm the information is accurate.')
-    .check()
+  // A track is still missing, so the submit preview stays out of reach.
+  await expect(checklist).toContainText('Upload the first track')
   await expect(submit).toBeDisabled()
 })
 
@@ -912,12 +925,10 @@ for (const theme of ['light', 'dark', 'dim']) {
       (value) => localStorage.setItem('bitrate.artist-theme.v1', value),
       theme,
     )
-    await gotoHydrated(
-      page,
-      `/dashboard/music/${workspaceDraftId}?step=deliver`,
-    )
+    await gotoHydrated(page, `/dashboard/music/${workspaceDraftId}?step=draft`)
     await page
-      .getByRole('button', { name: 'Edit schedule', exact: true })
+      .getByRole('region', { name: 'Release timing' })
+      .getByRole('button', { name: 'Edit timing', exact: true })
       .click()
     const dialog = page.getByRole('dialog', {
       name: 'Release timing',
@@ -965,7 +976,8 @@ for (const theme of ['light', 'dark', 'dim']) {
       page.getByText('Nov 1, 2026, 12:30 PM UTC', { exact: true }),
     ).toBeVisible()
     await page
-      .getByRole('button', { name: 'Edit schedule', exact: true })
+      .getByRole('region', { name: 'Release timing' })
+      .getByRole('button', { name: 'Edit timing', exact: true })
       .click()
     await expect(dialog.getByLabel('Time (UTC)', { exact: true })).toHaveValue(
       '12:30:15.125',
@@ -1001,12 +1013,10 @@ for (const failure of [409, 503, 'unconfirmed'] as const) {
   }) => {
     await authenticate(context)
     await page.request.post('http://localhost:3103/test/music')
-    await gotoHydrated(
-      page,
-      `/dashboard/music/${workspaceDraftId}?step=deliver`,
-    )
+    await gotoHydrated(page, `/dashboard/music/${workspaceDraftId}?step=draft`)
     await page
-      .getByRole('button', { name: 'Edit schedule', exact: true })
+      .getByRole('region', { name: 'Release timing' })
+      .getByRole('button', { name: 'Edit timing', exact: true })
       .click()
     const dialog = page.getByRole('dialog', {
       name: 'Release timing',
@@ -1037,14 +1047,16 @@ for (const failure of [409, 503, 'unconfirmed'] as const) {
       dialog.getByLabel('Release date', { exact: true }),
     ).toHaveValue('2026-11-01')
     await expect(
-      page.getByRole('definition').filter({ hasText: 'Right away' }),
-    ).toBeVisible()
+      page.getByRole('region', { name: 'Release timing' }),
+    ).toContainText('Right away')
     await expect(
       page.getByRole('status').filter({ hasText: 'Draft updated.' }),
     ).not.toBeVisible()
     await dialog.getByRole('button', { name: 'Cancel', exact: true }).click()
     await expect(
-      page.getByRole('button', { name: 'Edit schedule', exact: true }),
+      page
+        .getByRole('region', { name: 'Release timing' })
+        .getByRole('button', { name: 'Edit timing', exact: true }),
     ).toBeFocused()
   })
 }
@@ -1055,8 +1067,11 @@ test('release schedule validates an enabled empty date and locks dismissal while
 }) => {
   await authenticate(context)
   await page.request.post('http://localhost:3103/test/music')
-  await gotoHydrated(page, `/dashboard/music/${workspaceDraftId}?step=deliver`)
-  await page.getByRole('button', { name: 'Edit schedule', exact: true }).click()
+  await gotoHydrated(page, `/dashboard/music/${workspaceDraftId}?step=draft`)
+  await page
+    .getByRole('region', { name: 'Release timing' })
+    .getByRole('button', { name: 'Edit timing', exact: true })
+    .click()
   const dialog = page.getByRole('dialog', {
     name: 'Release timing',
     exact: true,
@@ -1105,8 +1120,11 @@ test('release schedule reloads the fresh version after a concurrent metadata edi
 }) => {
   await authenticate(context)
   await page.request.post('http://localhost:3103/test/music')
-  await gotoHydrated(page, `/dashboard/music/${workspaceDraftId}?step=deliver`)
-  await page.getByRole('button', { name: 'Edit schedule', exact: true }).click()
+  await gotoHydrated(page, `/dashboard/music/${workspaceDraftId}?step=draft`)
+  await page
+    .getByRole('region', { name: 'Release timing' })
+    .getByRole('button', { name: 'Edit timing', exact: true })
+    .click()
   const dialog = page.getByRole('dialog', {
     name: 'Release timing',
     exact: true,
@@ -1135,7 +1153,10 @@ test('release schedule reloads the fresh version after a concurrent metadata edi
     'changed or is no longer a draft',
   )
   await dialog.getByRole('button', { name: 'Cancel', exact: true }).click()
-  await page.getByRole('button', { name: 'Edit schedule', exact: true }).click()
+  await page
+    .getByRole('region', { name: 'Release timing' })
+    .getByRole('button', { name: 'Edit timing', exact: true })
+    .click()
   await dialog.getByLabel('Premiere on a date').check()
   await dialog.getByLabel('Release date', { exact: true }).fill('2026-11-01')
   await dialog
@@ -1264,12 +1285,16 @@ for (const theme of ['light', 'dark', 'dim'] as const) {
     await expect(
       page.getByText('No credited participants yet.', { exact: true }),
     ).toBeVisible()
-    // A non-draft keeps its edit actions visible but locked, with the reason.
+    // A non-draft keeps its timing visible but locked, with the reason.
+    const timing = page.getByRole('region', { name: 'Release timing' })
+    await expect(timing).toContainText('Right away')
     await expect(
-      page.getByRole('button', { name: 'Edit details', exact: true }),
+      timing.getByRole('button', { name: 'Edit timing', exact: true }),
     ).toHaveAttribute('aria-disabled', 'true')
     await stages.getByRole('link', { name: /^Deliver/ }).click()
-    await expect(page.getByText('Right away', { exact: true })).toBeVisible()
+    await expect(
+      page.getByRole('heading', { name: 'Territories', exact: true }),
+    ).toBeVisible()
     const waveform = page.locator('.artist-release-header-art')
     await expect(waveform).toHaveJSProperty('naturalWidth', 2172)
     await page.evaluate(() => document.fonts.ready)
@@ -1319,6 +1344,7 @@ test('release workspace edits an owned draft, refreshes its summary and persists
       'No tracks yet. Upload a WAV or FLAC master to add the first one.',
     ),
   ).toBeVisible()
+  await openChecklist(page)
   await page.getByRole('button', { name: 'Edit details', exact: true }).click()
   const dialog = page.getByRole('dialog', { name: 'Edit draft', exact: true })
   await dialog.getByLabel('Release title').fill('Workspace draft updated')
@@ -1824,24 +1850,30 @@ for (const theme of ['light', 'dark', 'dim'] as const) {
           ),
       )
       .toBe(true)
-    await page
+    await table
       .getByRole('button', { name: 'Play Night Signal', exact: true })
       .click()
     await expect(
-      page.getByRole('button', { name: 'Pause Night Signal', exact: true }),
+      table.getByRole('button', { name: 'Pause Night Signal', exact: true }),
+    ).toBeVisible()
+    // The mini player names what is playing and offers its own controls.
+    const player = page.getByRole('region', { name: 'Player' })
+    await expect(player).toContainText('Night Signal')
+    await expect(
+      player.getByRole('button', { name: 'Pause Night Signal', exact: true }),
     ).toBeVisible()
     await page.screenshot({
       path: `../../output/playwright/artist-music/${theme}-${testInfo.project.name}-tracks.png`,
       fullPage: true,
       scale: 'css',
     })
-    await page
+    await table
       .getByRole('button', { name: 'Pause Night Signal', exact: true })
       .click()
-    await page
+    await table
       .getByRole('button', { name: 'Play Night Signal', exact: true })
       .click()
-    await page
+    await table
       .getByRole('button', { name: 'Play Afterglow', exact: true })
       .click()
     await expect
@@ -1854,9 +1886,9 @@ for (const theme of ['light', 'dark', 'dim'] as const) {
       )
       .toBe(true)
     await expect(
-      page.getByRole('button', { name: 'Play Night Signal', exact: true }),
+      table.getByRole('button', { name: 'Play Night Signal', exact: true }),
     ).toBeVisible()
-    await page
+    await table
       .getByRole('button', { name: 'Pause Afterglow', exact: true })
       .click()
     await page.getByLabel('Status filter').selectOption('NEEDS_CHANGES')
@@ -2342,6 +2374,16 @@ test('workspace theme switches all three palettes and persists across navigation
     'background-color',
     'rgb(11, 13, 18)',
   )
+  // Blocks blur-fade in on entry; measure them once they have settled.
+  const settled = () =>
+    page.evaluate(() =>
+      Promise.all(
+        document
+          .getAnimations()
+          .map((animation) => animation.finished.catch(() => undefined)),
+      ),
+    )
+  await settled()
   const initialCard = await page
     .getByRole('region', { name: 'Release workspace' })
     .boundingBox()
@@ -2365,6 +2407,7 @@ test('workspace theme switches all three palettes and persists across navigation
     await expect(
       page.getByRole('heading', { name: 'Dashboard', exact: true }),
     ).toBeVisible()
+    await settled()
     expect(
       await page
         .getByRole('region', { name: 'Release workspace' })

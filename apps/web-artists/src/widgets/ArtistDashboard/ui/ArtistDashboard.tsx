@@ -7,8 +7,10 @@ import {
 } from '@features/workspace-language'
 import { ThemeSwitcher } from '@features/workspace-theme'
 import type { ArtistIdentity } from '@shared/auth/artistSession.types'
+import { useInterfaceSounds } from '@shared/hooks'
 import { useI18n } from '@shared/i18n'
 import { ROUTES } from '@shared/routes/routes'
+import { useWorkspaceTheme } from '@shared/theme/WorkspaceThemeProvider'
 import { Link, useLocation } from '@tanstack/react-router'
 import { PanelLeftClose, PanelLeftOpen } from 'lucide-react'
 import { type ReactNode, useMemo, useState } from 'react'
@@ -28,6 +30,8 @@ interface ArtistDashboardProps {
 }
 
 export function ArtistDashboard({ artist, children }: ArtistDashboardProps) {
+  const { sound } = useWorkspaceTheme()
+  useInterfaceSounds(sound === 'on')
   const [compact, setCompact] = useState(false)
   const pathname = useLocation({ select: (location) => location.pathname })
   const { t } = useI18n()

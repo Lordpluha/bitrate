@@ -13,7 +13,6 @@ import { type TranslationKey, useI18n } from '@shared/i18n'
 import { formatDateTimeUtc } from '@shared/lib/date'
 import { LockedButton } from '@shared/ui'
 import {
-  CalendarDays,
   CircleCheck,
   CircleDashed,
   CircleSlash,
@@ -47,16 +46,6 @@ function planLockReason(status: Status): TranslationKey | null {
     : 'delivery.lock.planReview'
 }
 
-/** The timing stays editable in the draft and after approval, until publishing starts. */
-function scheduleLockReason(status: Status): TranslationKey | null {
-  if (status === 'DRAFT' || status === 'READY') return null
-  if (wentLive(status)) return 'delivery.lock.scheduleLive'
-  if (publishing(status)) return 'delivery.lock.schedulePublishing'
-  return status === 'REJECTED'
-    ? 'delivery.lock.scheduleRejected'
-    : 'delivery.lock.scheduleReview'
-}
-
 /** Live and failed carry meaning; everything else stays neutral so nothing looks sent. */
 const tone: Record<DestinationAvailability, string | undefined> = {
   NOT_CONNECTED: 'warning',
@@ -83,7 +72,6 @@ interface ReleaseDeliveryPanelProps {
   releaseId: string
   /** The release version the plan is edited against, and its planned date. */
   release: { status: Status; updatedAt: string; scheduledAt: string | null }
-  onSchedule: () => void
 }
 
 /** Stage 4: when and where the release goes; states plainly that nothing has been sent. */
@@ -91,14 +79,12 @@ export function ReleaseDeliveryPanel({
   artistId,
   releaseId,
   release,
-  onSchedule,
 }: ReleaseDeliveryPanelProps) {
   const i18n = useI18n()
   const { t, tMessage, locale } = i18n
   const delivery = useReleaseDelivery(artistId, releaseId)
   const [editing, setEditing] = useState(false)
   const lock = planLockReason(release.status)
-  const scheduleLock = scheduleLockReason(release.status)
   const approved = release.status === 'READY' || release.status === 'RELEASED'
 
   if (delivery.isPending)
@@ -156,47 +142,12 @@ export function ReleaseDeliveryPanel({
     <div className="artist-release-stage">
       <div className="artist-release-stage-main grid content-start gap-4">
         <section
-          aria-labelledby="release-timing-heading"
+          aria-labelledby="release-territories-heading"
           className="artist-release-workspace-panel"
         >
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <h2 id="release-timing-heading">{t('release.roadmap.timing')}</h2>
-            {scheduleLock ? (
-              <LockedButton
-                reason={t(scheduleLock)}
-                size="sm"
-                variant="outline"
-              >
-                {t('delivery.editSchedule')}
-              </LockedButton>
-            ) : (
-              <Button onClick={onSchedule} size="sm" variant="outline">
-                {t('delivery.editSchedule')}
-              </Button>
-            )}
-          </div>
+          <h2 id="release-territories-heading">{t('delivery.territories')}</h2>
           <p>{t('delivery.timingIntro')}</p>
           <dl className="artist-release-fact-grid">
-            <div data-done={true}>
-              <dt>
-                <span aria-hidden="true" className="artist-release-fact-icon">
-                  <CalendarDays />
-                </span>
-                {t('editRelease.releaseDate')}
-              </dt>
-              <dd>
-                {release.scheduledAt
-                  ? t('delivery.dateUtc', {
-                      date: formatDateTimeUtc(release.scheduledAt, locale),
-                    })
-                  : t('editRelease.rightAway')}
-              </dd>
-              <dd className="artist-release-fact-hint">
-                {release.scheduledAt
-                  ? t('delivery.premiereHint')
-                  : t('editRelease.rightAwayHint')}
-              </dd>
-            </div>
             <div data-done={true}>
               <dt>
                 <span aria-hidden="true" className="artist-release-fact-icon">

@@ -21,6 +21,63 @@
     object-fit: cover;
     border-radius: 0.5rem;
   }
+  /* Draft artwork doubles as the upload target: click or drop an image on it. */
+  .artist-release-cover-upload {
+    position: relative;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    overflow: hidden;
+    cursor: pointer;
+    background: var(--color-secondary);
+    border: 1px dashed transparent;
+  }
+  .artist-release-cover-upload > img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .artist-release-cover-hint {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem;
+    font-size: 0.625rem;
+    line-height: 1.2;
+    color: white;
+    text-align: center;
+    background: color-mix(in srgb, black 55%, transparent);
+    opacity: 0;
+    transition: opacity 0.15s ease;
+  }
+  .artist-release-cover-hint :where(svg) {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+  .artist-release-cover-upload:is(:hover, :focus-visible, [data-over="true"])
+    .artist-release-cover-hint {
+    opacity: 1;
+  }
+  .artist-release-cover-upload:focus-visible {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 2px;
+  }
+  /* Without artwork the hint is the content, so the empty square says what to do. */
+  .artist-release-cover-upload[data-empty="true"] {
+    border-color: var(--color-artist-selection-border);
+  }
+  .artist-release-cover-upload[data-empty="true"] .artist-release-cover-hint {
+    color: var(--color-accent);
+    background: transparent;
+    opacity: 1;
+  }
+  .artist-release-cover-upload[data-over="true"] {
+    border-color: var(--color-accent);
+  }
   .artist-release-cover-placeholder {
     display: grid;
     place-items: center;
@@ -37,8 +94,39 @@
     margin-top: 0.375rem;
   }
   .artist-release-tracks li {
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: stretch;
+    padding: 0.75rem 1rem;
+  }
+  .artist-release-track-head {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    min-width: 0;
+  }
+  .artist-release-track-head h3 {
+    font-size: 0.8125rem;
+    color: var(--color-foreground);
+  }
+  .artist-release-track-index {
+    display: grid;
+    flex-shrink: 0;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    font-size: 0.75rem;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-text-secondary);
+    background: var(--color-secondary);
+    border-radius: 9999px;
+  }
+  .artist-release-track-actions {
+    display: flex;
     flex-wrap: wrap;
-    padding: 0.75rem;
+    gap: 0.5rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--color-artist-release-border);
   }
   .artist-release-track-status {
     font-size: var(--text-artist-caption);
@@ -193,9 +281,10 @@
     width: 0.875rem;
     height: 0.875rem;
   }
-  /* Stepper — Pencil "Workspace / Timeline": four linked stages with connectors. */
+  /* Stepper: small numbered dots with their names on one row, joined by lines. A line after a
+     finished stage is solid; lines toward stages still ahead are dashed. */
   .artist-release-stepper {
-    padding: 0.75rem;
+    padding: 0.875rem 1.125rem;
     background: linear-gradient(
       145deg,
       var(--color-artist-release-panel-start),
@@ -203,58 +292,78 @@
       var(--color-artist-release-panel-end)
     );
     border: 1px solid var(--color-artist-release-border);
-    border-radius: 0.625rem;
+    border-radius: 0.75rem;
   }
   .artist-release-stepper ol {
-    display: grid;
-    gap: 0.25rem;
+    display: flex;
+    align-items: center;
+  }
+  .artist-release-stepper li {
+    display: flex;
+    flex: 1 1 0;
+    align-items: center;
+    min-width: 0;
+  }
+  .artist-release-stepper li:last-child {
+    flex: 0 0 auto;
   }
   .artist-release-stepper a {
     display: flex;
-    gap: 0.75rem;
+    flex-shrink: 0;
+    gap: 0.5rem;
     align-items: center;
-    padding: 0.5rem;
-    border: 1px solid transparent;
-    border-radius: 0.625rem;
+    padding: 0.3125rem 0.75rem 0.3125rem 0.3125rem;
+    border-radius: 9999px;
     transition: background-color 150ms ease;
   }
   .artist-release-stepper a:hover {
-    background: var(--color-artist-selection);
+    background: color-mix(in srgb, var(--color-foreground) 5%, transparent);
   }
+  /* The stage on screen reads like the selected tab: a tinted pill around its dot and name. */
   .artist-release-stepper a[aria-current="page"] {
     background: var(--color-artist-selection);
-    border-color: var(--color-artist-selection-border);
+    box-shadow: inset 0 0 0 1px
+      color-mix(in srgb, var(--color-artist-selection-border) 45%, transparent);
   }
   .artist-release-stepper a:focus-visible {
     outline: 2px solid var(--color-ring);
     outline-offset: 2px;
   }
-  .artist-release-step-mark {
+  .artist-release-step-dot {
     display: grid;
     flex-shrink: 0;
     place-items: center;
-    width: 2.25rem;
-    height: 2.25rem;
-    font-size: 0.6875rem;
-    background: var(--color-background);
+    width: 1.375rem;
+    height: 1.375rem;
+    font-size: 0.625rem;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+    color: var(--color-text-secondary);
     border: 1px solid var(--color-artist-release-border);
     border-radius: 9999px;
   }
-  .artist-release-step-mark :where(svg) {
-    width: 1.125rem;
-    height: 1.125rem;
-  }
-  .artist-release-step-name,
-  .artist-release-step-state {
-    display: block;
+  .artist-release-step-dot :where(svg) {
+    width: 0.75rem;
+    height: 0.75rem;
+    stroke-width: 3;
   }
   .artist-release-step-name {
-    font-size: 0.6875rem;
-  }
-  .artist-release-step-state {
-    margin-top: 0.125rem;
-    font-size: 0.5625rem;
+    font-size: 0.8125rem;
     color: var(--color-text-secondary);
+    white-space: nowrap;
+  }
+  /* Drawn rather than border-dashed, so dash and gap lengths are ours and match every browser. */
+  .artist-release-step-line {
+    flex: 1;
+    min-width: 1rem;
+    height: 1.5px;
+    margin-inline: 0.75rem;
+    background: repeating-linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--color-text-secondary) 45%, transparent) 0 6px,
+      transparent 6px 11px
+    );
+    border-radius: 9999px;
   }
   /* Stage body — main task column and supporting column, as in the Pencil stage frames. */
   .artist-release-stage {
@@ -286,154 +395,46 @@
   .artist-release-empty-stage p {
     max-width: 26rem;
   }
-  /* Draft overview — Pencil "Review / Release overview" with the artwork-proofing insert. */
-  .artist-release-proof {
-    position: relative;
-    display: grid;
-    grid-template-columns: auto minmax(0, 1fr);
-    gap: 1rem;
-    padding: 1rem;
-    margin-bottom: 1.25rem;
-    overflow: hidden;
-    background: linear-gradient(
-      90deg,
-      var(--color-background),
-      color-mix(in srgb, var(--color-artist-selection-border) 8%, transparent)
-    );
-    border: 1px solid var(--color-artist-selection-border);
-    border-top-width: 3px;
-    border-radius: 0.625rem;
+  /* Draft stage — the progress card (checklist, blockers, submission) beside the editors. */
+  .artist-release-progress > p {
+    margin-top: 0.375rem;
   }
-  .artist-release-proof-art {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    object-fit: cover;
-    opacity: var(--artist-release-waveform-opacity);
-    mask-image: linear-gradient(90deg, transparent 10%, currentColor 70%);
+  .artist-release-progress-body > p {
+    margin-top: 0.375rem;
   }
-  .artist-release-proof > :not(.artist-release-proof-art) {
-    position: relative;
-  }
-  .artist-release-proof-cover {
-    width: 6.5rem;
-    height: 6.5rem;
-    object-fit: cover;
-    border: 1px solid var(--color-artist-selection-border);
+  /* Phones only: the counter doubles as the fold toggle, with a full-size touch target. */
+  .artist-release-progress-toggle {
+    min-height: 2.75rem;
+    padding-inline: 0.5rem;
+    margin-block: -0.75rem;
+    margin-inline-end: -0.5rem;
     border-radius: 0.5rem;
   }
-  /* The draft cover doubles as the artwork upload, so the artist finds it where it shows. */
-  .artist-release-proof-upload {
-    display: grid;
-    place-items: center;
-    padding: 0;
-    overflow: hidden;
-    color: var(--color-accent);
-    cursor: pointer;
-    background: var(--color-secondary);
-  }
-  .artist-release-proof-upload > img {
-    grid-area: 1 / 1;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  .artist-release-proof-upload-hint {
-    display: grid;
-    grid-area: 1 / 1;
-    gap: 0.375rem;
-    place-items: center;
-    place-self: stretch;
-    align-content: center;
-    font-size: 0.75rem;
-    font-weight: 500;
-    transition: opacity 150ms ease;
-  }
-  .artist-release-proof-upload-hint :where(svg) {
-    width: 1.5rem;
-    height: 1.5rem;
-  }
-  .artist-release-proof-upload[data-empty="true"] {
-    border-style: dashed;
-  }
-  .artist-release-proof-upload[data-empty="true"]:hover {
-    background: color-mix(
-      in srgb,
-      var(--color-accent) 12%,
-      var(--color-secondary)
-    );
-  }
-  .artist-release-proof-upload[data-empty="false"]
-    .artist-release-proof-upload-hint {
-    color: var(--color-foreground);
-    background: color-mix(in srgb, var(--color-background) 72%, transparent);
-    opacity: 0;
-  }
-  .artist-release-proof-upload:is(:hover, :focus-visible)
-    .artist-release-proof-upload-hint {
-    opacity: 1;
-  }
-  .artist-release-proof-upload:focus-visible {
+  .artist-release-progress-toggle:focus-visible {
     outline: 2px solid var(--color-ring);
     outline-offset: 2px;
   }
-  @media (prefers-reduced-motion: reduce) {
-    .artist-release-proof-upload-hint {
-      transition: none;
+  @variant max-lg {
+    .artist-release-progress-body[data-expanded="false"] {
+      display: none;
     }
   }
-  .artist-release-proof-identity {
-    display: grid;
-    gap: 0.375rem;
-    align-content: center;
-    min-width: 0;
+  .artist-release-progress-count {
+    font-size: 0.6875rem;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-artist-status-warning);
+    white-space: nowrap;
   }
-  .artist-release-workspace-panel p.artist-release-proof-title {
-    font-size: 1.375rem;
-    line-height: 1.2;
-    color: var(--color-foreground);
-  }
-  .artist-release-proof-meta,
-  .artist-release-proof-state {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    align-items: center;
-  }
-  .artist-release-proof-state :where(svg) {
-    width: 1rem;
-    height: 1rem;
-  }
-  .artist-release-proof-master {
-    display: grid;
-    grid-column: 1 / -1;
-    gap: 0.5rem;
-    padding: 0.75rem;
-    background: var(--color-artist-release-panel-start);
-    border: 1px solid var(--color-artist-release-border);
-    border-radius: 0.625rem;
-  }
-  .artist-release-proof-master p {
+  .artist-release-workspace-panel p.artist-release-progress-lock {
     display: flex;
     gap: 0.5rem;
-    align-items: center;
-    justify-content: space-between;
+    align-items: flex-start;
   }
-  .artist-release-workspace-panel p.artist-release-proof-track {
-    justify-content: flex-start;
-    font-size: 0.75rem;
-    color: var(--color-foreground);
-  }
-  .artist-release-proof-track :where(svg) {
+  .artist-release-progress-lock :where(svg) {
     flex-shrink: 0;
-    width: 1rem;
-    height: 1rem;
-    color: var(--color-artist-icon);
-  }
-  .artist-release-proof-track .artist-release-chip {
-    margin-left: auto;
+    width: 0.875rem;
+    height: 0.875rem;
+    margin-top: 0.2rem;
   }
   /* Readiness checklist — one row per preparation step with its own way back. */
   .artist-release-checklist {
@@ -443,10 +444,13 @@
   .artist-release-checklist li {
     display: grid;
     grid-template-columns: auto minmax(0, 1fr) auto;
-    gap: 0.25rem 0.75rem;
+    gap: 0.75rem;
     align-items: center;
-    padding-block: 0.75rem;
+    padding-block: 0.625rem;
     border-bottom: 1px solid var(--color-artist-release-border);
+  }
+  .artist-release-checklist li:last-child {
+    border-bottom: 0;
   }
   .artist-release-checklist :where(li > svg) {
     width: 1.125rem;
@@ -454,26 +458,25 @@
     color: var(--color-artist-status-warning);
   }
   .artist-release-checklist-name {
+    display: block;
     font-size: 0.75rem;
   }
   .artist-release-checklist-detail {
-    display: grid;
-    grid-column: 2;
+    display: block;
     font-size: 0.625rem;
     color: var(--color-text-secondary);
   }
-  .artist-release-checklist-detail > span {
-    color: var(--color-artist-status-warning);
-  }
   .artist-release-checklist li > :is(button, a) {
-    grid-row: 1 / 3;
-    grid-column: 3;
-    /* Small text, but a full-size touch target (WCAG 2.5.8). */
     height: auto;
-    min-height: 1.5rem;
-    padding: 0;
-    font-size: 0.625rem;
-    color: var(--color-artist-icon);
+    min-height: 2rem;
+    padding-inline: 0.625rem;
+    font-size: 0.6875rem;
+    color: var(--color-accent);
+  }
+  .artist-release-submit {
+    padding-top: 1rem;
+    margin-top: 0.75rem;
+    border-top: 1px solid var(--color-artist-release-border);
   }
   .artist-release-honest {
     display: flex;
@@ -519,6 +522,22 @@
     height: 1.25rem;
   }
   /* Vertical steps; marks reuse the stage stepper's complete/current styling. */
+  /* Review timeline marks: a numbered circle, green with a check when done. */
+  .artist-release-step-mark {
+    display: grid;
+    flex-shrink: 0;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    font-size: 0.6875rem;
+    background: var(--color-background);
+    border: 1px solid var(--color-artist-release-border);
+    border-radius: 9999px;
+  }
+  .artist-release-step-mark :where(svg) {
+    width: 1.125rem;
+    height: 1.125rem;
+  }
   .artist-release-timeline {
     display: grid;
     margin-top: 1.25rem;
@@ -602,10 +621,6 @@
     }
   }
   /* Side panels: submission, review progress, delivery checks, plan at a glance. */
-  .artist-release-submit-count {
-    font-size: 0.625rem;
-    color: var(--color-artist-status-warning);
-  }
   .artist-release-submit-list,
   .artist-release-summary-list {
     display: grid;
@@ -724,9 +739,96 @@
     height: 1.125rem;
     color: var(--color-artist-icon);
   }
-  .artist-release-rows li > :is(button, a, [aria-disabled]) {
+  .artist-release-rows
+    li
+    > :is(button, a, [aria-disabled], .artist-release-row-actions) {
     grid-column: 2 / -1;
     justify-self: start;
+  }
+  .artist-release-row-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  /* Phones give the link actions the full row, side by side. */
+  @variant max-sm {
+    .artist-release-rows li > .artist-release-row-actions {
+      grid-column: 1 / -1;
+      justify-self: stretch;
+    }
+    .artist-release-row-actions > * {
+      flex: 1 1 0;
+    }
+  }
+  /* From sm up the link actions sit on the row itself, after the availability chip. */
+  @variant sm {
+    .artist-release-rows li:has(> .artist-release-row-actions) {
+      grid-template-columns: auto minmax(0, 1fr) auto auto;
+    }
+    .artist-release-rows li > .artist-release-row-actions {
+      grid-row: 1;
+      grid-column: 4;
+    }
+  }
+  /* The header waveform runs through the stacked text on narrow screens. */
+  @variant max-lg {
+    .artist-release-header-art {
+      display: none;
+    }
+  }
+  /* Release timing in the draft: one row with the date, a hint and the edit action. */
+  .artist-release-timing {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 0.875rem;
+    align-items: center;
+  }
+  .artist-release-workspace-panel p.artist-release-timing-value {
+    margin-top: 0.25rem;
+    font-size: 0.8125rem;
+    color: var(--color-foreground);
+  }
+  .artist-release-editors > .artist-release-timing {
+    grid-column: 1 / -1;
+  }
+  /* What happens next: a plain list of follow-ups, not cards, so nothing reads as a button. */
+  .artist-release-next {
+    display: grid;
+    margin-top: 0.5rem;
+  }
+  .artist-release-next li {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 0.75rem;
+    align-items: center;
+    padding-block: 0.75rem;
+    border-bottom: 1px solid var(--color-artist-release-border);
+  }
+  .artist-release-next li:last-child {
+    border-bottom: 0;
+  }
+  .artist-release-next-icon {
+    display: grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    color: var(--color-artist-icon);
+    background: var(--color-secondary);
+    border-radius: 9999px;
+  }
+  .artist-release-next-icon :where(svg) {
+    width: 1rem;
+    height: 1rem;
+  }
+  .artist-release-next li[data-state="ready"] .artist-release-next-icon {
+    color: var(--color-accent);
+  }
+  .artist-release-next-text {
+    display: grid;
+    gap: 0.125rem;
+    min-width: 0;
+    font-size: 0.625rem;
+    color: var(--color-text-secondary);
   }
   .artist-release-destinations {
     overflow: hidden;
@@ -814,42 +916,32 @@
     color: var(--color-foreground);
   }
   @variant max-sm {
-    .artist-release-stepper ol {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+    .artist-release-stepper {
+      padding: 0.625rem 0.5rem;
     }
+    /* At 320px the row must fit: tight pills, and lines that may shrink to a short dash. */
     .artist-release-stepper a {
-      flex-direction: column;
-      gap: 0.375rem;
-      padding: 0.375rem 0.125rem;
-      text-align: center;
+      padding: 0.1875rem;
     }
-    .artist-release-step-name {
-      font-size: 0.625rem;
+    .artist-release-stepper a[aria-current="page"] {
+      padding-right: 0.5rem;
     }
-    .artist-release-step-state {
+    /* Phones keep every dot but only the open stage's name. */
+    .artist-release-stepper
+      a:not([aria-current="page"])
+      .artist-release-step-name {
       position: absolute;
       width: 1px;
       height: 1px;
       overflow: hidden;
       clip-path: inset(50%);
     }
+    .artist-release-step-line {
+      min-width: 0.5rem;
+      margin-inline: 0.25rem;
+    }
   }
   @variant sm {
-    .artist-release-stepper ol {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
-    .artist-release-stepper a {
-      flex-direction: column;
-      gap: 0.5rem;
-      text-align: center;
-    }
-    .artist-release-proof {
-      grid-template-columns: auto minmax(0, 1fr) minmax(0, 0.9fr);
-    }
-    .artist-release-proof-master {
-      grid-column: auto;
-      align-self: center;
-    }
     .artist-release-facts {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
@@ -880,10 +972,6 @@
     .artist-release-header-action a {
       flex-shrink: 0;
     }
-    .artist-release-stepper a {
-      flex-direction: row;
-      text-align: left;
-    }
     .artist-release-stage {
       grid-template-columns: minmax(0, 720fr) minmax(0, 352fr);
       gap: 1rem 1.5rem;
@@ -897,6 +985,26 @@
     }
     .artist-release-editors > .artist-release-tracks {
       grid-column: 1 / -1;
+    }
+    /* The progress card comes first for phones and sits beside the editors from lg up. */
+    .artist-release-draft {
+      grid-template-columns: minmax(0, 1fr) minmax(18rem, 22rem);
+    }
+    .artist-release-draft > .artist-release-stage-main {
+      grid-row: 1;
+      grid-column: 1;
+    }
+    .artist-release-draft > .artist-release-stage-side {
+      grid-row: 1;
+      grid-column: 2;
+    }
+    .artist-release-draft .artist-release-editors {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+  @variant xl {
+    .artist-release-draft .artist-release-editors {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
   /* State overrides last, so each one outranks the base rule it refines. */
@@ -933,7 +1041,7 @@
     color: var(--color-artist-status-error);
     border-color: currentColor;
   }
-  [data-tone="success"] .artist-release-submit-count {
+  .artist-release-progress-count[data-complete="true"] {
     color: var(--color-artist-status-ready);
   }
   .artist-release-submit-list[data-tone="info"] :where(svg) {
@@ -954,16 +1062,35 @@
     border-color: transparent;
     box-shadow: var(--shadow-artist-action);
   }
-  li[data-state="complete"] .artist-release-step-state {
-    color: var(--color-artist-status-ready);
+  li[data-state="complete"] .artist-release-step-dot {
+    color: var(--color-artist-canvas-start);
+    background: var(--color-artist-status-ready);
+    border-color: transparent;
   }
-  li[data-state="current"] .artist-release-step-state {
-    color: var(--color-artist-icon);
+  li[data-state="current"] .artist-release-step-dot {
+    color: var(--color-accent);
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px
+      color-mix(in srgb, var(--color-accent) 18%, transparent);
   }
-  li[data-state="optional"] .artist-release-step-mark {
-    color: var(--color-artist-icon);
-    border-color: var(--color-artist-selection-border);
+  li[data-state="optional"] .artist-release-step-dot {
     border-style: dashed;
+  }
+  .artist-release-stepper
+    li:is([data-state="complete"], [data-state="current"])
+    .artist-release-step-name {
+    color: var(--color-foreground);
+  }
+  .artist-release-stepper li[data-state="complete"] .artist-release-step-line {
+    background: var(--color-artist-status-ready);
+  }
+  .artist-release-stepper
+    a:is(:hover, [aria-current="page"])
+    .artist-release-step-name {
+    color: var(--color-foreground);
+  }
+  .artist-release-stepper a[aria-current="page"] .artist-release-step-name {
+    font-weight: 500;
   }
   .artist-release-checklist li[data-done="true"] > :where(svg) {
     color: var(--color-artist-status-ready);
@@ -978,13 +1105,6 @@
   }
   .artist-release-rows li[data-planned="false"] {
     opacity: 0.6;
-  }
-  li[data-done="true"] .artist-release-checklist-detail > span {
-    color: var(--color-artist-status-ready);
-  }
-  .artist-release-workspace-panel
-    p.artist-release-proof-state[data-complete="true"] {
-    color: var(--color-artist-status-ready);
   }
   .artist-release-summary-list li[data-done="true"] > span:nth-of-type(2) {
     color: var(--color-artist-status-ready);
