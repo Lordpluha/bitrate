@@ -23,7 +23,6 @@ describe('toReportDetail', () => {
         id: baseReport.entityId,
         title: 'Night Drive',
         deletedAt: '2026-09-10T08:00:00.000Z',
-        parentId: null,
       },
       siblingReports: [],
     }
@@ -59,7 +58,7 @@ describe('toReportDetail', () => {
 describe('toWireModerationEntityType', () => {
   it('is a direct pass-through, stated explicitly so a dropped member fails to compile', () => {
     expect(toWireModerationEntityType('track')).toBe('track')
-    expect(toWireModerationEntityType('episode')).toBe('episode')
+    expect(toWireModerationEntityType('album')).toBe('album')
     expect(toWireModerationEntityType('user')).toBe('user')
   })
 })
