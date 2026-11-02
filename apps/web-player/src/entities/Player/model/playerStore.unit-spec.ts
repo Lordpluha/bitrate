@@ -36,7 +36,6 @@ const createTrack = ({ id, title, duration }: TestTrackInput): TrackEntity => ({
   discNumber: 1,
   language: null,
   deletedAt: null,
-  playbackVersion: 1,
   fragmentTimescale: null,
   durationTicks: null,
 })

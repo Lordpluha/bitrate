@@ -69,12 +69,12 @@
     *::after {
       /* biome-ignore lint/complexity/noImportantStyles: Accessibility preferences must override scrolling utilities. */
       scroll-behavior: auto !important;
+      /* biome-ignore lint/complexity/noImportantStyles: Accessibility preferences must override transition utilities. */
+      transition-duration: 0.01ms !important;
       /* biome-ignore lint/complexity/noImportantStyles: Accessibility preferences must override animation utilities. */
       animation-duration: 0.01ms !important;
       /* biome-ignore lint/complexity/noImportantStyles: Accessibility preferences must override animation utilities. */
       animation-iteration-count: 1 !important;
-      /* biome-ignore lint/complexity/noImportantStyles: Accessibility preferences must override transition utilities. */
-      transition-duration: 0.01ms !important;
     }
   }
 

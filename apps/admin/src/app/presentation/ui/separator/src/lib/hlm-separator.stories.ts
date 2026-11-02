@@ -11,7 +11,7 @@ const meta = {
     template: `
       <div class="w-72 text-sm">
         <p class="font-medium">Catalog</p>
-        <p class="text-muted-foreground">Tracks, albums and podcasts.</p>
+        <p class="text-muted-foreground">Tracks, albums and playlists.</p>
         <hlm-separator class="my-4" />
         <p class="text-muted-foreground">Moderation queue</p>
       </div>
@@ -32,7 +32,7 @@ export const Vertical: Story = {
         <hlm-separator orientation="vertical" />
         <span>Albums</span>
         <hlm-separator orientation="vertical" />
-        <span>Podcasts</span>
+        <span>Playlists</span>
       </div>
     `,
   }),

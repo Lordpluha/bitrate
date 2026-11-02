@@ -1,4 +1,20 @@
-import type { BitratePlayerRendition, BitratePlayerSourceResolver } from '../../contract'
+import type {
+  BitratePlayerRendition,
+  BitratePlayerSourceResolver,
+  TrackManifest,
+} from '../../contract'
+
+/**
+ * A manifest whose codec MSE refuses, so a streaming `<bitrate-player>` plays the rendition
+ * natively through `renditionUrl` — the no-MSE path of ADR-0065 — without a CMAF fixture.
+ */
+export const NATIVE_ONLY_MANIFEST: TrackManifest = {
+  version: 1,
+  timescale: 48_000,
+  durationTicks: 48_000,
+  durationMs: 1_000,
+  renditions: [{ bitrate: 128, codec: 'x-unsupported', size: 0, initRange: [0, 0], fragments: [] }],
+}
 
 /** Story fixtures for `<bitrate-player>` — the same rendition shape the browser specs use. */
 export const SINGLE_RENDITION: BitratePlayerRendition[] = [{ bitrate: 320, label: '320 kbps' }]

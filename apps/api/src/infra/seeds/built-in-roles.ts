@@ -15,10 +15,10 @@ const BUILT_IN_ROLES = [
     name: 'MODERATOR',
     description:
       'Built-in operator role. Holds moderation, catalog, and user-management permissions ' +
-      '(reports, artists, tracks, users, audit), read access to genres, albums, playlists and ' +
-      'podcasts, and hiding public playlists; excludes staff and role administration, the ' +
+      '(reports, artists, tracks, users, audit), read access to genres, albums and playlists, ' +
+      'and hiding public playlists; excludes staff and role administration, the ' +
       'overview dashboard, exports, genre editing, restores, session revocation, and taking ' +
-      'down tracks, albums, playlists or podcasts.',
+      'down tracks, albums or playlists.',
     permissions: [...MODERATOR_TEMPLATE] as string[],
   },
 ] as const

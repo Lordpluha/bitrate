@@ -282,7 +282,7 @@ describe('AdminOverviewService', () => {
     })
   })
   describe('getReportsByType', () => {
-    const ALL_TYPES = ['track', 'album', 'playlist', 'artist', 'podcast', 'episode', 'user']
+    const ALL_TYPES = ['track', 'album', 'playlist', 'artist', 'user']
 
     it('zero-fills every entity type across every day against an empty database', async () => {
       queryRawMock(prisma).mockResolvedValueOnce([])
@@ -317,7 +317,7 @@ describe('AdminOverviewService', () => {
         { day: new Date('2026-09-15T00:00:00.000Z'), entityType: 'track', count: 2 },
         { day: new Date('2026-09-16T00:00:00.000Z'), entityType: 'track', count: 1 },
         { day: new Date('2026-09-16T00:00:00.000Z'), entityType: 'user', count: 4 },
-        { day: new Date('2026-09-17T00:00:00.000Z'), entityType: 'podcast', count: 5 },
+        { day: new Date('2026-09-17T00:00:00.000Z'), entityType: 'playlist', count: 5 },
       ])
 
       const result = await service.getReportsByType(3)
@@ -325,7 +325,11 @@ describe('AdminOverviewService', () => {
       const byType = new Map(result.series.map((s) => [s.entityType, s]))
       expect(byType.get('track')).toEqual({ entityType: 'track', counts: [2, 1, 0], total: 3 })
       expect(byType.get('user')).toEqual({ entityType: 'user', counts: [0, 4, 0], total: 4 })
-      expect(byType.get('podcast')).toEqual({ entityType: 'podcast', counts: [0, 0, 5], total: 5 })
+      expect(byType.get('playlist')).toEqual({
+        entityType: 'playlist',
+        counts: [0, 0, 5],
+        total: 5,
+      })
       expect(byType.get('album')).toEqual({ entityType: 'album', counts: [0, 0, 0], total: 0 })
       expect(result.total).toBe(12)
     })
