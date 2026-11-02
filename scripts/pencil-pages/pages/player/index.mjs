@@ -13,7 +13,6 @@ import { playerPages } from './player.mjs'
 import { searchDiscoveryPages } from './search-discovery.mjs'
 import { libraryPages } from './library.mjs'
 import { artistProfilePages } from './artist-profile.mjs'
-import { podcastPages } from './podcast.mjs'
 import { settingsPages } from './settings.mjs'
 import { conceptsPages } from './concepts.mjs'
 
@@ -60,7 +59,6 @@ export const pages = Object.fromEntries(
     ...searchDiscoveryPages,
     ...libraryPages,
     ...artistProfilePages,
-    ...podcastPages,
     ...settingsPages,
     ...conceptsPages,
     loading,

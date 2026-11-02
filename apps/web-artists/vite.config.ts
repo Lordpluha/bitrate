@@ -32,6 +32,14 @@ export default defineConfig({
        * upgrade, not a side effect of silencing the warning.
        */
       compatibilityDate: '2024-04-03',
+      externals: {
+        /**
+         * lucide-react's exports list a `node` condition (CJS) ahead of `import`. Nitro traces
+         * only the ESM build into .output, so Node then fails to find the CJS entry at runtime.
+         * Bundling it sidesteps the mismatch.
+         */
+        inline: ['lucide-react'],
+      },
     }),
     /** react's vite plugin must come after start's vite plugin. */
     viteReact(),

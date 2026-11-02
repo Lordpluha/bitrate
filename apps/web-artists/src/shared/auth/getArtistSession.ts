@@ -1,8 +1,8 @@
 import { SESSION_COOKIE_NAMES } from '@bitrate/contracts'
 import { createServerFn } from '@tanstack/react-start'
 import {
+  appendResponseHeader,
   getCookie,
-  getResponseHeaders,
   setResponseHeader,
 } from '@tanstack/react-start/server'
 import { getArtistApiUrl } from './artistApiUrl'
@@ -24,8 +24,7 @@ export const getArtistSession = createServerFn({ method: 'POST' }).handler(
         refreshToken: getCookie(refreshCookieName),
       },
       (cookies) => {
-        const headers = getResponseHeaders()
-        for (const cookie of cookies) headers.append('Set-Cookie', cookie)
+        appendResponseHeader('Set-Cookie', cookies)
       },
     )
   },

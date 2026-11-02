@@ -788,66 +788,6 @@ export interface paths {
     patch?: never
     trace?: never
   }
-  '/api/v1/tracks/stream/{id}/hls/master.m3u8': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    /**
-     * Get the HLS master playlist for a track
-     * @description Returns `application/vnd.apple.mpegurl`, listing every available bitrate variant.
-     */
-    get: operations['TracksController_getHlsMasterPlaylist_v1']
-    put?: never
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/api/v1/tracks/stream/{id}/hls/{bitrate}/{asset}': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    /**
-     * Get one HLS asset for a track rendition
-     * @description Segments are served with an immutable cache header; the variant `.m3u8` playlist is not.
-     */
-    get: operations['TracksController_getHlsAsset_v1']
-    put?: never
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/api/v1/tracks/stream/{id}': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    /**
-     * Stream audio file
-     * @description Returns the track audio as a binary stream. Supports HTTP range requests for partial content.
-     */
-    get: operations['TracksController_streamTrack_v1']
-    put?: never
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
   '/api/v1/tracks/{id}': {
     parameters: {
       query?: never
@@ -883,20 +823,20 @@ export interface paths {
     patch?: never
     trace?: never
   }
-  '/api/v1/tracks/{id}/manifest': {
+  '/api/v1/tracks/{id}/play-sessions': {
     parameters: {
       query?: never
       header?: never
       path?: never
       cookie?: never
     }
-    /**
-     * Get the byte-range playback manifest for a track
-     * @description Returns the fragment index every CMAF rendition is addressed by. Immutable for a given track, so it can be cached indefinitely. See ADR-0020.
-     */
-    get: operations['TracksController_getManifest_v1']
+    get?: never
     put?: never
-    post?: never
+    /**
+     * Open a playback session for a track
+     * @description Returns the byte-range manifest and a signed token. Every rendition request must carry it as `?t=`; it lasts the track plus 15 minutes and is revoked on logout and password reset. See ADR-0067.
+     */
+    post: operations['TracksController_openPlaySession_v1']
     delete?: never
     options?: never
     head?: never
@@ -911,8 +851,8 @@ export interface paths {
       cookie?: never
     }
     /**
-     * Stream bytes of one CMAF rendition
-     * @description Serves the rendition file, honoring an inclusive `bytes=` Range. The player asks for one fragment at a time using offsets from the manifest.
+     * Authorised by the session token alone (D9): a native `<audio>` cannot refresh a cookie.
+     * @description Serves bytes for a playback session (`?t=` from `POST /tracks/:id/play-sessions`). A `Range` of at most the largest fragment (~10 s) is served exactly; a missing or longer range gets one response to the end of the file, released no faster than the session budget: real time since it opened plus 60 s of audio. See ADR-0067.
      */
     get: operations['TracksController_streamRendition_v1']
     put?: never
@@ -2079,75 +2019,6 @@ export interface paths {
     put?: never
     post?: never
     delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/api/v1/podcasts': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    /** List podcasts */
-    get: operations['PodcastsController_getAll_v1']
-    put?: never
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/api/v1/podcasts/{id}': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    /** Get a podcast by id, with its episodes */
-    get: operations['PodcastsController_getById_v1']
-    put?: never
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/api/v1/me/episodes': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    /** List the caller's saved episodes */
-    get: operations['PodcastsController_saved_v1']
-    put?: never
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/api/v1/me/episodes/{id}': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get?: never
-    /** Save an episode to the caller's library */
-    put: operations['PodcastsController_save_v1']
-    post?: never
-    /** Remove an episode from the caller's library */
-    delete: operations['PodcastsController_unsave_v1']
     options?: never
     head?: never
     patch?: never
@@ -3901,101 +3772,6 @@ export interface paths {
     patch?: never
     trace?: never
   }
-  '/api/v1/admin/podcasts': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    /** Runs the list podcasts operation. */
-    get: operations['AdminPodcastsController_list_v1']
-    put?: never
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/api/v1/admin/podcasts/{id}': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    /**
-     * Runs the get podcast operation.
-     * @description A taken-down podcast stays reachable by id, and every episode is listed with its own take-down state.
-     */
-    get: operations['AdminPodcastsController_getById_v1']
-    put?: never
-    post?: never
-    /**
-     * Runs the soft-delete (take-down) operation.
-     * @description The podcast's episodes are not affected and stay independently manageable.
-     */
-    delete: operations['AdminPodcastsController_remove_v1']
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/api/v1/admin/podcasts/{id}/restore': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get?: never
-    put?: never
-    /** Runs the restore operation. */
-    post: operations['AdminPodcastsController_restore_v1']
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/api/v1/admin/podcasts/{id}/episodes/{episodeId}': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get?: never
-    put?: never
-    post?: never
-    /**
-     * Runs the episode soft-delete (take-down) operation.
-     * @description The parent podcast and the other episodes are not affected.
-     */
-    delete: operations['AdminPodcastsController_removeEpisode_v1']
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/api/v1/admin/podcasts/{id}/episodes/{episodeId}/restore': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get?: never
-    put?: never
-    /** Runs the episode restore operation. */
-    post: operations['AdminPodcastsController_restoreEpisode_v1']
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
   '/api/v1/admin/releases': {
     parameters: {
       query?: never
@@ -4441,9 +4217,7 @@ export interface components {
        * @description The processing finished at value.
        */
       processingFinishedAt: string | null
-      /** @description 1 = legacy HLS pipeline, 2 = single-file CMAF + Range index (ADR-0020). */
-      playbackVersion: number
-      /** @description Fragment timescale shared by every CMAF rendition; null on legacy tracks. */
+      /** @description Fragment timescale shared by every CMAF rendition; null until the first publish. */
       fragmentTimescale: number | null
       /** @description Track duration in fragment ticks; null on legacy tracks. */
       durationTicks: number | null
@@ -4761,6 +4535,20 @@ export interface components {
       /** @description Renditions ordered from the lowest bitrate to the highest. */
       renditions: components['schemas']['TrackManifestRenditionEntity'][]
     }
+    PlaySessionEntity: {
+      /** @description The track's byte-range playback manifest. */
+      manifest: components['schemas']['TrackManifestEntity']
+      /**
+       * @description Signed token for `GET /tracks/:id/cmaf/:bitrate?t=…`.
+       * @example eyJzaWQiOiIuLi4ifQ.c2lnbmF0dXJl
+       */
+      token: string
+      /**
+       * @description When the token stops working, in Unix seconds.
+       * @example 1793300000
+       */
+      expiresAt: number
+    }
     CreateTrackDto: {
       /** @description Track title */
       title: string
@@ -4800,6 +4588,13 @@ export interface components {
        * @description Cover image file
        */
       cover?: string
+    }
+    OpenPlaySessionDto: {
+      /**
+       * Format: uuid
+       * @description The Bitrate Connect device playing, as registered at `/me/player/devices`
+       */
+      deviceId?: string
     }
     PlaylistTrackEntity: {
       /** @description The id value. */
@@ -4850,9 +4645,7 @@ export interface components {
        * @description The processing finished at value.
        */
       processingFinishedAt: string | null
-      /** @description 1 = legacy HLS pipeline, 2 = single-file CMAF + Range index (ADR-0020). */
-      playbackVersion: number
-      /** @description Fragment timescale shared by every CMAF rendition; null on legacy tracks. */
+      /** @description Fragment timescale shared by every CMAF rendition; null until the first publish. */
       fragmentTimescale: number | null
       /** @description Track duration in fragment ticks; null on legacy tracks. */
       durationTicks: number | null
@@ -6214,7 +6007,7 @@ export interface components {
     }
     CreateReportDto: {
       /** @enum {string} */
-      entityType: 'track' | 'album' | 'playlist' | 'artist' | 'podcast' | 'episode' | 'user'
+      entityType: 'track' | 'album' | 'playlist' | 'artist' | 'user'
       /** Format: uuid */
       entityId: string
       reason: string
@@ -6268,9 +6061,6 @@ export interface components {
         | 'playlists:hide'
         | 'playlists:delete'
         | 'playlists:restore'
-        | 'podcasts:read'
-        | 'podcasts:delete'
-        | 'podcasts:restore'
         | 'releases:read'
         | 'releases:review'
       )[]
@@ -6403,10 +6193,7 @@ export interface components {
       failed: number
     }
     ModerationSubjectEntity: {
-      /**
-       * @description The resolved entity kind — `track`, `album`, `playlist`, `artist`, `podcast`, `episode`,
-       *     or `user`.
-       */
+      /** @description The resolved entity kind — `track`, `album`, `playlist`, `artist` or `user`. */
       kind: string
       /** @description The subject's id. */
       id: string
@@ -6417,12 +6204,6 @@ export interface components {
        * @description The subject's soft-delete timestamp, if it has one and is deleted.
        */
       deletedAt?: string | null
-      /**
-       * @description The subject's owning parent, when its kind has one — an episode's podcast id. `null` for
-       *     every other kind, kept as one field rather than a kind-specific one so the entity stays
-       *     simple; a future parent-bearing kind reuses this instead of adding another optional field.
-       */
-      parentId?: string | null
     }
     AdminModerationReportDetailEntity: {
       /** @description The id value. */
@@ -6985,16 +6766,7 @@ export interface components {
      * @description The pipeline step that failed, if any.
      * @enum {string}
      */
-    TrackProcessingStep:
-      | 'CLAIM'
-      | 'PREPARE_TEMP'
-      | 'PROGRESSIVE_ENCODE'
-      | 'HLS_ENCODE'
-      | 'HLS_VALIDATE'
-      | 'CMAF_ENCODE'
-      | 'UPLOAD'
-      | 'PUBLISH'
-      | 'CLEANUP'
+    TrackProcessingStep: 'CLAIM' | 'PREPARE_TEMP' | 'CMAF_ENCODE' | 'UPLOAD' | 'PUBLISH' | 'CLEANUP'
     /**
      * @description The classified error code, if this attempt failed.
      * @enum {string}
@@ -7183,9 +6955,6 @@ export interface components {
         | 'playlists:hide'
         | 'playlists:delete'
         | 'playlists:restore'
-        | 'podcasts:read'
-        | 'podcasts:delete'
-        | 'podcasts:restore'
         | 'releases:read'
         | 'releases:review'
       )[]
@@ -7245,9 +7014,6 @@ export interface components {
         | 'playlists:hide'
         | 'playlists:delete'
         | 'playlists:restore'
-        | 'podcasts:read'
-        | 'podcasts:delete'
-        | 'podcasts:restore'
         | 'releases:read'
         | 'releases:review'
       /**
@@ -7298,9 +7064,6 @@ export interface components {
         | 'playlists:hide'
         | 'playlists:delete'
         | 'playlists:restore'
-        | 'podcasts:read'
-        | 'podcasts:delete'
-        | 'podcasts:restore'
         | 'releases:read'
         | 'releases:review'
       )[]
@@ -7344,9 +7107,6 @@ export interface components {
         | 'playlists:hide'
         | 'playlists:delete'
         | 'playlists:restore'
-        | 'podcasts:read'
-        | 'podcasts:delete'
-        | 'podcasts:restore'
         | 'releases:read'
         | 'releases:review'
       )[]
@@ -7393,9 +7153,6 @@ export interface components {
         | 'playlists:hide'
         | 'playlists:delete'
         | 'playlists:restore'
-        | 'podcasts:read'
-        | 'podcasts:delete'
-        | 'podcasts:restore'
         | 'releases:read'
         | 'releases:review'
       )[]
@@ -7449,9 +7206,6 @@ export interface components {
         | 'playlists:hide'
         | 'playlists:delete'
         | 'playlists:restore'
-        | 'podcasts:read'
-        | 'podcasts:delete'
-        | 'podcasts:restore'
         | 'releases:read'
         | 'releases:review'
       )[]
@@ -7533,9 +7287,6 @@ export interface components {
         | 'playlists:hide'
         | 'playlists:delete'
         | 'playlists:restore'
-        | 'podcasts:read'
-        | 'podcasts:delete'
-        | 'podcasts:restore'
         | 'releases:read'
         | 'releases:review'
       )[]
@@ -7579,9 +7330,6 @@ export interface components {
         | 'playlists:hide'
         | 'playlists:delete'
         | 'playlists:restore'
-        | 'podcasts:read'
-        | 'podcasts:delete'
-        | 'podcasts:restore'
         | 'releases:read'
         | 'releases:review'
       )[]
@@ -7623,9 +7371,6 @@ export interface components {
         | 'playlists:hide'
         | 'playlists:delete'
         | 'playlists:restore'
-        | 'podcasts:read'
-        | 'podcasts:delete'
-        | 'podcasts:restore'
         | 'releases:read'
         | 'releases:review'
       )[]
@@ -7746,7 +7491,7 @@ export interface components {
        * @description The kind of entity the reports were filed against.
        * @enum {string}
        */
-      entityType: 'track' | 'album' | 'playlist' | 'artist' | 'podcast' | 'episode' | 'user'
+      entityType: 'track' | 'album' | 'playlist' | 'artist' | 'user'
       /** @description Reports filed per day, aligned by index to the response's `dates`. */
       counts: number[]
       /** @description The sum of `counts` — reports of this entity type filed in the window. */
@@ -8031,104 +7776,6 @@ export interface components {
     SetPlaylistVisibilityDto: {
       reason?: string
       isPublic: boolean
-    }
-    AdminPodcastEntity: {
-      /** @description The id value. */
-      id: string
-      /** @description The title value. */
-      title: string
-      /** @description The publisher's display name. */
-      publisher: string
-      /** @description The stored cover image reference, or `null`. */
-      cover?: string | null
-      /** @description The podcast's language code, if any. */
-      language?: string | null
-      /** @description Whether the podcast is flagged explicit. */
-      explicit: boolean
-      /** @description How many episodes the podcast has, taken-down ones included. */
-      episodeCount: number
-      /**
-       * Format: date-time
-       * @description Soft-delete (take-down) timestamp.
-       */
-      deletedAt?: string | null
-      /**
-       * Format: date-time
-       * @description The created at value.
-       */
-      createdAt: string
-      /**
-       * Format: date-time
-       * @description The updated at value.
-       */
-      updatedAt: string
-    }
-    PaginatedAdminPodcastsEntity: {
-      /** @description The podcasts on this page. */
-      data: components['schemas']['AdminPodcastEntity'][]
-      /** @description The total number of podcasts matching the query. */
-      total: number
-      /** @description The current page number. */
-      page: number
-      /** @description The page size. */
-      limit: number
-    }
-    AdminPodcastEpisodeEntity: {
-      /** @description The episode's id. */
-      id: string
-      /** @description The owning podcast's id. */
-      podcastId: string
-      /** @description The episode's title. */
-      title: string
-      /** @description The episode length in seconds, if known. */
-      duration?: number | null
-      /**
-       * Format: date-time
-       * @description Release date, or `null` if unset.
-       */
-      releaseDate?: string | null
-      /** @description Whether the episode is flagged explicit. */
-      explicit: boolean
-      /**
-       * Format: date-time
-       * @description The episode's own soft-delete timestamp — independent of the podcast's.
-       */
-      deletedAt?: string | null
-    }
-    AdminPodcastDetailEntity: {
-      /** @description The id value. */
-      id: string
-      /** @description The title value. */
-      title: string
-      /** @description The publisher's display name. */
-      publisher: string
-      /** @description The stored cover image reference, or `null`. */
-      cover?: string | null
-      /** @description The podcast's language code, if any. */
-      language?: string | null
-      /** @description Whether the podcast is flagged explicit. */
-      explicit: boolean
-      /** @description How many episodes the podcast has, taken-down ones included. */
-      episodeCount: number
-      /**
-       * Format: date-time
-       * @description Soft-delete (take-down) timestamp.
-       */
-      deletedAt?: string | null
-      /**
-       * Format: date-time
-       * @description The created at value.
-       */
-      createdAt: string
-      /**
-       * Format: date-time
-       * @description The updated at value.
-       */
-      updatedAt: string
-      /** @description The podcast description, if any. */
-      description?: string | null
-      /** @description The podcast's episodes, newest release first, taken-down ones included. */
-      episodes: components['schemas']['AdminPodcastEpisodeEntity'][]
     }
     AdminReleaseEntity: {
       /** Format: uuid */
@@ -14701,475 +14348,6 @@ export interface operations {
       }
     }
   }
-  TracksController_getHlsMasterPlaylist_v1: {
-    parameters: {
-      query?: never
-      header?: never
-      path: {
-        /** @description Track ID */
-        id: string
-      }
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      /** @description The master playlist */
-      200: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': {
-            /** @example 401 */
-            statusCode?: number
-            /**
-             * @example errors.auth.invalid_or_expired_token
-             * @enum {string}
-             */
-            message?:
-              | 'errors.auth.access_token_required'
-              | 'errors.auth.refresh_token_required'
-              | 'errors.auth.invalid_token_requirement'
-              | 'errors.auth.invalid_or_expired_token'
-              | 'errors.auth.user_not_found'
-              | 'errors.auth.session_not_found'
-            /** @example Unauthorized */
-            error?: string
-            /**
-             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
-             * @example errors.auth.invalid_or_expired_token
-             * @enum {string}
-             */
-            code?:
-              | 'errors.auth.access_token_required'
-              | 'errors.auth.refresh_token_required'
-              | 'errors.auth.invalid_token_requirement'
-              | 'errors.auth.invalid_or_expired_token'
-              | 'errors.auth.user_not_found'
-              | 'errors.auth.session_not_found'
-          }
-        }
-      }
-      /** @description Track not found, or its HLS stream is not ready */
-      404: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Method not allowed */
-      405: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Request timeout */
-      408: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Too many requests */
-      429: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Internal server error */
-      500: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Not implemented */
-      501: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Bad gateway */
-      502: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Service unavailable */
-      503: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Gateway timeout */
-      504: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description HTTP version not supported */
-      505: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Insufficient storage */
-      507: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Loop detected */
-      508: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      default: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-    }
-  }
-  TracksController_getHlsAsset_v1: {
-    parameters: {
-      query?: never
-      header?: never
-      path: {
-        /** @description Rendition kbps */
-        bitrate: number
-        /** @description Playlist or segment filename */
-        asset: string
-        /** @description Track ID */
-        id: string
-      }
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      /** @description The requested asset bytes */
-      200: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': {
-            /** @example 401 */
-            statusCode?: number
-            /**
-             * @example errors.auth.invalid_or_expired_token
-             * @enum {string}
-             */
-            message?:
-              | 'errors.auth.access_token_required'
-              | 'errors.auth.refresh_token_required'
-              | 'errors.auth.invalid_token_requirement'
-              | 'errors.auth.invalid_or_expired_token'
-              | 'errors.auth.user_not_found'
-              | 'errors.auth.session_not_found'
-            /** @example Unauthorized */
-            error?: string
-            /**
-             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
-             * @example errors.auth.invalid_or_expired_token
-             * @enum {string}
-             */
-            code?:
-              | 'errors.auth.access_token_required'
-              | 'errors.auth.refresh_token_required'
-              | 'errors.auth.invalid_token_requirement'
-              | 'errors.auth.invalid_or_expired_token'
-              | 'errors.auth.user_not_found'
-              | 'errors.auth.session_not_found'
-          }
-        }
-      }
-      /** @description Track, rendition, or asset not found, or the track is not ready */
-      404: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Method not allowed */
-      405: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Request timeout */
-      408: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Too many requests */
-      429: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Internal server error */
-      500: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Not implemented */
-      501: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Bad gateway */
-      502: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Service unavailable */
-      503: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Gateway timeout */
-      504: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description HTTP version not supported */
-      505: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Insufficient storage */
-      507: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Loop detected */
-      508: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      default: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-    }
-  }
-  TracksController_streamTrack_v1: {
-    parameters: {
-      query?: {
-        bitrate?: number
-        format?: string
-      }
-      header?: {
-        /** @description Byte range for partial content (e.g. bytes=0-1048575) */
-        Range?: string
-      }
-      path: {
-        /** @description Track ID */
-        id: string
-      }
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      /** @description Full audio stream */
-      200: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'audio/mpeg': string
-        }
-      }
-      /** @description Partial audio stream (Range request) */
-      206: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'audio/mpeg': string
-        }
-      }
-      /**
-       * @description Unauthorized
-       *
-       *     Not authenticated
-       */
-      401: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': {
-            /** @example 401 */
-            statusCode?: number
-            /**
-             * @example errors.auth.invalid_or_expired_token
-             * @enum {string}
-             */
-            message?:
-              | 'errors.auth.access_token_required'
-              | 'errors.auth.refresh_token_required'
-              | 'errors.auth.invalid_token_requirement'
-              | 'errors.auth.invalid_or_expired_token'
-              | 'errors.auth.user_not_found'
-              | 'errors.auth.session_not_found'
-            /** @example Unauthorized */
-            error?: string
-            /**
-             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
-             * @example errors.auth.invalid_or_expired_token
-             * @enum {string}
-             */
-            code?:
-              | 'errors.auth.access_token_required'
-              | 'errors.auth.refresh_token_required'
-              | 'errors.auth.invalid_token_requirement'
-              | 'errors.auth.invalid_or_expired_token'
-              | 'errors.auth.user_not_found'
-              | 'errors.auth.session_not_found'
-          }
-        }
-      }
-      /** @description Track not found */
-      404: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Method not allowed */
-      405: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Request timeout */
-      408: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Too many requests */
-      429: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Internal server error */
-      500: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Not implemented */
-      501: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Bad gateway */
-      502: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Service unavailable */
-      503: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Gateway timeout */
-      504: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description HTTP version not supported */
-      505: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Insufficient storage */
-      507: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Loop detected */
-      508: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      default: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-    }
-  }
   TracksController_getById_v1: {
     parameters: {
       query?: never
@@ -15612,7 +14790,7 @@ export interface operations {
       }
     }
   }
-  TracksController_getManifest_v1: {
+  TracksController_openPlaySession_v1: {
     parameters: {
       query?: never
       header?: never
@@ -15622,17 +14800,25 @@ export interface operations {
       }
       cookie?: never
     }
-    requestBody?: never
+    requestBody?: {
+      content: {
+        'application/json': components['schemas']['OpenPlaySessionDto']
+      }
+    }
     responses: {
-      200: {
+      201: {
         headers: {
           [name: string]: unknown
         }
         content: {
-          'application/json': components['schemas']['TrackManifestEntity']
+          'application/json': components['schemas']['PlaySessionEntity']
         }
       }
-      /** @description Unauthorized */
+      /**
+       * @description Unauthorized
+       *
+       *     Not signed in
+       */
       401: {
         headers: {
           [name: string]: unknown
@@ -15690,7 +14876,7 @@ export interface operations {
         }
         content?: never
       }
-      /** @description Too many requests */
+      /** @description Too many sessions opened */
       429: {
         headers: {
           [name: string]: unknown
@@ -15765,7 +14951,10 @@ export interface operations {
   }
   TracksController_streamRendition_v1: {
     parameters: {
-      query?: never
+      query: {
+        /** @description Playback session token */
+        t: unknown
+      }
       header?: {
         /** @description Inclusive byte window, e.g. `bytes=929-100915` */
         Range?: string
@@ -15780,16 +14969,7 @@ export interface operations {
     }
     requestBody?: never
     responses: {
-      /** @description Whole rendition file */
-      200: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'audio/mp4': string
-        }
-      }
-      /** @description Requested byte range */
+      /** @description The requested fragment, or the rest of the file at real-time pace */
       206: {
         headers: {
           [name: string]: unknown
@@ -15798,42 +14978,12 @@ export interface operations {
           'audio/mp4': string
         }
       }
-      /** @description Unauthorized */
-      401: {
+      /** @description Missing, forged, expired, revoked or other-track session token */
+      403: {
         headers: {
           [name: string]: unknown
         }
-        content: {
-          'application/json': {
-            /** @example 401 */
-            statusCode?: number
-            /**
-             * @example errors.auth.invalid_or_expired_token
-             * @enum {string}
-             */
-            message?:
-              | 'errors.auth.access_token_required'
-              | 'errors.auth.refresh_token_required'
-              | 'errors.auth.invalid_token_requirement'
-              | 'errors.auth.invalid_or_expired_token'
-              | 'errors.auth.user_not_found'
-              | 'errors.auth.session_not_found'
-            /** @example Unauthorized */
-            error?: string
-            /**
-             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
-             * @example errors.auth.invalid_or_expired_token
-             * @enum {string}
-             */
-            code?:
-              | 'errors.auth.access_token_required'
-              | 'errors.auth.refresh_token_required'
-              | 'errors.auth.invalid_token_requirement'
-              | 'errors.auth.invalid_or_expired_token'
-              | 'errors.auth.user_not_found'
-              | 'errors.auth.session_not_found'
-          }
-        }
+        content?: never
       }
       /** @description Rendition not found */
       404: {
@@ -15856,7 +15006,14 @@ export interface operations {
         }
         content?: never
       }
-      /** @description Too many requests */
+      /** @description Range outside the file */
+      416: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description The session is ahead of real time; retry after `Retry-After` seconds */
       429: {
         headers: {
           [name: string]: unknown
@@ -25958,671 +25115,6 @@ export interface operations {
       }
     }
   }
-  PodcastsController_getAll_v1: {
-    parameters: {
-      query?: {
-        page?: number
-        limit?: number
-        /** @description Case-insensitive title search */
-        q?: string
-      }
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      /** @description A page of podcasts with their episode count */
-      200: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Method not allowed */
-      405: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Request timeout */
-      408: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Too many requests */
-      429: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Internal server error */
-      500: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Not implemented */
-      501: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Bad gateway */
-      502: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Service unavailable */
-      503: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Gateway timeout */
-      504: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description HTTP version not supported */
-      505: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Insufficient storage */
-      507: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Loop detected */
-      508: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      default: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-    }
-  }
-  PodcastsController_getById_v1: {
-    parameters: {
-      query?: {
-        /** @description Episodes page */
-        page?: number
-        /** @description Episodes page size */
-        limit?: number
-        /** @description Case-insensitive episode title or description search */
-        q?: string
-      }
-      header?: never
-      path: {
-        id: string
-      }
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      /** @description The podcast with a page of its episodes */
-      200: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Podcast not found */
-      404: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Method not allowed */
-      405: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Request timeout */
-      408: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Too many requests */
-      429: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Internal server error */
-      500: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Not implemented */
-      501: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Bad gateway */
-      502: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Service unavailable */
-      503: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Gateway timeout */
-      504: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description HTTP version not supported */
-      505: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Insufficient storage */
-      507: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Loop detected */
-      508: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      default: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-    }
-  }
-  PodcastsController_saved_v1: {
-    parameters: {
-      query?: {
-        page?: number
-        limit?: number
-      }
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      /** @description A page of saved episodes, each carrying a savedAt timestamp */
-      200: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /**
-       * @description Unauthorized
-       *
-       *     Missing or invalid session
-       */
-      401: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': {
-            /** @example 401 */
-            statusCode?: number
-            /**
-             * @example errors.auth.invalid_or_expired_token
-             * @enum {string}
-             */
-            message?:
-              | 'errors.auth.access_token_required'
-              | 'errors.auth.refresh_token_required'
-              | 'errors.auth.invalid_token_requirement'
-              | 'errors.auth.invalid_or_expired_token'
-              | 'errors.auth.user_not_found'
-              | 'errors.auth.session_not_found'
-            /** @example Unauthorized */
-            error?: string
-            /**
-             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
-             * @example errors.auth.invalid_or_expired_token
-             * @enum {string}
-             */
-            code?:
-              | 'errors.auth.access_token_required'
-              | 'errors.auth.refresh_token_required'
-              | 'errors.auth.invalid_token_requirement'
-              | 'errors.auth.invalid_or_expired_token'
-              | 'errors.auth.user_not_found'
-              | 'errors.auth.session_not_found'
-          }
-        }
-      }
-      /** @description Method not allowed */
-      405: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Request timeout */
-      408: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Too many requests */
-      429: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Internal server error */
-      500: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Not implemented */
-      501: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Bad gateway */
-      502: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Service unavailable */
-      503: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Gateway timeout */
-      504: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description HTTP version not supported */
-      505: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Insufficient storage */
-      507: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Loop detected */
-      508: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      default: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-    }
-  }
-  PodcastsController_save_v1: {
-    parameters: {
-      query?: never
-      header?: never
-      path: {
-        /** @description Episode id */
-        id: string
-      }
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      /** @description Episode saved */
-      204: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /**
-       * @description Unauthorized
-       *
-       *     Missing or invalid session
-       */
-      401: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': {
-            /** @example 401 */
-            statusCode?: number
-            /**
-             * @example errors.auth.invalid_or_expired_token
-             * @enum {string}
-             */
-            message?:
-              | 'errors.auth.access_token_required'
-              | 'errors.auth.refresh_token_required'
-              | 'errors.auth.invalid_token_requirement'
-              | 'errors.auth.invalid_or_expired_token'
-              | 'errors.auth.user_not_found'
-              | 'errors.auth.session_not_found'
-            /** @example Unauthorized */
-            error?: string
-            /**
-             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
-             * @example errors.auth.invalid_or_expired_token
-             * @enum {string}
-             */
-            code?:
-              | 'errors.auth.access_token_required'
-              | 'errors.auth.refresh_token_required'
-              | 'errors.auth.invalid_token_requirement'
-              | 'errors.auth.invalid_or_expired_token'
-              | 'errors.auth.user_not_found'
-              | 'errors.auth.session_not_found'
-          }
-        }
-      }
-      /** @description Episode not found */
-      404: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Method not allowed */
-      405: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Request timeout */
-      408: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Too many requests */
-      429: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Internal server error */
-      500: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Not implemented */
-      501: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Bad gateway */
-      502: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Service unavailable */
-      503: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Gateway timeout */
-      504: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description HTTP version not supported */
-      505: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Insufficient storage */
-      507: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Loop detected */
-      508: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      default: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-    }
-  }
-  PodcastsController_unsave_v1: {
-    parameters: {
-      query?: never
-      header?: never
-      path: {
-        /** @description Episode id */
-        id: string
-      }
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      /** @description Episode removed from the library */
-      204: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /**
-       * @description Unauthorized
-       *
-       *     Missing or invalid session
-       */
-      401: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': {
-            /** @example 401 */
-            statusCode?: number
-            /**
-             * @example errors.auth.invalid_or_expired_token
-             * @enum {string}
-             */
-            message?:
-              | 'errors.auth.access_token_required'
-              | 'errors.auth.refresh_token_required'
-              | 'errors.auth.invalid_token_requirement'
-              | 'errors.auth.invalid_or_expired_token'
-              | 'errors.auth.user_not_found'
-              | 'errors.auth.session_not_found'
-            /** @example Unauthorized */
-            error?: string
-            /**
-             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
-             * @example errors.auth.invalid_or_expired_token
-             * @enum {string}
-             */
-            code?:
-              | 'errors.auth.access_token_required'
-              | 'errors.auth.refresh_token_required'
-              | 'errors.auth.invalid_token_requirement'
-              | 'errors.auth.invalid_or_expired_token'
-              | 'errors.auth.user_not_found'
-              | 'errors.auth.session_not_found'
-          }
-        }
-      }
-      /** @description Method not allowed */
-      405: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Request timeout */
-      408: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Too many requests */
-      429: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Internal server error */
-      500: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Not implemented */
-      501: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Bad gateway */
-      502: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Service unavailable */
-      503: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Gateway timeout */
-      504: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description HTTP version not supported */
-      505: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Insufficient storage */
-      507: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Loop detected */
-      508: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      default: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-    }
-  }
   ReleasesController_findAll_v1: {
     parameters: {
       query?: {
@@ -35140,7 +33632,7 @@ export interface operations {
         page?: number
         limit?: number
         status?: 'OPEN' | 'REVIEWING' | 'RESOLVED' | 'REJECTED'
-        entityType?: 'track' | 'album' | 'playlist' | 'artist' | 'podcast' | 'episode' | 'user'
+        entityType?: 'track' | 'album' | 'playlist' | 'artist' | 'user'
         sort?: 'createdAt' | 'status'
         order?: 'asc' | 'desc'
       }
@@ -35588,7 +34080,7 @@ export interface operations {
     parameters: {
       query?: {
         status?: 'OPEN' | 'REVIEWING' | 'RESOLVED' | 'REJECTED'
-        entityType?: 'track' | 'album' | 'playlist' | 'artist' | 'podcast' | 'episode' | 'user'
+        entityType?: 'track' | 'album' | 'playlist' | 'artist' | 'user'
         sort?: 'createdAt' | 'status'
         order?: 'asc' | 'desc'
       }
@@ -44649,930 +43141,6 @@ export interface operations {
         }
         content: {
           'application/json': components['schemas']['AdminPlaylistEntity']
-        }
-      }
-    }
-  }
-  AdminPodcastsController_list_v1: {
-    parameters: {
-      query?: {
-        page?: number
-        limit?: number
-        status?: 'active' | 'deactivated' | 'all'
-        /** @description Search by title */
-        q?: string
-        sort?: 'createdAt' | 'title'
-        order?: 'asc' | 'desc'
-      }
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      /** @description A page of podcasts */
-      200: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['PaginatedAdminPodcastsEntity']
-        }
-      }
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': {
-            /** @example 401 */
-            statusCode?: number
-            /**
-             * @example Invalid or expired token
-             * @enum {string}
-             */
-            message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'Staff not found'
-              | 'Session not found'
-            /** @example Unauthorized */
-            error?: string
-            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
-            code?: string
-          }
-        }
-      }
-      /** @description Requires the podcasts:read permission */
-      403: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Method not allowed */
-      405: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Request timeout */
-      408: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Too many requests */
-      429: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Internal server error */
-      500: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Not implemented */
-      501: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Bad gateway */
-      502: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Service unavailable */
-      503: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Gateway timeout */
-      504: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description HTTP version not supported */
-      505: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Insufficient storage */
-      507: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Loop detected */
-      508: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      default: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-    }
-  }
-  AdminPodcastsController_getById_v1: {
-    parameters: {
-      query?: never
-      header?: never
-      path: {
-        id: string
-      }
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['AdminPodcastDetailEntity']
-        }
-      }
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': {
-            /** @example 401 */
-            statusCode?: number
-            /**
-             * @example Invalid or expired token
-             * @enum {string}
-             */
-            message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'Staff not found'
-              | 'Session not found'
-            /** @example Unauthorized */
-            error?: string
-            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
-            code?: string
-          }
-        }
-      }
-      /** @description Requires the podcasts:read permission */
-      403: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Podcast not found */
-      404: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Method not allowed */
-      405: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Request timeout */
-      408: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Too many requests */
-      429: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Internal server error */
-      500: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Not implemented */
-      501: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Bad gateway */
-      502: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Service unavailable */
-      503: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Gateway timeout */
-      504: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description HTTP version not supported */
-      505: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Insufficient storage */
-      507: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Loop detected */
-      508: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      default: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-    }
-  }
-  AdminPodcastsController_remove_v1: {
-    parameters: {
-      query?: never
-      header?: never
-      path: {
-        id: string
-      }
-      cookie?: never
-    }
-    requestBody?: {
-      content: {
-        'application/json': components['schemas']['TakeDownReasonDto']
-      }
-    }
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['AdminPodcastEntity']
-        }
-      }
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': {
-            /** @example 401 */
-            statusCode?: number
-            /**
-             * @example Invalid or expired token
-             * @enum {string}
-             */
-            message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'Staff not found'
-              | 'Session not found'
-            /** @example Unauthorized */
-            error?: string
-            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
-            code?: string
-          }
-        }
-      }
-      /** @description Requires the podcasts:delete permission */
-      403: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Podcast not found */
-      404: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Method not allowed */
-      405: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Request timeout */
-      408: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Podcast is already deleted */
-      409: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Too many requests */
-      429: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Internal server error */
-      500: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Not implemented */
-      501: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Bad gateway */
-      502: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Service unavailable */
-      503: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Gateway timeout */
-      504: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description HTTP version not supported */
-      505: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Insufficient storage */
-      507: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Loop detected */
-      508: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      default: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['AdminPodcastEntity']
-        }
-      }
-    }
-  }
-  AdminPodcastsController_restore_v1: {
-    parameters: {
-      query?: never
-      header?: never
-      path: {
-        id: string
-      }
-      cookie?: never
-    }
-    requestBody?: {
-      content: {
-        'application/json': components['schemas']['TakeDownReasonDto']
-      }
-    }
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['AdminPodcastEntity']
-        }
-      }
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': {
-            /** @example 401 */
-            statusCode?: number
-            /**
-             * @example Invalid or expired token
-             * @enum {string}
-             */
-            message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'Staff not found'
-              | 'Session not found'
-            /** @example Unauthorized */
-            error?: string
-            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
-            code?: string
-          }
-        }
-      }
-      /** @description Requires the podcasts:restore permission */
-      403: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Podcast not found */
-      404: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Method not allowed */
-      405: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Request timeout */
-      408: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Podcast is not deleted */
-      409: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Too many requests */
-      429: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Internal server error */
-      500: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Not implemented */
-      501: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Bad gateway */
-      502: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Service unavailable */
-      503: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Gateway timeout */
-      504: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description HTTP version not supported */
-      505: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Insufficient storage */
-      507: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Loop detected */
-      508: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      default: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['AdminPodcastEntity']
-        }
-      }
-    }
-  }
-  AdminPodcastsController_removeEpisode_v1: {
-    parameters: {
-      query?: never
-      header?: never
-      path: {
-        id: string
-        episodeId: string
-      }
-      cookie?: never
-    }
-    requestBody?: {
-      content: {
-        'application/json': components['schemas']['TakeDownReasonDto']
-      }
-    }
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['AdminPodcastEpisodeEntity']
-        }
-      }
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': {
-            /** @example 401 */
-            statusCode?: number
-            /**
-             * @example Invalid or expired token
-             * @enum {string}
-             */
-            message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'Staff not found'
-              | 'Session not found'
-            /** @example Unauthorized */
-            error?: string
-            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
-            code?: string
-          }
-        }
-      }
-      /** @description Requires the podcasts:delete permission */
-      403: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Episode not found on this podcast */
-      404: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Method not allowed */
-      405: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Request timeout */
-      408: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Episode is already deleted */
-      409: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Too many requests */
-      429: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Internal server error */
-      500: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Not implemented */
-      501: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Bad gateway */
-      502: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Service unavailable */
-      503: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Gateway timeout */
-      504: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description HTTP version not supported */
-      505: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Insufficient storage */
-      507: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Loop detected */
-      508: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      default: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['AdminPodcastEpisodeEntity']
-        }
-      }
-    }
-  }
-  AdminPodcastsController_restoreEpisode_v1: {
-    parameters: {
-      query?: never
-      header?: never
-      path: {
-        id: string
-        episodeId: string
-      }
-      cookie?: never
-    }
-    requestBody?: {
-      content: {
-        'application/json': components['schemas']['TakeDownReasonDto']
-      }
-    }
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['AdminPodcastEpisodeEntity']
-        }
-      }
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': {
-            /** @example 401 */
-            statusCode?: number
-            /**
-             * @example Invalid or expired token
-             * @enum {string}
-             */
-            message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'Staff not found'
-              | 'Session not found'
-            /** @example Unauthorized */
-            error?: string
-            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
-            code?: string
-          }
-        }
-      }
-      /** @description Requires the podcasts:restore permission */
-      403: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Episode not found on this podcast */
-      404: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Method not allowed */
-      405: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Request timeout */
-      408: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Episode is not deleted */
-      409: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Too many requests */
-      429: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Internal server error */
-      500: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Not implemented */
-      501: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Bad gateway */
-      502: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Service unavailable */
-      503: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Gateway timeout */
-      504: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description HTTP version not supported */
-      505: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Insufficient storage */
-      507: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Loop detected */
-      508: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      default: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['AdminPodcastEpisodeEntity']
         }
       }
     }

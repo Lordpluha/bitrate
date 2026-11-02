@@ -1,6 +1,6 @@
 import { appConfigs } from '@common/config'
 import { CacheModule } from '@infra/cache/cache.module'
-import { MetricsService } from '@infra/observability/metrics.service'
+import { ObservabilityModule } from '@infra/observability/observability.module'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import { StorageModule } from '@infra/storage/storage.module'
 import { AlbumsModule } from '@modules/albums/albums.module'
@@ -46,9 +46,9 @@ import { AppController } from '../../src/app.controller'
     HistoryModule,
     CacheModule,
     StorageModule,
+    ObservabilityModule,
   ],
   controllers: [AppController],
-  providers: [MetricsService],
 })
 class E2eTestModule {}
 

@@ -239,7 +239,7 @@ function taskNotification(task: DueTask, now: Date): ArtistNotification[] {
       taskTitle: task.title,
       releaseId: task.release.id,
       releaseTitle: task.release.title,
-      at: reached > task.createdAt ? reached : task.createdAt,
+      at: new Date(Math.max(reached.getTime(), task.createdAt.getTime())),
     },
   ]
 }

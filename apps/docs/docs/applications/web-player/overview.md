@@ -67,7 +67,8 @@ and cursor locks and the grain data URI. Behaviour and acceptance:
   [ADR-0007](../../architecture/0007-forms-react-hook-form-zod.md))
 - **CMAF + MediaSource Extensions** — first-party adaptive playback over byte ranges
   (see [ADR-0020](../../architecture/0020-cmaf-range-mse-playback.md))
-- **hls.js** — fallback playback for tracks with no CMAF renditions
+- **Native fallback** — without MSE the same CMAF file plays through `<audio>`
+  (see [ADR-0065](../../architecture/0065-single-cmaf-aac-delivery-format.md))
 
 ## 🔧 API client
 

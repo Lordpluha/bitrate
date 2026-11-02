@@ -16,14 +16,14 @@ const meta = {
   render: (args) => ({
     props: args,
     template: `
-      <hlm-tabs tab="episodes" class="w-96">
-        <hlm-tabs-list [variant]="variant" aria-label="Podcast sections">
-          <button hlmTabsTrigger="episodes" type="button">Episodes</button>
+      <hlm-tabs tab="tracks" class="w-96">
+        <hlm-tabs-list [variant]="variant" aria-label="Album sections">
+          <button hlmTabsTrigger="tracks" type="button">Tracks</button>
           <button hlmTabsTrigger="metadata" type="button">Metadata</button>
           <button hlmTabsTrigger="history" type="button" [disabled]="true">History</button>
         </hlm-tabs-list>
-        <div hlmTabsContent="episodes" class="pt-3">12 episodes, newest first.</div>
-        <div hlmTabsContent="metadata" class="pt-3">Publisher, language and creation date.</div>
+        <div hlmTabsContent="tracks" class="pt-3">12 tracks, in disc order.</div>
+        <div hlmTabsContent="metadata" class="pt-3">Label, genre and release date.</div>
         <div hlmTabsContent="history" class="pt-3">Moderation history.</div>
       </hlm-tabs>
     `,
