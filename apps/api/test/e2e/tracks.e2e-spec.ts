@@ -47,10 +47,23 @@ describe('TracksController (e2e)', () => {
     await request(app.getHttpServer()).post('/tracks').expect(401)
   })
 
-  it('GET /tracks/:id/cmaf/:bitrate should return 401 without auth', async () => {
+  it('POST /tracks/:id/play-sessions should return 401 without auth', async () => {
+    await request(app.getHttpServer())
+      .post('/tracks/f47ac10b-58cc-4372-a567-0e02b2c3d479/play-sessions')
+      .expect(401)
+  })
+
+  it('GET /tracks/:id/cmaf/:bitrate should return 403 without a playback session token', async () => {
     await request(app.getHttpServer())
       .get('/tracks/f47ac10b-58cc-4372-a567-0e02b2c3d479/cmaf/192')
-      .expect(401)
+      .expect(403)
+  })
+
+  it('GET /tracks/:id/cmaf/:bitrate should return 403 for a forged playback session token', async () => {
+    await request(app.getHttpServer())
+      .get('/tracks/f47ac10b-58cc-4372-a567-0e02b2c3d479/cmaf/192')
+      .query({ t: 'forged.token' })
+      .expect(403)
   })
 
   it('PUT /tracks/:id should return 401 without artist auth', async () => {

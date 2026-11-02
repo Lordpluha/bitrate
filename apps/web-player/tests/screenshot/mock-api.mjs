@@ -689,14 +689,16 @@ const silentWavFor = (pathname) => silentWav(silentSecondsFor(pathname))
 createServer((request, response) => {
   const url = new URL(request.url ?? '/', `http://localhost:${PORT}`)
   if (request.method === 'OPTIONS') return respond(request, response, 204, {})
-  const manifest = /^\/api\/v1\/tracks\/([^/]+)\/manifest$/.exec(url.pathname)
-  if (manifest) {
-    return respond(
-      request,
-      response,
-      200,
-      CMAF ? CMAF.manifest : nativeManifest(manifest[1]),
-    )
+  /** A playback session (ADR-0067); the mock's rendition routes accept any token. */
+  const playSession =
+    request.method === 'POST' &&
+    /^\/api\/v1\/tracks\/([^/]+)\/play-sessions$/.exec(url.pathname)
+  if (playSession) {
+    return respond(request, response, 201, {
+      expiresAt: 4_102_444_800,
+      manifest: CMAF ? CMAF.manifest : nativeManifest(playSession[1]),
+      token: 'mock-session-token',
+    })
   }
   const rendition = /^\/api\/v1\/tracks\/[^/]+\/cmaf\/(\d+)$/.exec(url.pathname)
   if (CMAF && rendition) {
