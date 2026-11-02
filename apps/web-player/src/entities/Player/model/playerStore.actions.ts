@@ -43,7 +43,7 @@ export const createPlayerState: StateCreator<PlayerState, [], []> = (
       currentQueueId: null,
       currentTime: 0,
       currentTrack: startTrack,
-      currentTrackIndex: resolvedIndex >= 0 ? resolvedIndex : 0,
+      currentTrackIndex: Math.max(resolvedIndex, 0),
       duration: startTrack.duration ?? 0,
       isPlaying: true,
       playbackSequence: state.playbackSequence + 1,

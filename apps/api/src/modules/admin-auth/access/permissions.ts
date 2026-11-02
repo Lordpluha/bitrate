@@ -38,9 +38,6 @@ export const PERMISSIONS = [
   'playlists:hide',
   'playlists:delete',
   'playlists:restore',
-  'podcasts:read',
-  'podcasts:delete',
-  'podcasts:restore',
   'releases:read',
   'releases:review',
 ] as const
@@ -81,7 +78,6 @@ export const MODERATOR_TEMPLATE: readonly Permission[] = [
   'albums:read',
   'playlists:read',
   'playlists:hide',
-  'podcasts:read',
   'releases:read',
   'releases:review',
 ]

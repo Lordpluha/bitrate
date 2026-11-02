@@ -15,9 +15,6 @@ export type ProcessingAttemptStatus = 'RUNNING' | 'SUCCEEDED' | 'FAILED' | 'SUPE
 export type ProcessingStep =
   | 'CLAIM'
   | 'PREPARE_TEMP'
-  | 'PROGRESSIVE_ENCODE'
-  | 'HLS_ENCODE'
-  | 'HLS_VALIDATE'
   | 'CMAF_ENCODE'
   | 'UPLOAD'
   | 'PUBLISH'

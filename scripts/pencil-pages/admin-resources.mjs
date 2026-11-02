@@ -52,7 +52,6 @@ const moderation = {
         ['Track', ['Track']],
         ['Album', ['Album']],
         ['Playlist', ['Playlist']],
-        ['Episode', ['Podcast episode']],
         ['Artist', ['Artist']],
         ['Listener', ['Listener']],
       ],
@@ -80,7 +79,7 @@ const moderation = {
     },
     {
       id: 'R-1033',
-      subject: { t: 'Episode 41: Signal Path', s: 'Podcast episode · Outer Loop' },
+      subject: { t: 'Late Night Drive', s: 'Playlist · @driftwave' },
       reason: 'Hate speech',
       status: REPORT_STATUS.reviewing,
       created: '4 h',
@@ -138,9 +137,9 @@ const moderation = {
     desc: 'No open reports. New ones appear here as they arrive.',
   },
   noresults: {
-    filter: { label: 'Type', value: 'Episode' },
+    filter: { label: 'Type', value: 'Playlist' },
     title: 'No reports match these filters',
-    desc: 'Nothing open on episodes. Clear the filters to see the whole queue.',
+    desc: 'Nothing open on playlists. Clear the filters to see the whole queue.',
   },
   error: {
     title: 'Couldn’t load the queue',
@@ -834,7 +833,7 @@ const catalogTrack = {
   perm: 'tracks:read',
 }
 
-/* ---------- Operations · Albums, Playlists, Podcasts ---------- */
+/* ---------- Operations · Albums, Playlists ---------- */
 const albums = {
   kind: 'list',
   nav: 'albums',
@@ -1229,200 +1228,6 @@ const playlist = {
     desc: 'The admin API didn’t respond. Nothing was changed.',
   },
   perm: 'playlists:read',
-}
-const podcasts = {
-  kind: 'list',
-  nav: 'podcasts',
-  route: '/podcasts (podcasts:read)',
-  icon: 'podcast',
-  eyebrow: 'OPERATIONS · PODCASTS',
-  title: 'Podcasts',
-  sub: 'Shows and their episodes, by publisher and language.',
-  kpis: [
-    { icon: 'podcast', tone: 'up', label: 'Shows', value: '1,248', sub: '64 new this month' },
-    {
-      icon: 'trend',
-      tone: 'info',
-      label: 'Episodes this week',
-      value: '386',
-      sub: '+12% vs last week',
-    },
-    { icon: 'flag', tone: 'warn', label: 'Reported episodes', value: '3', sub: '1 in review' },
-    { icon: 'x', tone: 'flat', label: 'Taken down', value: '6', sub: 'Shows, all time' },
-  ],
-  search: 'Search title or publisher',
-  filters: [
-    {
-      key: 'state',
-      label: 'Status',
-      value: 'Live',
-      options: [
-        ['Live', ['Live']],
-        ['Taken down', ['Taken down']],
-        ['All', null],
-      ],
-    },
-  ],
-  cols: [
-    { k: 'show', l: 'Title' },
-    { k: 'language', l: 'Language', w: 110 },
-    { k: 'episodes', l: 'Episodes', w: 90, sort: 'desc' },
-    { k: 'state', l: 'Status', w: 120, wide: true },
-  ],
-  rows: [
-    {
-      id: 'outer-loop',
-      show: { t: 'Outer Loop', s: 'Late Signal Radio' },
-      language: 'English',
-      episodes: '41',
-      state: RES_STATE.live,
-    },
-    {
-      id: 'tiny-desk',
-      show: { t: 'Tape Notes', s: 'Harbor Tapes' },
-      language: 'English',
-      episodes: '128',
-      state: RES_STATE.live,
-    },
-    {
-      id: 'hvylia',
-      show: { t: 'Хвиля', s: 'Radio Kyiv Lab' },
-      language: 'Ukrainian',
-      episodes: '67',
-      state: RES_STATE.live,
-    },
-    {
-      id: 'studio-hours',
-      show: { t: 'Studio Hours', s: 'Fern Lane' },
-      language: 'English',
-      episodes: '22',
-      state: RES_STATE.live,
-    },
-    {
-      id: 'b-side',
-      show: { t: 'B-Side Stories', s: 'Mira Sol' },
-      language: 'Spanish',
-      episodes: '15',
-      state: RES_STATE.live,
-    },
-  ],
-  card: { title: 'show', badge: 'state', meta: ['language', 'episodes'] },
-  pager: '1–5 of 1,248',
-  detail: 'podcast',
-  empty: { title: 'No podcasts yet', desc: 'Shows appear here once publishers add them.' },
-  noresults: {
-    query: 'jazz',
-    title: 'No podcasts match “jazz”',
-    desc: 'Try another title or publisher, or clear the status filter.',
-  },
-  error: {
-    title: 'Couldn’t load podcasts',
-    desc: 'The admin API didn’t respond. Nothing was changed.',
-  },
-  perm: 'podcasts:read',
-}
-const podcast = {
-  kind: 'detail',
-  nav: 'podcasts',
-  route: '/podcasts/:id (podcasts:read; take-down needs podcasts:write)',
-  parent: 'podcasts',
-  hash: 'podcasts/outer-loop',
-  icon: 'podcast',
-  eyebrow: 'PODCASTS · SHOW',
-  title: 'Outer Loop',
-  status: RES_STATE.live,
-  sub: 'By Late Signal Radio · English · 41 episodes',
-  actions: [
-    { icon: 'x', label: 'Take down show', primary: true, danger: true, dialog: 'takedown' },
-  ],
-  tiles: [
-    {
-      w: 2,
-      icon: 'podcast',
-      title: 'Show',
-      meta: 'From the publisher’s feed',
-      blocks: [
-        {
-          type: 'kv',
-          rows: [
-            ['Publisher', 'Late Signal Radio'],
-            ['Language', 'English'],
-            ['Category', 'Music commentary'],
-            ['Explicit', 'No'],
-            ['Since', 'Feb 2025'],
-          ],
-        },
-      ],
-    },
-    {
-      w: 2,
-      icon: 'flag',
-      title: 'Open report',
-      meta: 'R-1033 · Episode 41',
-      blocks: [
-        {
-          type: 'kv',
-          rows: [
-            ['Reason', 'Hate speech'],
-            ['Status', { tone: 'info', t: 'Reviewing' }],
-            ['Moderator', 'leo.mod'],
-          ],
-        },
-        { type: 'quote', t: '“The guest’s remarks at 31:20 target a nationality.”' },
-      ],
-      link: 'Open in Moderation',
-    },
-    {
-      w: 4,
-      icon: 'list',
-      title: 'Episodes',
-      meta: 'Newest first',
-      blocks: [
-        {
-          type: 'table',
-          cols: [
-            { l: 'Episode' },
-            { l: 'Released', w: 120 },
-            { l: 'Length', w: 80, wide: true },
-            { l: 'State', w: 120 },
-          ],
-          rows: [
-            [
-              { t: '41 · Signal Path', s: 'Has an open report' },
-              'Oct 19, 2026',
-              '58:12',
-              RES_STATE.live,
-            ],
-            [
-              { t: '40 · Weather Balloons', s: 'With Kite Harbor' },
-              'Oct 12, 2026',
-              '49:40',
-              RES_STATE.live,
-            ],
-            [{ t: '39 · Cold Opens', s: 'Mailbag' }, 'Oct 5, 2026', '44:05', RES_STATE.down],
-            [{ t: '38 · Ambient Summer', s: 'Live set' }, 'Sep 28, 2026', '61:18', RES_STATE.live],
-          ],
-        },
-      ],
-    },
-  ],
-  dialogs: {
-    takedown: takeDown(
-      'show',
-      'Outer Loop',
-      'All 41 episodes leave search and libraries. Late Signal Radio is told why; you can restore it later.',
-    ),
-  },
-  saving: 'Taking down…',
-  notfound: {
-    title: 'Podcast not found',
-    desc: 'This show doesn’t exist or was removed. Go back to podcasts.',
-  },
-  error: {
-    title: 'Couldn’t load this podcast',
-    desc: 'The admin API didn’t respond. Nothing was changed.',
-  },
-  perm: 'podcasts:read',
 }
 
 /* ---------- Operations · Genres (with the editor) ---------- */
@@ -2266,7 +2071,7 @@ const ROLE_ROWS = [
   },
   {
     id: 'catalog-editor',
-    role: { t: 'Catalog editor', s: 'Albums, playlists, podcasts and genres' },
+    role: { t: 'Catalog editor', s: 'Albums, playlists and genres' },
     holders: '2',
     divergent: { tone: 'warn', t: '1 operator' },
     protected: { tone: 'flat', t: 'No' },
@@ -2883,8 +2688,6 @@ export const RESOURCES = {
   album,
   playlists,
   playlist,
-  podcasts,
-  podcast,
   genres,
   'genre-editor': genreEditor,
   artists,
@@ -2999,9 +2802,8 @@ export const RESOURCES_UK = {
   'No open reports. New ones appear here as they arrive.':
     'Відкритих скарг немає. Нові з’являться тут.',
   'No reports match these filters': 'Жодна скарга не відповідає фільтрам',
-  'Nothing open on episodes. Clear the filters to see the whole queue.':
-    'Відкритих скарг на епізоди немає. Скиньте фільтри, щоб побачити всю чергу.',
-  Episode: 'Епізод',
+  'Nothing open on playlists. Clear the filters to see the whole queue.':
+    'Відкритих скарг на плейлисти немає. Скиньте фільтри, щоб побачити всю чергу.',
   'Couldn’t load the queue': 'Не вдалося завантажити чергу',
   'The admin API didn’t respond. Nothing was changed.':
     'API адмінки не відповів. Нічого не змінено.',
@@ -3273,46 +3075,9 @@ export const RESOURCES_UK = {
   'This playlist doesn’t exist or its owner deleted it. Go back to playlists.':
     'Такого плейлиста немає або власник його видалив. Поверніться до плейлистів.',
   'Couldn’t load this playlist': 'Не вдалося завантажити плейлист',
-  'OPERATIONS · PODCASTS': 'ОПЕРАЦІЇ · ПОДКАСТИ',
-  'Shows and their episodes, by publisher and language.':
-    'Шоу та їхні епізоди за видавцем і мовою.',
-  Shows: 'Шоу',
-  '64 new this month': '64 нових цього місяця',
-  'Episodes this week': 'Епізодів цього тижня',
-  '+12% vs last week': '+12% до минулого тижня',
-  'Reported episodes': 'Епізоди зі скаргами',
-  '1 in review': '1 на розгляді',
-  'Shows, all time': 'Шоу, за весь час',
-  'Search title or publisher': 'Пошук за назвою або видавцем',
-  Episodes: 'Епізоди',
   English: 'Англійська',
-  Ukrainian: 'Українська',
-  Spanish: 'Іспанська',
-  'No podcasts yet': 'Подкастів ще немає',
-  'Shows appear here once publishers add them.': 'Шоу з’являться тут, щойно видавці їх додадуть.',
-  'No podcasts match “jazz”': 'Жоден подкаст не відповідає «jazz»',
-  'Try another title or publisher, or clear the status filter.':
-    'Спробуйте іншу назву чи видавця або скиньте фільтр статусу.',
-  'Couldn’t load podcasts': 'Не вдалося завантажити подкасти',
-  'PODCASTS · SHOW': 'ПОДКАСТИ · ШОУ',
-  'By Late Signal Radio · English · 41 episodes': 'Від Late Signal Radio · англійська · 41 епізод',
-  'Take down show': 'Зняти шоу',
-  Show: 'Шоу',
-  'From the publisher’s feed': 'Зі стрічки видавця',
-  Publisher: 'Видавець',
   Category: 'Категорія',
-  Since: 'З',
-  'R-1033 · Episode 41': 'R-1033 · Епізод 41',
   Moderator: 'Модератор',
-  'Newest first': 'Спершу нові',
-  'Has an open report': 'Є відкрита скарга',
-  'Take down Outer Loop?': 'Зняти Outer Loop?',
-  'All 41 episodes leave search and libraries. Late Signal Radio is told why; you can restore it later.':
-    'Усі 41 епізод зникнуть із пошуку й бібліотек. Late Signal Radio дізнається причину; шоу можна відновити.',
-  'Podcast not found': 'Подкаст не знайдено',
-  'This show doesn’t exist or was removed. Go back to podcasts.':
-    'Такого шоу немає або його видалено. Поверніться до подкастів.',
-  'Couldn’t load this podcast': 'Не вдалося завантажити подкаст',
   'OPERATIONS · GENRES': 'ОПЕРАЦІЇ · ЖАНРИ',
   'The genres artists tag their music with, and how much is in each.':
     'Жанри, якими артисти позначають музику, і скільки її в кожному.',
@@ -3517,7 +3282,7 @@ export const RESOURCES_UK = {
   Operations: 'Операції',
   'Catalog, releases and processing': 'Каталог, релізи й обробка',
   'Catalog editor': 'Редактор каталогу',
-  'Albums, playlists, podcasts and genres': 'Альбоми, плейлисти, подкасти й жанри',
+  'Albums, playlists and genres': 'Альбоми, плейлисти й жанри',
   'Read-only': 'Лише перегляд',
   'Every section, no changes': 'Усі розділи без змін',
   '1 operator': '1 оператор',
@@ -3707,5 +3472,4 @@ export const RESOURCES_UK = {
   Play: 'Відтворити',
   'All statuses': 'Усі статуси',
   Playlist: 'Плейлист',
-  'Podcast episode': 'Епізод подкасту',
 }
