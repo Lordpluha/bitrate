@@ -3,7 +3,7 @@
 import { Button, Input, Typography, toast } from '@bitrate/ui-react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { apiBaseUrl } from '@shared/api'
-import { messageKey, useI18n } from '@shared/i18n'
+import { clientLocale, messageKey, useI18n } from '@shared/i18n'
 import { ROUTES } from '@shared/routes/routes'
 import { useNavigate, useSearch } from '@tanstack/react-router'
 import { type SubmitHandler, useForm } from 'react-hook-form'
@@ -46,7 +46,10 @@ export const ResetPasswordForm = () => {
         {
           method: 'POST',
           credentials: 'include',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Accept-Language': clientLocale(),
+            'Content-Type': 'application/json',
+          },
           body: JSON.stringify({ token, password: data.password }),
         },
       )
