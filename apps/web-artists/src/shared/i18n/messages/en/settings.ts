@@ -3,6 +3,10 @@ export const settings = {
   'settings.language.label': 'Interface language',
   'settings.language.description':
     'The language of your workspace. Saved in this browser.',
+  'settings.language.accountDescription':
+    'Saved to your account, so your other devices follow it.',
+  'settings.language.accountFailed':
+    'Changed on this device, but not saved to your account. Try again later.',
   'settings.subtitle': 'Your account, security and workspace preferences.',
   'settings.loading': 'Loading settings…',
   'settings.account': 'Account',

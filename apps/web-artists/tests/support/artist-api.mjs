@@ -3,6 +3,7 @@ import { createServer } from 'node:http'
 
 const verifiedEmails = new Set()
 const releases = new Map()
+const profileLocales = new Map()
 const demoTracks = [
   ['Night Signal', 'ORIGINAL', 'READY', 236, 'night-signal', null],
   ['Afterglow', 'REMASTER', 'NEEDS_CHANGES', 242, 'afterglow', 'Afterglow'],
@@ -593,6 +594,38 @@ const server = createServer(async (request, response) => {
         : 'ce14c750-95c6-4f17-a22a-5a08d0c7f777',
       username: cookie.includes('test-other') ? 'Other artist' : 'Test artist',
       avatar: null,
+    })
+  }
+  if (
+    (request.url === '/api/v1/artist-profile' && request.method === 'GET') ||
+    (request.url === '/api/v1/artist-profile/locale' &&
+      request.method === 'PUT')
+  ) {
+    const other = cookie.includes('artist_access_token=test-other')
+    if (!other && !cookie.includes('artist_access_token=test-valid'))
+      return json(401, { message: 'Unauthorized' })
+    const key = scoped(other ? 'other' : 'artist')
+    if (request.method === 'PUT') {
+      let body = ''
+      for await (const chunk of request) body += chunk
+      profileLocales.set(key, JSON.parse(body).locale)
+    }
+    return json(200, {
+      id: other
+        ? 'de14c750-95c6-4f17-a22a-5a08d0c7f777'
+        : 'ce14c750-95c6-4f17-a22a-5a08d0c7f777',
+      username: other ? 'Other artist' : 'Test artist',
+      email: other ? 'other@example.test' : 'artist@example.test',
+      bio: null,
+      country: null,
+      socials: {},
+      avatar: null,
+      backgroundImage: null,
+      verified: false,
+      twoFactorEnabled: false,
+      emailVerified: true,
+      locale: profileLocales.get(key) ?? 'en',
+      updatedAt: '2026-01-01T00:00:00.000Z',
     })
   }
   if (

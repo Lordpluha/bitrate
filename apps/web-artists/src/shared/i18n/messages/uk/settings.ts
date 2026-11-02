@@ -3,6 +3,10 @@ export const settings = {
   'settings.language.label': 'Мова інтерфейсу',
   'settings.language.description':
     'Мова вашого робочого простору. Зберігається в цьому браузері.',
+  'settings.language.accountDescription':
+    'Зберігається у вашому обліковому записі, тож інші пристрої теж його підхоплять.',
+  'settings.language.accountFailed':
+    'Змінено на цьому пристрої, але не збережено в обліковому записі. Спробуйте пізніше.',
   'settings.subtitle':
     'Ваш обліковий запис, безпека й налаштування робочого простору.',
   'settings.loading': 'Завантажуємо налаштування…',

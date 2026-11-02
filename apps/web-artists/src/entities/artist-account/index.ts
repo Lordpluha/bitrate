@@ -2,6 +2,7 @@ export {
   type ProfileImageKind,
   useArtistProfile,
   useProfileImage,
+  useSetAccountLocale,
   useUpdateProfile,
 } from './api/account'
 export {

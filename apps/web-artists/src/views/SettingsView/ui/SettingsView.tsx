@@ -159,7 +159,7 @@ function SettingsSections({
         id="settings-language-heading"
         title={t('settings.language.title')}
       >
-        <LanguagePreference />
+        <LanguagePreference artistId={artistId} />
       </Panel>
       <Panel
         id="settings-notifications-heading"
