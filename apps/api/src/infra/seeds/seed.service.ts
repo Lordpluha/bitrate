@@ -5,7 +5,6 @@ import type { FakerService } from './faker.service'
 import { CatalogSeeder } from './seeders/catalog.seeder'
 import { LibrarySeeder } from './seeders/library.seeder'
 import { NcsImportSeeder } from './seeders/ncs-import.seeder'
-import { PodcastSeeder } from './seeders/podcast.seeder'
 import type { IPasswordHasher, ITrackUploadService, NcsImportStats } from './seeders/seed.types'
 
 const BANNER = '═══════════════════════════════════════'
@@ -20,7 +19,6 @@ export class SeedService {
   private readonly ncsImport: NcsImportSeeder
   private readonly catalog: CatalogSeeder
   private readonly library: LibrarySeeder
-  private readonly podcasts: PodcastSeeder
 
   /** Creates a new instance. */
   constructor(
@@ -33,7 +31,6 @@ export class SeedService {
     this.ncsImport = new NcsImportSeeder(prisma, downloadService, trackUploadService)
     this.catalog = new CatalogSeeder(prisma)
     this.library = new LibrarySeeder(prisma, fakerService, passwordHasher)
-    this.podcasts = new PodcastSeeder(prisma)
   }
 
   /** The logger value. */
@@ -85,20 +82,12 @@ export class SeedService {
     )
   }
 
-  /** Creates podcasts, episodes and saved episode relations for library screens. */
-  async createPodcasts() {
-    return await this.step('🎙️  STEP 7: Creating podcasts and episodes', () =>
-      this.podcasts.createPodcasts(),
-    )
-  }
-
   /** Очищает базу данных. */
   async clearDatabase() {
     this.logger.log('🗑️  Clearing existing data...')
     await this.prisma.$transaction([
       this.prisma.auditLog.deleteMany(),
       this.prisma.moderationReport.deleteMany(),
-      this.prisma.podcast.deleteMany(),
       this.prisma.user.deleteMany(),
       this.prisma.album.deleteMany(),
       this.prisma.track.deleteMany(),
@@ -121,8 +110,6 @@ export class SeedService {
       users: await this.prisma.user.count(),
       playlists: await this.prisma.playlist.count(),
       genres: await this.prisma.genre.count(),
-      podcasts: await this.prisma.podcast.count(),
-      episodes: await this.prisma.episode.count(),
       history: await this.prisma.listeningHistory.count(),
     }
 
@@ -136,7 +123,6 @@ export class SeedService {
     this.logger.log(`👥 Users (faker):          ${dbStats.users}`)
     this.logger.log(`🎵 Playlists (faker):      ${dbStats.playlists}`)
     this.logger.log(`🏷️  Genres:                 ${dbStats.genres}`)
-    this.logger.log(`🎙️  Podcasts / episodes:    ${dbStats.podcasts} / ${dbStats.episodes}`)
     this.logger.log(`🕘 Listening history:       ${dbStats.history}`)
   }
 }

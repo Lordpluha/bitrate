@@ -1,8 +1,8 @@
 import { getArtistApiUrl } from '@shared/auth/artistApiUrl'
 import { createServerFn } from '@tanstack/react-start'
 import {
+  appendResponseHeader,
   getCookie,
-  getResponseHeaders,
   setResponseHeader,
 } from '@tanstack/react-start/server'
 import { twoFactorFormSchema } from '../validation/TwoFactorForm.validation'
@@ -43,9 +43,7 @@ export const verifyTwoFactorLogin = createServerFn({ method: 'POST' })
         }
       }
       if (response.ok) {
-        const headers = getResponseHeaders()
-        for (const cookie of response.headers.getSetCookie())
-          headers.append('Set-Cookie', cookie)
+        appendResponseHeader('Set-Cookie', response.headers.getSetCookie())
         return { success: true }
       }
     } catch {
