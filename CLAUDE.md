@@ -9,7 +9,7 @@ Turborepo + pnpm; workspace names use `@bitrate/`.
 
 | Path | Stack / boundary |
 |---|---|
-| `apps/api` | NestJS, Prisma/PostgreSQL, Redis, BullMQ, Socket.io |
+| `apps/api` | NestJS, Prisma/PostgreSQL, Redis, BullMQ |
 | `apps/web-player` | Next.js App Router, Feature-Sliced Design |
 | `apps/web-artists` | TanStack Start, Vite + Nitro, FSD; no Next.js APIs |
 | `apps/admin` | Angular zoneless SPA, spartan-ng, ESLint |
