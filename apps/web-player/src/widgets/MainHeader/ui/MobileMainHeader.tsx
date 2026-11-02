@@ -17,7 +17,6 @@ import { NotificationsPopover } from '@/widgets/MainHeader/ui/NotificationsPopov
 const NESTED_PAGE_PREFIXES = [
   ROUTES.artist(''),
   ROUTES.user(''),
-  ROUTES.podcast(''),
   ROUTES.findFriends,
   ROUTES.friendRequests,
 ]

@@ -428,7 +428,7 @@ from `$HOME/bitrate`, with the old stack still up. Nothing here touches the data
    there, so compare against a listing taken before the copy rather than expecting an exact
    match.
 
-4. Deploy. A track whose master was copied from `private/tracks` has no HLS ladder in the
+4. Deploy. A track whose master was copied from `private/tracks` has no CMAF renditions in the
    bucket; run the reprocess operation for it from the admin panel after the deploy.
 
 ## 7. Releasing

@@ -70,8 +70,6 @@ const TYPE_LABEL: Record<ModerationEntityType, string> = {
   album: 'moderation.type.album',
   playlist: 'moderation.type.playlist',
   artist: 'moderation.type.artist',
-  podcast: 'moderation.type.podcast',
-  episode: 'moderation.type.episode',
   user: 'moderation.type.user',
 }
 

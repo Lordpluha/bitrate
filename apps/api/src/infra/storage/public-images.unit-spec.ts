@@ -51,7 +51,7 @@ describe('isPublicAssetKey', () => {
   it.each([
     '../x.png',
     'tracks/covers/../x.png',
-    'tracks/t1/hls/master.m3u8',
+    'tracks/t1/generations/g/cmaf/192.m4a',
     'users/avatars/a.svg',
   ])('rejects %s', (key) => expect(isPublicAssetKey(key)).toBe(false))
 })
