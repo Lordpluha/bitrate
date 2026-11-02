@@ -25,7 +25,7 @@ export function NotificationPreferences({
   if (preferences.isPending)
     return (
       <p className="text-sm" role="status">
-        Loading notification settings…
+        {t('settings.notifications.loading')}
       </p>
     )
   if (preferences.isError)
@@ -41,7 +41,7 @@ export function NotificationPreferences({
           size="sm"
           variant="outline"
         >
-          Try again
+          {t('common.tryAgain')}
         </Button>
       </div>
     )
@@ -59,20 +59,22 @@ export function NotificationPreferences({
   return (
     <div className="space-y-3">
       <table className="w-full text-sm">
-        <caption className="sr-only">Notification channels by category</caption>
+        <caption className="sr-only">
+          {t('settings.notifications.caption')}
+        </caption>
         <thead>
           <tr className="text-left text-xs text-text-secondary">
             <th className="py-1 font-normal" scope="col">
-              Category
+              {t('settings.notifications.category')}
             </th>
             <th className="py-1 text-center font-normal" scope="col">
-              In-app
+              {t('settings.notifications.inApp')}
             </th>
             <th className="py-1 text-center font-normal" scope="col">
-              Email
+              {t('settings.notifications.email')}
             </th>
             <th className="py-1 text-center font-normal" scope="col">
-              Push
+              {t('settings.notifications.push')}
             </th>
           </tr>
         </thead>
@@ -101,10 +103,10 @@ export function NotificationPreferences({
                   />
                 </td>
                 <td className="py-3 text-center text-xs text-text-secondary">
-                  Not sent yet
+                  {t('settings.notifications.notSent')}
                 </td>
                 <td className="py-3 text-center text-xs text-text-secondary">
-                  Not sent yet
+                  {t('settings.notifications.notSent')}
                 </td>
               </tr>
             )
@@ -112,9 +114,7 @@ export function NotificationPreferences({
         </tbody>
       </table>
       <p className="text-xs text-text-secondary" role="status">
-        {save.isPending
-          ? 'Saving…'
-          : 'Switched-off categories leave the notification center. Anything that needs action still shows on your dashboard. Account and security emails are always sent.'}
+        {save.isPending ? t('common.saving') : t('settings.notifications.note')}
       </p>
       {save.error && (
         <p className="text-sm text-destructive" role="alert">

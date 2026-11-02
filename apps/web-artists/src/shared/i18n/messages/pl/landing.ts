@@ -23,4 +23,9 @@ export const landing = {
   'landing.legal.privacy': 'Polityka prywatności',
   'landing.legal.community': 'Zasady społeczności',
   'landing.legal.copyright': 'Prawa autorskie',
+  'landing.home': 'Strona główna Bitrate dla artystów',
+  'landing.legalDraft':
+    'Szkic — czeka na weryfikację prawną. Tekst w [[podwójnych nawiasach]] nie jest jeszcze uzupełniony.',
+  'landing.legalEnglishOnly': 'Ten dokument jest dostępny tylko po angielsku.',
+  'landing.otherDocuments': 'Inne dokumenty prawne',
 } as const

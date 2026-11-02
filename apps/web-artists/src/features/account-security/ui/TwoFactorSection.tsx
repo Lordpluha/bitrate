@@ -1,6 +1,6 @@
 import { Button, Input } from '@bitrate/ui-react'
 import { useTwoFactorSetup, useTwoFactorToggle } from '@entities/artist-account'
-import { useI18n } from '@shared/i18n'
+import { type TranslationKey, useI18n } from '@shared/i18n'
 import { ShieldCheck, ShieldOff } from 'lucide-react'
 import { useId, useState } from 'react'
 
@@ -13,19 +13,19 @@ interface TwoFactorSectionProps {
 
 /** Enrol with an authenticator app (QR or manual key + code), or turn it off with a code. */
 export function TwoFactorSection({ artistId, enabled }: TwoFactorSectionProps) {
-  const { tMessage } = useI18n()
+  const { t, tMessage } = useI18n()
   const id = useId()
   const setup = useTwoFactorSetup()
   const toggle = useTwoFactorToggle(artistId, !enabled)
   const [code, setCode] = useState('')
-  const [problem, setProblem] = useState<string | null>(null)
+  const [problem, setProblem] = useState<TranslationKey | null>(null)
   const [disabling, setDisabling] = useState(false)
   const enrolling = !enabled && setup.data !== undefined
   const askingCode = enrolling || (enabled && disabling)
 
   const confirm = async () => {
     if (!CODE_PATTERN.test(code.trim())) {
-      setProblem('Enter the 6-digit code from your authenticator app.')
+      setProblem('settings.twoFactor.codeFormat')
       return
     }
     try {
@@ -51,11 +51,13 @@ export function TwoFactorSection({ artistId, enabled }: TwoFactorSectionProps) {
             />
           )}
           <div>
-            <p className="text-sm font-medium">Two-factor sign-in</p>
+            <p className="text-sm font-medium">
+              {t('settings.twoFactor.title')}
+            </p>
             <p className="text-sm text-text-secondary">
               {enabled
-                ? 'On. Sign-in asks for a code from your authenticator app.'
-                : 'Off. Add a second step to protect your releases.'}
+                ? t('settings.twoFactor.on')
+                : t('settings.twoFactor.off')}
             </p>
           </div>
         </div>
@@ -66,7 +68,7 @@ export function TwoFactorSection({ artistId, enabled }: TwoFactorSectionProps) {
               size="sm"
               variant="outline"
             >
-              Turn off
+              {t('settings.twoFactor.turnOff')}
             </Button>
           ) : (
             <Button
@@ -75,7 +77,9 @@ export function TwoFactorSection({ artistId, enabled }: TwoFactorSectionProps) {
               size="sm"
               variant="outline"
             >
-              {setup.isPending ? 'Preparing…' : 'Set up'}
+              {setup.isPending
+                ? t('settings.twoFactor.preparing')
+                : t('settings.twoFactor.setUp')}
             </Button>
           ))}
       </div>
@@ -87,20 +91,17 @@ export function TwoFactorSection({ artistId, enabled }: TwoFactorSectionProps) {
       {enrolling && setup.data && (
         <div className="flex flex-wrap items-start gap-4 rounded-lg border border-border p-4">
           <img
-            alt="QR code for your authenticator app"
+            alt={t('settings.twoFactor.qrAlt')}
             className="size-40 rounded-md bg-white p-2"
             src={setup.data.qrCodeDataUrl}
           />
           <div className="min-w-0 flex-1 space-y-2 text-sm">
-            <p>
-              Scan the code with an authenticator app, or enter this key
-              manually:
-            </p>
+            <p>{t('settings.twoFactor.scan')}</p>
             <code className="block break-all rounded-md bg-secondary px-3 py-2 text-xs">
               {setup.data.manualCode}
             </code>
             <p className="text-text-secondary">
-              Then enter the 6-digit code it shows to finish.
+              {t('settings.twoFactor.then')}
             </p>
           </div>
         </div>
@@ -117,7 +118,7 @@ export function TwoFactorSection({ artistId, enabled }: TwoFactorSectionProps) {
         >
           <div className="space-y-1">
             <label className="block text-sm font-medium" htmlFor={`${id}-code`}>
-              Authenticator code
+              {t('settings.twoFactor.code')}
             </label>
             <Input
               autoComplete="one-time-code"
@@ -142,10 +143,10 @@ export function TwoFactorSection({ artistId, enabled }: TwoFactorSectionProps) {
             variant="primary"
           >
             {toggle.isPending
-              ? 'Checking…'
+              ? t('settings.twoFactor.checking')
               : enabled
-                ? 'Turn off two-factor'
-                : 'Turn on two-factor'}
+                ? t('settings.twoFactor.confirmOff')
+                : t('settings.twoFactor.confirmOn')}
           </Button>
           <Button
             disabled={toggle.isPending}
@@ -159,13 +160,13 @@ export function TwoFactorSection({ artistId, enabled }: TwoFactorSectionProps) {
             type="button"
             variant="ghost"
           >
-            Cancel
+            {t('common.cancel')}
           </Button>
         </form>
       )}
       {(problem ?? toggle.error) && (
         <p className="text-sm text-destructive" role="alert">
-          {problem ?? toggle.error?.message}
+          {problem ? t(problem) : tMessage(toggle.error?.message)}
         </p>
       )}
     </div>

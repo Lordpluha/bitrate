@@ -6,13 +6,8 @@ import {
   useRevokeOtherSessions,
   useRevokeSession,
 } from '@entities/artist-account'
-import { useI18n } from '@shared/i18n'
+import { type I18n, useI18n } from '@shared/i18n'
 import { Laptop, Smartphone } from 'lucide-react'
-
-const usedFormat = new Intl.DateTimeFormat('en-US', {
-  dateStyle: 'medium',
-  timeStyle: 'short',
-})
 
 interface ActiveSessionsSectionProps {
   artistId: string
@@ -20,17 +15,26 @@ interface ActiveSessionsSectionProps {
 
 const MOBILE = /Android|iPhone|iPad|iPod/
 
-function lastSeen(session: ArtistSession) {
-  if (session.current) return 'This device · active now'
-  const at = session.lastUsedAt ?? session.createdAt
-  return `${session.lastUsedAt ? 'Last active' : 'Signed in'} ${usedFormat.format(new Date(at))}`
+function lastSeen(
+  session: ArtistSession,
+  { t, locale }: Pick<I18n, 't' | 'locale'>,
+) {
+  if (session.current) return t('settings.sessions.thisDevice')
+  const date = new Intl.DateTimeFormat(locale, {
+    dateStyle: 'medium',
+    timeStyle: 'short',
+  }).format(new Date(session.lastUsedAt ?? session.createdAt))
+  return session.lastUsedAt
+    ? t('settings.sessions.lastActive', { date })
+    : t('settings.sessions.signedIn', { date })
 }
 
 /** Signed-in devices, with sign-out for each other device and for all of them at once. */
 export function ActiveSessionsSection({
   artistId,
 }: ActiveSessionsSectionProps) {
-  const { tMessage } = useI18n()
+  const i18n = useI18n()
+  const { t, tMessage, tp } = i18n
   const sessions = useArtistSessions(artistId)
   const revoke = useRevokeSession(artistId)
   const revokeOthers = useRevokeOtherSessions(artistId)
@@ -42,11 +46,14 @@ export function ActiveSessionsSection({
     <div className="space-y-3 border-t border-border pt-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <p className="text-sm font-medium">Signed-in devices</p>
+          <p className="text-sm font-medium">{t('settings.sessions.title')}</p>
           <p className="text-sm text-text-secondary">
             {revokeOthers.isSuccess
-              ? `Signed out ${revokeOthers.data} ${revokeOthers.data === 1 ? 'device' : 'devices'}.`
-              : 'Sign out anywhere you no longer use or do not recognise.'}
+              ? tp({
+                  count: revokeOthers.data,
+                  key: 'settings.sessions.signedOut',
+                })
+              : t('settings.sessions.hint')}
           </p>
         </div>
         {others > 0 && (
@@ -56,13 +63,15 @@ export function ActiveSessionsSection({
             size="sm"
             variant="outline"
           >
-            {revokeOthers.isPending ? 'Signing out…' : 'Sign out other devices'}
+            {revokeOthers.isPending
+              ? t('settings.sessions.signingOut')
+              : t('settings.sessions.signOutOthers')}
           </Button>
         )}
       </div>
       {sessions.isPending ? (
         <p className="text-sm" role="status">
-          Loading devices…
+          {t('settings.sessions.loading')}
         </p>
       ) : sessions.isError ? (
         <div className="flex flex-wrap items-center gap-3">
@@ -76,7 +85,7 @@ export function ActiveSessionsSection({
             size="sm"
             variant="outline"
           >
-            Try again
+            {t('common.tryAgain')}
           </Button>
         </div>
       ) : (
@@ -96,21 +105,23 @@ export function ActiveSessionsSection({
                 />
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm">
-                    {describeSessionDevice(session.userAgent)}
+                    {describeSessionDevice(session.userAgent, t)}
                   </p>
                   <p className="text-xs text-text-secondary">
-                    {lastSeen(session)}
+                    {lastSeen(session, i18n)}
                   </p>
                 </div>
                 {!session.current && (
                   <Button
-                    aria-label={`Sign out ${describeSessionDevice(session.userAgent)}`}
+                    aria-label={t('settings.sessions.signOutDevice', {
+                      device: describeSessionDevice(session.userAgent, t),
+                    })}
                     disabled={busy}
                     onClick={() => revoke.mutate(session.id)}
                     size="sm"
                     variant="ghost"
                   >
-                    Sign out
+                    {t('shell.signOut')}
                   </Button>
                 )}
               </li>
@@ -120,7 +131,7 @@ export function ActiveSessionsSection({
       )}
       {(revoke.error ?? revokeOthers.error) && (
         <p className="text-sm text-destructive" role="alert">
-          {(revoke.error ?? revokeOthers.error)?.message}
+          {tMessage((revoke.error ?? revokeOthers.error)?.message)}
         </p>
       )}
     </div>

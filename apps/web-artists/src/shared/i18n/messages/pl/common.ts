@@ -11,4 +11,5 @@ export const common = {
   'common.tracks.few': '{count} utwory',
   'common.tracks.many': '{count} utworów',
   'common.tracks.other': '{count} utworu',
+  'common.closeDialog': 'Zamknij okno',
 } as const

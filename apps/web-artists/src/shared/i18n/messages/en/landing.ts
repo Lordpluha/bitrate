@@ -23,4 +23,9 @@ export const landing = {
   'landing.legal.privacy': 'Privacy Policy',
   'landing.legal.community': 'Community Guidelines',
   'landing.legal.copyright': 'Copyright',
+  'landing.home': 'Bitrate for Artists home',
+  'landing.legalDraft':
+    'Draft — pending legal review. Text in [[double brackets]] is not filled in yet.',
+  'landing.legalEnglishOnly': 'This document is available in English only.',
+  'landing.otherDocuments': 'Other legal documents',
 } as const

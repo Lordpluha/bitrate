@@ -1,4 +1,5 @@
 import { Button, cn } from '@bitrate/ui-react'
+import { useI18n } from '@shared/i18n'
 import { X } from 'lucide-react'
 import { type ReactNode, useEffect, useId, useRef } from 'react'
 
@@ -18,6 +19,7 @@ export function WorkspaceModal({
   className,
 }: WorkspaceModalProps) {
   const titleId = useId()
+  const { t } = useI18n()
   const dialog = useRef<HTMLDialogElement>(null)
 
   useEffect(() => {
@@ -74,7 +76,7 @@ export function WorkspaceModal({
           {title}
         </h2>
         <Button
-          aria-label="Close dialog"
+          aria-label={t('common.closeDialog')}
           className="shrink-0"
           disabled={!canClose}
           onClick={onClose}

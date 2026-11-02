@@ -112,4 +112,5 @@ export const music = {
   'music.search.sections': 'Розділи',
   'music.search.searching': 'Шукаємо…',
   'music.search.empty': 'Нічого не знайдено.',
+  'music.search.unavailable': 'Пошук зараз недоступний.',
 } as const
