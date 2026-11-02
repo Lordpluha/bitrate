@@ -4,6 +4,7 @@ import { common } from './common'
 import { editRelease } from './editRelease'
 import { labels } from './labels'
 import { music } from './music'
+import { publish } from './publish'
 import { release } from './release'
 import { releaseErrors } from './releaseErrors'
 import { settings } from './settings'
@@ -16,6 +17,7 @@ export const uk = {
   ...editRelease,
   ...labels,
   ...music,
+  ...publish,
   ...release,
   ...releaseErrors,
   ...settings,
