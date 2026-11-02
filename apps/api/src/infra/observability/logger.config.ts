@@ -21,11 +21,36 @@ const REDACTED_HEADER_PATHS = [
   'res.headers["set-cookie"]',
 ]
 
+/** The playback session token travels as `?t=` (ADR-0067); it must never reach a log. */
+const PLAYBACK_TOKEN_PARAM = /([?&]t=)[^&]*/
+
+/** Replaces the value of a `t` query parameter with a marker. */
+export function redactPlaybackToken(url: string): string {
+  return url.replace(PLAYBACK_TOKEN_PARAM, '$1[REDACTED]')
+}
+
+/** The fields of pino-http's serialized request this config rewrites. */
+type SerializedRequest = {
+  url?: string
+  query?: Record<string, unknown>
+  [field: string]: unknown
+}
+
+/** Logs a request without its playback token, in the url and in the parsed query alike. */
+export function serializeRequest(req: SerializedRequest): SerializedRequest {
+  return {
+    ...req,
+    ...(typeof req.url === 'string' ? { url: redactPlaybackToken(req.url) } : {}),
+    ...(req.query && 't' in req.query ? { query: { ...req.query, t: '[REDACTED]' } } : {}),
+  }
+}
+
 /** Options for `LoggerModule.forRoot()` — see ADR-0046. */
 export const loggerOptions: Params = {
   pinoHttp: {
     level: process.env.NODE_ENV === 'production' ? 'info' : 'debug',
     redact: REDACTED_HEADER_PATHS,
+    serializers: { req: serializeRequest },
     autoLogging: {
       ignore: (req) => req.url === METRICS_ROUTE_URL,
     },

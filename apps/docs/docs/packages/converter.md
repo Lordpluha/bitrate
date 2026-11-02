@@ -4,7 +4,7 @@ sidebar_position: 5
 
 # @bitrate/converter
 
-CLI и Node.js обёртка над FFmpeg для конвертации аудио и изображений.
+CLI и Node.js обёртка над FFmpeg: CMAF-качества для стриминга, аудио из видео и изображения.
 
 ## Требования
 
@@ -12,27 +12,11 @@ FFmpeg поставляется через `ffmpeg-static` — системна�
 
 ## CLI
 
-### Конвертация аудио в OGG Opus
-
-```bash
-# Базовая конвертация (128k CBR)
-media-converter audio -i song.mp3
-
-# Кастомный битрейт
-media-converter audio -i song.mp3 -b 192k
-
-# VBR (Variable Bitrate)
-media-converter audio -i song.mp3 --vbr
-
-# Указать выходной файл
-media-converter audio -i song.mp3 -o song.opus
-```
-
 ### Извлечение аудио из видео в AAC
 
 ```bash
-media-converter video-to-audio -i video.mp4
-media-converter video-to-audio -i video.mp4 -b 256k
+media-converter video -i video.mp4
+media-converter video -i video.mp4 -b 256k
 ```
 
 ### Конвертация изображений в WebP
@@ -45,28 +29,28 @@ media-converter image -i cover.png -q 85  # качество 0-100
 ## Программный API
 
 ```typescript
-import { convertAudio, convertImage } from '@bitrate/converter'
+import { convertAudioToCmaf, convertImage } from '@bitrate/converter'
 
-// Аудио
-await convertAudio({
-  inputPath: './song.mp3',
-  outputPath: './song.opus',
-  bitrate: '192k',
-  format: 'opus',
+// CMAF: один файл на качество, выровненные фрагменты и байтовый индекс
+const { timescale, durationTicks, renditions } = await convertAudioToCmaf({
+  input: './song.wav',
+  outputDir: './song.cmaf',
+  bitrates: [128, 192, 320],
 })
 
 // Изображение
 await convertImage({
-  inputPath: './cover.jpg',
-  outputPath: './cover.webp',
+  input: './cover.jpg',
+  output: './cover.webp',
   quality: 85,
 })
 ```
 
 ## Использование в API
 
-`AudioProcessor` (BullMQ воркер) использует `@bitrate/converter` для создания progressive
-Opus fallback и единого multi-bitrate HLS-пакета AAC/fMP4. HLS-варианты кодируются совместно,
-чтобы границы сегментов совпадали при адаптивном переключении.
+Воркер `audio-processing` вызывает `convertAudioToCmaf` — единственный аудиоформат хранения
+([ADR-0065](../architecture/0065-single-cmaf-aac-delivery-format.md)). Все качества кодируются
+одним запуском FFmpeg: AAC-LC, 48 кГц, стерео, фрагменты по 469 AAC-фреймов (10,005 с).
+`assertAlignedRenditions` проваливает задачу, если границы фрагментов разошлись.
 
 Подробнее: [Audio Processing Pipeline](../infrastructure/audio-processing)

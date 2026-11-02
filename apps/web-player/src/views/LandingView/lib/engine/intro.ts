@@ -171,31 +171,32 @@ const drawLogo = ({ el }: { el: HTMLElement }) => {
   sa.setAttribute('stroke-dasharray', `${la} ${la}`)
   sb.setAttribute('stroke-dasharray', `${lb} ${lb}`)
   trace.setAttribute('stroke-dasharray', `${LOGO * 0.12} ${LOGO}`)
-  /** P: where the pen is along the whole route; T: where the ribbon's tail is. */
-  const g = { lin: 0, lout: 0, total: 0, P: 0, T: 0 }
+  /** pen: where the pen is along the whole route; tail: where the ribbon's tail is. */
+  const g = { lin: 0, lout: 0, total: 0, pen: 0, tail: 0 }
   const paint = () => {
-    const { lin, lout, total, P, T } = g
+    const { lin, lout, total, pen, tail } = g
     const bStart = lin + laRest + lConnect
     const oStart = bStart + lbHead
     const drawn = (x: number, start: number, len: number) =>
       clamp((x - start) / len)
     lead.style.strokeDashoffset = String(
-      lin * (1 - drawn(P, 0, lin)) - lin * drawn(T, 0, lin),
+      lin * (1 - drawn(pen, 0, lin)) - lin * drawn(tail, 0, lin),
     )
     out.style.strokeDashoffset = String(
-      lout * (1 - drawn(P, oStart, lout)) - lout * drawn(T, oStart, lout),
+      lout * (1 - drawn(pen, oStart, lout)) - lout * drawn(tail, oStart, lout),
     )
     /* the tip of bar A appears with the ribbon's arrival; bar B's tail tip completes when the ribbon leaves */
-    const a = P < lin ? 0 : (aTip + (la - aTip) * drawn(P, lin, laRest)) / la
+    const a =
+      pen < lin ? 0 : (aTip + (la - aTip) * drawn(pen, lin, laRest)) / la
     const b =
-      P < bStart
+      pen < bStart
         ? 0
-        : P >= oStart
+        : pen >= oStart
           ? 1
-          : (lbHead / lb) * drawn(P, bStart, lbHead)
+          : (lbHead / lb) * drawn(pen, bStart, lbHead)
     sa.style.strokeDashoffset = String(la * (1 - a))
     sb.style.strokeDashoffset = String(lb * (1 - b))
-    const pt = route.getPointAtLength(Math.min(total, Math.max(0, P)))
+    const pt = route.getPointAtLength(Math.min(total, Math.max(0, pen)))
     head.setAttribute('cx', String(pt.x))
     head.setAttribute('cy', String(pt.y))
   }
@@ -237,17 +238,22 @@ const drawLogo = ({ el }: { el: HTMLElement }) => {
   ro.observe(el)
   const tl = gsap.timeline()
   tl.set(mark, { opacity: 1 }, 0)
-  tl.set(g, { P: 0, T: 0, onComplete: paint }, 0)
+  tl.set(g, { pen: 0, tail: 0, onComplete: paint }, 0)
   tl.to(head, { attr: { opacity: 0.8 }, duration: 0.2 }, 0)
   tl.to(
     g,
-    { P: () => g.total, duration: 2.4, ease: 'power1.inOut', onUpdate: paint },
+    {
+      pen: () => g.total,
+      duration: 2.4,
+      ease: 'power1.inOut',
+      onUpdate: paint,
+    },
     0,
   )
   tl.to(head, { attr: { opacity: 0 }, duration: 0.25 }, 2.2)
   tl.to(
     g,
-    { T: () => g.total, duration: 1.3, ease: 'power2.in', onUpdate: paint },
+    { tail: () => g.total, duration: 1.3, ease: 'power2.in', onUpdate: paint },
     1.6,
   )
   /* the white outline runs only once the mark is fully painted */

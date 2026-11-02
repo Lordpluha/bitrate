@@ -6,7 +6,6 @@ const valid = {
   artistId: 'artist-1',
   sourceFileName: 'source.mp3',
   masterKey: 'masters/source.mp3',
-  format: 'opus',
   bitrates: ['128k', '192k'],
 }
 

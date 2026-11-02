@@ -22,9 +22,6 @@ const statusDto = contractEnum<WireProcessingAttemptStatus>()([
 const stepDto = contractEnum<WireProcessingStep>()([
   'CLAIM',
   'PREPARE_TEMP',
-  'PROGRESSIVE_ENCODE',
-  'HLS_ENCODE',
-  'HLS_VALIDATE',
   'CMAF_ENCODE',
   'UPLOAD',
   'PUBLISH',

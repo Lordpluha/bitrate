@@ -60,14 +60,16 @@ export const reportPageDto = z.object({
   limit: z.number().int(),
 }) satisfies z.ZodType<ContractReportPage>
 
-type ContractSubject = ApiSchemas['ModerationSubjectEntity']
+type ContractSubject = Pick<
+  ApiSchemas['ModerationSubjectEntity'],
+  'kind' | 'id' | 'title' | 'deletedAt'
+>
 
 const subjectDto = z.object({
   kind: z.string(),
   id: z.string(),
   title: z.string(),
   deletedAt: z.iso.datetime().nullable(),
-  parentId: z.string().nullable(),
 }) satisfies z.ZodType<ContractSubject>
 
 export type SubjectDto = z.infer<typeof subjectDto>
@@ -92,9 +94,8 @@ type ContractReportDetail = Pick<
   | 'status'
   | 'resolvedAt'
   | 'createdAt'
-  | 'subject'
   | 'siblingReports'
->
+> & { subject: ContractSubject | null }
 
 export const reportDetailDto = z.object({
   id: z.uuid(),
