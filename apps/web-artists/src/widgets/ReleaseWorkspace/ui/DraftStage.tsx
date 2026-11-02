@@ -5,6 +5,7 @@ import {
   releaseRoadmap,
   releaseTypeLabels,
 } from '@entities/release'
+import { useI18n } from '@shared/i18n'
 import { formatDuration } from '@shared/lib/format'
 import { LockedButton } from '@shared/ui'
 import { Link } from '@tanstack/react-router'
@@ -54,7 +55,9 @@ interface DraftStageProps {
 /** Stage 1: everything the artist prepares before asking Bitrate to review. */
 export function DraftStage({ artistId, release, onAction }: DraftStageProps) {
   const lock = editLockReason(release.status)
-  const steps = releaseRoadmap(release).filter((step) =>
+  const i18n = useI18n()
+  const { t, tp } = i18n
+  const steps = releaseRoadmap(release, i18n).filter((step) =>
     PREPARATION.has(step.key),
   )
   const left = steps.filter((step) => step.state !== 'done').length
@@ -63,22 +66,36 @@ export function DraftStage({ artistId, release, onAction }: DraftStageProps) {
     PreparationKey,
     { label: string; run: () => void } | { label: string; href: string }
   > = {
-    details: { label: 'Edit details', run: () => onAction({ kind: 'edit' }) },
+    details: {
+      label: t('workspace.draft.editDetails'),
+      run: () => onAction({ kind: 'edit' }),
+    },
     timing: {
-      label: 'Edit timing',
+      label: t('workspace.draft.editTiming'),
       run: () => onAction({ kind: 'schedule' }),
     },
     artwork: {
-      label: release.cover ? 'Edit artwork' : 'Add artwork',
+      label: release.cover
+        ? t('workspace.draft.editArtwork')
+        : t('workspace.draft.addArtwork'),
       run: () => onAction({ kind: 'cover' }),
     },
     audio:
       release.trackCount === 0
-        ? { label: 'Add audio', run: () => onAction({ kind: 'track-add' }) }
-        : { label: 'Edit tracks', href: '#release-tracks-heading' },
-    credits: { label: 'Review credits', href: '#release-credits-heading' },
+        ? {
+            label: t('workspace.draft.addAudio'),
+            run: () => onAction({ kind: 'track-add' }),
+          }
+        : {
+            label: t('workspace.draft.editTracks'),
+            href: '#release-tracks-heading',
+          },
+    credits: {
+      label: t('workspace.draft.reviewCredits'),
+      href: '#release-credits-heading',
+    },
     rights: {
-      label: 'Confirm rights',
+      label: t('workspace.draft.confirmRights'),
       run: () => onAction({ kind: 'rights' }),
     },
   }
@@ -100,7 +117,7 @@ export function DraftStage({ artistId, release, onAction }: DraftStageProps) {
             {lock ? (
               release.cover ? (
                 <img
-                  alt={`${release.title} artwork`}
+                  alt={t('workspace.artworkAlt', { title: release.title })}
                   className="artist-release-proof-cover"
                   src={releaseCoverUrl(release.cover)}
                 />
@@ -121,7 +138,9 @@ export function DraftStage({ artistId, release, onAction }: DraftStageProps) {
                 )}
                 <span className="artist-release-proof-upload-hint">
                   <ImagePlus aria-hidden="true" />
-                  {release.cover ? 'Change artwork' : 'Add artwork'}
+                  {release.cover
+                    ? t('workspace.draft.changeArtwork')
+                    : t('workspace.draft.addArtwork')}
                 </span>
               </button>
             )}
@@ -130,10 +149,9 @@ export function DraftStage({ artistId, release, onAction }: DraftStageProps) {
               <p>{release.artistName}</p>
               <p className="artist-release-proof-meta">
                 <span className="artist-release-chip">
-                  {releaseTypeLabels[release.type]}
+                  {t(releaseTypeLabels[release.type])}
                 </span>
-                {release.trackCount}{' '}
-                {release.trackCount === 1 ? 'track' : 'tracks'}
+                {tp({ count: release.trackCount, key: 'common.tracks' })}
               </p>
               <p
                 className="artist-release-proof-state"
@@ -145,8 +163,8 @@ export function DraftStage({ artistId, release, onAction }: DraftStageProps) {
                   <CircleDashed aria-hidden="true" />
                 )}
                 {left === 0
-                  ? 'Preparation complete'
-                  : `${left} ${left === 1 ? 'step' : 'steps'} left`}
+                  ? t('workspace.draft.complete')
+                  : tp({ count: left, key: 'workspace.draft.stepsLeft' })}
               </p>
             </div>
             <div className="artist-release-proof-master">
@@ -155,20 +173,24 @@ export function DraftStage({ artistId, release, onAction }: DraftStageProps) {
                   <p className="artist-release-proof-track">
                     <Play aria-hidden="true" />
                     <span className="min-w-0 truncate">{master.title}</span>
-                    <span className="artist-release-chip">Master</span>
+                    <span className="artist-release-chip">
+                      {t('workspace.draft.master')}
+                    </span>
                   </p>
                   <p>
-                    <span>Duration</span>
+                    <span>{t('workspace.draft.duration')}</span>
                     <span>{duration(master.duration)}</span>
                   </p>
                 </>
               ) : (
-                <p>No master yet. Upload the first track.</p>
+                <p>{t('workspace.draft.noMaster')}</p>
               )}
             </div>
           </div>
-          <h2 id="release-checklist-heading">Readiness checklist</h2>
-          <p>Choose an action to return to the exact step.</p>
+          <h2 id="release-checklist-heading">
+            {t('workspace.draft.checklist')}
+          </h2>
+          <p>{t('workspace.draft.checklistHint')}</p>
           <ul className="artist-release-checklist">
             {steps.map((step) => {
               const action = actions[step.key as PreparationKey]
@@ -190,10 +212,12 @@ export function DraftStage({ artistId, release, onAction }: DraftStageProps) {
                   </span>
                   <span className="artist-release-checklist-detail">
                     {step.detail}
-                    <span>{done ? 'Ready' : 'Needed'}</span>
+                    <span>
+                      {done ? t('workspace.ready') : t('workspace.needed')}
+                    </span>
                   </span>
                   {rowLock ? (
-                    <LockedButton reason={rowLock} size="sm" variant="link">
+                    <LockedButton reason={t(rowLock)} size="sm" variant="link">
                       {action.label}
                     </LockedButton>
                   ) : 'href' in action ? (
@@ -211,8 +235,7 @@ export function DraftStage({ artistId, release, onAction }: DraftStageProps) {
           </ul>
           <p className="artist-release-honest">
             <Info aria-hidden="true" />
-            Submission starts Bitrate review. It does not deliver this release
-            to streaming services.
+            {t('workspace.draft.honest')}
           </p>
         </section>
         {release.status === 'DRAFT' ? (
@@ -223,11 +246,13 @@ export function DraftStage({ artistId, release, onAction }: DraftStageProps) {
             className="artist-release-workspace-panel artist-release-stage-side"
             data-tone="success"
           >
-            <h2 id="release-submit-heading">Draft submitted</h2>
+            <h2 id="release-submit-heading">
+              {t('workspace.draft.submitted')}
+            </h2>
             <p>
-              The draft is locked while Bitrate reviews it or after approval.
+              {t('workspace.draft.locked')}
               {release.status === 'REJECTED' &&
-                ' Choose Start revising on the Review step to edit it again.'}
+                ` ${t('workspace.draft.lockedRejected')}`}
             </p>
             <Button
               asChild
@@ -239,7 +264,7 @@ export function DraftStage({ artistId, release, onAction }: DraftStageProps) {
                 search={{ step: 'review' }}
                 to="/dashboard/music/$releaseId"
               >
-                Open review
+                {t('workspace.draft.openReview')}
               </Link>
             </Button>
           </section>

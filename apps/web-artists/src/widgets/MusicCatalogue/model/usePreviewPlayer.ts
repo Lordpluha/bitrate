@@ -1,7 +1,11 @@
 import type { MusicTrack } from '@entities/music'
+import { messageKey } from '@shared/i18n'
 import { useEffect, useRef, useState } from 'react'
 
-/** One shared preview `<audio>`: plays, pauses and reports failures for the chosen track. */
+/**
+ * One shared preview `<audio>`: plays, pauses and reports failures for the chosen track.
+ * `playError` is a catalog key.
+ */
 export function usePreviewPlayer() {
   const [active, setActive] = useState<MusicTrack | null>(null)
   const [playing, setPlaying] = useState(false)
@@ -16,7 +20,7 @@ export function usePreviewPlayer() {
       void audio.play().catch(() => {
         if (!current) return
         setPlaying(false)
-        setPlayError('Preview could not be played. Please try again.')
+        setPlayError(messageKey('music.preview.failed'))
       })
     } else audio.pause()
     return () => {
@@ -34,7 +38,7 @@ export function usePreviewPlayer() {
   const stop = () => setPlaying(false)
   const fail = () => {
     setPlaying(false)
-    setPlayError('Preview is unavailable.')
+    setPlayError(messageKey('music.preview.unavailable'))
   }
 
   return { active, playing, playError, audioRef, toggle, stop, fail }

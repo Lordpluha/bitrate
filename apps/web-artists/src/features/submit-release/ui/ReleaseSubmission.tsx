@@ -5,6 +5,7 @@ import {
   useSubmitRelease,
   useWithdrawRelease,
 } from '@entities/release'
+import { useI18n } from '@shared/i18n'
 import { useId, useState } from 'react'
 
 interface ReleaseSubmissionProps {
@@ -17,6 +18,7 @@ export function ReleaseSubmission({
   artistId,
   release,
 }: ReleaseSubmissionProps) {
+  const { t, tMessage, tp } = useI18n()
   const id = useId()
   const submit = useSubmitRelease(artistId)
   const withdraw = useWithdrawRelease(artistId)
@@ -37,16 +39,17 @@ export function ReleaseSubmission({
             }}
             variant="outline"
           >
-            {withdraw.isPending ? 'Withdrawing…' : 'Withdraw from review'}
+            {withdraw.isPending
+              ? t('publish.withdrawing')
+              : t('publish.withdraw')}
           </Button>
           <p className="text-sm text-text-secondary">
-            Need a change? Withdrawing returns it to the draft; nothing saved is
-            lost.
+            {t('publish.withdrawHint')}
           </p>
         </div>
         {withdraw.error && (
           <p className="text-sm text-destructive" role="alert">
-            {withdraw.error.message}
+            {tMessage(withdraw.error.message)}
           </p>
         )}
       </div>
@@ -56,8 +59,7 @@ export function ReleaseSubmission({
     return (
       <div className="space-y-3">
         <p className="font-medium" role="status">
-          Bitrate requested changes. Reopen the draft to address them, then
-          submit again.
+          {t('publish.changesRequested')}
         </p>
         <Button
           className="artist-workspace-primary rounded-full"
@@ -67,11 +69,13 @@ export function ReleaseSubmission({
           }}
           variant="primary"
         >
-          {revise.isPending ? 'Reopening…' : 'Start revising'}
+          {revise.isPending
+            ? t('publish.reopening')
+            : t('publish.startRevising')}
         </Button>
         {revise.error && (
           <p className="text-sm text-destructive" role="alert">
-            {revise.error.message}
+            {tMessage(revise.error.message)}
           </p>
         )}
       </div>
@@ -80,7 +84,7 @@ export function ReleaseSubmission({
   if (release.status === 'READY')
     return (
       <p className="font-medium" role="status">
-        Approved by Bitrate review. Delivery follows the plan below.
+        {t('publish.approvedReview')}
       </p>
     )
 
@@ -110,9 +114,7 @@ export function ReleaseSubmission({
           }}
           type="checkbox"
         />
-        <span>
-          I checked this draft and confirm the information is accurate.
-        </span>
+        <span>{t('publish.confirmAccurate')}</span>
       </label>
       <Button
         className="artist-workspace-primary rounded-full"
@@ -120,16 +122,16 @@ export function ReleaseSubmission({
         type="submit"
         variant="primary"
       >
-        {submit.isPending ? 'Submitting…' : 'Submit for review'}
+        {submit.isPending ? t('publish.submitting') : t('publish.submit')}
       </Button>
       <p className="text-sm text-text-secondary" id={`${id}-hint`}>
         {blockers > 0
-          ? `Resolve ${blockers} ${blockers === 1 ? 'blocker' : 'blockers'} before submission.`
-          : 'Creates a Bitrate review request only. It does not deliver this release to streaming services.'}
+          ? tp({ count: blockers, key: 'publish.blockers' })
+          : t('publish.submitHint')}
       </p>
       {submit.error && (
         <p className="text-sm text-destructive" role="alert">
-          {submit.error.message}
+          {tMessage(submit.error.message)}
         </p>
       )}
     </form>

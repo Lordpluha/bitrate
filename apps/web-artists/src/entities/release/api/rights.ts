@@ -1,13 +1,19 @@
 import type { ApiSchemas } from '@bitrate/contracts'
 import { clientFetchClient } from '@shared/api/fetchClient'
 import { writeSignal as signal } from '@shared/api/writeTimeout'
+import { messageKey } from '@shared/i18n'
 import { z } from 'zod'
 import {
   type ReleaseSummary,
   releaseSummarySchema,
 } from '../model/release.schema'
 import { releaseBlockerSchema, rightTypes } from '../model/rights'
-import { advancedRelease, draftRelease, guardedWrite } from './guardedWrite'
+import {
+  advancedRelease,
+  draftRelease,
+  guardedWrite,
+  type WriteMessages,
+} from './guardedWrite'
 
 export interface RightsRequest {
   id: string
@@ -24,9 +30,8 @@ export function saveRights({ id, input }: RightsRequest) {
       }),
     (data) => advancedRelease(data, id, input.expectedUpdatedAt),
     {
-      invalid: 'Choose the master owner and enter their name, then try again.',
-      unconfirmed:
-        'Could not confirm the rights were saved. Close this form and check the release before trying again.',
+      invalid: messageKey('release.error.rightsInvalid'),
+      unconfirmed: messageKey('release.error.rightsUnconfirmed'),
     },
   )
 }
@@ -67,10 +72,8 @@ export function saveSplits({ id, input }: SplitsRequest) {
       return parsed.data
     },
     {
-      invalid:
-        'Each share must be above 0%, the total cannot exceed 100%, and every person must be credited on this release.',
-      unconfirmed:
-        'Could not confirm the splits were saved. Close this form and check the release before trying again.',
+      invalid: messageKey('release.error.splitsInvalid'),
+      unconfirmed: messageKey('release.error.splitsUnconfirmed'),
     },
   )
 }
@@ -105,9 +108,8 @@ export function saveTrackIsrc({ id, trackId, input }: TrackIsrcRequest) {
       return parsed.data
     },
     {
-      invalid: 'Enter an ISRC such as US-RC1-76-07839.',
-      unconfirmed:
-        'Could not confirm the ISRC was saved. Close this form and check the tracks before trying again.',
+      invalid: messageKey('release.error.isrcInvalid'),
+      unconfirmed: messageKey('release.error.isrcUnconfirmed'),
     },
   )
 }
@@ -120,8 +122,7 @@ export interface SubmitRequest {
 const blockedSchema = z.object({ blockers: z.array(releaseBlockerSchema) })
 
 export function submitRelease({ id, input }: SubmitRequest) {
-  const unconfirmed =
-    'Review request was not confirmed. Your saved draft remains; check the release and try again.'
+  const unconfirmed = messageKey('release.error.submitUnconfirmed')
   return guardedWrite(
     () =>
       clientFetchClient.POST('/api/v1/releases/{id}/submit', {
@@ -134,15 +135,14 @@ export function submitRelease({ id, input }: SubmitRequest) {
       return release?.status === 'SUBMITTED' ? release : undefined
     },
     {
-      invalid: 'Confirm that you reviewed this draft.',
+      invalid: messageKey('release.error.submitInvalid'),
       unconfirmed,
       statusMessages: {
-        422: (error) => {
-          const blocked = blockedSchema.safeParse(error)
-          if (!blocked.success) return unconfirmed
-          const count = blocked.data.blockers.length
-          return `Resolve ${count} ${count === 1 ? 'blocker' : 'blockers'} before submission.`
-        },
+        // The workspace lists the blockers and their count; the error only points there.
+        422: (error) =>
+          blockedSchema.safeParse(error).success
+            ? messageKey('release.error.submitBlocked')
+            : unconfirmed,
       },
     },
   )
@@ -163,11 +163,9 @@ export function withdrawRelease({ id, input }: WithdrawRequest) {
       }),
     (data) => draftRelease(data, id),
     {
-      invalid: 'Could not withdraw this release. Please try again.',
-      unconfirmed:
-        'Could not confirm the withdrawal. Check the release before trying again.',
-      conflict:
-        'This release changed or is no longer awaiting review. Reload it to see its latest status.',
+      invalid: messageKey('release.error.withdrawInvalid'),
+      unconfirmed: messageKey('release.error.withdrawUnconfirmed'),
+      conflict: messageKey('release.error.withdrawConflict'),
     },
   )
 }
@@ -188,11 +186,9 @@ export function reviseRelease({ id, input }: ReviseRequest) {
       }),
     (data) => draftRelease(data, id),
     {
-      invalid: 'Could not reopen this release. Please try again.',
-      unconfirmed:
-        'Could not confirm the release was reopened. Check it before trying again.',
-      conflict:
-        'This release changed or no changes were requested. Reload it to see its latest status.',
+      invalid: messageKey('release.error.reviseInvalid'),
+      unconfirmed: messageKey('release.error.reviseUnconfirmed'),
+      conflict: messageKey('release.error.reviseConflict'),
     },
   )
 }
@@ -221,11 +217,9 @@ export function publishRelease({ id, input }: PublishRequest) {
         : undefined
     },
     {
-      invalid: 'Could not publish this release. Please try again.',
-      unconfirmed:
-        'Could not confirm publishing started. Reload the release before trying again.',
-      conflict:
-        'This release changed or is no longer ready to publish. Reload it to see its latest status.',
+      invalid: messageKey('release.error.publishInvalid'),
+      unconfirmed: messageKey('release.error.publishUnconfirmed'),
+      conflict: messageKey('release.error.publishConflict'),
     },
   )
 }
@@ -237,7 +231,7 @@ function launchWrite(
     | '/api/v1/releases/{id}/unpublish'
     | '/api/v1/releases/{id}/republish',
   expected: ReleaseSummary['status'],
-  messages: { invalid: string; unconfirmed: string; conflict: string },
+  messages: Required<Omit<WriteMessages, 'statusMessages'>>,
 ) {
   return ({ id, input }: PublishRequest) =>
     guardedWrite(
@@ -263,11 +257,9 @@ export const cancelPremiere = launchWrite(
   '/api/v1/releases/{id}/publish/cancel',
   'READY',
   {
-    invalid: 'Could not cancel the premiere. Please try again.',
-    unconfirmed:
-      'Could not confirm the premiere was cancelled. Reload the release before trying again.',
-    conflict:
-      'This release changed or has no scheduled premiere. Reload it to see its latest status.',
+    invalid: messageKey('release.error.cancelInvalid'),
+    unconfirmed: messageKey('release.error.cancelUnconfirmed'),
+    conflict: messageKey('release.error.cancelConflict'),
   },
 )
 
@@ -275,11 +267,9 @@ export const unpublishRelease = launchWrite(
   '/api/v1/releases/{id}/unpublish',
   'UNPUBLISHED',
   {
-    invalid: 'Could not take this release offline. Please try again.',
-    unconfirmed:
-      'Could not confirm the release went offline. Reload it before trying again.',
-    conflict:
-      'This release changed or is not live. Reload it to see its latest status.',
+    invalid: messageKey('release.error.unpublishInvalid'),
+    unconfirmed: messageKey('release.error.unpublishUnconfirmed'),
+    conflict: messageKey('release.error.unpublishConflict'),
   },
 )
 
@@ -287,10 +277,8 @@ export const republishRelease = launchWrite(
   '/api/v1/releases/{id}/republish',
   'RELEASED',
   {
-    invalid: 'Could not publish this release again. Please try again.',
-    unconfirmed:
-      'Could not confirm the release is live again. Reload it before trying again.',
-    conflict:
-      'This release changed or cannot be published again. Reload it to see its latest status.',
+    invalid: messageKey('release.error.republishInvalid'),
+    unconfirmed: messageKey('release.error.republishUnconfirmed'),
+    conflict: messageKey('release.error.republishConflict'),
   },
 )

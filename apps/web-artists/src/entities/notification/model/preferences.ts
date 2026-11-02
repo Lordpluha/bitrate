@@ -1,21 +1,23 @@
 import type { ApiSchemas } from '@bitrate/contracts'
+import type { TranslationKey } from '@shared/i18n'
 import { z } from 'zod'
 
 export const notificationCategories = ['REVIEW', 'DELIVERY'] as const
 export type NotificationCategory = (typeof notificationCategories)[number]
 
+/** Catalog keys; render them with `t()`. */
 export const notificationCategoryLabels = {
   REVIEW: {
-    title: 'Bitrate review',
-    hint: 'Submissions, approvals and requested changes',
+    title: 'notifications.category.review',
+    hint: 'notifications.category.reviewHint',
   },
   DELIVERY: {
-    title: 'Delivery and release',
-    hint: 'Stores going live, failed deliveries and releases',
+    title: 'notifications.category.delivery',
+    hint: 'notifications.category.deliveryHint',
   },
 } as const satisfies Record<
   NotificationCategory,
-  { title: string; hint: string }
+  { title: TranslationKey; hint: TranslationKey }
 >
 
 export const notificationPreferencesSchema = z.object({

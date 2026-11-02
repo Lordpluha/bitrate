@@ -9,7 +9,8 @@ import {
   useUpdateProfile,
 } from '@entities/artist-account'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { countries } from '@shared/constants/countries'
+import { countriesFor } from '@shared/constants/countries'
+import { useI18n } from '@shared/i18n'
 import { NativeSelect } from '@shared/ui'
 import { useId, useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -29,6 +30,7 @@ export function ProfileForm({
   profile,
   onValuesChange,
 }: ProfileFormProps) {
+  const { t, tMessage, locale } = useI18n()
   const id = useId()
   const update = useUpdateProfile(artistId)
   const [saved, setSaved] = useState(false)
@@ -76,7 +78,7 @@ export function ProfileForm({
         id={`${id}-${name}-error`}
         role="alert"
       >
-        {errors[name]?.message}
+        {tMessage(errors[name]?.message)}
       </p>
     )
 
@@ -93,7 +95,7 @@ export function ProfileForm({
             className="block text-sm font-medium"
             htmlFor={`${id}-username`}
           >
-            Handle
+            {t('profile.handle')}
           </label>
           <Input
             aria-describedby={`${id}-username-hint`}
@@ -105,7 +107,7 @@ export function ProfileForm({
             {...field('username')}
           />
           <p className="text-xs text-text-secondary" id={`${id}-username-hint`}>
-            Shown as @handle on your public page.
+            {t('profile.handleHint')}
           </p>
           {error('username')}
         </div>
@@ -114,7 +116,7 @@ export function ProfileForm({
             className="block text-sm font-medium"
             htmlFor={`${id}-country`}
           >
-            Country
+            {t('profile.country')}
           </label>
           <NativeSelect
             className="artist-music-control h-11 pl-3 text-sm"
@@ -122,8 +124,8 @@ export function ProfileForm({
             id={`${id}-country`}
             {...field('country')}
           >
-            <option value="">Not shown</option>
-            {countries.map((country) => (
+            <option value="">{t('profile.notShown')}</option>
+            {countriesFor(locale).map((country) => (
               <option key={country.code} value={country.code}>
                 {country.name}
               </option>
@@ -133,7 +135,7 @@ export function ProfileForm({
       </div>
       <div className="space-y-2">
         <label className="block text-sm font-medium" htmlFor={`${id}-bio`}>
-          Bio
+          {t('profile.bio')}
         </label>
         <Textarea
           aria-describedby={`${id}-bio-count`}
@@ -150,7 +152,7 @@ export function ProfileForm({
         {error('bio')}
       </div>
       <fieldset className="space-y-3">
-        <legend className="text-sm font-medium">Links</legend>
+        <legend className="text-sm font-medium">{t('profile.links')}</legend>
         <div className="grid gap-4 sm:grid-cols-2">
           {socialLinkKeys.map((key) => (
             <div className="space-y-1" key={key}>
@@ -158,7 +160,7 @@ export function ProfileForm({
                 className="block text-xs text-text-secondary"
                 htmlFor={`${id}-${key}`}
               >
-                {socialLinkLabels[key]}
+                {t(socialLinkLabels[key])}
               </label>
               <Input
                 aria-invalid={Boolean(errors[key])}
@@ -176,12 +178,12 @@ export function ProfileForm({
       </fieldset>
       {update.error && (
         <p className="text-sm text-destructive" role="alert">
-          {update.error.message}
+          {tMessage(update.error.message)}
         </p>
       )}
       {saved && !isDirty && (
         <p className="text-sm text-text-secondary" role="status">
-          Profile saved.
+          {t('profile.saved')}
         </p>
       )}
       <div className="flex flex-wrap justify-end gap-3">
@@ -195,7 +197,7 @@ export function ProfileForm({
           type="button"
           variant="outline"
         >
-          Discard changes
+          {t('profile.discard')}
         </Button>
         <Button
           className="artist-workspace-primary"
@@ -203,7 +205,7 @@ export function ProfileForm({
           type="submit"
           variant="primary"
         >
-          {busy ? 'Saving…' : 'Save profile'}
+          {busy ? t('common.saving') : t('profile.save')}
         </Button>
       </div>
     </form>

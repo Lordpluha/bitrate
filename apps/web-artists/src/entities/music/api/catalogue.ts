@@ -1,5 +1,6 @@
 import { artistMusicKeys } from '@shared/api/artistMusicKeys'
 import { clientFetchClient } from '@shared/api/fetchClient'
+import { messageKey } from '@shared/i18n'
 import { useQuery } from '@tanstack/react-query'
 import { z } from 'zod'
 import {
@@ -31,7 +32,7 @@ async function getTracks(search: CatalogueSearch, signal: AbortSignal) {
   )
   const parsed = musicTrackPageSchema.safeParse(data)
   if (error || !parsed.success)
-    throw new Error('Could not load your tracks. Please try again.')
+    throw new Error(messageKey('music.error.tracks'))
   return parsed.data
 }
 
@@ -58,7 +59,7 @@ async function getReleases(search: CatalogueSearch, signal: AbortSignal) {
   )
   const parsed = musicReleasePageSchema.safeParse(data)
   if (error || !parsed.success)
-    throw new Error('Could not load your releases. Please try again.')
+    throw new Error(messageKey('music.error.releases'))
   return parsed.data
 }
 
@@ -94,7 +95,7 @@ export function useMusicCounts(artistId: string | undefined) {
       )
       const parsed = musicCountsSchema.safeParse(data)
       if (error || !parsed.success)
-        throw new Error('Could not load catalogue counts.')
+        throw new Error(messageKey('music.error.counts'))
       return parsed.data
     },
     enabled: Boolean(artistId),

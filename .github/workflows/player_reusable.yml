@@ -105,10 +105,11 @@ jobs:
 
       # Installed through the player's own `playwright` so the browser revision matches the
       # version its Vitest provider drives, whatever version is hoisted to the root.
-      - name: Install Playwright Chromium
-        run: pnpm --filter @bitrate/player exec playwright install chromium --with-deps
+      # WebKit runs the native-playback spec (ADR-0067): the engine closest to Safari's no-MSE path.
+      - name: Install Playwright Chromium and WebKit
+        run: pnpm --filter @bitrate/player exec playwright install chromium webkit --with-deps
 
-      - name: Run browser tests (Chromium)
+      - name: Run browser tests (Chromium, WebKit)
         run: pnpm --filter @bitrate/player test:browser
 
   build:

@@ -1,4 +1,5 @@
 import { apiBaseUrl } from '@shared/api'
+import type { TranslationKey } from '@shared/i18n'
 
 /** Mirrors the API limits so oversized or unsupported files are refused before uploading. */
 const MAX_COVER_BYTES = 20 * 1024 * 1024
@@ -32,15 +33,17 @@ export function releaseAudioUrl(releaseId: string, trackId: string): string {
   return `${apiBaseUrl}/api/v1/releases/${releaseId}/tracks/${trackId}/audio`
 }
 
-export function coverFileProblem(file: File): string | null {
-  if (!COVER_TYPES.has(file.type)) return 'Choose a JPEG, PNG or WebP image.'
-  if (file.size > MAX_COVER_BYTES) return 'Choose an image up to 20 MB.'
+/** What is wrong with a chosen cover, as a catalog key, or null when it can be uploaded. */
+export function coverFileProblem(file: File): TranslationKey | null {
+  if (!COVER_TYPES.has(file.type)) return 'media.coverType'
+  if (file.size > MAX_COVER_BYTES) return 'media.coverSize'
   return null
 }
 
-export function audioFileProblem(file: File): string | null {
-  if (!AUDIO_TYPES.has(file.type)) return 'Choose a WAV, FLAC, MP3 or OGG file.'
-  if (file.size > MAX_AUDIO_BYTES) return 'Choose a file up to 512 MB.'
+/** What is wrong with a chosen master, as a catalog key, or null when it can be uploaded. */
+export function audioFileProblem(file: File): TranslationKey | null {
+  if (!AUDIO_TYPES.has(file.type)) return 'media.audioType'
+  if (file.size > MAX_AUDIO_BYTES) return 'media.audioSize'
   return null
 }
 

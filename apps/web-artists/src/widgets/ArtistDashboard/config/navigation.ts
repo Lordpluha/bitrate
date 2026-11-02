@@ -1,3 +1,4 @@
+import type { TranslationKey } from '@shared/i18n'
 import { ROUTES } from '@shared/routes/routes'
 import {
   BarChart3,
@@ -13,16 +14,48 @@ type DashboardDestination =
   (typeof ROUTES.dashboard)[keyof typeof ROUTES.dashboard]
 
 interface DashboardNavigationItem {
-  label: string
+  /** The page's name in every language; styles select on it, so it is never translated. */
+  page: string
+  label: TranslationKey
   to: DashboardDestination
   icon: LucideIcon
 }
 
 export const dashboardNavigation: DashboardNavigationItem[] = [
-  { label: 'Dashboard', to: ROUTES.dashboard.home, icon: LayoutDashboard },
-  { label: 'Music', to: ROUTES.dashboard.music, icon: Disc3 },
-  { label: 'Distribution', to: ROUTES.dashboard.distribution, icon: Send },
-  { label: 'Analytics', to: ROUTES.dashboard.analytics, icon: BarChart3 },
-  { label: 'Profile', to: ROUTES.dashboard.profile, icon: UserRound },
-  { label: 'Settings', to: ROUTES.dashboard.settings, icon: Settings2 },
+  {
+    page: 'dashboard',
+    label: 'shell.nav.dashboard',
+    to: ROUTES.dashboard.home,
+    icon: LayoutDashboard,
+  },
+  {
+    page: 'music',
+    label: 'shell.nav.music',
+    to: ROUTES.dashboard.music,
+    icon: Disc3,
+  },
+  {
+    page: 'distribution',
+    label: 'shell.nav.distribution',
+    to: ROUTES.dashboard.distribution,
+    icon: Send,
+  },
+  {
+    page: 'analytics',
+    label: 'shell.nav.analytics',
+    to: ROUTES.dashboard.analytics,
+    icon: BarChart3,
+  },
+  {
+    page: 'profile',
+    label: 'shell.nav.profile',
+    to: ROUTES.dashboard.profile,
+    icon: UserRound,
+  },
+  {
+    page: 'settings',
+    label: 'shell.nav.settings',
+    to: ROUTES.dashboard.settings,
+    icon: Settings2,
+  },
 ]

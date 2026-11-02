@@ -8,6 +8,7 @@ import {
   Typography,
 } from '@bitrate/ui-react'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { messageKey, useI18n } from '@shared/i18n'
 import { getLoginDestination } from '@shared/routes/authRedirect'
 import { ROUTES } from '@shared/routes/routes'
 import { SocialAuthButtons } from '@shared/ui'
@@ -20,6 +21,7 @@ import { TwoFactorLoginForm } from './TwoFactorLoginForm'
 
 export const LoginForm = () => {
   const router = useRouter()
+  const { t, tMessage } = useI18n()
   const search = useSearch({ from: '/login' })
   const [requiresTwoFactor, setRequiresTwoFactor] = useState(false)
   const completeLogin = async () => {
@@ -44,8 +46,8 @@ export const LoginForm = () => {
       form.setError('root', {
         type: needsVerification ? 'emailVerification' : 'server',
         message: needsVerification
-          ? 'Verify your email before signing in.'
-          : 'Invalid email or password. Please try again.',
+          ? messageKey('auth.login.verifyFirst')
+          : messageKey('auth.login.invalidCredentials'),
       })
     },
   })
@@ -76,7 +78,7 @@ export const LoginForm = () => {
       <div className="flex flex-col items-center">
         <LogoIcon height={64} width={64} />
         <Typography as="h1" className="mt-2 text-center" size={'heading2'}>
-          Welcome back!
+          {t('auth.login.title')}
         </Typography>
       </div>
 
@@ -85,7 +87,7 @@ export const LoginForm = () => {
         onSubmit={form.handleSubmit(onSubmit)}
       >
         <label className="text-xl font-normal " htmlFor="email">
-          Email Address
+          {t('auth.emailAddress')}
         </label>
         <Input
           autoComplete="email"
@@ -98,38 +100,38 @@ export const LoginForm = () => {
         />
         {form.formState.errors.email ? (
           <Typography as="p" className="text-red-500 text-sm" size={'body'}>
-            {form.formState.errors.email.message}
+            {tMessage(form.formState.errors.email.message)}
           </Typography>
         ) : null}
 
         <label className="text-xl font-normal mt-3" htmlFor="password">
-          Password
+          {t('auth.password')}
         </label>
         <PasswordInput
           autoComplete="current-password"
           className="text-xl! hover:border-white py-2 focus-visible:ring-ring"
           id="password"
-          placeholder="Password"
+          placeholder={t('auth.password')}
           variant="black"
           {...form.register('password')}
         />
         {form.formState.errors.password ? (
           <Typography as="p" className="text-red-500 text-sm" size={'body'}>
-            {form.formState.errors.password.message}
+            {tMessage(form.formState.errors.password.message)}
           </Typography>
         ) : null}
 
         <div className="mt-4 flex flex-col items-stretch gap-4">
           {form.formState.errors.root && (
             <div role="alert">
-              <p>{form.formState.errors.root.message}</p>
+              <p>{tMessage(form.formState.errors.root.message)}</p>
               {form.formState.errors.root.type === 'emailVerification' && (
                 <Link
                   className="font-semibold underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                   search={{ email: form.getValues('email'), next: search.next }}
                   to={ROUTES.auth.verifyEmail}
                 >
-                  Verify email
+                  {t('auth.verifyEmail')}
                 </Link>
               )}
             </div>
@@ -140,11 +142,11 @@ export const LoginForm = () => {
             type="submit"
             variant="primary"
           >
-            {isPending ? 'Logging in...' : 'Continue'}
+            {isPending ? t('auth.login.submitting') : t('common.continue')}
           </Button>
 
           <div className="flex items-center justify-center gap-2">
-            <span className="text-2xl">or</span>
+            <span className="text-2xl">{t('common.or')}</span>
           </div>
 
           <div className="flex flex-col gap-2">
@@ -152,10 +154,10 @@ export const LoginForm = () => {
           </div>
 
           <p className="text-lg text-center">
-            Don't have an account?{' '}
+            {t('auth.login.noAccount')}{' '}
             <Link className="font-bold" to={ROUTES.auth.registration}>
               <br />
-              Sign up.
+              {t('auth.login.signUp')}
             </Link>
           </p>
         </div>

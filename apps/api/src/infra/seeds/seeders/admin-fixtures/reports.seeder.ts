@@ -97,8 +97,7 @@ function buildBaseCatalogReports(
  * Reports across every {@link ReportEntityType} value and every {@link ModerationStatus}. Real
  * base-catalog rows are reused as the subject for `track`/`artist` reports (several pointing at
  * the same subject, so a subject page has siblings to show); every other entity type points at a
- * row this seeder owns. `podcast`/`episode` are skipped when the base catalog has none yet — this
- * seeder never creates a podcast of its own.
+ * row this seeder owns.
  */
 export async function seedReports(
   prisma: AdminFixturesPrismaClient,
@@ -107,38 +106,10 @@ export async function seedReports(
   baseArtist: { id: string },
   baseTrack: { id: string },
 ): Promise<void> {
-  const podcast = await prisma.podcast.findFirst({
-    where: { deletedAt: null },
-    orderBy: { createdAt: 'asc' },
-    select: { id: true },
-  })
-  const episode = await prisma.episode.findFirst({
-    where: { deletedAt: null },
-    orderBy: { createdAt: 'asc' },
-    select: { id: true },
-  })
-
   const reports: ReportFixture[] = [
     ...buildBaseCatalogReports(baseArtist, baseTrack),
     ...buildFixedReports(ids),
   ]
-
-  if (podcast) {
-    reports.push({
-      entityType: 'podcast',
-      entityId: podcast.id,
-      reason: 'Fixture report: podcast content report',
-      status: 'OPEN',
-    })
-  }
-  if (episode) {
-    reports.push({
-      entityType: 'episode',
-      entityId: episode.id,
-      reason: 'Fixture report: episode content report',
-      status: 'OPEN',
-    })
-  }
 
   for (const report of reports) {
     const existing = await prisma.moderationReport.findFirst({

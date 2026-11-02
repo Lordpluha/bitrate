@@ -10,6 +10,7 @@ import {
   useWorkspaceActions,
 } from '@features/workspace-actions'
 import { useAuthContext } from '@shared/hooks/AuthContext'
+import { useI18n } from '@shared/i18n'
 import { ROUTES } from '@shared/routes/routes'
 import { useNavigate } from '@tanstack/react-router'
 import { Upload } from 'lucide-react'
@@ -35,6 +36,7 @@ export function MusicCatalogue({ search }: { search: CatalogueSearch }) {
   const [details, setDetails] = useState<CatalogueDetails | null>(null)
   const [updatedNotice, setUpdatedNotice] = useState<string | null>(null)
   const preview = usePreviewPlayer()
+  const { t, tMessage, tp } = useI18n()
 
   const change = (next: CatalogueSearch) => {
     void navigate({
@@ -60,7 +62,7 @@ export function MusicCatalogue({ search }: { search: CatalogueSearch }) {
     <div className="space-y-4 lg:space-y-5">
       <div className="artist-music-tabs-actions flex flex-wrap items-center justify-between gap-4">
         <fieldset className="flex min-w-0 gap-3">
-          <legend className="sr-only">Music views</legend>
+          <legend className="sr-only">{t('music.tabs.legend')}</legend>
           {(['tracks', 'releases'] as const).map((value) => (
             <Button
               aria-pressed={tab === value}
@@ -69,7 +71,11 @@ export function MusicCatalogue({ search }: { search: CatalogueSearch }) {
               onClick={() => change({ tab: value, page: 1 })}
               variant="outline"
             >
-              {value === 'tracks' ? 'Tracks' : 'Releases'}{' '}
+              {t(
+                value === 'tracks'
+                  ? 'music.tabs.tracks'
+                  : 'music.tabs.releases',
+              )}{' '}
               <span>{counts.data?.[value] ?? '…'}</span>
             </Button>
           ))}
@@ -82,7 +88,7 @@ export function MusicCatalogue({ search }: { search: CatalogueSearch }) {
               variant="primary"
             >
               <Upload aria-hidden="true" className="size-4" />
-              Upload track
+              {t('music.uploadTrack')}
             </Button>
           ) : (
             <CreateReleaseButton className="w-full" />
@@ -95,7 +101,7 @@ export function MusicCatalogue({ search }: { search: CatalogueSearch }) {
           className="rounded-lg border border-border bg-secondary p-4 text-sm"
           role="status"
         >
-          Draft updated: {updatedNotice}
+          {t('music.draftUpdated', { title: updatedNotice })}
         </p>
       )}
       {saved && (
@@ -103,12 +109,12 @@ export function MusicCatalogue({ search }: { search: CatalogueSearch }) {
           className="rounded-lg border border-border bg-secondary p-4 text-sm"
           role="status"
         >
-          Draft created. Your release is saved in Music.
+          {t('music.draftCreated')}
         </p>
       )}
       {counts.isError && (
         <p className="text-xs text-text-secondary" role="status">
-          Counts unavailable.{' '}
+          {t('music.countsUnavailable')}{' '}
           <button
             className="underline"
             onClick={() => {
@@ -116,7 +122,7 @@ export function MusicCatalogue({ search }: { search: CatalogueSearch }) {
             }}
             type="button"
           >
-            Try again
+            {t('common.tryAgain')}
           </button>
         </p>
       )}
@@ -135,24 +141,30 @@ export function MusicCatalogue({ search }: { search: CatalogueSearch }) {
         <div className="relative">
           {data && tab === 'tracks' && (
             <div className="artist-music-mobile-table-heading">
-              <span>{catalogueSortLabels[search.sort ?? 'updated'].label}</span>
-              <span>{data.total} tracks</span>
+              <span>
+                {t(catalogueSortLabels[search.sort ?? 'updated'].label)}
+              </span>
+              <span>{tp({ count: data.total, key: 'common.tracks' })}</span>
             </div>
           )}
           {catalogue.isPending ? (
             <p className="px-6 py-16 text-text-secondary" role="status">
-              Loading your {tab}…
+              {t(
+                tab === 'tracks'
+                  ? 'music.loading.tracks'
+                  : 'music.loading.releases',
+              )}
             </p>
           ) : catalogue.isError ? (
             <div className="space-y-4 px-6 py-12">
-              <p role="alert">{catalogue.error.message}</p>
+              <p role="alert">{tMessage(catalogue.error.message)}</p>
               <Button
                 onClick={() => {
                   void catalogue.refetch()
                 }}
                 variant="outline"
               >
-                Try again
+                {t('common.tryAgain')}
               </Button>
             </div>
           ) : records.length === 0 ? (
@@ -189,13 +201,13 @@ export function MusicCatalogue({ search }: { search: CatalogueSearch }) {
       </div>
       {preview.active && preview.playing && (
         <p className="text-xs text-text-secondary" role="status">
-          Playing {preview.active.title}
-          {preview.active.isDemo ? ' · Illustrative sample audio' : ''}
+          {t('music.playing', { title: preview.active.title })}
+          {preview.active.isDemo ? ` · ${t('music.sampleAudio')}` : ''}
         </p>
       )}
       {preview.playError && (
         <p className="text-sm text-destructive" role="alert">
-          {preview.playError}
+          {tMessage(preview.playError)}
         </p>
       )}
       <audio

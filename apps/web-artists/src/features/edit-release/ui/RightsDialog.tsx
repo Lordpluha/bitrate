@@ -1,6 +1,7 @@
 import { Button, Input } from '@bitrate/ui-react'
 import { type ReleaseWorkspace, useSaveRights } from '@entities/release'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useI18n } from '@shared/i18n'
 import { WorkspaceModal } from '@shared/ui/WorkspaceModal/WorkspaceModal'
 import { useId, useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -19,6 +20,7 @@ export function RightsDialog({
   onClose,
   onSaved,
 }: RightsDialogProps) {
+  const { t, tMessage } = useI18n()
   const id = useId()
   const mutation = useSaveRights(artistId)
   const [expectedUpdatedAt] = useState(release.updatedAt)
@@ -59,7 +61,7 @@ export function RightsDialog({
       canClose={!busy}
       className="artist-release-credit-modal"
       onClose={onClose}
-      title="Rights confirmation"
+      title={t('editRelease.rightsTitle')}
     >
       <form
         aria-busy={busy}
@@ -68,7 +70,7 @@ export function RightsDialog({
         onSubmit={form.handleSubmit(submit)}
       >
         <p className="text-sm text-text-secondary">
-          Confirm what is true for this draft before review.
+          {t('editRelease.rightsIntro')}
         </p>
         <fieldset
           aria-describedby={errors.ownerType ? `${id}-owner-error` : undefined}
@@ -76,7 +78,7 @@ export function RightsDialog({
           disabled={busy}
         >
           <legend className="text-sm font-medium">
-            Who controls the master recording?
+            {t('editRelease.masterQuestion')}
           </legend>
           <label className="artist-release-credit-role">
             <input
@@ -85,7 +87,9 @@ export function RightsDialog({
               value="ARTIST"
               {...form.register('ownerType', { onChange: reset })}
             />
-            <span>{release.artistName} (this artist)</span>
+            <span>
+              {t('workspace.rights.thisArtist', { name: release.artistName })}
+            </span>
           </label>
           <label className="artist-release-credit-role">
             <input
@@ -93,7 +97,7 @@ export function RightsDialog({
               value="OTHER"
               {...form.register('ownerType', { onChange: reset })}
             />
-            <span>Another owner, such as a label</span>
+            <span>{t('editRelease.otherOwner')}</span>
           </label>
           {errors.ownerType && (
             <p
@@ -101,7 +105,7 @@ export function RightsDialog({
               id={`${id}-owner-error`}
               role="alert"
             >
-              {errors.ownerType.message}
+              {tMessage(errors.ownerType.message)}
             </p>
           )}
         </fieldset>
@@ -111,7 +115,7 @@ export function RightsDialog({
               className="block text-sm font-medium"
               htmlFor={`${id}-owner-name`}
             >
-              Master owner name
+              {t('editRelease.ownerName')}
             </label>
             <Input
               aria-describedby={
@@ -131,28 +135,29 @@ export function RightsDialog({
                 id={`${id}-owner-name-error`}
                 role="alert"
               >
-                {errors.ownerName.message}
+                {tMessage(errors.ownerName.message)}
               </p>
             )}
           </div>
         )}
         <fieldset className="space-y-3" disabled={busy}>
-          <legend className="text-sm font-medium">Confirmation</legend>
+          <legend className="text-sm font-medium">
+            {t('editRelease.confirmation')}
+          </legend>
           <label className="artist-release-credit-role">
             <input
               type="checkbox"
               {...form.register('writersConfirmed', { onChange: reset })}
             />
-            <span>All songwriters and composers are listed</span>
+            <span>{t('workspace.rights.writersListed')}</span>
           </label>
         </fieldset>
         <p className="text-sm text-text-secondary">
-          Changing contributors later clears this confirmation. You confirm the
-          whole draft is accurate once, when you submit it for review.
+          {t('editRelease.rightsNote')}
         </p>
         {mutation.error && (
           <p className="text-sm text-destructive" role="alert">
-            {mutation.error.message}
+            {tMessage(mutation.error.message)}
           </p>
         )}
         <div className="flex flex-wrap justify-end gap-3">
@@ -162,7 +167,7 @@ export function RightsDialog({
             type="button"
             variant="outline"
           >
-            Cancel
+            {t('common.cancel')}
           </Button>
           <Button
             className="artist-workspace-primary"
@@ -170,7 +175,7 @@ export function RightsDialog({
             type="submit"
             variant="primary"
           >
-            {busy ? 'Saving rights…' : 'Save rights'}
+            {busy ? t('editRelease.savingRights') : t('editRelease.saveRights')}
           </Button>
         </div>
       </form>

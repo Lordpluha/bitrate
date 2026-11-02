@@ -1,4 +1,5 @@
 import { Button, cn } from '@bitrate/ui-react'
+import { useI18n } from '@shared/i18n'
 import { Plus } from 'lucide-react'
 import { useWorkspaceActions } from '../model/workspaceActions'
 
@@ -10,6 +11,7 @@ export function CreateReleaseButton({
   className?: string
 }) {
   const { openAction } = useWorkspaceActions()
+  const { t } = useI18n()
   return (
     <Button
       className={cn(
@@ -20,7 +22,7 @@ export function CreateReleaseButton({
       variant="primary"
     >
       <Plus aria-hidden="true" className="size-[1.0625rem]" />
-      {first ? 'Create your first release' : 'Create release'}
+      {first ? t('music.create.first') : t('music.create.title')}
     </Button>
   )
 }

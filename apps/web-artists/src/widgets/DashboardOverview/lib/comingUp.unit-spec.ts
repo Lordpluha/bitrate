@@ -18,14 +18,14 @@ describe('comingUp', () => {
       {
         key: 'release-019a0000-0000-7000-8000-000000000202',
         at: '2026-10-25T09:00:00.000Z',
-        title: 'Planned release date',
+        title: 'dashboard.upcoming.plannedDate',
         detail: 'Release 2',
         releaseId: '019a0000-0000-7000-8000-000000000202',
       },
       {
         key: 'release-019a0000-0000-7000-8000-000000000201',
         at: '2026-11-01T12:00:00.000Z',
-        title: 'Planned release date',
+        title: 'dashboard.upcoming.plannedDate',
         detail: 'Release 1',
         releaseId: '019a0000-0000-7000-8000-000000000201',
       },

@@ -53,14 +53,14 @@ describe('saveSplits', () => {
       shares: input.shares,
     })
     await expect(saveSplits({ id, input })).rejects.toThrow(
-      'Could not confirm the splits were saved',
+      'release.error.splitsUnconfirmed',
     )
   })
 
   it('explains a stale draft', async () => {
     respond(409, { message: 'Release changed' })
     await expect(saveSplits({ id, input })).rejects.toThrow(
-      'This release changed or is no longer a draft',
+      'release.error.stale',
     )
   })
 })
@@ -69,15 +69,13 @@ describe('submitRelease', () => {
   const submit = () =>
     submitRelease({ id, input: { reviewed: true, expectedUpdatedAt } })
 
-  it('counts the blockers the API reports', async () => {
+  it('points to the blockers the API reports', async () => {
     respond(
       422,
       { blockers: [{ code: 'NO_TRACKS' }, { code: 'COVER_MISSING' }] },
       'POST',
     )
-    await expect(submit()).rejects.toThrow(
-      'Resolve 2 blockers before submission.',
-    )
+    await expect(submit()).rejects.toThrow('release.error.submitBlocked')
   })
 
   it('confirms a release that moved to review', async () => {

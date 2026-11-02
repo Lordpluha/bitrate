@@ -1,5 +1,6 @@
 import { Button, Input, LogoIcon, Typography } from '@bitrate/ui-react'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { messageKey, useI18n } from '@shared/i18n'
 import { useMutation } from '@tanstack/react-query'
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
@@ -18,6 +19,7 @@ export function TwoFactorLoginForm({
   onVerified,
   onBack,
 }: TwoFactorLoginFormProps) {
+  const { t, tMessage } = useI18n()
   const form = useForm<TwoFactorFormData>({
     resolver: zodResolver(twoFactorFormSchema),
     defaultValues: { code: '' },
@@ -36,7 +38,7 @@ export function TwoFactorLoginForm({
     },
     onError: () => {
       form.setError('root', {
-        message: 'Could not verify your code. Please try again.',
+        message: messageKey('auth.twoFactor.failed'),
       })
     },
   })
@@ -46,17 +48,15 @@ export function TwoFactorLoginForm({
       <div className="mb-6 flex flex-col items-center gap-2">
         <LogoIcon height={64} width={64} />
         <Typography as="h1" className="text-center" size="heading2">
-          Verify your sign-in
+          {t('auth.twoFactor.title')}
         </Typography>
-        <p className="text-center">
-          Enter the code from your authenticator app.
-        </p>
+        <p className="text-center">{t('auth.twoFactor.description')}</p>
       </div>
       <form
         className="flex flex-col gap-4"
         onSubmit={form.handleSubmit((data) => verification.mutate(data))}
       >
-        <label htmlFor="two-factor-code">Authentication code</label>
+        <label htmlFor="two-factor-code">{t('auth.twoFactor.codeLabel')}</label>
         <Input
           aria-describedby={
             form.formState.errors.code ? 'two-factor-code-error' : undefined
@@ -73,11 +73,11 @@ export function TwoFactorLoginForm({
         />
         {form.formState.errors.code && (
           <p id="two-factor-code-error" role="alert">
-            {form.formState.errors.code.message}
+            {tMessage(form.formState.errors.code.message)}
           </p>
         )}
         {form.formState.errors.root && (
-          <p role="alert">{form.formState.errors.root.message}</p>
+          <p role="alert">{tMessage(form.formState.errors.root.message)}</p>
         )}
         <Button
           disabled={verification.isPending}
@@ -85,7 +85,9 @@ export function TwoFactorLoginForm({
           type="submit"
           variant="primary"
         >
-          {verification.isPending ? 'Verifying…' : 'Verify and sign in'}
+          {verification.isPending
+            ? t('common.verifying')
+            : t('auth.twoFactor.submit')}
         </Button>
         <Button
           disabled={verification.isPending}
@@ -93,7 +95,7 @@ export function TwoFactorLoginForm({
           type="button"
           variant="ghost"
         >
-          Back to sign-in
+          {t('auth.twoFactor.back')}
         </Button>
       </form>
     </div>

@@ -4,9 +4,15 @@ const { fetchWithAuthRefresh } = vi.hoisted(() => ({
   fetchWithAuthRefresh: vi.fn(),
 }))
 
-vi.mock('@shared/api/client', () => ({ fetchWithAuthRefresh }))
+const { openPlaySession, playSessionToken } = vi.hoisted(() => ({
+  openPlaySession: vi.fn(),
+  playSessionToken: vi.fn(() => 'token-1' as string | undefined),
+}))
 
-import { fetchRenditionRange } from './hooks'
+vi.mock('@shared/api/client', () => ({ fetchWithAuthRefresh }))
+vi.mock('./playSessions', () => ({ openPlaySession, playSessionToken }))
+
+import { fetchRenditionRange, getRenditionUrl } from './hooks'
 
 const fetchRange = () =>
   fetchRenditionRange({
@@ -31,6 +37,74 @@ const response = (
       : undefined,
     status,
   })
+
+describe('getRenditionUrl', () => {
+  beforeEach(() => {
+    fetchWithAuthRefresh.mockReset()
+    playSessionToken.mockReturnValue('token-1')
+  })
+
+  it('points at the rendition file with the newest session token of the track', () => {
+    expect(getRenditionUrl({ bitrate: 192, trackId: 'track-id' })).toMatch(
+      /\/api\/v1\/tracks\/track-id\/cmaf\/192\?t=token-1$/,
+    )
+  })
+
+  it('is the same file, with the same token, the fragment ranges are read from', async () => {
+    fetchWithAuthRefresh.mockResolvedValue(response(206, [1, 2, 3]))
+
+    await fetchRange()
+
+    expect(fetchWithAuthRefresh).toHaveBeenCalledWith(
+      getRenditionUrl({ bitrate: 128, trackId: 'track-id' }),
+      expect.anything(),
+    )
+  })
+})
+
+describe('fetchRenditionRange with playback sessions', () => {
+  beforeEach(() => {
+    fetchWithAuthRefresh.mockReset()
+    openPlaySession.mockReset()
+    playSessionToken.mockReturnValue('token-1')
+  })
+
+  it('opens one new session when the token is refused, then retries with it', async () => {
+    fetchWithAuthRefresh
+      .mockResolvedValueOnce(new Response(null, { status: 403 }))
+      .mockResolvedValueOnce(response(206, [1, 2, 3]))
+    openPlaySession.mockImplementation(async () => {
+      playSessionToken.mockReturnValue('token-2')
+      return {}
+    })
+
+    await expect(fetchRange()).resolves.toBeInstanceOf(ArrayBuffer)
+
+    expect(openPlaySession).toHaveBeenCalledWith({ trackId: 'track-id' })
+    const [retryUrl] = fetchWithAuthRefresh.mock.calls[1] as [string]
+    expect(retryUrl).toMatch(/\?t=token-2$/)
+  })
+
+  it('gives up when the new session is refused too', async () => {
+    fetchWithAuthRefresh.mockResolvedValue(new Response(null, { status: 403 }))
+    openPlaySession.mockResolvedValue({})
+
+    await expect(fetchRange()).rejects.toThrow()
+    expect(openPlaySession).toHaveBeenCalledTimes(1)
+  })
+
+  it('waits Retry-After when the session is ahead of real time, then retries', async () => {
+    fetchWithAuthRefresh
+      .mockResolvedValueOnce(
+        new Response(null, { headers: { 'Retry-After': '0' }, status: 429 }),
+      )
+      .mockResolvedValueOnce(response(206, [1, 2, 3]))
+
+    await expect(fetchRange()).resolves.toBeInstanceOf(ArrayBuffer)
+    expect(fetchWithAuthRefresh).toHaveBeenCalledTimes(2)
+    expect(openPlaySession).not.toHaveBeenCalled()
+  })
+})
 
 describe('fetchRenditionRange', () => {
   beforeEach(() => {

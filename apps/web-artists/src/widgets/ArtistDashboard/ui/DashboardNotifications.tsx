@@ -6,6 +6,7 @@ import {
   useMarkNotificationsSeen,
   useNotifications,
 } from '@entities/notification'
+import { useI18n } from '@shared/i18n'
 import { Link } from '@tanstack/react-router'
 import { BellOff, CircleAlert, Info } from 'lucide-react'
 
@@ -21,20 +22,21 @@ export function DashboardNotifications({
 }: DashboardNotificationsProps) {
   const notifications = useNotifications(artistId)
   const markSeen = useMarkNotificationsSeen(artistId)
+  const { tMessage, t } = useI18n()
 
   if (notifications.isPending)
-    return <p role="status">Loading notifications…</p>
+    return <p role="status">{t('shell.notifications.loading')}</p>
   if (notifications.isError)
     return (
       <div className="space-y-3">
-        <p role="alert">{notifications.error.message}</p>
+        <p role="alert">{tMessage(notifications.error.message)}</p>
         <Button
           onClick={() => {
             void notifications.refetch()
           }}
           variant="outline"
         >
-          Try again
+          {t('common.tryAgain')}
         </Button>
       </div>
     )
@@ -44,10 +46,7 @@ export function DashboardNotifications({
     return (
       <div className="flex items-start gap-3 text-sm text-text-secondary">
         <BellOff aria-hidden="true" className="size-5 shrink-0" />
-        <p>
-          No notifications. Deadlines, review results and delivery updates will
-          appear here.
-        </p>
+        <p>{t('shell.notifications.empty')}</p>
       </div>
     )
 
@@ -57,7 +56,9 @@ export function DashboardNotifications({
     <div className="space-y-5">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <p className="text-sm text-text-secondary" role="status">
-          {unread === 0 ? 'All caught up' : `${unread} unread`}
+          {unread === 0
+            ? t('shell.notifications.caughtUp')
+            : t('shell.notifications.unreadCount', { count: unread })}
         </p>
         {unread > 0 && (
           <Button
@@ -66,27 +67,27 @@ export function DashboardNotifications({
             size="sm"
             variant="outline"
           >
-            Mark all as read
+            {t('shell.notifications.markAllRead')}
           </Button>
         )}
       </div>
       {markSeen.error && (
         <p className="text-sm text-destructive" role="alert">
-          {markSeen.error.message}
+          {tMessage(markSeen.error.message)}
         </p>
       )}
       {actions.length > 0 && (
         <NotificationGroup
           items={actions}
           onNavigate={onNavigate}
-          title="Action required"
+          title={t('shell.notifications.actionRequired')}
         />
       )}
       {updates.length > 0 && (
         <NotificationGroup
           items={updates}
           onNavigate={onNavigate}
-          title="Updates"
+          title={t('shell.notifications.updates')}
         />
       )}
     </div>
@@ -102,6 +103,8 @@ function NotificationGroup({
   items: ArtistNotification[]
   onNavigate: () => void
 }) {
+  const i18n = useI18n()
+  const { t } = i18n
   return (
     <section className="space-y-1">
       <h3 className="text-xs uppercase tracking-wide text-text-secondary">
@@ -136,11 +139,16 @@ function NotificationGroup({
                       item.unread && 'font-medium',
                     )}
                   >
-                    {describeNotification(item)}
-                    {item.unread && <span className="sr-only"> (unread)</span>}
+                    {describeNotification(item, i18n)}
+                    {item.unread && (
+                      <span className="sr-only">
+                        {' '}
+                        {t('shell.notifications.unread')}
+                      </span>
+                    )}
                   </span>
                   <span className="block truncate text-xs text-text-secondary">
-                    {item.releaseTitle} · {notificationTime(item.at)}
+                    {item.releaseTitle} · {notificationTime(item.at, i18n)}
                   </span>
                 </span>
                 {item.unread && (

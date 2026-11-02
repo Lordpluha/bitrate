@@ -1,3 +1,4 @@
+import { messageKey } from '@shared/i18n'
 import { z } from 'zod'
 
 /**
@@ -6,16 +7,16 @@ import { z } from 'zod'
  */
 export const emailSchema = z
   .string()
-  .min(1, 'Email is required')
-  .pipe(z.email('Please enter a valid email address'))
+  .min(1, messageKey('auth.validation.emailRequired'))
+  .pipe(z.email(messageKey('auth.validation.emailInvalid')))
 
 export const passwordSchema = z
   .string()
-  .min(10, 'Password must be at least 10 characters')
-  .regex(/[A-Za-z]/, 'Password must contain at least one letter')
+  .min(10, messageKey('auth.validation.passwordTooShort'))
+  .regex(/[A-Za-z]/, messageKey('auth.validation.passwordLetter'))
   .regex(
     /[0-9]|[^A-Za-z0-9]/,
-    'Password must contain a number or special character',
+    messageKey('auth.validation.passwordNumberOrSymbol'),
   )
 
 export const registrationSchema = z
@@ -26,26 +27,26 @@ export const registrationSchema = z
     acceptArtistAgreement: z.boolean(),
   })
   .refine((data) => !data.password || data.password.length >= 10, {
-    message: 'Password must be at least 10 characters',
+    message: messageKey('auth.validation.passwordTooShort'),
     path: ['password'],
   })
   .refine((data) => !data.password || /[A-Za-z]/.test(data.password), {
-    message: 'Password must contain at least one letter',
+    message: messageKey('auth.validation.passwordLetter'),
     path: ['password'],
   })
   .refine(
     (data) => !data.password || /[0-9]|[^A-Za-z0-9]/.test(data.password),
     {
-      message: 'Password must contain a number or special character',
+      message: messageKey('auth.validation.passwordNumberOrSymbol'),
       path: ['password'],
     },
   )
   .refine((data) => !data.password || data.acceptLegal, {
-    message: 'You must accept the Terms of Use and Community Guidelines',
+    message: messageKey('auth.validation.acceptLegal'),
     path: ['acceptLegal'],
   })
   .refine((data) => !data.password || data.acceptArtistAgreement, {
-    message: 'You must accept the Artist Agreement',
+    message: messageKey('auth.validation.acceptArtistAgreement'),
     path: ['acceptArtistAgreement'],
   })
 

@@ -6,6 +6,7 @@ import {
   stageProgress,
   stageProgressLabels,
 } from '@entities/release'
+import { useI18n } from '@shared/i18n'
 import { Link } from '@tanstack/react-router'
 import { Check } from 'lucide-react'
 
@@ -18,8 +19,9 @@ interface ReleaseStepperProps {
 /** The five release stages as navigation, each showing where it stands. */
 export function ReleaseStepper({ release, active }: ReleaseStepperProps) {
   const progress = stageProgress(release.status)
+  const { t } = useI18n()
   return (
-    <nav aria-label="Release stages" className="artist-release-stepper">
+    <nav aria-label={t('workspace.stages')} className="artist-release-stepper">
       <ol>
         {releaseStages.map((stage, index) => {
           const state = progress[stage]
@@ -37,10 +39,10 @@ export function ReleaseStepper({ release, active }: ReleaseStepperProps) {
                 </span>
                 <span className="min-w-0">
                   <span className="artist-release-step-name">
-                    {releaseStageLabels[stage]}
+                    {t(releaseStageLabels[stage])}
                   </span>
                   <span className="artist-release-step-state">
-                    {stageProgressLabels[state]}
+                    {t(stageProgressLabels[state])}
                   </span>
                 </span>
               </Link>

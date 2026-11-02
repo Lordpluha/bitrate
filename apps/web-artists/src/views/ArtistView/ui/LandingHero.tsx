@@ -1,9 +1,11 @@
 import { Button } from '@bitrate/ui-react'
+import { useI18n } from '@shared/i18n'
 import { ROUTES } from '@shared/routes/routes'
 import { Link } from '@tanstack/react-router'
 import { ArrowRight } from 'lucide-react'
 
 export const LandingHero = () => {
+  const { t } = useI18n()
   return (
     <section
       aria-labelledby="landing-title"
@@ -11,27 +13,26 @@ export const LandingHero = () => {
     >
       <div className="flex flex-col gap-5">
         <p className="text-sm font-semibold uppercase tracking-wider text-text-secondary">
-          Bitrate for Artists
+          {t('landing.eyebrow')}
         </p>
         <h1
           className="text-balance text-4xl font-semibold leading-tight lg:text-6xl"
           id="landing-title"
         >
-          Plan, prepare and track your releases.
+          {t('landing.title')}
         </h1>
         <p className="text-pretty text-lg text-text-secondary">
-          One workspace for the releases you put out on Bitrate: drafts, credits
-          and rights, publishing and listening analytics.
+          {t('landing.lead')}
         </p>
         <div className="flex flex-wrap gap-3">
           <Button asChild size="lg">
             <Link to={ROUTES.auth.registration}>
-              Create an account
+              {t('landing.createAccount')}
               <ArrowRight aria-hidden="true" />
             </Link>
           </Button>
           <Button asChild size="lg" variant="outline">
-            <Link to={ROUTES.auth.login}>Log in</Link>
+            <Link to={ROUTES.auth.login}>{t('landing.logIn')}</Link>
           </Button>
         </div>
       </div>

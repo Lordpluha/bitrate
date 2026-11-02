@@ -1,4 +1,5 @@
 import { refreshToken } from '@shared/api'
+import { messageKey } from '@shared/i18n'
 
 /** How the private master route is checked before the player is handed its URL. */
 export interface AudioSourceDeps {
@@ -11,9 +12,9 @@ const defaultDeps: AudioSourceDeps = {
   refresh: refreshToken,
 }
 
-const SESSION_EXPIRED = 'Your session has expired. Sign in again to listen.'
-const MASTER_GONE = 'This recording is no longer available.'
-const CHECK_FAILED = 'Could not load this recording. Try again.'
+const SESSION_EXPIRED = messageKey('media.player.sessionExpired')
+const MASTER_GONE = messageKey('media.player.gone')
+const CHECK_FAILED = messageKey('media.player.failed')
 
 /** The API answers HEAD by streaming the whole master, so one ranged byte proves access. */
 const PROBE: RequestInit = {
@@ -34,8 +35,8 @@ async function probeStatus(url: string, deps: AudioSourceDeps) {
 
 /**
  * Resolves an owner-only master URL for `<bitrate-player>`. The element's `<audio>` cannot
- * renew an expired session, so a one-byte probe does it first; rejections carry a message the
- * player can show as-is.
+ * renew an expired session, so a one-byte probe does it first; rejections carry a catalog key
+ * the caller translates before the player shows it.
  */
 export async function playableAudioUrl(
   url: string,

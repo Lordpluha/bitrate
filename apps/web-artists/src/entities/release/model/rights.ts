@@ -1,4 +1,5 @@
 import type { ApiSchemas } from '@bitrate/contracts'
+import type { Translate, TranslationKey } from '@shared/i18n'
 import { z } from 'zod'
 
 type RightType = ApiSchemas['ReleaseRightType']
@@ -6,10 +7,11 @@ type RightType = ApiSchemas['ReleaseRightType']
 /** 10,000 basis points is 100%; the API stores integer basis points. */
 export const FULL_SHARE_BASIS_POINTS = 10_000
 
+/** Catalog keys; render them with `t()`. */
 export const rightTypeLabels = {
-  RECORDING: 'Master',
-  COMPOSITION: 'Publishing',
-} satisfies Record<RightType, string>
+  RECORDING: 'release.right.recording',
+  COMPOSITION: 'release.right.composition',
+} satisfies Record<RightType, TranslationKey>
 
 export const rightTypes = [
   'RECORDING',
@@ -97,21 +99,32 @@ interface BlockerNames {
 export function describeBlocker(
   blocker: ReleaseBlocker,
   names: BlockerNames,
+  t: Translate,
 ): string {
   switch (blocker.code) {
     case 'NO_TRACKS':
-      return 'Add at least one track'
+      return t('release.blocker.noTracks')
     case 'COVER_MISSING':
-      return 'Upload the release artwork'
+      return t('release.blocker.coverMissing')
     case 'TRACK_AUDIO_MISSING':
-      return `Upload audio for ${names.tracks?.[blocker.trackId] ?? 'a recording'}`
+      return t('release.blocker.audioMissing', {
+        track:
+          names.tracks?.[blocker.trackId] ?? t('release.blocker.aRecording'),
+      })
     case 'MASTER_OWNER_MISSING':
-      return 'Choose the master owner'
+      return t('release.blocker.masterOwner')
     case 'WRITERS_NOT_CONFIRMED':
-      return 'Confirm all writers are listed'
+      return t('release.blocker.writers')
     case 'CONTRIBUTOR_ROLES_MISSING':
-      return `${names.contributors[blocker.contributorId] ?? 'A contributor'} needs a role`
+      return t('release.blocker.roles', {
+        name:
+          names.contributors[blocker.contributorId] ??
+          t('release.blocker.aContributor'),
+      })
     case 'SPLITS_INCOMPLETE':
-      return `${rightTypeLabels[blocker.rightType]} splits total ${basisPointsToPercent(blocker.totalBasisPoints)}% of 100%`
+      return t('release.blocker.splits', {
+        right: t(rightTypeLabels[blocker.rightType]),
+        percent: basisPointsToPercent(blocker.totalBasisPoints),
+      })
   }
 }
