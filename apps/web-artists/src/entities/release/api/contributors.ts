@@ -1,6 +1,7 @@
 import type { ApiSchemas } from '@bitrate/contracts'
 import { clientFetchClient } from '@shared/api/fetchClient'
 import { writeSignal } from '@shared/api/writeTimeout'
+import { messageKey } from '@shared/i18n'
 import { z } from 'zod'
 import {
   contributorResultSchema,
@@ -24,7 +25,7 @@ export async function getContributor(
     { params: { path: { id, contributorId } }, signal },
   )
   if (result.response.status === 404)
-    throw new Error('This release or contributor is no longer available.')
+    throw new Error(messageKey('release.error.contributorGone'))
   const parsed = contributorResultSchema.safeParse(result.data)
   if (
     !result.response.ok ||
@@ -32,7 +33,7 @@ export async function getContributor(
     parsed.data.release.id !== id ||
     parsed.data.participant.id !== contributorId
   )
-    throw new Error('Could not load the latest contributor. Please try again.')
+    throw new Error(messageKey('release.error.loadContributor'))
   return parsed.data
 }
 
@@ -41,8 +42,7 @@ export async function saveContributor(
   contributorId?: string,
 ) {
   const { id, input } = request
-  const unconfirmed =
-    'Could not confirm the contributor was saved. Close this form and check Participants before trying again.'
+  const unconfirmed = messageKey('release.error.contributorUnconfirmed')
   let result: Awaited<ReturnType<typeof sendContributor>>
   try {
     result = await sendContributor(request, contributorId)
@@ -50,13 +50,11 @@ export async function saveContributor(
     throw new Error(unconfirmed)
   }
   if (result.response.status === 409)
-    throw new Error(
-      'This release changed or is no longer a draft. Your entries are kept here; close and reopen the form to review the latest version.',
-    )
+    throw new Error(messageKey('release.error.stale'))
   if (result.response.status === 404)
-    throw new Error('This release or contributor is no longer available.')
+    throw new Error(messageKey('release.error.contributorGone'))
   if (result.response.status === 400)
-    throw new Error('Check the contributor name and roles, then try again.')
+    throw new Error(messageKey('release.error.contributorInvalid'))
   const parsed = contributorResultSchema.safeParse(result.data)
   if (
     result.response.status !== (contributorId ? 200 : 201) ||
@@ -128,9 +126,8 @@ export function removeContributor({
         : undefined
     },
     {
-      invalid: 'Could not remove this contributor. Please try again.',
-      unconfirmed:
-        'Could not confirm the contributor was removed. Check Participants before trying again.',
+      invalid: messageKey('release.error.removeContributorInvalid'),
+      unconfirmed: messageKey('release.error.removeContributorUnconfirmed'),
     },
   )
 }
@@ -157,11 +154,9 @@ export function creditSelf({ id, expectedUpdatedAt }: CreditSelfRequest) {
         : undefined
     },
     {
-      invalid: 'Could not credit you on this release. Please try again.',
-      unconfirmed:
-        'Could not confirm you were credited. Check Participants before trying again.',
-      conflict:
-        'This release changed or already credits someone. Close this and review Participants.',
+      invalid: messageKey('release.error.creditSelfInvalid'),
+      unconfirmed: messageKey('release.error.creditSelfUnconfirmed'),
+      conflict: messageKey('release.error.creditSelfConflict'),
     },
   )
 }

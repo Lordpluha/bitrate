@@ -1,4 +1,5 @@
 import type { ApiSchemas } from '@bitrate/contracts'
+import { messageKey } from '@shared/i18n'
 import { z } from 'zod'
 import { releaseSummarySchema } from './release.schema'
 
@@ -14,15 +15,15 @@ export const contributorSchema = z.strictObject({
   displayName: z
     .string()
     .trim()
-    .min(1, 'Enter a contributor name')
-    .max(255, 'Use 255 characters or fewer'),
+    .min(1, messageKey('release.error.nameRequired'))
+    .max(255, messageKey('release.error.nameTooLong')),
   roles: z
     .array(z.enum(contributorRoles))
-    .min(1, 'Choose at least one role')
+    .min(1, messageKey('release.error.roleRequired'))
     .max(5)
     .refine(
       (roles) => new Set(roles).size === roles.length,
-      'Choose each role once',
+      messageKey('release.error.roleOnce'),
     ),
 })
 export type ContributorValues = z.infer<typeof contributorSchema>

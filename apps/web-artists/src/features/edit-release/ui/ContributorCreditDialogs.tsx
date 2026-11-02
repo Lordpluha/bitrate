@@ -4,7 +4,7 @@ import {
   useCreditSelf,
   useRemoveContributor,
 } from '@entities/release'
-import { useI18n } from '@shared/i18n'
+import { Interpolate, useI18n } from '@shared/i18n'
 import { WorkspaceModal } from '@shared/ui/WorkspaceModal/WorkspaceModal'
 import { useState } from 'react'
 
@@ -26,7 +26,7 @@ export function RemoveContributorDialog({
   onClose,
   onSaved,
 }: RemoveContributorDialogProps) {
-  const { tMessage } = useI18n()
+  const { t, tMessage } = useI18n()
   const remove = useRemoveContributor(artistId)
   const [expectedUpdatedAt] = useState(release.updatedAt)
   const person = release.participants.find((item) => item.id === contributorId)
@@ -49,13 +49,20 @@ export function RemoveContributorDialog({
       canClose={!remove.isPending}
       className="artist-release-credit-modal"
       onClose={onClose}
-      title="Remove contributor"
+      title={t('workspace.credits.removeContributor')}
     >
       <div aria-busy={remove.isPending} className="space-y-6">
         <p>
-          Remove <strong>{person?.displayName ?? 'this contributor'}</strong>{' '}
-          from the release? Their master and publishing shares are removed, so
-          the splits must add up to 100% again.
+          <Interpolate
+            message={t('editRelease.removeConfirm')}
+            values={{
+              name: (
+                <strong>
+                  {person?.displayName ?? t('editRelease.thisContributor')}
+                </strong>
+              ),
+            }}
+          />
         </p>
         {remove.error && (
           <p className="text-sm text-destructive" role="alert">
@@ -70,7 +77,7 @@ export function RemoveContributorDialog({
             type="button"
             variant="outline"
           >
-            Keep contributor
+            {t('editRelease.keepContributor')}
           </Button>
           <Button
             disabled={remove.isPending}
@@ -80,7 +87,9 @@ export function RemoveContributorDialog({
             type="button"
             variant="destructive"
           >
-            {remove.isPending ? 'Removing…' : 'Remove contributor'}
+            {remove.isPending
+              ? t('editRelease.removing')
+              : t('workspace.credits.removeContributor')}
           </Button>
         </div>
       </div>
@@ -94,7 +103,7 @@ export function CreditSelfDialog({
   onClose,
   onSaved,
 }: CreditDialogProps) {
-  const { tMessage } = useI18n()
+  const { t, tMessage } = useI18n()
   const credit = useCreditSelf(artistId)
   const [expectedUpdatedAt] = useState(release.updatedAt)
 
@@ -112,13 +121,14 @@ export function CreditSelfDialog({
       canClose={!credit.isPending}
       className="artist-release-credit-modal"
       onClose={onClose}
-      title="I made it myself"
+      title={t('workspace.credits.self')}
     >
       <div aria-busy={credit.isPending} className="space-y-6">
         <p>
-          Credit <strong>{release.artistName}</strong> as performer, composer
-          and lyricist with 100% of the master and publishing splits. You can
-          add collaborators and divide the shares later.
+          <Interpolate
+            message={t('editRelease.creditSelf')}
+            values={{ name: <strong>{release.artistName}</strong> }}
+          />
         </p>
         {credit.error && (
           <p className="text-sm text-destructive" role="alert">
@@ -132,7 +142,7 @@ export function CreditSelfDialog({
             type="button"
             variant="outline"
           >
-            Cancel
+            {t('common.cancel')}
           </Button>
           <Button
             className="artist-workspace-primary"
@@ -144,7 +154,9 @@ export function CreditSelfDialog({
             type="button"
             variant="primary"
           >
-            {credit.isPending ? 'Crediting…' : 'Credit me alone'}
+            {credit.isPending
+              ? t('editRelease.crediting')
+              : t('editRelease.creditMe')}
           </Button>
         </div>
       </div>

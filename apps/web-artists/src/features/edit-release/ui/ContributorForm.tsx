@@ -41,7 +41,9 @@ export function ContributorForm({
     mode: 'onTouched',
   })
   const { errors, isSubmitting, isDirty } = form.formState
-  const title = participant ? 'Edit contributor' : 'Add contributor'
+  const title = participant
+    ? t('editRelease.editContributor')
+    : t('workspace.credits.add')
   const parsed = contributorSchema.safeParse(form.watch())
   const changed =
     !participant ||
@@ -76,11 +78,11 @@ export function ContributorForm({
         onSubmit={form.handleSubmit(submit)}
       >
         <p className="text-sm text-text-secondary">
-          Credit a person involved in this release and assign at least one role.
+          {t('editRelease.contributorIntro')}
         </p>
         <div className="space-y-2">
           <label className="block text-sm font-medium" htmlFor={`${id}-name`}>
-            Contributor name
+            {t('editRelease.contributorName')}
           </label>
           <Input
             aria-describedby={
@@ -103,7 +105,7 @@ export function ContributorForm({
               id={`${id}-name-error`}
               role="alert"
             >
-              {errors.displayName.message}
+              {tMessage(errors.displayName.message)}
             </p>
           )}
         </div>
@@ -114,9 +116,11 @@ export function ContributorForm({
           className="space-y-3"
           disabled={busy}
         >
-          <legend className="text-sm font-medium">Assigned roles</legend>
+          <legend className="text-sm font-medium">
+            {t('editRelease.roles')}
+          </legend>
           <p className="text-sm text-text-secondary" id={`${id}-roles-hint`}>
-            Choose at least one role.
+            {t('editRelease.rolesHint')}
           </p>
           <div className="artist-release-credit-roles">
             {contributorRoles.map((role) => (
@@ -138,13 +142,12 @@ export function ContributorForm({
               id={`${id}-roles-error`}
               role="alert"
             >
-              {errors.roles.message}
+              {tMessage(errors.roles.message)}
             </p>
           )}
         </fieldset>
         <p className="text-sm text-text-secondary">
-          Credits do not grant workspace access. Shares are set in the master
-          and publishing splits.
+          {t('editRelease.contributorNote')}
         </p>
         {mutation.error && (
           <p className="text-sm text-destructive" role="alert">
@@ -158,7 +161,7 @@ export function ContributorForm({
             type="button"
             variant="outline"
           >
-            Cancel
+            {t('common.cancel')}
           </Button>
           <Button
             className="artist-workspace-primary"
@@ -166,7 +169,9 @@ export function ContributorForm({
             type="submit"
             variant="primary"
           >
-            {busy ? 'Saving contributor…' : 'Save contributor'}
+            {busy
+              ? t('editRelease.savingContributor')
+              : t('editRelease.saveContributor')}
           </Button>
         </div>
       </form>
