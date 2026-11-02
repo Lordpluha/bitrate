@@ -227,7 +227,7 @@ Pencil components: `Mobile/Island`, `Mobile/Island Compact`, `Mobile/Island Skip
 - **Shape.** One floating glass capsule, 18 px above the safe area, 66 px tall. It holds the
   artwork with a progress ring, three tabs (Home, Search, Library) and play. Jam is not a tab: it is a
   Library filter, and a live Jam shows on top of Library; a Jam live activity opens Library › Jam.
-- **Filter rows.** Chip rows (Library: Everything, Jam, Saved, Podcasts…) scroll sideways when they
+- **Filter rows.** Chip rows (Library: Everything, Jam, Saved, Playlists…) scroll sideways when they
   overflow; nothing wraps. The edges fade only on the side where more chips hide, and the chosen chip
   scrolls into view. A mouse wheel scrolls the row horizontally. In Pencil the row bleeds past the
   edge, so a cut chip shows there is more. The active tab's

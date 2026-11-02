@@ -67,7 +67,7 @@ function quickGrid(cols = 4) {
 }
 function homeAll() {
   return [
-    Chips(['All', 'Music', 'Podcasts']),
+    Chips(['All', 'Music']),
     Col({ gap: 4 }, [Tx('Eyebrow', 'MADE FOR MAYA'), Tx('H1', 'Good evening, Maya')]),
     quickGrid(),
     SectionHeader('Recommended for you'),
@@ -133,70 +133,6 @@ export const playerPages = {
     desktop: () => Desktop('Home', homeAll(), { nowPlaying: true }),
     mobile: () => Mobile('Home', homeMobile()),
     states: [
-      state(
-        'Podcasts tab',
-        () =>
-          Desktop(
-            'Podcasts',
-            [
-              Chips(['All', 'Music', 'Podcasts'], 2),
-              SectionHeader('Your episodes'),
-              Col(
-                { gap: 0, width: 'fill_container' },
-                [
-                  ['Ep. 12 — Mixing for headphones', 'Signal & Noise · 48 min'],
-                  ['Ep. 11 — The second album', 'Signal & Noise · 52 min'],
-                ].map(([t, m]) =>
-                  R('Episode Row', {}, { title: { content: t }, meta: { content: m } }),
-                ),
-              ),
-              SectionHeader('Podcasts & shows'),
-              CardRow([
-                AlbumCard('Signal & Noise', 'Bitrate Studios', 'stage'),
-                AlbumCard('Night Shift', 'Mira Sol', 'night'),
-              ]),
-            ],
-            { nowPlaying: true },
-          ),
-        () =>
-          Mobile('Podcasts', [
-            Chips(['All', 'Music', 'Podcasts'], 2),
-            Tx('H4', 'Your episodes'),
-            MobileTrack('Ep. 12 — Mixing for headphones', 'Signal & Noise · 48 min', 'stage'),
-            Tx('H4', 'Podcasts & shows'),
-            Row({ gap: 12 }, [
-              AlbumCard('Signal & Noise', 'Bitrate Studios', 'stage', 171),
-              AlbumCard('Night Shift', 'Mira Sol', 'night', 171),
-            ]),
-          ]),
-      ),
-      state(
-        'No podcasts',
-        () =>
-          Desktop(
-            'No podcasts',
-            [
-              Chips(['All', 'Music', 'Podcasts'], 2),
-              EmptyState(
-                'No podcasts have been published yet.',
-                'Shows will appear here when creators publish them.',
-                null,
-                'podcast',
-              ),
-            ],
-            { nowPlaying: true },
-          ),
-        () =>
-          Mobile('No podcasts', [
-            Chips(['All', 'Music', 'Podcasts'], 2),
-            EmptyState(
-              'No podcasts have been published yet.',
-              'Shows will appear here when creators publish them.',
-              null,
-              'podcast',
-            ),
-          ]),
-      ),
       state(
         'Bitrate Connect',
         () =>

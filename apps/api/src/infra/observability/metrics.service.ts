@@ -31,6 +31,7 @@ export class MetricsService {
   private readonly registry = new Registry()
   private readonly httpRequestsTotal: Counter<keyof RouteLabels>
   private readonly httpRequestDurationSeconds: Histogram<keyof RouteLabels>
+  private readonly playbackSessionDegradedTotal: Counter<'step'>
 
   constructor() {
     collectDefaultMetrics({ register: this.registry })
@@ -49,6 +50,17 @@ export class MetricsService {
       buckets: DURATION_BUCKETS_SECONDS,
       registers: [this.registry],
     })
+    this.playbackSessionDegradedTotal = new Counter({
+      name: 'bitrate_api_playback_session_degraded_total',
+      help: 'Playback session checks that fell back to the token signature because Redis was unavailable.',
+      labelNames: ['step'],
+      registers: [this.registry],
+    })
+  }
+
+  /** Counts a playback session check served on the token alone while Redis was down. */
+  recordPlaybackSessionDegraded(step: 'authorize' | 'charge'): void {
+    this.playbackSessionDegradedTotal.inc({ step })
   }
 
   record(method: string, route: string, status: number, durationMs: number): void {
