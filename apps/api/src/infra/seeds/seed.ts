@@ -74,10 +74,7 @@ async function main() {
     // Шаг 7: Добавление библиотеки и истории пользователей
     await seedService.createUserLikes()
 
-    // Шаг 8: Создание подкастов и сохранённых эпизодов
-    await seedService.createPodcasts()
-
-    // Шаг 9: Финальная статистика
+    // Шаг 8: Финальная статистика
     await seedService.printStats(stats)
 
     console.log('\n✅ Database seeding completed successfully!')

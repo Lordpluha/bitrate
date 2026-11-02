@@ -6,18 +6,15 @@ import type { ChartSeriesValues } from '@presentation/components'
 export type Translate = (key: string, params?: Record<string, string | number>) => string
 
 /**
- * One design token per entity type. The chart palette only defines five categorical roles, so
- * `episode` and `user` fall back to neutral theme tokens; each series is also named in the
- * legend, tooltip and accessible table, so colour never carries the meaning alone.
+ * One categorical chart token per entity type. Each series is also named in the legend, tooltip
+ * and accessible table, so colour never carries the meaning alone.
  */
 export const ENTITY_TYPE_COLOR: Record<ModerationEntityType, string> = {
   track: '--color-chart-1',
   album: '--color-chart-2',
   playlist: '--color-chart-3',
   artist: '--color-chart-4',
-  podcast: '--color-chart-5',
-  episode: '--color-muted-foreground',
-  user: '--color-foreground',
+  user: '--color-chart-5',
 }
 
 /** Short day labels for the charts' axes and sr-only tables, e.g. "18 Sep" / "18 вер.". */

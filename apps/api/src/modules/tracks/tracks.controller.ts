@@ -12,7 +12,6 @@ import {
   HttpCode,
   Logger,
   Param,
-  ParseEnumPipe,
   ParseIntPipe,
   ParseUUIDPipe,
   Post,
@@ -27,14 +26,11 @@ import { Throttle } from '@nestjs/throttler'
 import type { Request, Response } from 'express'
 import { ZodValidationPipe } from 'nestjs-zod'
 import {
-  GetHlsAssetSwagger,
-  GetHlsMasterPlaylistSwagger,
   GetTrackByIdSwagger,
-  GetTrackManifestSwagger,
   LikeTrackSwagger,
+  OpenPlaySessionSwagger,
   PostTrackSwagger,
   StreamTrackRenditionSwagger,
-  StreamTrackSwagger,
   TracksGetAllSwagger,
   TracksGetLikedSwagger,
   UnlikeTrackSwagger,
@@ -46,11 +42,16 @@ import {
   type UpdateTrackDto,
   UpdateTrackSchema,
 } from './dtos/create-track.dto'
-import { TrackEntity, TrackManifestEntity, TrackManifestRenditionEntity } from './entities'
-import { type AudioStreamFormat, SUPPORTED_AUDIO_STREAM_FORMATS } from './track-audio.helpers'
+import { type OpenPlaySessionDto, OpenPlaySessionSchema } from './dtos/open-play-session.dto'
+import {
+  PlaySessionEntity,
+  TrackEntity,
+  TrackManifestEntity,
+  TrackManifestRenditionEntity,
+} from './entities'
+import { PlaybackPacingError } from './playback-session.service'
 import { TrackPlaybackService } from './track-playback.service'
 import { UnsatisfiableRangeError } from './track-playback.types'
-import { TrackStreamingService } from './track-streaming.service'
 import { TrackFilesInterceptor } from './track-upload.interceptor'
 import { TrackUploadService } from './track-upload.service'
 import { TracksService } from './tracks.service'
@@ -95,14 +96,13 @@ function sendRangeStream(
 }
 
 /** Track catalogue, uploads, likes and audio delivery. */
-@ApiExtraModels(TrackEntity, TrackManifestEntity, TrackManifestRenditionEntity)
+@ApiExtraModels(TrackEntity, TrackManifestEntity, TrackManifestRenditionEntity, PlaySessionEntity)
 @ApiTags('Tracks')
 @Controller({ path: 'tracks', version: '1' })
 export class TracksController {
   constructor(
     private tracksService: TracksService,
     private trackUploadService: TrackUploadService,
-    private trackStreamingService: TrackStreamingService,
     private trackPlaybackService: TrackPlaybackService,
   ) {}
 
@@ -115,72 +115,6 @@ export class TracksController {
     @Query('artistId', new ParseUUIDPipe({ optional: true })) artistId?: string,
   ) {
     return this.tracksService.findAll({ artistId, limit, page, title })
-  }
-
-  @GetHlsMasterPlaylistSwagger()
-  @UserAuth()
-  @Throttle({ default: { ttl: 60_000, limit: 600 } })
-  @Get('stream/:id/hls/master.m3u8')
-  async getHlsMasterPlaylist(
-    @Param('id', ParseUUIDPipe) id: TrackEntity['id'],
-    @Res() res: Response,
-  ) {
-    const playlist = await this.trackStreamingService.getHlsMasterPlaylist(id)
-    res.set({
-      'Content-Type': 'application/vnd.apple.mpegurl',
-      'Cache-Control': 'private, max-age=5, no-transform',
-    })
-    return res.send(playlist)
-  }
-
-  @GetHlsAssetSwagger()
-  @UserAuth()
-  @Throttle({ default: { ttl: 60_000, limit: 1_200 } })
-  @Get('stream/:id/hls/:bitrate/:asset')
-  async getHlsAsset(
-    @Param('id', ParseUUIDPipe) id: TrackEntity['id'],
-    @Param('bitrate', ParseIntPipe) bitrate: number,
-    @Param('asset') asset: string,
-    @Res() res: Response,
-  ) {
-    const data = await this.trackStreamingService.getHlsAsset(id, bitrate, asset)
-    res.set({
-      'Content-Type': data.contentType,
-      ...(data.contentLength === undefined ? {} : { 'Content-Length': data.contentLength }),
-      'Cache-Control': data.immutable
-        ? IMMUTABLE_CACHE_CONTROL
-        : 'private, max-age=30, no-transform',
-    })
-    pipeToResponse(data.stream, res, logger, 'Audio')
-  }
-
-  @StreamTrackSwagger()
-  @UserAuth()
-  @Throttle({ default: { ttl: 60_000, limit: 600 } })
-  @Get('stream/:id')
-  async streamTrack(
-    @Param('id', ParseUUIDPipe) id: TrackEntity['id'],
-    @Req() req: Request,
-    @Res() res: Response,
-    @Query('bitrate', new ParseIntPipe({ optional: true })) bitrate?: number,
-    @Query('format', new ParseEnumPipe(SUPPORTED_AUDIO_STREAM_FORMATS, { optional: true }))
-    format?: AudioStreamFormat,
-  ) {
-    const streamData = await this.trackStreamingService.getTrackStream(
-      id,
-      req.headers.range,
-      bitrate,
-      format,
-    )
-
-    sendRangeStream(res, streamData, {
-      ...(streamData.contentLength === undefined
-        ? {}
-        : { 'Content-Length': streamData.contentLength }),
-      'Cache-Control': 'private, max-age=3600, no-transform',
-      'X-Audio-Bitrate': streamData.bitrate,
-      'X-Audio-Format': streamData.format,
-    })
   }
 
   @PostTrackSwagger()
@@ -240,30 +174,49 @@ export class TracksController {
     return this.tracksService.findTrackById(id)
   }
 
-  @GetTrackManifestSwagger()
+  @OpenPlaySessionSwagger()
   @UserAuth()
-  @Get(':id/manifest')
-  getManifest(@Param('id', ParseUUIDPipe) id: TrackEntity['id']) {
-    return this.trackPlaybackService.getManifest(id)
+  @Throttle({ default: { ttl: 60_000, limit: 120 } })
+  @Post(':id/play-sessions')
+  openPlaySession(
+    @Param('id', ParseUUIDPipe) id: TrackEntity['id'],
+    @Req() req: UserAuthRequest,
+    @Body(new ZodValidationPipe(OpenPlaySessionSchema)) dto: OpenPlaySessionDto,
+  ) {
+    return this.trackPlaybackService.openSession({
+      trackId: id,
+      userId: req.user.id,
+      ...(dto?.deviceId ? { deviceId: dto.deviceId } : {}),
+    })
   }
 
+  /** Authorised by the session token alone (D9): a native `<audio>` cannot refresh a cookie. */
   @StreamTrackRenditionSwagger()
-  @UserAuth()
   @Throttle({ default: { ttl: 60_000, limit: 1_200 } })
   @Get(':id/cmaf/:bitrate')
   async streamRendition(
     @Param('id', ParseUUIDPipe) id: TrackEntity['id'],
     @Param('bitrate', ParseIntPipe) bitrate: number,
+    @Query('t') token: string | undefined,
     @Req() req: Request,
     @Res() res: Response,
   ) {
     let rendition: Awaited<ReturnType<TrackPlaybackService['getRenditionStream']>>
     try {
-      rendition = await this.trackPlaybackService.getRenditionStream(id, bitrate, req.headers.range)
+      rendition = await this.trackPlaybackService.getRenditionStream({
+        trackId: id,
+        bitrate,
+        rangeHeader: req.headers.range,
+        token,
+      })
     } catch (error) {
       if (error instanceof UnsatisfiableRangeError) {
         res.set({ 'Accept-Ranges': 'bytes', 'Content-Range': `bytes */${error.fileSize}` })
         return res.status(416).send()
+      }
+      if (error instanceof PlaybackPacingError) {
+        res.set({ 'Retry-After': String(error.retryAfterSeconds) })
+        return res.status(429).send()
       }
       throw error
     }
