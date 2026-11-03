@@ -55,7 +55,7 @@ Use these names in code. Planned CSS custom properties are listed for
 | `power3.out` | `cubic-bezier(.215, .61, .355, 1)` | layout settling: stack, panel height, tab content |
 | `power3.in` / `power2.in` | `cubic-bezier(.55, .055, .675, .19)` | things leaving: palette close, old tab content |
 | `back.out(1.6)` | `cubic-bezier(.34, 1.56, .64, 1)` | small reveals with character: tab labels |
-| `back.out(4)` | spring via `linear()`, or WAAPI keyframes `.8 → 1.08 → 1` | the Like pop |
+| `back.out(4)` | spring via `linear()` | the Like pop |
 | `elastic.out(1, .75)` | `linear()` spring curve | tooltip morph, health panel bloom |
 | `none` | `linear` | rotations, progress, the cursor follow |
 
@@ -64,13 +64,26 @@ palette 0.5 s in and 0.32 s out.
 
 ## 3. Choosing the tool
 
+GSAP 3 is the animation library for every web surface
+([ADR-0069](../architecture/0069-gsap-web-animation-standard.md)). Anything driven by script
+uses it. CSS covers only the feedback and enter or exit cases that need no script. Do not add
+Motion, other animation libraries or hand-written Web Animations API hooks.
+
 | Need | Tool |
 |---|---|
 | Hover, press, focus, simple enter or exit | CSS transitions on transform and opacity (Tailwind `transition-*`, `duration-*`) |
 | Enter or exit of mounted elements in React | CSS plus the `data-state` attributes Base UI already exposes (`data-[starting-style]`, `data-[ending-style]`) |
-| FLIP, measured height morphs, staggered lists | Web Animations API (`element.animate`) in a small hook, or GSAP if the surface already uses it |
-| Timelines with several tracks (logo loader, landing scenes) | GSAP 3 (`gsap`, `@gsap/react` `useGSAP` for cleanup). `apps/web-player` installs it for the landing, loaded lazily; add it to another workspace only when a surface there needs a timeline. |
-| Scroll-linked effects | CSS scroll or view timelines when supported, otherwise an `IntersectionObserver` trigger. Never scroll-event handlers. |
+| FLIP, measured height morphs, staggered lists | GSAP `Flip` and `stagger` |
+| Timelines with several tracks (logo loader, landing scenes) | GSAP timelines |
+| Springs, pops, drag with momentum | GSAP eases (`back`, `elastic`), `Draggable` with `InertiaPlugin` |
+| Pointer-driven values (cursor follow, magnetic pill) | `gsap.quickTo` |
+| Scroll-linked effects | CSS scroll or view timelines when supported, otherwise GSAP `ScrollTrigger`. Never scroll-event handlers. |
+
+In React, animate through `useGSAP` from `@gsap/react`; it scopes selectors and reverts on
+unmount. In Angular (`apps/admin`), create a `gsap.context()` and revert it in `ngOnDestroy`.
+Register plugins once per workspace and handle reduced motion with `gsap.matchMedia()`. A
+workspace adds `gsap` with its first animated surface, after a bundle-impact check. The
+landing keeps loading it lazily.
 
 Shared motion code belongs in `packages/ui-react` (for example `src/motion/`), next to the
 component that uses it. The Svelte player engine (`packages/player`) keeps its own CSS
