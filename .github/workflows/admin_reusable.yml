@@ -51,12 +51,12 @@ env:
   # published image talks to forever, and no runtime environment variable on the server can
   # correct it afterwards.
   #
-  # The deployment variable keeps the shared name NEXT_PUBLIC_API_URL; the mapping onto this
-  # app's own NG_APP_API_URL happens in the build arg below, the same way web-artists maps it
-  # onto VITE_API_URL. The repository declares no Actions variables, so the fallback is the value
-  # that actually applies; `vars.*` stays as the override hook for forks and a future staging
-  # environment.
-  BUILD_NG_APP_API_URL: ${{ vars.NEXT_PUBLIC_API_URL || 'https://api.bitrate.me' }}
+  # The panel calls the operator API on its own origin (#458, ADR-0068): nginx forwards
+  # /api/v1/admin/ on admin.<domain> to the admin-api process, so this is the panel's host, not
+  # api.<domain>. The repository declares no Actions variables, so the fallback is the value
+  # that actually applies; `vars.ADMIN_API_URL` stays as the override hook for forks and a future
+  # staging environment.
+  BUILD_NG_APP_API_URL: ${{ vars.ADMIN_API_URL || 'https://admin.bitrate.me' }}
 
 jobs:
   admin-checks:
