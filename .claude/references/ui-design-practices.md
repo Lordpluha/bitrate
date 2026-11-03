@@ -16,6 +16,9 @@ documents are written is covered separately in [skill-writing-lessons](skill-wri
 2. This file.
 3. `design-taste-frontend`. Use its design read, dials and AI-tell lists; where it disagrees
    with the table below, the Bitrate column applies.
+4. `emil-design-eng` (motion only). Use its decision framework (should it animate, purpose,
+   easing, duration), interruptibility and gesture rules; where it disagrees with
+   [Motion](#motion), that section applies.
 
 | `design-taste-frontend` says | Bitrate does |
 |---|---|
@@ -88,6 +91,15 @@ Motion uses `motion` (`motion/react`) and the tokens in `packages/tailwind/src/a
 - Hover and press: 200-300 ms; press feedback `scale(0.98)`.
 - `backdrop-blur` only on fixed or sticky surfaces (player bar, navigation, overlays).
 - `prefers-reduced-motion` turns movement into a fade or nothing.
+
+| `emil-design-eng` says | Bitrate does |
+|---|---|
+| Examples use `framer-motion` (`useSpring`, `motion.div`) | Use `motion/react` only where it is already installed; otherwise CSS transitions and Base UI `data-starting-style` / `data-ending-style`. A new animation dependency needs the bundle-impact check in the [styling guide](styling-guide.md). |
+| Inline custom curves (`--ease-out: cubic-bezier(0.23, 1, 0.32, 1)`) | Add a reused curve or duration once to `packages/tailwind/src/animations.css`, then reference the token. |
+| Press feedback `scale(0.97)`, 100-160 ms | Press `scale(0.98)`; hover and press 200-300 ms, as above. |
+| Review output must be a Before/After/Why table | `br-review` owns the review format; use the table only inside a finding. |
+| "Initial Response" greeting on first load | Skip it; answer the Bitrate task directly. |
+| CSS recipes for every surface | `apps/mobile` uses Reanimated with `useReducedMotion` (see `mobile-rules.md`); the GSAP engine in `apps/web-player/src/views/LandingView` is explanatory motion, so longer durations are allowed there. |
 
 ## States and interaction
 
