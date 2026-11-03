@@ -92,14 +92,15 @@ Motion uses `motion` (`motion/react`) and the tokens in `packages/tailwind/src/a
 - `backdrop-blur` only on fixed or sticky surfaces (player bar, navigation, overlays).
 - `prefers-reduced-motion` turns movement into a fade or nothing.
 
+`emil-design-eng` is a Bitrate adaptation: its examples are already GSAP or CSS (ADR-0069),
+press feedback is `scale(0.98)` and `br-review` owns the review format. What it still leaves
+to this section:
+
 | `emil-design-eng` says | Bitrate does |
 |---|---|
-| Examples use `framer-motion` (`useSpring`, `motion.div`) and WAAPI | Translate them to GSAP (`useGSAP`, `quickTo`, `Flip`, `back`/`elastic` eases) or to CSS transitions with Base UI `data-starting-style` / `data-ending-style`. Never add Motion; GSAP is the only web animation library (ADR-0069, `apps/docs/docs/brand/motion.md` §3). |
-| Inline custom curves (`--ease-out: cubic-bezier(0.23, 1, 0.32, 1)`) | Add a reused curve or duration once to `packages/tailwind/src/animations.css`, then reference the token. |
-| Press feedback `scale(0.97)`, 100-160 ms | Press `scale(0.98)`; hover and press 200-300 ms, as above. |
-| Review output must be a Before/After/Why table | `br-review` owns the review format; use the table only inside a finding. |
-| "Initial Response" greeting on first load | Skip it; answer the Bitrate task directly. |
-| CSS recipes for every surface | `apps/mobile` uses Reanimated with `useReducedMotion` (see `mobile-rules.md`); the GSAP engine in `apps/web-player/src/views/LandingView` is explanatory motion, so longer durations are allowed there. |
+| Durations: dropdowns 150-250 ms, modals 200-500 ms | The motion guide's tokens (`--motion-fast`, `--motion-base`, `--motion-emphasis`) win where they differ. |
+| Register a `CustomEase` when no named ease fits | Use the motion guide's GSAP ease names first; a reused curve also goes to `packages/tailwind/src/animations.css` for CSS. |
+| Web recipes everywhere | `apps/mobile` uses Reanimated with `useReducedMotion` (see `mobile-rules.md`); the GSAP engine in `apps/web-player/src/views/LandingView` is explanatory motion, so longer durations are allowed there. |
 
 ## States and interaction
 
