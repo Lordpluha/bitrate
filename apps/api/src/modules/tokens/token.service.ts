@@ -7,6 +7,7 @@ import * as argon2 from 'argon2'
 import type { Response } from 'express'
 import ms, { type StringValue } from 'ms'
 import {
+  isHostOnlySession,
   JWTPayload,
   LEGACY_SESSION_COOKIE_NAMES,
   type SessionAudience,
@@ -85,7 +86,8 @@ export class TokenService {
     accessToken: string,
     refreshToken: string,
   ) {
-    const base = this.configService.getOrThrow('cookie')
+    const { domain, ...hostOnly } = this.configService.getOrThrow('cookie')
+    const base = isHostOnlySession(audience) || !domain ? hostOnly : { ...hostOnly, domain }
 
     res.cookie(sessionCookieName(audience, 'access'), accessToken, {
       ...base,
@@ -95,6 +97,7 @@ export class TokenService {
       ...base,
       maxAge: ms(this.refreshTokenExpiry),
     })
+    this.clearParentDomainStaffCookies(res, audience)
     this.clearLegacyCookies(res)
   }
 
@@ -106,22 +109,36 @@ export class TokenService {
    * domain-scoped session in place, so logout silently does nothing.
    */
   clearAuthCookies(res: Response, audience: SessionAudience) {
-    const options = this.clearCookieOptions()
+    const options = this.clearCookieOptions(isHostOnlySession(audience))
 
     res.clearCookie(sessionCookieName(audience, 'access'), options)
     res.clearCookie(sessionCookieName(audience, 'refresh'), options)
-    this.clearLegacyCookies(res, options)
+    this.clearParentDomainStaffCookies(res, audience)
+    this.clearLegacyCookies(res)
+  }
+
+  /**
+   * Drops staff cookies a session from before #458 wrote on the parent domain: a browser holding
+   * both would also send the stale pair to the operator host. Remove once those sessions have
+   * expired, one refresh-token lifetime after the release.
+   */
+  private clearParentDomainStaffCookies(res: Response, audience: SessionAudience) {
+    const options = this.clearCookieOptions()
+    if (audience !== 'staff' || !options.domain) return
+    res.clearCookie(sessionCookieName('staff', 'access'), options)
+    res.clearCookie(sessionCookieName('staff', 'refresh'), options)
   }
 
   /** Drops the session cookies every audience shared before the names were split. */
-  private clearLegacyCookies(res: Response, options = this.clearCookieOptions()) {
+  private clearLegacyCookies(res: Response) {
+    const options = this.clearCookieOptions()
     for (const name of LEGACY_SESSION_COOKIE_NAMES) res.clearCookie(name, options)
   }
 
   /** The scope a session cookie was written with, which clearing it has to repeat. */
-  private clearCookieOptions() {
+  private clearCookieOptions(hostOnly = false) {
     const { httpOnly, sameSite, secure, path, domain } = this.configService.getOrThrow('cookie')
-    return { httpOnly, sameSite, secure, path, ...(domain ? { domain } : {}) }
+    return { httpOnly, sameSite, secure, path, ...(domain && !hostOnly ? { domain } : {}) }
   }
 
   /** Runs the hash token operation. */
