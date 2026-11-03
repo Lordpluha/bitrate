@@ -94,7 +94,7 @@ Motion uses `motion` (`motion/react`) and the tokens in `packages/tailwind/src/a
 
 | `emil-design-eng` says | Bitrate does |
 |---|---|
-| Examples use `framer-motion` (`useSpring`, `motion.div`) | Use `motion/react` only where it is already installed; otherwise CSS transitions and Base UI `data-starting-style` / `data-ending-style`. A new animation dependency needs the bundle-impact check in the [styling guide](styling-guide.md). |
+| Examples use `framer-motion` (`useSpring`, `motion.div`) and WAAPI | Translate them to GSAP (`useGSAP`, `quickTo`, `Flip`, `back`/`elastic` eases) or to CSS transitions with Base UI `data-starting-style` / `data-ending-style`. Never add Motion; GSAP is the only web animation library (ADR-0069, `apps/docs/docs/brand/motion.md` §3). |
 | Inline custom curves (`--ease-out: cubic-bezier(0.23, 1, 0.32, 1)`) | Add a reused curve or duration once to `packages/tailwind/src/animations.css`, then reference the token. |
 | Press feedback `scale(0.97)`, 100-160 ms | Press `scale(0.98)`; hover and press 200-300 ms, as above. |
 | Review output must be a Before/After/Why table | `br-review` owns the review format; use the table only inside a finding. |
