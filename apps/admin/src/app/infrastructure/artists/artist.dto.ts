@@ -1,4 +1,4 @@
-import type { ApiPaths, ApiSchemas } from '@bitrate/contracts'
+import type { ApiPaths, ApiSchemas } from '@bitrate/contracts/admin'
 import * as z from 'zod'
 
 /**
