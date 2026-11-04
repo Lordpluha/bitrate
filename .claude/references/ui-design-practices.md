@@ -80,12 +80,15 @@ documents are written is covered separately in [skill-writing-lessons](skill-wri
 
 ## Motion
 
-Motion uses `motion` (`motion/react`) and the tokens in `packages/tailwind/src/animations.css`.
+Script-driven motion uses GSAP (`useGSAP` in React), simple feedback and Base UI enter/exit
+use CSS transitions, and both use the tokens in `packages/tailwind/src/animations.css`. The
+tool table is in `apps/docs/docs/brand/motion.md` §3
+([ADR-0069](../../apps/docs/docs/architecture/0069-gsap-web-animation-standard.md)).
 
 - Animate only `transform` and `opacity`; `will-change` only while animating.
-- Scroll reveals use `whileInView` or `IntersectionObserver`, not `scroll` listeners.
-- Continuous input (pointer, scroll progress, scrubbing) goes through `useMotionValue` /
-  `useTransform`, not `useState`.
+- Scroll reveals use CSS view timelines or GSAP `ScrollTrigger`, not `scroll` listeners.
+- Continuous input (pointer, scroll progress, scrubbing) goes through `gsap.quickTo` or
+  `ScrollTrigger` scrub, not `useState`.
 - Lists enter staggered (about 80 ms per item), short distance (about 12px), ease-out curve
   such as `cubic-bezier(0.16, 1, 0.3, 1)`.
 - Hover and press: 200-300 ms; press feedback `scale(0.98)`.
@@ -141,7 +144,7 @@ to review.
 
 ## Left out on purpose
 
-Python-style randomisation, AIDA landing structure, GSAP ScrollTrigger recipes, font and icon
+Python-style randomisation, AIDA landing structure, font and icon
 library swaps, fixed hex palettes, `picsum.photos` imagery, glass and "double-bezel" cards as
 a default, CRT/brutalist effects and floating pill navigation. Each conflicts with the token
 system, the DS-only rule or the player's information density.
