@@ -34,7 +34,7 @@ Read only affected workspaces. Check scope before applying React/FSD/Next.js con
 - On demand: `.claude/CONTEXT.md` (terminology), `.claude/TOKEN_BUDGET.md` (usage),
   `.claude/references/environment.md` (host tools), `.claude/references/mcp.md` (MCP).
 - Designing or restyling UI: `.claude/references/ui-design-practices.md` (it ranks
-  `design-taste-frontend` below project rules). Editing skills, rules, agents or references:
+  `design-taste-frontend` and the motion skill `emil-design-eng` below project rules). Editing skills, rules, agents or references:
   `.claude/references/skill-writing-lessons.md`.
 - Keep optional references as plain links; `@` imports load contents at startup.
 
