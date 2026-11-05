@@ -24,6 +24,15 @@ scrape_configs:
     static_configs:
       - targets: ["api:3000"]
 
+  # The operator API (#458): the same metrics endpoint and bearer token as `bitrate-api`, served
+  # by its own process; this job label is what tells the two apart.
+  - job_name: bitrate-admin-api
+    metrics_path: /api/v1/metrics
+    authorization:
+      credentials: dev-metrics-token-local-only-0001
+    static_configs:
+      - targets: ["admin-api:3007"]
+
   # The transcode worker's own process (a separate container, ADR-0049): default process metrics,
   # queue depths and job counters/duration, all prefixed `bitrate_worker_`. Internal port only,
   # same bearer scheme (and the same dev token caveat as above) as the API's metrics.

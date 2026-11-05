@@ -1,4 +1,4 @@
-import type { ApiSchemas } from '@bitrate/contracts'
+import type { ApiSchemas } from '@bitrate/contracts/admin'
 import * as z from 'zod'
 import type { BatchResult } from '@domain/shared'
 import { contractEnum } from './contract-union'

@@ -203,7 +203,7 @@ logic in `scripts/check-pr-scope.mjs`; run `pnpm check:pr-scope` before pushing)
   `pnpm check:pr-scope -- --multi-workspace`.
 - **At most 200 changed files and 3000 changed lines** (additions + deletions, renames
   detected, so a pure move costs no lines). Generated or release-managed output counts toward
-  none of the limits: lockfiles, `packages/contracts/src/api/v*.ts`, `*.gen.ts`, test
+  none of the limits: lockfiles, `packages/contracts/src/api/{,admin-}v*.ts`, `*.gen.ts`, test
   snapshots, `.changeset/*.md`, `CHANGELOG.md`, `pencil/**`.
 - **Fifty changed files is a soft signal** below that ceiling: at that size, say in the
   description what it contains and how to review it part by part.

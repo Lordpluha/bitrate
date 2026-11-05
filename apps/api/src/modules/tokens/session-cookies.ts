@@ -9,8 +9,8 @@ export type SessionTokenKind = 'access' | 'refresh'
 /**
  * The cookie names each audience's session is stored under.
  *
- * Every session cookie is scoped to the shared `COOKIE_DOMAIN`, so the player, the artists
- * portal and the admin panel all receive each other's cookies. A shared name made one sign-in
+ * Listener and artist session cookies are scoped to the shared `COOKIE_DOMAIN` (staff ones were
+ * too before #458), so the web apps receive each other's cookies. A shared name made one sign-in
  * overwrite another — signing in to the admin logged the player out and the other way round —
  * so each audience owns its own pair. Mirrored for the web apps in
  * `@bitrate/contracts/auth-cookies`; `session-cookies.unit-spec.ts` keeps the two in step.
@@ -20,6 +20,15 @@ export const SESSION_COOKIE_NAMES = {
   artist: { access: 'artist_access_token', refresh: 'artist_refresh_token' },
   staff: { access: 'staff_access_token', refresh: 'staff_refresh_token' },
 } as const satisfies Record<SessionAudience, Record<SessionTokenKind, string>>
+
+/**
+ * Whether an audience's session stays host-only even when `COOKIE_DOMAIN` is set. Operator
+ * sessions stay on the operator host, which serves both the panel and its API (#458); listener and
+ * artist sessions span the parent domain so the web apps' route guards can read them.
+ */
+export function isHostOnlySession(audience: SessionAudience): boolean {
+  return audience === 'staff'
+}
 
 /**
  * The shared names every audience used before they were split. Cleared on every sign-in and

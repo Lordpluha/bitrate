@@ -1,0 +1,7 @@
+{
+  /* `start:admin:dev` only. Nest's `deleteOutDir` would let two watchers sharing `dist` delete
+     each other's output, so the operator process builds into its own directory (#458).
+     Production builds once into `dist`, which holds both entry points. */
+  "extends": "./tsconfig.build.json",
+  "compilerOptions": { "outDir": "./dist-admin" }
+}
