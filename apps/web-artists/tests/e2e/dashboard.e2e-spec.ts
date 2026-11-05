@@ -1989,8 +1989,7 @@ for (const theme of ['light', 'dark', 'dim'] as const) {
     await authenticate(context)
     await gotoHydrated(page, '/dashboard')
     await page
-      .getByRole('button', { name: /^Create (release|your first release)$/ })
-      .last()
+      .getByRole('button', { name: 'Create your first release', exact: true })
       .click()
     const dialog = page.getByRole('dialog', {
       name: 'Create release',
@@ -2017,7 +2016,7 @@ for (const theme of ['light', 'dark', 'dim'] as const) {
       page.getByRole('button', { name: `Open ${title}`, exact: true }),
     ).toBeVisible()
     await page
-      .getByRole('button', { name: /^Create (release|your first release)$/ })
+      .getByRole('button', { name: 'Create release', exact: true })
       .last()
       .click()
     await expect(dialog.getByLabel('Release title')).toBeFocused()
@@ -2044,9 +2043,10 @@ test('release drafts validate title locally and cancel without a write', async (
   })
   await authenticate(context)
   await gotoHydrated(page, '/dashboard')
-  const trigger = page
-    .getByRole('button', { name: /^Create (release|your first release)$/ })
-    .last()
+  const trigger = page.getByRole('button', {
+    name: 'Create your first release',
+    exact: true,
+  })
   await trigger.click()
   const dialog = page.getByRole('dialog', {
     name: 'Create release',
@@ -2077,8 +2077,7 @@ test('release drafts keep entered values after an API failure and allow retry', 
   await authenticate(context)
   await gotoHydrated(page, '/dashboard')
   await page
-    .getByRole('button', { name: /^Create (release|your first release)$/ })
-    .last()
+    .getByRole('button', { name: 'Create your first release', exact: true })
     .click()
   const dialog = page.getByRole('dialog', {
     name: 'Create release',
@@ -2121,8 +2120,7 @@ test('release drafts prevent repeated submits and dismissal while saving', async
   await authenticate(context)
   await gotoHydrated(page, '/dashboard')
   await page
-    .getByRole('button', { name: /^Create (release|your first release)$/ })
-    .last()
+    .getByRole('button', { name: 'Create your first release', exact: true })
     .click()
   const dialog = page.getByRole('dialog', {
     name: 'Create release',
@@ -2252,8 +2250,7 @@ test('release drafts do not claim success for an unverified save response', asyn
   await authenticate(context)
   await gotoHydrated(page, '/dashboard')
   await page
-    .getByRole('button', { name: /^Create (release|your first release)$/ })
-    .last()
+    .getByRole('button', { name: 'Create your first release', exact: true })
     .click()
   const dialog = page.getByRole('dialog', {
     name: 'Create release',
@@ -2308,8 +2305,7 @@ test('release list belongs to the signed-in artist after signing out and switchi
   await authenticate(context)
   await gotoHydrated(page, '/dashboard')
   await page
-    .getByRole('button', { name: /^Create (release|your first release)$/ })
-    .last()
+    .getByRole('button', { name: 'Create your first release', exact: true })
     .click()
   const dialog = page.getByRole('dialog', {
     name: 'Create release',
@@ -2525,9 +2521,10 @@ for (const theme of ['dark', 'light', 'dim'] as const) {
       await expect(page).toHaveURL(new RegExp(`/dashboard/${path}(\\?|$)`))
     }
     await gotoHydrated(page, '/dashboard')
-    const create = page
-      .getByRole('button', { name: /^Create (release|your first release)$/ })
-      .last()
+    const create = page.getByRole('button', {
+      name: 'Create your first release',
+      exact: true,
+    })
     await create.click()
     const release = page.getByRole('dialog', {
       name: 'Create release',

@@ -104,12 +104,9 @@ describe('TracksController', () => {
   it('openPlaySession opens a session for the signed-in user and the given device', async () => {
     const session = { manifest: {}, token: 'signed', expiresAt: 1 }
     playbackService.openSession.mockResolvedValue(session as never)
+    const user = buildUser({ id: 'user-1' })
 
-    const result = await controller.openPlaySession(
-      'track-1',
-      { user: { id: 'user-1' } } as never,
-      { deviceId: 'device-1' },
-    )
+    const result = await controller.openPlaySession('track-1', user, { deviceId: 'device-1' })
 
     expect(playbackService.openSession).toHaveBeenCalledWith({
       trackId: 'track-1',

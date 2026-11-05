@@ -14,7 +14,7 @@ const SELECTOR_MODES = {
   one: (count: number) => count === 1,
 } satisfies Record<string, (count: number) => boolean>
 
-export type RouteDocumentedCheckerSelectorMode = keyof typeof SELECTOR_MODES
+type RouteDocumentedCheckerSelectorMode = keyof typeof SELECTOR_MODES
 
 /** Selector: the route passes when its matching decorator count satisfies `mode`. */
 export type RouteDocumentedCheckerSelector = {
