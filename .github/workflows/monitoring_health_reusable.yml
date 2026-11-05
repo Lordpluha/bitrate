@@ -1,8 +1,8 @@
 name: "[monitoring] Health Reusable"
 
-# Probes the public production endpoints. They are listed in README's "Live sites", so no secret
-# is needed: the old check read a SERVER_HOST secret that was never created and failed before
-# making a single request.
+# Probes the public production endpoints. They are listed in README's "Live sites". The only
+# secret is the Cloudflare Access service token for the operator host (CF_ACCESS_CLIENT_ID /
+# CF_ACCESS_CLIENT_SECRET), sent to that one URL and nowhere else.
 
 on:
   workflow_call:
@@ -22,9 +22,11 @@ jobs:
           # Readiness, not liveness: it checks the database, Redis and storage too.
           - name: API
             url: https://api.bitrate.me/api/v1/health/ready
-          # The operator API process (#458), reached through the panel's host.
+          # The operator API process (#458), reached through the panel's host. That host is
+          # behind Cloudflare Access, so this probe carries the Access service token.
           - name: Operator API
             url: https://admin.bitrate.me/api/v1/health/ready
+            access: true
           - name: Web player
             url: https://bitrate.me
           - name: Artists portal
@@ -38,8 +40,19 @@ jobs:
       - name: Check ${{ matrix.name }}
         env:
           URL: ${{ matrix.url }}
+          ACCESS: ${{ matrix.access && 'true' || 'false' }}
+          CF_ACCESS_CLIENT_ID: ${{ matrix.access && secrets.CF_ACCESS_CLIENT_ID || '' }}
+          CF_ACCESS_CLIENT_SECRET: ${{ matrix.access && secrets.CF_ACCESS_CLIENT_SECRET || '' }}
         run: |
-          result=$(curl -sS -o /dev/null -w '%{http_code} %{time_total}' \
+          auth=()
+          if [ "$ACCESS" = "true" ]; then
+            if [ -z "$CF_ACCESS_CLIENT_ID" ] || [ -z "$CF_ACCESS_CLIENT_SECRET" ]; then
+              echo "::error title=Missing Access token::$URL is behind Cloudflare Access; set the CF_ACCESS_CLIENT_ID and CF_ACCESS_CLIENT_SECRET repository secrets"
+              exit 1
+            fi
+            auth=(-H "CF-Access-Client-Id: $CF_ACCESS_CLIENT_ID" -H "CF-Access-Client-Secret: $CF_ACCESS_CLIENT_SECRET")
+          fi
+          result=$(curl -sS -o /dev/null -w '%{http_code} %{time_total}' "${auth[@]}" \
             --retry 3 --retry-all-errors --retry-delay 10 --max-time 20 "$URL") || result="000 0"
           read -r status seconds <<<"$result"
           echo "$URL answered $status in ${seconds}s"
