@@ -1,23 +1,32 @@
 import type { ApiSchemas } from '@bitrate/contracts'
 import { clientFetchClient } from '@shared/api/fetchClient'
 import { writeSignal } from '@shared/api/writeTimeout'
+import { messageKey } from '@shared/i18n'
 import { z } from 'zod'
 import {
   type CreateReleaseValues,
   releaseSummarySchema,
 } from '../model/release.schema'
 
+const identifierConflicts = {
+  'This UPC is already used by another release': messageKey(
+    'release.error.upcTaken',
+  ),
+  'This ISRC is already used by another recording': messageKey(
+    'release.error.isrcTaken',
+  ),
+} as const
+
 const identifierConflictSchema = z.object({
-  message: z.enum([
-    'This UPC is already used by another release',
-    'This ISRC is already used by another recording',
-  ]),
+  message: z.enum(
+    Object.keys(identifierConflicts) as [keyof typeof identifierConflicts],
+  ),
 })
 
 /** A duplicate identifier is a 409 the artist can fix, unlike a stale version. */
 export function identifierConflict(error: unknown): string | undefined {
   const parsed = identifierConflictSchema.safeParse(error)
-  return parsed.success ? parsed.data.message : undefined
+  return parsed.success ? identifierConflicts[parsed.data.message] : undefined
 }
 
 export async function getRelease(id: string, signal: AbortSignal) {
@@ -26,10 +35,10 @@ export async function getRelease(id: string, signal: AbortSignal) {
     signal,
   })
   if (result.response.status === 404)
-    throw new Error('This release is no longer available.')
+    throw new Error(messageKey('release.error.gone'))
   const parsed = releaseSummarySchema.safeParse(result.data)
   if (!result.response.ok || !parsed.success || parsed.data.id !== id)
-    throw new Error('Could not load the latest release. Please try again.')
+    throw new Error(messageKey('release.error.loadRelease'))
   return parsed.data
 }
 
@@ -40,8 +49,7 @@ export async function updateRelease({
   id: string
   input: ApiSchemas['UpdateReleaseDto']
 }) {
-  const unconfirmed =
-    'Could not confirm your changes were saved. Close this form and check Music before trying again.'
+  const unconfirmed = messageKey('release.error.updateUnconfirmed')
   let result: Awaited<ReturnType<typeof sendUpdate>>
   try {
     result = await sendUpdate(id, input)
@@ -50,13 +58,12 @@ export async function updateRelease({
   }
   if (result.response.status === 409)
     throw new Error(
-      identifierConflict(result.error) ??
-        'This release changed or is no longer a draft. Your entries are kept here; close and reopen the form to review the latest version.',
+      identifierConflict(result.error) ?? messageKey('release.error.stale'),
     )
   if (result.response.status === 404)
-    throw new Error('This release is no longer available.')
+    throw new Error(messageKey('release.error.gone'))
   if (result.response.status === 400)
-    throw new Error('Check the release details, then try again.')
+    throw new Error(messageKey('release.error.updateInvalid'))
   const parsed = releaseSummarySchema.safeParse(result.data)
   if (
     !result.response.ok ||
@@ -93,8 +100,7 @@ export interface DeleteReleaseRequest {
 
 /** Deletes a draft; only an explicit 204 confirms it. */
 export async function deleteRelease({ id, input }: DeleteReleaseRequest) {
-  const unconfirmed =
-    'Could not confirm the draft was deleted. Check Music before trying again.'
+  const unconfirmed = messageKey('release.error.deleteUnconfirmed')
   let result: Awaited<ReturnType<typeof sendDelete>>
   try {
     result = await sendDelete(id, input)
@@ -102,11 +108,8 @@ export async function deleteRelease({ id, input }: DeleteReleaseRequest) {
     throw new Error(unconfirmed)
   }
   const { status } = result.response
-  if (status === 409)
-    throw new Error(
-      'This release changed or is no longer a draft. Reload Music to see its latest status.',
-    )
-  if (status === 404) throw new Error('This release is no longer available.')
+  if (status === 409) throw new Error(messageKey('release.error.deleteStale'))
+  if (status === 404) throw new Error(messageKey('release.error.gone'))
   if (status !== 204) throw new Error(unconfirmed)
 }
 
@@ -123,12 +126,10 @@ export async function createRelease(input: CreateReleaseValues) {
   try {
     result = await sendDraft(input)
   } catch {
-    throw new Error(
-      'Could not confirm your draft was saved. Check Music before trying again.',
-    )
+    throw new Error(messageKey('release.error.createUnconfirmed'))
   }
   if (result.response.status === 400)
-    throw new Error('Check the release title and type, then try again.')
+    throw new Error(messageKey('release.error.createInvalid'))
   const parsed = releaseSummarySchema.safeParse(result.data)
   if (
     !result.response.ok ||
@@ -137,9 +138,7 @@ export async function createRelease(input: CreateReleaseValues) {
     parsed.data.title !== input.title.trim() ||
     parsed.data.type !== input.type
   )
-    throw new Error(
-      'Could not confirm your draft was saved. Check Music before trying again.',
-    )
+    throw new Error(messageKey('release.error.createUnconfirmed'))
   return parsed.data
 }
 

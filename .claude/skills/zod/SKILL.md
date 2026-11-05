@@ -43,7 +43,7 @@ is reusable on both sides of a boundary; one that imports a UI library is not.
 export const CreateTrackSchema = z.object({
   title: z.string().min(1).max(255),
   duration: z.number().int().positive(),
-  artistId: z.string().uuid(),
+  artistId: z.uuid(),
 })
 
 export class CreateTrackDto extends createZodDto(CreateTrackSchema) {}
@@ -76,7 +76,7 @@ what the server actually sent at runtime. Where a wrong shape would be dangerous
 debug, parse the response:
 
 ```ts
-export const trackResponseSchema = z.object({ id: z.string().uuid(), title: z.string() })
+export const trackResponseSchema = z.object({ id: z.uuid(), title: z.string() })
 export type TrackResponse = z.infer<typeof trackResponseSchema>
 ```
 

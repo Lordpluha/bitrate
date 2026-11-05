@@ -1,12 +1,11 @@
 import { beforeEach, describe, expect, it } from '@jest/globals'
-import type { OptionalUserAuthRequest } from '@modules/users-auth/types'
+import { buildUser } from '@modules/users/__tests__/fixtures/users.fixtures'
 import { BadRequestException } from '@nestjs/common'
 import { type DeepMockProxy, mockDeep, mockReset } from 'jest-mock-extended'
 import { SearchController } from './search.controller'
 import type { SearchService } from './search.service'
 
-const makeRequest = (userId?: string): OptionalUserAuthRequest =>
-  userId ? { user: { id: userId } as OptionalUserAuthRequest['user'] } : {}
+const makeUser = (userId?: string) => (userId ? buildUser({ id: userId }) : undefined)
 
 describe('SearchController', () => {
   let controller: SearchController
@@ -19,12 +18,12 @@ describe('SearchController', () => {
   })
 
   it('rejects a blank query before it ever reaches the search service', async () => {
-    await expect(controller.search(makeRequest(), '   ')).rejects.toThrow(BadRequestException)
+    await expect(controller.search(makeUser(), '   ')).rejects.toThrow(BadRequestException)
     expect(service.search).not.toHaveBeenCalled()
   })
 
   it('rejects a search type outside the known allowlist', async () => {
-    await expect(controller.search(makeRequest(), 'query', 'not-a-real-type')).rejects.toThrow(
+    await expect(controller.search(makeUser(), 'query', 'not-a-real-type')).rejects.toThrow(
       BadRequestException,
     )
     expect(service.search).not.toHaveBeenCalled()
@@ -38,7 +37,7 @@ describe('SearchController', () => {
       playlists: [],
     } as never)
 
-    await controller.search(makeRequest(), ' query ', 'tracks')
+    await controller.search(makeUser(), ' query ', 'tracks')
 
     expect(service.search).toHaveBeenCalledWith(
       'query',
@@ -54,7 +53,7 @@ describe('SearchController', () => {
       playlists: [],
     } as never)
 
-    await controller.search(makeRequest('user-1'), 'query')
+    await controller.search(makeUser('user-1'), 'query')
 
     expect(service.search).toHaveBeenCalledWith(
       'query',

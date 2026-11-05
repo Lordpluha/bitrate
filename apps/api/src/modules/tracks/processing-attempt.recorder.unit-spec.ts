@@ -4,10 +4,6 @@ import * as Sentry from '@sentry/nestjs'
 import { mockTransaction, type PrismaMock, prismaMock, resetPrismaMock } from '@test/mocks'
 import { ProcessingAttemptRecorder } from './processing-attempt.recorder'
 
-jest.mock('@sentry/nestjs', () => ({
-  captureException: jest.fn(),
-}))
-
 describe('ProcessingAttemptRecorder', () => {
   let recorder: ProcessingAttemptRecorder
   let prisma: PrismaMock
@@ -159,7 +155,7 @@ describe('ProcessingAttemptRecorder', () => {
         trackId: 'track-1',
         jobId: 'job-1',
         attempt: 1,
-        step: 'PROGRESSIVE_ENCODE',
+        step: 'CMAF_ENCODE',
         stepDetail: '192k',
         error: new Error(
           'Converted audio file is empty: /storage/.processing/track-1-job-1-1/a.opus',
@@ -172,7 +168,7 @@ describe('ProcessingAttemptRecorder', () => {
         data: expect.objectContaining({
           status: 'FAILED',
           willRetry: true,
-          failedStep: 'PROGRESSIVE_ENCODE',
+          failedStep: 'CMAF_ENCODE',
           stepDetail: '192k',
           errorCode: 'EMPTY_OUTPUT',
           errorMessage: 'Converted audio file is empty: <tracks>/track-1-job-1-1/a.opus',

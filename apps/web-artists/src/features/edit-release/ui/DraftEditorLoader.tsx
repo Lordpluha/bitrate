@@ -1,5 +1,6 @@
 import { Button } from '@bitrate/ui-react'
 import { type ReleaseSummary, useRelease } from '@entities/release'
+import { useI18n } from '@shared/i18n'
 import { WorkspaceModal } from '@shared/ui/WorkspaceModal/WorkspaceModal'
 import type { ReactNode } from 'react'
 
@@ -23,6 +24,7 @@ export function DraftEditorLoader({
   onClose,
   renderDraft,
 }: DraftEditorLoaderProps) {
+  const { t, tMessage } = useI18n()
   const query = useRelease(artistId, releaseId)
   if (
     query.data &&
@@ -34,24 +36,21 @@ export function DraftEditorLoader({
   return (
     <WorkspaceModal onClose={onClose} title={title}>
       {query.isPending ? (
-        <p role="status">Loading the latest draft…</p>
+        <p role="status">{t('editRelease.loadingDraft')}</p>
       ) : query.isError ? (
         <div className="space-y-4">
-          <p role="alert">{query.error.message}</p>
+          <p role="alert">{tMessage(query.error.message)}</p>
           <Button
             onClick={() => {
               void query.refetch()
             }}
             variant="outline"
           >
-            Try again
+            {t('common.tryAgain')}
           </Button>
         </div>
       ) : (
-        <p role="alert">
-          This release can no longer be edited here. Close the form and refresh
-          Music to review its status.
-        </p>
+        <p role="alert">{t('editRelease.notEditable')}</p>
       )}
     </WorkspaceModal>
   )

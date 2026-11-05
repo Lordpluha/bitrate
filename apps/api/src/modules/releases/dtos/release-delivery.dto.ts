@@ -35,7 +35,7 @@ export const UpdateDeliveryPlanSchema = z.strictObject({
     .describe('Release version read before editing'),
 })
 
-export const ListDistributionSchema = paginationQuerySchema.strict()
+export const ListDistributionSchema = z.strictObject(paginationQuerySchema.shape)
 
 export class UpdateDeliveryPlanDto extends createZodDto(UpdateDeliveryPlanSchema) {}
 export class ListDistributionDto extends createZodDto(ListDistributionSchema) {}

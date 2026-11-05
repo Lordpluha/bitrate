@@ -12,10 +12,10 @@ export const ADMIN_PLAYLISTS_SORT_FIELDS = [
 ] as const satisfies readonly Prisma.PlaylistScalarFieldEnum[]
 
 export const ListAdminPlaylistsQuerySchema = paginationQuerySchema
-  .merge(sortQuerySchema(ADMIN_PLAYLISTS_SORT_FIELDS))
+  .extend(sortQuerySchema(ADMIN_PLAYLISTS_SORT_FIELDS).shape)
   .extend({
     status: adminResourceStatusSchema.optional(),
-    ownerId: z.string().uuid().optional(),
+    ownerId: z.uuid().optional(),
     q: z.string().min(1).max(255).optional(),
   })
 

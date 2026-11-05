@@ -21,10 +21,15 @@ import { ARTIST_PROFILE_ERRORS } from './artist-profile.errors'
 import {
   ArtistSocialsSchema,
   type ProfileImageVersionDto,
+  type SetArtistLocaleDto,
   type UpdateArtistProfileDto,
 } from './dtos/artist-profile.dto'
+import { PROFILE_SELECT } from './orm'
 
 const MAX_PROFILE_IMAGE_BYTES = 10 * 1024 * 1024
+
+/** A profile edited between reading its version and writing the language is read once more. */
+const LOCALE_WRITE_ATTEMPTS = 2
 
 export type ProfileImageKind = 'avatar' | 'background'
 
@@ -32,21 +37,6 @@ const IMAGE_FOLDERS = {
   avatar: 'artists/avatars',
   background: 'artists/backgrounds',
 } as const satisfies Record<ProfileImageKind, PublicImageFolder>
-
-const PROFILE_SELECT = {
-  id: true,
-  username: true,
-  email: true,
-  bio: true,
-  country: true,
-  socials: true,
-  avatar: true,
-  backgroundImage: true,
-  verified: true,
-  twoFactorEnabled: true,
-  emailVerifiedAt: true,
-  updatedAt: true,
-} as const satisfies Prisma.ArtistSelect
 
 type ProfileRecord = Prisma.ArtistGetPayload<{ select: typeof PROFILE_SELECT }>
 
@@ -84,6 +74,25 @@ export class ArtistProfileService {
     })
     await this.invalidatePublicCaches()
     return updated
+  }
+
+  /**
+   * Sets the workspace language. It is a preference, not profile content: no version is
+   * required, and the stored version is written back unchanged so an open profile form never
+   * conflicts with it. The write is conditional on that version, so it never rolls back an
+   * edit that landed in between.
+   */
+  async setLocale(artistId: string, locale: SetArtistLocaleDto['locale']) {
+    for (let attempt = 0; attempt < LOCALE_WRITE_ATTEMPTS; attempt++) {
+      const { updatedAt } = await this.read(artistId)
+      const [artist] = await this.prisma.artist.updateManyAndReturn({
+        where: { id: artistId, deletedAt: null, updatedAt },
+        data: { locale, updatedAt },
+        select: PROFILE_SELECT,
+      })
+      if (artist) return view(artist)
+    }
+    throw new ConflictException(ARTIST_PROFILE_ERRORS.CHANGED)
   }
 
   async uploadImage(

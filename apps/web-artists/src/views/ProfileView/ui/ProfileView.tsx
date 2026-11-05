@@ -11,9 +11,12 @@ import {
   ProfileForm,
   ProfileImageField,
   profileImageUrl,
+  socialLinkIcons,
 } from '@features/edit-profile'
 import { countryName } from '@shared/constants/countries'
-import { BadgeCheck, UserRound } from 'lucide-react'
+import { useI18n } from '@shared/i18n'
+import { useArtworkAmbience } from '@shared/lib/artworkAmbience'
+import { BadgeCheck, MapPin, UserRound } from 'lucide-react'
 import { useState } from 'react'
 
 interface ProfileViewProps {
@@ -22,27 +25,30 @@ interface ProfileViewProps {
 
 /** Public artist profile editor with a live preview that never implies the draft is saved. */
 export function ProfileView({ artistId }: ProfileViewProps) {
+  const { t, tMessage } = useI18n()
   const profile = useArtistProfile(artistId)
   return (
     <section className="artist-music space-y-6">
       <div>
-        <h1 className="text-[1.625rem] font-normal lg:text-[2rem]">Profile</h1>
+        <h1 className="text-[1.625rem] font-normal lg:text-[2rem]">
+          {t('shell.nav.profile')}
+        </h1>
         <p className="mt-2 text-[0.9375rem] text-text-secondary">
-          How listeners see you on Bitrate.
+          {t('profile.subtitle')}
         </p>
       </div>
       {profile.isPending ? (
-        <p role="status">Loading your profile…</p>
+        <p role="status">{t('profile.loading')}</p>
       ) : profile.isError ? (
         <div className="space-y-3">
-          <p role="alert">{profile.error.message}</p>
+          <p role="alert">{tMessage(profile.error.message)}</p>
           <Button
             onClick={() => {
               void profile.refetch()
             }}
             variant="outline"
           >
-            Try again
+            {t('common.tryAgain')}
           </Button>
         </div>
       ) : (
@@ -63,109 +69,95 @@ function ProfileEditor({
     profileFormDefaults(profile),
   )
   return (
-    <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_22rem]">
-      <div className="space-y-6">
-        <section
-          aria-labelledby="profile-images-heading"
-          className="artist-release-workspace-panel space-y-5"
-        >
-          <h2 id="profile-images-heading">Images</h2>
-          <ProfileImageField
-            artistId={artistId}
-            kind="avatar"
-            profile={profile}
-          />
-          <ProfileImageField
-            artistId={artistId}
-            kind="background"
-            profile={profile}
-          />
-        </section>
-        <section
-          aria-labelledby="profile-details-heading"
-          className="artist-release-workspace-panel space-y-5"
-        >
-          <h2 id="profile-details-heading">Details</h2>
-          <ProfileForm
-            artistId={artistId}
-            onValuesChange={setDraft}
-            profile={profile}
-          />
-        </section>
-      </div>
-      <ProfilePreview draft={draft} profile={profile} />
+    <div className="space-y-6">
+      <ProfileCard artistId={artistId} draft={draft} profile={profile} />
+      <ProfileForm
+        artistId={artistId}
+        onValuesChange={setDraft}
+        profile={profile}
+      />
     </div>
   )
 }
 
-function ProfilePreview({
+/** The public page as it would look now: the saved images with the unsaved text. */
+function ProfileCard({
+  artistId,
   profile,
   draft,
 }: {
+  artistId: string
   profile: ArtistProfile
   draft: ProfileFormValues
 }) {
+  const { t, locale } = useI18n()
   const links = socialLinkKeys.filter((key) => draft[key].trim() !== '')
+  const banner = profile.backgroundImage
+    ? profileImageUrl(profile.backgroundImage)
+    : null
+  useArtworkAmbience(banner)
   return (
-    <aside aria-labelledby="profile-preview-heading" className="space-y-2">
-      <h2 className="text-sm text-text-secondary" id="profile-preview-heading">
-        Preview · unsaved changes are shown but not published
-      </h2>
-      <div className="artist-release-workspace-panel overflow-hidden p-0">
-        <div className="h-28 bg-secondary">
-          {profile.backgroundImage && (
-            <img
-              alt=""
-              className="size-full object-cover"
-              src={profileImageUrl(profile.backgroundImage)}
-            />
+    <section
+      aria-labelledby="profile-preview-heading"
+      className="artist-release-workspace-panel artist-profile-card"
+    >
+      <div className="artist-profile-banner">
+        {banner && <img alt="" src={banner} />}
+        <h2 className="artist-profile-note" id="profile-preview-heading">
+          {t('profile.preview')}
+        </h2>
+      </div>
+      <div className="artist-profile-identity">
+        <div className="artist-profile-avatar">
+          {profile.avatar ? (
+            <img alt="" src={profileImageUrl(profile.avatar)} />
+          ) : (
+            <UserRound aria-hidden="true" />
           )}
         </div>
-        <div className="space-y-3 px-4 pb-5">
-          <div className="-mt-10 flex size-20 items-center justify-center overflow-hidden rounded-full border-4 border-background bg-secondary">
-            {profile.avatar ? (
-              <img
-                alt=""
-                className="size-full object-cover"
-                src={profileImageUrl(profile.avatar)}
-              />
-            ) : (
-              <UserRound aria-hidden="true" className="size-8 text-accent" />
+        <div className="artist-profile-info">
+          <p className="artist-profile-name">
+            @{draft.username.trim() || profile.username}
+            {profile.verified && (
+              <BadgeCheck aria-label={t('profile.verified')} />
             )}
-          </div>
-          <div>
-            <p className="flex items-center gap-1 text-lg">
-              @{draft.username.trim() || profile.username}
-              {profile.verified && (
-                <BadgeCheck
-                  aria-label="Verified artist"
-                  className="size-5 text-accent"
-                />
-              )}
+          </p>
+          {draft.country && (
+            <p className="artist-profile-country">
+              <MapPin aria-hidden="true" />
+              {countryName(draft.country, locale)}
             </p>
-            {draft.country && (
-              <p className="text-sm text-text-secondary">
-                {countryName(draft.country)}
-              </p>
-            )}
-          </div>
-          <p className="whitespace-pre-line text-sm text-text-secondary">
-            {draft.bio.trim() || 'No bio yet.'}
+          )}
+          <p className="artist-profile-bio">
+            {draft.bio.trim() || t('profile.noBio')}
           </p>
           {links.length > 0 && (
-            <ul className="flex flex-wrap gap-2">
-              {links.map((key) => (
-                <li
-                  className="rounded-full border border-border px-3 py-1 text-xs"
-                  key={key}
-                >
-                  {socialLinkLabels[key]}
-                </li>
-              ))}
+            <ul className="artist-profile-links">
+              {links.map((key) => {
+                const Icon = socialLinkIcons[key]
+                return (
+                  <li key={key}>
+                    <Icon aria-hidden="true" />
+                    {t(socialLinkLabels[key])}
+                  </li>
+                )
+              })}
             </ul>
           )}
         </div>
       </div>
-    </aside>
+      <div className="artist-profile-images">
+        <ProfileImageField
+          artistId={artistId}
+          kind="avatar"
+          profile={profile}
+        />
+        <ProfileImageField
+          artistId={artistId}
+          kind="background"
+          profile={profile}
+        />
+      </div>
+    </section>
   )
 }

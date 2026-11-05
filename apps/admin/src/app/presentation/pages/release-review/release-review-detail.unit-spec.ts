@@ -59,7 +59,7 @@ function release(overrides: Partial<ReleaseSubmissionDetail> = {}): ReleaseSubmi
     splits: [],
     territories: [],
     destinations: ['SPOTIFY'],
-    blockerCodes: ['WRITERS_NOT_CONFIRMED'],
+    blockerCodes: ['COVER_MISSING'],
     noticeCodes: [],
     reviews: [],
     ...overrides,
@@ -70,8 +70,6 @@ const review: SubmissionReview = {
   id: 'r1',
   decision: 'APPROVED',
   message: null,
-  requiredChanges: [],
-  recommendations: [],
   createdAt: new Date('2026-10-22T09:00:00.000Z'),
   reviewerUsername: 'mara.ops',
 }
@@ -158,8 +156,8 @@ describe('ReleaseReviewDetailPage', () => {
     create()
     const { host } = await render()
 
-    expect(host.textContent).toContain('2 of 3 confirmed')
-    expect(host.textContent).toContain('Writers not confirmed')
+    expect(host.textContent).toContain('1 of 2 confirmed')
+    expect(host.textContent).toContain('No artwork')
     expect(host.textContent).toContain('Ferry Lights')
     expect(host.textContent).toContain('No audio')
     expect(host.textContent).toContain('Worldwide')
@@ -184,7 +182,7 @@ describe('ReleaseReviewDetailPage', () => {
     )
   })
 
-  it('will not send a change request without a required change', async () => {
+  it('will not send a change request without feedback', async () => {
     getRelease.mockResolvedValue(release())
     create()
     const { fixture, host, button, dialog } = await render()
@@ -194,9 +192,9 @@ describe('ReleaseReviewDetailPage', () => {
     const send = button(dialog(), 'Send to artist')
     expect(send?.disabled).toBe(true)
 
-    const field = dialog()?.querySelector<HTMLTextAreaElement>('#review-required')
+    const field = dialog()?.querySelector<HTMLTextAreaElement>('#review-message')
     if (field) {
-      field.value = 'Replace the artwork\n\n'
+      field.value = '**Artwork:** replace it'
       field.dispatchEvent(new Event('input'))
     }
     await fixture.whenStable()
@@ -204,7 +202,7 @@ describe('ReleaseReviewDetailPage', () => {
     await fixture.whenStable()
 
     expect(requestChanges).toHaveBeenCalledWith(
-      expect.objectContaining({ requiredChanges: ['Replace the artwork'] }),
+      expect.objectContaining({ message: '**Artwork:** replace it' }),
     )
   })
 

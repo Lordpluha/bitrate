@@ -81,6 +81,17 @@ describe('Release rights confirmation (HTTP)', () => {
     expect(lockData()).not.toHaveProperty('accuracyConfirmedAt')
   })
 
+  it('saves the master owner alone and leaves the songwriter confirmation untouched', async () => {
+    transactionMock.release.updateManyAndReturn.mockResolvedValue([advanced])
+    await request(app.getHttpServer())
+      .patch(`/api/v1/releases/${draft.id}/rights`)
+      .set('x-test-artist', ownerId)
+      .send({ masterOwner: { type: 'ARTIST' }, expectedUpdatedAt: version })
+      .expect(200)
+    expect(lockData()).toMatchObject({ masterOwnerType: 'ARTIST', masterOwnerName: null })
+    expect(lockData()).not.toHaveProperty('writersConfirmedAt')
+  })
+
   it('rejects the retired accuracy confirmation', async () => {
     await request(app.getHttpServer())
       .patch(`/api/v1/releases/${draft.id}/rights`)

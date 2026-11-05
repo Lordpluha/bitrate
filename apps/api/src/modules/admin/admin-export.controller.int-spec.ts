@@ -17,9 +17,6 @@ import { AdminTracksService } from './tracks/admin-tracks.service'
 import { AdminUsersController } from './users/admin-users.controller'
 import { AdminUsersService } from './users/admin-users.service'
 
-/** `TrackUploadService` pulls in `music-metadata`, which cannot be resolved under Jest. */
-jest.mock('music-metadata', () => ({ parseFile: jest.fn() }), { virtual: true })
-
 type ExportMock = jest.Mock<(...args: unknown[]) => Promise<unknown>>
 
 type ExportCase = {

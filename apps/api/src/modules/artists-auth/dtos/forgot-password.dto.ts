@@ -1,9 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { z } from 'zod'
+import { ArtistEmailSchema } from './login.dto'
 
 /** The forgot password schema value. */
 export const ForgotPasswordSchema = z.object({
-  email: z.string().email({ message: 'Invalid email format' }),
+  email: ArtistEmailSchema,
 })
 
 /** Represents the forgot password dto. */

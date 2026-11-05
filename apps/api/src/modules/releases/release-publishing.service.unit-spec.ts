@@ -14,9 +14,6 @@ import type { Queue } from 'bullmq'
 import { type DeepMockProxy, mockDeep } from 'jest-mock-extended'
 import { ReleasePublishingService } from './release-publishing.service'
 
-/** `TrackUploadService` pulls in the ESM-only `music-metadata`, which Jest cannot load. */
-jest.mock('music-metadata', () => ({ parseFile: jest.fn() }), { virtual: true })
-
 const OWNER = '0199aee0-0000-7000-8000-0000000000a1'
 const RELEASE = '0199aee0-0000-7000-8000-000000000001'
 const VERSION = '2026-10-27T10:00:00.000Z'

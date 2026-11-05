@@ -31,6 +31,7 @@ export {
   useUpdateRelease,
 } from './api/useReleases'
 export { useReleaseWorkspace } from './api/useReleaseWorkspace'
+export { playableAudioUrl } from './model/audioSource'
 export {
   type ContributorValues,
   contributorRoles,
@@ -43,8 +44,10 @@ export {
   COVER_ACCEPT,
   coverFileProblem,
   formatBytes,
+  releaseAudioUrl,
   releaseCoverUrl,
   titleFromFileName,
+  trackCoverUrl,
 } from './model/media'
 export {
   type CreateReleaseValues,
@@ -56,7 +59,6 @@ export {
 } from './model/release.schema'
 export {
   basisPointsToPercent,
-  describeBlocker,
   FULL_SHARE_BASIS_POINTS,
   formatIsrc,
   isValidUpc,
@@ -64,7 +66,7 @@ export {
   percentToBasisPoints,
   type ReleaseNotice,
   rightTypeLabels,
-  rightTypes,
+  splitRightTypes,
 } from './model/rights'
 export { releaseRoadmap } from './model/roadmap'
 export {
@@ -80,4 +82,4 @@ export {
   type ReleaseWorkspace,
 } from './model/workspace.schema'
 export { ReleaseFields } from './ui/ReleaseFields'
-export { TrackPlayer } from './ui/TrackPlayer'
+export { StageRing } from './ui/StageRing'

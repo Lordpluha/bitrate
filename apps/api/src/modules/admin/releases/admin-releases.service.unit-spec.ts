@@ -1,14 +1,11 @@
 import type { StorageService } from '@infra/storage/storage.types'
-import { beforeEach, describe, expect, it, jest } from '@jest/globals'
+import { beforeEach, describe, expect, it } from '@jest/globals'
 import type { ReleasePublishingService } from '@modules/releases/release-publishing.service'
 import { ConflictException, NotFoundException } from '@nestjs/common'
 import type { Prisma } from '@prisma/client'
 import { type PrismaMock, prismaMock, resetPrismaMock } from '@test/mocks'
 import { type DeepMockProxy, mockDeep } from 'jest-mock-extended'
 import { AdminReleasesService } from './admin-releases.service'
-
-/** The publishing service pulls in the ESM-only `music-metadata`, which Jest cannot load. */
-jest.mock('music-metadata', () => ({ parseFile: jest.fn() }), { virtual: true })
 
 const RELEASE_ID = 'release-1'
 const STAFF_ID = 'staff-1'
@@ -47,8 +44,6 @@ const DETAIL = {
       id: 'review-1',
       decision: 'CHANGES_REQUESTED',
       message: 'Fix cover',
-      requiredChanges: ['cover'],
-      recommendations: [],
       createdAt: new Date(),
       staff: null,
     },
@@ -148,9 +143,7 @@ describe('AdminReleasesService', () => {
       transaction.releaseReview.create.mockResolvedValue({
         id: 'review-2',
         decision: 'CHANGES_REQUESTED',
-        message: 'Fix it',
-        requiredChanges: ['cover'],
-        recommendations: [],
+        message: '**Cover** must be at least 3000 px square.',
         createdAt: new Date(),
         staff: { username: 'mod' },
       } as never)
@@ -160,9 +153,7 @@ describe('AdminReleasesService', () => {
         STAFF_ID,
         {
           expectedUpdatedAt: EXPECTED_UPDATED_AT,
-          message: 'Fix it',
-          requiredChanges: ['cover'],
-          recommendations: [],
+          message: '**Cover** must be at least 3000 px square.',
         },
         AUDIT,
       )
@@ -190,7 +181,7 @@ describe('AdminReleasesService', () => {
           entityId: RELEASE_ID,
           ipAddress: '127.0.0.1',
           metadata: {
-            reason: 'Fix it',
+            reason: '**Cover** must be at least 3000 px square.',
             before: { status: 'SUBMITTED' },
             after: { status: 'REJECTED' },
             requestId: 'req-1',

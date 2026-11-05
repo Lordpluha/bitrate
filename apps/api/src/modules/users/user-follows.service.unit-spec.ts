@@ -4,8 +4,8 @@ import { ForbiddenException, NotFoundException } from '@nestjs/common'
 import type { Prisma } from '@prisma/client'
 import { type PrismaMock, prismaMock, resetPrismaMock } from '@test/mocks'
 import { buildUser } from './__tests__/fixtures/users.fixtures'
+import { PUBLIC_USER_SELECT } from './orm'
 import { UserFollowsService } from './user-follows.service'
-import { PUBLIC_USER_SELECT } from './users.select'
 
 describe('UserFollowsService', () => {
   let service: UserFollowsService

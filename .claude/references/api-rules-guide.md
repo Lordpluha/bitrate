@@ -19,6 +19,8 @@ apps/api/src/modules/<name>/
   dtos/                 Input DTOs with Zod schemas (nestjs-zod)
   entities/             Domain entity classes (@ApiProperty annotated)
   errors/               Custom HttpException subclasses
+  orm/                  Prisma query fragments: `*.select.ts`, `*.where.ts`, `*.include.ts`
+                        (constants, builders, their GetPayload types; no mappers or logic)
   __tests__/            Fixtures and builders
   index.ts              Public barrel
 ```
@@ -118,7 +120,7 @@ import { z } from 'zod'
 export const CreateTrackSchema = z.object({
   title: z.string().min(1).max(255),
   duration: z.number().int().positive(),
-  artistId: z.string().uuid(),
+  artistId: z.uuid(),
 })
 
 export class CreateTrackDto extends createZodDto(CreateTrackSchema) {}
@@ -145,6 +147,14 @@ export class TrackEntity {
 ```
 
 Entity classes are not Prisma models — they describe the API response shape for Swagger and can be used as return type hints.
+
+## Query fragments (`orm/`)
+
+Name each fragment after what it selects (`public-artist.select.ts`, `album-list.where.ts`) and
+export it through `orm/index.ts`; other modules import `@modules/<name>/orm`. A
+`PUBLIC_*_SELECT` / `*_SAFE_SELECT` is a security boundary — it is the allowlist that keeps
+passwords, 2FA secrets and lockout bookkeeping out of responses — so reuse it instead of
+copying it, and widen it only with review.
 
 ## Services
 

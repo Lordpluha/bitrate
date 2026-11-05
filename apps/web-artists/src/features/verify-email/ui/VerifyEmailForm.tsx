@@ -1,10 +1,11 @@
 import { Button, Input, LogoIcon, Typography } from '@bitrate/ui-react'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useI18n } from '@shared/i18n'
 import { ROUTES } from '@shared/routes/routes'
 import { Link } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { useEmailVerification } from '../api/useEmailVerification'
+import { RATE_LIMITED, useEmailVerification } from '../api/useEmailVerification'
 import {
   type VerificationFormData,
   verificationSchema,
@@ -18,6 +19,7 @@ interface VerifyEmailFormProps {
 
 export function VerifyEmailForm({ token, email, next }: VerifyEmailFormProps) {
   const { verify, resend } = useEmailVerification()
+  const { t, tMessage } = useI18n()
   const [cooldown, setCooldown] = useState(0)
   const form = useForm<VerificationFormData>({
     resolver: zodResolver(verificationSchema),
@@ -52,7 +54,7 @@ export function VerifyEmailForm({ token, email, next }: VerifyEmailFormProps) {
         }
       },
       onError: (error) => {
-        if (error.message.startsWith('Please wait')) setCooldown(60)
+        if (error.message === RATE_LIMITED) setCooldown(60)
       },
     })
   }
@@ -65,12 +67,12 @@ export function VerifyEmailForm({ token, email, next }: VerifyEmailFormProps) {
       <div className="mb-8 flex flex-col items-center gap-2 text-center">
         <LogoIcon height={64} width={64} />
         <Typography as="h1" id="verify-email-title" size="heading2">
-          Verify your email
+          {t('auth.verify.title')}
         </Typography>
         <p className="text-lg text-neutral-400">
           {verify.isSuccess
-            ? 'You’re ready to make some noise.'
-            : 'One more step to your artist workspace.'}
+            ? t('auth.verify.ready')
+            : t('auth.verify.oneMoreStep')}
         </p>
       </div>
       {verify.isSuccess ? (
@@ -78,13 +80,12 @@ export function VerifyEmailForm({ token, email, next }: VerifyEmailFormProps) {
           className="mb-6 rounded-lg border border-neutral-600 p-5 text-center"
           role="status"
         >
-          Your email has been verified. You can now sign in.
+          {t('auth.verify.verified')}
         </div>
       ) : (
         <>
           <p className="mb-6 text-center text-lg">
-            Enter the six-digit code from your verification email. The code is
-            valid for 10 minutes.
+            {t('auth.verify.instructions')}
           </p>
           {token && (
             <Button
@@ -95,7 +96,7 @@ export function VerifyEmailForm({ token, email, next }: VerifyEmailFormProps) {
               type="button"
               variant="secondary"
             >
-              {verify.isPending ? 'Verifying…' : 'Verify email'}
+              {verify.isPending ? t('common.verifying') : t('auth.verifyEmail')}
             </Button>
           )}
           <form
@@ -107,7 +108,7 @@ export function VerifyEmailForm({ token, email, next }: VerifyEmailFormProps) {
             })}
           >
             <label className="text-xl" htmlFor="verification-email">
-              Email address
+              {t('auth.verify.emailLabel')}
             </label>
             <Input
               aria-describedby={
@@ -133,11 +134,11 @@ export function VerifyEmailForm({ token, email, next }: VerifyEmailFormProps) {
                 id="verification-email-error"
                 role="alert"
               >
-                {errors.email.message}
+                {tMessage(errors.email.message)}
               </p>
             )}
             <label className="mt-3 text-xl" htmlFor="verification-code">
-              Verification code
+              {t('auth.verify.codeLabel')}
             </label>
             <Input
               aria-describedby={
@@ -158,7 +159,7 @@ export function VerifyEmailForm({ token, email, next }: VerifyEmailFormProps) {
               {...form.register('code', { onChange: () => verify.reset() })}
             />
             <p className="text-sm text-neutral-400" id="verification-code-hint">
-              Six digits. You can paste the entire code.
+              {t('auth.verify.codeHint')}
             </p>
             {errors.code && (
               <p
@@ -166,12 +167,12 @@ export function VerifyEmailForm({ token, email, next }: VerifyEmailFormProps) {
                 id="verification-code-error"
                 role="alert"
               >
-                {errors.code.message}
+                {tMessage(errors.code.message)}
               </p>
             )}
             {verify.error && (
               <p className="text-red-500" role="alert">
-                {verify.error.message}
+                {tMessage(verify.error.message)}
               </p>
             )}
             <Button
@@ -181,7 +182,9 @@ export function VerifyEmailForm({ token, email, next }: VerifyEmailFormProps) {
               type="submit"
               variant="primary"
             >
-              {verify.isPending ? 'Verifying…' : 'Verify and continue'}
+              {verify.isPending
+                ? t('common.verifying')
+                : t('auth.verify.submit')}
             </Button>
             <Button
               disabled={busy || cooldown > 0}
@@ -193,15 +196,15 @@ export function VerifyEmailForm({ token, email, next }: VerifyEmailFormProps) {
               variant="ghost"
             >
               {resend.isPending
-                ? 'Sending…'
+                ? t('common.sending')
                 : cooldown > 0
-                  ? `Send again in ${cooldown}s`
-                  : 'Resend verification email'}
+                  ? t('auth.verify.resendIn', { seconds: cooldown })
+                  : t('auth.verify.resend')}
             </Button>
           </form>
           {resend.error && (
             <p className="mt-4 text-red-500" role="alert">
-              {resend.error.message}
+              {tMessage(resend.error.message)}
             </p>
           )}
           {resend.isSuccess && (
@@ -210,10 +213,10 @@ export function VerifyEmailForm({ token, email, next }: VerifyEmailFormProps) {
               role={resend.data === 'unavailable' ? 'alert' : 'status'}
             >
               {resend.data === 'development'
-                ? 'Local email delivery is disabled. Use the verification code in the API terminal.'
+                ? t('auth.verify.development')
                 : resend.data === 'unavailable'
-                  ? 'The verification email could not be sent. Please try again later or contact support.'
-                  : 'If the account needs verification, a new code has been requested. Check your inbox and spam folder.'}
+                  ? t('auth.verify.unavailable')
+                  : t('auth.verify.requested')}
             </p>
           )}
         </>
@@ -223,7 +226,7 @@ export function VerifyEmailForm({ token, email, next }: VerifyEmailFormProps) {
         search={{ next }}
         to={ROUTES.auth.login}
       >
-        Back to login
+        {t('auth.verify.backToLogin')}
       </Link>
     </section>
   )

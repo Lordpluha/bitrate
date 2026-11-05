@@ -54,9 +54,9 @@ describe('ArtistsController', () => {
   it('updateProfile should call service.update with artist id from request', async () => {
     const updated = buildArtist({ username: 'new-name' })
     service.update.mockResolvedValue(updated as never)
-    const req = { artist: { id: 'artist-1' } } as never
+    const artist = buildArtist({ id: 'artist-1' })
 
-    const result = await controller.updateProfile(req, 'artist-1', { username: 'new-name' })
+    const result = await controller.updateProfile(artist, 'artist-1', { username: 'new-name' })
 
     expect(service.update).toHaveBeenCalledWith('artist-1', { username: 'new-name' }, 'artist-1')
     expect(result).toBe(updated)
@@ -65,9 +65,9 @@ describe('ArtistsController', () => {
   it('deleteProfile should call service.requestDelete with artist id from request', async () => {
     const deleted = buildArtist()
     service.requestDelete.mockResolvedValue(deleted as never)
-    const req = { artist: { id: 'artist-1' } } as never
+    const artist = buildArtist({ id: 'artist-1' })
 
-    const result = await controller.deleteProfile(req, 'artist-1')
+    const result = await controller.deleteProfile(artist, 'artist-1')
 
     expect(service.requestDelete).toHaveBeenCalledWith('artist-1', 'artist-1')
     expect(result).toBe(deleted)

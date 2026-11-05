@@ -38,6 +38,7 @@ import {
   AuthRevokeSessionSwagger,
   AuthVerifyEmailResendSwagger,
   AuthVerifyEmailSwagger,
+  CurrentUser,
   TwoFactorDisableSwagger,
   TwoFactorEnableSwagger,
   TwoFactorSetupSwagger,
@@ -65,7 +66,6 @@ import {
 } from './dtos'
 import { UserSessionEntity } from './entities'
 import { TwoFactorService } from './two-factor.service'
-import type { UserAuthRequest } from './types'
 import { UserAuthService } from './user-auth.service'
 import { UserAuth } from './users-auth.guard'
 
@@ -107,8 +107,11 @@ export class UsersAuthController {
   @AuthLogoutSwagger()
   @UserAuth()
   @Post('logout')
-  async logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
-    const user = req.user as UserEntity
+  async logout(
+    @CurrentUser() user: UserEntity,
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+  ) {
     await this.authService.logout(user.id, readAccessToken(req, 'user'))
     this.tokenService.clearAuthCookies(res, 'user')
   }
@@ -126,8 +129,7 @@ export class UsersAuthController {
   @UserAuth()
   @Throttle(SESSION_ROUTE_THROTTLE)
   @Get('me')
-  async getMe(@Req() req: Request) {
-    const user = req.user as UserEntity
+  async getMe(@CurrentUser() user: UserEntity) {
     return await this.userService.findSelfById(user.id)
   }
 
@@ -137,10 +139,9 @@ export class UsersAuthController {
   @HttpCode(200)
   @Post('legal/accept')
   async acceptLegal(
-    @Req() req: Request,
+    @CurrentUser() user: UserEntity,
     @Body(new ZodValidationPipe(LegalAcceptanceSchema)) _dto: LegalAcceptanceDto,
   ) {
-    const user = req.user as UserEntity
     return await this.userService.acceptLegal(user.id)
   }
 
@@ -182,31 +183,31 @@ export class UsersAuthController {
   @AuthGetSessionsSwagger()
   @UserAuth()
   @Get('sessions')
-  getSessions(@Req() req: UserAuthRequest) {
-    return this.authService.getSessions(req.user.id, readAccessToken(req, 'user'))
+  getSessions(@CurrentUser() user: UserEntity, @Req() req: Request) {
+    return this.authService.getSessions(user.id, readAccessToken(req, 'user'))
   }
 
   /** Revokes an individual session owned by the current user. */
   @AuthRevokeSessionSwagger()
   @UserAuth()
   @Delete('sessions/:id')
-  async revokeSession(@Req() req: UserAuthRequest, @Param('id', ParseUUIDPipe) id: string) {
-    await this.authService.revokeSession(req.user.id, id)
+  async revokeSession(@CurrentUser() user: UserEntity, @Param('id', ParseUUIDPipe) id: string) {
+    await this.authService.revokeSession(user.id, id)
   }
 
   /** Revokes every session except the current browser session. */
   @AuthRevokeOtherSessionsSwagger()
   @UserAuth()
   @Delete('sessions')
-  async revokeOtherSessions(@Req() req: UserAuthRequest) {
-    await this.authService.revokeOtherSessions(req.user.id, readAccessToken(req, 'user'))
+  async revokeOtherSessions(@CurrentUser() user: UserEntity, @Req() req: Request) {
+    await this.authService.revokeOtherSessions(user.id, readAccessToken(req, 'user'))
   }
 
   @TwoFactorSetupSwagger()
   @UserAuth()
   @Post('2fa/setup')
-  async twoFactorSetup(@Req() req: UserAuthRequest) {
-    return await this.twoFactorService.setupTwoFactor(req.user.id)
+  async twoFactorSetup(@CurrentUser() user: UserEntity) {
+    return await this.twoFactorService.setupTwoFactor(user.id)
   }
 
   @TwoFactorEnableSwagger()
@@ -214,10 +215,10 @@ export class UsersAuthController {
   @HttpCode(200)
   @Post('2fa/enable')
   async twoFactorEnable(
-    @Req() req: UserAuthRequest,
+    @CurrentUser() user: UserEntity,
     @Body(new ZodValidationPipe(TwoFactorCodeSchema)) dto: TwoFactorCodeDto,
   ) {
-    await this.twoFactorService.enableTwoFactor(req.user.id, dto.code)
+    await this.twoFactorService.enableTwoFactor(user.id, dto.code)
   }
 
   @TwoFactorDisableSwagger()
@@ -225,10 +226,10 @@ export class UsersAuthController {
   @HttpCode(200)
   @Delete('2fa/disable')
   async twoFactorDisable(
-    @Req() req: UserAuthRequest,
+    @CurrentUser() user: UserEntity,
     @Body(new ZodValidationPipe(TwoFactorCodeSchema)) dto: TwoFactorCodeDto,
   ) {
-    await this.twoFactorService.disableTwoFactor(req.user.id, dto.code)
+    await this.twoFactorService.disableTwoFactor(user.id, dto.code)
   }
 
   @TwoFactorVerifyLoginSwagger()

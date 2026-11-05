@@ -22,6 +22,9 @@ jobs:
           # Readiness, not liveness: it checks the database, Redis and storage too.
           - name: API
             url: https://api.bitrate.me/api/v1/health/ready
+          # The operator API process (#458), reached through the panel's host.
+          - name: Operator API
+            url: https://admin.bitrate.me/api/v1/health/ready
           - name: Web player
             url: https://bitrate.me
           - name: Artists portal

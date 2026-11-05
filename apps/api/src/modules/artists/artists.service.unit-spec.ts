@@ -3,8 +3,8 @@ import { beforeEach, describe, expect, it, jest } from '@jest/globals'
 import { ForbiddenException, NotFoundException } from '@nestjs/common'
 import { type PrismaMock, prismaMock, resetPrismaMock } from '@test/mocks'
 import { buildArtist } from './__tests__/fixtures/artists.fixtures'
-import { PUBLIC_ARTIST_SELECT } from './artists.select'
 import { ArtistsService } from './artists.service'
+import { PUBLIC_ARTIST_SELECT } from './orm'
 
 const makeCacheMock = () =>
   ({
@@ -157,14 +157,14 @@ describe('ArtistsService', () => {
     expect(result).toBe(deleted)
   })
 
-  it('findByEmail should ignore soft-deleted artists', async () => {
+  it('findByEmail matches the address regardless of case and ignores soft-deleted artists', async () => {
     const artist = buildArtist()
     prisma.artist.findFirst.mockResolvedValue(artist)
 
     const result = await service.findByEmail('artist@example.com')
 
     expect(prisma.artist.findFirst).toHaveBeenCalledWith({
-      where: { email: 'artist@example.com', deletedAt: null },
+      where: { email: { equals: 'artist@example.com', mode: 'insensitive' }, deletedAt: null },
       select: { id: true },
     })
     expect(result).toBe(artist)

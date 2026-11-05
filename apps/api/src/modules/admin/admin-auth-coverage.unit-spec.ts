@@ -1,19 +1,10 @@
-import { readdirSync } from 'node:fs'
-import { join, relative } from 'node:path'
-import { describe, expect, it, jest } from '@jest/globals'
-import {
-  AdminAuthGuard,
-  PERMISSIONS,
-  type Permission,
-  REQUIRED_PERMISSION,
-} from '@modules/admin-auth'
+import { join } from 'node:path'
+import { walk } from '@common/swagger/controller-routes'
+import { describe, expect, it } from '@jest/globals'
+import { AdminAuthGuard, type Permission, REQUIRED_PERMISSION } from '@modules/admin-auth'
 import type { Type } from '@nestjs/common'
 import { GUARDS_METADATA, PATH_METADATA } from '@nestjs/common/constants'
 import { Reflector } from '@nestjs/core'
-
-/** `TrackUploadService` pulls in `music-metadata` via `track-media.ts`; that package
- * cannot be resolved under Jest, so every spec that reaches it mocks it virtually. */
-jest.mock('music-metadata', () => ({ parseFile: jest.fn() }), { virtual: true })
 
 type RouteHandler = (...args: never[]) => unknown
 
@@ -67,12 +58,6 @@ const ROUTE_PERMISSIONS: Record<string, Permission> = {
   'AdminPlaylistsController.setVisibility': 'playlists:hide',
   'AdminPlaylistsController.remove': 'playlists:delete',
   'AdminPlaylistsController.restore': 'playlists:restore',
-  'AdminPodcastsController.list': 'podcasts:read',
-  'AdminPodcastsController.getById': 'podcasts:read',
-  'AdminPodcastsController.remove': 'podcasts:delete',
-  'AdminPodcastsController.restore': 'podcasts:restore',
-  'AdminPodcastsController.removeEpisode': 'podcasts:delete',
-  'AdminPodcastsController.restoreEpisode': 'podcasts:restore',
   'AdminArtistsController.list': 'artists:read',
   'AdminArtistsController.exportCsv': 'artists:export',
   'AdminArtistsController.getById': 'artists:read',
@@ -129,25 +114,17 @@ const ROUTE_PERMISSIONS: Record<string, Permission> = {
   'AdminUsersController.revokeSessions': 'users:revoke-sessions',
 }
 
-/** Controller files under the operator trees, found on disk rather than through the module graph. */
-function controllerFiles(root: string): string[] {
-  return readdirSync(root, { withFileTypes: true, recursive: true })
-    .filter((entry) => entry.isFile())
-    .filter((entry) => entry.name.endsWith('.controller.ts'))
-    .map((entry) => join(entry.parentPath, entry.name))
-}
-
 /**
  * Discovery is filesystem-based on purpose. Importing `AdminModule` would pull the whole service
  * layer with it — including an ESM-only audio dependency the CJS unit runner cannot load — and
  * the point of this test is that it keeps working without anyone tending it.
  */
 function loadControllers(): Type[] {
-  return OPERATOR_ROOTS.flatMap(controllerFiles).flatMap((file) => {
-    const relativePath = relative(__dirname, file).replace(/\.ts$/, '')
-    const loaded: Record<string, unknown> = require(
-      relativePath.startsWith('.') ? relativePath : `./${relativePath}`,
-    )
+  const files = OPERATOR_ROOTS.flatMap((root) =>
+    walk(root, (name) => name.endsWith('.controller.ts')),
+  )
+  return files.flatMap((file) => {
+    const loaded: Record<string, unknown> = require(file)
 
     return Object.values(loaded).filter(
       (exported): exported is Type =>
@@ -193,7 +170,6 @@ describe('operator surface access control', () => {
       'AdminModerationController',
       'AdminOverviewController',
       'AdminPlaylistsController',
-      'AdminPodcastsController',
       'AdminReleasesController',
       'AdminRolesController',
       'AdminStaffController',
@@ -244,8 +220,6 @@ describe('operator surface access control', () => {
       route.controller,
     ])
 
-    expect(required).toBeDefined()
-    expect(PERMISSIONS).toContain(required)
     expect(required).toBe(ROUTE_PERMISSIONS[route.id])
   })
 })

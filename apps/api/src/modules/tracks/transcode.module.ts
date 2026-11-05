@@ -1,19 +1,14 @@
-import {
-  AUDIO_PROCESSING_DEAD_LETTER_QUEUE,
-  AUDIO_PROCESSING_QUEUE,
-} from '@infra/queues/audio-processing.queue'
-import { RELEASE_PUBLISHING_QUEUE } from '@infra/queues/release-publishing.queue'
 import { StorageCoreModule } from '@infra/storage/storage-core.module'
 import { NotificationsQueueModule } from '@modules/notifications'
-import { BullModule } from '@nestjs/bullmq'
 import { Module } from '@nestjs/common'
 import { AudioProcessingConsumer } from './audio-processing.consumer'
-import { ProcessingAttemptRecorder } from './processing-attempt.recorder'
+import { AudioProcessingQueueModule } from './audio-processing-queue.module'
 
 /**
- * The audio-conversion pipeline: the consumer, the attempt recorder and both queue
- * registrations. Shared by the API's `TracksModule` (the producer, which enqueues and records
- * enqueue failures) and the standalone worker, so the queues and the recorder have one owner.
+ * The audio-conversion pipeline: the consumer on top of the queues and the attempt recorder
+ * (`AudioProcessingQueueModule`). Shared by the API's `TracksModule` (the producer, which enqueues
+ * and records enqueue failures) and the standalone worker, so the queues and the recorder have
+ * one owner.
  *
  * Whether the consumer actually runs a BullMQ worker is decided per process by
  * `AUDIO_PROCESSING_WORKER_ENABLED`. Deliberately has no auth imports so a process without HTTP
@@ -21,20 +16,8 @@ import { ProcessingAttemptRecorder } from './processing-attempt.recorder'
  * ADR-0049.
  */
 @Module({
-  imports: [
-    StorageCoreModule,
-    NotificationsQueueModule,
-    BullModule.registerQueue(
-      { name: AUDIO_PROCESSING_QUEUE },
-      {
-        name: AUDIO_PROCESSING_DEAD_LETTER_QUEUE,
-        defaultJobOptions: { removeOnComplete: 500, removeOnFail: 1_000 },
-      },
-      // Producer only: finished conversions of release tracks are reported to the API.
-      { name: RELEASE_PUBLISHING_QUEUE },
-    ),
-  ],
-  providers: [AudioProcessingConsumer, ProcessingAttemptRecorder],
-  exports: [ProcessingAttemptRecorder, AudioProcessingConsumer, BullModule],
+  imports: [StorageCoreModule, NotificationsQueueModule, AudioProcessingQueueModule],
+  providers: [AudioProcessingConsumer],
+  exports: [AudioProcessingQueueModule, AudioProcessingConsumer],
 })
 export class TranscodeModule {}

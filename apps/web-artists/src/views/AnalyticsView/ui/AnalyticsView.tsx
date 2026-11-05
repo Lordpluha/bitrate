@@ -3,21 +3,46 @@ import {
   type AnalyticsPeriod,
   type ArtistAnalytics,
   analyticsPeriods,
-  changeLabel,
   useArtistAnalytics,
 } from '@entities/analytics'
-import { destinationLabels } from '@shared/constants/destinations'
+import {
+  type CustomizableLayout,
+  CustomizeControls,
+  LayoutGrid,
+  type TileDefinition,
+  useCustomizableLayout,
+} from '@features/workspace-layout'
+import { useI18n } from '@shared/i18n'
 import { formatDateTimeUtc } from '@shared/lib/date'
 import { ROUTES } from '@shared/routes/routes'
+import { CountUp, PanelIcon } from '@shared/ui'
 import { Link } from '@tanstack/react-router'
-import { BarChart3, PlugZap } from 'lucide-react'
+import { BarChart3, Flame, Headphones, Repeat, Users } from 'lucide-react'
+import type { ReactNode } from 'react'
+import { useFormats } from '../lib/useFormats'
+import { Change, StatTile } from './AnalyticsParts'
+import { DailyTable } from './DailyTable'
+import { ExternalSources } from './ExternalSources'
+import { PlaysChart } from './PlaysChart'
+import { TopTracks } from './TopTracks'
 
-const numberFormat = new Intl.NumberFormat('en-US')
-const dayFormat = new Intl.DateTimeFormat('en-US', {
-  month: 'short',
-  day: 'numeric',
-  timeZone: 'UTC',
-})
+/** Analytics tiles in their default order: the chart and its highlights, then detail. */
+const analyticsTiles: readonly TileDefinition[] = [
+  { id: 'plays', label: 'analytics.plays', sizes: ['M', 'L'], size: 'M' },
+  {
+    id: 'highlights',
+    label: 'analytics.highlights',
+    sizes: ['S', 'M', 'L'],
+    size: 'S',
+  },
+  { id: 'top-tracks', label: 'analytics.top', sizes: ['M', 'L'], size: 'M' },
+  {
+    id: 'sources',
+    label: 'analytics.other',
+    sizes: ['S', 'M', 'L'],
+    size: 'S',
+  },
+]
 
 interface AnalyticsViewProps {
   artistId: string
@@ -26,277 +51,189 @@ interface AnalyticsViewProps {
 
 /** Bitrate-owned listening signals only; external services never show invented zeroes. */
 export function AnalyticsView({ artistId, days }: AnalyticsViewProps) {
+  const { t, tMessage, tp } = useI18n()
   const analytics = useArtistAnalytics(artistId, days)
+  const layout = useCustomizableLayout(artistId, 'analytics', analyticsTiles)
+  const ready = analytics.data?.state === 'READY'
   return (
     <section
       aria-busy={analytics.isFetching}
       className="artist-music space-y-6"
     >
-      <div className="flex flex-wrap items-end justify-between gap-4">
+      <div className="artist-release-workspace-panel artist-analytics-hero">
+        <img
+          alt=""
+          aria-hidden="true"
+          className="artist-dash-art"
+          src="/artwork/analytics/analytics-spectrum.webp"
+        />
         <div>
           <h1 className="text-[1.625rem] font-normal lg:text-[2rem]">
-            Analytics
+            {t('shell.nav.analytics')}
           </h1>
-          <p className="mt-2 text-[0.9375rem] text-text-secondary">
-            Plays and listeners on Bitrate, by UTC day.
+          <p className="artist-analytics-hero-subtitle">
+            {t('analytics.subtitle')}
           </p>
         </div>
-        <nav aria-label="Period" className="flex gap-2">
-          {analyticsPeriods.map((period) => (
-            <Link
-              aria-current={period === days ? 'page' : undefined}
-              className={cn(
-                'rounded-full border border-border px-4 py-2 text-sm',
-                period === days
-                  ? 'bg-secondary font-medium'
-                  : 'text-text-secondary',
-              )}
-              key={period}
-              search={{ days: period }}
-              to={ROUTES.dashboard.analytics}
-            >
-              {period} days
-            </Link>
-          ))}
-        </nav>
+        <div className="flex flex-wrap items-center gap-3">
+          {ready && <CustomizeControls layout={layout} />}
+          <nav
+            aria-label={t('analytics.period')}
+            className="flex gap-0.5 rounded-lg border border-border bg-secondary p-0.5"
+          >
+            {analyticsPeriods.map((period) => (
+              <Link
+                aria-current={period === days ? 'page' : undefined}
+                className={cn(
+                  'flex min-h-9 items-center rounded-md border border-transparent px-3.5 text-xs transition-colors',
+                  period === days
+                    ? 'border-primary bg-card text-foreground'
+                    : 'text-text-secondary hover:text-foreground',
+                )}
+                key={period}
+                search={{ days: period }}
+                to={ROUTES.dashboard.analytics}
+              >
+                {tp({ count: period, key: 'analytics.days' })}
+              </Link>
+            ))}
+          </nav>
+        </div>
       </div>
       {analytics.isPending ? (
-        <p role="status">Loading analytics…</p>
+        <div className="artist-analytics-grid" role="status">
+          <span className="sr-only">{t('analytics.loading')}</span>
+          <div className="artist-release-workspace-panel h-80 animate-pulse" />
+          <div className="artist-release-workspace-panel h-80 animate-pulse" />
+        </div>
       ) : analytics.isError ? (
         <div className="space-y-3">
-          <p role="alert">{analytics.error.message}</p>
+          <p role="alert">{tMessage(analytics.error.message)}</p>
           <Button
             onClick={() => {
               void analytics.refetch()
             }}
             variant="outline"
           >
-            Try again
+            {t('common.tryAgain')}
           </Button>
         </div>
       ) : (
-        <AnalyticsBody data={analytics.data} />
+        <AnalyticsBody data={analytics.data} layout={layout} />
       )}
     </section>
   )
 }
 
-function AnalyticsBody({ data }: { data: ArtistAnalytics }) {
+function AnalyticsBody({
+  data,
+  layout,
+}: {
+  data: ArtistAnalytics
+  layout: CustomizableLayout
+}) {
+  const { t, tp, locale } = useI18n()
+  const format = useFormats()
   if (data.state !== 'READY' || !data.totals || !data.previous)
     return (
-      <div className="space-y-4">
-        <div className="artist-release-workspace-panel flex items-start gap-3">
-          <BarChart3
+      <div className="artist-analytics-grid">
+        <div className="artist-release-workspace-panel artist-analytics-empty">
+          <img
+            alt=""
             aria-hidden="true"
-            className="size-5 shrink-0 text-accent"
+            className="artist-dash-art"
+            src="/artwork/analytics/analytics-data-states.webp"
           />
-          <p className="text-sm">
+          <span className="artist-analytics-empty-icon">
+            <BarChart3 aria-hidden="true" />
+          </span>
+          <p>
             {data.state === 'NO_TRACKS'
-              ? 'No data yet. Analytics start once a track of yours is published on Bitrate.'
-              : 'No data yet. Nobody has played your published tracks on Bitrate so far.'}
+              ? t('analytics.noTracks')
+              : t('analytics.noPlays')}
           </p>
         </div>
         <ExternalSources data={data} />
       </div>
     )
-  return (
-    <div className="space-y-4">
-      <div className="grid gap-4 sm:grid-cols-2">
-        <StatTile
-          label="Plays"
-          previous={data.previous.plays}
-          value={data.totals.plays}
-        />
-        <StatTile
-          label="Listeners"
-          previous={data.previous.listeners}
-          value={data.totals.listeners}
-        />
-      </div>
-      <DailyPlays data={data} />
-      <TopTracks data={data} />
-      <ExternalSources data={data} />
-      <p className="text-xs text-text-secondary">
-        Source: Bitrate playback by signed-in listeners. Read{' '}
-        {formatDateTimeUtc(data.freshness)} UTC.
-      </p>
-    </div>
-  )
-}
-
-function StatTile({
-  label,
-  value,
-  previous,
-}: {
-  label: string
-  value: number
-  previous: number
-}) {
-  return (
-    <div className="artist-release-workspace-panel">
-      <p className="text-sm text-text-secondary">{label}</p>
-      <p className="mt-1 text-3xl">{numberFormat.format(value)}</p>
-      <p className="mt-1 text-xs text-text-secondary">
-        {changeLabel(value, previous)} · previous{' '}
-        {numberFormat.format(previous)}
-      </p>
-    </div>
-  )
-}
-
-/** One series of magnitudes: single-hue thin bars on a baseline, hover values, table view. */
-function DailyPlays({ data }: { data: ArtistAnalytics }) {
-  const max = Math.max(1, ...data.daily.map((day) => day.plays))
+  const { totals, previous } = data
   const peak = data.daily.reduce(
     (best, day) => (day.plays > best.plays ? day : best),
-    data.daily[0] ?? { date: '', plays: 0 },
+    data.daily[0] ?? { date: data.period.to, plays: 0 },
   )
-  return (
-    <section
-      aria-labelledby="analytics-daily-heading"
-      className="artist-release-workspace-panel space-y-4"
-    >
-      <div className="flex flex-wrap items-baseline justify-between gap-2">
-        <h2 id="analytics-daily-heading">Plays per day</h2>
-        {peak.plays > 0 && (
-          <p className="text-xs text-text-secondary">
-            Peak {numberFormat.format(peak.plays)} on{' '}
-            {dayFormat.format(new Date(peak.date))}
+  const tiles: Record<string, ReactNode> = {
+    plays: (
+      <section
+        aria-labelledby="analytics-daily-heading"
+        className="artist-release-workspace-panel"
+      >
+        <h2 className="artist-analytics-label" id="analytics-daily-heading">
+          <PanelIcon icon={Headphones} />
+          {t('analytics.plays')}
+        </h2>
+        <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1">
+          <p className="artist-analytics-hero-value">
+            <CountUp value={totals.plays} />
           </p>
-        )}
-      </div>
-      <div
-        aria-hidden="true"
-        className="flex h-40 items-end gap-[2px] border-b border-border"
-      >
-        {data.daily.map((day) => (
-          <div
-            className="group relative flex h-full min-w-0 flex-1 items-end"
-            key={day.date}
-            title={`${dayFormat.format(new Date(day.date))}: ${numberFormat.format(day.plays)} plays`}
-          >
-            <div
-              className="w-full rounded-t bg-accent opacity-80 group-hover:opacity-100"
-              style={{
-                height: day.plays === 0 ? '1px' : `${(day.plays / max) * 100}%`,
-              }}
-            />
-          </div>
-        ))}
-      </div>
-      <div
-        aria-hidden="true"
-        className="flex justify-between text-xs text-text-secondary"
-      >
-        <span>
-          {dayFormat.format(new Date(data.daily[0]?.date ?? data.period.from))}
-        </span>
-        <span>
-          {dayFormat.format(
-            new Date(data.daily.at(-1)?.date ?? data.period.to),
+          <Change current={totals.plays} previous={previous.plays} />
+        </div>
+        <PlaysChart
+          daily={data.daily}
+          formatDay={format.day}
+          formatNumber={format.number}
+        />
+        <DailyTable data={data} />
+      </section>
+    ),
+    highlights: (
+      <div className="artist-analytics-side">
+        <StatTile hue="blue" icon={Users} label={t('analytics.listeners')}>
+          <p className="artist-analytics-value">
+            <CountUp value={totals.listeners} />
+          </p>
+          <Change current={totals.listeners} previous={previous.listeners} />
+        </StatTile>
+        <StatTile hue="purple" icon={Repeat} label={t('analytics.perListener')}>
+          <p className="artist-analytics-value">
+            {totals.listeners === 0
+              ? '—'
+              : format.ratio(totals.plays / totals.listeners)}
+          </p>
+          <p className="artist-analytics-hint">
+            {t('analytics.perListenerHint')}
+          </p>
+        </StatTile>
+        <StatTile hue="amber" icon={Flame} label={t('analytics.bestDay')}>
+          <p className="artist-analytics-value">
+            {peak.plays > 0 ? format.day(peak.date) : '—'}
+          </p>
+          {peak.plays > 0 && (
+            <p className="artist-analytics-hint">
+              {tp({
+                count: peak.plays,
+                key: 'analytics.bestDayPlays',
+                values: { plays: format.number(peak.plays) },
+              })}
+            </p>
           )}
-        </span>
+        </StatTile>
       </div>
-      <details>
-        <summary className="cursor-pointer text-sm underline">
-          Show as table
-        </summary>
-        <table className="mt-3 w-full text-sm">
-          <caption className="sr-only">Plays per UTC day</caption>
-          <thead>
-            <tr className="text-left text-text-secondary">
-              <th className="py-1 font-normal" scope="col">
-                Day (UTC)
-              </th>
-              <th className="py-1 text-right font-normal" scope="col">
-                Plays
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {data.daily.map((day) => (
-              <tr className="border-t border-border" key={day.date}>
-                <td className="py-1">{dayFormat.format(new Date(day.date))}</td>
-                <td className="py-1 text-right tabular-nums">
-                  {numberFormat.format(day.plays)}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </details>
-    </section>
-  )
-}
-
-function TopTracks({ data }: { data: ArtistAnalytics }) {
+    ),
+    'top-tracks': <TopTracks data={data} />,
+    sources: <ExternalSources data={data} />,
+  }
   return (
-    <section
-      aria-labelledby="analytics-top-heading"
-      className="artist-release-workspace-panel space-y-3"
-    >
-      <h2 id="analytics-top-heading">Top tracks</h2>
-      {data.topTracks.length === 0 ? (
-        <p className="text-sm text-text-secondary">No plays in this period.</p>
-      ) : (
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="text-left text-text-secondary">
-              <th className="py-1 font-normal" scope="col">
-                Track
-              </th>
-              <th className="py-1 text-right font-normal" scope="col">
-                Plays
-              </th>
-              <th className="py-1 text-right font-normal" scope="col">
-                Listeners
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {data.topTracks.map((track) => (
-              <tr className="border-t border-border" key={track.trackId}>
-                <td className="max-w-0 truncate py-2 pr-3">{track.title}</td>
-                <td className="py-2 text-right tabular-nums">
-                  {numberFormat.format(track.plays)}
-                </td>
-                <td className="py-2 text-right tabular-nums">
-                  {numberFormat.format(track.listeners)}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
-    </section>
-  )
-}
-
-function ExternalSources({ data }: { data: ArtistAnalytics }) {
-  return (
-    <section
-      aria-labelledby="analytics-external-heading"
-      className="artist-release-workspace-panel space-y-3"
-    >
-      <h2 id="analytics-external-heading">Other services</h2>
-      <ul className="grid gap-2 sm:grid-cols-3">
-        {data.external.map((item) => (
-          <li
-            className="flex items-center justify-between gap-2 rounded-md border border-border px-3 py-2 text-sm"
-            key={item.source}
-          >
-            <span>{destinationLabels[item.source]}</span>
-            <span className="flex items-center gap-1 text-xs text-text-secondary">
-              <PlugZap aria-hidden="true" className="size-3.5" />
-              Not connected
-            </span>
-          </li>
-        ))}
-      </ul>
+    <>
+      <LayoutGrid
+        layout={layout}
+        renderTile={(id) => tiles[id] ?? null}
+        variant="thirds"
+      />
       <p className="text-xs text-text-secondary">
-        No figures are shown for services that are not connected.
+        {t('analytics.source', {
+          date: formatDateTimeUtc(data.freshness, locale),
+        })}
       </p>
-    </section>
+    </>
   )
 }

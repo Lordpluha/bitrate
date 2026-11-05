@@ -15,7 +15,7 @@ Tailwind v4 + `@bitrate/tailwind` design tokens + CVA + `cn()`. Read before writ
 | Token layer | Hand-written `@theme` layers in `@bitrate/tailwind`, imported through `themes.css` |
 | Class merging | `cn(...inputs)` from `@bitrate/ui-react` — wraps `clsx` + `tailwind-merge` |
 | Variant component pattern | CVA (`class-variance-authority`) via `cva(...)` factory |
-| Animations | `motion` (Motion for React) |
+| Animations | GSAP 3 for anything script-driven; CSS transitions for hover, press and Base UI enter/exit ([ADR-0069](../../apps/docs/docs/architecture/0069-gsap-web-animation-standard.md)) |
 | Theme switching | CSS class on `<html>` (`light` / `dim`; dark is the default) resolved by `:root.<theme>` selectors |
 
 ## Design tokens
@@ -123,7 +123,7 @@ Five non-negotiable rules for every variant component:
 - **`className` overrides not composed via `cn()`** — raw template literals bypass `tailwind-merge` and produce conflicting utilities.
 - **Arbitrary colour values** — `bg-[#1a1a1a]` and `text-[color:#fff]` defeat the token system. Promote to a token instead.
 - **`tailwind.config.js`** — Tailwind v4 reads config from `@theme`. A JS config file is a red flag.
-- **`tailwindcss-animate`** — that package is Tailwind v3 only. Use the `motion` library or CSS transitions.
+- **`tailwindcss-animate`** — that package is Tailwind v3 only. Use CSS transitions or GSAP.
 - **Tailwind's built-in colour scales** — `bg-slate-100`, `text-gray-500`, `border-zinc-700`
   and the rest. `scripts/check-design-tokens.mjs` owns the exact list (`STOCK_SCALES`); read it
   there rather than trusting a copy in prose, because the two drift whenever a scale moves

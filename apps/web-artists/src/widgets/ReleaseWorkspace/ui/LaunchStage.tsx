@@ -1,12 +1,17 @@
 import { Button, toast } from '@bitrate/ui-react'
 import type { ReleaseWorkspace } from '@entities/release'
 import { PublishRelease } from '@features/publish-release'
+import { useI18n } from '@shared/i18n'
 import { PLAYER_ROUTES } from '@shared/routes/routes'
-import { LockedButton } from '@shared/ui'
-import { ExternalLink, Info, Link2, Megaphone, Share2 } from 'lucide-react'
-
-const NOT_LIVE = 'Available once the release goes live on Bitrate.'
-const COMING_SOON = 'Coming soon to the artist workspace.'
+import { LockedButton, PanelIcon } from '@shared/ui'
+import {
+  ExternalLink,
+  Link2,
+  Megaphone,
+  Rocket,
+  Share2,
+  Sparkles,
+} from 'lucide-react'
 
 interface LaunchStageProps {
   artistId: string
@@ -16,21 +21,24 @@ interface LaunchStageProps {
 /** Stage 5: publication on Bitrate and what follows it. Only Bitrate publication is shown as done. */
 export function LaunchStage({ artistId, release }: LaunchStageProps) {
   const live = release.status === 'RELEASED'
+  const { t } = useI18n()
+  const notLive = t('workspace.launch.notLive')
   return (
     <div className="artist-release-stage">
       <section
         aria-labelledby="release-publish-heading"
         className="artist-release-workspace-panel artist-release-stage-main"
       >
-        <h2 id="release-publish-heading">Bitrate publication</h2>
+        <h2 id="release-publish-heading">
+          <PanelIcon icon={Rocket} />
+          {t('workspace.launch.publication')}
+        </h2>
         <PublishRelease artistId={artistId} release={release} />
         <h2 className="mt-8" id="release-launch-heading">
-          Release links
+          <PanelIcon icon={Link2} />
+          {t('workspace.launch.links')}
         </h2>
-        <p>
-          Availability is shown per destination; missing links are never
-          implied.
-        </p>
+        <p>{t('workspace.launch.linksHint')}</p>
         <ul className="artist-release-rows">
           <li>
             <Link2 aria-hidden="true" />
@@ -38,21 +46,23 @@ export function LaunchStage({ artistId, release }: LaunchStageProps) {
               <span className="artist-release-row-title">Bitrate</span>
               <span>
                 {live
-                  ? 'Primary release page'
-                  : 'Published when the release goes live'}
+                  ? t('workspace.launch.primaryPage')
+                  : t('workspace.launch.publishedWhenLive')}
               </span>
             </span>
             <span
               className="artist-release-chip"
               data-status={live ? 'READY' : undefined}
             >
-              {live ? 'Available' : 'Not live'}
+              {live
+                ? t('workspace.launch.available')
+                : t('workspace.launch.notLiveChip')}
             </span>
             {live && release.albumId ? (
               <PlayerLinkActions albumId={release.albumId} />
             ) : (
-              <LockedButton reason={NOT_LIVE} size="sm" variant="outline">
-                Copy link
+              <LockedButton reason={notLive} size="sm" variant="outline">
+                {t('workspace.launch.copyLink')}
               </LockedButton>
             )}
           </li>
@@ -62,39 +72,43 @@ export function LaunchStage({ artistId, release }: LaunchStageProps) {
         aria-labelledby="release-launch-next-heading"
         className="artist-release-workspace-panel artist-release-stage-side"
       >
-        <h2 id="release-launch-next-heading">What happens next</h2>
-        <ul className="artist-release-rows">
-          <li>
-            <Share2 aria-hidden="true" />
-            <span className="min-w-0">
+        <h2 id="release-launch-next-heading">
+          <PanelIcon icon={Sparkles} />
+          {t('workspace.whatNext')}
+        </h2>
+        <ol className="artist-release-next">
+          <li data-state={live ? 'ready' : 'waiting'}>
+            <span className="artist-release-next-icon">
+              <Share2 aria-hidden="true" />
+            </span>
+            <span className="artist-release-next-text">
               <span className="artist-release-row-title">
-                Share the Bitrate link
+                {t('workspace.launch.share')}
               </span>
               <span>
-                {live ? 'Ready to share' : 'After the release goes live'}
+                {live
+                  ? t('workspace.launch.readyToShare')
+                  : t('workspace.launch.afterLive')}
               </span>
             </span>
           </li>
-          <li>
-            <Megaphone aria-hidden="true" />
-            <span className="min-w-0">
+          <li data-state="soon">
+            <span className="artist-release-next-icon">
+              <Megaphone aria-hidden="true" />
+            </span>
+            <span className="artist-release-next-text">
               <span className="artist-release-row-title">
-                Prepare a promotion plan
+                {t('workspace.launch.promotionPlan')}
               </span>
-              <span>Optional · Coming soon</span>
+              <span>{t('workspace.launch.optional')}</span>
+            </span>
+            <span className="artist-release-chip">
+              {t('workspace.launch.soon')}
             </span>
           </li>
-        </ul>
-        <LockedButton
-          className="mt-4 w-full rounded-full"
-          reason={live ? COMING_SOON : NOT_LIVE}
-          variant="outline"
-        >
-          Plan promotion
-        </LockedButton>
-        <p className="artist-release-honest">
-          <Info aria-hidden="true" />
-          Only Bitrate publication is shown as complete here.
+        </ol>
+        <p className="artist-release-footnote">
+          {t('workspace.launch.honest')}
         </p>
       </section>
     </div>
@@ -104,16 +118,17 @@ export function LaunchStage({ artistId, release }: LaunchStageProps) {
 /** Copy or open the release's album page in the Bitrate player. */
 function PlayerLinkActions({ albumId }: { albumId: string }) {
   const url = PLAYER_ROUTES.album(albumId)
+  const { t } = useI18n()
   const copy = async () => {
     try {
       await navigator.clipboard.writeText(url)
-      toast.success('Link copied')
+      toast.success(t('workspace.launch.copied'))
     } catch {
-      toast.error(`Could not copy the link. Copy it manually: ${url}`)
+      toast.error(t('workspace.launch.copyFailed', { url }))
     }
   }
   return (
-    <span className="flex flex-wrap gap-2">
+    <div className="artist-release-row-actions">
       <Button
         onClick={() => {
           void copy()
@@ -121,14 +136,14 @@ function PlayerLinkActions({ albumId }: { albumId: string }) {
         size="sm"
         variant="outline"
       >
-        Copy link
+        {t('workspace.launch.copyLink')}
       </Button>
-      <Button asChild size="sm" variant="outline">
+      <Button asChild className="gap-1.5" size="sm" variant="outline">
         <a href={url} rel="noopener noreferrer" target="_blank">
-          Open in player
+          {t('workspace.launch.openInPlayer')}
           <ExternalLink aria-hidden="true" className="size-4" />
         </a>
       </Button>
-    </span>
+    </div>
   )
 }

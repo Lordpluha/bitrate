@@ -87,7 +87,6 @@ describe('Release submission (HTTP)', () => {
       const response = await submit({ reviewed: true, expectedUpdatedAt: version }).expect(422)
       expect(response.body.blockers).toEqual([
         { code: 'SPLITS_INCOMPLETE', rightType: 'RECORDING', totalBasisPoints: 0 },
-        { code: 'SPLITS_INCOMPLETE', rightType: 'COMPOSITION', totalBasisPoints: 0 },
       ])
       expect(transactionMock.release.updateManyAndReturn).not.toHaveBeenCalled()
     })

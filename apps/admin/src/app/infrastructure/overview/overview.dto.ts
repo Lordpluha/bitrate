@@ -1,4 +1,4 @@
-import type { ApiSchemas } from '@bitrate/contracts'
+import type { ApiSchemas } from '@bitrate/contracts/admin'
 import * as z from 'zod'
 import { auditEntryDto } from '../audit/audit.dto'
 

@@ -124,11 +124,6 @@
             <span hlmBadge variant="destructive">{{ 'report.tile.deleted' | transloco }}</span>
           }
         </div>
-        @if (subject.kind === 'episode' && subject.parentId) {
-          <p class="text-xs text-muted-foreground">
-            {{ 'report.tile.podcast' | transloco: { id: shortId(subject.parentId) } }}
-          </p>
-        }
         @if (subjectLink(subject); as link) {
           <a
             class="mt-auto inline-flex items-center gap-1.5 text-[0.8125rem] font-semibold text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"

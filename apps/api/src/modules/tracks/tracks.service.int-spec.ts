@@ -5,14 +5,12 @@ import { PrismaService } from '@infra/prisma/prisma.service'
 import { STORAGE_SERVICE } from '@infra/storage/storage.constants'
 import { afterAll, beforeAll, beforeEach, describe, expect, it, jest } from '@jest/globals'
 import { getQueueToken } from '@nestjs/bullmq'
-import { NotFoundException } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { Test, type TestingModule } from '@nestjs/testing'
 import { prismaMock, resetPrismaMock } from '@test/mocks'
 import type { Queue } from 'bullmq'
 import { buildAudioFile, buildTrack } from './__tests__/fixtures/tracks.fixtures'
 import { ProcessingAttemptRecorder } from './processing-attempt.recorder'
-import { TrackStreamingService } from './track-streaming.service'
 import { TrackUploadService } from './track-upload.service'
 import { TracksService } from './tracks.service'
 
@@ -25,14 +23,6 @@ const makeConfigMock = () =>
   ({
     getOrThrow: jest.fn(),
   }) as unknown as jest.Mocked<ConfigService<AppConfig>>
-
-jest.mock(
-  'music-metadata',
-  () => ({
-    parseFile: jest.fn().mockResolvedValue({ format: { duration: 100, bitrate: 128000 } } as never),
-  }),
-  { virtual: true },
-)
 
 /**
  * The upload temp directory is created with real `mkdtemp`/`lstat` calls, which this spec's
@@ -53,7 +43,6 @@ jest.mock('node:fs', () => ({
 describe('TracksService (int)', () => {
   let service: TracksService
   let uploadService: TrackUploadService
-  let streamingService: TrackStreamingService
   let module: TestingModule
   let queueMock: jest.Mocked<Queue>
   let configMock: jest.Mocked<ConfigService<AppConfig>>
@@ -66,7 +55,6 @@ describe('TracksService (int)', () => {
       providers: [
         TracksService,
         TrackUploadService,
-        TrackStreamingService,
         { provide: PrismaService, useValue: prismaMock },
         { provide: getQueueToken('audio-processing'), useValue: queueMock },
         { provide: ConfigService, useValue: configMock },
@@ -110,7 +98,6 @@ describe('TracksService (int)', () => {
 
     service = module.get(TracksService)
     uploadService = module.get(TrackUploadService)
-    streamingService = module.get(TrackStreamingService)
   })
 
   afterAll(() => module?.close())
@@ -123,7 +110,6 @@ describe('TracksService (int)', () => {
   it('should be defined via DI', () => {
     expect(service).toBeDefined()
     expect(uploadService).toBeDefined()
-    expect(streamingService).toBeDefined()
   })
 
   it('findAll should return paginated data', async () => {
@@ -143,12 +129,6 @@ describe('TracksService (int)', () => {
     const result = await service.findTrackById('track-1')
 
     expect(result).toEqual(track)
-  })
-
-  it('getTrackStream should throw NotFoundException when track not found', async () => {
-    prismaMock.track.findFirst.mockResolvedValue(null)
-
-    await expect(streamingService.getTrackStream('nonexistent')).rejects.toThrow(NotFoundException)
   })
 
   it('create should call prisma in transaction and enqueue job', async () => {

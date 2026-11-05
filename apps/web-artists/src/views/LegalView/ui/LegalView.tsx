@@ -1,4 +1,5 @@
 import { Typography } from '@bitrate/ui-react'
+import { useI18n } from '@shared/i18n'
 import {
   LEGAL_DOCUMENTS,
   type LegalBlock,
@@ -80,60 +81,63 @@ const LegalBlockView = ({ block }: { block: LegalBlock }) => {
  * One legal document as a readable page. The banner stays until the texts have been reviewed
  * by a lawyer and the operator placeholders are filled in.
  */
-export const LegalView = ({ document }: LegalViewProps) => (
-  <div className="min-h-screen bg-black-800 text-white">
-    <article className="mx-auto flex max-w-3xl flex-col gap-6 px-6 py-12">
-      <p
-        className="rounded-md border border-primary px-4 py-3 text-sm"
-        role="note"
-      >
-        Draft — pending legal review. Text in [[double brackets]] is not filled
-        in yet.
-      </p>
-
-      <Typography as="h1" size="heading2">
-        {document.title}
-      </Typography>
-
-      {document.sections.map((section) => (
-        <section
-          className="flex flex-col gap-3"
-          key={section.heading ?? 'lead-in'}
+export const LegalView = ({ document }: LegalViewProps) => {
+  const { t, locale } = useI18n()
+  return (
+    <div className="min-h-screen bg-black-800 text-white">
+      <article className="mx-auto flex max-w-3xl flex-col gap-6 px-6 py-12">
+        <p
+          className="rounded-md border border-primary px-4 py-3 text-sm"
+          role="note"
         >
-          {section.heading ? (
-            <Typography as="h2" size="heading5">
-              {section.heading}
-            </Typography>
-          ) : null}
-          {section.blocks.map((block) => (
-            <LegalBlockView
-              block={block}
-              key={
-                block.kind === 'table'
-                  ? block.header.join('|')
-                  : `${block.kind}:${JSON.stringify(block)}`
-              }
-            />
-          ))}
-        </section>
-      ))}
+          {t('landing.legalDraft')}
+          {locale !== 'en' && ` ${t('landing.legalEnglishOnly')}`}
+        </p>
 
-      <nav
-        aria-label="Other legal documents"
-        className="flex flex-wrap gap-x-4 gap-y-2 border-t border-neutral-600 pt-6 text-sm"
-      >
-        {LEGAL_DOCUMENTS.filter((other) => other.slug !== document.slug).map(
-          (other) => (
-            <a
-              className="text-primary hover:opacity-70"
-              href={ROUTES.legal(other.slug)}
-              key={other.slug}
-            >
-              {other.title}
-            </a>
-          ),
-        )}
-      </nav>
-    </article>
-  </div>
-)
+        <Typography as="h1" size="heading2">
+          {document.title}
+        </Typography>
+
+        {document.sections.map((section) => (
+          <section
+            className="flex flex-col gap-3"
+            key={section.heading ?? 'lead-in'}
+          >
+            {section.heading ? (
+              <Typography as="h2" size="heading5">
+                {section.heading}
+              </Typography>
+            ) : null}
+            {section.blocks.map((block) => (
+              <LegalBlockView
+                block={block}
+                key={
+                  block.kind === 'table'
+                    ? block.header.join('|')
+                    : `${block.kind}:${JSON.stringify(block)}`
+                }
+              />
+            ))}
+          </section>
+        ))}
+
+        <nav
+          aria-label={t('landing.otherDocuments')}
+          className="flex flex-wrap gap-x-4 gap-y-2 border-t border-neutral-600 pt-6 text-sm"
+        >
+          {LEGAL_DOCUMENTS.filter((other) => other.slug !== document.slug).map(
+            (other) => (
+              <a
+                className="text-primary hover:opacity-70"
+                href={ROUTES.legal(other.slug)}
+                key={other.slug}
+              >
+                {other.title}
+              </a>
+            ),
+          )}
+        </nav>
+      </article>
+    </div>
+  )
+}

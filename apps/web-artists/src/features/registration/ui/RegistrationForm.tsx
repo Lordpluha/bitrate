@@ -1,6 +1,7 @@
 'use client'
 
 import { LogoIcon, Typography } from '@bitrate/ui-react'
+import { useI18n } from '@shared/i18n'
 import { useRegistrationForm } from '../model/useRegistrationForm'
 import { RegistrationEmailStep } from './RegistrationEmailStep'
 import { RegistrationPasswordStep } from './RegistrationPasswordStep'
@@ -10,6 +11,7 @@ const LOGO_SIZE = 64
 
 /** Two-step artist sign-up card: email address, then password. */
 export const RegistrationForm = () => {
+  const { t } = useI18n()
   const {
     backToEmailStep,
     form,
@@ -26,7 +28,7 @@ export const RegistrationForm = () => {
         <LogoIcon height={LOGO_SIZE} width={LOGO_SIZE} />
         {step === 'email' ? (
           <Typography as="h5" className="mt-2 text-center" size={'heading2'}>
-            Sign up and immerse yourself in music
+            {t('auth.registration.title')}
           </Typography>
         ) : null}
       </div>

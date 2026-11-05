@@ -1,5 +1,5 @@
 import { describe, expect, it, jest } from '@jest/globals'
-import type { UserAuthRequest } from '@modules/users-auth/types'
+import { buildUser } from '@modules/users/__tests__/fixtures/users.fixtures'
 import { ModerationController } from './moderation.controller'
 import type { CreateReportDto } from './moderation.dto'
 import type { ModerationService } from './moderation.service'
@@ -15,9 +15,9 @@ describe('ModerationController', () => {
       reason: 'Harmful content',
     }
 
-    await expect(
-      controller.create({ user: { id: 'user-1' } } as UserAuthRequest, dto),
-    ).resolves.toEqual({ id: 'report-1' })
+    await expect(controller.create(buildUser({ id: 'user-1' }), dto)).resolves.toEqual({
+      id: 'report-1',
+    })
     expect(createReport).toHaveBeenCalledWith('user-1', dto)
   })
 })

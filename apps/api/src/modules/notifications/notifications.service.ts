@@ -1,6 +1,6 @@
 import { PrismaService } from '@infra/prisma/prisma.service'
-import { PUBLIC_ALBUM_WHERE } from '@modules/albums/album-visibility'
-import { PUBLIC_TRACK_WHERE } from '@modules/tracks/track-visibility'
+import { PUBLIC_ALBUM_WHERE } from '@modules/albums/orm'
+import { PUBLIC_TRACK_WHERE } from '@modules/tracks/orm'
 import { Injectable } from '@nestjs/common'
 import type {
   FollowNotificationJob,

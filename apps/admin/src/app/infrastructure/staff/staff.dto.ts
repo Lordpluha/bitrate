@@ -1,4 +1,4 @@
-import type { ApiSchemas } from '@bitrate/contracts'
+import type { ApiSchemas } from '@bitrate/contracts/admin'
 import * as z from 'zod'
 import { contractEnum } from '../http/contract-union'
 
@@ -45,9 +45,6 @@ const wirePermissionDto = contractEnum<WirePermission>()([
   'playlists:hide',
   'playlists:delete',
   'playlists:restore',
-  'podcasts:read',
-  'podcasts:delete',
-  'podcasts:restore',
   'releases:read',
   'releases:review',
 ])

@@ -23,7 +23,7 @@ export const ADMIN_ARTISTS_SORT_FIELDS = [
 ] as const satisfies readonly Prisma.ArtistScalarFieldEnum[]
 
 export const ListAdminArtistsQuerySchema = paginationQuerySchema
-  .merge(sortQuerySchema(ADMIN_ARTISTS_SORT_FIELDS))
+  .extend(sortQuerySchema(ADMIN_ARTISTS_SORT_FIELDS).shape)
   .extend({
     verified: booleanQueryParam.optional(),
     status: adminResourceStatusSchema.optional(),

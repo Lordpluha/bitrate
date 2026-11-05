@@ -1,15 +1,8 @@
 import { normalizePagination } from '@common/pagination'
-import type { OptionalUserAuthRequest, UserAuthRequest } from '@modules/users-auth/types'
+import type { UserEntity } from '@modules/users/entities'
+import { CurrentUser } from '@modules/users-auth/decorators/current-user.decorator'
 import { OptionalUserAuth, UserAuth } from '@modules/users-auth/users-auth.guard'
-import {
-  BadRequestException,
-  Controller,
-  Delete,
-  Get,
-  ParseIntPipe,
-  Query,
-  Req,
-} from '@nestjs/common'
+import { BadRequestException, Controller, Delete, Get, ParseIntPipe, Query } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
 import { ClearSearchHistorySwagger, GetSearchHistorySwagger, SearchSwagger } from './decorators'
 import { SearchService } from './search.service'
@@ -24,7 +17,7 @@ export class SearchController {
   @OptionalUserAuth()
   @Get()
   async search(
-    @Req() req: OptionalUserAuthRequest,
+    @CurrentUser() user: UserEntity | undefined,
     @Query('q') query: string,
     @Query('types') types?: string | string[],
     @Query('page', new ParseIntPipe({ optional: true })) page?: number,
@@ -47,7 +40,7 @@ export class SearchController {
       year,
       genre,
       artist,
-      userId: req.user?.id,
+      userId: user?.id,
     })
   }
 
@@ -55,18 +48,18 @@ export class SearchController {
   @UserAuth()
   @Get('history')
   getHistory(
-    @Req() req: UserAuthRequest,
+    @CurrentUser() user: UserEntity,
     @Query('page', new ParseIntPipe({ optional: true })) page?: number,
     @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
   ) {
     const pagination = normalizePagination(page, limit)
-    return this.searchService.getHistory(req.user.id, pagination.page, pagination.limit)
+    return this.searchService.getHistory(user.id, pagination.page, pagination.limit)
   }
 
   @ClearSearchHistorySwagger()
   @UserAuth()
   @Delete('history')
-  clearHistory(@Req() req: UserAuthRequest) {
-    return this.searchService.clearHistory(req.user.id)
+  clearHistory(@CurrentUser() user: UserEntity) {
+    return this.searchService.clearHistory(user.id)
   }
 }

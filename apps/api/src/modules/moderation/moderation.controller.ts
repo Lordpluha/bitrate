@@ -1,6 +1,7 @@
-import type { UserAuthRequest } from '@modules/users-auth/types'
+import type { UserEntity } from '@modules/users/entities'
+import { CurrentUser } from '@modules/users-auth/decorators/current-user.decorator'
 import { UserAuth } from '@modules/users-auth/users-auth.guard'
-import { Body, Controller, Post, Req } from '@nestjs/common'
+import { Body, Controller, Post } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
 import { Throttle } from '@nestjs/throttler'
 import { ZodValidationPipe } from 'nestjs-zod'
@@ -18,9 +19,9 @@ export class ModerationController {
   @Post('reports')
   @Throttle({ default: { ttl: 60_000, limit: 5 } })
   create(
-    @Req() req: UserAuthRequest,
+    @CurrentUser() user: UserEntity,
     @Body(new ZodValidationPipe(CreateReportSchema)) dto: CreateReportDto,
   ) {
-    return this.moderation.createReport(req.user.id, dto)
+    return this.moderation.createReport(user.id, dto)
   }
 }

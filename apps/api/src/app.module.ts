@@ -1,16 +1,7 @@
-import { REDIS_CLIENT } from '@infra/cache/cache.constants'
-import { CacheModule } from '@infra/cache/cache.module'
-import { AuditInterceptor } from '@infra/observability/audit.interceptor'
-import { loggerOptions } from '@infra/observability/logger.config'
-import { MetricsInterceptor } from '@infra/observability/metrics.interceptor'
-import { MetricsService } from '@infra/observability/metrics.service'
-import { RedisThrottlerStorage } from '@infra/observability/redis-throttler.storage'
-import { PrismaModule } from '@infra/prisma/prisma.module'
-import { bullRootAsyncOptions } from '@infra/queues/bull-root.options'
 import { StorageModule } from '@infra/storage/storage.module'
-import { AdminModule } from '@modules/admin'
 import { AlbumsModule } from '@modules/albums/albums.module'
 import { ArtistProfileModule } from '@modules/artist-profile'
+import { ArtistWorkspaceModule } from '@modules/artist-workspace'
 import { ArtistsModule } from '@modules/artists/artists.module'
 import { ArtistsAuthModule } from '@modules/artists-auth/artists-auth.module'
 import { DiscoveryModule } from '@modules/discovery/discovery.module'
@@ -20,46 +11,18 @@ import { MeModule } from '@modules/me/me.module'
 import { ModerationModule } from '@modules/moderation/moderation.module'
 import { NotificationsModule } from '@modules/notifications/notifications.module'
 import { PlaylistsModule } from '@modules/playlists/playlists.module'
-import { PodcastsModule } from '@modules/podcasts/podcasts.module'
 import { ReleasePublishingModule, ReleasesModule } from '@modules/releases'
 import { SearchModule } from '@modules/search/search.module'
 import { TracksModule } from '@modules/tracks/tracks.module'
 import { UsersModule } from '@modules/users/users.module'
 import { UsersAuthModule } from '@modules/users-auth/users-auth.module'
-import { BullModule } from '@nestjs/bullmq'
-import { type MiddlewareConsumer, Module, type NestModule } from '@nestjs/common'
-import { ConfigModule } from '@nestjs/config'
-import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core'
-import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler'
-import { SentryModule } from '@sentry/nestjs/setup'
-import type { Redis } from 'ioredis'
-import { I18nModule } from 'nestjs-i18n'
-import { LoggerModule } from 'nestjs-pino'
-import { AppController } from './app.controller'
-import { PathTraversalMiddleware, RequestIdMiddleware } from './common'
-import { API_RATE_LIMITS } from './common/config'
-import { appConfigModuleOptions } from './common/config/config-module.options'
-import { HttpExceptionFilter } from './common/filters/http-exception.filter'
-import { HttpCacheInterceptor } from './common/interceptors/http-cache.interceptor'
-import { i18nOptions } from './i18n/i18n.config'
+import { Module } from '@nestjs/common'
+import { AppCoreModule } from './app-core.module'
 
+/** Root of the public API process: the listener and artist surfaces. Operators: `AdminAppModule`. */
 @Module({
   imports: [
-    SentryModule.forRoot(),
-    LoggerModule.forRoot(loggerOptions),
-    I18nModule.forRoot(i18nOptions),
-    ConfigModule.forRoot(appConfigModuleOptions),
-    ThrottlerModule.forRootAsync({
-      imports: [CacheModule],
-      inject: [REDIS_CLIENT],
-      useFactory: (redis: Redis) => ({
-        throttlers: API_RATE_LIMITS,
-        storage: new RedisThrottlerStorage(redis),
-      }),
-    }),
-    BullModule.forRootAsync(bullRootAsyncOptions),
-    PrismaModule,
-    CacheModule,
+    AppCoreModule,
     StorageModule,
     UsersAuthModule,
     ArtistsModule,
@@ -74,25 +37,11 @@ import { i18nOptions } from './i18n/i18n.config'
     FriendsModule,
     DiscoveryModule,
     MeModule,
-    PodcastsModule,
     ReleasesModule,
     ReleasePublishingModule,
     ArtistProfileModule,
+    ArtistWorkspaceModule,
     ModerationModule,
-    AdminModule,
-  ],
-  controllers: [AppController],
-  providers: [
-    MetricsService,
-    { provide: APP_GUARD, useClass: ThrottlerGuard },
-    { provide: APP_INTERCEPTOR, useClass: MetricsInterceptor },
-    { provide: APP_INTERCEPTOR, useClass: HttpCacheInterceptor },
-    { provide: APP_INTERCEPTOR, useClass: AuditInterceptor },
-    { provide: APP_FILTER, useClass: HttpExceptionFilter },
   ],
 })
-export class AppModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer.apply(RequestIdMiddleware, PathTraversalMiddleware).forRoutes('*path')
-  }
-}
+export class AppModule {}

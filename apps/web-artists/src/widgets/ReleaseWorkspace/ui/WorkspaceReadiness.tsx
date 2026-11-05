@@ -1,68 +1,39 @@
-import {
-  describeBlocker,
-  type ReleaseNotice,
-  type ReleaseWorkspace,
-} from '@entities/release'
+import type { ReleaseNotice, ReleaseWorkspace } from '@entities/release'
 import { ReleaseSubmission } from '@features/submit-release'
-import { CircleAlert, Info } from 'lucide-react'
+import { type Translate, useI18n } from '@shared/i18n'
+import { Info } from 'lucide-react'
 
 interface WorkspaceReadinessProps {
   artistId: string
   release: ReleaseWorkspace
+  onReview: () => void
 }
 
-function describeNotice(notice: ReleaseNotice, release: ReleaseWorkspace) {
-  if (notice.code === 'UPC_MISSING')
-    return 'No UPC yet — a code is needed before delivery'
+function describeNotice(
+  notice: ReleaseNotice,
+  release: ReleaseWorkspace,
+  t: Translate,
+) {
+  if (notice.code === 'UPC_MISSING') return t('workspace.readiness.noUpc')
   const track = release.trackDrafts.find((item) => item.id === notice.trackId)
-  return `${track?.title ?? 'A recording'} has no ISRC yet — a code is needed before delivery`
+  return t('workspace.readiness.noIsrc', {
+    title: track?.title ?? t('workspace.readiness.aRecording'),
+  })
 }
 
+/** Notes that do not block review, then the submission itself. */
 export function WorkspaceReadiness({
   artistId,
   release,
+  onReview,
 }: WorkspaceReadinessProps) {
-  const { blockers, notices } = release.readiness
-  const contributors = Object.fromEntries(
-    release.participants.map((person) => [person.id, person.displayName]),
-  )
-  const tracks = Object.fromEntries(
-    release.trackDrafts.map((track) => [track.id, track.title]),
-  )
+  const { notices } = release.readiness
+  const { t } = useI18n()
   return (
-    <section
-      aria-labelledby="release-submit-heading"
-      className="artist-release-workspace-panel artist-release-stage-side artist-release-submit"
-      data-tone={blockers.length === 0 ? 'success' : undefined}
-    >
-      <div className="flex items-baseline justify-between gap-3">
-        <h2 id="release-submit-heading">
-          {blockers.length === 0 ? 'Ready for review' : 'Before review'}
-        </h2>
-        <span className="artist-release-submit-count">
-          {blockers.length} {blockers.length === 1 ? 'blocker' : 'blockers'}
-        </span>
-      </div>
-      <p>
-        {blockers.length === 0
-          ? 'Every required step is complete.'
-          : 'Resolve these before submitting.'}
-      </p>
-      {blockers.length > 0 && (
-        <ul aria-label="Blockers" className="artist-release-submit-list">
-          {blockers.map((blocker) => (
-            <li
-              key={`${blocker.code}-${'contributorId' in blocker ? blocker.contributorId : ''}${'rightType' in blocker ? blocker.rightType : ''}${'trackId' in blocker ? blocker.trackId : ''}`}
-            >
-              <CircleAlert aria-hidden="true" />
-              {describeBlocker(blocker, { contributors, tracks })}
-            </li>
-          ))}
-        </ul>
-      )}
+    <div className="artist-release-submit" id="release-submit-heading">
       {notices.length > 0 && (
         <ul
-          aria-label="Notes"
+          aria-label={t('workspace.readiness.notesLabel')}
           className="artist-release-submit-list"
           data-tone="info"
         >
@@ -71,12 +42,16 @@ export function WorkspaceReadiness({
               key={`${notice.code}-${'trackId' in notice ? notice.trackId : ''}`}
             >
               <Info aria-hidden="true" />
-              {describeNotice(notice, release)}
+              {describeNotice(notice, release, t)}
             </li>
           ))}
         </ul>
       )}
-      <ReleaseSubmission artistId={artistId} release={release} />
-    </section>
+      <ReleaseSubmission
+        artistId={artistId}
+        onReview={onReview}
+        release={release}
+      />
+    </div>
   )
 }

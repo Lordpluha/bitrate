@@ -65,6 +65,7 @@ export const artistDashboardSchema = z.object({
         id: z.uuid(),
         title: z.string(),
         status: releaseStatus,
+        cover: z.string().nullable().default(null),
         scheduledAt: instant,
       }),
     )

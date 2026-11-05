@@ -1,5 +1,6 @@
 import { artistMusicKeys } from '@shared/api/artistMusicKeys'
 import { clientFetchClient } from '@shared/api/fetchClient'
+import { messageKey } from '@shared/i18n'
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import {
   MIN_SEARCH_LENGTH,
@@ -17,7 +18,7 @@ export function useWorkspaceSearch(artistId: string, query: string) {
       })
       const parsed = workspaceSearchSchema.safeParse(result.data)
       if (!result.response.ok || !parsed.success)
-        throw new Error('Search is unavailable right now.')
+        throw new Error(messageKey('music.search.unavailable'))
       return parsed.data
     },
     enabled: q.length >= MIN_SEARCH_LENGTH,

@@ -162,3 +162,48 @@
     transform: translate3d(3%, -2%, 0) scale(1.06);
   }
 }
+
+/* Rendered Markdown (review feedback and its preview): Tailwind's reset strips list markers and
+   heading sizes, so restore a compact, readable set. */
+@layer components {
+  .app-markdown {
+    overflow-wrap: anywhere;
+    line-height: 1.6;
+  }
+  .app-markdown > * + * {
+    margin-top: 0.5rem;
+  }
+  .app-markdown :is(h1, h2, h3, h4) {
+    font-weight: 600;
+  }
+  .app-markdown strong {
+    font-weight: 600;
+  }
+  .app-markdown em {
+    font-style: italic;
+  }
+  .app-markdown ul {
+    list-style: disc;
+    padding-inline-start: 1.25rem;
+  }
+  .app-markdown ol {
+    list-style: decimal;
+    padding-inline-start: 1.25rem;
+  }
+  .app-markdown a {
+    color: var(--color-primary);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .app-markdown blockquote {
+    padding-inline-start: 0.75rem;
+    color: var(--color-muted-foreground);
+    border-inline-start: 2px solid var(--color-border);
+  }
+  .app-markdown code {
+    padding: 0.125rem 0.25rem;
+    font-size: 0.8125em;
+    background: color-mix(in srgb, var(--color-foreground) 8%, transparent);
+    border-radius: 0.25rem;
+  }
+}

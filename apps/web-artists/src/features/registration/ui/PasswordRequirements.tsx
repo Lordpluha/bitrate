@@ -1,6 +1,7 @@
 'use client'
 
 import { CircleCheck, CircleIcon, Typography } from '@bitrate/ui-react'
+import { useI18n } from '@shared/i18n'
 import type { PasswordRules } from '../model/useRegistrationForm'
 
 /** Marker size used by both the met and unmet states. */
@@ -44,18 +45,27 @@ export type PasswordRequirementsProps = {
 }
 
 /** Live checklist of what the chosen password still needs. */
-export const PasswordRequirements = ({ rules }: PasswordRequirementsProps) => (
-  <div className="mt-3">
-    <Typography as="p" className="font-bold" size={'body'}>
-      Password must contain at least:
-    </Typography>
-    <ul className="mt-2 flex flex-col gap-2">
-      <PasswordRule label="1 letter" met={rules.hasLetter} />
-      <PasswordRule
-        label="1 number or special symbol (for example, # ? ! &)"
-        met={rules.hasNumberOrSpecial}
-      />
-      <PasswordRule label="10 characters" met={rules.hasMinLength} />
-    </ul>
-  </div>
-)
+export const PasswordRequirements = ({ rules }: PasswordRequirementsProps) => {
+  const { t } = useI18n()
+  return (
+    <div className="mt-3">
+      <Typography as="p" className="font-bold" size={'body'}>
+        {t('auth.registration.rulesTitle')}
+      </Typography>
+      <ul className="mt-2 flex flex-col gap-2">
+        <PasswordRule
+          label={t('auth.registration.ruleLetter')}
+          met={rules.hasLetter}
+        />
+        <PasswordRule
+          label={t('auth.registration.ruleNumberOrSymbol')}
+          met={rules.hasNumberOrSpecial}
+        />
+        <PasswordRule
+          label={t('auth.registration.ruleLength')}
+          met={rules.hasMinLength}
+        />
+      </ul>
+    </div>
+  )
+}

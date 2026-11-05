@@ -38,7 +38,6 @@ export interface ConvertAudioJob {
   artistId: string
   sourceFileName: string
   masterKey: string
-  format: string
   bitrates: string[]
   trigger?: TrackProcessingTrigger
   input?: ConvertAudioJobInputProbe
@@ -49,7 +48,7 @@ const objectKeySchema = z
   .string()
   .min(1)
   .refine((key) => !(key.startsWith('/') || key.includes('\\') || key.split('/').includes('..')), {
-    message: 'must be a relative object key',
+    error: 'must be a relative object key',
   })
 
 const convertAudioJobSchema = z.object({
@@ -57,7 +56,6 @@ const convertAudioJobSchema = z.object({
   artistId: z.string().min(1),
   sourceFileName: z.string().min(1),
   masterKey: objectKeySchema,
-  format: z.string().min(1),
   bitrates: z.array(z.string().regex(/^\d+k$/)).min(1),
   trigger: z.enum(['UPLOAD', 'REPLACE', 'REPROCESS']).optional(),
   input: z

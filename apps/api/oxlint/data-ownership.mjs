@@ -20,6 +20,7 @@ export const DATA_OWNERS = {
   artistOAuthAccount: ['artists-auth'],
   artistPasswordReset: ['artists-auth'],
   artistSession: ['artists-auth'],
+  artistWorkspaceLayout: ['artist-workspace'],
 
   staff: ['admin-auth', 'admin/staff'],
   staffSession: ['admin-auth'],
@@ -65,10 +66,6 @@ export const DATA_OWNERS = {
 
   /** The genre catalogue is curated by staff only; no public module edits it. */
   genre: ['admin/genres'],
-
-  podcast: ['podcasts'],
-  episode: ['podcasts'],
-  userSavedEpisode: ['podcasts'],
 
   listeningHistory: ['history'],
   searchHistory: ['search'],

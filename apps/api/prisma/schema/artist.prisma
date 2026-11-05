@@ -60,6 +60,7 @@ model Artist {
   releases     Release[] @relation("ReleaseOwner")
   notificationState ArtistNotificationState?
   notificationPreference ArtistNotificationPreference?
+  workspaceLayouts ArtistWorkspaceLayout[]
   trackDrafts  ArtistTrackDraft[]
   releaseCredits ReleaseContributor[]
   genres       ArtistGenre[]
@@ -150,4 +151,24 @@ model ArtistGenre {
 
   @@id([artistId, genreId])
   @@index([genreId])
+}
+
+/// A workspace page whose tiles the artist can arrange.
+enum ArtistWorkspacePage {
+  DASHBOARD
+  ANALYTICS
+  RELEASE_DRAFT
+}
+
+/// One artist's arrangement of a workspace page: tile order, size and visibility, as
+/// `[{ id, size, hidden }]`. The web app merges it with the page's current tiles.
+model ArtistWorkspaceLayout {
+  artistId  String              @db.Uuid
+  page      ArtistWorkspacePage
+  tiles     Json
+  updatedAt DateTime            @updatedAt
+
+  artist Artist @relation(fields: [artistId], references: [id], onDelete: Cascade)
+
+  @@id([artistId, page])
 }

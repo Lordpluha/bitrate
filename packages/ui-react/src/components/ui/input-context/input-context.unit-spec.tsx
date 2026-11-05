@@ -12,6 +12,15 @@ const Consumer = () => {
   )
 }
 
+type GrabProps = {
+  onContext: (context: ReturnType<typeof useInputContext>) => void
+}
+
+const Grab = ({ onContext }: GrabProps) => {
+  onContext(useInputContext())
+  return null
+}
+
 describe('InputContext', () => {
   it('returns null when used outside a provider', () => {
     render(<Consumer />)
@@ -31,15 +40,14 @@ describe('InputContext', () => {
   it('exposes setters from the context', () => {
     let setFocused: InputContextValue['setFocused'] | undefined
     let setValue: InputContextValue['setValue'] | undefined
-    const Grab = () => {
-      const context = useInputContext()
-      setFocused = context?.setFocused
-      setValue = context?.setValue
-      return null
-    }
     render(
       <InputProvider>
-        <Grab />
+        <Grab
+          onContext={(context) => {
+            setFocused = context?.setFocused
+            setValue = context?.setValue
+          }}
+        />
       </InputProvider>,
     )
     expect(typeof setFocused).toBe('function')

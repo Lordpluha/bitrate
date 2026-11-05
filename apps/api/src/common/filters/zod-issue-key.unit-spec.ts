@@ -33,13 +33,13 @@ describe('zodIssueKey', () => {
     ['number too big', z.number().max(1), 3, 'validation.too_big.number'],
     ['number not below', z.number().lt(1), 1, 'validation.too_big.number_exclusive'],
     ['array too long', z.array(z.string()).max(1), ['a', 'b'], 'validation.too_big.array'],
-    ['email', z.string().email(), 'x', 'validation.invalid_format.email'],
-    ['url', z.string().url(), 'x', 'validation.invalid_format.url'],
-    ['uuid', z.string().uuid(), 'x', 'validation.invalid_format.uuid'],
+    ['email', z.email(), 'x', 'validation.invalid_format.email'],
+    ['url', z.url(), 'x', 'validation.invalid_format.url'],
+    ['uuid', z.uuid(), 'x', 'validation.invalid_format.uuid'],
     ['regex', z.string().regex(/^a$/), 'x', 'validation.invalid_format.regex'],
-    ['other format', z.string().datetime(), 'x', 'validation.invalid_format.other'],
+    ['other format', z.iso.datetime(), 'x', 'validation.invalid_format.other'],
     ['enum', z.enum(['a', 'b']), 'z', 'validation.invalid_value'],
-    ['unknown key', z.object({}).strict(), { a: 1 }, 'validation.unrecognized_keys'],
+    ['unknown key', z.strictObject({}), { a: 1 }, 'validation.unrecognized_keys'],
     ['multiple of', z.number().multipleOf(5), 3, 'validation.not_multiple_of'],
     ['union', z.union([z.string(), z.number()]), true, 'validation.invalid_input'],
     ['bare refine', z.string().refine(() => false), 'x', 'validation.invalid_input'],
@@ -61,12 +61,10 @@ describe('zodIssueKey', () => {
 
   it('leaves a hand-written message alone', () => {
     expect(
-      zodIssueKey(issuesOf(z.string().min(3, { message: 'Hand written' }), 'a')[0] as ZodIssueLike),
+      zodIssueKey(issuesOf(z.string().min(3, { error: 'Hand written' }), 'a')[0] as ZodIssueLike),
     ).toBeUndefined()
     expect(
-      zodIssueKey(
-        issuesOf(z.string().email({ message: 'Invalid email format' }), 'a')[0] as ZodIssueLike,
-      ),
+      zodIssueKey(issuesOf(z.email({ error: 'Invalid email format' }), 'a')[0] as ZodIssueLike),
     ).toBeUndefined()
   })
 })

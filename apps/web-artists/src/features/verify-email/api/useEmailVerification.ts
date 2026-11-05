@@ -1,10 +1,14 @@
 import { apiBaseUrl } from '@shared/api'
+import { messageKey } from '@shared/i18n'
 import { useMutation } from '@tanstack/react-query'
 import { z } from 'zod'
 
 const deliverySchema = z.object({
   delivery: z.enum(['email', 'development', 'unavailable']),
 })
+/** The error a rate-limited request throws; the form starts its resend cooldown on it. */
+export const RATE_LIMITED = messageKey('auth.verify.rateLimited')
+
 type EmailVerification = { token: string } | { email: string; code: string }
 
 type VerificationRequest =
@@ -15,8 +19,8 @@ type VerificationRequest =
 async function sendVerificationRequest(request: VerificationRequest) {
   const unavailable =
     request.path !== 'verify-email/resend'
-      ? 'Unable to verify your email right now. Please try again.'
-      : 'Could not resend the verification email. Please try again.'
+      ? messageKey('auth.verify.verifyFailed')
+      : messageKey('auth.verify.resendFailed')
   let response: Response
   try {
     response = await fetch(
@@ -35,11 +39,11 @@ async function sendVerificationRequest(request: VerificationRequest) {
   if (!response.ok) {
     throw new Error(
       response.status === 429
-        ? 'Please wait one minute before trying again.'
+        ? RATE_LIMITED
         : request.path !== 'verify-email/resend' && response.status === 400
           ? request.path === 'verify-email/code'
-            ? 'This code is invalid or expired. Request a new code if needed.'
-            : 'This verification link is invalid or expired.'
+            ? messageKey('auth.verify.codeInvalid')
+            : messageKey('auth.verify.linkInvalid')
           : unavailable,
     )
   }

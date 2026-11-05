@@ -22,7 +22,6 @@ type LibraryTag = {
 const tags: LibraryTag[] = [
   { label: 'Playlists', type: 'playlist' },
   { label: 'Artists', type: 'artist' },
-  { label: 'Podcasts', type: 'podcast' },
 ]
 
 type LibraryTagsProps = {

@@ -12,9 +12,9 @@ import type { ReplaceReleaseSplitsDto } from './dtos/replace-release-splits.dto'
 import type { UpdateReleaseContributorDto } from './dtos/update-release-contributor.dto'
 import type { UpdateReleaseRightsDto } from './dtos/update-release-rights.dto'
 import { RELEASE_ERRORS } from './errors'
+import { RELEASE_CONTRIBUTOR_SELECT, RELEASE_SUMMARY_SELECT } from './orm'
 import { lockOwnedDraft } from './release-draft-lock'
 import { type CreditedArtist, creditArtistAlone } from './release-solo-credit'
-import { RELEASE_CONTRIBUTOR_SELECT, RELEASE_SUMMARY_SELECT } from './releases.select'
 
 /** A credit change invalidates both rights confirmations. */
 const CLEARED_CONFIRMATIONS = {
@@ -142,7 +142,9 @@ export class ReleaseCreditsService {
       lockOwnedDraft(tx, ownerArtistId, id, input.expectedUpdatedAt, {
         masterOwnerType: input.masterOwner?.type ?? null,
         masterOwnerName: input.masterOwner?.type === 'OTHER' ? input.masterOwner.name : null,
-        writersConfirmedAt: input.writersConfirmed ? new Date() : null,
+        ...(input.writersConfirmed === undefined
+          ? {}
+          : { writersConfirmedAt: input.writersConfirmed ? new Date() : null }),
       }),
     )
   }

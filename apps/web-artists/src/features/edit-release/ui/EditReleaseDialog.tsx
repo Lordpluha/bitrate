@@ -7,6 +7,7 @@ import {
   useUpdateRelease,
 } from '@entities/release'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useI18n } from '@shared/i18n'
 import { WorkspaceModal } from '@shared/ui/WorkspaceModal/WorkspaceModal'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -20,6 +21,7 @@ interface EditReleaseDialogProps {
 }
 
 export function EditReleaseDialog(props: EditReleaseDialogProps) {
+  const { t } = useI18n()
   return (
     <DraftEditorLoader
       artistId={props.artistId}
@@ -28,7 +30,7 @@ export function EditReleaseDialog(props: EditReleaseDialogProps) {
       renderDraft={(release) => (
         <EditReleaseForm {...props} release={release} />
       )}
-      title="Edit draft"
+      title={t('music.item.editDraft')}
     />
   )
 }
@@ -39,6 +41,7 @@ function EditReleaseForm({
   onClose,
   onSaved,
 }: EditReleaseDialogProps & { release: ReleaseSummary }) {
+  const { t, tMessage } = useI18n()
   const update = useUpdateRelease(artistId)
   const form = useForm<CreateReleaseValues>({
     resolver: zodResolver(createReleaseSchema),
@@ -60,7 +63,11 @@ function EditReleaseForm({
     }
   }
   return (
-    <WorkspaceModal canClose={!busy} onClose={onClose} title="Edit draft">
+    <WorkspaceModal
+      canClose={!busy}
+      onClose={onClose}
+      title={t('music.item.editDraft')}
+    >
       <form
         aria-busy={busy}
         className="space-y-6"
@@ -68,8 +75,7 @@ function EditReleaseForm({
         onSubmit={form.handleSubmit(submit)}
       >
         <p className="text-sm leading-relaxed text-text-secondary">
-          Update the draft title and release type. Your music stays unpublished.
-          Artwork and tracks are edited in the release workspace.
+          {t('editRelease.editIntro')}
         </p>
         <ReleaseFields
           busy={busy}
@@ -78,7 +84,7 @@ function EditReleaseForm({
         />
         {update.error && (
           <p className="text-sm text-destructive" role="alert">
-            {update.error.message}
+            {tMessage(update.error.message)}
           </p>
         )}
         <div className="flex flex-wrap justify-end gap-3">
@@ -88,7 +94,7 @@ function EditReleaseForm({
             type="button"
             variant="outline"
           >
-            Cancel
+            {t('common.cancel')}
           </Button>
           <Button
             className="artist-workspace-primary"
@@ -96,7 +102,9 @@ function EditReleaseForm({
             type="submit"
             variant="primary"
           >
-            {busy ? 'Saving changes…' : 'Save changes'}
+            {busy
+              ? t('editRelease.savingChanges')
+              : t('editRelease.saveChanges')}
           </Button>
         </div>
       </form>

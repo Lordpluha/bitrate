@@ -1,5 +1,31 @@
 # @bitrate/admin
 
+## 0.6.0
+
+### Minor Changes
+
+- 6739349: Removed the podcast vertical from the operator panel, per the music-only decision in ADR-0066. The Podcasts list and detail screens, their navigation entry and routes are gone, so `/podcasts` and `/podcasts/:id` now fall through to the not-found page. The role and staff editors no longer offer `podcasts:*` permissions, the moderation queue no longer filters by podcast or episode, and the overview's reports-by-type chart no longer shows those types. Report subjects no longer carry a parent link. Until the API removes them, podcast permissions it still stores and podcast/episode series it still reports are dropped when the panel reads them.
+- fe5b6ad: Review feedback is now one Markdown message: reviewers write it in a single editor with a formatting toolbar in the admin, and artists see it formatted. The API drops the separate required-change and recommendation lists (a migration folds existing ones into the message), so this is a breaking contract change. Artists split only the master now: publishing shares and the songwriter confirmation are no longer asked for or required, and new releases start with the artist as master owner. The artist workspace also gets a submit preview, a reworked draft step and stepper, a new analytics layout, a mini player with volume in Music, release artwork on track rows, page entrance animations and interface sounds that can be turned off in Settings.
+
+### Patch Changes
+
+- ec6334b: The operator panel's wire types follow the music-only API contract: it no longer accepts `podcasts:*` permissions or podcast and episode report series (ADR-0066).
+- fdfe873: Made CMAF the only stored audio format (ADR-0065). The worker now runs a single FFmpeg pass that
+  produces the CMAF renditions; the progressive Opus files and the HLS ladder are no longer encoded
+  or uploaded. Removed `GET /tracks/stream/:id`, `GET /tracks/stream/:id/hls/master.m3u8`,
+  `GET /tracks/stream/:id/hls/:bitrate/:asset`, the Socket.io `AudioGateway` with its WebSocket
+  guard and dependencies, and `playbackVersion` from tracks. A migration deletes non-CMAF track
+  files and attempts on the removed processing steps, marks ready tracks left without CMAF
+  renditions as failed, and makes the CMAF byte-index columns required.
+
+  Admin processing diagnostics no longer list the removed `PROGRESSIVE_ENCODE`, `HLS_ENCODE` and
+  `HLS_VALIDATE` steps; their DTO follows the regenerated contract.
+
+- 0944701: The operator API moved into a process of its own (ADR-0068). `main.admin.ts` serves `/api/v1/admin/*` and the health and metrics endpoints on `ADMIN_API_PORT` (3007), and the public API process no longer registers any operator route. In production the operator API is reached only through the admin panel's own host; `api.<domain>` answers 404 for operator paths. Staff session cookies are now host-only on that host instead of spanning the parent cookie domain, and signing in, refreshing or signing out also clears the staff cookies an older session left on the parent domain, so staff sign in once more after the release. Each process publishes its own OpenAPI document: the public contract `v1.ts` no longer contains the operator paths, which moved to `admin-v1.ts`, imported as `@bitrate/contracts/admin`. Each document now declares one security scheme per session cookie, named after the cookie, instead of a single `cookie` scheme overwritten by the last one. The public API also stops allowing the admin panel's origin in CORS. The admin panel now calls the operator API on its own origin.
+- Updated dependencies [bb90f3d]
+- Updated dependencies [959cfa2]
+  - @bitrate/player@2.0.0
+
 ## 0.5.0
 
 ### Minor Changes

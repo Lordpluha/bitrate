@@ -9,10 +9,13 @@ import {
   useUpdateProfile,
 } from '@entities/artist-account'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { countries } from '@shared/constants/countries'
-import { NativeSelect } from '@shared/ui'
+import { countriesFor } from '@shared/constants/countries'
+import { useI18n } from '@shared/i18n'
+import { NativeSelect, PanelIcon } from '@shared/ui'
+import { IdCard, Link2 } from 'lucide-react'
 import { useId, useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { socialLinkIcons } from './socialLinkIcons'
 
 interface ProfileFormProps {
   artistId: string
@@ -29,6 +32,7 @@ export function ProfileForm({
   profile,
   onValuesChange,
 }: ProfileFormProps) {
+  const { t, tMessage, locale } = useI18n()
   const id = useId()
   const update = useUpdateProfile(artistId)
   const [saved, setSaved] = useState(false)
@@ -76,115 +80,137 @@ export function ProfileForm({
         id={`${id}-${name}-error`}
         role="alert"
       >
-        {errors[name]?.message}
+        {tMessage(errors[name]?.message)}
       </p>
     )
 
   return (
     <form
       aria-busy={busy}
-      className="space-y-6"
+      className="artist-profile-form"
       noValidate
       onSubmit={form.handleSubmit(submit)}
     >
-      <div className="grid gap-5 sm:grid-cols-2">
+      <section
+        aria-labelledby={`${id}-details-heading`}
+        className="artist-release-workspace-panel space-y-5"
+      >
+        <h2 id={`${id}-details-heading`}>
+          <PanelIcon icon={IdCard} />
+          {t('profile.details')}
+        </h2>
+        <div className="grid gap-5 sm:grid-cols-2">
+          <div className="space-y-2">
+            <label
+              className="block text-sm font-medium"
+              htmlFor={`${id}-username`}
+            >
+              {t('profile.handle')}
+            </label>
+            <Input
+              aria-describedby={`${id}-username-hint`}
+              aria-invalid={Boolean(errors.username)}
+              autoComplete="off"
+              disabled={busy}
+              id={`${id}-username`}
+              maxLength={50}
+              {...field('username')}
+            />
+            <p
+              className="text-xs text-text-secondary"
+              id={`${id}-username-hint`}
+            >
+              {t('profile.handleHint')}
+            </p>
+            {error('username')}
+          </div>
+          <div className="space-y-2">
+            <label
+              className="block text-sm font-medium"
+              htmlFor={`${id}-country`}
+            >
+              {t('profile.country')}
+            </label>
+            <NativeSelect
+              className="artist-music-control h-11 pl-3 text-sm"
+              disabled={busy}
+              id={`${id}-country`}
+              {...field('country')}
+            >
+              <option value="">{t('profile.notShown')}</option>
+              {countriesFor(locale).map((country) => (
+                <option key={country.code} value={country.code}>
+                  {country.name}
+                </option>
+              ))}
+            </NativeSelect>
+          </div>
+        </div>
         <div className="space-y-2">
-          <label
-            className="block text-sm font-medium"
-            htmlFor={`${id}-username`}
-          >
-            Handle
+          <label className="block text-sm font-medium" htmlFor={`${id}-bio`}>
+            {t('profile.bio')}
           </label>
-          <Input
-            aria-describedby={`${id}-username-hint`}
-            aria-invalid={Boolean(errors.username)}
-            autoComplete="off"
+          <Textarea
+            aria-describedby={`${id}-bio-count`}
+            aria-invalid={Boolean(errors.bio)}
             disabled={busy}
-            id={`${id}-username`}
-            maxLength={50}
-            {...field('username')}
+            id={`${id}-bio`}
+            maxLength={500}
+            rows={9}
+            {...field('bio')}
           />
-          <p className="text-xs text-text-secondary" id={`${id}-username-hint`}>
-            Shown as @handle on your public page.
+          <p className="text-xs text-text-secondary" id={`${id}-bio-count`}>
+            {bioLength}/500
           </p>
-          {error('username')}
+          {error('bio')}
         </div>
-        <div className="space-y-2">
-          <label
-            className="block text-sm font-medium"
-            htmlFor={`${id}-country`}
-          >
-            Country
-          </label>
-          <NativeSelect
-            className="artist-music-control h-11 pl-3 text-sm"
-            disabled={busy}
-            id={`${id}-country`}
-            {...field('country')}
-          >
-            <option value="">Not shown</option>
-            {countries.map((country) => (
-              <option key={country.code} value={country.code}>
-                {country.name}
-              </option>
-            ))}
-          </NativeSelect>
+      </section>
+      <section
+        aria-labelledby={`${id}-links-heading`}
+        className="artist-release-workspace-panel space-y-5"
+      >
+        <h2 id={`${id}-links-heading`}>
+          <PanelIcon icon={Link2} />
+          {t('profile.links')}
+        </h2>
+        <div className="grid gap-3">
+          {socialLinkKeys.map((key) => {
+            const Icon = socialLinkIcons[key]
+            return (
+              <div className="space-y-1" key={key}>
+                <label
+                  className="artist-profile-link-label"
+                  htmlFor={`${id}-${key}`}
+                >
+                  <Icon aria-hidden="true" />
+                  {t(socialLinkLabels[key])}
+                </label>
+                <Input
+                  aria-invalid={Boolean(errors[key])}
+                  autoComplete="url"
+                  disabled={busy}
+                  id={`${id}-${key}`}
+                  inputMode="url"
+                  placeholder="https://"
+                  {...field(key)}
+                />
+                {error(key)}
+              </div>
+            )
+          })}
         </div>
-      </div>
-      <div className="space-y-2">
-        <label className="block text-sm font-medium" htmlFor={`${id}-bio`}>
-          Bio
-        </label>
-        <Textarea
-          aria-describedby={`${id}-bio-count`}
-          aria-invalid={Boolean(errors.bio)}
-          disabled={busy}
-          id={`${id}-bio`}
-          maxLength={500}
-          rows={5}
-          {...field('bio')}
-        />
-        <p className="text-xs text-text-secondary" id={`${id}-bio-count`}>
-          {bioLength}/500
-        </p>
-        {error('bio')}
-      </div>
-      <fieldset className="space-y-3">
-        <legend className="text-sm font-medium">Links</legend>
-        <div className="grid gap-4 sm:grid-cols-2">
-          {socialLinkKeys.map((key) => (
-            <div className="space-y-1" key={key}>
-              <label
-                className="block text-xs text-text-secondary"
-                htmlFor={`${id}-${key}`}
-              >
-                {socialLinkLabels[key]}
-              </label>
-              <Input
-                aria-invalid={Boolean(errors[key])}
-                autoComplete="url"
-                disabled={busy}
-                id={`${id}-${key}`}
-                inputMode="url"
-                placeholder="https://"
-                {...field(key)}
-              />
-              {error(key)}
-            </div>
-          ))}
-        </div>
-      </fieldset>
-      {update.error && (
-        <p className="text-sm text-destructive" role="alert">
-          {update.error.message}
-        </p>
-      )}
-      {saved && !isDirty && (
-        <p className="text-sm text-text-secondary" role="status">
-          Profile saved.
-        </p>
-      )}
-      <div className="flex flex-wrap justify-end gap-3">
+      </section>
+      <div className="artist-profile-actions">
+        {update.error && (
+          <p className="text-sm text-destructive" role="alert">
+            {tMessage(update.error.message)}
+          </p>
+        )}
+        {saved && !isDirty && (
+          <p className="text-sm text-text-secondary" role="status">
+            {t('profile.saved')}
+          </p>
+        )}
         <Button
           disabled={busy || !isDirty}
           onClick={() => {
@@ -195,7 +221,7 @@ export function ProfileForm({
           type="button"
           variant="outline"
         >
-          Discard changes
+          {t('profile.discard')}
         </Button>
         <Button
           className="artist-workspace-primary"
@@ -203,7 +229,7 @@ export function ProfileForm({
           type="submit"
           variant="primary"
         >
-          {busy ? 'Saving…' : 'Save profile'}
+          {busy ? t('common.saving') : t('profile.save')}
         </Button>
       </div>
     </form>

@@ -7,7 +7,7 @@ import {
   NotFoundException,
   UnprocessableEntityException,
 } from '@nestjs/common'
-import { AlbumType, type Prisma, ReleaseStatus } from '@prisma/client'
+import { AlbumType, type Prisma, ReleaseMasterOwner, ReleaseStatus } from '@prisma/client'
 import type { CreateReleaseDto } from './dtos/create-release.dto'
 import type { ListReleasesDto } from './dtos/list-releases.dto'
 import type { ReleaseDraftVersionDto } from './dtos/release-media.dto'
@@ -19,17 +19,16 @@ import type {
 import type { UpdateReleaseDto } from './dtos/update-release.dto'
 import type { UpdateReleaseTrackDto } from './dtos/update-release-track.dto'
 import { RELEASE_ERRORS } from './errors'
-import { lockOwnedDraft } from './release-draft-lock'
-import { releaseReadiness } from './release-readiness'
-import { type CreditedArtist, creditArtistAlone } from './release-solo-credit'
 import {
   RELEASE_SUMMARY_SELECT,
   type ReadinessRecord,
   type ReleaseWorkspaceRecord,
-  readinessFromRecord,
   releaseReadinessSelect,
   releaseWorkspaceSelect,
-} from './releases.select'
+} from './orm'
+import { lockOwnedDraft } from './release-draft-lock'
+import { readinessFromRecord, releaseReadiness } from './release-readiness'
+import { type CreditedArtist, creditArtistAlone } from './release-solo-credit'
 
 /** Statuses whose release timing (`scheduledAt`) can still change. */
 const TIMING_STATUSES = [ReleaseStatus.DRAFT, ReleaseStatus.READY]
@@ -47,6 +46,8 @@ export class ReleasesService {
           title: input.title,
           type: input.type ?? AlbumType.SINGLE,
           status: ReleaseStatus.DRAFT,
+          // Most artists own their recording; another owner is a choice in the rights step.
+          masterOwnerType: ReleaseMasterOwner.ARTIST,
         },
         select: RELEASE_SUMMARY_SELECT,
       })

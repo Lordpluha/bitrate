@@ -6,12 +6,9 @@ import {
   useRevokeOtherSessions,
   useRevokeSession,
 } from '@entities/artist-account'
+import { type I18n, useI18n } from '@shared/i18n'
 import { Laptop, Smartphone } from 'lucide-react'
-
-const usedFormat = new Intl.DateTimeFormat('en-US', {
-  dateStyle: 'medium',
-  timeStyle: 'short',
-})
+import { useState } from 'react'
 
 interface ActiveSessionsSectionProps {
   artistId: string
@@ -19,32 +16,60 @@ interface ActiveSessionsSectionProps {
 
 const MOBILE = /Android|iPhone|iPad|iPod/
 
-function lastSeen(session: ArtistSession) {
-  if (session.current) return 'This device · active now'
-  const at = session.lastUsedAt ?? session.createdAt
-  return `${session.lastUsedAt ? 'Last active' : 'Signed in'} ${usedFormat.format(new Date(at))}`
+/** Other devices listed before the rest fold behind "Show all". */
+const COLLAPSED_OTHERS = 3
+
+function lastSeen(
+  session: ArtistSession,
+  { t, locale }: Pick<I18n, 't' | 'locale'>,
+) {
+  if (session.current) return t('settings.sessions.thisDevice')
+  const date = new Intl.DateTimeFormat(locale, {
+    dateStyle: 'medium',
+    timeStyle: 'short',
+  }).format(new Date(session.lastUsedAt ?? session.createdAt))
+  return session.lastUsedAt
+    ? t('settings.sessions.lastActive', { date })
+    : t('settings.sessions.signedIn', { date })
 }
 
 /** Signed-in devices, with sign-out for each other device and for all of them at once. */
 export function ActiveSessionsSection({
   artistId,
 }: ActiveSessionsSectionProps) {
+  const i18n = useI18n()
+  const { t, tMessage, tp } = i18n
   const sessions = useArtistSessions(artistId)
   const revoke = useRevokeSession(artistId)
   const revokeOthers = useRevokeOtherSessions(artistId)
+  const [expanded, setExpanded] = useState(false)
   const others =
     sessions.data?.filter((session) => !session.current).length ?? 0
+  const collapsible = others > COLLAPSED_OTHERS
+  const folded = new Set(
+    expanded
+      ? []
+      : (sessions.data ?? [])
+          .filter((session) => !session.current)
+          .slice(COLLAPSED_OTHERS)
+          .map((session) => session.id),
+  )
+  const visible =
+    sessions.data?.filter((session) => !folded.has(session.id)) ?? []
   const busy = revoke.isPending || revokeOthers.isPending
 
   return (
     <div className="space-y-3 border-t border-border pt-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <p className="text-sm font-medium">Signed-in devices</p>
+          <p className="text-sm font-medium">{t('settings.sessions.title')}</p>
           <p className="text-sm text-text-secondary">
             {revokeOthers.isSuccess
-              ? `Signed out ${revokeOthers.data} ${revokeOthers.data === 1 ? 'device' : 'devices'}.`
-              : 'Sign out anywhere you no longer use or do not recognise.'}
+              ? tp({
+                  count: revokeOthers.data,
+                  key: 'settings.sessions.signedOut',
+                })
+              : t('settings.sessions.hint')}
           </p>
         </div>
         {others > 0 && (
@@ -54,18 +79,20 @@ export function ActiveSessionsSection({
             size="sm"
             variant="outline"
           >
-            {revokeOthers.isPending ? 'Signing out…' : 'Sign out other devices'}
+            {revokeOthers.isPending
+              ? t('settings.sessions.signingOut')
+              : t('settings.sessions.signOutOthers')}
           </Button>
         )}
       </div>
       {sessions.isPending ? (
         <p className="text-sm" role="status">
-          Loading devices…
+          {t('settings.sessions.loading')}
         </p>
       ) : sessions.isError ? (
         <div className="flex flex-wrap items-center gap-3">
           <p className="text-sm text-destructive" role="alert">
-            {sessions.error.message}
+            {tMessage(sessions.error.message)}
           </p>
           <Button
             onClick={() => {
@@ -74,12 +101,12 @@ export function ActiveSessionsSection({
             size="sm"
             variant="outline"
           >
-            Try again
+            {t('common.tryAgain')}
           </Button>
         </div>
       ) : (
         <ul aria-busy={busy} className="divide-y divide-border">
-          {sessions.data.map((session) => {
+          {visible.map((session) => {
             const Icon = MOBILE.test(session.userAgent ?? '')
               ? Smartphone
               : Laptop
@@ -94,21 +121,23 @@ export function ActiveSessionsSection({
                 />
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm">
-                    {describeSessionDevice(session.userAgent)}
+                    {describeSessionDevice(session.userAgent, t)}
                   </p>
                   <p className="text-xs text-text-secondary">
-                    {lastSeen(session)}
+                    {lastSeen(session, i18n)}
                   </p>
                 </div>
                 {!session.current && (
                   <Button
-                    aria-label={`Sign out ${describeSessionDevice(session.userAgent)}`}
+                    aria-label={t('settings.sessions.signOutDevice', {
+                      device: describeSessionDevice(session.userAgent, t),
+                    })}
                     disabled={busy}
                     onClick={() => revoke.mutate(session.id)}
                     size="sm"
                     variant="ghost"
                   >
-                    Sign out
+                    {t('shell.signOut')}
                   </Button>
                 )}
               </li>
@@ -116,9 +145,23 @@ export function ActiveSessionsSection({
           })}
         </ul>
       )}
+      {sessions.isSuccess && collapsible && (
+        <Button
+          aria-expanded={expanded}
+          onClick={() => setExpanded((open) => !open)}
+          size="sm"
+          variant="ghost"
+        >
+          {expanded
+            ? t('settings.sessions.showFewer')
+            : t('settings.sessions.showAll', {
+                count: sessions.data.length,
+              })}
+        </Button>
+      )}
       {(revoke.error ?? revokeOthers.error) && (
         <p className="text-sm text-destructive" role="alert">
-          {(revoke.error ?? revokeOthers.error)?.message}
+          {tMessage((revoke.error ?? revokeOthers.error)?.message)}
         </p>
       )}
     </div>

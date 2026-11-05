@@ -1,5 +1,6 @@
 import { artistMusicKeys } from '@shared/api/artistMusicKeys'
 import { clientFetchClient } from '@shared/api/fetchClient'
+import { messageKey } from '@shared/i18n'
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import {
   type AnalyticsPeriod,
@@ -16,7 +17,7 @@ export function useArtistAnalytics(artistId: string, days: AnalyticsPeriod) {
       })
       const parsed = artistAnalyticsSchema.safeParse(result.data)
       if (!result.response.ok || !parsed.success)
-        throw new Error('Could not load analytics. Please try again.')
+        throw new Error(messageKey('analytics.error.load'))
       return parsed.data
     },
     placeholderData: keepPreviousData,

@@ -9,7 +9,7 @@ Turborepo + pnpm; workspace names use `@bitrate/`.
 
 | Path | Stack / boundary |
 |---|---|
-| `apps/api` | NestJS, Prisma/PostgreSQL, Redis, BullMQ, Socket.io |
+| `apps/api` | NestJS, Prisma/PostgreSQL, Redis, BullMQ |
 | `apps/web-player` | Next.js App Router, Feature-Sliced Design |
 | `apps/web-artists` | TanStack Start, Vite + Nitro, FSD; no Next.js APIs |
 | `apps/admin` | Angular zoneless SPA, spartan-ng, ESLint |
@@ -34,7 +34,7 @@ Read only affected workspaces. Check scope before applying React/FSD/Next.js con
 - On demand: `.claude/CONTEXT.md` (terminology), `.claude/TOKEN_BUDGET.md` (usage),
   `.claude/references/environment.md` (host tools), `.claude/references/mcp.md` (MCP).
 - Designing or restyling UI: `.claude/references/ui-design-practices.md` (it ranks
-  `design-taste-frontend` below project rules). Editing skills, rules, agents or references:
+  `design-taste-frontend` and the motion skill `emil-design-eng` below project rules). Editing skills, rules, agents or references:
   `.claude/references/skill-writing-lessons.md`.
 - Keep optional references as plain links; `@` imports load contents at startup.
 
@@ -94,6 +94,8 @@ Preserve each command's remote-action approval boundaries: specialists do not pu
 mutate GitHub; `br-manager` handles confirmed interactive tracker actions; `/br-auto`'s
 dispatcher owns its GitHub actions. Unattended workers may commit/push only their assigned
 branch. Never force-push or push `develop`.
+Label issues and PRs only with labels `gh label list` already shows. Never create, rename or
+delete a label — even one a rule or workflow names; if a needed label is missing, ask the owner.
 
 ## Search and verification
 

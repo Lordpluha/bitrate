@@ -1,5 +1,6 @@
 import type { ApiSchemas } from '@bitrate/contracts'
 import { releaseStatuses } from '@shared/constants/releaseStatuses'
+import type { TranslationKey } from '@shared/i18n'
 import { z } from 'zod'
 
 export const trackStatuses = [
@@ -11,20 +12,22 @@ export const trackStatuses = [
   'UPLOAD_FAILED',
 ] as const
 export const trackVersions = ['ORIGINAL', 'REMASTER', 'LIVE', 'DEMO'] as const
+/** Catalog keys; render them with `t()`. */
 export const trackStatusLabels = {
-  DRAFT: 'Draft',
-  PROCESSING: 'Processing',
-  READY: 'Ready',
-  NEEDS_CHANGES: 'Needs changes',
-  PUBLISHED: 'Published',
-  UPLOAD_FAILED: 'Upload failed',
-} satisfies Record<ApiSchemas['ArtistTrackStatus'], string>
+  DRAFT: 'labels.trackStatus.draft',
+  PROCESSING: 'labels.trackStatus.processing',
+  READY: 'labels.trackStatus.ready',
+  NEEDS_CHANGES: 'labels.trackStatus.needsChanges',
+  PUBLISHED: 'labels.trackStatus.published',
+  UPLOAD_FAILED: 'labels.trackStatus.uploadFailed',
+} satisfies Record<ApiSchemas['ArtistTrackStatus'], TranslationKey>
+/** Catalog keys; render them with `t()`. */
 export const trackVersionLabels = {
-  ORIGINAL: 'Original',
-  REMASTER: 'Remaster',
-  LIVE: 'Live',
-  DEMO: 'Demo',
-} satisfies Record<ApiSchemas['ArtistTrackVersion'], string>
+  ORIGINAL: 'labels.trackVersion.original',
+  REMASTER: 'labels.trackVersion.remaster',
+  LIVE: 'labels.trackVersion.live',
+  DEMO: 'labels.trackVersion.demo',
+} satisfies Record<ApiSchemas['ArtistTrackVersion'], TranslationKey>
 
 /** Rows per catalogue page; the API echoes it back as `limit`. */
 export const CATALOGUE_PAGE_SIZE = 6

@@ -67,8 +67,8 @@
   .artist-music-surface {
     background: linear-gradient(
       120deg,
-      var(--color-artist-catalog-start),
-      var(--color-artist-catalog-end)
+      var(--color-artist-glass-catalog-start),
+      var(--color-artist-glass-catalog-end)
     );
     box-shadow: var(--shadow-artist-catalog);
   }
@@ -207,6 +207,37 @@
     text-align: right;
   }
 
+  /* Release cards pair their facts left and right, like track cards. */
+  .artist-music-table[data-tab="releases"] .artist-music-updated-cell {
+    grid-row: 2;
+    grid-column: 2 / 4;
+    justify-self: end;
+  }
+  .artist-music-table[data-tab="releases"] .artist-music-release-cell {
+    grid-row: 4;
+    grid-column: 2;
+  }
+  .artist-music-table[data-tab="releases"] .artist-music-release-updated {
+    grid-row: 4;
+    grid-column: 2 / 4;
+    justify-self: end;
+  }
+  /* On cards the play button sits on the cover instead of underneath it. */
+  @container (max-width: 899.98px) {
+    .artist-music-table[data-tab="tracks"] .artist-music-play-cell {
+      z-index: 1;
+      grid-row: 1;
+      grid-column: 1;
+      align-self: start;
+      justify-self: center;
+      margin-top: 0.5rem;
+    }
+    .artist-music-table[data-tab="tracks"] .artist-music-play-cell > button {
+      color: white;
+      background: color-mix(in srgb, black 50%, transparent);
+      border-radius: 9999px;
+    }
+  }
   .artist-music-badge {
     display: inline-flex;
     gap: 0.5rem;

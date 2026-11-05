@@ -2,6 +2,7 @@ export {
   type ProfileImageKind,
   useArtistProfile,
   useProfileImage,
+  useSetAccountLocale,
   useUpdateProfile,
 } from './api/account'
 export {
@@ -20,6 +21,7 @@ export {
   type ProfileFormValues,
   profileFormDefaults,
   profileFormSchema,
+  type SocialLinkKey,
   socialLinkKeys,
   socialLinkLabels,
 } from './model/profile.schema'

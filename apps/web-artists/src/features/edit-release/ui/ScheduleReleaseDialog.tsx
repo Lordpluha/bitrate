@@ -1,6 +1,7 @@
 import { Button, Input } from '@bitrate/ui-react'
 import { type ReleaseSummary, useUpdateRelease } from '@entities/release'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { type TranslationKey, useI18n } from '@shared/i18n'
 import { WorkspaceModal } from '@shared/ui/WorkspaceModal/WorkspaceModal'
 import { useId, useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -25,17 +26,22 @@ const TIMING_STATUSES = ['DRAFT', 'READY'] as const
 const TIMING_CHOICES = [
   {
     planned: false,
-    label: 'Right away',
-    hint: 'It goes live as soon as you publish it.',
+    label: 'editRelease.rightAway',
+    hint: 'editRelease.rightAwayHint',
   },
   {
     planned: true,
-    label: 'Premiere on a date',
-    hint: 'It goes live at the date and time you choose.',
+    label: 'editRelease.premiere',
+    hint: 'editRelease.premiereHint',
   },
-] as const
+] as const satisfies readonly {
+  planned: boolean
+  label: TranslationKey
+  hint: TranslationKey
+}[]
 
 export function ScheduleReleaseDialog(props: ScheduleReleaseDialogProps) {
+  const { t } = useI18n()
   return (
     <DraftEditorLoader
       artistId={props.artistId}
@@ -45,7 +51,7 @@ export function ScheduleReleaseDialog(props: ScheduleReleaseDialogProps) {
         <ScheduleReleaseForm {...props} release={release} />
       )}
       statuses={TIMING_STATUSES}
-      title="Release timing"
+      title={t('release.roadmap.timing')}
     />
   )
 }
@@ -56,6 +62,7 @@ function ScheduleReleaseForm({
   onClose,
   onSaved,
 }: ScheduleReleaseDialogProps & { release: ReleaseSummary }) {
+  const { t, tMessage } = useI18n()
   const id = useId()
   const update = useUpdateRelease(artistId)
   const form = useForm<ScheduleValues>({
@@ -89,7 +96,7 @@ function ScheduleReleaseForm({
       canClose={!busy}
       className="artist-release-schedule-modal"
       onClose={onClose}
-      title="Release timing"
+      title={t('release.roadmap.timing')}
     >
       <form
         aria-busy={busy}
@@ -98,11 +105,10 @@ function ScheduleReleaseForm({
         onSubmit={form.handleSubmit(submit)}
       >
         <p className="text-sm text-text-secondary">
-          Choose when listeners can hear it. You can change this until the
-          release is published.
+          {t('editRelease.timingIntro')}
         </p>
         <fieldset className="space-y-2" disabled={busy}>
-          <legend className="sr-only">When to release</legend>
+          <legend className="sr-only">{t('editRelease.whenToRelease')}</legend>
           {TIMING_CHOICES.map((choice) => (
             <label className="artist-release-credit-role" key={choice.label}>
               <input
@@ -121,9 +127,9 @@ function ScheduleReleaseForm({
                 type="radio"
               />
               <span>
-                <span className="block font-medium">{choice.label}</span>
+                <span className="block font-medium">{t(choice.label)}</span>
                 <span className="block text-xs text-text-secondary">
-                  {choice.hint}
+                  {t(choice.hint)}
                 </span>
               </span>
             </label>
@@ -136,7 +142,9 @@ function ScheduleReleaseForm({
                 className="block text-sm font-medium"
                 htmlFor={`${id}-${field}`}
               >
-                {field === 'date' ? 'Release date' : 'Time (UTC)'}
+                {field === 'date'
+                  ? t('editRelease.releaseDate')
+                  : t('editRelease.timeUtc')}
               </label>
               <Input
                 aria-describedby={
@@ -149,7 +157,7 @@ function ScheduleReleaseForm({
                 id={`${id}-${field}`}
                 max={field === 'date' ? '9999-12-31' : undefined}
                 min={field === 'date' ? '0001-01-01' : undefined}
-                step={field === 'time' ? '0.001' : undefined}
+                step={field === 'time' ? 60 : undefined}
                 type={field}
                 {...form.register(field, { onChange: () => update.reset() })}
               />
@@ -159,16 +167,18 @@ function ScheduleReleaseForm({
                   id={`${id}-${field}-error`}
                   role="alert"
                 >
-                  {errors[field]?.message}
+                  {tMessage(errors[field]?.message)}
                 </p>
               )}
             </div>
           ))}
         </div>
-        <p className="text-sm text-text-secondary">Time zone: UTC.</p>
+        <p className="text-sm text-text-secondary">
+          {t('editRelease.timeZone')}
+        </p>
         {update.error && (
           <p className="text-sm text-destructive" role="alert">
-            {update.error.message}
+            {tMessage(update.error.message)}
           </p>
         )}
         <div className="flex flex-wrap justify-end gap-3">
@@ -178,7 +188,7 @@ function ScheduleReleaseForm({
             type="button"
             variant="outline"
           >
-            Cancel
+            {t('common.cancel')}
           </Button>
           <Button
             className="artist-workspace-primary"
@@ -186,7 +196,9 @@ function ScheduleReleaseForm({
             type="submit"
             variant="primary"
           >
-            {busy ? 'Saving schedule…' : 'Save schedule'}
+            {busy
+              ? t('editRelease.savingSchedule')
+              : t('editRelease.saveSchedule')}
           </Button>
         </div>
       </form>

@@ -1,4 +1,4 @@
-import type { ApiPaths } from '@bitrate/contracts'
+import type { ApiPaths } from '@bitrate/contracts/admin'
 import { HttpClient } from '@angular/common/http'
 import { inject, Injectable } from '@angular/core'
 import { firstValueFrom } from 'rxjs'

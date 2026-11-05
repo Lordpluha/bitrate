@@ -1,7 +1,9 @@
 import { pipeToResponse } from '@common/utils/stream'
+import type { ArtistEntity } from '@modules/artists/entities'
 import { ArtistAuth } from '@modules/artists-auth/artists-auth.guard'
-import type { ArtistAuthRequest } from '@modules/artists-auth/types'
-import type { UserAuthRequest } from '@modules/users-auth/types'
+import { CurrentArtist } from '@modules/artists-auth/decorators/current-artist.decorator'
+import type { UserEntity } from '@modules/users/entities'
+import { CurrentUser } from '@modules/users-auth/decorators/current-user.decorator'
 import { UserAuth } from '@modules/users-auth/users-auth.guard'
 import {
   BadRequestException,
@@ -12,7 +14,6 @@ import {
   HttpCode,
   Logger,
   Param,
-  ParseEnumPipe,
   ParseIntPipe,
   ParseUUIDPipe,
   Post,
@@ -27,14 +28,11 @@ import { Throttle } from '@nestjs/throttler'
 import type { Request, Response } from 'express'
 import { ZodValidationPipe } from 'nestjs-zod'
 import {
-  GetHlsAssetSwagger,
-  GetHlsMasterPlaylistSwagger,
   GetTrackByIdSwagger,
-  GetTrackManifestSwagger,
   LikeTrackSwagger,
+  OpenPlaySessionSwagger,
   PostTrackSwagger,
   StreamTrackRenditionSwagger,
-  StreamTrackSwagger,
   TracksGetAllSwagger,
   TracksGetLikedSwagger,
   UnlikeTrackSwagger,
@@ -46,11 +44,16 @@ import {
   type UpdateTrackDto,
   UpdateTrackSchema,
 } from './dtos/create-track.dto'
-import { TrackEntity, TrackManifestEntity, TrackManifestRenditionEntity } from './entities'
-import { type AudioStreamFormat, SUPPORTED_AUDIO_STREAM_FORMATS } from './track-audio.helpers'
+import { type OpenPlaySessionDto, OpenPlaySessionSchema } from './dtos/open-play-session.dto'
+import {
+  PlaySessionEntity,
+  TrackEntity,
+  TrackManifestEntity,
+  TrackManifestRenditionEntity,
+} from './entities'
+import { PlaybackPacingError } from './playback-session.service'
 import { TrackPlaybackService } from './track-playback.service'
 import { UnsatisfiableRangeError } from './track-playback.types'
-import { TrackStreamingService } from './track-streaming.service'
 import { TrackFilesInterceptor } from './track-upload.interceptor'
 import { TrackUploadService } from './track-upload.service'
 import { TracksService } from './tracks.service'
@@ -95,14 +98,13 @@ function sendRangeStream(
 }
 
 /** Track catalogue, uploads, likes and audio delivery. */
-@ApiExtraModels(TrackEntity, TrackManifestEntity, TrackManifestRenditionEntity)
+@ApiExtraModels(TrackEntity, TrackManifestEntity, TrackManifestRenditionEntity, PlaySessionEntity)
 @ApiTags('Tracks')
 @Controller({ path: 'tracks', version: '1' })
 export class TracksController {
   constructor(
     private tracksService: TracksService,
     private trackUploadService: TrackUploadService,
-    private trackStreamingService: TrackStreamingService,
     private trackPlaybackService: TrackPlaybackService,
   ) {}
 
@@ -117,78 +119,12 @@ export class TracksController {
     return this.tracksService.findAll({ artistId, limit, page, title })
   }
 
-  @GetHlsMasterPlaylistSwagger()
-  @UserAuth()
-  @Throttle({ default: { ttl: 60_000, limit: 600 } })
-  @Get('stream/:id/hls/master.m3u8')
-  async getHlsMasterPlaylist(
-    @Param('id', ParseUUIDPipe) id: TrackEntity['id'],
-    @Res() res: Response,
-  ) {
-    const playlist = await this.trackStreamingService.getHlsMasterPlaylist(id)
-    res.set({
-      'Content-Type': 'application/vnd.apple.mpegurl',
-      'Cache-Control': 'private, max-age=5, no-transform',
-    })
-    return res.send(playlist)
-  }
-
-  @GetHlsAssetSwagger()
-  @UserAuth()
-  @Throttle({ default: { ttl: 60_000, limit: 1_200 } })
-  @Get('stream/:id/hls/:bitrate/:asset')
-  async getHlsAsset(
-    @Param('id', ParseUUIDPipe) id: TrackEntity['id'],
-    @Param('bitrate', ParseIntPipe) bitrate: number,
-    @Param('asset') asset: string,
-    @Res() res: Response,
-  ) {
-    const data = await this.trackStreamingService.getHlsAsset(id, bitrate, asset)
-    res.set({
-      'Content-Type': data.contentType,
-      ...(data.contentLength === undefined ? {} : { 'Content-Length': data.contentLength }),
-      'Cache-Control': data.immutable
-        ? IMMUTABLE_CACHE_CONTROL
-        : 'private, max-age=30, no-transform',
-    })
-    pipeToResponse(data.stream, res, logger, 'Audio')
-  }
-
-  @StreamTrackSwagger()
-  @UserAuth()
-  @Throttle({ default: { ttl: 60_000, limit: 600 } })
-  @Get('stream/:id')
-  async streamTrack(
-    @Param('id', ParseUUIDPipe) id: TrackEntity['id'],
-    @Req() req: Request,
-    @Res() res: Response,
-    @Query('bitrate', new ParseIntPipe({ optional: true })) bitrate?: number,
-    @Query('format', new ParseEnumPipe(SUPPORTED_AUDIO_STREAM_FORMATS, { optional: true }))
-    format?: AudioStreamFormat,
-  ) {
-    const streamData = await this.trackStreamingService.getTrackStream(
-      id,
-      req.headers.range,
-      bitrate,
-      format,
-    )
-
-    sendRangeStream(res, streamData, {
-      ...(streamData.contentLength === undefined
-        ? {}
-        : { 'Content-Length': streamData.contentLength }),
-      'Cache-Control': 'private, max-age=3600, no-transform',
-      'X-Audio-Bitrate': streamData.bitrate,
-      'X-Audio-Format': streamData.format,
-    })
-  }
-
   @PostTrackSwagger()
   @ArtistAuth()
   @Post('')
   @TrackFilesInterceptor()
   async postTrack(
-    @Req() req: ArtistAuthRequest,
+    @CurrentArtist() artist: ArtistEntity,
     @Body(new ZodValidationPipe(CreateTrackSchema))
     createTrackDto: CreateTrackDto,
     @UploadedFiles() files: TrackUploadFiles,
@@ -200,7 +136,7 @@ export class TracksController {
       throw new BadRequestException('Audio file is required')
     }
 
-    return await this.trackUploadService.create(req.artist.id, createTrackDto, audioFile, coverFile)
+    return await this.trackUploadService.create(artist.id, createTrackDto, audioFile, coverFile)
   }
 
   @UpdateTrackByIdSwagger()
@@ -208,14 +144,14 @@ export class TracksController {
   @Put(':id')
   @TrackFilesInterceptor()
   putTrack(
-    @Req() req: ArtistAuthRequest,
+    @CurrentArtist() artist: ArtistEntity,
     @Param('id', ParseUUIDPipe) id: TrackEntity['id'],
     @Body(new ZodValidationPipe(UpdateTrackSchema))
     updateTrackDto: UpdateTrackDto,
     @UploadedFiles() files: TrackUploadFiles,
   ) {
     return this.trackUploadService.update(
-      req.artist.id,
+      artist.id,
       id,
       updateTrackDto,
       files?.audio?.[0],
@@ -227,11 +163,11 @@ export class TracksController {
   @UserAuth()
   @Get('liked')
   getLikedTracks(
-    @Req() req: UserAuthRequest,
+    @CurrentUser() user: UserEntity,
     @Query('page', new ParseIntPipe({ optional: true })) page?: number,
     @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
   ) {
-    return this.tracksService.findLikedTracks(req.user.id, { page, limit })
+    return this.tracksService.findLikedTracks(user.id, { page, limit })
   }
 
   @GetTrackByIdSwagger()
@@ -240,30 +176,49 @@ export class TracksController {
     return this.tracksService.findTrackById(id)
   }
 
-  @GetTrackManifestSwagger()
+  @OpenPlaySessionSwagger()
   @UserAuth()
-  @Get(':id/manifest')
-  getManifest(@Param('id', ParseUUIDPipe) id: TrackEntity['id']) {
-    return this.trackPlaybackService.getManifest(id)
+  @Throttle({ default: { ttl: 60_000, limit: 120 } })
+  @Post(':id/play-sessions')
+  openPlaySession(
+    @Param('id', ParseUUIDPipe) id: TrackEntity['id'],
+    @CurrentUser() user: UserEntity,
+    @Body(new ZodValidationPipe(OpenPlaySessionSchema)) dto: OpenPlaySessionDto,
+  ) {
+    return this.trackPlaybackService.openSession({
+      trackId: id,
+      userId: user.id,
+      ...(dto?.deviceId ? { deviceId: dto.deviceId } : {}),
+    })
   }
 
+  /** Authorised by the session token alone (D9): a native `<audio>` cannot refresh a cookie. */
   @StreamTrackRenditionSwagger()
-  @UserAuth()
   @Throttle({ default: { ttl: 60_000, limit: 1_200 } })
   @Get(':id/cmaf/:bitrate')
   async streamRendition(
     @Param('id', ParseUUIDPipe) id: TrackEntity['id'],
     @Param('bitrate', ParseIntPipe) bitrate: number,
+    @Query('t') token: string | undefined,
     @Req() req: Request,
     @Res() res: Response,
   ) {
     let rendition: Awaited<ReturnType<TrackPlaybackService['getRenditionStream']>>
     try {
-      rendition = await this.trackPlaybackService.getRenditionStream(id, bitrate, req.headers.range)
+      rendition = await this.trackPlaybackService.getRenditionStream({
+        trackId: id,
+        bitrate,
+        rangeHeader: req.headers.range,
+        token,
+      })
     } catch (error) {
       if (error instanceof UnsatisfiableRangeError) {
         res.set({ 'Accept-Ranges': 'bytes', 'Content-Range': `bytes */${error.fileSize}` })
         return res.status(416).send()
+      }
+      if (error instanceof PlaybackPacingError) {
+        res.set({ 'Retry-After': String(error.retryAfterSeconds) })
+        return res.status(429).send()
       }
       throw error
     }
@@ -277,15 +232,15 @@ export class TracksController {
   @LikeTrackSwagger()
   @UserAuth()
   @Post(':id/like')
-  likeTrack(@Req() req: UserAuthRequest, @Param('id', ParseUUIDPipe) id: TrackEntity['id']) {
-    return this.tracksService.like(req.user.id, id)
+  likeTrack(@CurrentUser() user: UserEntity, @Param('id', ParseUUIDPipe) id: TrackEntity['id']) {
+    return this.tracksService.like(user.id, id)
   }
 
   @UnlikeTrackSwagger()
   @UserAuth()
   @HttpCode(200)
   @Delete(':id/like')
-  unlikeTrack(@Req() req: UserAuthRequest, @Param('id', ParseUUIDPipe) id: TrackEntity['id']) {
-    return this.tracksService.unlike(req.user.id, id)
+  unlikeTrack(@CurrentUser() user: UserEntity, @Param('id', ParseUUIDPipe) id: TrackEntity['id']) {
+    return this.tracksService.unlike(user.id, id)
   }
 }

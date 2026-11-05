@@ -3,7 +3,7 @@ import { PrismaService } from '@infra/prisma/prisma.service'
 import { Injectable } from '@nestjs/common'
 import type { Prisma } from '@prisma/client'
 import type { MusicReleasesDto, MusicTracksDto } from './dtos/music-catalogue.dto'
-import { RELEASE_SUMMARY_SELECT } from './releases.select'
+import { RELEASE_SUMMARY_SELECT } from './orm'
 
 @Injectable()
 export class ArtistMusicService {
@@ -48,16 +48,21 @@ export class ArtistMusicService {
           isDemo: true,
           updatedAt: true,
           owner: { select: { username: true } },
-          release: { select: { id: true, title: true, deletedAt: true } },
+          release: { select: { id: true, title: true, cover: true, deletedAt: true } },
         },
       }),
       this.prisma.artistTrackDraft.count({ where }),
     ])
-    const data = records.map(({ owner, release, ...record }) => ({
-      ...record,
-      artistName: owner.username,
-      release: release && !release.deletedAt ? { id: release.id, title: release.title } : null,
-    }))
+    const data = records.map(({ owner, release, ...record }) => {
+      const live = release && !release.deletedAt ? release : null
+      return {
+        ...record,
+        // A recording uploaded into a release has no artwork of its own; it shows the release's.
+        cover: record.cover ?? live?.cover ?? null,
+        artistName: owner.username,
+        release: live ? { id: live.id, title: live.title } : null,
+      }
+    })
     return { data, total, page, limit }
   }
 

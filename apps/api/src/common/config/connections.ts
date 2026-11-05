@@ -1,29 +1,34 @@
 import type { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface'
 import { registerAs } from '@nestjs/config'
-import type { GatewayMetadata } from '@nestjs/websockets'
 import { resolveWebHosts } from './web.config'
 
+/** The two HTTP processes the API runs as: listeners and artists, and operators (#458). */
+export type ApiSurface = 'public' | 'admin'
+
 /**
- * Allowed origins for CORS
+ * Allowed origins for CORS: each surface admits only the frontends that call it, so the operator
+ * panel's origin reaches only the operator process, plus any localhost for development.
  */
-const getAllowedOrigins = (): CorsOptions['origin'] => {
+export const allowedOrigins = (
+  surface: ApiSurface,
+  env: Parameters<typeof resolveWebHosts>[0] = process.env,
+): (string | RegExp)[] => {
   const baseOrigins = [
     /^http:\/\/localhost(:\d+)?$/, // Any localhost with optional port
   ]
 
-  const { userHost, artistHost, adminHost } = resolveWebHosts()
-  const configuredOrigins = [userHost, artistHost, adminHost].filter((origin): origin is string =>
-    Boolean(origin),
-  )
+  const { userHost, artistHost, adminHost } = resolveWebHosts(env)
+  const surfaceOrigins = surface === 'admin' ? [adminHost] : [userHost, artistHost]
+  const configuredOrigins = surfaceOrigins.filter((origin): origin is string => Boolean(origin))
 
   return [...new Set(configuredOrigins), ...baseOrigins]
 }
 
 /**
- * Common CORS configuration for HTTP requests
+ * CORS configuration for HTTP requests to one surface
  */
-const httpConfig: CorsOptions = {
-  origin: getAllowedOrigins(),
+const httpConfig = (surface: ApiSurface): CorsOptions => ({
+  origin: allowedOrigins(surface),
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH', 'HEAD'],
   allowedHeaders: [
     'Content-Type',
@@ -49,20 +54,12 @@ const httpConfig: CorsOptions = {
   credentials: true,
   preflightContinue: false,
   optionsSuccessStatus: 200,
-}
+})
 
-/**
- * Common configuration for WebSocket connections
- */
-export const websocketConfig: GatewayMetadata = {
-  cors: {
-    origin: getAllowedOrigins(),
-    credentials: true,
-  },
-}
-
-/** The connections config value. */
+/** The connections config value: CORS options per surface. */
 export const connectionsConfig = registerAs('connections', () => ({
-  http: httpConfig,
-  ws: websocketConfig,
+  http: { public: httpConfig('public'), admin: httpConfig('admin') } satisfies Record<
+    ApiSurface,
+    CorsOptions
+  >,
 }))

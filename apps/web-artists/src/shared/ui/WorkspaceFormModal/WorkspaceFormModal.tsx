@@ -1,4 +1,5 @@
 import { Button } from '@bitrate/ui-react'
+import { useI18n } from '@shared/i18n'
 import { WorkspaceModal } from '@shared/ui/WorkspaceModal/WorkspaceModal'
 import type { FormEvent, ReactNode } from 'react'
 
@@ -12,7 +13,7 @@ interface WorkspaceFormModalProps {
   /** The write's failure, shown above the actions. */
   error?: Error | null
   submitLabel: string
-  /** Replaces the submit label while pending. */
+  /** Replaces the submit label while pending; defaults to “Saving…”. */
   pendingLabel?: string
   submitDisabled?: boolean
   /** Vertical rhythm of the form body; most workspace forms use `space-y-6`. */
@@ -28,11 +29,12 @@ export function WorkspaceFormModal({
   pending,
   error,
   submitLabel,
-  pendingLabel = 'Saving…',
+  pendingLabel,
   submitDisabled = false,
   className = 'space-y-6',
   children,
 }: WorkspaceFormModalProps) {
+  const { t, tMessage } = useI18n()
   return (
     <WorkspaceModal
       canClose={!pending}
@@ -52,7 +54,7 @@ export function WorkspaceFormModal({
         {children}
         {error && (
           <p className="text-sm text-destructive" role="alert">
-            {error.message}
+            {tMessage(error.message)}
           </p>
         )}
         <div className="flex flex-wrap justify-end gap-3">
@@ -62,7 +64,7 @@ export function WorkspaceFormModal({
             type="button"
             variant="outline"
           >
-            Cancel
+            {t('common.cancel')}
           </Button>
           <Button
             className="artist-workspace-primary"
@@ -70,7 +72,7 @@ export function WorkspaceFormModal({
             type="submit"
             variant="primary"
           >
-            {pending ? pendingLabel : submitLabel}
+            {pending ? (pendingLabel ?? t('common.saving')) : submitLabel}
           </Button>
         </div>
       </form>

@@ -4,6 +4,7 @@ import {
   useRemoveTrack,
   useRenameTrack,
 } from '@entities/release'
+import { Interpolate, type TranslationKey, useI18n } from '@shared/i18n'
 import { WorkspaceModal } from '@shared/ui/WorkspaceModal/WorkspaceModal'
 import { useId, useState } from 'react'
 
@@ -24,18 +25,19 @@ export function RenameTrackDialog({
   onClose,
   onSaved,
 }: TrackDialogProps) {
+  const { t, tMessage } = useI18n()
   const id = useId()
   const rename = useRenameTrack(artistId)
   const [expectedUpdatedAt] = useState(release.updatedAt)
   const track = release.trackDrafts.find((item) => item.id === trackId)
   const [title, setTitle] = useState(track?.title ?? '')
-  const [problem, setProblem] = useState<string | null>(null)
+  const [problem, setProblem] = useState<TranslationKey | null>(null)
   const unchanged = title.trim() === track?.title
 
   const submit = async () => {
     const trimmed = title.trim()
     if (trimmed === '') {
-      setProblem('Enter a title for this recording.')
+      setProblem('media.enterTitle')
       return
     }
     try {
@@ -56,7 +58,7 @@ export function RenameTrackDialog({
       canClose={!rename.isPending}
       className="artist-release-credit-modal"
       onClose={onClose}
-      title="Rename track"
+      title={t('media.renameTitle')}
     >
       <form
         aria-busy={rename.isPending}
@@ -69,7 +71,7 @@ export function RenameTrackDialog({
       >
         <div className="space-y-2">
           <label className="block text-sm font-medium" htmlFor={`${id}-title`}>
-            Track title
+            {t('media.trackTitle')}
           </label>
           <Input
             aria-describedby={problem ? `${id}-error` : undefined}
@@ -92,13 +94,13 @@ export function RenameTrackDialog({
               id={`${id}-error`}
               role="alert"
             >
-              {problem}
+              {t(problem)}
             </p>
           )}
         </div>
         {rename.error && (
           <p className="text-sm text-destructive" role="alert">
-            {rename.error.message}
+            {tMessage(rename.error.message)}
           </p>
         )}
         <div className="flex flex-wrap justify-end gap-3">
@@ -108,7 +110,7 @@ export function RenameTrackDialog({
             type="button"
             variant="outline"
           >
-            Cancel
+            {t('common.cancel')}
           </Button>
           <Button
             className="artist-workspace-primary"
@@ -116,7 +118,7 @@ export function RenameTrackDialog({
             type="submit"
             variant="primary"
           >
-            {rename.isPending ? 'Saving…' : 'Save title'}
+            {rename.isPending ? t('common.saving') : t('media.saveTitle')}
           </Button>
         </div>
       </form>
@@ -131,6 +133,7 @@ export function RemoveTrackDialog({
   onClose,
   onSaved,
 }: TrackDialogProps) {
+  const { t, tMessage } = useI18n()
   const remove = useRemoveTrack(artistId)
   const [expectedUpdatedAt] = useState(release.updatedAt)
   const track = release.trackDrafts.find((item) => item.id === trackId)
@@ -149,17 +152,24 @@ export function RemoveTrackDialog({
       canClose={!remove.isPending}
       className="artist-release-credit-modal"
       onClose={onClose}
-      title="Remove track"
+      title={t('media.removeTitle')}
     >
       <div aria-busy={remove.isPending} className="space-y-6">
         <p>
-          Remove <strong>{track?.title ?? 'this recording'}</strong> from the
-          release? Its uploaded audio is deleted and its ISRC is freed. This
-          cannot be undone.
+          <Interpolate
+            message={t('media.removeConfirm')}
+            values={{
+              title: (
+                <strong>
+                  {track?.title ?? t('editRelease.thisRecording')}
+                </strong>
+              ),
+            }}
+          />
         </p>
         {remove.error && (
           <p className="text-sm text-destructive" role="alert">
-            {remove.error.message}
+            {tMessage(remove.error.message)}
           </p>
         )}
         <div className="flex flex-wrap justify-end gap-3">
@@ -170,7 +180,7 @@ export function RemoveTrackDialog({
             type="button"
             variant="outline"
           >
-            Keep track
+            {t('media.keepTrack')}
           </Button>
           <Button
             disabled={remove.isPending}
@@ -180,7 +190,9 @@ export function RemoveTrackDialog({
             type="button"
             variant="destructive"
           >
-            {remove.isPending ? 'Removing…' : 'Remove track'}
+            {remove.isPending
+              ? t('editRelease.removing')
+              : t('media.removeTitle')}
           </Button>
         </div>
       </div>

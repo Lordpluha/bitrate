@@ -4,7 +4,9 @@ import {
   releaseCoverUrl,
   useReorderTracks,
 } from '@entities/release'
-import { Music2, Upload } from 'lucide-react'
+import { useI18n } from '@shared/i18n'
+import { PanelIcon } from '@shared/ui'
+import { ListMusic, Music2, Upload } from 'lucide-react'
 import { durationLabel, isrcLabel } from '../lib/trackLabels'
 import type { WorkspaceActionHandler } from '../model/workspaceAction'
 import { DraftTrackRow } from './DraftTrackRow'
@@ -29,7 +31,11 @@ export function WorkspaceTracks({
   onAction,
 }: WorkspaceTracksProps) {
   const draft = release.status === 'DRAFT'
-  const shown = release.trackDrafts.length + release.tracks.length
+  const { t, tMessage } = useI18n()
+  // Drafts and linked tracks are the same recordings seen twice; linked ones show only for
+  // releases that have no drafts.
+  const linked = release.trackDrafts.length === 0 ? release.tracks : []
+  const shown = release.trackDrafts.length + linked.length
   const reorder = useReorderTracks(artistId)
   const ids = release.trackDrafts.map((track) => track.id)
   // Partial lists cannot be reordered safely; the API needs every recording.
@@ -47,26 +53,25 @@ export function WorkspaceTracks({
     >
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h2 id="release-tracks-heading">
-          Tracks <span>({release.trackCount})</span>
+          <PanelIcon icon={ListMusic} />
+          {t('workspace.tracks.title')} <span>({release.trackCount})</span>
         </h2>
         {draft && (
           <Button
+            className="gap-1.5"
             onClick={() => onAction({ kind: 'track-add' })}
             size="sm"
             variant="outline"
           >
             <Upload aria-hidden="true" className="size-4" />
-            Upload track
+            {t('music.uploadTrack')}
           </Button>
         )}
       </div>
-      <p>
-        Recordings in this release, in running order. Uploaded audio stays
-        private.
-      </p>
+      <p>{t('workspace.tracks.description')}</p>
       {reorder.error && (
         <p className="text-sm text-destructive" role="alert">
-          {reorder.error.message}
+          {tMessage(reorder.error.message)}
         </p>
       )}
       {shown === 0 ? (
@@ -74,8 +79,8 @@ export function WorkspaceTracks({
           <Music2 aria-hidden="true" className="size-5 shrink-0 text-accent" />
           <p>
             {draft
-              ? 'No tracks yet. Upload a WAV or FLAC master to add the first one.'
-              : 'No tracks linked to this release.'}
+              ? t('workspace.tracks.emptyDraft')
+              : t('workspace.tracks.empty')}
           </p>
         </div>
       ) : (
@@ -100,18 +105,21 @@ export function WorkspaceTracks({
               track={track}
             />
           ))}
-          {release.tracks.map((track) => (
+          {linked.map((track) => (
             <li key={track.id}>
-              <Music2
-                aria-hidden="true"
-                className="size-5 shrink-0 text-accent"
-              />
-              <div>
-                <h3>
-                  {track.position}. {track.title}
-                </h3>
-                <p>Linked recording · {durationLabel(track.duration)}</p>
-                <p>{isrcLabel(track.isrc)}</p>
+              <div className="artist-release-track-head">
+                <span className="artist-release-track-index">
+                  {track.position}
+                </span>
+                <div className="min-w-0 flex-1">
+                  <h3>{track.title}</h3>
+                  <p>
+                    {t('workspace.tracks.linked', {
+                      duration: durationLabel(track.duration, t),
+                    })}{' '}
+                    · {isrcLabel(track.isrc, t)}
+                  </p>
+                </div>
               </div>
             </li>
           ))}
@@ -119,8 +127,10 @@ export function WorkspaceTracks({
       )}
       {release.trackCount > shown && (
         <p>
-          Showing {shown} of {release.trackCount} tracks. This preview shows up
-          to 50 draft recordings and 50 linked recordings.
+          {t('workspace.tracks.partial', {
+            shown,
+            total: release.trackCount,
+          })}
         </p>
       )}
     </section>

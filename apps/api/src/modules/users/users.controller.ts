@@ -1,5 +1,5 @@
 import { SafeUserEntity } from '@modules/users'
-import type { OptionalUserAuthRequest } from '@modules/users-auth/types'
+import { CurrentUser } from '@modules/users-auth/decorators/current-user.decorator'
 import { OptionalUserAuth, UserAuth } from '@modules/users-auth/users-auth.guard'
 import {
   BadRequestException,
@@ -14,13 +14,11 @@ import {
   Post,
   Put,
   Query,
-  Req,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common'
 import { FileInterceptor } from '@nestjs/platform-express'
 import { ApiExtraModels, ApiTags } from '@nestjs/swagger'
-import type { Request } from 'express'
 import { memoryStorage } from 'multer'
 import { ZodValidationPipe } from 'nestjs-zod'
 import * as z from 'zod'
@@ -86,10 +84,9 @@ export class UsersController {
   @UserAuth()
   @Put('')
   async putById(
-    @Req() req: Request,
+    @CurrentUser() user: UserEntity,
     @Body(new ZodValidationPipe(UpdateUserSchema)) userData: UpdateUserDto,
   ) {
-    const user = req.user as UserEntity
     return await this.usersService.updateById(user.id, userData)
   }
 
@@ -109,36 +106,36 @@ export class UsersController {
       },
     }),
   )
-  async uploadAvatar(@Req() req: Request, @UploadedFile() file?: Express.Multer.File) {
+  async uploadAvatar(@CurrentUser() user: UserEntity, @UploadedFile() file?: Express.Multer.File) {
     if (!file) throw new BadRequestException('Avatar file is required')
-    return await this.usersService.uploadAvatar((req.user as UserEntity).id, file)
+    return await this.usersService.uploadAvatar(user.id, file)
   }
 
   @FollowUserSwagger()
   @UserAuth()
   @HttpCode(204)
   @Post(':id/follow')
-  follow(@Req() req: Request, @Param('id', ParseUUIDPipe) id: string) {
-    return this.userFollowsService.followUser((req.user as UserEntity).id, id)
+  follow(@CurrentUser() user: UserEntity, @Param('id', ParseUUIDPipe) id: string) {
+    return this.userFollowsService.followUser(user.id, id)
   }
 
   @UnfollowUserSwagger()
   @UserAuth()
   @HttpCode(204)
   @Delete(':id/follow')
-  unfollow(@Req() req: Request, @Param('id', ParseUUIDPipe) id: string) {
-    return this.userFollowsService.unfollowUser((req.user as UserEntity).id, id)
+  unfollow(@CurrentUser() user: UserEntity, @Param('id', ParseUUIDPipe) id: string) {
+    return this.userFollowsService.unfollowUser(user.id, id)
   }
 
   @GetFollowingSwagger()
   @UserAuth()
   @Get('me/following')
   following(
-    @Req() req: Request,
+    @CurrentUser() user: UserEntity,
     @Query('page', new ParseIntPipe({ optional: true })) page?: number,
     @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
   ) {
-    return this.userFollowsService.getFollowing((req.user as UserEntity).id, page, limit)
+    return this.userFollowsService.getFollowing(user.id, page, limit)
   }
 
   /** What the people the caller follows last played. Declared after `me/following`, before `:id/…`. */
@@ -146,33 +143,33 @@ export class UsersController {
   @UserAuth()
   @Get('me/following/activity')
   followingActivity(
-    @Req() req: Request,
+    @CurrentUser() user: UserEntity,
     @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
   ) {
-    return this.userFollowsService.getFollowingActivity((req.user as UserEntity).id, limit)
+    return this.userFollowsService.getFollowingActivity(user.id, limit)
   }
 
   @GetFollowListSwagger('followers')
   @OptionalUserAuth()
   @Get(':id/followers')
   followers(
-    @Req() req: OptionalUserAuthRequest,
+    @CurrentUser() user: UserEntity | undefined,
     @Param('id', ParseUUIDPipe) id: string,
     @Query('page', new ParseIntPipe({ optional: true })) page?: number,
     @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
   ) {
-    return this.userFollowsService.listFollows('followers', id, req.user?.id, page, limit)
+    return this.userFollowsService.listFollows('followers', id, user?.id, page, limit)
   }
 
   @GetFollowListSwagger('following')
   @OptionalUserAuth()
   @Get(':id/following')
   followingOf(
-    @Req() req: OptionalUserAuthRequest,
+    @CurrentUser() user: UserEntity | undefined,
     @Param('id', ParseUUIDPipe) id: string,
     @Query('page', new ParseIntPipe({ optional: true })) page?: number,
     @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
   ) {
-    return this.userFollowsService.listFollows('following', id, req.user?.id, page, limit)
+    return this.userFollowsService.listFollows('following', id, user?.id, page, limit)
   }
 }

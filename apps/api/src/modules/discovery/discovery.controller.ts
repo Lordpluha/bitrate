@@ -1,5 +1,4 @@
 import { HttpCacheable } from '@common/interceptors/http-cacheable.decorator'
-import type { OptionalUserAuthRequest, UserAuthRequest } from '@modules/users-auth/types'
 import { OptionalUserAuth, UserAuth } from '@modules/users-auth/users-auth.guard'
 import {
   BadRequestException,
@@ -9,7 +8,6 @@ import {
   ParseIntPipe,
   ParseUUIDPipe,
   Query,
-  Req,
 } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
 import {
@@ -32,6 +30,8 @@ const chartScope = (scope: string, country: string | undefined): ChartScope => {
   return known
 }
 
+import type { UserEntity } from '@modules/users/entities'
+import { CurrentUser } from '@modules/users-auth/decorators/current-user.decorator'
 import { PersonalTopService, type TimeRange } from './personal-top.service'
 
 @ApiTags('Discovery')
@@ -66,8 +66,8 @@ export class DiscoveryController {
   @GetFeedSwagger()
   @OptionalUserAuth()
   @Get('recommendations/feed')
-  feed(@Req() req: OptionalUserAuthRequest) {
-    return this.discovery.getFeed(req.user?.id)
+  feed(@CurrentUser() user: UserEntity | undefined) {
+    return this.discovery.getFeed(user?.id)
   }
 
   @GetRelatedArtistsSwagger()
@@ -107,26 +107,26 @@ export class DiscoveryController {
   @UserAuth()
   @Get('me/top/tracks')
   topTracks(
-    @Req() req: UserAuthRequest,
+    @CurrentUser() user: UserEntity,
     @Query('range') range = 'medium',
     @Query('page', new ParseIntPipe({ optional: true })) page?: number,
     @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
   ) {
     this.validateRange(range)
-    return this.personalTop.getTopTracks(req.user.id, range as TimeRange, page, limit)
+    return this.personalTop.getTopTracks(user.id, range as TimeRange, page, limit)
   }
 
   @GetTopArtistsSwagger()
   @UserAuth()
   @Get('me/top/artists')
   topArtists(
-    @Req() req: UserAuthRequest,
+    @CurrentUser() user: UserEntity,
     @Query('range') range = 'medium',
     @Query('page', new ParseIntPipe({ optional: true })) page?: number,
     @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
   ) {
     this.validateRange(range)
-    return this.personalTop.getTopArtists(req.user.id, range as TimeRange, page, limit)
+    return this.personalTop.getTopArtists(user.id, range as TimeRange, page, limit)
   }
 
   private validateRange(range: string) {

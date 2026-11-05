@@ -1,4 +1,4 @@
-import type { ApiSchemas } from '@bitrate/contracts'
+import type { ApiSchemas } from '@bitrate/contracts/admin'
 import * as z from 'zod'
 import { contractEnum } from '../http/contract-union'
 
@@ -22,9 +22,6 @@ const statusDto = contractEnum<WireProcessingAttemptStatus>()([
 const stepDto = contractEnum<WireProcessingStep>()([
   'CLAIM',
   'PREPARE_TEMP',
-  'PROGRESSIVE_ENCODE',
-  'HLS_ENCODE',
-  'HLS_VALIDATE',
   'CMAF_ENCODE',
   'UPLOAD',
   'PUBLISH',

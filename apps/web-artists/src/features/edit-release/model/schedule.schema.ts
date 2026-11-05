@@ -1,3 +1,4 @@
+import { messageKey } from '@shared/i18n'
 import { z } from 'zod'
 
 const dateSchema = z.iso
@@ -13,20 +14,22 @@ export const scheduleSchema = z
     date: z.string(),
     time: z.string(),
   })
-  .superRefine((values, ctx) => {
+  .check((ctx) => {
+    const values = ctx.value
+    // superRefine's addIssue defaulted `input` and `continue: true`; keep both.
+    const fail = (message: string, path: PropertyKey[]) =>
+      ctx.issues.push({
+        code: 'custom',
+        message,
+        path,
+        input: ctx.value,
+        continue: true,
+      })
     if (!values.planned) return
     if (!dateSchema.safeParse(values.date).success)
-      ctx.addIssue({
-        code: 'custom',
-        path: ['date'],
-        message: 'Choose a valid release date.',
-      })
+      fail(messageKey('editRelease.dateInvalid'), ['date'])
     if (!timeSchema.safeParse(values.time).success)
-      ctx.addIssue({
-        code: 'custom',
-        path: ['time'],
-        message: 'Choose a valid time in UTC.',
-      })
+      fail(messageKey('editRelease.timeInvalid'), ['time'])
   })
 
 export type ScheduleValues = z.infer<typeof scheduleSchema>
@@ -36,7 +39,8 @@ export function scheduleDefaults(scheduledAt: string | null): ScheduleValues {
   return {
     planned: instant !== null,
     date: instant?.slice(0, 10) ?? '',
-    time: instant?.slice(11, 23) ?? '00:00:00.000',
+    // Premieres are planned to the minute; seconds only add noise to the form.
+    time: instant?.slice(11, 16) ?? '00:00',
   }
 }
 

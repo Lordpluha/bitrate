@@ -1,5 +1,12 @@
 # @bitrate/ui-react
 
+## 1.2.4
+
+### Patch Changes
+
+- Updated dependencies [fe5b6ad]
+  - @bitrate/tailwind@1.2.0
+
 ## 1.2.3
 
 ### Patch Changes

@@ -2,26 +2,29 @@ import { Button } from '@bitrate/ui-react'
 import {
   type ReleaseWorkspace,
   useReviseRelease,
-  useSubmitRelease,
   useWithdrawRelease,
 } from '@entities/release'
-import { useId, useState } from 'react'
+import { useI18n } from '@shared/i18n'
+import { useState } from 'react'
+import { SubmitPreviewDialog } from './SubmitPreviewDialog'
 
 interface ReleaseSubmissionProps {
   artistId: string
   release: ReleaseWorkspace
+  /** Opens the page's submit preview; without it this block opens its own. */
+  onReview?: () => void
 }
 
 /** Creates, withdraws or reopens a Bitrate review request; never starts external delivery. */
 export function ReleaseSubmission({
   artistId,
   release,
+  onReview,
 }: ReleaseSubmissionProps) {
-  const id = useId()
-  const submit = useSubmitRelease(artistId)
+  const { t, tMessage, tp } = useI18n()
   const withdraw = useWithdrawRelease(artistId)
   const revise = useReviseRelease(artistId)
-  const [reviewed, setReviewed] = useState(false)
+  const [previewing, setPreviewing] = useState(false)
   const blockers = release.readiness.blockers.length
   const expectedUpdatedAt = release.updatedAt
 
@@ -37,16 +40,17 @@ export function ReleaseSubmission({
             }}
             variant="outline"
           >
-            {withdraw.isPending ? 'Withdrawing…' : 'Withdraw from review'}
+            {withdraw.isPending
+              ? t('publish.withdrawing')
+              : t('publish.withdraw')}
           </Button>
           <p className="text-sm text-text-secondary">
-            Need a change? Withdrawing returns it to the draft; nothing saved is
-            lost.
+            {t('publish.withdrawHint')}
           </p>
         </div>
         {withdraw.error && (
           <p className="text-sm text-destructive" role="alert">
-            {withdraw.error.message}
+            {tMessage(withdraw.error.message)}
           </p>
         )}
       </div>
@@ -56,8 +60,7 @@ export function ReleaseSubmission({
     return (
       <div className="space-y-3">
         <p className="font-medium" role="status">
-          Bitrate requested changes. Reopen the draft to address them, then
-          submit again.
+          {t('publish.changesRequested')}
         </p>
         <Button
           className="artist-workspace-primary rounded-full"
@@ -67,11 +70,13 @@ export function ReleaseSubmission({
           }}
           variant="primary"
         >
-          {revise.isPending ? 'Reopening…' : 'Start revising'}
+          {revise.isPending
+            ? t('publish.reopening')
+            : t('publish.startRevising')}
         </Button>
         {revise.error && (
           <p className="text-sm text-destructive" role="alert">
-            {revise.error.message}
+            {tMessage(revise.error.message)}
           </p>
         )}
       </div>
@@ -80,58 +85,34 @@ export function ReleaseSubmission({
   if (release.status === 'READY')
     return (
       <p className="font-medium" role="status">
-        Approved by Bitrate review. Delivery follows the plan below.
+        {t('publish.approvedReview')}
       </p>
     )
 
   if (release.status !== 'DRAFT') return null
 
   return (
-    <form
-      aria-busy={submit.isPending}
-      className="space-y-3"
-      noValidate
-      onSubmit={(event) => {
-        event.preventDefault()
-        submit.mutate({
-          id: release.id,
-          input: { reviewed: true, expectedUpdatedAt },
-        })
-      }}
-    >
-      <label className="artist-release-credit-role">
-        <input
-          aria-describedby={`${id}-hint`}
-          checked={reviewed}
-          disabled={submit.isPending}
-          onChange={(event) => {
-            submit.reset()
-            setReviewed(event.target.checked)
-          }}
-          type="checkbox"
-        />
-        <span>
-          I checked this draft and confirm the information is accurate.
-        </span>
-      </label>
+    <div className="space-y-3">
       <Button
         className="artist-workspace-primary rounded-full"
-        disabled={submit.isPending || blockers > 0 || !reviewed}
-        type="submit"
+        disabled={blockers > 0}
+        onClick={() => (onReview ? onReview() : setPreviewing(true))}
         variant="primary"
       >
-        {submit.isPending ? 'Submitting…' : 'Submit for review'}
+        {t('publish.review')}
       </Button>
-      <p className="text-sm text-text-secondary" id={`${id}-hint`}>
+      <p className="text-sm text-text-secondary">
         {blockers > 0
-          ? `Resolve ${blockers} ${blockers === 1 ? 'blocker' : 'blockers'} before submission.`
-          : 'Creates a Bitrate review request only. It does not deliver this release to streaming services.'}
+          ? tp({ count: blockers, key: 'publish.blockers' })
+          : t('publish.submitHint')}
       </p>
-      {submit.error && (
-        <p className="text-sm text-destructive" role="alert">
-          {submit.error.message}
-        </p>
+      {previewing && (
+        <SubmitPreviewDialog
+          artistId={artistId}
+          onClose={() => setPreviewing(false)}
+          release={release}
+        />
       )}
-    </form>
+    </div>
   )
 }

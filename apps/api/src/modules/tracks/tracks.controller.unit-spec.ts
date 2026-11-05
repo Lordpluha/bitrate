@@ -1,16 +1,15 @@
-import { once } from 'node:events'
 import { PassThrough, Readable } from 'node:stream'
 import { finished } from 'node:stream/promises'
 import { beforeEach, describe, expect, it, jest } from '@jest/globals'
+import { buildArtist } from '@modules/artists/__tests__/fixtures/artists.fixtures'
+import { buildUser } from '@modules/users/__tests__/fixtures/users.fixtures'
 import { BadRequestException } from '@nestjs/common'
 import { buildAudioFile, buildTrack } from './__tests__/fixtures/tracks.fixtures'
+import { PlaybackPacingError } from './playback-session.service'
 import type { TrackPlaybackService } from './track-playback.service'
-import type { TrackStreamingService } from './track-streaming.service'
 import type { TrackUploadService } from './track-upload.service'
 import { TracksController } from './tracks.controller'
 import type { TracksService } from './tracks.service'
-
-jest.mock('music-metadata', () => ({ parseFile: jest.fn() }), { virtual: true })
 
 const makeServiceMock = () =>
   ({
@@ -26,15 +25,6 @@ const makeUploadServiceMock = () =>
     create: jest.fn(),
     update: jest.fn(),
   }) as unknown as jest.Mocked<TrackUploadService>
-
-const makeStreamingServiceMock = () =>
-  ({
-    getTrackStream: jest.fn(),
-    getTrackAudioStream: jest.fn(),
-    getTrackStreamUrl: jest.fn(),
-    getHlsMasterPlaylist: jest.fn(),
-    getHlsAsset: jest.fn(),
-  }) as unknown as jest.Mocked<TrackStreamingService>
 
 /** A source whose first read fails, as a dropped storage connection does. */
 const failingStream = () =>
@@ -53,7 +43,7 @@ const makeStreamResponse = () =>
 
 const makePlaybackServiceMock = () =>
   ({
-    getManifest: jest.fn(),
+    openSession: jest.fn(),
     getRenditionStream: jest.fn(),
   }) as unknown as jest.Mocked<TrackPlaybackService>
 
@@ -61,15 +51,13 @@ describe('TracksController', () => {
   let controller: TracksController
   let service: jest.Mocked<TracksService>
   let uploadService: jest.Mocked<TrackUploadService>
-  let streamingService: jest.Mocked<TrackStreamingService>
   let playbackService: jest.Mocked<TrackPlaybackService>
 
   beforeEach(() => {
     service = makeServiceMock()
     uploadService = makeUploadServiceMock()
-    streamingService = makeStreamingServiceMock()
     playbackService = makePlaybackServiceMock()
-    controller = new TracksController(service, uploadService, streamingService, playbackService)
+    controller = new TracksController(service, uploadService, playbackService)
   })
 
   it('getAll should delegate to service.findAll', () => {
@@ -92,111 +80,89 @@ describe('TracksController', () => {
     expect(result).resolves.toBe(track)
   })
 
-  it('getHlsMasterPlaylist should return the generated playlist', async () => {
-    streamingService.getHlsMasterPlaylist.mockResolvedValue('#EXTM3U\n' as never)
-    const res = {
-      set: jest.fn(),
-      send: jest.fn().mockReturnValue('sent'),
-    }
-
-    const result = await controller.getHlsMasterPlaylist('track-1', res as never)
-
-    expect(streamingService.getHlsMasterPlaylist).toHaveBeenCalledWith('track-1')
-    expect(res.set).toHaveBeenCalledWith(
-      expect.objectContaining({ 'Content-Type': 'application/vnd.apple.mpegurl' }),
-    )
-    expect(result).toBe('sent')
-  })
-
-  it('getHlsAsset should stream an authenticated segment response', async () => {
-    streamingService.getHlsAsset.mockResolvedValue({
-      stream: Readable.from([Buffer.from('segment')]),
-      contentType: 'video/iso.segment',
+  it('streamRendition should close the response when the storage stream fails', async () => {
+    playbackService.getRenditionStream.mockResolvedValue({
+      stream: failingStream(),
+      contentType: 'audio/mp4',
       contentLength: 1024,
-      immutable: true,
-    } as never)
-    const res = makeStreamResponse()
-
-    await controller.getHlsAsset('track-1', 192, 'segment_00000.m4s', res as never)
-    const [body] = (await once(res, 'data')) as [Buffer]
-
-    expect(streamingService.getHlsAsset).toHaveBeenCalledWith('track-1', 192, 'segment_00000.m4s')
-    expect(res.set).toHaveBeenCalledWith(expect.objectContaining({ 'Content-Length': 1024 }))
-    expect(body.toString()).toBe('segment')
-  })
-
-  it.each(['getHlsAsset', 'streamTrack', 'streamRendition'] as const)(
-    '%s should close the response when the storage stream fails',
-    async (route) => {
-      const stream = failingStream()
-      const data = {
-        stream,
-        contentType: 'audio/mp4',
-        contentLength: 1024,
-        immutable: true,
-        isPartial: false,
-        bitrate: 192,
-        format: 'opus',
-      }
-      streamingService.getHlsAsset.mockResolvedValue(data as never)
-      streamingService.getTrackStream.mockResolvedValue(data as never)
-      playbackService.getRenditionStream.mockResolvedValue(data as never)
-      const res = makeStreamResponse()
-      const req = { headers: {} } as never
-
-      if (route === 'getHlsAsset')
-        await controller.getHlsAsset('track-1', 192, 'init.mp4', res as never)
-      if (route === 'streamTrack') await controller.streamTrack('track-1', req, res as never)
-      if (route === 'streamRendition')
-        await controller.streamRendition('track-1', 192, req, res as never)
-
-      await expect(finished(res)).rejects.toThrow('storage connection reset')
-      expect(res.destroyed).toBe(true)
-    },
-  )
-
-  it('getHlsAsset should omit Content-Length when the asset length is unknown', async () => {
-    const stream = Readable.from([])
-    streamingService.getHlsAsset.mockResolvedValue({
-      stream,
-      contentType: 'video/iso.segment',
-      contentLength: undefined,
-      immutable: true,
-    } as never)
-    const res = makeStreamResponse()
-
-    await controller.getHlsAsset('track-1', 192, 'segment_00000.m4s', res as never)
-
-    const [headers] = res.set.mock.calls[0] as [Record<string, unknown>]
-    expect(headers).not.toHaveProperty('Content-Length')
-  })
-
-  it('streamTrack should omit Content-Length when the length is unknown', async () => {
-    const stream = Readable.from([])
-    streamingService.getTrackStream.mockResolvedValue({
-      stream,
-      contentType: 'audio/mpeg',
-      contentLength: undefined,
-      fileSize: undefined,
-      start: 0,
-      end: undefined,
       isPartial: false,
-      bitrate: 192,
-      format: 'opus',
     } as never)
-    const req = { headers: {} } as never
     const res = makeStreamResponse()
 
-    await controller.streamTrack('track-1', req, res as never, undefined, 'opus')
+    await controller.streamRendition(
+      'track-1',
+      192,
+      'signed',
+      { headers: {} } as never,
+      res as never,
+    )
 
-    const [headers] = res.set.mock.calls[0] as [Record<string, unknown>]
-    expect(headers).not.toHaveProperty('Content-Length')
+    await expect(finished(res)).rejects.toThrow('storage connection reset')
+    expect(res.destroyed).toBe(true)
+  })
+
+  it('openPlaySession opens a session for the signed-in user and the given device', async () => {
+    const session = { manifest: {}, token: 'signed', expiresAt: 1 }
+    playbackService.openSession.mockResolvedValue(session as never)
+    const user = buildUser({ id: 'user-1' })
+
+    const result = await controller.openPlaySession('track-1', user, { deviceId: 'device-1' })
+
+    expect(playbackService.openSession).toHaveBeenCalledWith({
+      trackId: 'track-1',
+      userId: 'user-1',
+      deviceId: 'device-1',
+    })
+    expect(result).toBe(session)
+  })
+
+  it('streamRendition hands the session token and Range to the service', async () => {
+    playbackService.getRenditionStream.mockResolvedValue({
+      stream: Readable.from([]),
+      contentType: 'audio/mp4',
+      contentLength: 708,
+      isPartial: true,
+      start: 0,
+      end: 707,
+      fileSize: 133_586,
+    } as never)
+
+    await controller.streamRendition(
+      'track-1',
+      192,
+      'signed',
+      { headers: { range: 'bytes=0-' } } as never,
+      makeStreamResponse() as never,
+    )
+
+    expect(playbackService.getRenditionStream).toHaveBeenCalledWith({
+      trackId: 'track-1',
+      bitrate: 192,
+      rangeHeader: 'bytes=0-',
+      token: 'signed',
+    })
+  })
+
+  it('streamRendition answers 429 with Retry-After when the session is ahead of real time', async () => {
+    playbackService.getRenditionStream.mockRejectedValue(new PlaybackPacingError(7))
+    const res = { set: jest.fn(), status: jest.fn().mockReturnThis(), send: jest.fn() }
+
+    await controller.streamRendition(
+      'track-1',
+      192,
+      'signed',
+      { headers: {} } as never,
+      res as never,
+    )
+
+    expect(res.status).toHaveBeenCalledWith(429)
+    expect(res.set).toHaveBeenCalledWith({ 'Retry-After': '7' })
   })
 
   it('postTrack should throw BadRequestException when audio file is missing', async () => {
-    const req = { artist: { id: 'artist-1' } } as never
+    const artist = buildArtist({ id: 'artist-1' })
 
-    await expect(controller.postTrack(req, { title: 'T' } as never, {})).rejects.toThrow(
+    await expect(controller.postTrack(artist, { title: 'T' } as never, {})).rejects.toThrow(
       BadRequestException,
     )
   })
@@ -204,11 +170,11 @@ describe('TracksController', () => {
   it('postTrack should call uploadService.create when audio file is present', async () => {
     const track = buildTrack()
     uploadService.create.mockResolvedValue(track as never)
-    const req = { artist: { id: 'artist-1' } } as never
+    const artist = buildArtist({ id: 'artist-1' })
     const audioFile = buildAudioFile()
     const files = { audio: [audioFile] }
 
-    const result = await controller.postTrack(req, { title: 'T' } as never, files)
+    const result = await controller.postTrack(artist, { title: 'T' } as never, files)
 
     expect(uploadService.create).toHaveBeenCalledWith(
       'artist-1',
@@ -223,8 +189,8 @@ describe('TracksController', () => {
     const track = buildTrack()
     uploadService.update.mockResolvedValue(track as never)
 
-    const req = { artist: { id: 'artist-1' } } as never
-    const result = await controller.putTrack(req, 'track-1', { title: 'Updated' } as never, {})
+    const artist = buildArtist({ id: 'artist-1' })
+    const result = await controller.putTrack(artist, 'track-1', { title: 'Updated' } as never, {})
 
     expect(uploadService.update).toHaveBeenCalledWith(
       'artist-1',
@@ -239,9 +205,9 @@ describe('TracksController', () => {
   it('getLikedTracks should call service.findLikedTracks with user id from request', () => {
     const tracks = [buildTrack()]
     service.findLikedTracks.mockResolvedValue(tracks as never)
-    const req = { user: { id: 'user-1' } } as never
+    const user = buildUser({ id: 'user-1' })
 
-    const result = controller.getLikedTracks(req, 1, 10)
+    const result = controller.getLikedTracks(user, 1, 10)
 
     expect(service.findLikedTracks).toHaveBeenCalledWith('user-1', { page: 1, limit: 10 })
     expect(result).resolves.toBe(tracks)
@@ -250,9 +216,9 @@ describe('TracksController', () => {
   it('likeTrack should call service.like with user id and track id', () => {
     const track = buildTrack()
     service.like.mockResolvedValue(track as never)
-    const req = { user: { id: 'user-1' } } as never
+    const user = buildUser({ id: 'user-1' })
 
-    const result = controller.likeTrack(req, 'track-1')
+    const result = controller.likeTrack(user, 'track-1')
 
     expect(service.like).toHaveBeenCalledWith('user-1', 'track-1')
     expect(result).resolves.toBe(track)
@@ -261,9 +227,9 @@ describe('TracksController', () => {
   it('unlikeTrack should call service.unlike with user id and track id', () => {
     const track = buildTrack()
     service.unlike.mockResolvedValue(track as never)
-    const req = { user: { id: 'user-1' } } as never
+    const user = buildUser({ id: 'user-1' })
 
-    const result = controller.unlikeTrack(req, 'track-1')
+    const result = controller.unlikeTrack(user, 'track-1')
 
     expect(service.unlike).toHaveBeenCalledWith('user-1', 'track-1')
     expect(result).resolves.toBe(track)

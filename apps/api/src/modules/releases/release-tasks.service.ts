@@ -14,22 +14,10 @@ import type {
   UpdateReleaseTaskDto,
 } from './dtos/release-task.dto'
 import { RELEASE_ERRORS } from './errors'
+import { TASK_SELECT } from './orm'
 
 /** Upper bound on the tasks one release lists; a planning checklist never needs more. */
 const MAX_TASKS_PER_RELEASE = 200
-
-const TASK_SELECT = {
-  id: true,
-  releaseId: true,
-  title: true,
-  notes: true,
-  status: true,
-  dueAt: true,
-  completedAt: true,
-  createdAt: true,
-  updatedAt: true,
-  assignee: { select: { id: true, displayName: true } },
-} as const satisfies Prisma.ReleaseTaskSelect
 
 /** Open work first, then the nearest deadline, undated tasks last. */
 const TASK_ORDER = [

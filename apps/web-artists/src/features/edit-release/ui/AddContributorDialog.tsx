@@ -1,3 +1,4 @@
+import { useI18n } from '@shared/i18n'
 import { ContributorForm } from './ContributorForm'
 import { DraftEditorLoader } from './DraftEditorLoader'
 
@@ -9,6 +10,7 @@ interface AddContributorDialogProps {
 }
 
 export function AddContributorDialog(props: AddContributorDialogProps) {
+  const { t } = useI18n()
   return (
     <DraftEditorLoader
       artistId={props.artistId}
@@ -17,7 +19,7 @@ export function AddContributorDialog(props: AddContributorDialogProps) {
       renderDraft={(release) => (
         <ContributorForm {...props} release={release} />
       )}
-      title="Add contributor"
+      title={t('workspace.credits.add')}
     />
   )
 }

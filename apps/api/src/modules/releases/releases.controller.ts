@@ -1,5 +1,6 @@
+import type { ArtistEntity } from '@modules/artists/entities'
 import { ArtistAuth } from '@modules/artists-auth/artists-auth.guard'
-import type { ArtistAuthRequest } from '@modules/artists-auth/types'
+import { CurrentArtist } from '@modules/artists-auth/decorators/current-artist.decorator'
 import {
   Body,
   Controller,
@@ -13,7 +14,6 @@ import {
   Post,
   Put,
   Query,
-  Req,
 } from '@nestjs/common'
 import { ApiExtraModels, ApiTags } from '@nestjs/swagger'
 import { ZodValidationPipe } from 'nestjs-zod'
@@ -87,10 +87,10 @@ export class ReleasesController {
   @Header('Cache-Control', 'private, no-store')
   @Post()
   createDraft(
-    @Req() request: ArtistAuthRequest,
+    @CurrentArtist() artist: ArtistEntity,
     @Body(new ZodValidationPipe(CreateReleaseSchema)) input: CreateReleaseDto,
   ) {
-    return this.releases.createDraft(request.artist, input)
+    return this.releases.createDraft(artist, input)
   }
 
   @ListReleasesSwagger()
@@ -98,26 +98,26 @@ export class ReleasesController {
   @Header('Cache-Control', 'private, no-store')
   @Get()
   findAll(
-    @Req() request: ArtistAuthRequest,
+    @CurrentArtist() artist: ArtistEntity,
     @Query(new ZodValidationPipe(ListReleasesSchema)) query: ListReleasesDto,
   ) {
-    return this.releases.findAll(request.artist.id, query)
+    return this.releases.findAll(artist.id, query)
   }
 
   @ReleaseDetailSwagger()
   @ArtistAuth()
   @Header('Cache-Control', 'private, no-store')
   @Get(':id')
-  findOne(@Req() request: ArtistAuthRequest, @Param('id', ParseUUIDPipe) id: string) {
-    return this.releases.findOne(request.artist.id, id)
+  findOne(@CurrentArtist() artist: ArtistEntity, @Param('id', ParseUUIDPipe) id: string) {
+    return this.releases.findOne(artist.id, id)
   }
 
   @ReleaseWorkspaceSwagger()
   @ArtistAuth()
   @Header('Cache-Control', 'private, no-store')
   @Get(':id/workspace')
-  workspace(@Req() request: ArtistAuthRequest, @Param('id', ParseUUIDPipe) id: string) {
-    return this.releases.workspace(request.artist.id, id)
+  workspace(@CurrentArtist() artist: ArtistEntity, @Param('id', ParseUUIDPipe) id: string) {
+    return this.releases.workspace(artist.id, id)
   }
 
   @UpdateReleaseSwagger()
@@ -125,11 +125,11 @@ export class ReleasesController {
   @Header('Cache-Control', 'private, no-store')
   @Patch(':id')
   updateDraft(
-    @Req() request: ArtistAuthRequest,
+    @CurrentArtist() artist: ArtistEntity,
     @Param('id', ParseUUIDPipe) id: string,
     @Body(new ZodValidationPipe(UpdateReleaseSchema)) input: UpdateReleaseDto,
   ) {
-    return this.releases.updateDraft(request.artist.id, id, input)
+    return this.releases.updateDraft(artist.id, id, input)
   }
 
   @DeleteReleaseSwagger()
@@ -138,11 +138,11 @@ export class ReleasesController {
   @HttpCode(204)
   @Delete(':id')
   async deleteDraft(
-    @Req() request: ArtistAuthRequest,
+    @CurrentArtist() artist: ArtistEntity,
     @Param('id', ParseUUIDPipe) id: string,
     @Body(new ZodValidationPipe(ReleaseDraftVersionSchema)) input: ReleaseDraftVersionDto,
   ): Promise<void> {
-    await this.releases.deleteDraft(request.artist.id, id, input)
+    await this.releases.deleteDraft(artist.id, id, input)
   }
 
   @AddReleaseContributorSwagger()
@@ -150,11 +150,11 @@ export class ReleasesController {
   @Header('Cache-Control', 'private, no-store')
   @Post(':id/contributors')
   addContributor(
-    @Req() request: ArtistAuthRequest,
+    @CurrentArtist() artist: ArtistEntity,
     @Param('id', ParseUUIDPipe) id: string,
     @Body(new ZodValidationPipe(AddReleaseContributorSchema)) input: AddReleaseContributorDto,
   ) {
-    return this.credits.addContributor(request.artist.id, id, input)
+    return this.credits.addContributor(artist.id, id, input)
   }
 
   @CreditReleaseArtistSwagger()
@@ -162,11 +162,11 @@ export class ReleasesController {
   @Header('Cache-Control', 'private, no-store')
   @Post(':id/contributors/self')
   creditSelf(
-    @Req() request: ArtistAuthRequest,
+    @CurrentArtist() artist: ArtistEntity,
     @Param('id', ParseUUIDPipe) id: string,
     @Body(new ZodValidationPipe(ReleaseDraftVersionSchema)) input: ReleaseDraftVersionDto,
   ) {
-    return this.credits.creditSelf(request.artist, id, input)
+    return this.credits.creditSelf(artist, id, input)
   }
 
   @RemoveReleaseContributorSwagger()
@@ -175,12 +175,12 @@ export class ReleasesController {
   @HttpCode(200)
   @Delete(':id/contributors/:contributorId')
   removeContributor(
-    @Req() request: ArtistAuthRequest,
+    @CurrentArtist() artist: ArtistEntity,
     @Param('id', ParseUUIDPipe) id: string,
     @Param('contributorId', ParseUUIDPipe) contributorId: string,
     @Body(new ZodValidationPipe(ReleaseDraftVersionSchema)) input: ReleaseDraftVersionDto,
   ) {
-    return this.credits.removeContributor(request.artist.id, id, contributorId, input)
+    return this.credits.removeContributor(artist.id, id, contributorId, input)
   }
 
   @ReleaseContributorSwagger()
@@ -188,11 +188,11 @@ export class ReleasesController {
   @Header('Cache-Control', 'private, no-store')
   @Get(':id/contributors/:contributorId')
   contributor(
-    @Req() request: ArtistAuthRequest,
+    @CurrentArtist() artist: ArtistEntity,
     @Param('id', ParseUUIDPipe) id: string,
     @Param('contributorId', ParseUUIDPipe) contributorId: string,
   ) {
-    return this.credits.contributor(request.artist.id, id, contributorId)
+    return this.credits.contributor(artist.id, id, contributorId)
   }
 
   @UpdateReleaseContributorSwagger()
@@ -200,12 +200,12 @@ export class ReleasesController {
   @Header('Cache-Control', 'private, no-store')
   @Patch(':id/contributors/:contributorId')
   updateContributor(
-    @Req() request: ArtistAuthRequest,
+    @CurrentArtist() artist: ArtistEntity,
     @Param('id', ParseUUIDPipe) id: string,
     @Param('contributorId', ParseUUIDPipe) contributorId: string,
     @Body(new ZodValidationPipe(UpdateReleaseContributorSchema)) input: UpdateReleaseContributorDto,
   ) {
-    return this.credits.updateContributor(request.artist.id, id, contributorId, input)
+    return this.credits.updateContributor(artist.id, id, contributorId, input)
   }
 
   @UpdateReleaseRightsSwagger()
@@ -213,11 +213,11 @@ export class ReleasesController {
   @Header('Cache-Control', 'private, no-store')
   @Patch(':id/rights')
   updateRights(
-    @Req() request: ArtistAuthRequest,
+    @CurrentArtist() artist: ArtistEntity,
     @Param('id', ParseUUIDPipe) id: string,
     @Body(new ZodValidationPipe(UpdateReleaseRightsSchema)) input: UpdateReleaseRightsDto,
   ) {
-    return this.credits.updateRights(request.artist.id, id, input)
+    return this.credits.updateRights(artist.id, id, input)
   }
 
   @ReplaceReleaseSplitsSwagger()
@@ -225,11 +225,11 @@ export class ReleasesController {
   @Header('Cache-Control', 'private, no-store')
   @Put(':id/splits')
   replaceSplits(
-    @Req() request: ArtistAuthRequest,
+    @CurrentArtist() artist: ArtistEntity,
     @Param('id', ParseUUIDPipe) id: string,
     @Body(new ZodValidationPipe(ReplaceReleaseSplitsSchema)) input: ReplaceReleaseSplitsDto,
   ) {
-    return this.credits.replaceSplits(request.artist.id, id, input)
+    return this.credits.replaceSplits(artist.id, id, input)
   }
 
   @UpdateReleaseTrackSwagger()
@@ -237,12 +237,12 @@ export class ReleasesController {
   @Header('Cache-Control', 'private, no-store')
   @Patch(':id/tracks/:trackId')
   updateTrack(
-    @Req() request: ArtistAuthRequest,
+    @CurrentArtist() artist: ArtistEntity,
     @Param('id', ParseUUIDPipe) id: string,
     @Param('trackId', ParseUUIDPipe) trackId: string,
     @Body(new ZodValidationPipe(UpdateReleaseTrackSchema)) input: UpdateReleaseTrackDto,
   ) {
-    return this.releases.updateTrack(request.artist.id, id, trackId, input)
+    return this.releases.updateTrack(artist.id, id, trackId, input)
   }
 
   @SubmitReleaseSwagger()
@@ -251,11 +251,11 @@ export class ReleasesController {
   @HttpCode(200)
   @Post(':id/submit')
   submit(
-    @Req() request: ArtistAuthRequest,
+    @CurrentArtist() artist: ArtistEntity,
     @Param('id', ParseUUIDPipe) id: string,
     @Body(new ZodValidationPipe(SubmitReleaseSchema)) input: SubmitReleaseDto,
   ) {
-    return this.releases.submit(request.artist.id, id, input)
+    return this.releases.submit(artist.id, id, input)
   }
 
   @WithdrawReleaseSwagger()
@@ -264,11 +264,11 @@ export class ReleasesController {
   @HttpCode(200)
   @Post(':id/withdraw')
   withdraw(
-    @Req() request: ArtistAuthRequest,
+    @CurrentArtist() artist: ArtistEntity,
     @Param('id', ParseUUIDPipe) id: string,
     @Body(new ZodValidationPipe(WithdrawReleaseSchema)) input: WithdrawReleaseDto,
   ) {
-    return this.releases.withdraw(request.artist.id, id, input)
+    return this.releases.withdraw(artist.id, id, input)
   }
 
   @ReviseReleaseSwagger()
@@ -277,10 +277,10 @@ export class ReleasesController {
   @HttpCode(200)
   @Post(':id/revise')
   revise(
-    @Req() request: ArtistAuthRequest,
+    @CurrentArtist() artist: ArtistEntity,
     @Param('id', ParseUUIDPipe) id: string,
     @Body(new ZodValidationPipe(ReviseReleaseSchema)) input: ReviseReleaseDto,
   ) {
-    return this.releases.revise(request.artist.id, id, input)
+    return this.releases.revise(artist.id, id, input)
   }
 }

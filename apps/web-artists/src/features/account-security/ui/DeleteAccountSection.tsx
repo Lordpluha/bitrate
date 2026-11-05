@@ -1,5 +1,6 @@
 import { Button, Input } from '@bitrate/ui-react'
 import { useDeleteAccount } from '@entities/artist-account'
+import { Interpolate, useI18n } from '@shared/i18n'
 import { ROUTES } from '@shared/routes/routes'
 import { WorkspaceModal } from '@shared/ui/WorkspaceModal/WorkspaceModal'
 import { useId, useState } from 'react'
@@ -14,6 +15,7 @@ export function DeleteAccountSection({
   artistId,
   username,
 }: DeleteAccountSectionProps) {
+  const { t, tMessage } = useI18n()
   const id = useId()
   const remove = useDeleteAccount(artistId)
   const [open, setOpen] = useState(false)
@@ -32,13 +34,13 @@ export function DeleteAccountSection({
   return (
     <div className="flex flex-wrap items-start justify-between gap-3">
       <div>
-        <p className="text-sm font-medium">Delete account</p>
+        <p className="text-sm font-medium">{t('settings.delete.title')}</p>
         <p className="text-sm text-text-secondary">
-          Removes your artist account from Bitrate and signs you out.
+          {t('settings.delete.hint')}
         </p>
       </div>
       <Button onClick={() => setOpen(true)} size="sm" variant="destructive">
-        Delete account
+        {t('settings.delete.title')}
       </Button>
       {open && (
         <WorkspaceModal
@@ -49,7 +51,7 @@ export function DeleteAccountSection({
             setTyped('')
             remove.reset()
           }}
-          title="Delete account"
+          title={t('settings.delete.title')}
         >
           <form
             aria-busy={remove.isPending}
@@ -61,15 +63,17 @@ export function DeleteAccountSection({
             }}
           >
             <p className="text-sm">
-              This cannot be undone from the workspace. Type{' '}
-              <strong>{username}</strong> to confirm.
+              <Interpolate
+                message={t('settings.delete.confirm')}
+                values={{ handle: <strong>{username}</strong> }}
+              />
             </p>
             <div className="space-y-2">
               <label
                 className="block text-sm font-medium"
                 htmlFor={`${id}-handle`}
               >
-                Your handle
+                {t('settings.delete.handle')}
               </label>
               <Input
                 autoComplete="off"
@@ -82,7 +86,7 @@ export function DeleteAccountSection({
             </div>
             {remove.error && (
               <p className="text-sm text-destructive" role="alert">
-                {remove.error.message}
+                {tMessage(remove.error.message)}
               </p>
             )}
             <div className="flex flex-wrap justify-end gap-3">
@@ -92,14 +96,16 @@ export function DeleteAccountSection({
                 type="button"
                 variant="outline"
               >
-                Keep account
+                {t('settings.delete.keep')}
               </Button>
               <Button
                 disabled={remove.isPending || !matches}
                 type="submit"
                 variant="destructive"
               >
-                {remove.isPending ? 'Deleting…' : 'Delete account'}
+                {remove.isPending
+                  ? t('editRelease.deleting')
+                  : t('settings.delete.title')}
               </Button>
             </div>
           </form>

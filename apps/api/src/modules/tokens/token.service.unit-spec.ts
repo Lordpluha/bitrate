@@ -128,8 +128,8 @@ describe('TokenService', () => {
     expect(res.clearCookie).toHaveBeenCalledWith('artist_refresh_token', attributes)
   })
 
-  it('clearAuthCookies should repeat the cookie domain, or a scoped session survives logout', () => {
-    const res = createResponse()
+  /** Runs `act` with `COOKIE_DOMAIN` configured as the shared parent domain. */
+  const withCookieDomain = (act: () => void) => {
     configMap.set('cookie', {
       httpOnly: true,
       sameSite: 'lax',
@@ -137,23 +137,62 @@ describe('TokenService', () => {
       path: '/',
       domain: '.bitrate.me',
     })
-
     try {
-      service.clearAuthCookies(res, 'staff')
+      act()
     } finally {
       configMap.set('cookie', { httpOnly: true, sameSite: 'lax', secure: false, path: '/' })
     }
+  }
 
-    const attributes = {
-      httpOnly: true,
-      sameSite: 'lax' as const,
-      secure: true,
-      path: '/',
-      domain: '.bitrate.me',
-    }
-    expect(res.clearCookie).toHaveBeenCalledWith('staff_access_token', attributes)
-    expect(res.clearCookie).toHaveBeenCalledWith('staff_refresh_token', attributes)
+  const hostOnly = { httpOnly: true, sameSite: 'lax' as const, secure: true, path: '/' }
+  const parentDomain = { ...hostOnly, domain: '.bitrate.me' }
+
+  it('clearAuthCookies should repeat the cookie domain, or a scoped session survives logout', () => {
+    const res = createResponse()
+
+    withCookieDomain(() => service.clearAuthCookies(res, 'artist'))
+
+    expect(res.clearCookie).toHaveBeenCalledWith('artist_access_token', parentDomain)
+    expect(res.clearCookie).toHaveBeenCalledWith('artist_refresh_token', parentDomain)
     // A legacy cookie written on the shared domain is only dropped by a domain-scoped clear.
-    expect(res.clearCookie).toHaveBeenCalledWith('access_token', attributes)
+    expect(res.clearCookie).toHaveBeenCalledWith('access_token', parentDomain)
+  })
+
+  /** #458: operator sessions stay on the operator host instead of reaching every subdomain. */
+  it('setAuthCookies should write a staff session host-only even with a cookie domain', () => {
+    const res = createResponse()
+
+    withCookieDomain(() => service.setAuthCookies(res, 'staff', 'at', 'rt'))
+
+    expect(res.cookie).toHaveBeenCalledWith('staff_access_token', 'at', {
+      ...hostOnly,
+      maxAge: 300_000,
+    })
+    expect(res.cookie).toHaveBeenCalledWith('staff_refresh_token', 'rt', {
+      ...hostOnly,
+      maxAge: 2_592_000_000,
+    })
+  })
+
+  it.each([
+    ['sign-in', (res: Response) => service.setAuthCookies(res, 'staff', 'at', 'rt')],
+    ['sign-out', (res: Response) => service.clearAuthCookies(res, 'staff')],
+  ] as const)('%s should drop a staff session left on the parent domain', (_, act) => {
+    const res = createResponse()
+
+    withCookieDomain(() => act(res))
+
+    expect(res.clearCookie).toHaveBeenCalledWith('staff_access_token', parentDomain)
+    expect(res.clearCookie).toHaveBeenCalledWith('staff_refresh_token', parentDomain)
+    expect(res.clearCookie).toHaveBeenCalledWith('access_token', parentDomain)
+  })
+
+  it('clearAuthCookies should clear the host-only staff session itself', () => {
+    const res = createResponse()
+
+    withCookieDomain(() => service.clearAuthCookies(res, 'staff'))
+
+    expect(res.clearCookie).toHaveBeenCalledWith('staff_access_token', hostOnly)
+    expect(res.clearCookie).toHaveBeenCalledWith('staff_refresh_token', hostOnly)
   })
 })

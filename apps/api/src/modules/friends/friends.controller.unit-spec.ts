@@ -1,10 +1,10 @@
 import { beforeEach, describe, expect, it } from '@jest/globals'
-import type { UserAuthRequest } from '@modules/users-auth/types'
+import { buildUser } from '@modules/users/__tests__/fixtures/users.fixtures'
 import { type DeepMockProxy, mockDeep, mockReset } from 'jest-mock-extended'
 import { FriendsController } from './friends.controller'
 import type { FriendsService } from './friends.service'
 
-const req = { user: { id: 'me' } } as UserAuthRequest
+const user = buildUser({ id: 'me' })
 
 describe('FriendsController', () => {
   let controller: FriendsController
@@ -17,13 +17,13 @@ describe('FriendsController', () => {
   })
 
   it('acts for the signed-in user on every route', async () => {
-    await controller.list(req)
-    await controller.requests(req, 'outgoing')
-    await controller.send(req, 'u1')
-    await controller.accept(req, 'r1')
-    await controller.decline(req, 'r2')
-    await controller.cancel(req, 'r3')
-    await controller.remove(req, 'u2')
+    await controller.list(user)
+    await controller.requests(user, 'outgoing')
+    await controller.send(user, 'u1')
+    await controller.accept(user, 'r1')
+    await controller.decline(user, 'r2')
+    await controller.cancel(user, 'r3')
+    await controller.remove(user, 'u2')
 
     expect(service.listFriends).toHaveBeenCalledWith('me')
     expect(service.listRequests).toHaveBeenCalledWith('me', 'outgoing')

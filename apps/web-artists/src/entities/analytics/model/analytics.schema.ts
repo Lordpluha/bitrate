@@ -1,4 +1,5 @@
 import type { ApiSchemas } from '@bitrate/contracts'
+import type { Translate } from '@shared/i18n'
 import { z } from 'zod'
 
 export const analyticsPeriods = [7, 28, 90] as const
@@ -31,6 +32,7 @@ export const artistAnalyticsSchema = z.object({
       z.object({
         trackId: z.uuid(),
         title: z.string(),
+        cover: z.string().nullable().default(null),
         plays: z.number().int().nonnegative(),
         listeners: z.number().int().nonnegative(),
       }),
@@ -47,9 +49,16 @@ export const artistAnalyticsSchema = z.object({
 export type ArtistAnalytics = z.infer<typeof artistAnalyticsSchema>
 
 /** Change against the previous period as text; never a bare color. */
-export function changeLabel(current: number, previous: number): string {
-  if (previous === 0) return current === 0 ? 'No change' : 'New this period'
+export function changeLabel(
+  current: number,
+  previous: number,
+  t: Translate,
+): string {
+  if (previous === 0)
+    return current === 0 ? t('analytics.noChange') : t('analytics.new')
   const change = Math.round(((current - previous) / previous) * 100)
-  if (change === 0) return 'No change'
-  return `${change > 0 ? '+' : '−'}${Math.abs(change)}% vs previous period`
+  if (change === 0) return t('analytics.noChange')
+  return t('analytics.change', {
+    change: `${change > 0 ? '+' : '−'}${Math.abs(change)}`,
+  })
 }

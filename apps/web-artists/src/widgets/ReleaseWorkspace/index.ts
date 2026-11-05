@@ -1,3 +1,4 @@
+export { draftTiles } from './config/draftTiles'
 export type { WorkspaceAction } from './model/workspaceAction'
 export { DraftStage } from './ui/DraftStage'
 export { LaunchStage } from './ui/LaunchStage'

@@ -1,4 +1,5 @@
 import type { ApiSchemas } from '@bitrate/contracts'
+import type { TranslationKey } from '@shared/i18n'
 import { z } from 'zod'
 import { releaseSummarySchema } from './release.schema'
 import {
@@ -9,13 +10,14 @@ import {
   rightTypes,
 } from './rights'
 
+/** Catalog keys; render them with `t()`. */
 export const participantRoleLabels = {
-  PERFORMER: 'Performer',
-  PRODUCER: 'Producer',
-  COMPOSER: 'Composer',
-  LYRICIST: 'Lyricist',
-  OTHER: 'Other',
-} satisfies Record<ApiSchemas['ReleaseCreditRole'], string>
+  PERFORMER: 'release.role.performer',
+  PRODUCER: 'release.role.producer',
+  COMPOSER: 'release.role.composer',
+  LYRICIST: 'release.role.lyricist',
+  OTHER: 'release.role.other',
+} satisfies Record<ApiSchemas['ReleaseCreditRole'], TranslationKey>
 
 const duration = z.number().int().nonnegative().nullable()
 const isrc = z.string().nullable()
@@ -115,9 +117,8 @@ export const releaseWorkspaceSchema = releaseSummarySchema
     latestReview: z
       .object({
         decision: z.enum(['APPROVED', 'CHANGES_REQUESTED']),
+        /** Reviewer feedback in Markdown. */
         message: z.string().nullable(),
-        requiredChanges: z.array(z.string()),
-        recommendations: z.array(z.string()),
         createdAt: z.iso.datetime({ offset: true }),
       })
       .nullable(),

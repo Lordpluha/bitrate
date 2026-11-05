@@ -1,8 +1,8 @@
 import { PrismaService } from '@infra/prisma/prisma.service'
 import { Injectable } from '@nestjs/common'
 import { type Prisma, ReleaseStatus, ReleaseTaskStatus } from '@prisma/client'
-import { releaseReadiness } from './release-readiness'
-import { readinessFromRecord, releaseReadinessSelect } from './releases.select'
+import { CURRENT_RELEASE_SELECT, releaseReadinessSelect } from './orm'
+import { readinessFromRecord, releaseReadiness } from './release-readiness'
 
 /** Statuses an artist is still acting on; the current release is chosen among them first. */
 const ACTIVE_STATUSES = [ReleaseStatus.DRAFT, ReleaseStatus.SUBMITTED, ReleaseStatus.REJECTED]
@@ -11,22 +11,6 @@ const ACTIVE_STATUSES = [ReleaseStatus.DRAFT, ReleaseStatus.SUBMITTED, ReleaseSt
 const ATTENTION_DRAFT_LIMIT = 10
 const UPCOMING_LIMIT = 5
 const NEXT_TASK_LIMIT = 5
-
-const CURRENT_RELEASE_SELECT = {
-  id: true,
-  title: true,
-  type: true,
-  status: true,
-  cover: true,
-  scheduledAt: true,
-  updatedAt: true,
-  trackDrafts: {
-    where: { deletedAt: null, audioKey: { not: null } },
-    orderBy: [{ position: 'asc' }, { createdAt: 'asc' }, { id: 'asc' }],
-    take: 1,
-    select: { id: true, title: true, duration: true, waveform: true },
-  },
-} as const satisfies Prisma.ReleaseSelect
 
 type AttentionItem =
   | { kind: 'BLOCKERS'; releaseId: string; releaseTitle: string; count: number }
@@ -80,7 +64,7 @@ export class ArtistDashboardService {
         where: { ...owned, scheduledAt: { gte: now } },
         orderBy: [{ scheduledAt: 'asc' }, { id: 'asc' }],
         take: UPCOMING_LIMIT,
-        select: { id: true, title: true, status: true, scheduledAt: true },
+        select: { id: true, title: true, status: true, cover: true, scheduledAt: true },
       }),
       this.prisma.releaseTask.count({ where: openTasks }),
       this.prisma.releaseTask.count({ where: { ...openTasks, dueAt: { lt: now } } }),

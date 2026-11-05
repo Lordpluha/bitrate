@@ -4,13 +4,6 @@ import type { ArtistsService } from '@modules/artists/artists.service'
 import type { TokenService } from '@modules/tokens/token.service'
 import type { Response } from 'express'
 
-jest.mock('otplib', () => ({
-  generateSecret: jest.fn(),
-  generateURI: jest.fn(),
-  verify: jest.fn(),
-}))
-jest.mock('qrcode', () => ({ toDataURL: jest.fn() }))
-
 import type { ArtistTwoFactorService } from './artist-two-factor.service'
 import { AuthController } from './artists-auth.controller'
 import type { ArtistsAuthService } from './artists-auth.service'
@@ -107,12 +100,9 @@ describe('AuthController (artists)', () => {
   it('logout should call service.logout and clearAuthCookies', async () => {
     authService.logout.mockResolvedValue(undefined as never)
     const res = makeResponse()
-    const req = {
-      artist: { id: 'artist-1' },
-      artist_access_token: 'at',
-    } as never
+    const req = { artist_access_token: 'at' } as never
 
-    await controller.logout(req, res)
+    await controller.logout(buildArtist({ id: 'artist-1' }), req, res)
 
     expect(authService.logout).toHaveBeenCalledWith('artist-1', 'at')
     expect(tokenService.clearAuthCookies).toHaveBeenCalledWith(res, 'artist')
@@ -137,9 +127,9 @@ describe('AuthController (artists)', () => {
   it('getMe should return artist by id from request user', async () => {
     const artist = buildArtist()
     artistsService.findById.mockResolvedValue(artist as never)
-    const req = { artist: { id: 'artist-1' } } as never
+    const caller = buildArtist({ id: 'artist-1' })
 
-    const result = await controller.getMe(req)
+    const result = await controller.getMe(caller)
 
     expect(artistsService.findById).toHaveBeenCalledWith('artist-1')
     expect(result).toBe(artist)

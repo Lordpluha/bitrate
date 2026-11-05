@@ -46,7 +46,7 @@ export const UpdateReleaseTaskSchema = z
       input.dueAt !== undefined ||
       input.assigneeContributorId !== undefined ||
       input.status !== undefined,
-    { message: RELEASE_VALIDATION.UPDATE_EMPTY },
+    { error: RELEASE_VALIDATION.UPDATE_EMPTY },
   )
 
 export const DeleteReleaseTaskSchema = z.strictObject({
@@ -54,11 +54,10 @@ export const DeleteReleaseTaskSchema = z.strictObject({
 })
 
 /** `OPEN` lists everything not yet done, which is what the Tasks page shows by default. */
-export const ListArtistTasksSchema = paginationQuerySchema
-  .extend({
-    status: z.enum([...Object.values(ReleaseTaskStatus), 'OPEN'] as const).optional(),
-  })
-  .strict()
+export const ListArtistTasksSchema = z.strictObject({
+  ...paginationQuerySchema.shape,
+  status: z.enum([...Object.values(ReleaseTaskStatus), 'OPEN'] as const).optional(),
+})
 
 export class CreateReleaseTaskDto extends createZodDto(CreateReleaseTaskSchema) {}
 export class UpdateReleaseTaskDto extends createZodDto(UpdateReleaseTaskSchema) {}

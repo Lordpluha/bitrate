@@ -33,7 +33,7 @@ type Story = StoryObj<typeof meta>
 
 const formSchema = z.object({
   username: z.string().min(6, {
-    message: 'Username must be at least 6 characters.',
+    error: 'Username must be at least 6 characters.',
   }),
 })
 

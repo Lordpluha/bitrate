@@ -2,7 +2,7 @@ import { normalizePagination } from '@common/pagination'
 import { USER_SETTINGS_DEFAULTS } from '@common/user-settings'
 import { isPrismaP2002, isPrismaP2034 } from '@common/utils/prisma'
 import { PrismaService } from '@infra/prisma/prisma.service'
-import { PUBLIC_TRACK_WHERE } from '@modules/tracks/track-visibility'
+import { PUBLIC_TRACK_WHERE } from '@modules/tracks/orm'
 import {
   BadRequestException,
   ConflictException,

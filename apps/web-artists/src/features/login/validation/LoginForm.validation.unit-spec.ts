@@ -27,14 +27,14 @@ describe('loginSchema', () => {
      */
     it('reports a missing email as required, not as malformed', () => {
       expect(errorFor({ email: '', password: 'hunter2' }, 'email')).toBe(
-        'Email is required',
+        'auth.validation.emailRequired',
       )
     })
 
     it('reports a malformed email as malformed', () => {
       expect(
         errorFor({ email: 'artist-at-bitrate', password: 'hunter2' }, 'email'),
-      ).toBe('Please enter a valid email address')
+      ).toBe('auth.validation.emailInvalid')
     })
 
     it('rejects a missing email field outright', () => {
@@ -46,7 +46,7 @@ describe('loginSchema', () => {
     it('reports an empty password as required', () => {
       expect(
         errorFor({ email: 'artist@bitrate.me', password: '' }, 'password'),
-      ).toBe('Password is required')
+      ).toBe('auth.validation.passwordRequired')
     })
 
     it('imposes no length rule at login — that belongs to registration', () => {

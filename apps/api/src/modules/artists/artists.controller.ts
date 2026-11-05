@@ -1,7 +1,8 @@
 import { HttpCacheable } from '@common/interceptors/http-cacheable.decorator'
 import { ArtistAuth } from '@modules/artists-auth/artists-auth.guard'
-import type { ArtistAuthRequest } from '@modules/artists-auth/types'
-import type { UserAuthRequest } from '@modules/users-auth/types'
+import { CurrentArtist } from '@modules/artists-auth/decorators/current-artist.decorator'
+import type { UserEntity } from '@modules/users/entities'
+import { CurrentUser } from '@modules/users-auth/decorators/current-user.decorator'
 import { UserAuth } from '@modules/users-auth/users-auth.guard'
 import {
   Body,
@@ -15,7 +16,6 @@ import {
   Post,
   Put,
   Query,
-  Req,
 } from '@nestjs/common'
 import { ApiExtraModels, ApiTags } from '@nestjs/swagger'
 import { ZodValidationPipe } from 'nestjs-zod'
@@ -101,20 +101,22 @@ export class ArtistsController {
   @ArtistAuth()
   @Put(':id')
   updateProfile(
-    @Req() req: ArtistAuthRequest,
+    @CurrentArtist() artist: ArtistEntity,
     @Param('id', ParseUUIDPipe) id: ArtistEntity['id'],
-    @Body(new ZodValidationPipe(UpdateArtistSchema)) artist: UpdateArtistDto,
+    @Body(new ZodValidationPipe(UpdateArtistSchema)) input: UpdateArtistDto,
   ) {
-    const artistId = req.artist.id
-    return this.artistsService.update(id, artist, artistId)
+    return this.artistsService.update(id, input, artist.id)
   }
 
   /** Runs the delete profile operation. */
   @DeleteArtistSwagger()
   @ArtistAuth()
   @Delete(':id')
-  deleteProfile(@Req() req: ArtistAuthRequest, @Param('id', ParseUUIDPipe) id: ArtistEntity['id']) {
-    const artistId = req.artist.id
+  deleteProfile(
+    @CurrentArtist() artist: ArtistEntity,
+    @Param('id', ParseUUIDPipe) id: ArtistEntity['id'],
+  ) {
+    const artistId = artist.id
     return this.artistsService.requestDelete(id, artistId)
   }
 
@@ -123,19 +125,19 @@ export class ArtistsController {
   @UserAuth()
   @Get('me/following')
   getFollowing(
-    @Req() req: UserAuthRequest,
+    @CurrentUser() user: UserEntity,
     @Query('page', new ParseIntPipe({ optional: true })) page?: number,
     @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
   ) {
-    return this.artistsService.getFollowing(req.user.id, page, limit)
+    return this.artistsService.getFollowing(user.id, page, limit)
   }
 
   /** Runs the follow operation. */
   @FollowArtistSwagger()
   @UserAuth()
   @Post(':id/follow')
-  follow(@Req() req: UserAuthRequest, @Param('id', ParseUUIDPipe) id: ArtistEntity['id']) {
-    return this.artistsService.follow(req.user.id, id)
+  follow(@CurrentUser() user: UserEntity, @Param('id', ParseUUIDPipe) id: ArtistEntity['id']) {
+    return this.artistsService.follow(user.id, id)
   }
 
   /** Runs the unfollow operation. */
@@ -143,7 +145,7 @@ export class ArtistsController {
   @UserAuth()
   @HttpCode(200)
   @Delete(':id/follow')
-  unfollow(@Req() req: UserAuthRequest, @Param('id', ParseUUIDPipe) id: ArtistEntity['id']) {
-    return this.artistsService.unfollow(req.user.id, id)
+  unfollow(@CurrentUser() user: UserEntity, @Param('id', ParseUUIDPipe) id: ArtistEntity['id']) {
+    return this.artistsService.unfollow(user.id, id)
   }
 }

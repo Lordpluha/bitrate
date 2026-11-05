@@ -1,6 +1,6 @@
 {
   "name": "@bitrate/contracts",
-  "version": "1.5.0",
+  "version": "2.0.0",
   "description": "",
   "private": true,
   "type": "module",
@@ -10,6 +10,7 @@
   },
   "exports": {
     ".": "./src/index.ts",
+    "./admin": "./src/api/admin.ts",
     "./*": "./src/*"
   },
   "keywords": [],
@@ -21,7 +22,7 @@
     "typescript": "^6.0.3"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.5.15",
+    "@biomejs/biome": "2.6.4",
     "@types/node": "^26.6.4"
   }
 }

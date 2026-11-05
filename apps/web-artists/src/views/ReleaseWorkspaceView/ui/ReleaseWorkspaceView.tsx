@@ -4,11 +4,17 @@ import {
   type ReleaseStage,
   useReleaseWorkspace,
 } from '@entities/release'
+import {
+  CustomizeControls,
+  useCustomizableLayout,
+} from '@features/workspace-layout'
+import { useI18n } from '@shared/i18n'
 import { ROUTES } from '@shared/routes/routes'
 import { Link } from '@tanstack/react-router'
 import { ReleaseDeliveryPanel } from '@widgets/ReleaseDelivery'
 import {
   DraftStage,
+  draftTiles,
   LaunchStage,
   ReleaseHeader,
   ReleaseStepper,
@@ -31,6 +37,12 @@ export function ReleaseWorkspaceView({
   step,
 }: ReleaseWorkspaceViewProps) {
   const query = useReleaseWorkspace(artistId, releaseId)
+  const draftLayout = useCustomizableLayout(
+    artistId,
+    'release-draft',
+    draftTiles,
+  )
+  const { t, tMessage } = useI18n()
   const [saved, setSaved] = useState(false)
   const [dialog, setDialog] = useState<WorkspaceAction | null>(null)
   /** Opening the next dialog is the next action, so it retires the saved notice. */
@@ -42,25 +54,25 @@ export function ReleaseWorkspaceView({
   return (
     <div aria-busy={query.isFetching} className="artist-release-workspace">
       {query.isPending ? (
-        <p role="status">Loading release workspace…</p>
+        <p role="status">{t('workspace.loading')}</p>
       ) : query.isError ? (
         <div className="space-y-4 py-8">
-          <h1 className="text-2xl">Release workspace unavailable</h1>
-          <p role="alert">{query.error.message}</p>
+          <h1 className="text-2xl">{t('workspace.unavailable')}</h1>
+          <p role="alert">{tMessage(query.error.message)}</p>
           <Button
             onClick={() => {
               void query.refetch()
             }}
             variant="outline"
           >
-            Try again
+            {t('common.tryAgain')}
           </Button>
           <Link
             className="block underline"
             search={{ tab: 'releases', page: 1 }}
             to={ROUTES.dashboard.music}
           >
-            Return to Music
+            {t('workspace.returnToMusic')}
           </Link>
         </div>
       ) : (
@@ -70,7 +82,7 @@ export function ReleaseWorkspaceView({
               className="mb-4 rounded-lg border border-border bg-secondary p-4 text-sm"
               role="status"
             >
-              Draft updated.
+              {t('workspace.draftUpdated')}
             </p>
           )}
           <Link
@@ -78,13 +90,22 @@ export function ReleaseWorkspaceView({
             search={{ tab: 'releases', page: 1 }}
             to={ROUTES.dashboard.music}
           >
-            Back to music
+            {t('shell.backToMusic')}
           </Link>
-          <ReleaseHeader release={query.data} />
-          <ReleaseStepper active={stage ?? 'draft'} release={query.data} />
+          <ReleaseHeader onAction={openDialog} release={query.data} />
+          <ReleaseStepper
+            actions={
+              stage === 'draft' && !draftLayout.editing ? (
+                <CustomizeControls layout={draftLayout} />
+              ) : undefined
+            }
+            active={stage ?? 'draft'}
+            release={query.data}
+          />
           {stage === 'draft' && (
             <DraftStage
               artistId={artistId}
+              layout={draftLayout}
               onAction={openDialog}
               release={query.data}
             />
@@ -95,7 +116,6 @@ export function ReleaseWorkspaceView({
           {stage === 'deliver' && (
             <ReleaseDeliveryPanel
               artistId={artistId}
-              onSchedule={() => openDialog({ kind: 'schedule' })}
               release={query.data}
               releaseId={releaseId}
             />

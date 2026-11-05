@@ -3,7 +3,7 @@ import {
   AUDIO_PROCESSING_DEAD_LETTER_QUEUE,
   AUDIO_PROCESSING_QUEUE,
 } from '@infra/queues/audio-processing.queue'
-import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals'
+import { afterAll, beforeAll, describe, expect, it } from '@jest/globals'
 import { LISTENING_STATS_QUEUE } from '@modules/history/listening-stats.consumer'
 import { NOTIFICATIONS_QUEUE } from '@modules/notifications'
 import { getQueueToken } from '@nestjs/bullmq'
@@ -11,15 +11,6 @@ import type { TestingModule } from '@nestjs/testing'
 import { Test } from '@nestjs/testing'
 import { makeQueueMock, prismaMock } from '@test/mocks'
 import { AppModule } from '../../app.module'
-
-/**
- * `music-metadata` ships ESM-only `exports` (no `"require"` condition). Node 24 itself can
- * `require()` it directly, but ts-jest's resolver cannot, so the real `TrackUploadService` →
- * `track-media.ts` → `music-metadata` chain fails to load with "Cannot find module" the moment
- * anything pulls in the real `AppModule` graph unmocked — orthogonal to what this spec checks.
- * `{ virtual: true }` registers a mock for a module Jest cannot resolve at all.
- */
-jest.mock('music-metadata', () => ({ parseFile: jest.fn() }), { virtual: true })
 
 /**
  * Compiles the real `AppModule` DI graph so a broken provider fails in seconds instead of at

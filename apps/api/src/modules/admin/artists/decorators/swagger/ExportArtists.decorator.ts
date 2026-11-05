@@ -1,8 +1,8 @@
 import { ADMIN_RESOURCE_STATUSES, CsvExportResponseSwagger } from '@modules/admin/shared'
 import { applyDecorators } from '@nestjs/common'
 import { ApiOperation, ApiQuery } from '@nestjs/swagger'
-import { ADMIN_ARTIST_EXPORT_COLUMNS } from '../../artist.select'
 import { ADMIN_ARTISTS_SORT_FIELDS } from '../../dtos'
+import { ADMIN_ARTIST_EXPORT_COLUMNS } from '../../orm'
 
 /** Runs the export artists swagger operation. */
 export function ExportArtistsSwagger() {

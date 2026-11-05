@@ -1,4 +1,5 @@
 import type { ApiSchemas } from '@bitrate/contracts'
+import { messageKey, supportedLocales, type TranslationKey } from '@shared/i18n'
 import { z } from 'zod'
 
 export const socialLinkKeys = [
@@ -10,16 +11,17 @@ export const socialLinkKeys = [
   'soundcloud',
 ] as const
 
-type SocialLinkKey = (typeof socialLinkKeys)[number]
+export type SocialLinkKey = (typeof socialLinkKeys)[number]
 
+/** Catalog keys; render them with `t()`. Only “Website” changes between languages. */
 export const socialLinkLabels = {
-  website: 'Website',
-  instagram: 'Instagram',
-  x: 'X',
-  youtube: 'YouTube',
-  tiktok: 'TikTok',
-  soundcloud: 'SoundCloud',
-} satisfies Record<SocialLinkKey, string>
+  website: 'profile.social.website',
+  instagram: 'profile.social.instagram',
+  x: 'profile.social.x',
+  youtube: 'profile.social.youtube',
+  tiktok: 'profile.social.tiktok',
+  soundcloud: 'profile.social.soundcloud',
+} satisfies Record<SocialLinkKey, TranslationKey>
 
 const link = z.url().optional()
 
@@ -42,6 +44,7 @@ export const artistProfileSchema = z.object({
   verified: z.boolean(),
   twoFactorEnabled: z.boolean(),
   emailVerified: z.boolean(),
+  locale: z.enum(supportedLocales),
   updatedAt: z.iso.datetime({ offset: true }),
 }) satisfies z.ZodType<ApiSchemas['ArtistProfileEntity']>
 
@@ -52,7 +55,7 @@ const optionalHttps = z
   .trim()
   .refine(
     (value) => value === '' || /^https:\/\/\S+$/.test(value),
-    'Enter a full https:// link.',
+    messageKey('profile.validation.https'),
   )
 
 /** Editor values; empty strings mean "not set" and are sent as null. */
@@ -60,13 +63,10 @@ export const profileFormSchema = z.object({
   username: z
     .string()
     .trim()
-    .min(3, 'Use at least 3 characters.')
-    .max(50, 'Use at most 50 characters.')
-    .regex(
-      /^[A-Za-z0-9._-]+$/,
-      'Use letters, digits, dots, dashes and underscores.',
-    ),
-  bio: z.string().max(500, 'Keep the bio under 500 characters.'),
+    .min(3, messageKey('profile.validation.min'))
+    .max(50, messageKey('profile.validation.max'))
+    .regex(/^[A-Za-z0-9._-]+$/, messageKey('profile.validation.chars')),
+  bio: z.string().max(500, messageKey('profile.validation.bio')),
   country: z.string(),
   website: optionalHttps,
   instagram: optionalHttps,

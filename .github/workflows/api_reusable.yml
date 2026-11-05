@@ -231,28 +231,37 @@ jobs:
         if: failure()
         run: docker compose -f infra/docker-compose.preprod.yaml -f infra/docker-compose.ci.yaml logs --tail=100 seaweedfs
 
+      # One contract per API process (#458). The public process builds dist with the Swagger
+      # plugin; the operator process then runs from that same build, because a second
+      # `nest start` would wipe the shared dist (deleteOutDir) under the first.
       - name: Verify generated API contracts
         run: |
+          wait_for() {
+            for i in {1..30}; do
+              curl --fail --silent "$1" > /dev/null && return 0
+              sleep 1
+            done
+            cat "$2"
+            return 1
+          }
           pnpm --filter @bitrate/api run start > /tmp/bitrate-api.log 2>&1 &
           API_PID=$!
-          trap 'kill "$API_PID" 2>/dev/null || true' EXIT
-          for i in {1..30}; do
-            curl --fail --silent http://localhost:3000/swagger/json > /dev/null && break
-            if [ "$i" = 30 ]; then
-              cat /tmp/bitrate-api.log
-              exit 1
-            fi
-            sleep 1
-          done
+          trap 'kill "$API_PID" "${ADMIN_API_PID:-}" 2>/dev/null || true' EXIT
+          wait_for http://localhost:3000/swagger/json /tmp/bitrate-api.log
+          pnpm --filter @bitrate/api run start:admin:prod > /tmp/bitrate-admin-api.log 2>&1 &
+          ADMIN_API_PID=$!
+          wait_for http://localhost:3007/swagger/json /tmp/bitrate-admin-api.log
           pnpm --filter @bitrate/contracts run gen:api
-          git diff --exit-code -- packages/contracts/src/api/v1.ts
+          git diff --exit-code -- packages/contracts/src/api/v1.ts packages/contracts/src/api/admin-v1.ts
 
       - name: Upload API startup log
         if: failure()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: api-startup-log
-          path: /tmp/bitrate-api.log
+          path: |
+            /tmp/bitrate-api.log
+            /tmp/bitrate-admin-api.log
           if-no-files-found: ignore
 
       # Regenerating the contract needs a running API, so a developer without
@@ -263,5 +272,7 @@ jobs:
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: regenerated-api-contract
-          path: packages/contracts/src/api/v1.ts
+          path: |
+            packages/contracts/src/api/v1.ts
+            packages/contracts/src/api/admin-v1.ts
           if-no-files-found: ignore

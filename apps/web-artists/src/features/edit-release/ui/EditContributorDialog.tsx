@@ -1,5 +1,6 @@
 import { Button } from '@bitrate/ui-react'
 import { useContributor } from '@entities/release'
+import { useI18n } from '@shared/i18n'
 import { WorkspaceModal } from '@shared/ui/WorkspaceModal/WorkspaceModal'
 import { ContributorForm } from './ContributorForm'
 
@@ -18,6 +19,7 @@ export function EditContributorDialog({
   onClose,
   onSaved,
 }: EditContributorDialogProps) {
+  const { t, tMessage } = useI18n()
   const query = useContributor(artistId, releaseId, contributorId)
   if (
     query.data &&
@@ -35,26 +37,23 @@ export function EditContributorDialog({
       />
     )
   return (
-    <WorkspaceModal onClose={onClose} title="Edit contributor">
+    <WorkspaceModal onClose={onClose} title={t('editRelease.editContributor')}>
       {query.isPending || query.isFetching ? (
-        <p role="status">Loading the latest contributor…</p>
+        <p role="status">{t('editRelease.loadingContributor')}</p>
       ) : query.isError ? (
         <div className="space-y-4">
-          <p role="alert">{query.error.message}</p>
+          <p role="alert">{tMessage(query.error.message)}</p>
           <Button
             onClick={() => {
               void query.refetch()
             }}
             variant="outline"
           >
-            Try again
+            {t('common.tryAgain')}
           </Button>
         </div>
       ) : (
-        <p role="alert">
-          This release is no longer a draft. Close the form and refresh Music to
-          review its status.
-        </p>
+        <p role="alert">{t('editRelease.notDraft')}</p>
       )}
     </WorkspaceModal>
   )

@@ -1,5 +1,5 @@
-import { readdir, rm, stat } from 'node:fs/promises'
-import { convertAudio, convertAudioToCmaf, convertAudioToHls } from '@bitrate/converter'
+import { rm, stat } from 'node:fs/promises'
+import { convertAudioToCmaf } from '@bitrate/converter'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import { STORAGE_SERVICE } from '@infra/storage/storage.constants'
 import { beforeEach, describe, expect, it, jest } from '@jest/globals'
@@ -17,13 +17,7 @@ import { AudioProcessingConsumer } from './audio-processing.consumer'
 import { removeStaleScratchDirs } from './audio-scratch'
 import { ProcessingAttemptRecorder } from './processing-attempt.recorder'
 
-jest.mock('@sentry/nestjs', () => ({
-  captureException: jest.fn(),
-}))
-
 jest.mock('@bitrate/converter', () => ({
-  convertAudio: jest.fn().mockResolvedValue(undefined as never),
-  convertAudioToHls: jest.fn().mockResolvedValue(undefined as never),
   convertAudioToCmaf: jest.fn(),
 }))
 
@@ -70,13 +64,10 @@ jest.mock('node:fs/promises', () => ({
   stat: jest.fn().mockResolvedValue({ size: 2048 } as never),
 }))
 
-const convertAudioMock = convertAudio as jest.MockedFunction<typeof convertAudio>
-const convertAudioToHlsMock = convertAudioToHls as jest.MockedFunction<typeof convertAudioToHls>
 const convertAudioToCmafMock = convertAudioToCmaf as jest.MockedFunction<typeof convertAudioToCmaf>
 
 const downloadMock = downloadObjectToFile as jest.MockedFunction<typeof downloadObjectToFile>
 const removeStaleMock = removeStaleScratchDirs as jest.MockedFunction<typeof removeStaleScratchDirs>
-const readdirMock = readdir as jest.MockedFunction<typeof readdir>
 const rmMock = rm as jest.MockedFunction<typeof rm>
 const statMock = stat as jest.MockedFunction<typeof stat>
 
@@ -132,15 +123,7 @@ describe('AudioProcessingConsumer', () => {
       }
       return []
     })
-    readdirMock.mockImplementation(((_path: never, options?: { withFileTypes?: boolean }) => {
-      if (options?.withFileTypes) {
-        return Promise.resolve([{ name: 'master.m3u8', isDirectory: () => false }]) as never
-      }
-      return Promise.resolve(['index.m3u8', 'init_0.mp4', 'segment_00000.m4s']) as never
-    }) as never)
     statMock.mockResolvedValue({ size: 2048 } as never)
-    convertAudioMock.mockResolvedValue(undefined as never)
-    convertAudioToHlsMock.mockResolvedValue(undefined as never)
     convertAudioToCmafMock.mockResolvedValue(cmafResult as never)
   })
 
@@ -158,29 +141,25 @@ describe('AudioProcessingConsumer', () => {
     expect(prisma.track.updateMany).toHaveBeenCalledWith(
       expect.objectContaining({ where: { id: 'track-1', audioUrl: 'track.mp3' } }),
     )
-    expect(convertAudioMock).not.toHaveBeenCalled()
+    expect(convertAudioToCmafMock).not.toHaveBeenCalled()
     expect(recorder.start).not.toHaveBeenCalled()
   })
 
-  it('prepares every variant, publishes it, and marks the track ready atomically', async () => {
+  it('stores only CMAF renditions, publishes them, and marks the track ready atomically', async () => {
     const job = buildJob('convert-audio', jobData)
 
     await consumer.process(job)
 
-    expect(convertAudioMock).toHaveBeenCalledTimes(2)
-    expect(convertAudioToHlsMock).toHaveBeenCalledTimes(1)
-    expect(convertAudioToHlsMock).toHaveBeenCalledWith(
-      expect.objectContaining({
-        bitrates: ['128k', '192k'],
-        segmentDuration: 4,
-      }),
+    expect(convertAudioToCmafMock).toHaveBeenCalledTimes(1)
+    const uploadedKeys = storage.upload.mock.calls.map(([key]) => key)
+    expect(uploadedKeys).toHaveLength(2)
+    for (const key of uploadedKeys) {
+      expect(key).toMatch(/^tracks\/track-1\/generations\/[a-f0-9]{16}\/cmaf\/\d+\.m4a$/)
+    }
+    const storedFormats = prisma.trackFile.upsert.mock.calls.map(
+      ([call]) => (call as { create?: { format?: string } }).create?.format,
     )
-    expect(storage.upload).toHaveBeenLastCalledWith(
-      expect.stringMatching(/^tracks\/track-1\/generations\/[a-f0-9]{16}\/hls\/master\.m3u8$/),
-      expect.anything(),
-      'application/vnd.apple.mpegurl',
-    )
-    expect(prisma.trackFile.upsert).toHaveBeenCalledTimes(4)
+    expect(storedFormats).toEqual(['cmaf', 'cmaf'])
     expect(prisma.track.updateMany).toHaveBeenCalledWith(
       expect.objectContaining({
         data: expect.objectContaining({ processingStatus: 'READY' }),
@@ -253,18 +232,14 @@ describe('AudioProcessingConsumer', () => {
     })
   })
 
-  it('marks the track as playbackVersion 2 with its fragment timescale', async () => {
+  it('stores the fragment timescale and duration on the track it publishes', async () => {
     await consumer.process(buildJob('convert-audio', jobData))
 
-    expect(prisma.track.updateMany).toHaveBeenCalledWith(
-      expect.objectContaining({
-        data: expect.objectContaining({
-          playbackVersion: 2,
-          fragmentTimescale: 48_000,
-          durationTicks: 2_880_000,
-        }),
-      }),
-    )
+    const published = prisma.track.updateMany.mock.calls
+      .map(([call]) => (call as { data?: { processingStatus?: string } }).data)
+      .find((data) => data?.processingStatus === 'READY')
+    expect(published).toMatchObject({ fragmentTimescale: 48_000, durationTicks: 2_880_000 })
+    expect(published).not.toHaveProperty('playbackVersion')
   })
 
   it('never marks a track ready when renditions are not spliceable', async () => {
@@ -283,7 +258,7 @@ describe('AudioProcessingConsumer', () => {
   })
 
   it('records the attempt error, cleans temporary files, and rethrows for BullMQ retry', async () => {
-    convertAudioMock.mockRejectedValueOnce(new Error('ffmpeg crashed') as never)
+    convertAudioToCmafMock.mockRejectedValueOnce(new Error('ffmpeg crashed') as never)
     const job = buildJob('convert-audio', jobData)
 
     await expect(consumer.process(job)).rejects.toThrow('ffmpeg crashed')
@@ -302,7 +277,7 @@ describe('AudioProcessingConsumer', () => {
         trackId: 'track-1',
         jobId: 'job-1',
         attempt: 1,
-        step: 'PROGRESSIVE_ENCODE',
+        step: 'CMAF_ENCODE',
         willRetry: true,
       }),
     )
@@ -317,14 +292,14 @@ describe('AudioProcessingConsumer', () => {
       stderrTail: 'Invalid data found when processing input',
       args: ['-i', '/tmp/track.mp3'],
     })
-    convertAudioMock.mockRejectedValueOnce(ffmpegError as never)
+    convertAudioToCmafMock.mockRejectedValueOnce(ffmpegError as never)
     const job = buildJob('convert-audio', jobData)
 
     await expect(consumer.process(job)).rejects.toThrow(ffmpegError)
 
     expect(recorder.fail).toHaveBeenCalledWith(
       expect.objectContaining({
-        step: 'PROGRESSIVE_ENCODE',
+        step: 'CMAF_ENCODE',
         willRetry: true,
         error: ffmpegError,
       }),
@@ -340,7 +315,7 @@ describe('AudioProcessingConsumer', () => {
       stderrTail: '',
       args: ['-i', '/tmp/track.mp3'],
     })
-    convertAudioMock.mockRejectedValueOnce(timeoutError as never)
+    convertAudioToCmafMock.mockRejectedValueOnce(timeoutError as never)
     const job = buildJob('convert-audio', jobData)
 
     await expect(consumer.process(job)).rejects.toThrow(timeoutError)
@@ -386,7 +361,7 @@ describe('AudioProcessingConsumer', () => {
       attemptsMade: 5,
       opts: { attempts: 5 },
     })
-    recorder.finalize.mockResolvedValueOnce('PROGRESSIVE_ENCODE' as never)
+    recorder.finalize.mockResolvedValueOnce('CMAF_ENCODE' as never)
 
     await consumer.onFailed(job as never, new Error('permanent failure'))
 
@@ -417,7 +392,7 @@ describe('AudioProcessingConsumer', () => {
     expect(Sentry.captureException).toHaveBeenCalledWith(
       expect.any(Error),
       expect.objectContaining({
-        fingerprint: ['audio-processing', 'UNKNOWN', 'PROGRESSIVE_ENCODE'],
+        fingerprint: ['audio-processing', 'UNKNOWN', 'CMAF_ENCODE'],
       }),
     )
   })
@@ -443,10 +418,6 @@ describe('AudioProcessingConsumer', () => {
     const [, key, localPath] = downloadMock.mock.calls[0] as [unknown, string, string]
     expect(key).toBe('masters/track.mp3')
     expect(localPath).toContain('track-1-job-1-1')
-    expect(convertAudioMock).toHaveBeenCalledWith(expect.objectContaining({ input: localPath }))
-    expect(convertAudioToHlsMock).toHaveBeenCalledWith(
-      expect.objectContaining({ input: localPath }),
-    )
     expect(convertAudioToCmafMock).toHaveBeenCalledWith(
       expect.objectContaining({ input: localPath }),
     )
@@ -457,7 +428,7 @@ describe('AudioProcessingConsumer', () => {
 
     await expect(consumer.process(buildJob('convert-audio', jobData))).rejects.toThrow('NoSuchKey')
 
-    expect(convertAudioMock).not.toHaveBeenCalled()
+    expect(convertAudioToCmafMock).not.toHaveBeenCalled()
     expect(rmMock).toHaveBeenLastCalledWith(expect.stringContaining('track-1-job-1-1'), {
       recursive: true,
       force: true,
@@ -483,7 +454,7 @@ describe('AudioProcessingConsumer', () => {
       expect.objectContaining({ jobId: 'unrecognised-job-1' }),
     )
     expect(prisma.track.updateMany).not.toHaveBeenCalled()
-    expect(convertAudioMock).not.toHaveBeenCalled()
+    expect(convertAudioToCmafMock).not.toHaveBeenCalled()
   })
 
   it('removes stale scratch directories at start-up when the worker autoruns', async () => {

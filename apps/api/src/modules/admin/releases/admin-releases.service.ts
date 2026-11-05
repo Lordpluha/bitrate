@@ -4,11 +4,20 @@ import { STORAGE_SERVICE } from '@infra/storage/storage.constants'
 import type { StorageService } from '@infra/storage/storage.types'
 import { type AuditContextValue, writeTakeDownAudit } from '@modules/admin/shared'
 import { RELEASE_ERRORS } from '@modules/releases/errors'
+import { releaseReadinessSelect } from '@modules/releases/orm'
 import { ReleasePublishingService } from '@modules/releases/release-publishing.service'
-import { type ReleaseReadiness, releaseReadiness } from '@modules/releases/release-readiness'
-import { readinessFromRecord, releaseReadinessSelect } from '@modules/releases/releases.select'
+import {
+  type ReleaseReadiness,
+  readinessFromRecord,
+  releaseReadiness,
+} from '@modules/releases/release-readiness'
 import { ConflictException, Inject, Injectable, NotFoundException } from '@nestjs/common'
 import { type Prisma, ReleaseReviewDecision, ReleaseStatus } from '@prisma/client'
+import {
+  type ApproveReleaseDto,
+  type ListAdminReleasesQueryDto,
+  type RequestReleaseChangesDto,
+} from './dtos/release-review.dto'
 import {
   DECIDED_SELECT,
   DETAIL_SELECT,
@@ -18,13 +27,8 @@ import {
   type ReviewRecord,
   ROW_SELECT,
   type RowRecord,
-} from './admin-releases.select'
-import {
-  ADMIN_REVIEWED_STATUSES,
-  type ApproveReleaseDto,
-  type ListAdminReleasesQueryDto,
-  type RequestReleaseChangesDto,
-} from './dtos/release-review.dto'
+  releaseQueueWhere,
+} from './orm'
 
 /** What a review decision moves the release to, and the review it stores. */
 type DecisionOutcome = {
@@ -47,7 +51,7 @@ export class AdminReleasesService {
 
   async list(query: ListAdminReleasesQueryDto) {
     const { page, limit, skip } = normalizePagination(query.page, query.limit)
-    const where = listWhere(query)
+    const where = releaseQueueWhere(query)
     const [rows, total] = await Promise.all([
       this.prisma.release.findMany({
         where,
@@ -88,9 +92,7 @@ export class AdminReleasesService {
       status: ReleaseStatus.REJECTED,
       review: {
         decision: ReleaseReviewDecision.CHANGES_REQUESTED,
-        message: input.message ?? null,
-        requiredChanges: input.requiredChanges,
-        recommendations: input.recommendations,
+        message: input.message,
       },
     })
   }
@@ -238,22 +240,6 @@ export class AdminReleasesService {
       requestId: audit.requestId,
       ipAddress: audit.ipAddress,
     })
-  }
-}
-
-/** The queue filter: not deleted, the chosen status (or every reviewed one), title/handle search. */
-function listWhere(query: ListAdminReleasesQueryDto): Prisma.ReleaseWhereInput {
-  return {
-    deletedAt: null,
-    status: query.status === 'ALL' ? { in: [...ADMIN_REVIEWED_STATUSES] } : query.status,
-    ...(query.q
-      ? {
-          OR: [
-            { title: { contains: query.q, mode: 'insensitive' } },
-            { owner: { username: { contains: query.q, mode: 'insensitive' } } },
-          ],
-        }
-      : {}),
   }
 }
 

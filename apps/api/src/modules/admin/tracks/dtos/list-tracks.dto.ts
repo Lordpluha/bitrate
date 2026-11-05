@@ -17,7 +17,7 @@ export const ADMIN_TRACKS_SORT_FIELDS = [
 ] as const satisfies readonly Prisma.TrackScalarFieldEnum[]
 
 export const ListAdminTracksQuerySchema = paginationQuerySchema
-  .merge(sortQuerySchema(ADMIN_TRACKS_SORT_FIELDS))
+  .extend(sortQuerySchema(ADMIN_TRACKS_SORT_FIELDS).shape)
   .extend({
     processingStatus: z.enum(TRACK_PROCESSING_STATUSES).optional(),
     status: adminResourceStatusSchema.optional(),

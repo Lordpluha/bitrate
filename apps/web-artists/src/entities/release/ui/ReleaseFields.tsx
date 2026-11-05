@@ -1,4 +1,5 @@
 import { Input } from '@bitrate/ui-react'
+import { useI18n } from '@shared/i18n'
 import { NativeSelect } from '@shared/ui'
 import { useId } from 'react'
 import type { UseFormReturn } from 'react-hook-form'
@@ -18,12 +19,13 @@ export function ReleaseFields({
   onChange: () => void
 }) {
   const id = useId()
+  const { t, tMessage } = useI18n()
   const errors = form.formState.errors
   return (
     <>
       <div className="space-y-2">
         <label className="block text-sm font-medium" htmlFor={`${id}-title`}>
-          Release title
+          {t('music.fields.title')}
         </label>
         <Input
           aria-describedby={errors.title ? `${id}-title-error` : undefined}
@@ -42,13 +44,13 @@ export function ReleaseFields({
             id={`${id}-title-error`}
             role="alert"
           >
-            {errors.title.message}
+            {tMessage(errors.title.message)}
           </p>
         )}
       </div>
       <div className="space-y-2">
         <label className="block text-sm font-medium" htmlFor={`${id}-type`}>
-          Release type
+          {t('music.fields.type')}
         </label>
         <NativeSelect
           aria-describedby={errors.type ? `${id}-type-error` : undefined}
@@ -60,7 +62,7 @@ export function ReleaseFields({
         >
           {releaseTypes.map((type) => (
             <option key={type} value={type}>
-              {releaseTypeLabels[type]}
+              {t(releaseTypeLabels[type])}
             </option>
           ))}
         </NativeSelect>
@@ -70,7 +72,7 @@ export function ReleaseFields({
             id={`${id}-type-error`}
             role="alert"
           >
-            {errors.type.message}
+            {tMessage(errors.type.message)}
           </p>
         )}
       </div>

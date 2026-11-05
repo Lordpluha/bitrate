@@ -6,8 +6,8 @@ export const ResetPasswordSchema = z.object({
   token: z.string().min(1),
   password: z
     .string()
-    .min(6, { message: 'Password must be at least 6 characters long' })
-    .max(32, { message: 'Password must not exceed 32 characters' }),
+    .min(6, { error: 'Password must be at least 6 characters long' })
+    .max(32, { error: 'Password must not exceed 32 characters' }),
 })
 
 /** Represents the reset password dto. */

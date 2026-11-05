@@ -1,5 +1,35 @@
 # @bitrate/web-artists
 
+## 1.5.0
+
+### Minor Changes
+
+- 6c466cc: The artist account dialog now offers the workspace language next to the appearance switch, saved to the account like the choice in Settings, and a Settings link that opens the full settings page. In Settings, a long list of signed-in devices folds to this device and the three most recent others, with "Show all devices" for the rest.
+- b0555d4: The workspace language is now saved to the artist account as well as the browser. Choosing a language in Settings stores it on the account, and signing in on a device that never chose one switches the workspace to the account's language; a choice already made on a device keeps winning there.
+- 59ab1ed: Translated Analytics into Ukrainian and Polish — period picker, totals and their change against the previous period, plays per day with its table, top tracks and other services — with numbers and dates formatted for the chosen language.
+- aa1c3b9: Translated the dashboard into Ukrainian and Polish — the first-release prompt, current release and its next step, needs attention, your releases, coming up, recent activity and listening data — and the notification texts in the dashboard and the notifications panel, with relative times and dates in the chosen language.
+- 284741d: Translated distribution into Ukrainian and Polish: the release's delivery stage (timing, territories, destinations and their states, locks), the delivery plan dialog, and the Distribution page. Country counts use each language's plural forms; store names stay as brands.
+- 2cf2d33: Translated the release editing dialogs into Ukrainian and Polish — draft details, timing, rights, barcode and ISRC, contributors, credits and splits, and deleting a draft — together with every message the release API calls report, such as stale drafts, unconfirmed saves and taken identifiers. A blocked submission now points to the blockers listed in the workspace instead of repeating their count.
+- d30c358: Translated release artwork and audio uploads into Ukrainian and Polish — the file pickers, drop zones and progress, upload and replace-audio dialogs, renaming and removing a track, and file-type and size checks — along with the messages the track player shows when a master cannot be played.
+- f66451e: Translated the Music catalogue (tabs, filters, table, pagination, item dialog, empty states), the create-release dialog, workspace search and the workspace notice dialogs into Ukrainian and Polish. Release and track status and type names now follow the chosen language everywhere they appear, and catalogue dates use the locale's format.
+- 6d4c247: Translated the public landing page and the profile editor (images, handle, country, bio, links and the live preview) into Ukrainian and Polish. Country names in the profile and the delivery plan now appear in the chosen language and are sorted by it, and account and profile errors follow the language too.
+- 7feac9d: Translated submitting a release for review, withdrawing and revising it, and publishing on Bitrate — the publish dialog, premiere scheduling and cancelling, taking a release offline and publishing it again — into Ukrainian and Polish, with premiere dates in the chosen language.
+- 656d1a1: Translated the release stages and their progress, the readiness roadmap, submission blockers, contributor roles, right names and the track player's quality label into Ukrainian and Polish, wherever the release workspace and the credit and split dialogs show them.
+- 72f3120: Translated the release workspace into Ukrainian and Polish: the header and its next action, the draft checklist, tracks, credits and splits, rights, the readiness panel, the review and launch stages, and the page's loading and error states. Dates in the workspace follow the chosen language.
+- 6b1cab0: Translated the rest of Settings into Ukrainian and Polish — account details, password reset, two-factor sign-in, signed-in devices, account deletion, notification channels, and the theme, density and motion choices — with device names and last-active dates in the chosen language.
+- 62c078b: Translated the sign-in, sign-up, email verification, password reset and not-found screens and the workspace shell (navigation, header, account menu, notifications panel) into Ukrainian and Polish. Form validation messages and sign-in errors follow the chosen language too.
+- 43a839f: Added interface languages to the artist workspace. Settings now has a Language panel with English, Ukrainian and Polish; the choice is saved in a cookie, so the server renders every later page in it, and before an artist picks one the workspace follows the browser's preferred supported language. This lays the translation layer only — screens move onto it in follow-up changes.
+- fe5b6ad: Review feedback is now one Markdown message: reviewers write it in a single editor with a formatting toolbar in the admin, and artists see it formatted. The API drops the separate required-change and recommendation lists (a migration folds existing ones into the message), so this is a breaking contract change. Artists split only the master now: publishing shares and the songwriter confirmation are no longer asked for or required, and new releases start with the artist as master owner. The artist workspace also gets a submit preview, a reworked draft step and stepper, a new analytics layout, a mini player with volume in Music, release artwork on track rows, page entrance animations and interface sounds that can be turned off in Settings.
+
+### Patch Changes
+
+- ab4190b: API requests from the artist workspace now carry the workspace language in `Accept-Language`, so messages the API translates arrive in Ukrainian or Polish when the artist chose them, rather than in the browser's language.
+- 301aff2: Terms of use 3.1 no longer grants listeners podcast streaming: Bitrate became music-only (ADR-0066).
+- Updated dependencies [bb90f3d]
+- Updated dependencies [959cfa2]
+  - @bitrate/player@2.0.0
+  - @bitrate/ui-react@1.2.4
+
 ## 1.4.0
 
 ### Minor Changes

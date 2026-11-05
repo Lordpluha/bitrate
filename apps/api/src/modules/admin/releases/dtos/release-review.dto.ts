@@ -1,5 +1,4 @@
 import { paginationQuerySchema } from '@common/pagination'
-import { RELEASE_VALIDATION } from '@modules/releases/errors'
 import { createZodDto } from 'nestjs-zod'
 import { z } from 'zod'
 
@@ -16,43 +15,32 @@ export const ADMIN_REVIEWED_STATUSES = [
 /** The review queue shows submissions by default. */
 export const ADMIN_RELEASE_STATUSES = [...ADMIN_REVIEWED_STATUSES, 'ALL'] as const
 
-export const ListAdminReleasesQuerySchema = paginationQuerySchema
-  .extend({
-    status: z.enum(ADMIN_RELEASE_STATUSES).default('SUBMITTED'),
-    q: z.string().trim().min(1).max(100).optional().describe('Title or artist handle'),
-  })
-  .strict()
+export const ListAdminReleasesQuerySchema = z.strictObject({
+  ...paginationQuerySchema.shape,
+  status: z.enum(ADMIN_RELEASE_STATUSES).default('SUBMITTED'),
+  q: z.string().trim().min(1).max(100).optional().describe('Title or artist handle'),
+})
 
 const expectedUpdatedAt = z.iso
   .datetime({ offset: true })
   .describe('Release version the reviewer looked at')
 
-const note = z.string().trim().min(1).max(500)
-const message = z
-  .string()
-  .trim()
-  .min(1)
-  .max(2000)
-  .optional()
-  .describe('Optional note to the artist')
+/** Longest review feedback, in characters of Markdown source. */
+const REVIEW_MESSAGE_MAX_LENGTH = 5000
 
-/** Review items are shown as a list; each one must say something different. */
-const noteList = (min: number, max: number) =>
-  z
-    .array(note)
-    .min(min)
-    .max(max)
-    .refine((items) => new Set(items).size === items.length, RELEASE_VALIDATION.DUPLICATE_ITEMS)
+/**
+ * Review feedback is Markdown: bold, italics, lists, quotes, code and links. Clients render it
+ * without raw HTML, so the text can only carry formatting.
+ */
+const feedback = z.string().trim().min(1).max(REVIEW_MESSAGE_MAX_LENGTH)
 
 export const ApproveReleaseSchema = z.strictObject({
-  message,
+  message: feedback.optional().describe('Optional note to the artist, in Markdown'),
   expectedUpdatedAt,
 })
 
 export const RequestReleaseChangesSchema = z.strictObject({
-  requiredChanges: noteList(1, 20).describe('Changes the artist must make before resubmitting'),
-  recommendations: noteList(0, 20).default([]).describe('Optional suggestions'),
-  message,
+  message: feedback.describe('What the artist must change before resubmitting, in Markdown'),
   expectedUpdatedAt,
 })
 

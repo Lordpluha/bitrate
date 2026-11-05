@@ -2,10 +2,8 @@ import type { PrismaService } from '@infra/prisma/prisma.service'
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from '@jest/globals'
 import type { INestApplication } from '@nestjs/common'
 import request from 'supertest'
-import { resetArtistsDatabase, resetUsersDatabase, verifyUserEmail } from '../helpers/db'
-import { closeE2eApp, createE2eApp, getResponseCookies } from './e2e-app'
-
-const makeRunId = () => Math.random().toString(36).slice(2, 8)
+import { resetArtistsDatabase, resetUsersDatabase } from '../helpers/db'
+import { closeE2eApp, createE2eApp, registerAndLogin } from './e2e-app'
 
 describe('TracksController (e2e)', () => {
   let app: INestApplication
@@ -47,10 +45,23 @@ describe('TracksController (e2e)', () => {
     await request(app.getHttpServer()).post('/tracks').expect(401)
   })
 
-  it('GET /tracks/stream/:id should return 401 without auth', async () => {
+  it('POST /tracks/:id/play-sessions should return 401 without auth', async () => {
     await request(app.getHttpServer())
-      .get('/tracks/stream/f47ac10b-58cc-4372-a567-0e02b2c3d479')
+      .post('/tracks/f47ac10b-58cc-4372-a567-0e02b2c3d479/play-sessions')
       .expect(401)
+  })
+
+  it('GET /tracks/:id/cmaf/:bitrate should return 403 without a playback session token', async () => {
+    await request(app.getHttpServer())
+      .get('/tracks/f47ac10b-58cc-4372-a567-0e02b2c3d479/cmaf/192')
+      .expect(403)
+  })
+
+  it('GET /tracks/:id/cmaf/:bitrate should return 403 for a forged playback session token', async () => {
+    await request(app.getHttpServer())
+      .get('/tracks/f47ac10b-58cc-4372-a567-0e02b2c3d479/cmaf/192')
+      .query({ t: 'forged.token' })
+      .expect(403)
   })
 
   it('PUT /tracks/:id should return 401 without artist auth', async () => {
@@ -61,24 +72,7 @@ describe('TracksController (e2e)', () => {
   })
 
   it('GET /tracks/liked should return 200 for authenticated user', async () => {
-    const runId = makeRunId()
-    const creds = {
-      email: `user_${runId}@example.com`,
-      password: 'password123',
-      username: `user_${runId}`,
-      acceptLegal: true,
-    }
-    await request(app.getHttpServer()).post('/auth/registration').send(creds).expect(201)
-    await verifyUserEmail(prisma, creds.email)
-    await prisma.user.update({
-      where: { email: creds.email },
-      data: { emailVerifiedAt: new Date() },
-    })
-    const loginRes = await request(app.getHttpServer())
-      .post('/auth/login')
-      .send({ email: creds.email, password: creds.password })
-      .expect(201)
-    const cookies = getResponseCookies(loginRes.headers['set-cookie'])
+    const { cookies } = await registerAndLogin(app, 'user')
 
     const res = await request(app.getHttpServer())
       .get('/tracks/liked')

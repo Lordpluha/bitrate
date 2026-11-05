@@ -3,6 +3,7 @@ import { createServer } from 'node:http'
 
 const verifiedEmails = new Set()
 const releases = new Map()
+const profileLocales = new Map()
 const demoTracks = [
   ['Night Signal', 'ORIGINAL', 'READY', 236, 'night-signal', null],
   ['Afterglow', 'REMASTER', 'NEEDS_CHANGES', 242, 'afterglow', 'Afterglow'],
@@ -59,8 +60,7 @@ function readinessOf(release, recordings) {
   const blockers = [
     ...(recordings.length === 0 ? [{ code: 'NO_TRACKS' }] : []),
     ...(rights.masterOwnerType ? [] : [{ code: 'MASTER_OWNER_MISSING' }]),
-    ...(rights.writersConfirmedAt ? [] : [{ code: 'WRITERS_NOT_CONFIRMED' }]),
-    ...['RECORDING', 'COMPOSITION']
+    ...['RECORDING']
       .filter((rightType) => total(rightType) !== 10_000)
       .map((rightType) => ({
         code: 'SPLITS_INCOMPLETE',
@@ -351,7 +351,13 @@ const server = createServer(async (request, response) => {
         release.rights = {
           masterOwnerType: input.masterOwner?.type ?? null,
           masterOwnerName: input.masterOwner?.name ?? null,
-          writersConfirmedAt: input.writersConfirmed ? now : null,
+          // Optional now: omitted keeps whatever was stored.
+          writersConfirmedAt:
+            input.writersConfirmed === undefined
+              ? (release.rights?.writersConfirmedAt ?? null)
+              : input.writersConfirmed
+                ? now
+                : null,
           // Accuracy is confirmed by submitting, never by the rights form.
           accuracyConfirmedAt: release.rights?.accuracyConfirmedAt ?? null,
         }
@@ -466,6 +472,12 @@ const server = createServer(async (request, response) => {
       attention: [],
       upcoming: [],
       tasks: { open: 0, overdue: 0, next: [] },
+    })
+  if (request.url?.startsWith('/api/v1/artist-workspace/layouts/'))
+    return json(200, {
+      page: request.url.split('/').pop(),
+      tiles: [],
+      updatedAt: null,
     })
   if (request.url === '/api/v1/artist-notifications')
     return json(200, { data: [], unread: 0, seenAt: null })
@@ -593,6 +605,38 @@ const server = createServer(async (request, response) => {
         : 'ce14c750-95c6-4f17-a22a-5a08d0c7f777',
       username: cookie.includes('test-other') ? 'Other artist' : 'Test artist',
       avatar: null,
+    })
+  }
+  if (
+    (request.url === '/api/v1/artist-profile' && request.method === 'GET') ||
+    (request.url === '/api/v1/artist-profile/locale' &&
+      request.method === 'PUT')
+  ) {
+    const other = cookie.includes('artist_access_token=test-other')
+    if (!other && !cookie.includes('artist_access_token=test-valid'))
+      return json(401, { message: 'Unauthorized' })
+    const key = scoped(other ? 'other' : 'artist')
+    if (request.method === 'PUT') {
+      let body = ''
+      for await (const chunk of request) body += chunk
+      profileLocales.set(key, JSON.parse(body).locale)
+    }
+    return json(200, {
+      id: other
+        ? 'de14c750-95c6-4f17-a22a-5a08d0c7f777'
+        : 'ce14c750-95c6-4f17-a22a-5a08d0c7f777',
+      username: other ? 'Other artist' : 'Test artist',
+      email: other ? 'other@example.test' : 'artist@example.test',
+      bio: null,
+      country: null,
+      socials: {},
+      avatar: null,
+      backgroundImage: null,
+      verified: false,
+      twoFactorEnabled: false,
+      emailVerified: true,
+      locale: profileLocales.get(key) ?? 'en',
+      updatedAt: '2026-01-01T00:00:00.000Z',
     })
   }
   if (

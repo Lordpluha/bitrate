@@ -16,6 +16,9 @@ documents are written is covered separately in [skill-writing-lessons](skill-wri
 2. This file.
 3. `design-taste-frontend`. Use its design read, dials and AI-tell lists; where it disagrees
    with the table below, the Bitrate column applies.
+4. `emil-design-eng` (motion only). Use its decision framework (should it animate, purpose,
+   easing, duration), interruptibility and gesture rules; where it disagrees with
+   [Motion](#motion), that section applies.
 
 | `design-taste-frontend` says | Bitrate does |
 |---|---|
@@ -77,17 +80,30 @@ documents are written is covered separately in [skill-writing-lessons](skill-wri
 
 ## Motion
 
-Motion uses `motion` (`motion/react`) and the tokens in `packages/tailwind/src/animations.css`.
+Script-driven motion uses GSAP (`useGSAP` in React), simple feedback and Base UI enter/exit
+use CSS transitions, and both use the tokens in `packages/tailwind/src/animations.css`. The
+tool table is in `apps/docs/docs/brand/motion.md` §3
+([ADR-0069](../../apps/docs/docs/architecture/0069-gsap-web-animation-standard.md)).
 
 - Animate only `transform` and `opacity`; `will-change` only while animating.
-- Scroll reveals use `whileInView` or `IntersectionObserver`, not `scroll` listeners.
-- Continuous input (pointer, scroll progress, scrubbing) goes through `useMotionValue` /
-  `useTransform`, not `useState`.
+- Scroll reveals use CSS view timelines or GSAP `ScrollTrigger`, not `scroll` listeners.
+- Continuous input (pointer, scroll progress, scrubbing) goes through `gsap.quickTo` or
+  `ScrollTrigger` scrub, not `useState`.
 - Lists enter staggered (about 80 ms per item), short distance (about 12px), ease-out curve
   such as `cubic-bezier(0.16, 1, 0.3, 1)`.
 - Hover and press: 200-300 ms; press feedback `scale(0.98)`.
 - `backdrop-blur` only on fixed or sticky surfaces (player bar, navigation, overlays).
 - `prefers-reduced-motion` turns movement into a fade or nothing.
+
+`emil-design-eng` is a Bitrate adaptation: its examples are already GSAP or CSS (ADR-0069),
+press feedback is `scale(0.98)` and `br-review` owns the review format. What it still leaves
+to this section:
+
+| `emil-design-eng` says | Bitrate does |
+|---|---|
+| Durations: dropdowns 150-250 ms, modals 200-500 ms | The motion guide's tokens (`--motion-fast`, `--motion-base`, `--motion-emphasis`) win where they differ. |
+| Register a `CustomEase` when no named ease fits | Use the motion guide's GSAP ease names first; a reused curve also goes to `packages/tailwind/src/animations.css` for CSS. |
+| Web recipes everywhere | `apps/mobile` uses Reanimated with `useReducedMotion` (see `mobile-rules.md`); the GSAP engine in `apps/web-player/src/views/LandingView` is explanatory motion, so longer durations are allowed there. |
 
 ## States and interaction
 
@@ -128,7 +144,7 @@ to review.
 
 ## Left out on purpose
 
-Python-style randomisation, AIDA landing structure, GSAP ScrollTrigger recipes, font and icon
+Python-style randomisation, AIDA landing structure, font and icon
 library swaps, fixed hex palettes, `picsum.photos` imagery, glass and "double-bezel" cards as
 a default, CRT/brutalist effects and floating pill navigation. Each conflicts with the token
 system, the DS-only rule or the player's information density.
