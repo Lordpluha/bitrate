@@ -423,7 +423,14 @@ services:
       - run
       - --token
       - ${CLOUDFLARE_TUNNEL_TOKEN:?CLOUDFLARE_TUNNEL_TOKEN is required}
+    # The tunnel's ingress lives in the Cloudflare dashboard (token-managed), not here.
+    # admin.<domain> MUST point at the edge nginx -- service `https://nginx:443` with
+    # Origin Server Name / HTTP Host Header `admin.<domain>` -- never at `admin:3005`.
+    # Only nginx routes /api/v1/admin/* and /api/v1/health/* to admin-api
+    # (infra/nginx/snippets/admin-routes.conf); the admin container is a static SPA
+    # server and answers every POST with 405, which is how operator login broke.
     depends_on:
+      - nginx
       - admin
     networks:
       - bitrate-network
