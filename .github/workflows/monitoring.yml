@@ -28,3 +28,5 @@ permissions:
 jobs:
   monitoring:
     uses: $/.github/workflows/monitoring_reusable.yml
+    # Repository secrets only: the health probe needs the Cloudflare Access service token.
+    secrets: inherit

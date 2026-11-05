@@ -423,7 +423,15 @@ services:
       - run
       - --token
       - ${CLOUDFLARE_TUNNEL_TOKEN:?CLOUDFLARE_TUNNEL_TOKEN is required}
+    # The tunnel's ingress lives in the Cloudflare dashboard (token-managed), not here.
+    # admin.<domain> MUST point at `http://nginx:8081` -- the internal, unpublished
+    # listener in infra/nginx/templates/prod.conf.template -- never at `admin:3005`.
+    # Only nginx routes /api/v1/admin/* and /api/v1/health/* to admin-api
+    # (infra/nginx/snippets/admin-routes.conf); the admin container is a static SPA
+    # server and answers every POST with 405, which is how operator login broke.
+    # The public 443 no longer serves admin.<domain> at all, so Access cannot be bypassed.
     depends_on:
+      - nginx
       - admin
     networks:
       - bitrate-network
