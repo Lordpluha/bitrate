@@ -601,6 +601,11 @@ jobs:
             printf '  StrictHostKeyChecking yes\n'
             printf '  BatchMode yes\n'
             printf '  ConnectTimeout 15\n'
+            # Without keepalives a connection that drops mid-deploy is never noticed by
+            # the runner: the v1.0.0 deploy sat "in progress" for 20+ minutes while the
+            # server side had long gone. 15s x 4 turns a dead link into an error in ~1 min.
+            printf '  ServerAliveInterval 15\n'
+            printf '  ServerAliveCountMax 4\n'
           } > /home/runner/.ssh/config
 
           install -m 600 /dev/null /home/runner/.ssh/known_hosts
@@ -870,6 +875,9 @@ jobs:
       # container's boot — a throwaway container needs nothing running but the database.
       - name: Deploy -- pull images, migrate, restart
         if: ${{ inputs.run-deploy }}
+        # A normal deploy is 1-9 minutes. The step gets its own ceiling so a hang fails
+        # here, loudly, instead of eating the whole job budget.
+        timeout-minutes: 20
         env:
           DEPLOY_IMAGE_TAG: ${{ steps.image-tag.outputs.tag }}
           REF_NAME: ${{ github.ref_name }}
@@ -900,6 +908,13 @@ jobs:
           # cannot answer it, so the run aborts unless --yes is passed.
           YES=""
           if "$TASK_BIN" --help 2>&1 | grep -q -- '--yes'; then YES="--yes"; fi
+
+          # Ignore SIGHUP. If the SSH session drops, sshd hangs up on this shell and,
+          # without this, takes `docker compose up` down with it halfway through: the
+          # v1.0.0 release left every new container in `Created` and production on 502
+          # until someone ran `up -d` by hand. An ignored signal is inherited across
+          # exec, so task and compose finish the deploy even with nobody listening.
+          trap '' HUP
 
           "$TASK_BIN" $YES prod:deploy
           REMOTE

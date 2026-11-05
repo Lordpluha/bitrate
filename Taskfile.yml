@@ -296,6 +296,22 @@ tasks:
       # provided migrations stay additive.
       - task: prod:migrate
       - cmd: '{{.DC_PROD}} up -d --no-build'
+      # `up -d` can exit having created containers it never started: the v1.0.0 release left
+      # every app container in `Created`, nginx found no upstreams, and every host returned
+      # 502 while the deploy looked fine. A second `up -d` starts them (that is what fixed it
+      # by hand); if any are still `Created` after that, fail the deploy instead of leaving
+      # production down behind a green step.
+      - cmd: |
+          if [ -n "$({{.DC_PROD}} ps -a -q --status created)" ]; then
+            echo "Containers left in Created after up -d; starting them again."
+            {{.DC_PROD}} up -d --no-build
+          fi
+          stuck="$({{.DC_PROD}} ps -a -q --status created)"
+          if [ -n "$stuck" ]; then
+            echo "Containers still not started after a second up -d:"
+            {{.DC_PROD}} ps -a --status created
+            exit 1
+          fi
       - cmd: '{{.DC_PROD}} ps'
       # Retention. Last, so the generation this deploy just replaced is what becomes a
       # candidate. Nothing removed these before and the host kept every release forever: four
