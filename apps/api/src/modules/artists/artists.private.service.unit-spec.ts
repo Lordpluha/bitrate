@@ -115,14 +115,14 @@ describe('ArtistsPrivateService', () => {
     expect(result).toBe(artist)
   })
 
-  it('findByEmail should exclude soft-deleted artists', async () => {
+  it('findByEmail matches the address regardless of case and excludes soft-deleted artists', async () => {
     const artist = buildArtist()
     prisma.artist.findFirst.mockResolvedValue(artist)
 
     const result = await service.findByEmail('artist@example.com')
 
     expect(prisma.artist.findFirst).toHaveBeenCalledWith({
-      where: { email: 'artist@example.com', deletedAt: null },
+      where: { email: { equals: 'artist@example.com', mode: 'insensitive' }, deletedAt: null },
     })
     expect(result).toBe(artist)
   })
