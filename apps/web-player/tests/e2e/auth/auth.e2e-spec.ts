@@ -1,4 +1,24 @@
-import { expect, test } from '@playwright/test'
+import { expect, type Page, test } from '@playwright/test'
+
+/** Next streams links before React attaches their client-side navigation handlers. */
+async function followHydratedLink(
+  page: Page,
+  name: string,
+  destination: RegExp,
+) {
+  const link = page.getByRole('link', { name, exact: true })
+  await expect
+    .poll(
+      () =>
+        link.evaluate((element) =>
+          Object.keys(element).some((key) => key.startsWith('__react')),
+        ),
+      { timeout: 15_000 },
+    )
+    .toBe(true)
+  await link.click()
+  await expect(page).toHaveURL(destination, { timeout: 15_000 })
+}
 
 test.describe('authentication pages', () => {
   test('validates the login form without sending an API request', async ({
@@ -22,9 +42,7 @@ test.describe('authentication pages', () => {
   }) => {
     await page.goto('/auth/login')
 
-    await page.getByRole('link', { name: 'Sign up' }).click()
-    // A cold dev server compiles the destination route on this first navigation.
-    await expect(page).toHaveURL(/\/auth\/registration$/, { timeout: 15_000 })
+    await followHydratedLink(page, 'Sign up', /\/auth\/registration$/)
     await expect(
       page.getByRole('heading', {
         name: 'Create your account for free and start listening',
@@ -32,10 +50,11 @@ test.describe('authentication pages', () => {
     ).toBeVisible()
 
     await page.goto('/auth/login')
-    await page.getByRole('link', { name: 'Forgot password?' }).click()
-    await expect(page).toHaveURL(/\/auth\/forgot-password$/, {
-      timeout: 15_000,
-    })
+    await followHydratedLink(
+      page,
+      'Forgot password?',
+      /\/auth\/forgot-password$/,
+    )
   })
 
   test('keeps more sign-in options folded until asked, and locked until the terms are accepted', async ({

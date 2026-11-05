@@ -388,7 +388,7 @@ test('contributor editing rejects a success response for a different participant
   )
   expect(writes).toBe(1)
   await dialog.getByRole('button', { name: 'Cancel', exact: true }).click()
-  await page.reload()
+  await gotoHydrated(page, page.url())
   await expect(
     page.getByRole('heading', { name: 'Updated credit', exact: true }),
   ).toBeVisible()
