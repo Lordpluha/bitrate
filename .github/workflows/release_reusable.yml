@@ -442,8 +442,11 @@ jobs:
                 jq -nc --arg path "${path}" '{path: $path}' >> "${dels}"
                 ;;
               *)
-                jq -nc --arg path "${path}" --arg contents "$(base64 -w0 "${path}")" \
-                      '{path: $path, contents: $contents}' >> "${adds}"
+                # Contents go through stdin, never argv: a single argument is
+                # capped at 128 KiB (MAX_ARG_STRLEN), and a base64 CHANGELOG
+                # outgrows that ("jq: Argument list too long", exit 126).
+                base64 -w0 "${path}" \
+                  | jq -Rsc --arg path "${path}" '{path: $path, contents: .}' >> "${adds}"
                 ;;
             esac
           done < <(git status --porcelain -z)
