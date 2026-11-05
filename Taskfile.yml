@@ -312,6 +312,14 @@ tasks:
             {{.DC_PROD}} ps -a --status created
             exit 1
           fi
+      # The nginx config is bind-mounted, so compose sees no change when infra/nginx changes and
+      # never recreates the container: the image renders templates/ into conf.d/ only at start,
+      # and a synced template sat unapplied until someone restarted nginx by hand. Re-render in
+      # place, validate, then reload -- a graceful reload, no dropped connections. If `nginx -t`
+      # fails the deploy fails here and the running process keeps serving the previous config.
+      - cmd: >-
+          {{.DC_PROD}} exec -T nginx sh -c
+          '/docker-entrypoint.d/20-envsubst-on-templates.sh >/dev/null && nginx -t && nginx -s reload'
       - cmd: '{{.DC_PROD}} ps'
       # Retention. Last, so the generation this deploy just replaced is what becomes a
       # candidate. Nothing removed these before and the host kept every release forever: four
