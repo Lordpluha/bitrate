@@ -3,7 +3,7 @@ import { PrismaService } from '@infra/prisma/prisma.service'
 import { Injectable } from '@nestjs/common'
 import type { Prisma } from '@prisma/client'
 import type { MusicReleasesDto, MusicTracksDto } from './dtos/music-catalogue.dto'
-import { RELEASE_SUMMARY_SELECT } from './releases.select'
+import { RELEASE_SUMMARY_SELECT } from './orm'
 
 @Injectable()
 export class ArtistMusicService {

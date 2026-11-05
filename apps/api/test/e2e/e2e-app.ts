@@ -17,8 +17,10 @@ import { type INestApplication, Module } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
 import { Test, type TestingModule } from '@nestjs/testing'
 import cookieParser from 'cookie-parser'
+import request from 'supertest'
 import { envSchema } from '../../env.schema'
 import { AppController } from '../../src/app.controller'
+import { verifyArtistEmail, verifyUserEmail } from '../helpers/db'
 
 /** Represents the e2e test module. */
 @Module({
@@ -79,4 +81,32 @@ export const getResponseCookies = (value: unknown): string[] => {
   if (Array.isArray(value) && value.every((cookie) => typeof cookie === 'string')) return value
 
   throw new Error('Response did not include valid set-cookie headers')
+}
+
+/** Short random suffix that keeps e2e emails and usernames unique across runs. */
+export const makeRunId = () => Math.random().toString(36).slice(2, 8)
+
+/** Registers a listener or artist with unique credentials, verifies its email and logs it in. */
+export const registerAndLogin = async (
+  app: INestApplication,
+  kind: 'user' | 'artist',
+  runId = makeRunId(),
+) => {
+  const authPath = kind === 'artist' ? '/artists/auth' : '/auth'
+  const creds = {
+    email: `${kind}_${runId}@example.com`,
+    password: 'password123',
+    username: `${kind}_${runId}`,
+    acceptLegal: true,
+    ...(kind === 'artist' && { acceptArtistAgreement: true }),
+  }
+  await request(app.getHttpServer()).post(`${authPath}/registration`).send(creds).expect(201)
+  const verifyEmail = kind === 'artist' ? verifyArtistEmail : verifyUserEmail
+  await verifyEmail(app.get(PrismaService), creds.email)
+  const res = await request(app.getHttpServer())
+    .post(`${authPath}/login`)
+    .send({ email: creds.email, password: creds.password })
+    .expect(201)
+
+  return { cookies: getResponseCookies(res.headers['set-cookie']), runId, ...creds }
 }

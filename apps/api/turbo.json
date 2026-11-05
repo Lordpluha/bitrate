@@ -2,9 +2,13 @@
   "extends": ["//"],
   "tasks": {
     "dev": {
-      "with": ["db:start", "start:dev"]
+      "with": ["db:start", "start:dev", "start:admin:dev"]
     },
     "start:dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "start:admin:dev": {
       "cache": false,
       "persistent": true
     },

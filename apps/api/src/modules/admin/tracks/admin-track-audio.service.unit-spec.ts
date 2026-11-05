@@ -1,13 +1,8 @@
 import type { PrismaService } from '@infra/prisma/prisma.service'
 import type { StorageService } from '@infra/storage/storage.types'
-import { beforeEach, describe, expect, it, jest } from '@jest/globals'
+import { beforeEach, describe, expect, it } from '@jest/globals'
 import { UnsatisfiableRangeError } from '@modules/tracks'
 import { type DeepMockProxy, mockDeep } from 'jest-mock-extended'
-
-/** `AdminTrackAudioService` pulls in `music-metadata` via the `@modules/tracks` barrel
- * (`track-upload.service` -> `track-media.ts`); that package cannot be resolved under
- * Jest, so every spec that reaches it mocks it virtually. */
-jest.mock('music-metadata', () => ({ parseFile: jest.fn() }), { virtual: true })
 
 import { AdminTrackAudioService } from './admin-track-audio.service'
 import { TrackAudioNotAvailableException, TrackNotFoundException } from './errors'

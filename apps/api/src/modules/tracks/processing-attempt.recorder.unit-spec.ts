@@ -4,10 +4,6 @@ import * as Sentry from '@sentry/nestjs'
 import { mockTransaction, type PrismaMock, prismaMock, resetPrismaMock } from '@test/mocks'
 import { ProcessingAttemptRecorder } from './processing-attempt.recorder'
 
-jest.mock('@sentry/nestjs', () => ({
-  captureException: jest.fn(),
-}))
-
 describe('ProcessingAttemptRecorder', () => {
   let recorder: ProcessingAttemptRecorder
   let prisma: PrismaMock

@@ -9,7 +9,7 @@ const BATCH_MAX_IDS = 100
  * here and collapsed by `runBatch`, so a double-click on a row never reports the same entity twice.
  */
 export const BatchIdsSchema = z.object({
-  ids: z.array(z.string().uuid()).min(1).max(BATCH_MAX_IDS),
+  ids: z.array(z.uuid()).min(1).max(BATCH_MAX_IDS),
 })
 
 export class BatchIdsDto extends createZodDto(BatchIdsSchema) {}

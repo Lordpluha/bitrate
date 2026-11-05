@@ -16,22 +16,9 @@ import type {
   UploadReleaseTrackDto,
 } from './dtos/release-media.dto'
 import { RELEASE_ERRORS } from './errors'
+import { TRACK_DRAFT_SELECT } from './orm'
 import { lockOwnedDraft } from './release-draft-lock'
 import { masterColumns, type StoredMaster, storeReleaseMaster } from './release-master'
-
-/** What a workspace shows for an uploaded draft; the storage key never leaves the server. */
-const TRACK_DRAFT_SELECT = {
-  id: true,
-  title: true,
-  version: true,
-  status: true,
-  duration: true,
-  isDemo: true,
-  isrc: true,
-  audioFileName: true,
-  audioSizeBytes: true,
-  waveform: true,
-} as const satisfies Prisma.ArtistTrackDraftSelect
 
 /** The release summary returned by {@link lockOwnedDraft}. */
 type LockedDraft = Awaited<ReturnType<typeof lockOwnedDraft>>

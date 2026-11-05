@@ -1,4 +1,4 @@
-import type { ApiSchemas } from '@bitrate/contracts'
+import type { ApiSchemas } from '@bitrate/contracts/admin'
 import { TAKE_DOWN_REASON_MAX_LENGTH } from '@domain/shared'
 import * as z from 'zod'
 

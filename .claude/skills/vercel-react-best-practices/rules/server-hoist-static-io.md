@@ -71,7 +71,7 @@ export async function GET(request: Request) {
 ```typescript
 // app/api/og/route.tsx
 import { ImageResponse } from 'next/og'
-import { readFileSync } from 'fs'
+import { readFileSync } from 'node:fs'
 import { join } from 'path'
 
 // Synchronous read at module level - blocks only during module init

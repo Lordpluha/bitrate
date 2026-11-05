@@ -20,28 +20,7 @@ import { type Prisma, ReleaseStatus, ReleaseUnpublishedBy } from '@prisma/client
 import type { Queue } from 'bullmq'
 import type { ReleaseDraftVersionDto } from './dtos/release-media.dto'
 import { RELEASE_ERRORS } from './errors'
-import { RELEASE_SUMMARY_SELECT } from './releases.select'
-
-/** What turning a release into catalogue tracks reads. */
-const PUBLISH_SOURCE_SELECT = {
-  ownerArtistId: true,
-  cover: true,
-  trackDrafts: {
-    where: { deletedAt: null },
-    orderBy: [{ position: 'asc' }, { createdAt: 'asc' }, { id: 'asc' }],
-    select: {
-      title: true,
-      duration: true,
-      isrc: true,
-      audioKey: true,
-      audioContentType: true,
-    },
-  },
-  contributors: { orderBy: { id: 'asc' }, select: { artistId: true } },
-  tracks: {
-    select: { position: true, track: { select: { id: true, processingStatus: true } } },
-  },
-} satisfies Prisma.ReleaseSelect
+import { PUBLISH_SOURCE_SELECT, RELEASE_SUMMARY_SELECT } from './orm'
 
 /** A premiere job may fire this early (clock skew between hosts) and still publish. */
 const PREMIERE_EARLY_MS = 5_000

@@ -13,7 +13,7 @@ const sortOrderSchema = z.enum(['asc', 'desc'])
  *
  * ```ts
  * export const ListAdminUsersQuerySchema = paginationQuerySchema
- *   .merge(sortQuerySchema(['username', 'email', 'createdAt']))
+ *   .extend(sortQuerySchema(['username', 'email', 'createdAt']).shape)
  *   .extend({ q: z.string().optional() })
  * ```
  *

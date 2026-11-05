@@ -3,7 +3,7 @@ import { z } from 'zod'
 
 /** The add tracks schema value. */
 export const AddTracksSchema = z.object({
-  trackIds: z.array(z.string().uuid()).min(1),
+  trackIds: z.array(z.uuid()).min(1),
 })
 
 /** Represents the add tracks dto. */

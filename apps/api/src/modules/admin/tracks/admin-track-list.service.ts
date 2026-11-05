@@ -2,17 +2,17 @@ import { DEFAULT_LIMIT, DEFAULT_PAGE } from '@common/pagination'
 import { buildSortOrderBy, type SortInput } from '@common/sort'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import type { AuditContextValue, CsvExport } from '@modules/admin/shared'
-import { openCsvExport, statusWhere } from '@modules/admin/shared'
+import { openCsvExport } from '@modules/admin/shared'
 import { Injectable } from '@nestjs/common'
 import { Prisma } from '@prisma/client'
 import {
   type AdminTrackRow,
   type AdminTracksSortField,
   type ListTracksInput,
-  TRACK_ROW_SELECT,
   type TrackListFilters,
   toAdminTrackRow,
-} from './admin-tracks.select'
+} from './admin-tracks.types'
+import { TRACK_ROW_SELECT, trackListRawWhere, trackListWhere } from './orm'
 import { ADMIN_TRACK_EXPORT_COLUMNS } from './track-export.columns'
 
 /**
@@ -28,32 +28,6 @@ import { ADMIN_TRACK_EXPORT_COLUMNS } from './track-export.columns'
 @Injectable()
 export class AdminTrackListService {
   constructor(private readonly prisma: PrismaService) {}
-
-  /** Builds the shared Prisma `where` clause for counting. */
-  private buildWhere({ processingStatus, status, q }: TrackListFilters) {
-    return {
-      ...statusWhere(status),
-      ...(processingStatus && { processingStatus }),
-      ...(q && { title: { contains: q, mode: 'insensitive' } }),
-    } satisfies Prisma.TrackWhereInput
-  }
-
-  /** Builds the matching raw-SQL `WHERE` fragment for the ordered id query. */
-  private buildRawWhere({ processingStatus, status = 'active', q }: TrackListFilters) {
-    const deletedFragment =
-      status === 'all'
-        ? Prisma.empty
-        : status === 'deactivated'
-          ? Prisma.sql`AND "deletedAt" IS NOT NULL`
-          : Prisma.sql`AND "deletedAt" IS NULL`
-
-    return Prisma.sql`
-      WHERE TRUE
-        ${deletedFragment}
-        ${processingStatus ? Prisma.sql`AND "processingStatus" = ${processingStatus}::"TrackProcessingStatus"` : Prisma.empty}
-        ${q ? Prisma.sql`AND title ILIKE ${`%${q}%`}` : Prisma.empty}
-    `
-  }
 
   /**
    * Lists tracks, paginated. Problem-first by default via the raw-SQL `CASE`
@@ -79,8 +53,8 @@ export class AdminTrackListService {
   }: ListTracksInput) {
     if (sort) return this.findAllSorted({ page, limit, processingStatus, status, q, sort, order })
 
-    const where = this.buildWhere({ processingStatus, status, q })
-    const rawWhere = this.buildRawWhere({ processingStatus, status, q })
+    const where = trackListWhere({ processingStatus, status, q })
+    const rawWhere = trackListRawWhere({ processingStatus, status, q })
     const skip = (page - 1) * limit
 
     const [rows, total] = await Promise.all([
@@ -125,9 +99,9 @@ export class AdminTrackListService {
     staffId: string,
     auditContext: AuditContextValue = {},
   ): Promise<CsvExport> {
-    const where = this.buildWhere({ processingStatus, status, q })
+    const where = trackListWhere({ processingStatus, status, q })
     const total = await this.prisma.track.count({ where })
-    const rawWhere = this.buildRawWhere({ processingStatus, status, q })
+    const rawWhere = trackListRawWhere({ processingStatus, status, q })
 
     return openCsvExport<AdminTrackRow>({
       prisma: this.prisma,
@@ -155,7 +129,7 @@ export class AdminTrackListService {
     sort,
     order,
   }: ListTracksInput) {
-    const where = this.buildWhere({ processingStatus, status, q })
+    const where = trackListWhere({ processingStatus, status, q })
     const [data, total] = await Promise.all([
       this.findSortedPage(where, { sort, order }, (page - 1) * limit, limit),
       this.prisma.track.count({ where }),

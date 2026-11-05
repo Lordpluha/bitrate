@@ -4,6 +4,7 @@ import { PrismaService } from '@infra/prisma/prisma.service'
 import { Injectable } from '@nestjs/common'
 import type { AuditLog, Prisma } from '@prisma/client'
 import type { ListAdminAuditLogsQueryDto } from './dtos'
+import { auditLogListWhere } from './orm'
 
 /** An audit log row with its actor resolved to a display username. */
 type AdminAuditLogRow = AuditLog & { actorUsername: string | null }
@@ -18,21 +19,6 @@ type AdminAuditLogRow = AuditLog & { actorUsername: string | null }
 export class AdminAuditService {
   constructor(private readonly prisma: PrismaService) {}
 
-  /** Builds the shared `where` clause for listing and counting. */
-  private buildWhere({ entityType, entityId, staffId, from, to }: ListAdminAuditLogsQueryDto) {
-    return {
-      ...(entityType && { entityType }),
-      ...(entityId && { entityId }),
-      ...(staffId && { staffId }),
-      ...((from || to) && {
-        createdAt: {
-          ...(from && { gte: from }),
-          ...(to && { lte: to }),
-        },
-      }),
-    } satisfies Prisma.AuditLogWhereInput
-  }
-
   /** Returns the `limit` most recent audit log rows, actor resolved — for the overview dashboard. */
   async findRecent(limit: number): Promise<AdminAuditLogRow[]> {
     const rows = await this.prisma.auditLog.findMany({
@@ -45,7 +31,7 @@ export class AdminAuditService {
   /** Lists audit log rows, paginated, newest first. */
   async findAll(query: ListAdminAuditLogsQueryDto) {
     const { page = DEFAULT_PAGE, limit = DEFAULT_LIMIT, sort, order } = query
-    const where = this.buildWhere(query)
+    const where = auditLogListWhere(query)
     const orderBy = buildSortOrderBy<Prisma.AuditLogOrderByWithRelationInput>({ sort, order }, [
       { createdAt: 'desc' },
       { id: 'desc' },

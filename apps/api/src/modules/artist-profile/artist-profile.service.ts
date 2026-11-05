@@ -24,6 +24,7 @@ import {
   type SetArtistLocaleDto,
   type UpdateArtistProfileDto,
 } from './dtos/artist-profile.dto'
+import { PROFILE_SELECT } from './orm'
 
 const MAX_PROFILE_IMAGE_BYTES = 10 * 1024 * 1024
 
@@ -36,22 +37,6 @@ const IMAGE_FOLDERS = {
   avatar: 'artists/avatars',
   background: 'artists/backgrounds',
 } as const satisfies Record<ProfileImageKind, PublicImageFolder>
-
-const PROFILE_SELECT = {
-  id: true,
-  username: true,
-  email: true,
-  bio: true,
-  country: true,
-  socials: true,
-  avatar: true,
-  backgroundImage: true,
-  verified: true,
-  twoFactorEnabled: true,
-  emailVerifiedAt: true,
-  locale: true,
-  updatedAt: true,
-} as const satisfies Prisma.ArtistSelect
 
 type ProfileRecord = Prisma.ArtistGetPayload<{ select: typeof PROFILE_SELECT }>
 

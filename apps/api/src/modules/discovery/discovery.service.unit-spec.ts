@@ -1,6 +1,6 @@
 import type { CacheService } from '@infra/cache/cache.service'
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals'
-import { PUBLIC_ARTIST_SELECT } from '@modules/artists/artists.select'
+import { PUBLIC_ARTIST_SELECT } from '@modules/artists/orm'
 import type { Prisma } from '@prisma/client'
 import { type PrismaMock, prismaMock, resetPrismaMock } from '@test/mocks'
 import { mockDeep } from 'jest-mock-extended'

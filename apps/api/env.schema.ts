@@ -12,6 +12,11 @@ export const envSchema = z
   .object({
     NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
     PORT: z.coerce.number().default(3000),
+    /**
+     * Port of the operator process (`main.admin.ts`, #458); `PORT` belongs to the public API. Not
+     * `ADMIN_PORT`: the admin panel's dev server already reads that name.
+     */
+    ADMIN_API_PORT: z.coerce.number().int().min(1).max(65_535).default(3007),
     TRUST_PROXY_HOPS: z.coerce.number().int().min(0).max(5).default(0),
     HEALTH_CHECK_TIMEOUT_MS: z.coerce.number().int().min(100).max(10_000).default(2_000),
     METRICS_TOKEN: z.string().min(32).optional(),

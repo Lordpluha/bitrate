@@ -2,13 +2,9 @@ import { PrismaService } from '@infra/prisma/prisma.service'
 import { assertGrantable, normalizePermissions, type Permission } from '@modules/admin-auth'
 import { Injectable, NotFoundException } from '@nestjs/common'
 import type { Prisma } from '@prisma/client'
-import {
-  ADMIN_STAFF_SAFE_SELECT,
-  ROLE_GRANT_SELECT,
-  STAFF_ROLE_CHECK_SELECT,
-} from './admin-staff.select'
 import type { AssignStaffRoleDto, UpdateStaffPermissionsDto } from './dtos'
 import { StaffNotFoundException, SuperAdminPermissionsException } from './errors'
+import { ADMIN_STAFF_SAFE_SELECT, ROLE_GRANT_SELECT, STAFF_ROLE_CHECK_SELECT } from './orm'
 import {
   assertNotLastActiveAdmin,
   isBuiltInAdmin,

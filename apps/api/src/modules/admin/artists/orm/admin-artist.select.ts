@@ -47,3 +47,6 @@ export const ADMIN_ARTIST_EXPORT_SELECT = {
   deletedAt: true,
   createdAt: true,
 } as const satisfies Prisma.ArtistSelect
+
+/** What the existence/state pre-checks read — never the credential columns. */
+export const EXISTENCE_SELECT = { id: true, deletedAt: true } as const satisfies Prisma.ArtistSelect

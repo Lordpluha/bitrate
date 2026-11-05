@@ -3,7 +3,7 @@ import type { StorageService } from '@infra/storage/storage.types'
 import { beforeEach, describe, expect, it, jest } from '@jest/globals'
 import { type PrismaMock, prismaMock, resetPrismaMock } from '@test/mocks'
 import { buildUser } from './__tests__/fixtures/users.fixtures'
-import { PUBLIC_USER_SELECT, SELF_USER_SELECT } from './users.select'
+import { PUBLIC_USER_SELECT, SELF_USER_SELECT } from './orm'
 import { UsersService } from './users.service'
 
 const PNG = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0, 0, 0, 0])

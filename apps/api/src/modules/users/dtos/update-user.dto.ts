@@ -3,10 +3,10 @@ import { z } from 'zod'
 
 /** The update user schema value. */
 export const UpdateUserSchema = z.object({
-  username: z.string().min(3, { message: 'Username must be at least 3 characters long' }),
+  username: z.string().min(3, { error: 'Username must be at least 3 characters long' }),
   description: z
     .string()
-    .max(500, { message: 'Description must not exceed 500 characters' })
+    .max(500, { error: 'Description must not exceed 500 characters' })
     .optional(),
 })
 

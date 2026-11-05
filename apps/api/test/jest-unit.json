@@ -21,6 +21,8 @@
   "coverageDirectory": "../coverage",
   "testEnvironment": "node",
   "moduleNameMapper": {
+    "^@sentry/nestjs$": "<rootDir>/../test/mocks/sentry-nestjs.ts",
+    "^music-metadata$": "<rootDir>/../test/__mocks__/music-metadata.ts",
     "^src/(.*)$": "<rootDir>/$1",
     "^@modules/(.*)$": "<rootDir>/modules/$1",
     "^@infra/(.*)$": "<rootDir>/infra/$1",

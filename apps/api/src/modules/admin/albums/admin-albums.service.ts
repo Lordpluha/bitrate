@@ -4,7 +4,6 @@ import { PrismaService } from '@infra/prisma/prisma.service'
 import type { AdminResourceStatus, AuditContextValue } from '@modules/admin/shared'
 import {
   runTakeDownTransition,
-  statusWhere,
   type TakeDownActor,
   type TakeDownDirection,
 } from '@modules/admin/shared'
@@ -17,6 +16,7 @@ import {
   AlbumNotDeletedException,
   AlbumNotFoundException,
 } from './errors'
+import { ALBUM_DETAIL_SELECT, ALBUM_ROW_SELECT, albumListWhere } from './orm'
 
 /** One of the album list's allowed sort fields. */
 type AdminAlbumsSortField = (typeof ADMIN_ALBUMS_SORT_FIELDS)[number]
@@ -30,37 +30,6 @@ type ListAlbumsInput = {
   q?: string
 } & SortInput<AdminAlbumsSortField>
 
-/** The columns the list, detail and take-down responses share, with the artist's name joined. */
-const ALBUM_ROW_SELECT = {
-  id: true,
-  title: true,
-  cover: true,
-  artistId: true,
-  artist: { select: { username: true } },
-  type: true,
-  totalTracks: true,
-  releaseDate: true,
-  deletedAt: true,
-  createdAt: true,
-  updatedAt: true,
-} as const satisfies Prisma.AlbumSelect
-
-/** The row columns plus the metadata and ordered tracks only the detail page shows. */
-const ALBUM_DETAIL_SELECT = {
-  ...ALBUM_ROW_SELECT,
-  description: true,
-  label: true,
-  copyright: true,
-  tracks: {
-    orderBy: [{ discNumber: 'asc' }, { trackNumber: 'asc' }],
-    select: {
-      trackNumber: true,
-      discNumber: true,
-      track: { select: { id: true, title: true, processingStatus: true, deletedAt: true } },
-    },
-  },
-} as const satisfies Prisma.AlbumSelect
-
 type AlbumRowRecord = Prisma.AlbumGetPayload<{ select: typeof ALBUM_ROW_SELECT }>
 type AlbumDetailRecord = Prisma.AlbumGetPayload<{ select: typeof ALBUM_DETAIL_SELECT }>
 
@@ -68,15 +37,6 @@ type AlbumDetailRecord = Prisma.AlbumGetPayload<{ select: typeof ALBUM_DETAIL_SE
 @Injectable()
 export class AdminAlbumsService {
   constructor(private readonly prisma: PrismaService) {}
-
-  /** Builds the shared `where` clause for listing and counting. */
-  private buildWhere({ status, artistId, q }: Omit<ListAlbumsInput, 'page' | 'limit'>) {
-    return {
-      ...statusWhere(status),
-      ...(artistId && { artistId }),
-      ...(q && { title: { contains: q, mode: 'insensitive' } }),
-    } satisfies Prisma.AlbumWhereInput
-  }
 
   /** Flattens an album (with its artist joined) into the operator row shape. */
   private toRow({ artist, ...album }: AlbumRowRecord): AdminAlbumEntity {
@@ -93,7 +53,7 @@ export class AdminAlbumsService {
     sort,
     order,
   }: ListAlbumsInput) {
-    const where = this.buildWhere({ status, artistId, q })
+    const where = albumListWhere({ status, artistId, q })
     const orderBy = buildSortOrderBy<Prisma.AlbumOrderByWithRelationInput>({ sort, order }, [
       { createdAt: 'desc' },
       { id: 'desc' },

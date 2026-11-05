@@ -8,18 +8,16 @@ const catalogueQuery = paginationQuerySchema.extend({
   sort: z.enum(['updated', 'title', 'oldest']).default('updated'),
 })
 
-export const MusicTracksSchema = catalogueQuery
-  .extend({
-    status: z.enum(ArtistTrackStatus).optional(),
-    type: z.enum(ArtistTrackVersion).optional(),
-  })
-  .strict()
-export const MusicReleasesSchema = catalogueQuery
-  .extend({
-    status: z.enum(ReleaseStatus).optional(),
-    type: z.enum(AlbumType).optional(),
-  })
-  .strict()
+export const MusicTracksSchema = z.strictObject({
+  ...catalogueQuery.shape,
+  status: z.enum(ArtistTrackStatus).optional(),
+  type: z.enum(ArtistTrackVersion).optional(),
+})
+export const MusicReleasesSchema = z.strictObject({
+  ...catalogueQuery.shape,
+  status: z.enum(ReleaseStatus).optional(),
+  type: z.enum(AlbumType).optional(),
+})
 
 export class MusicTracksDto extends createZodDto(MusicTracksSchema) {}
 export class MusicReleasesDto extends createZodDto(MusicReleasesSchema) {}

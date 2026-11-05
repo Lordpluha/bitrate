@@ -1,4 +1,5 @@
 import { type ReleaseCreditRole, type ReleaseMasterOwner, ReleaseRightType } from '@prisma/client'
+import type { ReadinessRecord } from './orm'
 
 /** 10,000 basis points is 100%; each split right must be fully allocated before submission. */
 export const FULL_SHARE_BASIS_POINTS = 10_000
@@ -71,4 +72,15 @@ function splitTotal(splits: ReleaseReadinessInput['splits'], rightType: ReleaseR
   return splits
     .filter((split) => split.rightType === rightType)
     .reduce((total, split) => total + split.shareBasisPoints, 0)
+}
+
+/** Published catalogue tracks already have processed audio; drafts need an uploaded master. */
+export function readinessFromRecord(record: ReadinessRecord) {
+  return {
+    ...record,
+    tracks: [
+      ...record.trackDrafts.map(({ id, isrc, audioKey }) => ({ id, isrc, hasAudio: !!audioKey })),
+      ...record.tracks.map(({ track }) => ({ ...track, hasAudio: true })),
+    ],
+  }
 }

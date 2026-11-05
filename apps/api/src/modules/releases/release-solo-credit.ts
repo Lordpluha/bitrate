@@ -1,6 +1,6 @@
 import { type Prisma, ReleaseCreditRole } from '@prisma/client'
+import { RELEASE_CONTRIBUTOR_SELECT } from './orm'
 import { FULL_SHARE_BASIS_POINTS, SPLIT_RIGHT_TYPES } from './release-readiness'
-import { RELEASE_CONTRIBUTOR_SELECT } from './releases.select'
 
 /** Everything a solo artist does on a release: performs, writes the music and the lyrics. */
 const SOLO_ROLES = [

@@ -5,8 +5,8 @@ import { ForbiddenException } from '@nestjs/common'
 import { Test, type TestingModule } from '@nestjs/testing'
 import { prismaMock, resetPrismaMock } from '@test/mocks'
 import { buildArtist } from './__tests__/fixtures/artists.fixtures'
-import { PUBLIC_ARTIST_SELECT } from './artists.select'
 import { ArtistsService } from './artists.service'
+import { PUBLIC_ARTIST_SELECT } from './orm'
 
 const makeCacheServiceMock = () =>
   ({

@@ -1,6 +1,7 @@
 import { pipeToResponse } from '@common/utils/stream'
+import type { ArtistEntity } from '@modules/artists/entities'
 import { ArtistAuth } from '@modules/artists-auth/artists-auth.guard'
-import type { ArtistAuthRequest } from '@modules/artists-auth/types'
+import { CurrentArtist } from '@modules/artists-auth/decorators/current-artist.decorator'
 import {
   Body,
   Controller,
@@ -14,7 +15,6 @@ import {
   ParseUUIDPipe,
   Post,
   Put,
-  Req,
   Res,
   UploadedFile,
 } from '@nestjs/common'
@@ -61,12 +61,12 @@ export class ReleaseMediaController {
   @ReleaseCoverInterceptor()
   @Put(':id/cover')
   uploadCover(
-    @Req() request: ArtistAuthRequest,
+    @CurrentArtist() artist: ArtistEntity,
     @Param('id', ParseUUIDPipe) id: string,
     @UploadedFile() file: Express.Multer.File | undefined,
     @Body(new ZodValidationPipe(UploadReleaseCoverSchema)) input: UploadReleaseCoverDto,
   ) {
-    return this.covers.uploadCover(request.artist.id, id, file, input)
+    return this.covers.uploadCover(artist.id, id, file, input)
   }
 
   @RemoveReleaseCoverSwagger()
@@ -74,11 +74,11 @@ export class ReleaseMediaController {
   @Header('Cache-Control', 'private, no-store')
   @Delete(':id/cover')
   removeCover(
-    @Req() request: ArtistAuthRequest,
+    @CurrentArtist() artist: ArtistEntity,
     @Param('id', ParseUUIDPipe) id: string,
     @Body(new ZodValidationPipe(ReleaseDraftVersionSchema)) input: ReleaseDraftVersionDto,
   ) {
-    return this.covers.removeCover(request.artist.id, id, input)
+    return this.covers.removeCover(artist.id, id, input)
   }
 
   @UploadReleaseTrackSwagger()
@@ -87,12 +87,12 @@ export class ReleaseMediaController {
   @ReleaseAudioInterceptor()
   @Post(':id/tracks')
   addTrack(
-    @Req() request: ArtistAuthRequest,
+    @CurrentArtist() artist: ArtistEntity,
     @Param('id', ParseUUIDPipe) id: string,
     @UploadedFile() file: Express.Multer.File | undefined,
     @Body(new ZodValidationPipe(UploadReleaseTrackSchema)) input: UploadReleaseTrackDto,
   ) {
-    return this.media.addTrack(request.artist.id, id, file, input)
+    return this.media.addTrack(artist.id, id, file, input)
   }
 
   @ReplaceReleaseTrackAudioSwagger()
@@ -101,13 +101,13 @@ export class ReleaseMediaController {
   @ReleaseAudioInterceptor()
   @Put(':id/tracks/:trackId/audio')
   replaceTrackAudio(
-    @Req() request: ArtistAuthRequest,
+    @CurrentArtist() artist: ArtistEntity,
     @Param('id', ParseUUIDPipe) id: string,
     @Param('trackId', ParseUUIDPipe) trackId: string,
     @UploadedFile() file: Express.Multer.File | undefined,
     @Body(new ZodValidationPipe(ReleaseDraftVersionSchema)) input: ReleaseDraftVersionDto,
   ) {
-    return this.media.replaceTrackAudio(request.artist.id, id, trackId, file, input)
+    return this.media.replaceTrackAudio(artist.id, id, trackId, file, input)
   }
 
   @ReorderReleaseTracksSwagger()
@@ -116,11 +116,11 @@ export class ReleaseMediaController {
   @HttpCode(200)
   @Put(':id/tracks/order')
   reorderTracks(
-    @Req() request: ArtistAuthRequest,
+    @CurrentArtist() artist: ArtistEntity,
     @Param('id', ParseUUIDPipe) id: string,
     @Body(new ZodValidationPipe(ReorderReleaseTracksSchema)) input: ReorderReleaseTracksDto,
   ) {
-    return this.media.reorderTracks(request.artist.id, id, input)
+    return this.media.reorderTracks(artist.id, id, input)
   }
 
   @RemoveReleaseTrackSwagger()
@@ -129,25 +129,25 @@ export class ReleaseMediaController {
   @HttpCode(200)
   @Delete(':id/tracks/:trackId')
   removeTrack(
-    @Req() request: ArtistAuthRequest,
+    @CurrentArtist() artist: ArtistEntity,
     @Param('id', ParseUUIDPipe) id: string,
     @Param('trackId', ParseUUIDPipe) trackId: string,
     @Body(new ZodValidationPipe(ReleaseDraftVersionSchema)) input: ReleaseDraftVersionDto,
   ) {
-    return this.media.removeTrack(request.artist.id, id, trackId, input)
+    return this.media.removeTrack(artist.id, id, trackId, input)
   }
 
   @ReleaseTrackAudioSwagger()
   @ArtistAuth()
   @Get(':id/tracks/:trackId/audio')
   async trackAudio(
-    @Req() request: ArtistAuthRequest,
+    @CurrentArtist() artist: ArtistEntity,
     @Param('id', ParseUUIDPipe) id: string,
     @Param('trackId', ParseUUIDPipe) trackId: string,
     @Headers('range') range: string | undefined,
     @Res() response: Response,
   ) {
-    const audio = await this.media.audioStream(request.artist.id, id, trackId, range)
+    const audio = await this.media.audioStream(artist.id, id, trackId, range)
     response.status(audio.contentRange ? 206 : 200)
     response.set({
       'Content-Type': audio.contentType ?? 'application/octet-stream',

@@ -8,10 +8,6 @@ import { Test, type TestingModule } from '@nestjs/testing'
 import { StubAdminAuthGuard } from '@test/mocks/stub-admin-auth.guard'
 import request from 'supertest'
 
-/** `TrackUploadService` pulls in `music-metadata` via `track-media.ts`; that package
- * cannot be resolved under Jest, so every spec that reaches it mocks it virtually. */
-jest.mock('music-metadata', () => ({ parseFile: jest.fn() }), { virtual: true })
-
 import {
   buildAdminTrackRow,
   buildTrackProcessingAttempt,

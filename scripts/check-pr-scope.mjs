@@ -29,7 +29,8 @@ const MAX_LINES = 3000
 const IGNORED = [
   /(^|\/)pnpm-lock\.yaml$/,
   /(^|\/)Cargo\.lock$/,
-  /^packages\/contracts\/src\/api\/v\d+\.ts$/,
+  // The generated public and operator contracts (v1.ts, admin-v1.ts; ADR-0068).
+  /^packages\/contracts\/src\/api\/(admin-)?v\d+\.ts$/,
   /\.gen\.ts$/,
   /(^|\/)__snapshots__\//,
   /\.snap$/,

@@ -13,6 +13,7 @@ import {
 import { parseRendition } from './cmaf-manifest'
 import { resolveRange } from './cmaf-range'
 import { PLAYBACK_ERRORS } from './errors'
+import { PUBLIC_TRACK_WHERE } from './orm'
 import { pacedChunks } from './paced-stream'
 import { planRenditionResponse, type RenditionSegment, renditionSegments } from './playback-segment'
 import { type AuthorizedPlaybackSession, PlaybackSessionService } from './playback-session.service'
@@ -23,7 +24,6 @@ import {
   type RenditionStream,
   type TrackManifestPayload,
 } from './track-playback.types'
-import { PUBLIC_TRACK_WHERE } from './track-visibility'
 
 /** Input for {@link TrackPlaybackService.openSession}. */
 export type OpenPlaySessionInput = {

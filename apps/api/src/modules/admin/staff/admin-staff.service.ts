@@ -6,13 +6,9 @@ import type { Permission } from '@modules/admin-auth'
 import { TokenService } from '@modules/tokens/token.service'
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common'
 import type { Prisma } from '@prisma/client'
-import {
-  ADMIN_STAFF_SAFE_SELECT,
-  ROLE_GRANT_SELECT,
-  STAFF_ROLE_CHECK_SELECT,
-} from './admin-staff.select'
 import type { ADMIN_STAFF_SORT_FIELDS, CreateStaffDto } from './dtos'
 import { StaffNotFoundException } from './errors'
+import { ADMIN_STAFF_SAFE_SELECT, ROLE_GRANT_SELECT, STAFF_ROLE_CHECK_SELECT } from './orm'
 import {
   assertNotLastActiveAdmin,
   isBuiltInAdmin,

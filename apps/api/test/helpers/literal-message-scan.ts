@@ -9,7 +9,7 @@
  *      whose first argument is a string literal, a template literal (substituted or not), or an
  *      object literal with a literal `message`. `throw` is not required.
  *  (b) `super(<same shapes>)` inside a class whose `extends` clause names such an exception.
- *  (c) a literal `message:` property in a zod schema option object: files importing `zod`, or
+ *  (c) a literal `error:` (or deprecated `message:`) property in a zod schema option object: files importing `zod`, or
  *      files under `dtos/` / named `*.dto.ts` / `*schema*.ts`.
  *
  * A text starting with `errors.` or `validation.` is a key and never flagged; so is any argument
@@ -29,7 +29,10 @@ const KEY_PATTERN = /^(errors|validation)\./
 /** Names that are HttpException subclasses by convention. */
 const EXCEPTION_NAME = /Exception$/
 
-/** DTO and schema files, where `message:` is a validation message. */
+/** Zod option keys carrying a validation message: Zod 4's `error` and the deprecated `message`. */
+const ZOD_MESSAGE_KEYS = new Set(['error', 'message'])
+
+/** DTO and schema files, where `message:` / `error:` is a validation message. */
 const DTO_FILE = /(?:^|\/)(?:dtos?|[^/]*\.dtos?|[^/]*schemas?)(?:\/|\.ts$)/i
 
 /** Specs, fixtures, mocks and the dictionaries are not user-facing source. */
@@ -140,7 +143,7 @@ export function findLiteralMessages(
       zodFile &&
       ts.isPropertyAssignment(node) &&
       (ts.isIdentifier(node.name) || ts.isStringLiteral(node.name)) &&
-      node.name.text === 'message'
+      ZOD_MESSAGE_KEYS.has(node.name.text)
     ) {
       const initializer = node.initializer
       if (

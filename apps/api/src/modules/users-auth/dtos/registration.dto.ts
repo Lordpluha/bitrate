@@ -7,10 +7,10 @@ import { LoginSchema } from './login.dto'
 export const RegistrationSchema = LoginSchema.extend({
   username: z
     .string()
-    .min(3, { message: 'Username must be at least 3 characters long' })
-    .max(20, { message: 'Username must not exceed 20 characters' }),
+    .min(3, { error: 'Username must be at least 3 characters long' })
+    .max(20, { error: 'Username must not exceed 20 characters' }),
   acceptLegal: z.literal(true, {
-    message: 'You must accept the Terms of Use and Community Guidelines',
+    error: 'You must accept the Terms of Use and Community Guidelines',
   }),
 })
 

@@ -11,8 +11,8 @@ export const ADMIN_STAFF_SORT_FIELDS = [
   'createdAt',
 ] as const satisfies readonly Prisma.StaffScalarFieldEnum[]
 
-export const ListAdminStaffQuerySchema = paginationQuerySchema.merge(
-  sortQuerySchema(ADMIN_STAFF_SORT_FIELDS),
+export const ListAdminStaffQuerySchema = paginationQuerySchema.extend(
+  sortQuerySchema(ADMIN_STAFF_SORT_FIELDS).shape,
 )
 
 export class ListAdminStaffQueryDto extends createZodDto(ListAdminStaffQuerySchema) {}

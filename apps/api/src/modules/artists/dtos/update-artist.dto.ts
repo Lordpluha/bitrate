@@ -5,8 +5,8 @@ import { z } from 'zod'
 export const UpdateArtistSchema = z.object({
   username: z.string().min(3).max(50).optional(),
   bio: z.string().max(500).optional(),
-  avatar: z.string().url().optional(),
-  backgroundImage: z.string().url().optional(),
+  avatar: z.url().optional(),
+  backgroundImage: z.url().optional(),
 })
 
 /** Represents the update artist dto. */

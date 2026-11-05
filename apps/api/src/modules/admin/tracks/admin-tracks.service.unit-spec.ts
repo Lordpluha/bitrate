@@ -4,10 +4,6 @@ import type { Prisma } from '@prisma/client'
 import { type PrismaMock, prismaMock, resetPrismaMock } from '@test/mocks'
 import { type DeepMockProxy, mockDeep } from 'jest-mock-extended'
 
-/** `TrackUploadService` pulls in `music-metadata` via `track-media.ts`; that package
- * cannot be resolved under Jest, so every spec that reaches it mocks it virtually. */
-jest.mock('music-metadata', () => ({ parseFile: jest.fn() }), { virtual: true })
-
 import {
   buildTrack,
   buildTrackProcessingAttempt,

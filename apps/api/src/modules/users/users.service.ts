@@ -11,7 +11,7 @@ import type { StorageService } from '@infra/storage/storage.types'
 import { Inject, Injectable } from '@nestjs/common'
 import type { Prisma } from '@prisma/client'
 import type { UserEntity } from './entities'
-import { PUBLIC_USER_SELECT, SELF_USER_SELECT } from './users.select'
+import { PUBLIC_USER_SELECT, SELF_USER_SELECT } from './orm'
 
 /** Largest avatar accepted, in bytes. */
 export const MAX_AVATAR_BYTES = 5 * 1024 * 1024

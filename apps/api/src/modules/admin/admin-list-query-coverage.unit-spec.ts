@@ -1,4 +1,4 @@
-import { describe, expect, it, jest } from '@jest/globals'
+import { describe, expect, it } from '@jest/globals'
 import { AdminAlbumsController } from '@modules/admin/albums/admin-albums.controller'
 import { ListAdminAlbumsQuerySchema } from '@modules/admin/albums/dtos'
 import { AdminArtistsController } from '@modules/admin/artists/admin-artists.controller'
@@ -36,10 +36,6 @@ import type { ZodType } from 'zod'
  * and is what every `ApiQuery`/`ApiParam`/`ApiHeader` decorator writes its metadata under.
  */
 const API_PARAMETERS_METADATA_KEY = 'swagger/apiParameters'
-
-/** `TrackUploadService` pulls in `music-metadata` via `track-media.ts`; that package cannot
- * be resolved under Jest, so every spec that reaches it mocks it virtually. */
-jest.mock('music-metadata', () => ({ parseFile: jest.fn() }), { virtual: true })
 
 type SwaggerQueryParameter = { in?: string; name?: string }
 

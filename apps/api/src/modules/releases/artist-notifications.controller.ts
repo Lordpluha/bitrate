@@ -1,6 +1,7 @@
+import type { ArtistEntity } from '@modules/artists/entities'
 import { ArtistAuth } from '@modules/artists-auth/artists-auth.guard'
-import type { ArtistAuthRequest } from '@modules/artists-auth/types'
-import { Body, Controller, Get, Header, HttpCode, Post, Put, Req } from '@nestjs/common'
+import { CurrentArtist } from '@modules/artists-auth/decorators/current-artist.decorator'
+import { Body, Controller, Get, Header, HttpCode, Post, Put } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
 import { ZodValidationPipe } from 'nestjs-zod'
 import { ArtistNotificationsService } from './artist-notifications.service'
@@ -24,8 +25,8 @@ export class ArtistNotificationsController {
   @ArtistAuth()
   @Header('Cache-Control', 'private, no-store')
   @Get()
-  list(@Req() request: ArtistAuthRequest) {
-    return this.notifications.list(request.artist.id)
+  list(@CurrentArtist() artist: ArtistEntity) {
+    return this.notifications.list(artist.id)
   }
 
   @MarkArtistNotificationsSeenSwagger()
@@ -33,16 +34,16 @@ export class ArtistNotificationsController {
   @Header('Cache-Control', 'private, no-store')
   @HttpCode(200)
   @Post('seen')
-  markSeen(@Req() request: ArtistAuthRequest) {
-    return this.notifications.markSeen(request.artist.id)
+  markSeen(@CurrentArtist() artist: ArtistEntity) {
+    return this.notifications.markSeen(artist.id)
   }
 
   @GetNotificationPreferencesSwagger()
   @ArtistAuth()
   @Header('Cache-Control', 'private, no-store')
   @Get('preferences')
-  preferences(@Req() request: ArtistAuthRequest) {
-    return this.notifications.preferences(request.artist.id)
+  preferences(@CurrentArtist() artist: ArtistEntity) {
+    return this.notifications.preferences(artist.id)
   }
 
   @UpdateNotificationPreferencesSwagger()
@@ -50,10 +51,10 @@ export class ArtistNotificationsController {
   @Header('Cache-Control', 'private, no-store')
   @Put('preferences')
   updatePreferences(
-    @Req() request: ArtistAuthRequest,
+    @CurrentArtist() artist: ArtistEntity,
     @Body(new ZodValidationPipe(UpdateNotificationPreferencesSchema))
     input: UpdateNotificationPreferencesDto,
   ) {
-    return this.notifications.updatePreferences(request.artist.id, input)
+    return this.notifications.updatePreferences(artist.id, input)
   }
 }

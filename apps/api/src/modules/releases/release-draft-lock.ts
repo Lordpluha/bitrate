@@ -1,7 +1,7 @@
 import { ConflictException, NotFoundException } from '@nestjs/common'
 import { type Prisma, ReleaseStatus } from '@prisma/client'
 import { RELEASE_ERRORS } from './errors'
-import { RELEASE_SUMMARY_SELECT } from './releases.select'
+import { RELEASE_SUMMARY_SELECT } from './orm'
 
 /**
  * Bumps the version of an owned draft together with `data`; rollback covers dependent writes.

@@ -4,7 +4,8 @@ import { NotFoundException } from '@nestjs/common'
 import { Prisma } from '@prisma/client'
 import { makeCacheMock, type PrismaMock, prismaMock, resetPrismaMock } from '@test/mocks'
 import { buildAlbum, buildArtist } from './__tests__/fixtures/albums.fixtures'
-import { ALBUM_TRACKS_INCLUDE, AlbumsService } from './albums.service'
+import { AlbumsService } from './albums.service'
+import { ALBUM_TRACKS_INCLUDE } from './orm'
 
 type AlbumModel = Awaited<ReturnType<PrismaMock['album']['create']>>
 type AlbumWithTracks = AlbumModel & { tracks: unknown[] }

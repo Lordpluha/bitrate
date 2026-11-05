@@ -135,6 +135,16 @@ describe('findLiteralMessages (AC3)', () => {
     ).toEqual([])
   })
 
+  it('flags a zod error option, the Zod 4 spelling of message', () => {
+    const bare = `z.string().min(6, { error: 'Too short' })`
+
+    expect(texts('src/modules/x/dtos/login.dto.ts', bare)).toEqual(['Too short'])
+    expect(
+      texts('src/modules/x/dtos/login.dto.ts', `z.string().min(6, { error: 'validation.x' })`),
+    ).toEqual([])
+    expect(texts('src/modules/x/dtos/login.dto.ts', 'z.object({ error: z.string() })')).toEqual([])
+  })
+
   it('counts an exception message once even in a file that imports zod', () => {
     const source = `import { z } from 'zod'\nthrow new BadRequestException({ message: 'Once' })`
 

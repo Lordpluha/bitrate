@@ -1,5 +1,4 @@
 import { beforeEach, describe, expect, it } from '@jest/globals'
-import type { Request } from 'express'
 import { type DeepMockProxy, mockDeep, mockReset } from 'jest-mock-extended'
 import { buildUser } from './__tests__/fixtures/users.fixtures'
 import type { UserFollowsService } from './user-follows.service'
@@ -73,10 +72,10 @@ describe('UsersController', () => {
     const updated = buildUser({ username: 'updated' })
     service.updateById.mockResolvedValue(updated)
 
-    const req = { user: buildUser({ id: 'user-1' }) } as unknown as Request
+    const user = buildUser({ id: 'user-1' })
     const dto = { username: 'updated' }
 
-    const result = await controller.putById(req, dto)
+    const result = await controller.putById(user, dto)
 
     expect(service.updateById).toHaveBeenCalledWith('user-1', dto)
     expect(result).toBe(updated)
@@ -85,18 +84,20 @@ describe('UsersController', () => {
   it('uploadAvatar hands the uploaded file to the service for the signed-in user', async () => {
     const updated = buildUser({ avatar: '/static/users/avatars/avatar.png' })
     service.uploadAvatar.mockResolvedValue(updated)
-    const req = { user: buildUser({ id: 'user-1' }) } as unknown as Request
+    const user = buildUser({ id: 'user-1' })
     const file = avatarFile()
 
-    const result = await controller.uploadAvatar(req, file)
+    const result = await controller.uploadAvatar(user, file)
 
     expect(service.uploadAvatar).toHaveBeenCalledWith('user-1', file)
     expect(result).toBe(updated)
   })
 
   it('uploadAvatar rejects a missing file', async () => {
-    const req = { user: buildUser({ id: 'user-1' }) } as unknown as Request
-    await expect(controller.uploadAvatar(req, undefined)).rejects.toThrow('Avatar file is required')
+    const user = buildUser({ id: 'user-1' })
+    await expect(controller.uploadAvatar(user, undefined)).rejects.toThrow(
+      'Avatar file is required',
+    )
     expect(service.uploadAvatar).not.toHaveBeenCalled()
   })
 })

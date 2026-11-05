@@ -8,7 +8,7 @@ import { Injectable } from '@nestjs/common'
 import type { Artist } from '@prisma/client'
 import type { TrackEntity } from './entities'
 import { TrackNotFoundException } from './errors'
-import { PUBLIC_TRACK_WHERE } from './track-visibility'
+import { PUBLIC_TRACK_WHERE } from './orm'
 
 /** Filters accepted by the public track listing. */
 type FindAllTracksInput = PaginationInput & Pick<Partial<TrackEntity>, 'artistId' | 'title'>

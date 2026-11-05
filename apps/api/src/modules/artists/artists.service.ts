@@ -2,13 +2,13 @@ import { normalizePagination } from '@common/pagination'
 import { NS, TTL } from '@infra/cache/cache.constants'
 import { CacheService } from '@infra/cache/cache.service'
 import { PrismaService } from '@infra/prisma/prisma.service'
-import { PUBLIC_TRACK_WHERE } from '@modules/tracks/track-visibility'
+import { PUBLIC_TRACK_WHERE } from '@modules/tracks/orm'
 import type { UserEntity } from '@modules/users'
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common'
-import { PUBLIC_ARTIST_SELECT } from './artists.select'
 import type { CreateArtistDto, UpdateArtistDto } from './dtos'
 import type { ArtistEntity } from './entities'
 import { ARTIST_ERRORS } from './errors/artist.errors'
+import { PUBLIC_ARTIST_SELECT } from './orm'
 
 const TOP_TRACKS_DEFAULT = 10
 const TOP_TRACKS_MAX = 50

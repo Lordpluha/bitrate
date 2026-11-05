@@ -18,7 +18,7 @@ export const ADMIN_REPORTS_SORT_FIELDS = [
 ] as const satisfies readonly Prisma.ModerationReportScalarFieldEnum[]
 
 export const ListReportsQuerySchema = paginationQuerySchema
-  .merge(sortQuerySchema(ADMIN_REPORTS_SORT_FIELDS))
+  .extend(sortQuerySchema(ADMIN_REPORTS_SORT_FIELDS).shape)
   .extend({
     status: z.enum(MODERATION_STATUSES).optional(),
     entityType: z.enum(MODERATION_ENTITY_TYPES).optional(),

@@ -1,4 +1,4 @@
-import type { AdminResourceStatus } from './dtos/resource-status.schema'
+import type { AdminResourceStatus } from '../dtos/resource-status.schema'
 
 /** The `deletedAt` condition a take-down `status` filter adds to any soft-deletable model. */
 type ResourceStatusWhere = { deletedAt?: null | { not: null } }

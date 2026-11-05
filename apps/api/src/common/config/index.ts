@@ -6,6 +6,7 @@ import { mailConfig } from './mail.config'
 import { s3Config } from './s3.config'
 import { webConfig } from './web.config'
 
+export type { ApiSurface } from './connections'
 export { API_RATE_LIMITS, AUTH_ROUTE_THROTTLE, SESSION_ROUTE_THROTTLE } from './rate-limit.config'
 
 /** The app configs value. */

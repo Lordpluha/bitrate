@@ -1,5 +1,4 @@
 import { beforeEach, describe, expect, it } from '@jest/globals'
-import type { Request } from 'express'
 import { type DeepMockProxy, mockDeep, mockReset } from 'jest-mock-extended'
 import {
   buildPlaylistWithTracks,
@@ -61,7 +60,7 @@ describe('PlaylistsController', () => {
     const playlist = buildPlaylistWithTracks()
     service.getByIdPopulated.mockResolvedValue(playlist)
 
-    const result = await controller.getById({}, 'playlist-1')
+    const result = await controller.getById(undefined, 'playlist-1')
 
     expect(service.getByIdPopulated).toHaveBeenCalledWith('playlist-1', undefined)
     expect(result).toBe(playlist)
@@ -70,17 +69,17 @@ describe('PlaylistsController', () => {
   it('getById should propagate service errors', async () => {
     service.getByIdPopulated.mockRejectedValue(new Error('boom'))
 
-    await expect(controller.getById({}, 'playlist-1')).rejects.toThrow('boom')
+    await expect(controller.getById(undefined, 'playlist-1')).rejects.toThrow('boom')
   })
 
   it('post should use user from request', async () => {
     const created = buildPlaylistWithTracks()
     service.create.mockResolvedValue(created)
 
-    const req = { user: buildUser() } as Request & { user: ReturnType<typeof buildUser> }
+    const user = buildUser()
     const dto = { title: 'New Playlist', description: 'desc' }
 
-    const result = await controller.post(req, dto)
+    const result = await controller.post(user, dto)
 
     expect(service.create).toHaveBeenCalledWith('user-1', dto)
     expect(dto).toEqual({ title: 'New Playlist', description: 'desc' })
@@ -88,21 +87,21 @@ describe('PlaylistsController', () => {
   })
 
   it('post should propagate service errors', async () => {
-    const req = { user: buildUser() } as Request & { user: ReturnType<typeof buildUser> }
+    const user = buildUser()
     const dto = { title: 'New Playlist', description: 'desc' }
     service.create.mockRejectedValue(new Error('create-failed'))
 
-    await expect(controller.post(req, dto)).rejects.toThrow('create-failed')
+    await expect(controller.post(user, dto)).rejects.toThrow('create-failed')
   })
 
   it('update should use user from request', async () => {
     const updated = buildPlaylistWithTracks({ title: 'Updated' })
     service.update.mockResolvedValue(updated)
 
-    const req = { user: buildUser() } as Request & { user: ReturnType<typeof buildUser> }
+    const user = buildUser()
     const dto = { title: 'Updated', description: 'desc' }
 
-    const result = await controller.update(req, 'playlist-1', dto)
+    const result = await controller.update(user, 'playlist-1', dto)
 
     expect(service.update).toHaveBeenCalledWith('user-1', 'playlist-1', dto)
     expect(dto).toEqual({ title: 'Updated', description: 'desc' })
@@ -110,10 +109,10 @@ describe('PlaylistsController', () => {
   })
 
   it('update should propagate service errors', async () => {
-    const req = { user: buildUser() } as Request & { user: ReturnType<typeof buildUser> }
+    const user = buildUser()
     const dto = { title: 'Updated' }
     service.update.mockRejectedValue(new Error('update-failed'))
 
-    await expect(controller.update(req, 'playlist-1', dto)).rejects.toThrow('update-failed')
+    await expect(controller.update(user, 'playlist-1', dto)).rejects.toThrow('update-failed')
   })
 })

@@ -5,6 +5,7 @@ import {
 } from '@common/auth-cookies'
 import { AUTH_ROUTE_THROTTLE, SESSION_ROUTE_THROTTLE } from '@common/config'
 import { ArtistsService } from '@modules/artists/artists.service'
+import type { ArtistEntity } from '@modules/artists/entities'
 import { readAccessToken, readRefreshToken } from '@modules/auth-core'
 import { TokenService } from '@modules/tokens/token.service'
 import {
@@ -37,6 +38,7 @@ import {
   AuthVerifyEmailCodeSwagger,
   AuthVerifyEmailResendSwagger,
   AuthVerifyEmailSwagger,
+  CurrentArtist,
   EmailAvailabilitySwagger,
   TwoFactorDisableSwagger,
   TwoFactorEnableSwagger,
@@ -65,7 +67,6 @@ import {
 } from './dtos'
 import { ArtistSessionEntity } from './entities'
 import { sessionClient } from './session-client'
-import type { ArtistAuthRequest } from './types'
 
 @ApiExtraModels(ArtistSessionEntity)
 @ApiTags('Artists Auth')
@@ -124,8 +125,12 @@ export class AuthController {
   @AuthLogoutSwagger()
   @ArtistAuth()
   @Post('logout')
-  async logout(@Req() req: ArtistAuthRequest & Request, @Res({ passthrough: true }) res: Response) {
-    await this.artistAuthService.logout(req.artist.id, readAccessToken(req, 'artist'))
+  async logout(
+    @CurrentArtist() artist: ArtistEntity,
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    await this.artistAuthService.logout(artist.id, readAccessToken(req, 'artist'))
     this.tokenService.clearAuthCookies(res, 'artist')
   }
 
@@ -145,8 +150,8 @@ export class AuthController {
   @ArtistAuth()
   @Throttle(SESSION_ROUTE_THROTTLE)
   @Get('me')
-  async getMe(@Req() req: ArtistAuthRequest) {
-    return await this.artistService.findById(req.artist.id)
+  async getMe(@CurrentArtist() artist: ArtistEntity) {
+    return await this.artistService.findById(artist.id)
   }
 
   @AuthForgotPasswordSwagger()
@@ -195,8 +200,8 @@ export class AuthController {
   @TwoFactorSetupSwagger()
   @ArtistAuth()
   @Post('2fa/setup')
-  async twoFactorSetup(@Req() req: ArtistAuthRequest) {
-    return await this.twoFactorService.setupTwoFactor(req.artist.id)
+  async twoFactorSetup(@CurrentArtist() artist: ArtistEntity) {
+    return await this.twoFactorService.setupTwoFactor(artist.id)
   }
 
   @TwoFactorEnableSwagger()
@@ -204,10 +209,10 @@ export class AuthController {
   @HttpCode(200)
   @Post('2fa/enable')
   async twoFactorEnable(
-    @Req() req: ArtistAuthRequest,
+    @CurrentArtist() artist: ArtistEntity,
     @Body(new ZodValidationPipe(TwoFactorCodeSchema)) dto: TwoFactorCodeDto,
   ) {
-    await this.twoFactorService.enableTwoFactor(req.artist.id, dto.code)
+    await this.twoFactorService.enableTwoFactor(artist.id, dto.code)
   }
 
   @TwoFactorDisableSwagger()
@@ -215,10 +220,10 @@ export class AuthController {
   @HttpCode(200)
   @Delete('2fa/disable')
   async twoFactorDisable(
-    @Req() req: ArtistAuthRequest,
+    @CurrentArtist() artist: ArtistEntity,
     @Body(new ZodValidationPipe(TwoFactorCodeSchema)) dto: TwoFactorCodeDto,
   ) {
-    await this.twoFactorService.disableTwoFactor(req.artist.id, dto.code)
+    await this.twoFactorService.disableTwoFactor(artist.id, dto.code)
   }
 
   @TwoFactorVerifyLoginSwagger()

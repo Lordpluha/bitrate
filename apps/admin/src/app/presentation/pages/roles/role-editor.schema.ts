@@ -16,6 +16,6 @@ export const roleEditorSchema = z.object({
   permissions: z
     .array(z.custom<Permission>())
     .refine((permissions) => permissions.every((permission) => !PROTECTED_SET.has(permission)), {
-      message: 'role.invalid.protected',
+      error: 'role.invalid.protected',
     }),
 })

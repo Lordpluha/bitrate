@@ -1,5 +1,6 @@
+import type { ArtistEntity } from '@modules/artists/entities'
 import { ArtistAuth } from '@modules/artists-auth/artists-auth.guard'
-import type { ArtistAuthRequest } from '@modules/artists-auth/types'
+import { CurrentArtist } from '@modules/artists-auth/decorators/current-artist.decorator'
 import {
   BadRequestException,
   Body,
@@ -11,7 +12,6 @@ import {
   ParseEnumPipe,
   Patch,
   Put,
-  Req,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common'
@@ -50,8 +50,8 @@ export class ArtistProfileController {
   @ArtistAuth()
   @Header('Cache-Control', 'private, no-store')
   @Get()
-  read(@Req() request: ArtistAuthRequest) {
-    return this.profile.read(request.artist.id)
+  read(@CurrentArtist() artist: ArtistEntity) {
+    return this.profile.read(artist.id)
   }
 
   @UpdateArtistProfileSwagger()
@@ -59,10 +59,10 @@ export class ArtistProfileController {
   @Header('Cache-Control', 'private, no-store')
   @Patch()
   update(
-    @Req() request: ArtistAuthRequest,
+    @CurrentArtist() artist: ArtistEntity,
     @Body(new ZodValidationPipe(UpdateArtistProfileSchema)) input: UpdateArtistProfileDto,
   ) {
-    return this.profile.update(request.artist.id, input)
+    return this.profile.update(artist.id, input)
   }
 
   // Declared before `:kind` so `locale` is never read as an image kind.
@@ -71,10 +71,10 @@ export class ArtistProfileController {
   @Header('Cache-Control', 'private, no-store')
   @Put('locale')
   setLocale(
-    @Req() request: ArtistAuthRequest,
+    @CurrentArtist() artist: ArtistEntity,
     @Body(new ZodValidationPipe(SetArtistLocaleSchema)) input: SetArtistLocaleDto,
   ) {
-    return this.profile.setLocale(request.artist.id, input.locale)
+    return this.profile.setLocale(artist.id, input.locale)
   }
 
   @UploadProfileImageSwagger()
@@ -94,12 +94,12 @@ export class ArtistProfileController {
   )
   @Put(':kind')
   uploadImage(
-    @Req() request: ArtistAuthRequest,
+    @CurrentArtist() artist: ArtistEntity,
     @Param('kind', new ParseEnumPipe(IMAGE_KINDS)) kind: ProfileImageKind,
     @UploadedFile() file: Express.Multer.File | undefined,
     @Body(new ZodValidationPipe(ProfileImageVersionSchema)) input: ProfileImageVersionDto,
   ) {
-    return this.profile.uploadImage(request.artist.id, kind, file, input)
+    return this.profile.uploadImage(artist.id, kind, file, input)
   }
 
   @RemoveProfileImageSwagger()
@@ -107,10 +107,10 @@ export class ArtistProfileController {
   @Header('Cache-Control', 'private, no-store')
   @Delete(':kind')
   removeImage(
-    @Req() request: ArtistAuthRequest,
+    @CurrentArtist() artist: ArtistEntity,
     @Param('kind', new ParseEnumPipe(IMAGE_KINDS)) kind: ProfileImageKind,
     @Body(new ZodValidationPipe(ProfileImageVersionSchema)) input: ProfileImageVersionDto,
   ) {
-    return this.profile.removeImage(request.artist.id, kind, input)
+    return this.profile.removeImage(artist.id, kind, input)
   }
 }

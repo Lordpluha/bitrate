@@ -2,31 +2,8 @@ import type { PrismaService } from '@infra/prisma/prisma.service'
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from '@jest/globals'
 import type { INestApplication } from '@nestjs/common'
 import request from 'supertest'
-import { resetDatabase, verifyUserEmail } from '../helpers/db'
-import { closeE2eApp, createE2eApp, getResponseCookies } from './e2e-app'
-
-const makeRunId = () => Math.random().toString(36).slice(2, 8)
-
-const registerAndLogin = async (app: INestApplication, prisma: PrismaService, runId: string) => {
-  const credentials = {
-    email: `search_${runId}@example.com`,
-    password: 'password123',
-    username: `search_${runId}`,
-    acceptLegal: true,
-  }
-  await request(app.getHttpServer()).post('/auth/registration').send(credentials).expect(201)
-  await verifyUserEmail(prisma, credentials.email)
-  await prisma.user.update({
-    where: { email: credentials.email },
-    data: { emailVerifiedAt: new Date() },
-  })
-  const response = await request(app.getHttpServer())
-    .post('/auth/login')
-    .send({ email: credentials.email, password: credentials.password })
-    .expect(201)
-
-  return getResponseCookies(response.headers['set-cookie'])
-}
+import { resetDatabase } from '../helpers/db'
+import { closeE2eApp, createE2eApp, registerAndLogin } from './e2e-app'
 
 describe('Search and listening history (e2e)', () => {
   let app: INestApplication
@@ -43,8 +20,7 @@ describe('Search and listening history (e2e)', () => {
   beforeEach(async () => resetDatabase(prisma))
 
   it('searches across entities, returns a top result, and records search history', async () => {
-    const runId = makeRunId()
-    const cookies = await registerAndLogin(app, prisma, runId)
+    const { cookies, runId } = await registerAndLogin(app, 'user')
     const artist = await prisma.artist.create({
       data: {
         email: `artist_${runId}@example.com`,
@@ -88,8 +64,7 @@ describe('Search and listening history (e2e)', () => {
   })
 
   it('records, paginates, removes, and clears listening history', async () => {
-    const runId = makeRunId()
-    const cookies = await registerAndLogin(app, prisma, runId)
+    const { cookies, runId } = await registerAndLogin(app, 'user')
     const artist = await prisma.artist.create({
       data: {
         email: `history_artist_${runId}@example.com`,

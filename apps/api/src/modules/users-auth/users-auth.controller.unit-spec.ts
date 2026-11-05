@@ -1,12 +1,5 @@
-import { beforeEach, describe, expect, it, jest } from '@jest/globals'
+import { beforeEach, describe, expect, it, type jest } from '@jest/globals'
 import type { Request, Response } from 'express'
-
-jest.mock('otplib', () => ({
-  generateSecret: jest.fn(),
-  generateURI: jest.fn(),
-  verify: jest.fn(),
-}))
-jest.mock('qrcode', () => ({ toDataURL: jest.fn() }))
 
 import { type DeepMockProxy, mockDeep, mockReset } from 'jest-mock-extended'
 import type { TokenService } from '../tokens/token.service'
@@ -99,10 +92,10 @@ describe('UsersAuthController', () => {
     it('should call auth service and clear cookies', async () => {
       const user = buildUser({ id: 'user-1' })
       const req = mockDeep<Request>()
-      Object.assign(req, { user, user_access_token: 'access-token' })
+      Object.assign(req, { user_access_token: 'access-token' })
       const res = createResponse()
 
-      await controller.logout(req, res)
+      await controller.logout(user, req, res)
 
       expect(authService.logout).toHaveBeenCalledWith('user-1', 'access-token')
       expect(tokenService.clearAuthCookies).toHaveBeenCalledWith(res, 'user')
@@ -136,10 +129,7 @@ describe('UsersAuthController', () => {
       const user = buildUser({ id: 'user-1' })
       const self = { ...user, legalAcceptanceRequired: true }
       usersService.findSelfById.mockResolvedValue(self)
-      const req = mockDeep<Request>()
-      Object.assign(req, { user })
-
-      const result = await controller.getMe(req)
+      const result = await controller.getMe(user)
 
       expect(usersService.findSelfById).toHaveBeenCalledWith('user-1')
       expect(result).toBe(self)
@@ -151,10 +141,7 @@ describe('UsersAuthController', () => {
       const user = buildUser({ id: 'user-1' })
       const refreshed = { ...user, legalAcceptanceRequired: false }
       usersService.acceptLegal.mockResolvedValue(refreshed as never)
-      const req = mockDeep<Request>()
-      Object.assign(req, { user })
-
-      const result = await controller.acceptLegal(req, { acceptLegal: true })
+      const result = await controller.acceptLegal(user, { acceptLegal: true })
 
       expect(usersService.acceptLegal).toHaveBeenCalledWith('user-1')
       expect(result).toBe(refreshed)
@@ -184,10 +171,7 @@ describe('UsersAuthController', () => {
         qrCodeDataUrl: 'data:url',
         manualCode: 'secret',
       })
-      const req = mockDeep<Request>()
-      Object.assign(req, { user })
-
-      const result = await controller.twoFactorSetup(req as never)
+      const result = await controller.twoFactorSetup(user)
 
       expect(twoFactorService.setupTwoFactor).toHaveBeenCalledWith('user-1')
       expect(result).toEqual({ qrCodeDataUrl: 'data:url', manualCode: 'secret' })
@@ -195,20 +179,14 @@ describe('UsersAuthController', () => {
 
     it('twoFactorEnable should call two-factor service', async () => {
       const user = buildUser({ id: 'user-1' })
-      const req = mockDeep<Request>()
-      Object.assign(req, { user })
-
-      await controller.twoFactorEnable(req as never, { code: '123456' })
+      await controller.twoFactorEnable(user, { code: '123456' })
 
       expect(twoFactorService.enableTwoFactor).toHaveBeenCalledWith('user-1', '123456')
     })
 
     it('twoFactorDisable should call two-factor service', async () => {
       const user = buildUser({ id: 'user-1' })
-      const req = mockDeep<Request>()
-      Object.assign(req, { user })
-
-      await controller.twoFactorDisable(req as never, { code: '654321' })
+      await controller.twoFactorDisable(user, { code: '654321' })
 
       expect(twoFactorService.disableTwoFactor).toHaveBeenCalledWith('user-1', '654321')
     })

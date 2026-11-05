@@ -10,8 +10,6 @@ import { TrackUploadService } from './track-upload.service'
 import { TracksController } from './tracks.controller'
 import { TracksService } from './tracks.service'
 
-jest.mock('music-metadata', () => ({ parseFile: jest.fn() }), { virtual: true })
-
 const makeServiceMock = () =>
   ({
     findAll: jest.fn(),

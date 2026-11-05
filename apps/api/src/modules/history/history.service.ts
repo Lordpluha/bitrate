@@ -1,7 +1,7 @@
 import { normalizePagination } from '@common/pagination'
 import { readUserSettings } from '@common/user-settings'
 import { PrismaService } from '@infra/prisma/prisma.service'
-import { PUBLIC_TRACK_SQL, PUBLIC_TRACK_WHERE } from '@modules/tracks/track-visibility'
+import { PUBLIC_TRACK_SQL, PUBLIC_TRACK_WHERE } from '@modules/tracks/orm'
 import type { UserEntity } from '@modules/users'
 import { Injectable } from '@nestjs/common'
 import { Prisma } from '@prisma/client'

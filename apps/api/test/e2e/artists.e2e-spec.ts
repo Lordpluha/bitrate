@@ -1,28 +1,9 @@
-import { PrismaService } from '@infra/prisma/prisma.service'
+import type { PrismaService } from '@infra/prisma/prisma.service'
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from '@jest/globals'
 import type { INestApplication } from '@nestjs/common'
 import request from 'supertest'
-import { resetArtistsDatabase, verifyArtistEmail } from '../helpers/db'
-import { closeE2eApp, createE2eApp, getResponseCookies } from './e2e-app'
-
-const makeRunId = () => Math.random().toString(36).slice(2, 8)
-
-const registerAndLogin = async (app: INestApplication, runId: string) => {
-  const creds = {
-    email: `artist_${runId}@example.com`,
-    password: 'password123',
-    username: `artist_${runId}`,
-    acceptLegal: true,
-    acceptArtistAgreement: true,
-  }
-  await request(app.getHttpServer()).post('/artists/auth/registration').send(creds).expect(201)
-  await verifyArtistEmail(app.get(PrismaService), creds.email)
-  const res = await request(app.getHttpServer())
-    .post('/artists/auth/login')
-    .send({ email: creds.email, password: creds.password })
-    .expect(201)
-  return { cookies: getResponseCookies(res.headers['set-cookie']), ...creds }
-}
+import { resetArtistsDatabase } from '../helpers/db'
+import { closeE2eApp, createE2eApp, registerAndLogin } from './e2e-app'
 
 describe('ArtistsController (e2e)', () => {
   let app: INestApplication
@@ -54,8 +35,7 @@ describe('ArtistsController (e2e)', () => {
   })
 
   it('full artist CRUD: register -> get by username -> update -> get by id', async () => {
-    const runId = makeRunId()
-    const { cookies, username } = await registerAndLogin(app, runId)
+    const { cookies, username } = await registerAndLogin(app, 'artist')
 
     const byUsernameRes = await request(app.getHttpServer())
       .get(`/artists/username/${username}`)
@@ -77,8 +57,7 @@ describe('ArtistsController (e2e)', () => {
   })
 
   it('PUT /artists/:id should return 401 without auth', async () => {
-    const runId = makeRunId()
-    await registerAndLogin(app, runId)
+    const { runId } = await registerAndLogin(app, 'artist')
 
     const byUsernameRes = await request(app.getHttpServer())
       .get(`/artists/username/artist_${runId}`)
@@ -91,8 +70,7 @@ describe('ArtistsController (e2e)', () => {
   })
 
   it('DELETE /artists/:id should delete the authenticated artist', async () => {
-    const runId = makeRunId()
-    const { cookies } = await registerAndLogin(app, runId)
+    const { cookies, runId } = await registerAndLogin(app, 'artist')
 
     const byUsernameRes = await request(app.getHttpServer())
       .get(`/artists/username/artist_${runId}`)
@@ -115,8 +93,7 @@ describe('ArtistsController (e2e)', () => {
   })
 
   it('DELETE /artists/:id should return 401 without auth', async () => {
-    const runId = makeRunId()
-    await registerAndLogin(app, runId)
+    const { runId } = await registerAndLogin(app, 'artist')
 
     const byUsernameRes = await request(app.getHttpServer())
       .get(`/artists/username/artist_${runId}`)

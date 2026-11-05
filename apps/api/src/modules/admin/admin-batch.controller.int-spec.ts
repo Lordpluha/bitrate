@@ -11,10 +11,6 @@ import { StubAdminAuthGuard } from '@test/mocks/stub-admin-auth.guard'
 import { type DeepMockProxy, mockDeep } from 'jest-mock-extended'
 import request from 'supertest'
 
-/** `TrackUploadService` pulls in `music-metadata` via `track-media.ts`; that package
- * cannot be resolved under Jest, so every spec that reaches it mocks it virtually. */
-jest.mock('music-metadata', () => ({ parseFile: jest.fn() }), { virtual: true })
-
 import { AdminModerationController } from './moderation/admin-moderation.controller'
 import { AdminModerationService } from './moderation/admin-moderation.service'
 import { buildTrack, buildTrackWithArtist } from './tracks/__tests__/fixtures/admin-tracks.fixtures'

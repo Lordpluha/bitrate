@@ -13,16 +13,16 @@ export const ADMIN_AUDIT_LOGS_SORT_FIELDS = [
 ] as const satisfies readonly Prisma.AuditLogScalarFieldEnum[]
 
 export const ListAdminAuditLogsQuerySchema = paginationQuerySchema
-  .merge(sortQuerySchema(ADMIN_AUDIT_LOGS_SORT_FIELDS))
+  .extend(sortQuerySchema(ADMIN_AUDIT_LOGS_SORT_FIELDS).shape)
   .extend({
     entityType: z.string().min(1).max(100).optional(),
-    entityId: z.string().uuid().optional(),
-    staffId: z.string().uuid().optional(),
+    entityId: z.uuid().optional(),
+    staffId: z.uuid().optional(),
     from: z.coerce.date().optional(),
     to: z.coerce.date().optional(),
   })
   .refine((value) => !(value.from && value.to) || value.from <= value.to, {
-    message: '`from` must not be after `to`',
+    error: '`from` must not be after `to`',
     path: ['from'],
   })
 

@@ -2,7 +2,7 @@ import type { Type } from '@nestjs/common'
 import { getSchemaPath } from '@nestjs/swagger'
 
 /** Builds the OpenAPI schema shared by the API's offset-paginated endpoints. */
-export const paginatedResponseSchema = (itemType: Type<unknown>) => ({
+export const paginatedResponseSchema = (itemType: Type) => ({
   type: 'object',
   required: ['data', 'total', 'page', 'limit'],
   properties: {

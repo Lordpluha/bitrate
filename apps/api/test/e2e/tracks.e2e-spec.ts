@@ -2,10 +2,8 @@ import type { PrismaService } from '@infra/prisma/prisma.service'
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from '@jest/globals'
 import type { INestApplication } from '@nestjs/common'
 import request from 'supertest'
-import { resetArtistsDatabase, resetUsersDatabase, verifyUserEmail } from '../helpers/db'
-import { closeE2eApp, createE2eApp, getResponseCookies } from './e2e-app'
-
-const makeRunId = () => Math.random().toString(36).slice(2, 8)
+import { resetArtistsDatabase, resetUsersDatabase } from '../helpers/db'
+import { closeE2eApp, createE2eApp, registerAndLogin } from './e2e-app'
 
 describe('TracksController (e2e)', () => {
   let app: INestApplication
@@ -74,24 +72,7 @@ describe('TracksController (e2e)', () => {
   })
 
   it('GET /tracks/liked should return 200 for authenticated user', async () => {
-    const runId = makeRunId()
-    const creds = {
-      email: `user_${runId}@example.com`,
-      password: 'password123',
-      username: `user_${runId}`,
-      acceptLegal: true,
-    }
-    await request(app.getHttpServer()).post('/auth/registration').send(creds).expect(201)
-    await verifyUserEmail(prisma, creds.email)
-    await prisma.user.update({
-      where: { email: creds.email },
-      data: { emailVerifiedAt: new Date() },
-    })
-    const loginRes = await request(app.getHttpServer())
-      .post('/auth/login')
-      .send({ email: creds.email, password: creds.password })
-      .expect(201)
-    const cookies = getResponseCookies(loginRes.headers['set-cookie'])
+    const { cookies } = await registerAndLogin(app, 'user')
 
     const res = await request(app.getHttpServer())
       .get('/tracks/liked')

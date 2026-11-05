@@ -17,10 +17,6 @@ import { AudioProcessingConsumer } from './audio-processing.consumer'
 import { removeStaleScratchDirs } from './audio-scratch'
 import { ProcessingAttemptRecorder } from './processing-attempt.recorder'
 
-jest.mock('@sentry/nestjs', () => ({
-  captureException: jest.fn(),
-}))
-
 jest.mock('@bitrate/converter', () => ({
   convertAudioToCmaf: jest.fn(),
 }))

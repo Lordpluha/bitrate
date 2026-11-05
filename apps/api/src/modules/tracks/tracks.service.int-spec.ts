@@ -24,14 +24,6 @@ const makeConfigMock = () =>
     getOrThrow: jest.fn(),
   }) as unknown as jest.Mocked<ConfigService<AppConfig>>
 
-jest.mock(
-  'music-metadata',
-  () => ({
-    parseFile: jest.fn().mockResolvedValue({ format: { duration: 100, bitrate: 128000 } } as never),
-  }),
-  { virtual: true },
-)
-
 /**
  * The upload temp directory is created with real `mkdtemp`/`lstat` calls, which this spec's
  * `node:fs` mock does not provide. Its creation is covered in `audio-scratch.unit-spec.ts`.

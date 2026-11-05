@@ -63,30 +63,28 @@ export const chartsSchema = paginationSchema.extend({
   data: z.array(discoveryTrackSchema),
 })
 
-const discoveryFeedItemSchema = z
-  .object({
-    artist: z
-      .object({
-        avatar: z.string().nullable(),
-        id: z.string(),
-        username: z.string(),
-      })
-      .optional(),
-    artistId: z.string().optional(),
-    cover: z.string().nullable(),
-    description: z.string().nullable().optional(),
-    id: z.string(),
-    title: z.string(),
-    user: z
-      .object({
-        avatar: z.string().nullable(),
-        id: z.string(),
-        username: z.string(),
-      })
-      .optional(),
-    userId: z.string().optional(),
-  })
-  .passthrough()
+const discoveryFeedItemSchema = z.looseObject({
+  artist: z
+    .object({
+      avatar: z.string().nullable(),
+      id: z.string(),
+      username: z.string(),
+    })
+    .optional(),
+  artistId: z.string().optional(),
+  cover: z.string().nullable(),
+  description: z.string().nullable().optional(),
+  id: z.string(),
+  title: z.string(),
+  user: z
+    .object({
+      avatar: z.string().nullable(),
+      id: z.string(),
+      username: z.string(),
+    })
+    .optional(),
+  userId: z.string().optional(),
+})
 
 export const recommendationsFeedSchema = z.object({
   sections: z.array(
