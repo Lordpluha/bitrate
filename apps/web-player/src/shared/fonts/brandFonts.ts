@@ -1,23 +1,26 @@
-import { Inter, JetBrains_Mono, Unbounded } from 'next/font/google'
+import localFont from 'next/font/local'
 
 /**
  * Brand typography (Unbounded headings, Inter text, JetBrains Mono data) shared by the landing
  * and the auth screens; the rest of the app moves to it separately.
  */
-const display = Unbounded({
+const display = localFont({
+  src: './files/Unbounded.woff2',
   variable: '--font-landing-display',
-  subsets: ['latin', 'latin-ext', 'cyrillic'],
-  weight: ['500', '600', '700', '800'],
+  weight: '500 800',
+  display: 'swap',
 })
-const body = Inter({
+const body = localFont({
+  src: './files/Inter.woff2',
   variable: '--font-landing-body',
-  subsets: ['latin', 'latin-ext', 'cyrillic'],
-  weight: ['400', '500', '600', '700'],
+  weight: '400 700',
+  display: 'swap',
 })
-const data = JetBrains_Mono({
+const data = localFont({
+  src: './files/JetBrainsMono.woff2',
   variable: '--font-landing-data',
-  subsets: ['latin', 'latin-ext', 'cyrillic'],
-  weight: ['500'],
+  weight: '500',
+  display: 'swap',
 })
 
 /** Puts the three font variables on an element; descendants pick them with `var(...)`. */

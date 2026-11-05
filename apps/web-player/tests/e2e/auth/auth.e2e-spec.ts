@@ -23,7 +23,8 @@ test.describe('authentication pages', () => {
     await page.goto('/auth/login')
 
     await page.getByRole('link', { name: 'Sign up' }).click()
-    await expect(page).toHaveURL(/\/auth\/registration$/)
+    // A cold dev server compiles the destination route on this first navigation.
+    await expect(page).toHaveURL(/\/auth\/registration$/, { timeout: 15_000 })
     await expect(
       page.getByRole('heading', {
         name: 'Create your account for free and start listening',
@@ -32,7 +33,9 @@ test.describe('authentication pages', () => {
 
     await page.goto('/auth/login')
     await page.getByRole('link', { name: 'Forgot password?' }).click()
-    await expect(page).toHaveURL(/\/auth\/forgot-password$/)
+    await expect(page).toHaveURL(/\/auth\/forgot-password$/, {
+      timeout: 15_000,
+    })
   })
 
   test('keeps more sign-in options folded until asked, and locked until the terms are accepted', async ({

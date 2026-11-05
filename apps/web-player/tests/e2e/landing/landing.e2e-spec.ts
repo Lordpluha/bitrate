@@ -147,15 +147,18 @@ test.describe('landing navigation on desktop', () => {
   test('a guest goes through every scene without being sent to log in', async ({
     page,
   }) => {
+    // Ten animated scene transitions plus a cold route compile can exceed the default 30s.
+    test.setTimeout(60_000)
     await skipIntro(page)
     await page.goto('/')
     await engineReady(page)
     for (const { id } of SCENES.slice(1)) {
-      await page.keyboard.press('ArrowDown')
-      await expect(activeScene(page)).toHaveId(id, { timeout: 4000 })
+      // Input is ignored while a scene transition is running; retry when it settles.
+      await expect(async () => {
+        await page.keyboard.press('ArrowDown')
+        await expect(activeScene(page)).toHaveId(id, { timeout: 1500 })
+      }).toPass({ timeout: 8000 })
       expect(new URL(page.url()).pathname).toBe('/')
-      /* the scene change locks input until it settles (leave 0.5 s + 0.7 s) */
-      await page.waitForTimeout(1300)
     }
   })
 
@@ -218,6 +221,8 @@ test.describe('landing on touch screens', () => {
     await expect(activeScene(page)).toHaveId('loop')
 
     await page.goto('/#partners')
+    // Start the physics-field check on a fresh deep link, outside the previous swipe's lock.
+    await page.reload()
     await engineReady(page)
     await expect(activeScene(page)).toHaveId('partners')
     await swipe({ page, selector: '#partnerZone', dy: -220 })

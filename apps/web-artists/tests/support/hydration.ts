@@ -15,12 +15,15 @@ export async function gotoHydrated(page: Page, path: string) {
   const response = await page.goto(path)
 
   await expect
-    .poll(() =>
-      page.evaluate(() =>
-        [...document.querySelectorAll('body *')].some((element) =>
-          Object.keys(element).some((key) => key.startsWith('__react')),
+    .poll(
+      () =>
+        page.evaluate(() =>
+          [...document.querySelectorAll('body *')].some((element) =>
+            Object.keys(element).some((key) => key.startsWith('__react')),
+          ),
         ),
-      ),
+      // Cold, code-split dashboard bundles can take over five seconds on CI's four workers.
+      { timeout: 15_000 },
     )
     .toBe(true)
 

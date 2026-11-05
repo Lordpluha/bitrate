@@ -2362,6 +2362,8 @@ test('workspace theme switches all three palettes and persists across navigation
   page,
   context,
 }) => {
+  // Compare layout geometry without sampling the entry animation's scale and translation.
+  await page.emulateMedia({ reducedMotion: 'reduce' })
   const errors: string[] = []
   page.on('pageerror', (error) => errors.push(error.message))
   page.on('console', (message) => {
