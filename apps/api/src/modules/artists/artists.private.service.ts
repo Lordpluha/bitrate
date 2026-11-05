@@ -84,7 +84,7 @@ export class ArtistsPrivateService {
   /** Runs the find by email operation. */
   async findByEmail(email: ArtistEntity['email']) {
     return await this.prisma.artist.findFirst({
-      where: { email, deletedAt: null },
+      where: { email: { equals: email, mode: 'insensitive' }, deletedAt: null },
     })
   }
 }

@@ -21,6 +21,7 @@ const makeAuthServiceMock = () =>
     verifyEmailCode: jest.fn(),
     verifyEmail: jest.fn(),
     resendEmailVerification: jest.fn(),
+    forgotPassword: jest.fn(),
   }) as unknown as jest.Mocked<ArtistsAuthService>
 
 const makeArtistsServiceMock = () =>
@@ -151,6 +152,65 @@ describe('AuthController artists (int)', () => {
       .expect(200)
     expect(response.body).toEqual({ delivery: 'development' })
     expect(authService.resendEmailVerification).toHaveBeenCalledWith('artist@example.com')
+  })
+
+  /**
+   * Registration stores the address lower-cased (web-artists sends it that way), so sign-in and
+   * password reset must normalize too — "Artist@…" from autofill was answered "Invalid credentials".
+   */
+  it('signs in with the address trimmed and lower-cased', async () => {
+    authService.loginArtist.mockResolvedValue({ access_token: 'at', refresh_token: 'rt' } as never)
+
+    await request(app.getHttpServer())
+      .post('/artists/auth/login')
+      .send({ email: '  Artist@EXAMPLE.com ', password: 'password123' })
+      .expect(201)
+
+    expect(authService.loginArtist).toHaveBeenCalledWith(
+      'artist@example.com',
+      'password123',
+      expect.anything(),
+    )
+  })
+
+  it('registers the address trimmed and lower-cased', async () => {
+    authService.registerArtist.mockResolvedValue({
+      requiresEmailVerification: true,
+      delivery: 'development',
+    } as never)
+
+    await request(app.getHttpServer())
+      .post('/artists/auth/registration')
+      .send({
+        email: ' New@Example.COM',
+        password: 'password123',
+        username: 'newartist',
+        acceptLegal: true,
+        acceptArtistAgreement: true,
+      })
+      .expect(201)
+
+    expect(authService.registerArtist).toHaveBeenCalledWith(
+      expect.objectContaining({ email: 'new@example.com' }),
+    )
+  })
+
+  it('requests a password reset for the address trimmed and lower-cased', async () => {
+    await request(app.getHttpServer())
+      .post('/artists/auth/forgot-password')
+      .send({ email: 'Artist@EXAMPLE.com ' })
+      .expect((res) => expect(res.status).toBeLessThan(300))
+
+    expect(authService.forgotPassword).toHaveBeenCalledWith('artist@example.com')
+  })
+
+  it('still rejects a malformed address on sign-in', async () => {
+    await request(app.getHttpServer())
+      .post('/artists/auth/login')
+      .send({ email: 'not-an-email', password: 'password123' })
+      .expect(400)
+
+    expect(authService.loginArtist).not.toHaveBeenCalled()
   })
 
   it('POST /artists/auth/login should return 201 on valid credentials', async () => {
