@@ -1,5 +1,37 @@
 # @bitrate/api
 
+## 2.0.0
+
+### Major Changes
+
+- fdfe873: Made CMAF the only stored audio format (ADR-0065). The worker now runs a single FFmpeg pass that
+  produces the CMAF renditions; the progressive Opus files and the HLS ladder are no longer encoded
+  or uploaded. Removed `GET /tracks/stream/:id`, `GET /tracks/stream/:id/hls/master.m3u8`,
+  `GET /tracks/stream/:id/hls/:bitrate/:asset`, the Socket.io `AudioGateway` with its WebSocket
+  guard and dependencies, and `playbackVersion` from tracks. A migration deletes non-CMAF track
+  files and attempts on the removed processing steps, marks ready tracks left without CMAF
+  renditions as failed, and makes the CMAF byte-index columns required.
+
+  Admin processing diagnostics no longer list the removed `PROGRESSIVE_ENCODE`, `HLS_ENCODE` and
+  `HLS_VALIDATE` steps; their DTO follows the regenerated contract.
+
+- fe5b6ad: Review feedback is now one Markdown message: reviewers write it in a single editor with a formatting toolbar in the admin, and artists see it formatted. The API drops the separate required-change and recommendation lists (a migration folds existing ones into the message), so this is a breaking contract change. Artists split only the master now: publishing shares and the songwriter confirmation are no longer asked for or required, and new releases start with the artist as master owner. The artist workspace also gets a submit preview, a reworked draft step and stepper, a new analytics layout, a mini player with volume in Music, release artwork on track rows, page entrance animations and interface sounds that can be turned off in Settings.
+- 0944701: The operator API moved into a process of its own (ADR-0068). `main.admin.ts` serves `/api/v1/admin/*` and the health and metrics endpoints on `ADMIN_API_PORT` (3007), and the public API process no longer registers any operator route. In production the operator API is reached only through the admin panel's own host; `api.<domain>` answers 404 for operator paths. Staff session cookies are now host-only on that host instead of spanning the parent cookie domain, and signing in, refreshing or signing out also clears the staff cookies an older session left on the parent domain, so staff sign in once more after the release. Each process publishes its own OpenAPI document: the public contract `v1.ts` no longer contains the operator paths, which moved to `admin-v1.ts`, imported as `@bitrate/contracts/admin`. Each document now declares one security scheme per session cookie, named after the cookie, instead of a single `cookie` scheme overwritten by the last one. The public API also stops allowing the admin panel's origin in CORS. The admin panel now calls the operator API on its own origin.
+- 6ae3b35: Every play now opens a playback session (ADR-0067). `POST /tracks/:id/play-sessions` returns the manifest with a signed token and replaces `GET /tracks/:id/manifest`, which was removed. `GET /tracks/:id/cmaf/:bitrate` authorises by the `?t=` token instead of the access cookie; it serves a `Range` of at most one fragment (~10 s) exactly and answers any longer or missing range with one response released no faster than real time plus a 60-second allowance, so a track can no longer be downloaded at once. The budget is shared by all of a listener's sessions for a track, and a listener ahead of it gets `429` with `Retry-After`. Logout, password reset, sign-in revocation and staff session revocation or take-down revoke the user's playback sessions, and the token is redacted from API and nginx logs. The web player opens a session for each play, carries its token on every rendition request, reopens the session once on `403` and waits out a `429`.
+- cde75d0: Removed the operator podcast endpoints (`/admin/podcasts`, episode take-down and restore) and the `podcasts:read|delete|restore` permissions because Bitrate became music-only (ADR-0066). A migration strips those permissions from stored roles and staff.
+- 3bfb9fe: Removed the listener podcast and saved-episode endpoints, the `podcast` and `episode` moderation report subjects and the report subject's `parentId` because Bitrate became music-only (ADR-0066). A migration deletes podcast and episode reports and drops the `Podcast`, `Episode` and `UserSavedEpisode` tables.
+
+### Minor Changes
+
+- 4897948: Added `PUT /api/v1/artist-profile/locale`, which stores the artist's workspace language (`en`, `uk` or `pl`). It is a preference, so it needs no profile version and leaves the version unchanged; the artist profile response now includes `locale`. Transactional emails already follow this value where a template exists.
+
+### Patch Changes
+
+- 2af2804: Fixed artists being told "Invalid credentials" right after registering when the sign-in form sent their address with a capital letter or a stray space (autofill, mobile keyboards). Artist sign-in, registration and password reset now trim and lower-case the address, and account lookups ignore letter case, so older accounts stored in mixed case are found too.
+- cfcd9c8: Fixed the transcode worker failing every conversion job in the production image with "Cannot find module '@bitrate/converter'". The image now ships the converter package that the API's pnpm link points to, and the image build fails if that import cannot be resolved.
+- Updated dependencies [800f70a]
+  - @bitrate/converter@3.0.0
+
 ## 1.5.0
 
 ### Minor Changes
