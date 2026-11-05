@@ -38,10 +38,6 @@ export const settings = {
   'settings.motion.hint': 'Мінімальна вимикає анімації',
   'settings.motion.system': 'Системна',
   'settings.motion.reduced': 'Мінімальна',
-  'settings.sound': 'Звуки',
-  'settings.sound.hint': 'Тихі кліки при наведенні й натисканні',
-  'settings.sound.on': 'Увімкнено',
-  'settings.sound.off': 'Вимкнено',
   'settings.twoFactor.codeFormat':
     'Введіть 6-значний код із застосунку автентифікації.',
   'settings.twoFactor.title': 'Двофакторний вхід',

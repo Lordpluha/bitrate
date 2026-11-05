@@ -1,11 +1,11 @@
 import { Button } from '@bitrate/ui-react'
-import { territorySummary, useDistribution } from '@entities/delivery'
-import { releaseCoverUrl, releaseStatusLabels } from '@entities/release'
+import { useDistribution } from '@entities/delivery'
 import { useI18n } from '@shared/i18n'
 import { ROUTES } from '@shared/routes/routes'
+import { PanelIcon } from '@shared/ui'
 import { Link } from '@tanstack/react-router'
-import { DestinationStates } from '@widgets/ReleaseDelivery'
-import { Info, Music2, Send } from 'lucide-react'
+import { CircleCheck, CircleDashed, Send, Unplug } from 'lucide-react'
+import { DeliveryMatrix } from './DeliveryMatrix'
 
 interface DistributionViewProps {
   artistId: string
@@ -15,8 +15,7 @@ interface DistributionViewProps {
 /** Plans and store states of every release; never shows a release as delivered unless it was. */
 export function DistributionView({ artistId, page }: DistributionViewProps) {
   const distribution = useDistribution(artistId, page)
-  const i18n = useI18n()
-  const { tMessage, t } = i18n
+  const { tMessage, t } = useI18n()
   const connected = distribution.data?.data[0]?.partner.connected
   const pages = distribution.data
     ? Math.max(1, Math.ceil(distribution.data.total / distribution.data.limit))
@@ -36,9 +35,30 @@ export function DistributionView({ artistId, page }: DistributionViewProps) {
         </p>
       </div>
       {connected === false && (
-        <div className="artist-release-inset rounded-lg border border-border p-4">
-          <Info aria-hidden="true" className="size-5 shrink-0 text-accent" />
-          <p className="text-sm">{t('delivery.page.noPartner')}</p>
+        <div className="artist-release-workspace-panel artist-dist-notice">
+          <div className="artist-dist-notice-copy">
+            <h2>
+              <PanelIcon icon={Unplug} />
+              {t('delivery.page.noPartnerTitle')}
+            </h2>
+            <p className="artist-dist-notice-text">
+              {t('delivery.page.noPartner')}
+            </p>
+          </div>
+          <ol aria-hidden="true" className="artist-dist-flow">
+            <li data-reached="true">
+              <CircleCheck />
+              {t('delivery.page.flow.plan')}
+            </li>
+            <li>
+              <CircleDashed />
+              {t('delivery.page.flow.partner')}
+            </li>
+            <li>
+              <CircleDashed />
+              {t('delivery.page.flow.stores')}
+            </li>
+          </ol>
         </div>
       )}
       {distribution.isPending ? (
@@ -56,61 +76,19 @@ export function DistributionView({ artistId, page }: DistributionViewProps) {
           </Button>
         </div>
       ) : distribution.data.data.length === 0 ? (
-        <div className="flex items-start gap-3 rounded-lg border border-border p-5">
-          <Send aria-hidden="true" className="size-5 shrink-0 text-accent" />
-          <div className="space-y-2">
-            <p>{t('delivery.page.empty')}</p>
-            <Link
-              className="underline"
-              search={{ tab: 'releases', page: 1 }}
-              to={ROUTES.dashboard.music}
-            >
-              {t('delivery.page.openMusic')}
-            </Link>
-          </div>
+        <div className="artist-release-workspace-panel artist-dist-empty">
+          <Send aria-hidden="true" />
+          <p>{t('delivery.page.empty')}</p>
+          <Link
+            className="artist-dash-link"
+            search={{ tab: 'releases', page: 1 }}
+            to={ROUTES.dashboard.music}
+          >
+            {t('delivery.page.openMusic')}
+          </Link>
         </div>
       ) : (
-        <ul className="space-y-4">
-          {distribution.data.data.map((delivery) => (
-            <li
-              className="artist-release-workspace-panel space-y-4"
-              key={delivery.releaseId}
-            >
-              <div className="flex flex-wrap items-center gap-4">
-                {delivery.cover ? (
-                  <img
-                    alt=""
-                    className="size-14 shrink-0 rounded-md border border-border object-cover"
-                    src={releaseCoverUrl(delivery.cover)}
-                  />
-                ) : (
-                  <div className="flex size-14 shrink-0 items-center justify-center rounded-md border border-dashed border-border">
-                    <Music2 aria-hidden="true" className="size-6 text-accent" />
-                  </div>
-                )}
-                <div className="min-w-0 flex-1">
-                  <h2>
-                    <Link
-                      className="underline"
-                      params={{ releaseId: delivery.releaseId }}
-                      to="/dashboard/music/$releaseId"
-                    >
-                      {delivery.title}
-                    </Link>
-                  </h2>
-                  <p className="text-sm text-text-secondary">
-                    {t(releaseStatusLabels[delivery.status])} ·{' '}
-                    {territorySummary(delivery, i18n)} ·{' '}
-                    {delivery.sent
-                      ? t('delivery.page.sent')
-                      : t('delivery.availability.notSent')}
-                  </p>
-                </div>
-              </div>
-              <DestinationStates delivery={delivery} plannedOnly />
-            </li>
-          ))}
-        </ul>
+        <DeliveryMatrix releases={distribution.data.data} />
       )}
       {distribution.data && pages > 1 && (
         <nav
@@ -119,7 +97,7 @@ export function DistributionView({ artistId, page }: DistributionViewProps) {
         >
           {page > 1 ? (
             <Link
-              className="underline"
+              className="artist-dash-link"
               search={{ page: page - 1 }}
               to={ROUTES.dashboard.distribution}
             >
@@ -133,7 +111,7 @@ export function DistributionView({ artistId, page }: DistributionViewProps) {
           </span>
           {page < pages ? (
             <Link
-              className="underline"
+              className="artist-dash-link"
               search={{ page: page + 1 }}
               to={ROUTES.dashboard.distribution}
             >

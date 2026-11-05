@@ -5,6 +5,7 @@ import {
   useMusicCatalogue,
   useMusicCounts,
 } from '@entities/music'
+import { useNowPlaying } from '@features/now-playing'
 import {
   CreateReleaseButton,
   useWorkspaceActions,
@@ -15,8 +16,8 @@ import { ROUTES } from '@shared/routes/routes'
 import { useNavigate } from '@tanstack/react-router'
 import { Upload } from 'lucide-react'
 import { useState } from 'react'
+import { previewTrack } from '../model/previewTrack'
 import { catalogueSortLabels } from '../model/sort'
-import { usePreviewPlayer } from '../model/usePreviewPlayer'
 import { CatalogueEmptyState } from './CatalogueEmptyState'
 import { CatalogueFilters } from './CatalogueFilters'
 import {
@@ -25,7 +26,6 @@ import {
 } from './CatalogueItemDialog'
 import { CataloguePagination } from './CataloguePagination'
 import { type CatalogueItem, CatalogueTable } from './CatalogueTable'
-import { PreviewBar } from './PreviewBar'
 
 export function MusicCatalogue({ search }: { search: CatalogueSearch }) {
   const { artist } = useAuthContext()
@@ -36,7 +36,7 @@ export function MusicCatalogue({ search }: { search: CatalogueSearch }) {
   const counts = useMusicCounts(artist?.id)
   const [details, setDetails] = useState<CatalogueDetails | null>(null)
   const [updatedNotice, setUpdatedNotice] = useState<string | null>(null)
-  const preview = usePreviewPlayer()
+  const player = useNowPlaying()
   const { t, tMessage, tp } = useI18n()
 
   const change = (next: CatalogueSearch) => {
@@ -179,8 +179,10 @@ export function MusicCatalogue({ search }: { search: CatalogueSearch }) {
             <CatalogueTable
               onActions={(item) => setDetails({ item, mode: 'actions' })}
               onDetails={(item) => setDetails({ item, mode: 'details' })}
-              onPlay={preview.toggle}
-              playingId={preview.playing ? preview.active?.id : undefined}
+              onPlay={(track) => player.toggle(previewTrack(track))}
+              playingKey={
+                player.status === 'playing' ? player.current?.key : undefined
+              }
               records={records}
               tab={tab}
             />
@@ -200,37 +202,6 @@ export function MusicCatalogue({ search }: { search: CatalogueSearch }) {
           )}
         </div>
       </div>
-      {preview.active && preview.source && (
-        <PreviewBar
-          duration={preview.duration}
-          muted={preview.muted}
-          onClose={preview.close}
-          onMute={preview.toggleMute}
-          onSeek={preview.seek}
-          onToggle={() => preview.active && preview.toggle(preview.active)}
-          onVolume={preview.setVolume}
-          playing={preview.playing}
-          time={preview.time}
-          track={preview.active}
-          volume={preview.volume}
-        />
-      )}
-      {preview.playError && (
-        <p className="text-sm text-destructive" role="alert">
-          {tMessage(preview.playError)}
-        </p>
-      )}
-      <audio
-        key={preview.active?.id}
-        {...preview.audioEvents}
-        onEnded={preview.stop}
-        onError={preview.fail}
-        preload="none"
-        ref={preview.audioRef}
-        src={preview.source ?? undefined}
-      >
-        <track kind="captions" />
-      </audio>
       {details && (
         <CatalogueItemDialog
           artistId={artist?.id}

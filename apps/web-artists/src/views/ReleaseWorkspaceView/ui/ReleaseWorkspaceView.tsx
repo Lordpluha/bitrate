@@ -4,12 +4,17 @@ import {
   type ReleaseStage,
   useReleaseWorkspace,
 } from '@entities/release'
+import {
+  CustomizeControls,
+  useCustomizableLayout,
+} from '@features/workspace-layout'
 import { useI18n } from '@shared/i18n'
 import { ROUTES } from '@shared/routes/routes'
 import { Link } from '@tanstack/react-router'
 import { ReleaseDeliveryPanel } from '@widgets/ReleaseDelivery'
 import {
   DraftStage,
+  draftTiles,
   LaunchStage,
   ReleaseHeader,
   ReleaseStepper,
@@ -32,6 +37,11 @@ export function ReleaseWorkspaceView({
   step,
 }: ReleaseWorkspaceViewProps) {
   const query = useReleaseWorkspace(artistId, releaseId)
+  const draftLayout = useCustomizableLayout(
+    artistId,
+    'release-draft',
+    draftTiles,
+  )
   const { t, tMessage } = useI18n()
   const [saved, setSaved] = useState(false)
   const [dialog, setDialog] = useState<WorkspaceAction | null>(null)
@@ -83,10 +93,19 @@ export function ReleaseWorkspaceView({
             {t('shell.backToMusic')}
           </Link>
           <ReleaseHeader onAction={openDialog} release={query.data} />
-          <ReleaseStepper active={stage ?? 'draft'} release={query.data} />
+          <ReleaseStepper
+            actions={
+              stage === 'draft' && !draftLayout.editing ? (
+                <CustomizeControls layout={draftLayout} />
+              ) : undefined
+            }
+            active={stage ?? 'draft'}
+            release={query.data}
+          />
           {stage === 'draft' && (
             <DraftStage
               artistId={artistId}
+              layout={draftLayout}
               onAction={openDialog}
               release={query.data}
             />

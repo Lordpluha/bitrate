@@ -74,6 +74,7 @@ export function PlaysChart({
 }: PlaysChartProps) {
   const { t, tp } = useI18n()
   const gradientId = useId()
+  const lineGradientId = useId()
   const [active, setActive] = useState<number | null>(null)
   const { step: gridStep, top } = niceScale(
     Math.max(...daily.map((day) => day.plays), 0),
@@ -91,6 +92,11 @@ export function PlaysChart({
   )
   const current = active === null ? null : daily[active]
   const left = active === null ? 0 : (active / last) * 100
+  const peakIndex = daily.reduce(
+    (best, day, index) => (day.plays > daily[best].plays ? index : best),
+    0,
+  )
+  const peak = daily[peakIndex]
 
   const pick = (event: PointerEvent<HTMLButtonElement>) => {
     const box = event.currentTarget.getBoundingClientRect()
@@ -140,8 +146,23 @@ export function PlaysChart({
         >
           <defs>
             <linearGradient id={gradientId} x1="0" x2="0" y1="0" y2="1">
-              <stop offset="0%" stopColor="currentColor" stopOpacity="0.22" />
+              <stop offset="0%" stopColor="currentColor" stopOpacity="0.38" />
               <stop offset="100%" stopColor="currentColor" stopOpacity="0" />
+            </linearGradient>
+            {/* In plot units: a flat line has no height for a bounding-box gradient to span. */}
+            <linearGradient
+              gradientUnits="userSpaceOnUse"
+              id={lineGradientId}
+              x1="0"
+              x2={WIDTH}
+              y1="0"
+              y2="0"
+            >
+              <stop offset="0%" style={{ stopColor: 'var(--color-chart-1)' }} />
+              <stop
+                offset="100%"
+                style={{ stopColor: 'var(--color-chart-2)' }}
+              />
             </linearGradient>
           </defs>
           <path d={area} fill={`url(#${gradientId})`} />
@@ -149,13 +170,25 @@ export function PlaysChart({
             className="artist-analytics-line"
             d={line}
             fill="none"
-            stroke="currentColor"
+            stroke={`url(#${lineGradientId})`}
             strokeLinecap="round"
             strokeLinejoin="round"
             strokeWidth={2}
             vectorEffect="non-scaling-stroke"
           />
         </svg>
+        {active === null && peak && peak.plays > 0 && (
+          <div
+            aria-hidden="true"
+            className="artist-analytics-peak"
+            style={{
+              left: `${(peakIndex / last) * 100}%`,
+              top: `${(1 - peak.plays / top) * 100}%`,
+            }}
+          >
+            <b>{formatNumber(peak.plays)}</b>
+          </div>
+        )}
         {current && active !== null && (
           <>
             <div

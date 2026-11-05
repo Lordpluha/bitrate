@@ -388,7 +388,7 @@ test('contributor editing rejects a success response for a different participant
   )
   expect(writes).toBe(1)
   await dialog.getByRole('button', { name: 'Cancel', exact: true }).click()
-  await page.reload()
+  await gotoHydrated(page, page.url())
   await expect(
     page.getByRole('heading', { name: 'Updated credit', exact: true }),
   ).toBeVisible()
@@ -936,7 +936,7 @@ for (const theme of ['light', 'dark', 'dim']) {
     })
     await dialog.getByLabel('Premiere on a date').check()
     await dialog.getByLabel('Release date', { exact: true }).fill('2026-11-01')
-    await dialog.getByLabel('Time (UTC)', { exact: true }).fill('12:30:15.125')
+    await dialog.getByLabel('Time (UTC)', { exact: true }).fill('12:30')
     await expect(
       dialog.getByRole('button', { name: 'Save schedule', exact: true }),
     ).toBeEnabled()
@@ -965,7 +965,7 @@ for (const theme of ['light', 'dark', 'dim']) {
       .getByRole('button', { name: 'Save schedule', exact: true })
       .click()
     expect((await (await saved).json()).scheduledAt).toBe(
-      '2026-11-01T12:30:15.125Z',
+      '2026-11-01T12:30:00.000Z',
     )
     await expect(dialog).not.toBeVisible()
     await expect(
@@ -980,7 +980,7 @@ for (const theme of ['light', 'dark', 'dim']) {
       .getByRole('button', { name: 'Edit timing', exact: true })
       .click()
     await expect(dialog.getByLabel('Time (UTC)', { exact: true })).toHaveValue(
-      '12:30:15.125',
+      '12:30',
     )
     await expect(
       dialog.getByRole('button', { name: 'Save schedule', exact: true }),
@@ -1296,13 +1296,13 @@ for (const theme of ['light', 'dark', 'dim'] as const) {
       page.getByRole('heading', { name: 'Territories', exact: true }),
     ).toBeVisible()
     const waveform = page.locator('.artist-release-header-art')
-    await expect(waveform).toHaveJSProperty('naturalWidth', 2172)
+    await expect(waveform).toHaveJSProperty('naturalWidth', 2400)
     await page.evaluate(() => document.fonts.ready)
     const bounds = await page.locator('.artist-release-header').boundingBox()
     expect(bounds?.x).toBe(isMobile ? 24 : 296)
     expect(bounds?.width).toBe(isMobile ? 342 : 1096)
     expect(
-      Math.abs((bounds?.y ?? 0) - (isMobile ? 168 : 120)),
+      Math.abs((bounds?.y ?? 0) - (isMobile ? 168 : 97)),
     ).toBeLessThanOrEqual(2)
     await page.screenshot({
       path: `../../output/playwright/release-workspace/${theme}-${testInfo.project.name}.png`,
@@ -1989,8 +1989,7 @@ for (const theme of ['light', 'dark', 'dim'] as const) {
     await authenticate(context)
     await gotoHydrated(page, '/dashboard')
     await page
-      .getByRole('button', { name: 'Create release', exact: true })
-      .last()
+      .getByRole('button', { name: 'Create your first release', exact: true })
       .click()
     const dialog = page.getByRole('dialog', {
       name: 'Create release',
@@ -2045,7 +2044,7 @@ test('release drafts validate title locally and cancel without a write', async (
   await authenticate(context)
   await gotoHydrated(page, '/dashboard')
   const trigger = page.getByRole('button', {
-    name: 'Create release',
+    name: 'Create your first release',
     exact: true,
   })
   await trigger.click()
@@ -2078,8 +2077,7 @@ test('release drafts keep entered values after an API failure and allow retry', 
   await authenticate(context)
   await gotoHydrated(page, '/dashboard')
   await page
-    .getByRole('button', { name: 'Create release', exact: true })
-    .last()
+    .getByRole('button', { name: 'Create your first release', exact: true })
     .click()
   const dialog = page.getByRole('dialog', {
     name: 'Create release',
@@ -2122,8 +2120,7 @@ test('release drafts prevent repeated submits and dismissal while saving', async
   await authenticate(context)
   await gotoHydrated(page, '/dashboard')
   await page
-    .getByRole('button', { name: 'Create release', exact: true })
-    .last()
+    .getByRole('button', { name: 'Create your first release', exact: true })
     .click()
   const dialog = page.getByRole('dialog', {
     name: 'Create release',
@@ -2253,8 +2250,7 @@ test('release drafts do not claim success for an unverified save response', asyn
   await authenticate(context)
   await gotoHydrated(page, '/dashboard')
   await page
-    .getByRole('button', { name: 'Create release', exact: true })
-    .last()
+    .getByRole('button', { name: 'Create your first release', exact: true })
     .click()
   const dialog = page.getByRole('dialog', {
     name: 'Create release',
@@ -2309,8 +2305,7 @@ test('release list belongs to the signed-in artist after signing out and switchi
   await authenticate(context)
   await gotoHydrated(page, '/dashboard')
   await page
-    .getByRole('button', { name: 'Create release', exact: true })
-    .last()
+    .getByRole('button', { name: 'Create your first release', exact: true })
     .click()
   const dialog = page.getByRole('dialog', {
     name: 'Create release',
@@ -2367,6 +2362,8 @@ test('workspace theme switches all three palettes and persists across navigation
   page,
   context,
 }) => {
+  // Compare layout geometry without sampling the entry animation's scale and translation.
+  await page.emulateMedia({ reducedMotion: 'reduce' })
   const errors: string[] = []
   page.on('pageerror', (error) => errors.push(error.message))
   page.on('console', (message) => {
@@ -2384,6 +2381,11 @@ test('workspace theme switches all three palettes and persists across navigation
       Promise.all(
         document
           .getAnimations()
+          // The aurora and breathing statuses loop forever; only entrances ever finish.
+          .filter(
+            (animation) =>
+              animation.effect?.getComputedTiming().iterations !== Infinity,
+          )
           .map((animation) => animation.finished.catch(() => undefined)),
       ),
     )
@@ -2522,7 +2524,7 @@ for (const theme of ['dark', 'light', 'dim'] as const) {
     }
     await gotoHydrated(page, '/dashboard')
     const create = page.getByRole('button', {
-      name: 'Create release',
+      name: 'Create your first release',
       exact: true,
     })
     await create.click()

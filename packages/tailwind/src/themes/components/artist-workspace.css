@@ -11,6 +11,18 @@
   --color-artist-canvas-start: #05060a;
   --color-artist-canvas-middle: #070a14;
   --color-artist-canvas-end: #0b0716;
+  /* Soft brand washes drifting behind the workspace; light and dim tone them down. */
+  --color-artist-aurora-1: color-mix(in oklab, var(--color-gradient-brand-from) 34%, transparent);
+  --color-artist-aurora-2: color-mix(in oklab, var(--color-gradient-brand-to) 24%, transparent);
+  --color-artist-aurora-3: color-mix(in oklab, var(--color-gradient-primary-to) 18%, transparent);
+  /* Share of a panel's colour that stays opaque; the rest lets the backdrop through. */
+  --artist-panel-opacity: 78%;
+  /* Film grain over the backdrop; light surfaces show it more, so it is fainter there. */
+  --artist-grain-opacity: 0.07;
+  /* How strongly a release's artwork colours tint the backdrop on its page. */
+  --artist-aurora-cover-mix: 38%;
+  /* How strongly a cover shows through the tile it bleeds into; dark art muddies light surfaces. */
+  --artist-cover-wash-opacity: 0.32;
   --color-artist-sidebar-start: #0d111b;
   --color-artist-sidebar-end: #080a10;
   --color-artist-panel-start: #151c2b;
@@ -92,6 +104,13 @@
   --color-artist-status-error: #be123c;
   --shadow-artist-catalog: none;
   --color-artist-canvas-start: var(--color-background);
+  --color-artist-aurora-1: color-mix(in oklab, var(--color-gradient-brand-from) 16%, transparent);
+  --color-artist-aurora-2: color-mix(in oklab, var(--color-gradient-brand-to) 12%, transparent);
+  --color-artist-aurora-3: color-mix(in oklab, var(--color-gradient-primary-to) 9%, transparent);
+  --artist-panel-opacity: 82%;
+  --artist-grain-opacity: 0.04;
+  --artist-aurora-cover-mix: 18%;
+  --artist-cover-wash-opacity: 0.1;
   --color-artist-canvas-middle: var(--color-background);
   --color-artist-canvas-end: var(--color-background);
   --color-artist-sidebar-start: var(--color-card);
@@ -126,6 +145,11 @@
   --color-artist-catalog-badge: #0b0d12;
   --shadow-artist-catalog: none;
   --color-artist-canvas-start: #0b0d12;
+  --color-artist-aurora-1: color-mix(in oklab, var(--color-gradient-brand-from) 24%, transparent);
+  --color-artist-aurora-2: color-mix(in oklab, var(--color-gradient-brand-to) 16%, transparent);
+  --color-artist-aurora-3: color-mix(in oklab, var(--color-gradient-primary-to) 12%, transparent);
+  --artist-panel-opacity: 80%;
+  --artist-aurora-cover-mix: 28%;
   --color-artist-canvas-middle: #0b0d12;
   --color-artist-canvas-end: #0b0d12;
   --color-artist-sidebar-start: #151923;

@@ -37,10 +37,6 @@ export const settings = {
   'settings.motion.hint': 'Reduced turns animations off',
   'settings.motion.system': 'System',
   'settings.motion.reduced': 'Reduced',
-  'settings.sound': 'Sounds',
-  'settings.sound.hint': 'Soft clicks on hover and press',
-  'settings.sound.on': 'On',
-  'settings.sound.off': 'Off',
   'settings.twoFactor.codeFormat':
     'Enter the 6-digit code from your authenticator app.',
   'settings.twoFactor.title': 'Two-factor sign-in',

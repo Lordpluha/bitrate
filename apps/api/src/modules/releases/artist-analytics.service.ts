@@ -24,6 +24,7 @@ interface DailyRow {
 interface TopRow {
   id: string
   title: string
+  cover: string | null
   plays: bigint
   listeners: bigint
 }
@@ -74,10 +75,10 @@ export class ArtistAnalyticsService {
         ${scope} AND h."listenedAt" >= ${from}
         GROUP BY day ORDER BY day`),
       this.prisma.queryRaw<TopRow[]>(Prisma.sql`
-        SELECT t.id, t.title, COUNT(*)::bigint AS plays,
+        SELECT t.id, t.title, t.cover, COUNT(*)::bigint AS plays,
                COUNT(DISTINCT h."userId")::bigint AS listeners
         ${scope} AND h."listenedAt" >= ${from}
-        GROUP BY t.id, t.title ORDER BY plays DESC, t.id ASC
+        GROUP BY t.id, t.title, t.cover ORDER BY plays DESC, t.id ASC
         LIMIT ${TOP_TRACK_LIMIT}`),
     ])
 
@@ -96,6 +97,7 @@ export class ArtistAnalyticsService {
       topTracks: top.map((row) => ({
         trackId: row.id,
         title: row.title,
+        cover: row.cover,
         plays: Number(row.plays),
         listeners: Number(row.listeners),
       })),

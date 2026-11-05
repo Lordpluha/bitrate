@@ -47,6 +47,7 @@ export {
   releaseAudioUrl,
   releaseCoverUrl,
   titleFromFileName,
+  trackCoverUrl,
 } from './model/media'
 export {
   type CreateReleaseValues,
@@ -81,4 +82,4 @@ export {
   type ReleaseWorkspace,
 } from './model/workspace.schema'
 export { ReleaseFields } from './ui/ReleaseFields'
-export { TrackPlayer } from './ui/TrackPlayer'
+export { StageRing } from './ui/StageRing'

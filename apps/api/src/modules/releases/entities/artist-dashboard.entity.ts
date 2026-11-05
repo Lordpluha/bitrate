@@ -95,6 +95,9 @@ export class DashboardUpcomingEntity {
   @ApiProperty({ enum: ReleaseStatus, enumName: 'ReleaseStatus' })
   status: ReleaseStatus
 
+  @ApiProperty({ type: String, nullable: true })
+  cover: string | null
+
   @ApiProperty({ type: String, format: 'date-time' })
   scheduledAt: Date
 }

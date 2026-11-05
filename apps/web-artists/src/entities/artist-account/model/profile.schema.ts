@@ -11,7 +11,7 @@ export const socialLinkKeys = [
   'soundcloud',
 ] as const
 
-type SocialLinkKey = (typeof socialLinkKeys)[number]
+export type SocialLinkKey = (typeof socialLinkKeys)[number]
 
 /** Catalog keys; render them with `t()`. Only “Website” changes between languages. */
 export const socialLinkLabels = {

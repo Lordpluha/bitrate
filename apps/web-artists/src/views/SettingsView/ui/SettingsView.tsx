@@ -14,8 +14,19 @@ import { LanguagePreference } from '@features/workspace-language'
 import { AppearancePreferences } from '@features/workspace-theme'
 import { useI18n } from '@shared/i18n'
 import { ROUTES } from '@shared/routes/routes'
+import { PanelIcon } from '@shared/ui'
 import { Link } from '@tanstack/react-router'
-import { CircleAlert, CircleCheck } from 'lucide-react'
+import {
+  Bell,
+  CircleAlert,
+  CircleCheck,
+  CircleUserRound,
+  Languages,
+  LockKeyhole,
+  type LucideIcon,
+  Palette,
+  TriangleAlert,
+} from 'lucide-react'
 import type { ReactNode } from 'react'
 
 interface SettingsViewProps {
@@ -60,10 +71,12 @@ export function SettingsView({ artistId }: SettingsViewProps) {
 function Panel({
   id,
   title,
+  icon,
   children,
 }: {
   id: string
   title: string
+  icon: LucideIcon
   children: ReactNode
 }) {
   return (
@@ -71,7 +84,10 @@ function Panel({
       aria-labelledby={id}
       className="artist-release-workspace-panel space-y-4"
     >
-      <h2 id={id}>{title}</h2>
+      <h2 id={id}>
+        <PanelIcon icon={icon} />
+        {title}
+      </h2>
       {children}
     </section>
   )
@@ -88,8 +104,12 @@ function SettingsSections({
   const { tMessage, t } = useI18n()
   return (
     <div className="grid max-w-3xl gap-4">
-      <Panel id="settings-account-heading" title={t('settings.account')}>
-        <dl className="grid gap-3 text-sm sm:grid-cols-2">
+      <Panel
+        icon={CircleUserRound}
+        id="settings-account-heading"
+        title={t('settings.account')}
+      >
+        <dl className="grid grid-cols-[minmax(0,1fr)] gap-3 text-sm sm:grid-cols-[repeat(2,minmax(0,1fr))]">
           <div>
             <dt className="text-text-secondary">{t('settings.email')}</dt>
             <dd className="flex items-center gap-1 break-all">
@@ -109,7 +129,7 @@ function SettingsSections({
           </div>
           <div>
             <dt className="text-text-secondary">{t('settings.handle')}</dt>
-            <dd>
+            <dd className="[overflow-wrap:anywhere]">
               @{profile.username} ·{' '}
               <Link className="underline" to={ROUTES.dashboard.profile}>
                 {t('settings.editProfile')}
@@ -118,7 +138,11 @@ function SettingsSections({
           </div>
         </dl>
       </Panel>
-      <Panel id="settings-security-heading" title={t('settings.security')}>
+      <Panel
+        icon={LockKeyhole}
+        id="settings-security-heading"
+        title={t('settings.security')}
+      >
         <TwoFactorSection
           artistId={artistId}
           enabled={profile.twoFactorEnabled}
@@ -148,25 +172,35 @@ function SettingsSections({
         </div>
         <ActiveSessionsSection artistId={artistId} />
       </Panel>
-      <Panel id="settings-appearance-heading" title={t('settings.appearance')}>
+      <Panel
+        icon={Palette}
+        id="settings-appearance-heading"
+        title={t('settings.appearance')}
+      >
         <AppearancePreferences />
         <p className="text-xs text-text-secondary">
           {t('settings.browserOnly')}
         </p>
       </Panel>
       <Panel
+        icon={Languages}
         id="settings-language-heading"
         title={t('settings.language.title')}
       >
         <LanguagePreference artistId={artistId} />
       </Panel>
       <Panel
+        icon={Bell}
         id="settings-notifications-heading"
         title={t('shell.notifications')}
       >
         <NotificationPreferences artistId={artistId} />
       </Panel>
-      <Panel id="settings-danger-heading" title={t('settings.danger')}>
+      <Panel
+        icon={TriangleAlert}
+        id="settings-danger-heading"
+        title={t('settings.danger')}
+      >
         <DeleteAccountSection artistId={artistId} username={profile.username} />
       </Panel>
     </div>

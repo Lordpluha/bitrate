@@ -26,11 +26,6 @@ const motionChoices: readonly Choice<'system' | 'reduced'>[] = [
   { value: 'reduced', label: 'settings.motion.reduced' },
 ]
 
-const soundChoices: readonly Choice<'on' | 'off'>[] = [
-  { value: 'on', label: 'settings.sound.on' },
-  { value: 'off', label: 'settings.sound.off' },
-]
-
 /** One preference: its name and a one-line explanation, with a compact segmented control. */
 function PreferenceRow<T extends string>({
   label,
@@ -63,7 +58,7 @@ function PreferenceRow<T extends string>({
       <div
         aria-describedby={`${name}-hint`}
         aria-labelledby={`${name}-label`}
-        className="flex gap-0.5 rounded-lg border border-border bg-secondary p-0.5"
+        className="flex flex-wrap gap-0.5 rounded-lg border border-border bg-secondary p-0.5"
         role="radiogroup"
       >
         {choices.map((choice) => {
@@ -102,18 +97,10 @@ function PreferenceRow<T extends string>({
   )
 }
 
-/** Theme, density, motion and interface sounds for this browser, as one settings list. */
+/** Theme, density and motion for this browser, as one settings list. */
 export function AppearancePreferences() {
-  const {
-    theme,
-    setTheme,
-    density,
-    setDensity,
-    motion,
-    setMotion,
-    sound,
-    setSound,
-  } = useWorkspaceTheme()
+  const { theme, setTheme, density, setDensity, motion, setMotion } =
+    useWorkspaceTheme()
   return (
     <div className="divide-y divide-border">
       <PreferenceRow
@@ -136,13 +123,6 @@ export function AppearancePreferences() {
         label="settings.motion"
         onChange={setMotion}
         value={motion}
-      />
-      <PreferenceRow
-        choices={soundChoices}
-        hint="settings.sound.hint"
-        label="settings.sound"
-        onChange={setSound}
-        value={sound}
       />
     </div>
   )

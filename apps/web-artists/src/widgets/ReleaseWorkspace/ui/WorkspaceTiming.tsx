@@ -21,6 +21,7 @@ export function WorkspaceTiming({ release, onAction }: WorkspaceTimingProps) {
     <section
       aria-labelledby="release-timing-heading"
       className="artist-release-workspace-panel artist-release-timing"
+      data-hue="amber"
     >
       <span aria-hidden="true" className="artist-release-next-icon">
         <CalendarDays />

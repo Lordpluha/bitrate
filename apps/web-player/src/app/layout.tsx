@@ -2,16 +2,22 @@ import { getSiteUrl, SITE_DESCRIPTION, SITE_NAME } from '@shared/constants/site'
 import { brandFontVariables } from '@shared/fonts'
 import { ThemeScript } from '@shared/utils'
 import type { Metadata, Viewport } from 'next'
-import { Kanit } from 'next/font/google'
+import localFont from 'next/font/local'
 import type { PropsWithChildren } from 'react'
 import { Provider } from './_provider'
 
 import './global.css'
 
-const kanit = Kanit({
+const kanit = localFont({
+  src: [
+    { path: '../shared/fonts/files/Kanit-Light.woff2', weight: '300' },
+    { path: '../shared/fonts/files/Kanit-Regular.woff2', weight: '400' },
+    { path: '../shared/fonts/files/Kanit-Medium.woff2', weight: '500' },
+    { path: '../shared/fonts/files/Kanit-SemiBold.woff2', weight: '600' },
+    { path: '../shared/fonts/files/Kanit-Bold.woff2', weight: '700' },
+  ],
   variable: '--font-kanit',
-  subsets: ['latin', 'latin-ext'],
-  weight: ['300', '400', '500', '600', '700'],
+  display: 'swap',
 })
 
 export const metadata: Metadata = {

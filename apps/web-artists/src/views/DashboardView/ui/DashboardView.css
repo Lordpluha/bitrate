@@ -10,14 +10,70 @@
     padding-block: 1.75rem;
     background: linear-gradient(
       calc(180deg + atan2(22rem, 100cqw)),
-      var(--color-artist-panel-start) var(--artist-diagonal-stop-start),
-      var(--color-artist-panel-end) var(--artist-diagonal-stop-end)
+      var(--color-artist-glass-panel-start) var(--artist-diagonal-stop-start),
+      var(--color-artist-glass-panel-end) var(--artist-diagonal-stop-end)
     );
     box-shadow: var(--shadow-artist-panel);
   }
 
   .artist-workspace-upload {
     color: var(--color-artist-icon);
+  }
+
+  /* First run: two rows of oversized type drift behind the one action. */
+  .artist-poster {
+    position: relative;
+    display: grid;
+    align-content: center;
+    container-type: inline-size;
+    overflow: hidden;
+  }
+  .artist-poster-marquee {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    gap: 0.5rem;
+    align-content: center;
+    pointer-events: none;
+    mask-image: linear-gradient(
+      90deg,
+      transparent,
+      #000 15%,
+      #000 85%,
+      transparent
+    );
+  }
+  .artist-poster-marquee > div {
+    display: flex;
+    font-size: clamp(3rem, 11cqw, 7rem);
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    white-space: nowrap;
+  }
+  .artist-poster-marquee span {
+    flex: none;
+    animation: artist-marquee 48s linear infinite;
+  }
+  .artist-poster-marquee > [data-row="0"] span {
+    color: transparent;
+    -webkit-text-stroke: 1px
+      color-mix(in oklab, var(--color-foreground) 14%, transparent);
+  }
+  .artist-poster-marquee > [data-row="1"] span {
+    color: color-mix(in oklab, var(--color-artist-icon) 9%, transparent);
+    animation-direction: reverse;
+  }
+  .artist-poster-body {
+    position: relative;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .artist-poster-marquee span {
+      animation: none;
+    }
+  }
+  :root[data-motion="reduced"] .artist-poster-marquee span {
+    animation: none;
   }
 
   .artist-workspace-empty-title {
@@ -43,8 +99,8 @@
       text-align: center;
       background-image: linear-gradient(
         calc(180deg + atan2(26.875rem, 100cqw)),
-        var(--color-artist-panel-start) var(--artist-diagonal-stop-start),
-        var(--color-artist-panel-end) var(--artist-diagonal-stop-end)
+        var(--color-artist-glass-panel-start) var(--artist-diagonal-stop-start),
+        var(--color-artist-glass-panel-end) var(--artist-diagonal-stop-end)
       );
     }
 
@@ -69,5 +125,11 @@
     .artist-workspace-empty-reassurance {
       margin-top: 1.3125rem;
     }
+  }
+}
+
+@keyframes artist-marquee {
+  to {
+    translate: -100% 0;
   }
 }

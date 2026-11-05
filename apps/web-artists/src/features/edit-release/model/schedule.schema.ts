@@ -39,7 +39,8 @@ export function scheduleDefaults(scheduledAt: string | null): ScheduleValues {
   return {
     planned: instant !== null,
     date: instant?.slice(0, 10) ?? '',
-    time: instant?.slice(11, 23) ?? '00:00:00.000',
+    // Premieres are planned to the minute; seconds only add noise to the form.
+    time: instant?.slice(11, 16) ?? '00:00',
   }
 }
 

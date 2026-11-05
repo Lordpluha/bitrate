@@ -3,8 +3,15 @@ import type { ReleaseWorkspace } from '@entities/release'
 import { PublishRelease } from '@features/publish-release'
 import { useI18n } from '@shared/i18n'
 import { PLAYER_ROUTES } from '@shared/routes/routes'
-import { LockedButton } from '@shared/ui'
-import { ExternalLink, Link2, Megaphone, Share2 } from 'lucide-react'
+import { LockedButton, PanelIcon } from '@shared/ui'
+import {
+  ExternalLink,
+  Link2,
+  Megaphone,
+  Rocket,
+  Share2,
+  Sparkles,
+} from 'lucide-react'
 
 interface LaunchStageProps {
   artistId: string
@@ -23,10 +30,12 @@ export function LaunchStage({ artistId, release }: LaunchStageProps) {
         className="artist-release-workspace-panel artist-release-stage-main"
       >
         <h2 id="release-publish-heading">
+          <PanelIcon icon={Rocket} />
           {t('workspace.launch.publication')}
         </h2>
         <PublishRelease artistId={artistId} release={release} />
         <h2 className="mt-8" id="release-launch-heading">
+          <PanelIcon icon={Link2} />
           {t('workspace.launch.links')}
         </h2>
         <p>{t('workspace.launch.linksHint')}</p>
@@ -63,7 +72,10 @@ export function LaunchStage({ artistId, release }: LaunchStageProps) {
         aria-labelledby="release-launch-next-heading"
         className="artist-release-workspace-panel artist-release-stage-side"
       >
-        <h2 id="release-launch-next-heading">{t('workspace.whatNext')}</h2>
+        <h2 id="release-launch-next-heading">
+          <PanelIcon icon={Sparkles} />
+          {t('workspace.whatNext')}
+        </h2>
         <ol className="artist-release-next">
           <li data-state={live ? 'ready' : 'waiting'}>
             <span className="artist-release-next-icon">

@@ -2,8 +2,6 @@ export const dashboard = {
   'dashboard.subtitle': 'Wszystko, czego potrzebujesz do kolejnego wydania.',
   'dashboard.loading': 'Wczytywanie obszaru roboczego…',
   'dashboard.first.label': 'Obszar roboczy wydania',
-  'dashboard.first.line1': 'Twój pierwszy utwór.',
-  'dashboard.first.line2': 'Twój następny krok.',
   'dashboard.first.title': 'Zacznij od gotowego utworu',
   'dashboard.first.description':
     'Prześlij audio i okładkę. Pomożemy Ci przygotować{br} szczegóły wydania i wskażemy następny krok.',
@@ -48,12 +46,11 @@ export const dashboard = {
   'dashboard.attention.clear':
     'Wszystko w porządku. Nic nie wymaga Twojej uwagi.',
   'dashboard.releases.viewMusic': 'Przejdź do muzyki',
-  'dashboard.releases.catalog': 'Obecny katalog · {releases} · {tracks}',
   'dashboard.releases.loading': 'Wczytywanie wydań…',
   'dashboard.releases.unavailable': 'Wydania są teraz niedostępne.',
   'dashboard.upcoming.title': 'Nadchodzące',
   'dashboard.upcoming.empty': 'Brak dat. Zaplanuj datę w wydaniu.',
-  'dashboard.upcoming.plannedDate': 'Planowana data wydania',
+  'dashboard.upcoming.planNext': 'Zaplanuj kolejne wydanie',
   'dashboard.activity.title': 'Ostatnia aktywność',
   'dashboard.activity.loading': 'Wczytywanie aktywności…',
   'dashboard.activity.empty':
@@ -64,4 +61,16 @@ export const dashboard = {
     'Odtworzenia i słuchacze w Bitrate; serwisy zewnętrzne są pokazane jako niepołączone, a nie jako zero.',
   'dashboard.listening.open': 'Otwórz analitykę',
   'dashboard.error.load': 'Nie udało się wczytać pulpitu. Spróbuj ponownie.',
+  'dashboard.numbers.title': 'Twój katalog',
+  'dashboard.numbers.releases': 'Wydania',
+  'dashboard.numbers.live': 'Opublikowane',
+  'dashboard.numbers.review': 'W weryfikacji',
+  'dashboard.numbers.drafts': 'Wersje robocze',
+  'dashboard.numbers.other': 'Inne',
+  'dashboard.numbers.tracks': 'Utwory',
+  'dashboard.premiere.title': 'Najbliższa premiera',
+  'dashboard.premiere.empty':
+    'Nie zaplanowano daty wydania. Wybierz ją w wydaniu, aby rozpocząć odliczanie.',
+  'dashboard.poster.first': 'Twoje pierwsze wydanie',
+  'dashboard.poster.upload': 'Prześlij utwór',
 } as const

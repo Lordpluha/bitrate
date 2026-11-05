@@ -157,7 +157,7 @@ function ScheduleReleaseForm({
                 id={`${id}-${field}`}
                 max={field === 'date' ? '9999-12-31' : undefined}
                 min={field === 'date' ? '0001-01-01' : undefined}
-                step={field === 'time' ? '0.001' : undefined}
+                step={field === 'time' ? 60 : undefined}
                 type={field}
                 {...form.register(field, { onChange: () => update.reset() })}
               />

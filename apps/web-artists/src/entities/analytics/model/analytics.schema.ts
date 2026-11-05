@@ -32,6 +32,7 @@ export const artistAnalyticsSchema = z.object({
       z.object({
         trackId: z.uuid(),
         title: z.string(),
+        cover: z.string().nullable().default(null),
         plays: z.number().int().nonnegative(),
         listeners: z.number().int().nonnegative(),
       }),

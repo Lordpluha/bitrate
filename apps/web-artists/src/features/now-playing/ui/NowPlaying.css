@@ -1,0 +1,288 @@
+/* Workspace player: the floating island, row players and the waveform they share. */
+@layer utilities {
+  .artist-waveform {
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-width: 0;
+    height: 2.25rem;
+  }
+  /* Equal 2px bars at a whole-pixel pitch (see BAR_PITCH); only their height varies. */
+  .artist-waveform-bars {
+    display: flex;
+    flex: 1;
+    gap: 2px;
+    align-items: center;
+    min-width: 0;
+    height: 100%;
+    overflow: hidden;
+  }
+  .artist-waveform-bars > span {
+    flex: none;
+    width: 2px;
+    /* The colour runs along the track (see Waveform); what has played burns brighter. */
+    background: color-mix(in oklab, currentColor 45%, transparent);
+    border-radius: 2px;
+    transition: background-color 200ms ease;
+  }
+  .artist-waveform-bars > span[data-played="true"] {
+    background: currentColor;
+  }
+  /* A transparent range over the bars: click, drag and arrow keys all seek. */
+  .artist-waveform-seek {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    cursor: pointer;
+    opacity: 0;
+  }
+  .artist-waveform:has(.artist-waveform-seek:focus-visible) {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 2px;
+    border-radius: 0.375rem;
+  }
+
+  .artist-track-player {
+    display: flex;
+    gap: 0.875rem;
+    align-items: center;
+    padding: 0.625rem 0.875rem;
+    margin-top: 0.75rem;
+    background: color-mix(in oklab, var(--color-background) 70%, transparent);
+    border: 1px solid var(--color-artist-release-border);
+    border-radius: 0.625rem;
+  }
+  .artist-track-player[data-current="true"] {
+    border-color: color-mix(
+      in oklab,
+      var(--color-artist-selection-border) 55%,
+      var(--color-artist-release-border)
+    );
+  }
+  .artist-track-player-toggle {
+    flex-shrink: 0;
+    border-radius: 999px;
+  }
+  .artist-track-player-wave {
+    flex: 1;
+  }
+  .artist-track-player-time {
+    flex-shrink: 0;
+    font-size: 0.75rem;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-text-secondary);
+  }
+
+  .artist-now-playing {
+    position: fixed;
+    bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+    left: 50%;
+    z-index: 40;
+    width: min(26rem, calc(100vw - 2rem));
+    padding: 0.5rem;
+    color: var(--color-foreground);
+    background: color-mix(
+      in oklab,
+      var(--color-artist-canvas-start) 86%,
+      transparent
+    );
+    border: 1px solid
+      color-mix(in oklab, var(--color-foreground) 12%, transparent);
+    border-radius: 1.75rem;
+    box-shadow: 0 18px 48px -12px
+      color-mix(in oklab, var(--color-artist-selection-border) 45%, transparent);
+    backdrop-filter: blur(16px);
+    translate: -50% 0;
+    transition:
+      width 450ms cubic-bezier(0.16, 1, 0.3, 1),
+      border-radius 450ms cubic-bezier(0.16, 1, 0.3, 1);
+    animation: artist-island-in 500ms cubic-bezier(0.16, 1, 0.3, 1) backwards;
+  }
+  .artist-now-playing[data-expanded="true"] {
+    width: min(34rem, calc(100vw - 2rem));
+    border-radius: 1.25rem;
+  }
+  .artist-now-playing-row {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+  }
+  .artist-now-playing-summary {
+    display: flex;
+    flex: 1;
+    gap: 0.625rem;
+    align-items: center;
+    min-width: 0;
+    padding: 0;
+    color: inherit;
+    text-align: left;
+    cursor: pointer;
+    border-radius: 999px;
+  }
+  .artist-now-playing-summary:focus-visible {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 2px;
+  }
+  .artist-now-playing-cover {
+    display: grid;
+    flex-shrink: 0;
+    place-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    overflow: hidden;
+    color: var(--color-text-secondary);
+    background: var(--color-secondary);
+    border-radius: 999px;
+  }
+  .artist-now-playing-cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .artist-now-playing-cover[data-spinning="true"] {
+    animation: artist-spin 8s linear infinite;
+  }
+  .artist-now-playing-title {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 0.8125rem;
+    white-space: nowrap;
+  }
+  .artist-now-playing-subtitle {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 0.6875rem;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-text-secondary);
+    white-space: nowrap;
+  }
+  .artist-now-playing-toggle {
+    flex-shrink: 0;
+    border-radius: 999px;
+  }
+  .artist-now-playing-eq {
+    display: flex;
+    gap: 2px;
+    align-items: flex-end;
+    height: 0.875rem;
+    margin-inline: 0.25rem;
+  }
+  .artist-now-playing-eq i {
+    width: 3px;
+    height: 3px;
+    background: var(--color-artist-icon);
+    border-radius: 2px;
+  }
+  .artist-now-playing-eq[data-active="true"] i {
+    animation: artist-eq 900ms ease-in-out infinite alternate;
+  }
+  .artist-now-playing-eq i:nth-child(2) {
+    animation-delay: -300ms;
+  }
+  .artist-now-playing-eq i:nth-child(3) {
+    animation-delay: -600ms;
+  }
+  .artist-now-playing-eq i:nth-child(4) {
+    animation-delay: -150ms;
+  }
+  /* One grid row from 0fr to 1fr animates the reveal without measuring the content. */
+  .artist-now-playing-more {
+    display: grid;
+    grid-template-rows: 0fr;
+    opacity: 0;
+    transition:
+      grid-template-rows 450ms cubic-bezier(0.16, 1, 0.3, 1),
+      opacity 300ms ease;
+  }
+  .artist-now-playing-more-inner {
+    display: grid;
+    gap: 0.5rem;
+    min-height: 0;
+    padding-inline: 0.5rem;
+    overflow: hidden;
+  }
+  .artist-now-playing-more-inner > :first-child {
+    margin-top: 0.625rem;
+  }
+  .artist-now-playing-more-inner > :last-child {
+    margin-bottom: 0.25rem;
+  }
+  .artist-now-playing[data-expanded="true"] .artist-now-playing-more {
+    grid-template-rows: 1fr;
+    opacity: 1;
+  }
+  .artist-now-playing-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+  }
+  .artist-now-playing-volume {
+    display: flex;
+    gap: 0.375rem;
+    align-items: center;
+  }
+  .artist-now-playing-volume button {
+    display: grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 999px;
+  }
+  .artist-now-playing-volume button:focus-visible {
+    outline: 2px solid var(--color-ring);
+  }
+  .artist-now-playing-volume input {
+    width: 6rem;
+    accent-color: var(--color-artist-selection-border);
+  }
+
+  @variant lg {
+    /* Centred over the content column, clear of the sidebar. */
+    .artist-now-playing {
+      left: calc(50% + 7.75rem);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .artist-now-playing,
+    .artist-now-playing-cover,
+    .artist-now-playing-eq i {
+      animation: none;
+    }
+  }
+  :root[data-motion="reduced"]
+    :is(
+      .artist-now-playing,
+      .artist-now-playing-cover,
+      .artist-now-playing-eq i
+    ) {
+    animation: none;
+  }
+}
+
+@keyframes artist-island-in {
+  from {
+    opacity: 0;
+    translate: -50% 1.5rem;
+  }
+}
+
+@keyframes artist-spin {
+  to {
+    rotate: 1turn;
+  }
+}
+
+@keyframes artist-eq {
+  to {
+    height: 0.875rem;
+  }
+}

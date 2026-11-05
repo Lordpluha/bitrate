@@ -24,7 +24,6 @@ export const profile = {
     'Could not confirm the image was saved. Reload the page before trying again.',
   'profile.subtitle': 'How listeners see you on Bitrate.',
   'profile.loading': 'Loading your profile…',
-  'profile.images': 'Images',
   'profile.details': 'Details',
   'profile.preview': 'Preview · unsaved changes are shown but not published',
   'profile.verified': 'Verified artist',
