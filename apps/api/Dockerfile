@@ -158,7 +158,11 @@ USER bitrateapi
 
 # Fails the build, not the first transcode job in production, when the worker's runtime-only
 # workspace dependency cannot be resolved from the API package (a dangling pnpm link).
-RUN cd apps/api && node --input-type=module -e "await import('@bitrate/converter')"
+# Resolved from apps/api, where the pnpm link lives; WORKDIR goes back to /app for CMD and the
+# compose `command` paths.
+WORKDIR /app/apps/api
+RUN node --input-type=module -e "await import('@bitrate/converter')"
+WORKDIR /app
 
 EXPOSE 3000
 HEALTHCHECK --interval=30s --timeout=3s --start-period=40s --retries=3 \
