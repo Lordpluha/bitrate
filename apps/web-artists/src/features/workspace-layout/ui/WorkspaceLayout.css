@@ -1,0 +1,167 @@
+/* Arrangeable tile grids: Dashboard, Analytics and the release Draft stage. */
+@layer utilities {
+  .artist-layout {
+    min-width: 0;
+    container-type: inline-size;
+  }
+  .artist-layout-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1rem;
+    align-items: stretch;
+  }
+  .artist-layout-tile {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+  .artist-layout-tile > :not(.artist-layout-toolbar),
+  .artist-layout-content > * {
+    flex: 1;
+  }
+  .artist-layout-content {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+  }
+  /* Panels inside a tile keep their tile's place in the page entrance stagger. */
+  #workspace-content .artist-layout-tile > :first-child {
+    --reveal-index: inherit;
+  }
+
+  @container (min-width: 42rem) {
+    .artist-layout-grid {
+      gap: 1.25rem;
+    }
+    .artist-layout-grid[data-variant="thirds"] {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .artist-layout-grid[data-variant="thirds"] > [data-size="M"] {
+      grid-column: span 2;
+    }
+    .artist-layout-grid[data-variant="thirds"] > [data-size="L"] {
+      grid-column: 1 / -1;
+    }
+    .artist-layout-grid[data-variant="halves"] {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .artist-layout-grid[data-variant="halves"]
+      > :is([data-size="M"], [data-size="L"]) {
+      grid-column: 1 / -1;
+    }
+  }
+
+  /* Customize mode: dashed outlines, a toolbar per tile, hidden tiles faded. */
+  .artist-layout-editbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.5rem;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+  }
+  .artist-layout-hint {
+    flex: 1 1 18rem;
+    font-size: 0.8125rem;
+    color: var(--color-text-secondary);
+  }
+  .artist-layout-tile[data-editing="true"] {
+    gap: 0.5rem;
+    padding: 0.5rem;
+    touch-action: manipulation;
+    border: 1px dashed
+      color-mix(in oklab, var(--color-artist-selection-border) 60%, transparent);
+    border-radius: calc(var(--radius-artist-panel) + 0.5rem);
+  }
+  .artist-layout-tile[data-hidden="true"] .artist-layout-content {
+    opacity: 0.35;
+    filter: grayscale(0.6);
+  }
+  .artist-layout-dragging {
+    z-index: 1;
+    box-shadow: 0 24px 48px -16px
+      color-mix(in oklab, var(--color-black) 60%, transparent);
+  }
+  .artist-layout-toolbar {
+    display: flex;
+    gap: 0.375rem;
+    align-items: center;
+  }
+  .artist-layout-toolbar button {
+    display: inline-flex;
+    gap: 0.375rem;
+    align-items: center;
+    justify-content: center;
+    min-height: 2rem;
+    padding-inline: 0.5rem;
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+    background: var(--color-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+  }
+  .artist-layout-toolbar button:hover {
+    color: var(--color-foreground);
+  }
+  .artist-layout-toolbar button:focus-visible {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 2px;
+  }
+  .artist-layout-handle {
+    flex: 1;
+    justify-content: flex-start;
+    min-width: 0;
+    touch-action: none;
+    cursor: grab;
+  }
+  .artist-layout-handle span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .artist-layout-dragging .artist-layout-handle {
+    cursor: grabbing;
+  }
+  .artist-layout-sizes {
+    display: flex;
+    gap: 0.125rem;
+    padding: 0.125rem;
+    background: var(--color-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+  }
+  .artist-layout-toolbar .artist-layout-sizes button {
+    min-width: 1.75rem;
+    min-height: 1.625rem;
+    padding-inline: 0.25rem;
+    background: transparent;
+    border-color: transparent;
+    border-radius: 0.375rem;
+  }
+  .artist-layout-toolbar .artist-layout-sizes button[aria-pressed="true"] {
+    color: var(--color-foreground);
+    background: var(--color-artist-selection);
+    border-color: var(--color-artist-selection-border);
+  }
+  .artist-layout-visibility[aria-pressed="true"] {
+    color: var(--color-artist-status-warning);
+  }
+
+  .artist-layout-customize {
+    gap: 0.5rem;
+  }
+  .artist-layout-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+    justify-content: flex-end;
+  }
+  .artist-layout-error {
+    width: 100%;
+    font-size: 0.75rem;
+    color: var(--color-destructive);
+    text-align: right;
+  }
+}

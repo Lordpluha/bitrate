@@ -80,7 +80,7 @@ export class ArtistDashboardService {
         where: { ...owned, scheduledAt: { gte: now } },
         orderBy: [{ scheduledAt: 'asc' }, { id: 'asc' }],
         take: UPCOMING_LIMIT,
-        select: { id: true, title: true, status: true, scheduledAt: true },
+        select: { id: true, title: true, status: true, cover: true, scheduledAt: true },
       }),
       this.prisma.releaseTask.count({ where: openTasks }),
       this.prisma.releaseTask.count({ where: { ...openTasks, dueAt: { lt: now } } }),

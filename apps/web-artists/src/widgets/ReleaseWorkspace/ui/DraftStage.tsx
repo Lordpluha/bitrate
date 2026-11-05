@@ -1,8 +1,20 @@
 import { Button, cn } from '@bitrate/ui-react'
 import { type ReleaseWorkspace, releaseRoadmap } from '@entities/release'
+import {
+  type CustomizableLayout,
+  CustomizeControls,
+  LayoutGrid,
+} from '@features/workspace-layout'
 import { useI18n } from '@shared/i18n'
+import { PanelIcon } from '@shared/ui'
 import { useLocation } from '@tanstack/react-router'
-import { ChevronDown, CircleCheck, CircleDashed, Lock } from 'lucide-react'
+import {
+  ChevronDown,
+  CircleCheck,
+  CircleDashed,
+  ListChecks,
+  Lock,
+} from 'lucide-react'
 import { useId, useState } from 'react'
 import { editLockReason } from '../lib/locks'
 import type { WorkspaceActionHandler } from '../model/workspaceAction'
@@ -40,13 +52,20 @@ interface DraftStageProps {
   release: ReleaseWorkspace
   /** Every button that opens a dialog reports here. */
   onAction: WorkspaceActionHandler
+  /** The artist's arrangement of `draftTiles`; Customize itself sits in the stepper. */
+  layout: CustomizableLayout
 }
 
 /**
  * Stage 1: everything the artist prepares before asking Bitrate to review. The side card is
  * the one place that says what is left and submits; the main column holds the editors.
  */
-export function DraftStage({ artistId, release, onAction }: DraftStageProps) {
+export function DraftStage({
+  artistId,
+  release,
+  onAction,
+  layout,
+}: DraftStageProps) {
   const lock = editLockReason(release.status)
   const i18n = useI18n()
   const { t } = i18n
@@ -108,6 +127,7 @@ export function DraftStage({ artistId, release, onAction }: DraftStageProps) {
       >
         <div className="flex items-baseline justify-between gap-3">
           <h2 id="release-checklist-heading">
+            <PanelIcon icon={ListChecks} />
             {draft
               ? t('workspace.draft.checklist')
               : t('workspace.draft.submitted')}
@@ -199,15 +219,34 @@ export function DraftStage({ artistId, release, onAction }: DraftStageProps) {
           )}
         </div>
       </section>
-      <div className="artist-release-stage-main artist-release-editors">
-        <WorkspaceTiming onAction={onAction} release={release} />
-        <WorkspaceTracks
-          artistId={artistId}
-          onAction={onAction}
-          release={release}
+      <div className="artist-release-stage-main">
+        <LayoutGrid
+          editingActions={<CustomizeControls layout={layout} />}
+          layout={layout}
+          renderTile={(id) => {
+            switch (id) {
+              case 'timing':
+                return <WorkspaceTiming onAction={onAction} release={release} />
+              case 'tracks':
+                return (
+                  <WorkspaceTracks
+                    artistId={artistId}
+                    onAction={onAction}
+                    release={release}
+                  />
+                )
+              case 'credits':
+                return (
+                  <WorkspaceCredits onAction={onAction} release={release} />
+                )
+              case 'rights':
+                return <WorkspaceRights onAction={onAction} release={release} />
+              default:
+                return null
+            }
+          }}
+          variant="halves"
         />
-        <WorkspaceCredits onAction={onAction} release={release} />
-        <WorkspaceRights onAction={onAction} release={release} />
       </div>
     </div>
   )

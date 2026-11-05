@@ -41,4 +41,5 @@ export const analytics = {
   'analytics.other': 'Інші сервіси',
   'analytics.noFigures': 'Для не під’єднаних сервісів цифри не показуються.',
   'analytics.error.load': 'Не вдалося завантажити аналітику. Спробуйте ще раз.',
+  'analytics.highlights': 'Головне',
 } as const

@@ -21,6 +21,7 @@ export {
   type ProfileFormValues,
   profileFormDefaults,
   profileFormSchema,
+  type SocialLinkKey,
   socialLinkKeys,
   socialLinkLabels,
 } from './model/profile.schema'

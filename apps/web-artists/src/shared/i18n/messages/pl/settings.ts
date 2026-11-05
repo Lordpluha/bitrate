@@ -38,10 +38,6 @@ export const settings = {
   'settings.motion.hint': 'Ograniczone wyłączają animacje',
   'settings.motion.system': 'Systemowe',
   'settings.motion.reduced': 'Ograniczone',
-  'settings.sound': 'Dźwięki',
-  'settings.sound.hint': 'Ciche kliknięcia przy najechaniu i kliknięciu',
-  'settings.sound.on': 'Włączone',
-  'settings.sound.off': 'Wyłączone',
   'settings.twoFactor.codeFormat':
     'Wpisz 6-cyfrowy kod z aplikacji uwierzytelniającej.',
   'settings.twoFactor.title': 'Logowanie dwuetapowe',

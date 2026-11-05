@@ -473,6 +473,12 @@ const server = createServer(async (request, response) => {
       upcoming: [],
       tasks: { open: 0, overdue: 0, next: [] },
     })
+  if (request.url?.startsWith('/api/v1/artist-workspace/layouts/'))
+    return json(200, {
+      page: request.url.split('/').pop(),
+      tiles: [],
+      updatedAt: null,
+    })
   if (request.url === '/api/v1/artist-notifications')
     return json(200, { data: [], unread: 0, seenAt: null })
   if (request.url?.startsWith('/api/v1/artist-search'))

@@ -37,6 +37,9 @@ export class AnalyticsTopTrackEntity {
   @ApiProperty()
   title: string
 
+  @ApiProperty({ type: String, nullable: true })
+  cover: string | null
+
   @ApiProperty({ minimum: 0 })
   plays: number
 

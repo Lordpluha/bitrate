@@ -24,7 +24,6 @@ export const profile = {
     'Nie udało się potwierdzić zapisania obrazu. Odśwież stronę przed ponowną próbą.',
   'profile.subtitle': 'Jak widzą Cię słuchacze w Bitrate.',
   'profile.loading': 'Wczytywanie profilu…',
-  'profile.images': 'Obrazy',
   'profile.details': 'Szczegóły',
   'profile.preview':
     'Podgląd · niezapisane zmiany są widoczne, ale nieopublikowane',

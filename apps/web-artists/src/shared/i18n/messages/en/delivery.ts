@@ -85,4 +85,8 @@ export const delivery = {
   'delivery.page.openMusic': 'Open Music',
   'delivery.page.sent': 'Sent to partner',
   'delivery.page.pages': 'Distribution pages',
+  'delivery.page.noPartnerTitle': 'No distribution partner yet',
+  'delivery.page.flow.plan': 'Your plan',
+  'delivery.page.flow.partner': 'Partner',
+  'delivery.page.flow.stores': 'Stores',
 } as const

@@ -5,7 +5,8 @@ import {
   useReorderTracks,
 } from '@entities/release'
 import { useI18n } from '@shared/i18n'
-import { Music2, Upload } from 'lucide-react'
+import { PanelIcon } from '@shared/ui'
+import { ListMusic, Music2, Upload } from 'lucide-react'
 import { durationLabel, isrcLabel } from '../lib/trackLabels'
 import type { WorkspaceActionHandler } from '../model/workspaceAction'
 import { DraftTrackRow } from './DraftTrackRow'
@@ -52,6 +53,7 @@ export function WorkspaceTracks({
     >
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h2 id="release-tracks-heading">
+          <PanelIcon icon={ListMusic} />
           {t('workspace.tracks.title')} <span>({release.trackCount})</span>
         </h2>
         {draft && (

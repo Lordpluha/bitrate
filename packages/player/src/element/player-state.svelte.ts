@@ -4,6 +4,7 @@
  * is a compiler macro tied to its `.svelte` file, so host-element calls are injected from
  * `BitratePlayer.svelte` instead — see `.claude/rules/player-rules.md` and the `svelte` skill.
  */
+import { untrack } from 'svelte'
 import { createPlaybackEngine, type PlaybackEngine, type PlaybackEngineState } from '../engine'
 import type { BitratePlayerRendition, BitratePlayerSourceResolver } from '../contract'
 
@@ -12,14 +13,18 @@ type DispatchFn = <T>(type: string, detail?: T) => void
 type PlayerTransport = {
   play: () => Promise<void>
   pause: () => void
+  seek: (seconds: number) => void
 }
 
 export type CreatePlayerEngineStateInput = {
   getAudioEl: () => HTMLAudioElement | undefined
   getResolveSource: () => BitratePlayerSourceResolver | null
   getRenditions: () => BitratePlayerRendition[]
+  /** The host's `volume` and `muted` properties, applied to every engine. */
+  getVolume: () => number
+  getMuted: () => boolean
   dispatch: DispatchFn
-  /** Rebinds host `play()`/`pause()` whenever a new engine is wired up. */
+  /** Rebinds host `play()`/`pause()`/`seek()` whenever a new engine is wired up. */
   exposeTransport: (transport: PlayerTransport) => void
 }
 
@@ -69,6 +74,11 @@ export function createPlayerEngineState(input: CreatePlayerEngineStateInput) {
       resolveSource: resolver,
       onEnded: () => input.dispatch('ended'),
     })
+    // Read untracked: a volume change must not rebuild the engine (see the effect below).
+    untrack(() => {
+      engine?.setVolume(input.getVolume())
+      engine?.setMuted(input.getMuted())
+    })
     const unsubscribe = engine.subscribe((next) => {
       if (next.status === 'playing' && previousStatus !== 'playing') input.dispatch('play')
       if (next.status === 'paused' && previousStatus === 'playing') input.dispatch('pause')
@@ -80,6 +90,7 @@ export function createPlayerEngineState(input: CreatePlayerEngineStateInput) {
     input.exposeTransport({
       play: () => (engine ? engine.play(effectiveBitrate) : Promise.resolve()),
       pause: () => engine?.pause(),
+      seek: (seconds) => engine?.seek(seconds),
     })
 
     return () => {
@@ -87,6 +98,16 @@ export function createPlayerEngineState(input: CreatePlayerEngineStateInput) {
       engine?.destroy()
       engine = null
     }
+  })
+
+  /** Follows later changes of the host's `volume` and `muted` properties. */
+  $effect(() => {
+    const volume = input.getVolume()
+    const muted = input.getMuted()
+    untrack(() => {
+      engine?.setVolume(volume)
+      engine?.setMuted(muted)
+    })
   })
 
   async function onPlayPause(): Promise<void> {

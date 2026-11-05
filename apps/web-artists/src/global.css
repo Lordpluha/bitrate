@@ -7,10 +7,13 @@
  * could not do.
  */
 @import "./shared/styles/workspace.css";
-@import "./entities/release/ui/TrackPlayer.css";
+@import "./features/now-playing/ui/NowPlaying.css";
+@import "./features/workspace-layout/ui/WorkspaceLayout.css";
 @import "./widgets/ArtistDashboard/ui/ArtistDashboard.css";
 @import "./views/DashboardView/ui/DashboardView.css";
 @import "./views/AnalyticsView/ui/AnalyticsView.css";
+@import "./views/DistributionView/ui/DistributionView.css";
+@import "./views/ProfileView/ui/ProfileView.css";
 @import "./widgets/ReleaseWorkspace/ui/ReleaseWorkspace.css";
 @import "./widgets/DashboardOverview/ui/DashboardOverview.css";
 @import "./widgets/MusicCatalogue/ui/MusicCatalogue.css";
@@ -108,11 +111,7 @@
   padding: 0.75rem;
 }
 :root[data-density="compact"]
-  :is(
-    .artist-release-workspace,
-    .artist-release-stage,
-    .artist-release-editors
-  ) {
+  :is(.artist-release-workspace, .artist-release-stage, .artist-layout-grid) {
   gap: 0.75rem;
 }
 /* Page entrance: content blocks blur-fade in, siblings staggered. New blocks (route changes,

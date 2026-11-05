@@ -35,4 +35,5 @@ export const analytics = {
   'analytics.noFigures':
     'No figures are shown for services that are not connected.',
   'analytics.error.load': 'Could not load analytics. Please try again.',
+  'analytics.highlights': 'Highlights',
 } as const

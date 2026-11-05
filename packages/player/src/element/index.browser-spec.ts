@@ -146,6 +146,55 @@ describe('<bitrate-player>', () => {
     await expect.poll(() => audio?.hasAttribute('src')).toBe(false)
   })
 
+  it('seeks the resolveSource engine through the host seek()', async () => {
+    const { BITRATE_PLAYER_TAG_NAME, defineBitratePlayer } = await import('./index')
+    await defineBitratePlayer()
+
+    const element = document.createElement(BITRATE_PLAYER_TAG_NAME) as BitratePlayerElement
+    document.body.append(element)
+    await customElements.whenDefined(BITRATE_PLAYER_TAG_NAME)
+
+    element.renditions = [{ bitrate: 320, label: '320 kbps' }]
+    element.resolveSource = vi.fn().mockResolvedValue('https://cdn.test/320.m4a')
+    const audio = await vi.waitFor(() => {
+      const found = element.shadowRoot?.querySelector('audio')
+      if (!found) throw new Error('audio not rendered yet')
+      return found
+    })
+
+    // Before media loads, currentTime reports the default playback start position it was given.
+    await expect
+      .poll(() => {
+        element.seek(42)
+        return audio.currentTime
+      })
+      .toBe(42)
+  })
+
+  it('applies the host volume and muted properties on the resolveSource path', async () => {
+    const { BITRATE_PLAYER_TAG_NAME, defineBitratePlayer } = await import('./index')
+    await defineBitratePlayer()
+
+    const element = document.createElement(BITRATE_PLAYER_TAG_NAME) as BitratePlayerElement
+    document.body.append(element)
+    await customElements.whenDefined(BITRATE_PLAYER_TAG_NAME)
+
+    element.volume = 0.4
+    element.renditions = [{ bitrate: 320, label: '320 kbps' }]
+    element.resolveSource = vi.fn().mockResolvedValue('https://cdn.test/320.m4a')
+    const audio = await vi.waitFor(() => {
+      const found = element.shadowRoot?.querySelector('audio')
+      if (!found) throw new Error('audio not rendered yet')
+      return found
+    })
+
+    await expect.poll(() => audio.volume).toBeCloseTo(0.4)
+    element.volume = 0.7
+    element.muted = true
+    await expect.poll(() => audio.volume).toBeCloseTo(0.7)
+    await expect.poll(() => audio.muted).toBe(true)
+  })
+
   it('renders cover art and artist once supplied, and a placeholder when absent', async () => {
     const { BITRATE_PLAYER_TAG_NAME, defineBitratePlayer } = await import('./index')
     await defineBitratePlayer()

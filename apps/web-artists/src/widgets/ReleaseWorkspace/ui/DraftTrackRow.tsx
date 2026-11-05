@@ -1,6 +1,6 @@
 import { Button } from '@bitrate/ui-react'
 import { trackStatusLabels, trackVersionLabels } from '@entities/music'
-import { TrackPlayer } from '@entities/release'
+import { TrackPlayer } from '@features/now-playing'
 import { useI18n } from '@shared/i18n'
 import { ArrowDown, ArrowUp, CircleAlert } from 'lucide-react'
 import {
@@ -102,9 +102,11 @@ export function DraftTrackRow({
       {track.hasAudio && (
         <TrackPlayer
           coverUrl={coverUrl}
+          duration={track.duration}
           releaseId={releaseId}
           title={track.title}
           trackId={track.id}
+          waveform={track.waveform}
         />
       )}
       {editable && (

@@ -1,7 +1,8 @@
 import { Button } from '@bitrate/ui-react'
 import type { ReleaseWorkspace } from '@entities/release'
 import { useI18n } from '@shared/i18n'
-import { CircleCheck, CircleDashed } from 'lucide-react'
+import { PanelIcon } from '@shared/ui'
+import { CircleCheck, CircleDashed, ShieldCheck } from 'lucide-react'
 import type { WorkspaceActionHandler } from '../model/workspaceAction'
 
 interface WorkspaceRightsProps {
@@ -38,9 +39,13 @@ export function WorkspaceRights({ release, onAction }: WorkspaceRightsProps) {
     <section
       aria-labelledby="release-rights-heading"
       className="artist-release-workspace-panel artist-release-rights"
+      data-hue="blue"
     >
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h2 id="release-rights-heading">{t('workspace.rights.title')}</h2>
+        <h2 id="release-rights-heading">
+          <PanelIcon icon={ShieldCheck} />
+          {t('workspace.rights.title')}
+        </h2>
         {draft && (
           <Button
             className="rounded-full"

@@ -28,6 +28,16 @@ export function releaseCoverUrl(cover: string): string {
   return cover.startsWith(API_STATIC_PREFIX) ? `${apiBaseUrl}${cover}` : cover
 }
 
+/**
+ * A published track's cover: release tracks store the release's full path, tracks uploaded
+ * directly store only a file name inside the public track covers folder.
+ */
+export function trackCoverUrl(cover: string): string {
+  return cover.includes('/')
+    ? releaseCoverUrl(cover)
+    : `${apiBaseUrl}${API_STATIC_PREFIX}tracks/covers/${encodeURIComponent(cover)}`
+}
+
 /** Owner-only playback route of an uploaded master; the session cookie authorizes it. */
 export function releaseAudioUrl(releaseId: string, trackId: string): string {
   return `${apiBaseUrl}/api/v1/releases/${releaseId}/tracks/${trackId}/audio`

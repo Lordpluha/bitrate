@@ -1,0 +1,201 @@
+@layer utilities {
+  /* The page leads with how listeners see the artist; the forms below only feed this card. */
+  .artist-profile-card {
+    padding: 0;
+    overflow: hidden;
+  }
+  .artist-profile-banner {
+    position: relative;
+    height: 13rem;
+    background:
+      radial-gradient(
+        60% 120% at 15% 0,
+        color-mix(in oklab, var(--color-chart-1) 45%, transparent),
+        transparent
+      ),
+      radial-gradient(
+        50% 120% at 85% 20%,
+        color-mix(in oklab, var(--color-chart-2) 35%, transparent),
+        transparent
+      ),
+      radial-gradient(
+        50% 100% at 55% 100%,
+        color-mix(in oklab, var(--color-chart-5) 18%, transparent),
+        transparent
+      ),
+      var(--color-secondary);
+  }
+  .artist-profile-banner img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .artist-release-workspace-panel .artist-profile-note {
+    position: absolute;
+    top: 0.875rem;
+    right: 0.875rem;
+    max-width: calc(100% - 1.75rem);
+    padding: 0.25rem 0.625rem;
+    font-size: 0.6875rem;
+    font-weight: 400;
+    color: var(--color-foreground);
+    background: color-mix(in oklab, var(--color-background) 72%, transparent);
+    border-radius: 9999px;
+  }
+  .artist-profile-identity {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 0 1.25rem;
+    padding: 0 1.5rem 1.25rem;
+  }
+  .artist-profile-avatar {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 7rem;
+    height: 7rem;
+    margin-top: -3.5rem;
+    overflow: hidden;
+    color: var(--color-artist-icon);
+    background: var(--color-secondary);
+    border: 4px solid var(--color-card);
+    border-radius: 50%;
+  }
+  .artist-profile-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .artist-profile-avatar svg {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+  .artist-profile-info {
+    display: grid;
+    gap: 0.375rem;
+    min-width: 0;
+    padding-top: 0.875rem;
+  }
+  .artist-release-workspace-panel .artist-profile-name {
+    display: flex;
+    gap: 0.375rem;
+    align-items: center;
+    font-size: 1.5rem;
+    line-height: 1.2;
+    color: var(--color-foreground);
+    overflow-wrap: anywhere;
+  }
+  .artist-profile-name svg {
+    flex-shrink: 0;
+    width: 1.25rem;
+    height: 1.25rem;
+    color: var(--color-artist-icon);
+  }
+  .artist-release-workspace-panel .artist-profile-country {
+    display: inline-flex;
+    gap: 0.25rem;
+    align-items: center;
+    font-size: 0.75rem;
+  }
+  .artist-profile-country svg {
+    width: 0.875rem;
+    height: 0.875rem;
+  }
+  .artist-release-workspace-panel .artist-profile-bio {
+    max-width: 65ch;
+    margin-top: 0.25rem;
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    text-wrap: pretty;
+    white-space: pre-line;
+  }
+  .artist-profile-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+    margin-top: 0.5rem;
+  }
+  .artist-profile-links li {
+    display: inline-flex;
+    gap: 0.375rem;
+    align-items: center;
+    padding: 0.25rem 0.625rem;
+    font-size: 0.6875rem;
+    border: 1px solid var(--color-artist-release-border);
+    border-radius: 9999px;
+  }
+  .artist-profile-links svg,
+  .artist-profile-link-label svg {
+    flex-shrink: 0;
+    width: 0.875rem;
+    height: 0.875rem;
+  }
+  /* Uploads apply at once, so they sit on the card they change. */
+  .artist-profile-images {
+    display: grid;
+    gap: 1rem 2rem;
+    padding: 1rem 1.5rem;
+    border-top: 1px solid var(--color-artist-release-border);
+  }
+  .artist-profile-image-field {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.25rem 1rem;
+    align-items: center;
+  }
+  .artist-profile-image-field > [role="alert"] {
+    grid-column: 1 / -1;
+  }
+  .artist-profile-form {
+    display: grid;
+    gap: 1.5rem;
+    align-items: start;
+  }
+  .artist-profile-form > .artist-release-workspace-panel {
+    height: 100%;
+  }
+  .artist-profile-link-label {
+    display: flex;
+    gap: 0.375rem;
+    align-items: center;
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+  }
+  .artist-profile-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+    justify-content: flex-end;
+  }
+  .artist-profile-actions > p {
+    margin-inline-end: auto;
+  }
+  @variant max-sm {
+    .artist-profile-banner {
+      height: 9rem;
+    }
+    .artist-profile-identity {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .artist-profile-avatar {
+      width: 5.5rem;
+      height: 5.5rem;
+      margin-top: -2.75rem;
+    }
+    .artist-profile-image-field {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+  @variant lg {
+    .artist-profile-images {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .artist-profile-form {
+      grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+    }
+    .artist-profile-actions {
+      grid-column: 1 / -1;
+    }
+  }
+}

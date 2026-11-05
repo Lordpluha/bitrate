@@ -7,14 +7,20 @@ import {
 import { ReleaseSubmission } from '@features/submit-release'
 import { type TranslationKey, useI18n } from '@shared/i18n'
 import { formatDateTimeUtc } from '@shared/lib/date'
+import { PanelIcon } from '@shared/ui'
 import { Link } from '@tanstack/react-router'
 import {
+  Activity,
   Check,
   CircleCheck,
   CircleDashed,
   Clock,
+  FileClock,
+  Hourglass,
   Info,
+  ListChecks,
   Send,
+  Sparkles,
 } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { WorkspaceReview } from './WorkspaceReview'
@@ -119,7 +125,10 @@ export function ReviewStage({ artistId, release }: ReviewStageProps) {
             <Clock aria-hidden="true" />
           </span>
           <div className="min-w-0 flex-1">
-            <h2 id="release-review-heading">{t('workspace.review.waiting')}</h2>
+            <h2 id="release-review-heading">
+              <PanelIcon icon={Hourglass} />
+              {t('workspace.review.waiting')}
+            </h2>
             {release.submittedAt && (
               <p>
                 {t('workspace.review.submittedAt', {
@@ -167,6 +176,7 @@ export function ReviewStage({ artistId, release }: ReviewStageProps) {
       >
         <Send aria-hidden="true" />
         <h2 id="release-review-heading">
+          <PanelIcon icon={FileClock} />
           {t('workspace.review.notSubmitted')}
         </h2>
         <p>{t('workspace.review.notSubmittedHint')}</p>
@@ -180,6 +190,7 @@ export function ReviewStage({ artistId, release }: ReviewStageProps) {
         className="artist-release-workspace-panel artist-release-stage-side"
       >
         <h2 id="release-review-next-heading">
+          <PanelIcon icon={Activity} />
           {t('workspace.review.progress')}
         </h2>
         <p>{t('workspace.review.reviseHint')}</p>
@@ -192,7 +203,10 @@ export function ReviewStage({ artistId, release }: ReviewStageProps) {
         aria-labelledby="release-review-next-heading"
         className="artist-release-workspace-panel artist-release-stage-side"
       >
-        <h2 id="release-review-next-heading">{t('workspace.whatNext')}</h2>
+        <h2 id="release-review-next-heading">
+          <PanelIcon icon={Sparkles} />
+          {t('workspace.whatNext')}
+        </h2>
         <p>{t('workspace.review.nextHint')}</p>
         <StageLink release={release} stage="deliver">
           {t('workspace.review.planDelivery')}
@@ -204,6 +218,7 @@ export function ReviewStage({ artistId, release }: ReviewStageProps) {
         className="artist-release-workspace-panel artist-release-stage-side"
       >
         <h2 id="release-review-next-heading">
+          <PanelIcon icon={ListChecks} />
           {t('workspace.review.readiness')}
         </h2>
         <ReadinessSummary release={release} />

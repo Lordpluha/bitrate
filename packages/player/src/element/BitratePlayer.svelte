@@ -99,6 +99,8 @@
     getAudioEl: () => audioEl,
     getResolveSource: () => resolveSource,
     getRenditions: () => renditions,
+    getVolume: () => volume,
+    getMuted: () => muted,
     dispatch,
     exposeTransport,
   })

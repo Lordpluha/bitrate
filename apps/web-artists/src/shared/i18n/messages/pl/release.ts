@@ -69,4 +69,5 @@ export const release = {
   'release.roadmap.delivery': 'Dostawa do sklepów',
   'release.roadmap.released': 'Wydane',
   'release.roadmap.deliverySoon': 'Dostawa do sklepów pojawi się wkrótce',
+  'release.ring.label': 'Etap {index} z {total}: {stage}',
 } as const

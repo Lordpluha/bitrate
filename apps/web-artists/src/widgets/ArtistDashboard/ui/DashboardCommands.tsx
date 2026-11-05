@@ -39,7 +39,7 @@ export function DashboardCommands({ artistId }: { artistId: string }) {
             ? t('shell.notifications.label', { count: unread })
             : t('shell.notifications')
         }
-        className="relative size-11 shrink-0 rounded-lg bg-secondary text-text-secondary"
+        className="artist-workspace-bell relative size-11 shrink-0 rounded-lg bg-secondary text-text-secondary"
         onClick={() => openAction('notifications')}
         size="icon"
         variant="ghost"
@@ -55,7 +55,7 @@ export function DashboardCommands({ artistId }: { artistId: string }) {
       {releaseWorkspace ? (
         <Button
           asChild
-          className="artist-workspace-header-create hidden rounded-full lg:inline-flex"
+          className="artist-workspace-header-create hidden lg:inline-flex"
           variant="outline"
         >
           <Link

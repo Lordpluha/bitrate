@@ -87,6 +87,10 @@ export const delivery = {
   'delivery.page.openMusic': 'Відкрити «Музику»',
   'delivery.page.sent': 'Надіслано партнеру',
   'delivery.page.pages': 'Сторінки дистрибуції',
+  'delivery.page.noPartnerTitle': 'Партнера з дистрибуції ще немає',
+  'delivery.page.flow.plan': 'Ваш план',
+  'delivery.page.flow.partner': 'Партнер',
+  'delivery.page.flow.stores': 'Магазини',
   'delivery.countries.few': '{count} країни',
   'delivery.countries.many': '{count} країн',
 } as const

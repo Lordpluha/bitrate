@@ -1,4 +1,4 @@
-import { Button, cn } from '@bitrate/ui-react'
+import { Button } from '@bitrate/ui-react'
 import {
   type ArtistProfile,
   type ProfileImageKind,
@@ -31,7 +31,10 @@ const copy = {
   { label: TranslationKey; hint: TranslationKey }
 >
 
-/** Uploads or removes one profile image immediately, with progress and a recoverable error. */
+/**
+ * Uploads or removes one profile image immediately, with progress and a recoverable error. The
+ * profile card this sits on shows the result.
+ */
 export function ProfileImageField({
   artistId,
   profile,
@@ -74,71 +77,54 @@ export function ProfileImageField({
   }
 
   return (
-    <div className="space-y-2">
-      <span className="block text-sm font-medium" id={`${id}-label`}>
-        {t(label)}
-      </span>
-      <div className="flex flex-wrap items-center gap-4">
-        <div
-          className={cn(
-            'flex shrink-0 items-center justify-center overflow-hidden border border-border bg-secondary',
-            kind === 'avatar' ? 'size-20 rounded-full' : 'h-20 w-40 rounded-lg',
-          )}
+    <div className="artist-profile-image-field">
+      <div className="min-w-0">
+        <span className="block text-sm font-medium" id={`${id}-label`}>
+          {t(label)}
+        </span>
+        <p className="text-xs text-text-secondary">{t(hint)}</p>
+      </div>
+      <div className="flex flex-wrap gap-2">
+        <input
+          accept={ACCEPT}
+          aria-labelledby={`${id}-label`}
+          className="sr-only"
+          disabled={image.isPending}
+          onChange={(event) => {
+            void upload(event.target.files?.[0] ?? null)
+          }}
+          ref={input}
+          type="file"
+        />
+        <Button
+          disabled={image.isPending}
+          onClick={() => input.current?.click()}
+          size="sm"
+          type="button"
+          variant="outline"
         >
-          {current ? (
-            <img
-              alt={t(label)}
-              className="size-full object-cover"
-              src={profileImageUrl(current)}
-            />
-          ) : (
-            <ImagePlus aria-hidden="true" className="size-6 text-accent" />
-          )}
-        </div>
-        <div className="space-y-2">
-          <input
-            accept={ACCEPT}
-            aria-labelledby={`${id}-label`}
-            className="sr-only"
+          <ImagePlus aria-hidden="true" className="mr-1.5 size-4" />
+          {progress !== null
+            ? t('media.uploadingPercent', {
+                percent: Math.round(progress * 100),
+              })
+            : current
+              ? t('profile.replace')
+              : t('profile.upload')}
+        </Button>
+        {current && (
+          <Button
             disabled={image.isPending}
-            onChange={(event) => {
-              void upload(event.target.files?.[0] ?? null)
+            onClick={() => {
+              void upload(null)
             }}
-            ref={input}
-            type="file"
-          />
-          <div className="flex flex-wrap gap-2">
-            <Button
-              disabled={image.isPending}
-              onClick={() => input.current?.click()}
-              size="sm"
-              type="button"
-              variant="outline"
-            >
-              {progress !== null
-                ? t('media.uploadingPercent', {
-                    percent: Math.round(progress * 100),
-                  })
-                : current
-                  ? t('profile.replace')
-                  : t('profile.upload')}
-            </Button>
-            {current && (
-              <Button
-                disabled={image.isPending}
-                onClick={() => {
-                  void upload(null)
-                }}
-                size="sm"
-                type="button"
-                variant="ghost"
-              >
-                {t('workspace.track.remove')}
-              </Button>
-            )}
-          </div>
-          <p className="text-xs text-text-secondary">{t(hint)}</p>
-        </div>
+            size="sm"
+            type="button"
+            variant="ghost"
+          >
+            {t('workspace.track.remove')}
+          </Button>
+        )}
       </div>
       {(problem ?? image.error) && (
         <p className="text-sm text-destructive" role="alert">

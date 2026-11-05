@@ -11,16 +11,19 @@ import { DeliveryPlanDialog } from '@features/delivery-plan'
 import { destinationLabels } from '@shared/constants/destinations'
 import { type TranslationKey, useI18n } from '@shared/i18n'
 import { formatDateTimeUtc } from '@shared/lib/date'
-import { LockedButton } from '@shared/ui'
+import { LockedButton, PanelIcon } from '@shared/ui'
 import {
   CircleCheck,
   CircleDashed,
   CircleSlash,
   Clock,
+  Globe,
   Globe2,
   Info,
+  ListChecks,
   Radio,
   Send,
+  Store,
 } from 'lucide-react'
 import { useState } from 'react'
 
@@ -93,7 +96,10 @@ export function ReleaseDeliveryPanel({
         aria-labelledby="release-delivery-heading"
         className="artist-release-workspace-panel"
       >
-        <h2 id="release-delivery-heading">{t('delivery.title')}</h2>
+        <h2 id="release-delivery-heading">
+          <PanelIcon icon={Send} />
+          {t('delivery.title')}
+        </h2>
         <p role="status">{t('delivery.loading')}</p>
       </section>
     )
@@ -103,7 +109,10 @@ export function ReleaseDeliveryPanel({
         aria-labelledby="release-delivery-heading"
         className="artist-release-workspace-panel space-y-2"
       >
-        <h2 id="release-delivery-heading">{t('delivery.title')}</h2>
+        <h2 id="release-delivery-heading">
+          <PanelIcon icon={Send} />
+          {t('delivery.title')}
+        </h2>
         <p role="alert">{tMessage(delivery.error.message)}</p>
         <Button
           onClick={() => {
@@ -145,7 +154,10 @@ export function ReleaseDeliveryPanel({
           aria-labelledby="release-territories-heading"
           className="artist-release-workspace-panel"
         >
-          <h2 id="release-territories-heading">{t('delivery.territories')}</h2>
+          <h2 id="release-territories-heading">
+            <PanelIcon icon={Globe} />
+            {t('delivery.territories')}
+          </h2>
           <p>{t('delivery.timingIntro')}</p>
           <dl className="artist-release-fact-grid">
             <div data-done={true}>
@@ -173,7 +185,10 @@ export function ReleaseDeliveryPanel({
             src="/artwork/releases/state-patchbay-v1.webp"
           />
           <div className="flex flex-wrap items-baseline justify-between gap-3">
-            <h2 id="release-delivery-heading">{t('delivery.destinations')}</h2>
+            <h2 id="release-delivery-heading">
+              <PanelIcon icon={Store} />
+              {t('delivery.destinations')}
+            </h2>
             <span className="text-xs text-text-secondary">
               {t('delivery.plannedCount', {
                 planned: storeCount,
@@ -219,6 +234,7 @@ export function ReleaseDeliveryPanel({
         className="artist-release-workspace-panel artist-release-stage-side"
       >
         <h2 id="release-delivery-next-heading">
+          <PanelIcon icon={ListChecks} />
           {t('delivery.beforeContinue')}
         </h2>
         <ul className="artist-release-summary-list">

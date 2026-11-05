@@ -14,14 +14,11 @@ import {
   readWorkspaceTheme,
   type WorkspaceDensity,
   type WorkspaceMotion,
-  type WorkspaceSound,
   type WorkspaceTheme,
   workspaceDensities,
   workspaceDensityStorageKey,
   workspaceMotionStorageKey,
   workspaceMotions,
-  workspaceSoundStorageKey,
-  workspaceSounds,
   workspaceThemePath,
   workspaceThemeStorageKey,
   workspaceThemes,
@@ -34,8 +31,6 @@ interface WorkspaceThemeContextValue {
   setDensity: (density: WorkspaceDensity) => void
   motion: WorkspaceMotion
   setMotion: (motion: WorkspaceMotion) => void
-  sound: WorkspaceSound
-  setSound: (sound: WorkspaceSound) => void
 }
 
 const WorkspaceThemeContext = createContext<WorkspaceThemeContextValue | null>(
@@ -59,7 +54,6 @@ export function WorkspaceThemeProvider({ children }: PropsWithChildren) {
   const [motion, setMotionState] = useState<WorkspaceMotion>(
     workspaceMotions[0],
   )
-  const [sound, setSoundState] = useState<WorkspaceSound>(workspaceSounds[0])
   const isWorkspace = useLocation({
     select: ({ pathname }) =>
       pathname === workspaceThemePath ||
@@ -70,7 +64,6 @@ export function WorkspaceThemeProvider({ children }: PropsWithChildren) {
     setThemeState(readWorkspaceTheme())
     setDensityState(readStored(workspaceDensities, workspaceDensityStorageKey))
     setMotionState(readStored(workspaceMotions, workspaceMotionStorageKey))
-    setSoundState(readStored(workspaceSounds, workspaceSoundStorageKey))
     const sync = (event: StorageEvent) => {
       const all = event.key === null
       if (all || event.key === workspaceThemeStorageKey)
@@ -79,8 +72,6 @@ export function WorkspaceThemeProvider({ children }: PropsWithChildren) {
         setDensityState(parseStored(workspaceDensities, event.newValue))
       if (all || event.key === workspaceMotionStorageKey)
         setMotionState(parseStored(workspaceMotions, event.newValue))
-      if (all || event.key === workspaceSoundStorageKey)
-        setSoundState(parseStored(workspaceSounds, event.newValue))
     }
     window.addEventListener('storage', sync)
     return () => window.removeEventListener('storage', sync)
@@ -112,11 +103,6 @@ export function WorkspaceThemeProvider({ children }: PropsWithChildren) {
     setMotion: (next) => {
       setMotionState(next)
       store(workspaceMotionStorageKey, next)
-    },
-    sound,
-    setSound: (next) => {
-      setSoundState(next)
-      store(workspaceSoundStorageKey, next)
     },
   }
 

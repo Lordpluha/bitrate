@@ -13,7 +13,7 @@ import {
 import { type Translate, useI18n } from '@shared/i18n'
 import { formatDuration } from '@shared/lib/format'
 import { Circle, Ellipsis, Music2, Pause, Play } from 'lucide-react'
-import { canPreview } from '../model/usePreviewPlayer'
+import { canPreview, previewKey } from '../model/previewTrack'
 
 export type CatalogueItem = MusicTrack | MusicRelease
 
@@ -65,7 +65,8 @@ export function trackDuration(seconds: number | null) {
 interface CatalogueTableProps {
   tab: 'tracks' | 'releases'
   records: readonly CatalogueItem[]
-  playingId?: string
+  /** Player key of the row that is audible now. */
+  playingKey?: string
   onPlay: (track: MusicTrack) => void
   onDetails: (item: CatalogueItem) => void
   onActions: (item: CatalogueItem) => void
@@ -74,7 +75,7 @@ interface CatalogueTableProps {
 export function CatalogueTable({
   tab,
   records,
-  playingId,
+  playingKey,
   onPlay,
   onDetails,
   onActions,
@@ -129,7 +130,7 @@ export function CatalogueTable({
       <tbody>
         {records.map((item) => {
           const isTrack = 'version' in item
-          const playing = playingId === item.id
+          const playing = isTrack && playingKey === previewKey(item)
           return (
             <tr
               className={cn(playing && 'artist-music-row-playing')}

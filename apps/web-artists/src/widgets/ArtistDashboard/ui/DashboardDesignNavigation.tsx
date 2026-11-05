@@ -2,7 +2,7 @@ import { cn } from '@bitrate/ui-react'
 import { useWorkspaceActions } from '@features/workspace-actions'
 import { useI18n } from '@shared/i18n'
 import { ROUTES } from '@shared/routes/routes'
-import { Link } from '@tanstack/react-router'
+import { Link, useLocation } from '@tanstack/react-router'
 import {
   ChartNoAxesCombined,
   LayoutDashboard,
@@ -12,6 +12,7 @@ import {
   Settings2,
   UserRound,
 } from 'lucide-react'
+import { useLayoutEffect, useRef, useState } from 'react'
 
 /** Designed order: live sections link, upcoming ones explain themselves in a dialog. */
 const sections = [
@@ -40,6 +41,44 @@ const sections = [
   },
 ] as const
 
+/** The section a path belongs to, matching how each link marks itself active. */
+function activeSection(pathname: string) {
+  return sections.findIndex(
+    (section) =>
+      'to' in section &&
+      (section.to === ROUTES.dashboard.home
+        ? pathname === section.to
+        : pathname === section.to || pathname.startsWith(`${section.to}/`)),
+  )
+}
+
+interface PillBox {
+  top: number
+  height: number
+}
+
+/** Places a pill under the active item; it slides when the active item changes. */
+function useNavigationPill(active: number) {
+  const nav = useRef<HTMLElement>(null)
+  const [pill, setPill] = useState<PillBox | null>(null)
+  useLayoutEffect(() => {
+    const item =
+      nav.current?.querySelectorAll<HTMLElement>('[data-nav-item]')[active]
+    if (!item) {
+      setPill(null)
+      return
+    }
+    const measure = () =>
+      setPill({ top: item.offsetTop, height: item.offsetHeight })
+    measure()
+    // Collapsing the sidebar resizes the item without changing the route.
+    const observer = new ResizeObserver(measure)
+    observer.observe(item)
+    return () => observer.disconnect()
+  }, [active])
+  return { nav, pill }
+}
+
 export function DashboardDesignNavigation({
   compact = false,
   onNavigate,
@@ -49,6 +88,8 @@ export function DashboardDesignNavigation({
 }) {
   const { openAction } = useWorkspaceActions()
   const { t } = useI18n()
+  const pathname = useLocation({ select: (location) => location.pathname })
+  const { nav, pill } = useNavigationPill(activeSection(pathname))
   const itemClass = cn(
     'artist-workspace-nav-item flex min-h-11 items-center gap-3 rounded-lg border border-transparent px-3.5 py-2 text-left text-sm font-normal text-text-secondary hover:bg-secondary hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring',
     compact && 'justify-center',
@@ -57,8 +98,17 @@ export function DashboardDesignNavigation({
   return (
     <nav
       aria-label={t('shell.artistWorkspace')}
-      className="flex w-full flex-col gap-2"
+      className="artist-workspace-nav relative flex w-full flex-col gap-2"
+      data-pill={pill !== null}
+      ref={nav}
     >
+      {pill && (
+        <span
+          aria-hidden="true"
+          className="artist-workspace-nav-pill"
+          style={{ height: pill.height, translate: `0 ${pill.top}px` }}
+        />
+      )}
       {sections.map((section) => {
         const Icon = section.icon
         const label = t(section.label)
@@ -76,6 +126,7 @@ export function DashboardDesignNavigation({
               'aria-current': 'page',
             }}
             className={itemClass}
+            data-nav-item=""
             key={section.label}
             onClick={onNavigate}
             preload={false}
@@ -87,6 +138,7 @@ export function DashboardDesignNavigation({
         ) : (
           <button
             className={itemClass}
+            data-nav-item=""
             key={section.label}
             onClick={() => {
               onNavigate?.()

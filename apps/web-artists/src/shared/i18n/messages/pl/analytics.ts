@@ -41,4 +41,5 @@ export const analytics = {
   'analytics.other': 'Inne serwisy',
   'analytics.noFigures': 'Dla niepodłączonych serwisów nie pokazujemy liczb.',
   'analytics.error.load': 'Nie udało się wczytać analityki. Spróbuj ponownie.',
+  'analytics.highlights': 'Najważniejsze',
 } as const

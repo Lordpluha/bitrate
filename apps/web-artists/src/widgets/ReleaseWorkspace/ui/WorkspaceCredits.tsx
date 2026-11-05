@@ -8,6 +8,7 @@ import {
   splitRightTypes,
 } from '@entities/release'
 import { useI18n } from '@shared/i18n'
+import { PanelIcon } from '@shared/ui'
 import {
   CircleAlert,
   CircleCheck,
@@ -15,6 +16,7 @@ import {
   Pencil,
   Trash2,
   UserRoundCheck,
+  UsersRound,
 } from 'lucide-react'
 import type { WorkspaceActionHandler } from '../model/workspaceAction'
 
@@ -42,9 +44,11 @@ export function WorkspaceCredits({ release, onAction }: WorkspaceCreditsProps) {
     <section
       aria-labelledby="release-credits-heading"
       className="artist-release-workspace-panel artist-release-participants"
+      data-hue="purple"
     >
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h2 id="release-credits-heading">
+          <PanelIcon icon={UsersRound} />
           {t('workspace.credits.title')}{' '}
           <span>({release.participantCount})</span>
         </h2>

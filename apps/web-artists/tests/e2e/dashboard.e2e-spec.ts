@@ -936,7 +936,7 @@ for (const theme of ['light', 'dark', 'dim']) {
     })
     await dialog.getByLabel('Premiere on a date').check()
     await dialog.getByLabel('Release date', { exact: true }).fill('2026-11-01')
-    await dialog.getByLabel('Time (UTC)', { exact: true }).fill('12:30:15.125')
+    await dialog.getByLabel('Time (UTC)', { exact: true }).fill('12:30')
     await expect(
       dialog.getByRole('button', { name: 'Save schedule', exact: true }),
     ).toBeEnabled()
@@ -965,7 +965,7 @@ for (const theme of ['light', 'dark', 'dim']) {
       .getByRole('button', { name: 'Save schedule', exact: true })
       .click()
     expect((await (await saved).json()).scheduledAt).toBe(
-      '2026-11-01T12:30:15.125Z',
+      '2026-11-01T12:30:00.000Z',
     )
     await expect(dialog).not.toBeVisible()
     await expect(
@@ -980,7 +980,7 @@ for (const theme of ['light', 'dark', 'dim']) {
       .getByRole('button', { name: 'Edit timing', exact: true })
       .click()
     await expect(dialog.getByLabel('Time (UTC)', { exact: true })).toHaveValue(
-      '12:30:15.125',
+      '12:30',
     )
     await expect(
       dialog.getByRole('button', { name: 'Save schedule', exact: true }),
@@ -1296,13 +1296,13 @@ for (const theme of ['light', 'dark', 'dim'] as const) {
       page.getByRole('heading', { name: 'Territories', exact: true }),
     ).toBeVisible()
     const waveform = page.locator('.artist-release-header-art')
-    await expect(waveform).toHaveJSProperty('naturalWidth', 2172)
+    await expect(waveform).toHaveJSProperty('naturalWidth', 2400)
     await page.evaluate(() => document.fonts.ready)
     const bounds = await page.locator('.artist-release-header').boundingBox()
     expect(bounds?.x).toBe(isMobile ? 24 : 296)
     expect(bounds?.width).toBe(isMobile ? 342 : 1096)
     expect(
-      Math.abs((bounds?.y ?? 0) - (isMobile ? 168 : 120)),
+      Math.abs((bounds?.y ?? 0) - (isMobile ? 168 : 97)),
     ).toBeLessThanOrEqual(2)
     await page.screenshot({
       path: `../../output/playwright/release-workspace/${theme}-${testInfo.project.name}.png`,
@@ -1989,7 +1989,7 @@ for (const theme of ['light', 'dark', 'dim'] as const) {
     await authenticate(context)
     await gotoHydrated(page, '/dashboard')
     await page
-      .getByRole('button', { name: 'Create release', exact: true })
+      .getByRole('button', { name: /^Create (release|your first release)$/ })
       .last()
       .click()
     const dialog = page.getByRole('dialog', {
@@ -2017,7 +2017,7 @@ for (const theme of ['light', 'dark', 'dim'] as const) {
       page.getByRole('button', { name: `Open ${title}`, exact: true }),
     ).toBeVisible()
     await page
-      .getByRole('button', { name: 'Create release', exact: true })
+      .getByRole('button', { name: /^Create (release|your first release)$/ })
       .last()
       .click()
     await expect(dialog.getByLabel('Release title')).toBeFocused()
@@ -2044,10 +2044,9 @@ test('release drafts validate title locally and cancel without a write', async (
   })
   await authenticate(context)
   await gotoHydrated(page, '/dashboard')
-  const trigger = page.getByRole('button', {
-    name: 'Create release',
-    exact: true,
-  })
+  const trigger = page
+    .getByRole('button', { name: /^Create (release|your first release)$/ })
+    .last()
   await trigger.click()
   const dialog = page.getByRole('dialog', {
     name: 'Create release',
@@ -2078,7 +2077,7 @@ test('release drafts keep entered values after an API failure and allow retry', 
   await authenticate(context)
   await gotoHydrated(page, '/dashboard')
   await page
-    .getByRole('button', { name: 'Create release', exact: true })
+    .getByRole('button', { name: /^Create (release|your first release)$/ })
     .last()
     .click()
   const dialog = page.getByRole('dialog', {
@@ -2122,7 +2121,7 @@ test('release drafts prevent repeated submits and dismissal while saving', async
   await authenticate(context)
   await gotoHydrated(page, '/dashboard')
   await page
-    .getByRole('button', { name: 'Create release', exact: true })
+    .getByRole('button', { name: /^Create (release|your first release)$/ })
     .last()
     .click()
   const dialog = page.getByRole('dialog', {
@@ -2253,7 +2252,7 @@ test('release drafts do not claim success for an unverified save response', asyn
   await authenticate(context)
   await gotoHydrated(page, '/dashboard')
   await page
-    .getByRole('button', { name: 'Create release', exact: true })
+    .getByRole('button', { name: /^Create (release|your first release)$/ })
     .last()
     .click()
   const dialog = page.getByRole('dialog', {
@@ -2309,7 +2308,7 @@ test('release list belongs to the signed-in artist after signing out and switchi
   await authenticate(context)
   await gotoHydrated(page, '/dashboard')
   await page
-    .getByRole('button', { name: 'Create release', exact: true })
+    .getByRole('button', { name: /^Create (release|your first release)$/ })
     .last()
     .click()
   const dialog = page.getByRole('dialog', {
@@ -2384,6 +2383,11 @@ test('workspace theme switches all three palettes and persists across navigation
       Promise.all(
         document
           .getAnimations()
+          // The aurora and breathing statuses loop forever; only entrances ever finish.
+          .filter(
+            (animation) =>
+              animation.effect?.getComputedTiming().iterations !== Infinity,
+          )
           .map((animation) => animation.finished.catch(() => undefined)),
       ),
     )
@@ -2521,10 +2525,9 @@ for (const theme of ['dark', 'light', 'dim'] as const) {
       await expect(page).toHaveURL(new RegExp(`/dashboard/${path}(\\?|$)`))
     }
     await gotoHydrated(page, '/dashboard')
-    const create = page.getByRole('button', {
-      name: 'Create release',
-      exact: true,
-    })
+    const create = page
+      .getByRole('button', { name: /^Create (release|your first release)$/ })
+      .last()
     await create.click()
     const release = page.getByRole('dialog', {
       name: 'Create release',
