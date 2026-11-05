@@ -285,6 +285,16 @@ If the domain sits behind a proxy such as Cloudflare, set these names to DNS-onl
 name terminates TLS at the edge under the proxy's own certificate, so the origin's never reaches
 the visitor and the HTTP-01 challenge is answered by whatever the proxy decides to forward.
 
+The operator panel is not on that list on purpose. `admin.<domain>` is served only through the
+Cloudflare tunnel (the `cloudflared` service), so Cloudflare Access sits in front of the panel
+and of `admin-api`. In the Zero Trust dashboard the tunnel's public hostname `admin.<domain>`
+must point at `http://nginx:8081`: an internal nginx listener that is not published on the
+host, so it has no certificate and cannot be reached from outside. Pointing the hostname at
+`admin:3005` skips nginx. The SPA still loads, but every `/api/v1/admin/*` call reaches the static
+server, which answers 405. Monitoring and the post-deploy check reach `admin-api` through Access
+with a service token stored in the `CF_ACCESS_CLIENT_ID` and `CF_ACCESS_CLIENT_SECRET` repository
+secrets.
+
 The portal needs a separate host rather than a path under the main domain because neither Next.js
 app sets `basePath` — both request their build output from `/_next/…`, so under path routing the
 portal's assets resolve against the web player, which does not have them.

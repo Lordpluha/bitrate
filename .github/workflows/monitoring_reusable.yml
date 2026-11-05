@@ -10,6 +10,7 @@ permissions:
 jobs:
   health:
     uses: $/.github/workflows/monitoring_health_reusable.yml
+    secrets: inherit
 
   ssl:
     uses: $/.github/workflows/monitoring_ssl_reusable.yml

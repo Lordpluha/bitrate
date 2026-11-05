@@ -1023,6 +1023,11 @@ jobs:
           DOMAIN: ${{ needs.deploy.outputs.domain }}
           ENVIRONMENT_NAME: ${{ inputs.environment }}
           ATTEMPTS: ${{ inputs.health-attempts }}
+          # admin.<domain> sits behind Cloudflare Access, which answers an anonymous probe
+          # with a 302 to its login page. A Service Token (repository secrets, since this
+          # job has no environment) lets the probe through to admin-api's readiness.
+          CF_ACCESS_CLIENT_ID: ${{ secrets.CF_ACCESS_CLIENT_ID }}
+          CF_ACCESS_CLIENT_SECRET: ${{ secrets.CF_ACCESS_CLIENT_SECRET }}
         run: |
           set -euo pipefail
 
@@ -1045,9 +1050,20 @@ jobs:
 
           failed=""
           for url in ${targets}; do
+            # The Access credentials go to the admin host only, never to the other targets.
+            auth=()
+            case "${url}" in
+              "https://admin.${DOMAIN}/"*)
+                if [ -z "${CF_ACCESS_CLIENT_ID:-}" ] || [ -z "${CF_ACCESS_CLIENT_SECRET:-}" ]; then
+                  echo "::warning::CF_ACCESS_CLIENT_ID/SECRET are not set -- skipping ${url}, which Cloudflare Access would answer with a login redirect."
+                  continue
+                fi
+                auth=(-H "CF-Access-Client-Id: ${CF_ACCESS_CLIENT_ID}" -H "CF-Access-Client-Secret: ${CF_ACCESS_CLIENT_SECRET}")
+                ;;
+            esac
             ok=""
             for attempt in $(seq 1 "${ATTEMPTS}"); do
-              code=$(curl -sS -o /dev/null -w '%{http_code}' --max-time 15 "${url}" || echo 000)
+              code=$(curl -sS -o /dev/null -w '%{http_code}' --max-time 15 "${auth[@]}" "${url}" || echo 000)
               if [ "${code}" = "200" ]; then
                 echo "healthy (${code}) -- ${url}"
                 ok=1

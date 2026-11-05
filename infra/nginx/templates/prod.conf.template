@@ -13,7 +13,9 @@ server {
     # unrecognised Host with the stock welcome page — and, worse, swallowing ACME challenges for
     # any name not listed below, which is exactly when a new subdomain's first certificate fails.
     listen 80 default_server;
-    server_name ${DOMAIN} www.${DOMAIN} artists.${DOMAIN} admin.${DOMAIN} api.${DOMAIN} docs.${DOMAIN} ui.${DOMAIN};
+    # admin.${DOMAIN} is deliberately absent: it is served only through the Cloudflare tunnel
+    # (see the operator panel's internal listener below), never from the public ports.
+    server_name ${DOMAIN} www.${DOMAIN} artists.${DOMAIN} api.${DOMAIN} docs.${DOMAIN} ui.${DOMAIN};
 
     # Must stay reachable over plain HTTP — certbot renews through it.
     location /.well-known/acme-challenge/ {
@@ -86,21 +88,26 @@ server {
     include /etc/nginx/snippets/artists-routes.conf;
 }
 
-# Operator panel on its own host. Same certificate as every other name on this site, so certbot
-# must be given admin.${DOMAIN} too. Not linked from anywhere public — it is staff-only.
+# Operator panel. Reachable ONLY through the Cloudflare tunnel, which puts Cloudflare Access in
+# front of it: the tunnel's public hostname admin.${DOMAIN} points at http://nginx:8081.
+#
+# It used to be a `listen 443` block here, which made the panel and admin-api answer anyone who
+# sent Host: admin.${DOMAIN} straight to the server's IP -- Access was never in that path. 8081 is
+# not published in docker-compose.prod.yaml, so only containers on bitrate-network reach it.
+# Plain HTTP is fine: TLS terminates at Cloudflare and this hop never leaves the docker bridge.
 server {
-    listen 443 ssl;
-    http2 on;
+    listen 8081;
     server_name admin.${DOMAIN};
 
-    ssl_certificate     /etc/letsencrypt/live/${DOMAIN}/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/${DOMAIN}/privkey.pem;
-
-    ssl_protocols TLSv1.2 TLSv1.3;
-    ssl_prefer_server_ciphers off;
-    ssl_session_cache shared:SSL:10m;
-    ssl_session_timeout 1d;
-    ssl_session_tickets off;
+    # Every request arrives from the cloudflared container. Without this, $remote_addr is that
+    # one address for everybody: admin_auth_limit becomes one shared bucket (a few bad logins
+    # lock every operator out) and admin-api audits the tunnel instead of the client. The
+    # header is trusted only from private addresses, i.e. from inside the docker network --
+    # the only place this listener can be reached from.
+    set_real_ip_from 10.0.0.0/8;
+    set_real_ip_from 172.16.0.0/12;
+    set_real_ip_from 192.168.0.0/16;
+    real_ip_header CF-Connecting-IP;
 
     add_header Strict-Transport-Security "max-age=63072000; includeSubDomains" always;
     # DENY, not SAMEORIGIN: nothing should ever frame the operator panel.
