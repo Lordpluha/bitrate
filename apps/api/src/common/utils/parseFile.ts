@@ -1,4 +1,4 @@
-import { readFileSync } from 'fs'
+import { readFileSync } from 'node:fs'
 import ts from 'typescript'
 
 /** Parses a source file once, memoized by absolute path. */
