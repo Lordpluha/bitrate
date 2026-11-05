@@ -1,6 +1,7 @@
+import type { ArtistEntity } from '@modules/artists/entities'
 import { ArtistAuth } from '@modules/artists-auth/artists-auth.guard'
-import type { ArtistAuthRequest } from '@modules/artists-auth/types'
-import { Controller, Get, Header, Query, Req } from '@nestjs/common'
+import { CurrentArtist } from '@modules/artists-auth/decorators/current-artist.decorator'
+import { Controller, Get, Header, Query } from '@nestjs/common'
 import { ApiExtraModels, ApiTags } from '@nestjs/swagger'
 import { ZodValidationPipe } from 'nestjs-zod'
 import { ArtistMusicService } from './artist-music.service'
@@ -28,8 +29,8 @@ export class ArtistMusicController {
   @ArtistAuth()
   @Header('Cache-Control', 'private, no-store')
   @Get('counts')
-  counts(@Req() request: ArtistAuthRequest) {
-    return this.music.counts(request.artist.id)
+  counts(@CurrentArtist() artist: ArtistEntity) {
+    return this.music.counts(artist.id)
   }
 
   @MusicCatalogueSwagger('tracks')
@@ -37,10 +38,10 @@ export class ArtistMusicController {
   @Header('Cache-Control', 'private, no-store')
   @Get('tracks')
   tracks(
-    @Req() request: ArtistAuthRequest,
+    @CurrentArtist() artist: ArtistEntity,
     @Query(new ZodValidationPipe(MusicTracksSchema)) input: MusicTracksDto,
   ) {
-    return this.music.tracks(request.artist.id, input)
+    return this.music.tracks(artist.id, input)
   }
 
   @MusicCatalogueSwagger('releases')
@@ -48,9 +49,9 @@ export class ArtistMusicController {
   @Header('Cache-Control', 'private, no-store')
   @Get('releases')
   releases(
-    @Req() request: ArtistAuthRequest,
+    @CurrentArtist() artist: ArtistEntity,
     @Query(new ZodValidationPipe(MusicReleasesSchema)) input: MusicReleasesDto,
   ) {
-    return this.music.releases(request.artist.id, input)
+    return this.music.releases(artist.id, input)
   }
 }

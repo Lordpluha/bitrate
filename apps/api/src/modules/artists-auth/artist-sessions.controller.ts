@@ -1,4 +1,5 @@
 import { SESSION_ROUTE_THROTTLE } from '@common/config'
+import type { ArtistEntity } from '@modules/artists/entities'
 import { readAccessToken } from '@modules/auth-core'
 import {
   Controller,
@@ -18,11 +19,11 @@ import type { Request } from 'express'
 import { ArtistSessionsService } from './artist-sessions.service'
 import { ArtistAuth } from './artists-auth.guard'
 import {
+  CurrentArtist,
   ListArtistSessionsSwagger,
   RevokeArtistSessionSwagger,
   RevokeOtherArtistSessionsSwagger,
 } from './decorators'
-import type { ArtistAuthRequest } from './types'
 
 /** The artist's signed-in devices, from account settings. */
 @ApiTags('Artists Auth')
@@ -35,21 +36,25 @@ export class ArtistSessionsController {
   @ListArtistSessionsSwagger()
   @Header('Cache-Control', 'private, no-store')
   @Get()
-  list(@Req() request: ArtistAuthRequest & Request) {
-    return this.sessions.list(request.artist.id, readAccessToken(request, 'artist'))
+  list(@CurrentArtist() artist: ArtistEntity, @Req() request: Request) {
+    return this.sessions.list(artist.id, readAccessToken(request, 'artist'))
   }
 
   @RevokeOtherArtistSessionsSwagger()
   @HttpCode(HttpStatus.OK)
   @Post('revoke-others')
-  revokeOthers(@Req() request: ArtistAuthRequest & Request) {
-    return this.sessions.revokeOthers(request.artist.id, readAccessToken(request, 'artist'))
+  revokeOthers(@CurrentArtist() artist: ArtistEntity, @Req() request: Request) {
+    return this.sessions.revokeOthers(artist.id, readAccessToken(request, 'artist'))
   }
 
   @RevokeArtistSessionSwagger()
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
-  revoke(@Req() request: ArtistAuthRequest & Request, @Param('id', ParseUUIDPipe) id: string) {
-    return this.sessions.revoke(request.artist.id, id, readAccessToken(request, 'artist'))
+  revoke(
+    @CurrentArtist() artist: ArtistEntity,
+    @Req() request: Request,
+    @Param('id', ParseUUIDPipe) id: string,
+  ) {
+    return this.sessions.revoke(artist.id, id, readAccessToken(request, 'artist'))
   }
 }

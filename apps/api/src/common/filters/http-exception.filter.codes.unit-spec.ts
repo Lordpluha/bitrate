@@ -97,11 +97,11 @@ describe('HttpExceptionFilter zod translation (AC2)', () => {
   const schema = z.object({
     name: z.string().min(3),
     age: z.number().max(10),
-    mail: z.string().email(),
+    mail: z.email(),
     kind: z.enum(['a', 'b']),
     tags: z.array(z.string()).min(1),
-    custom: z.string().min(2, { message: 'Hand written English' }),
-    keyed: z.string().min(2, { message: 'validation.password_too_short' }),
+    custom: z.string().min(2, { error: 'Hand written English' }),
+    keyed: z.string().min(2, { error: 'validation.password_too_short' }),
   })
   const input = { name: 'a', age: 99, mail: 'x', kind: 'z', tags: [], custom: 'a', keyed: 'a' }
 

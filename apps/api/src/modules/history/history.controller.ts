@@ -1,4 +1,5 @@
-import type { UserAuthRequest } from '@modules/users-auth/types'
+import type { UserEntity } from '@modules/users/entities'
+import { CurrentUser } from '@modules/users-auth/decorators/current-user.decorator'
 import { UserAuth } from '@modules/users-auth/users-auth.guard'
 import {
   Controller,
@@ -10,7 +11,6 @@ import {
   ParseUUIDPipe,
   Post,
   Query,
-  Req,
 } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
 import {
@@ -31,34 +31,34 @@ export class HistoryController {
   /** Runs the record operation. */
   @RecordHistorySwagger()
   @Post('tracks/:trackId')
-  record(@Req() req: UserAuthRequest, @Param('trackId', ParseUUIDPipe) trackId: string) {
-    return this.historyService.record(req.user.id, trackId)
+  record(@CurrentUser() user: UserEntity, @Param('trackId', ParseUUIDPipe) trackId: string) {
+    return this.historyService.record(user.id, trackId)
   }
 
   /** Runs the get history operation. */
   @GetHistorySwagger()
   @Get('')
   getHistory(
-    @Req() req: UserAuthRequest,
+    @CurrentUser() user: UserEntity,
     @Query('page', new ParseIntPipe({ optional: true })) page?: number,
     @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
   ) {
-    return this.historyService.getHistory(req.user.id, page, limit)
+    return this.historyService.getHistory(user.id, page, limit)
   }
 
   /** Runs the clear all operation. */
   @ClearHistorySwagger()
   @HttpCode(204)
   @Delete('')
-  clearAll(@Req() req: UserAuthRequest) {
-    return this.historyService.clearAll(req.user.id)
+  clearAll(@CurrentUser() user: UserEntity) {
+    return this.historyService.clearAll(user.id)
   }
 
   /** Runs the remove track operation. */
   @RemoveTrackHistorySwagger()
   @HttpCode(200)
   @Delete('tracks/:trackId')
-  removeTrack(@Req() req: UserAuthRequest, @Param('trackId', ParseUUIDPipe) trackId: string) {
-    return this.historyService.removeTrack(req.user.id, trackId)
+  removeTrack(@CurrentUser() user: UserEntity, @Param('trackId', ParseUUIDPipe) trackId: string) {
+    return this.historyService.removeTrack(user.id, trackId)
   }
 }

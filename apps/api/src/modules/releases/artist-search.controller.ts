@@ -1,6 +1,7 @@
+import type { ArtistEntity } from '@modules/artists/entities'
 import { ArtistAuth } from '@modules/artists-auth/artists-auth.guard'
-import type { ArtistAuthRequest } from '@modules/artists-auth/types'
-import { Controller, Get, Header, Query, Req } from '@nestjs/common'
+import { CurrentArtist } from '@modules/artists-auth/decorators/current-artist.decorator'
+import { Controller, Get, Header, Query } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
 import { ZodValidationPipe } from 'nestjs-zod'
 import { ArtistSearchService } from './artist-search.service'
@@ -17,9 +18,9 @@ export class ArtistSearchController {
   @Header('Cache-Control', 'private, no-store')
   @Get()
   search(
-    @Req() request: ArtistAuthRequest,
+    @CurrentArtist() artist: ArtistEntity,
     @Query(new ZodValidationPipe(ArtistSearchSchema)) query: ArtistSearchDto,
   ) {
-    return this.searchService.search(request.artist.id, query.q)
+    return this.searchService.search(artist.id, query.q)
   }
 }

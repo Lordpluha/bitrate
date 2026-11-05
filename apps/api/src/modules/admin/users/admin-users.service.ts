@@ -8,7 +8,6 @@ import {
   revokeAccountSessions,
   runBatch,
   runTakeDownTransition,
-  statusWhere,
   type TakeDownActor,
   type TakeDownDirection,
 } from '@modules/admin/shared'
@@ -25,7 +24,8 @@ import {
   ADMIN_USER_EXPORT_COLUMNS,
   ADMIN_USER_EXPORT_SELECT,
   ADMIN_USER_SAFE_SELECT,
-} from './user.select'
+  userListWhere,
+} from './orm'
 
 /** One of the listener directory's allowed sort fields. */
 type AdminUsersSortField = (typeof ADMIN_USERS_SORT_FIELDS)[number]
@@ -49,19 +49,6 @@ export class AdminUsersService {
     private readonly playbackSessions: PlaybackSessionService,
   ) {}
 
-  /** Builds the shared `where` clause for listing and counting. */
-  private buildWhere({ status, q }: Omit<ListUsersInput, 'page' | 'limit'>) {
-    return {
-      ...statusWhere(status),
-      ...(q && {
-        OR: [
-          { username: { contains: q, mode: 'insensitive' } },
-          { email: { contains: q, mode: 'insensitive' } },
-        ],
-      }),
-    } satisfies Prisma.UserWhereInput
-  }
-
   /** Lists users, paginated and optionally filtered. */
   async findAll({
     page = DEFAULT_PAGE,
@@ -71,7 +58,7 @@ export class AdminUsersService {
     sort,
     order,
   }: ListUsersInput) {
-    const where = this.buildWhere({ status, q })
+    const where = userListWhere({ status, q })
     const orderBy = buildSortOrderBy<Prisma.UserOrderByWithRelationInput>({ sort, order }, [
       { createdAt: 'desc' },
       { id: 'desc' },
@@ -100,7 +87,7 @@ export class AdminUsersService {
     staffId: string,
     auditContext: AuditContextValue = {},
   ): Promise<CsvExport> {
-    const where = this.buildWhere({ status, q })
+    const where = userListWhere({ status, q })
     const orderBy = buildSortOrderBy<Prisma.UserOrderByWithRelationInput>({ sort, order }, [
       { createdAt: 'desc' },
       { id: 'desc' },

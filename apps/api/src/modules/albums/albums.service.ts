@@ -5,14 +5,13 @@ import { NS, TTL } from '@infra/cache/cache.constants'
 import { CacheService } from '@infra/cache/cache.service'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import { ArtistEntity } from '@modules/artists'
-import { PUBLIC_TRACK_WHERE } from '@modules/tracks/track-visibility'
 import type { UserEntity } from '@modules/users'
 import { Injectable, NotFoundException } from '@nestjs/common'
 import type { AlbumType, Prisma } from '@prisma/client'
-import { PUBLIC_ALBUM_WHERE } from './album-visibility'
 import { CreateAlbumDto } from './dtos/create-album.dto'
 import { UpdateAlbumDto } from './dtos/update-album.dto'
 import { AlbumEntity } from './entities'
+import { ALBUM_TRACKS_INCLUDE, PUBLIC_ALBUM_WHERE } from './orm'
 
 /** The listener-facing album of a release that went live. */
 export type ReleaseAlbumInput = {
@@ -24,19 +23,6 @@ export type ReleaseAlbumInput = {
   /** Published tracks in running order. */
   trackIds: string[]
 }
-
-/**
- * Loads an album's playable tracks in running order.
- *
- * Shared by the list and detail queries so both always project the same shape.
- */
-export const ALBUM_TRACKS_INCLUDE = {
-  tracks: {
-    where: { track: PUBLIC_TRACK_WHERE },
-    include: { track: true },
-    orderBy: [{ discNumber: 'asc' }, { trackNumber: 'asc' }],
-  },
-} satisfies Prisma.AlbumInclude
 
 /** An `AlbumTrack` join row with its track loaded. */
 type AlbumTrackWithTrack = Prisma.AlbumTrackGetPayload<{ include: { track: true } }>

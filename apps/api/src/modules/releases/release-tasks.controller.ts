@@ -1,5 +1,6 @@
+import type { ArtistEntity } from '@modules/artists/entities'
 import { ArtistAuth } from '@modules/artists-auth/artists-auth.guard'
-import type { ArtistAuthRequest } from '@modules/artists-auth/types'
+import { CurrentArtist } from '@modules/artists-auth/decorators/current-artist.decorator'
 import {
   Body,
   Controller,
@@ -12,7 +13,6 @@ import {
   Patch,
   Post,
   Query,
-  Req,
 } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
 import { ZodValidationPipe } from 'nestjs-zod'
@@ -44,8 +44,8 @@ export class ReleaseTasksController {
   @ArtistAuth()
   @Header('Cache-Control', 'private, no-store')
   @Get(':id/tasks')
-  list(@Req() request: ArtistAuthRequest, @Param('id', ParseUUIDPipe) id: string) {
-    return this.tasks.list(request.artist.id, id)
+  list(@CurrentArtist() artist: ArtistEntity, @Param('id', ParseUUIDPipe) id: string) {
+    return this.tasks.list(artist.id, id)
   }
 
   @CreateReleaseTaskSwagger()
@@ -53,11 +53,11 @@ export class ReleaseTasksController {
   @Header('Cache-Control', 'private, no-store')
   @Post(':id/tasks')
   create(
-    @Req() request: ArtistAuthRequest,
+    @CurrentArtist() artist: ArtistEntity,
     @Param('id', ParseUUIDPipe) id: string,
     @Body(new ZodValidationPipe(CreateReleaseTaskSchema)) input: CreateReleaseTaskDto,
   ) {
-    return this.tasks.create(request.artist.id, id, input)
+    return this.tasks.create(artist.id, id, input)
   }
 
   @UpdateReleaseTaskSwagger()
@@ -65,12 +65,12 @@ export class ReleaseTasksController {
   @Header('Cache-Control', 'private, no-store')
   @Patch(':id/tasks/:taskId')
   update(
-    @Req() request: ArtistAuthRequest,
+    @CurrentArtist() artist: ArtistEntity,
     @Param('id', ParseUUIDPipe) id: string,
     @Param('taskId', ParseUUIDPipe) taskId: string,
     @Body(new ZodValidationPipe(UpdateReleaseTaskSchema)) input: UpdateReleaseTaskDto,
   ) {
-    return this.tasks.update(request.artist.id, id, taskId, input)
+    return this.tasks.update(artist.id, id, taskId, input)
   }
 
   @DeleteReleaseTaskSwagger()
@@ -79,12 +79,12 @@ export class ReleaseTasksController {
   @HttpCode(200)
   @Delete(':id/tasks/:taskId')
   remove(
-    @Req() request: ArtistAuthRequest,
+    @CurrentArtist() artist: ArtistEntity,
     @Param('id', ParseUUIDPipe) id: string,
     @Param('taskId', ParseUUIDPipe) taskId: string,
     @Body(new ZodValidationPipe(DeleteReleaseTaskSchema)) input: DeleteReleaseTaskDto,
   ) {
-    return this.tasks.remove(request.artist.id, id, taskId, input)
+    return this.tasks.remove(artist.id, id, taskId, input)
   }
 }
 
@@ -99,9 +99,9 @@ export class ArtistTasksController {
   @Header('Cache-Control', 'private, no-store')
   @Get()
   list(
-    @Req() request: ArtistAuthRequest,
+    @CurrentArtist() artist: ArtistEntity,
     @Query(new ZodValidationPipe(ListArtistTasksSchema)) query: ListArtistTasksDto,
   ) {
-    return this.tasks.listForArtist(request.artist.id, query)
+    return this.tasks.listForArtist(artist.id, query)
   }
 }

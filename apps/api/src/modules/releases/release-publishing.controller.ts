@@ -1,6 +1,7 @@
+import type { ArtistEntity } from '@modules/artists/entities'
 import { ArtistAuth } from '@modules/artists-auth/artists-auth.guard'
-import type { ArtistAuthRequest } from '@modules/artists-auth/types'
-import { Body, Controller, Header, HttpCode, Param, ParseUUIDPipe, Post, Req } from '@nestjs/common'
+import { CurrentArtist } from '@modules/artists-auth/decorators/current-artist.decorator'
+import { Body, Controller, Header, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
 import { ZodValidationPipe } from 'nestjs-zod'
 import {
@@ -24,11 +25,11 @@ export class ReleasePublishingController {
   @HttpCode(200)
   @Post(':id/publish')
   publish(
-    @Req() request: ArtistAuthRequest,
+    @CurrentArtist() artist: ArtistEntity,
     @Param('id', ParseUUIDPipe) id: string,
     @Body(new ZodValidationPipe(ReleaseDraftVersionSchema)) input: ReleaseDraftVersionDto,
   ) {
-    return this.publishing.publish(request.artist.id, id, input)
+    return this.publishing.publish(artist.id, id, input)
   }
 
   @CancelPremiereSwagger()
@@ -37,11 +38,11 @@ export class ReleasePublishingController {
   @HttpCode(200)
   @Post(':id/publish/cancel')
   cancelPremiere(
-    @Req() request: ArtistAuthRequest,
+    @CurrentArtist() artist: ArtistEntity,
     @Param('id', ParseUUIDPipe) id: string,
     @Body(new ZodValidationPipe(ReleaseDraftVersionSchema)) input: ReleaseDraftVersionDto,
   ) {
-    return this.publishing.cancelPremiere(request.artist.id, id, input)
+    return this.publishing.cancelPremiere(artist.id, id, input)
   }
 
   @UnpublishReleaseSwagger()
@@ -50,11 +51,11 @@ export class ReleasePublishingController {
   @HttpCode(200)
   @Post(':id/unpublish')
   unpublish(
-    @Req() request: ArtistAuthRequest,
+    @CurrentArtist() artist: ArtistEntity,
     @Param('id', ParseUUIDPipe) id: string,
     @Body(new ZodValidationPipe(ReleaseDraftVersionSchema)) input: ReleaseDraftVersionDto,
   ) {
-    return this.publishing.unpublish(request.artist.id, id, input)
+    return this.publishing.unpublish(artist.id, id, input)
   }
 
   @RepublishReleaseSwagger()
@@ -63,10 +64,10 @@ export class ReleasePublishingController {
   @HttpCode(200)
   @Post(':id/republish')
   republish(
-    @Req() request: ArtistAuthRequest,
+    @CurrentArtist() artist: ArtistEntity,
     @Param('id', ParseUUIDPipe) id: string,
     @Body(new ZodValidationPipe(ReleaseDraftVersionSchema)) input: ReleaseDraftVersionDto,
   ) {
-    return this.publishing.republish(request.artist.id, id, input)
+    return this.publishing.republish(artist.id, id, input)
   }
 }

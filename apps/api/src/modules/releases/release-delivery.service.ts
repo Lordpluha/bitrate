@@ -14,25 +14,13 @@ import {
 } from './distribution/distribution-adapter'
 import type { ListDistributionDto, UpdateDeliveryPlanDto } from './dtos/release-delivery.dto'
 import { RELEASE_ERRORS } from './errors'
+import { DELIVERY_SELECT } from './orm'
 import { lockOwnedDraft } from './release-draft-lock'
 
 const DESTINATIONS = Object.values(DeliveryDestination)
 
 /** The plan is editable before submission and again once Bitrate approves the release. */
 const DELIVERY_PLAN_STATUSES = [ReleaseStatus.DRAFT, ReleaseStatus.READY] as const
-
-const DELIVERY_SELECT = {
-  id: true,
-  title: true,
-  status: true,
-  cover: true,
-  updatedAt: true,
-  destinations: { select: { destination: true } },
-  territories: { select: { countryCode: true }, orderBy: { countryCode: 'asc' } },
-  deliveries: {
-    select: { destination: true, state: true, message: true, updatedAt: true },
-  },
-} as const satisfies Prisma.ReleaseSelect
 
 type DeliveryRecord = Prisma.ReleaseGetPayload<{ select: typeof DELIVERY_SELECT }>
 

@@ -1,7 +1,9 @@
 import { pipeToResponse } from '@common/utils/stream'
+import type { ArtistEntity } from '@modules/artists/entities'
 import { ArtistAuth } from '@modules/artists-auth/artists-auth.guard'
-import type { ArtistAuthRequest } from '@modules/artists-auth/types'
-import type { UserAuthRequest } from '@modules/users-auth/types'
+import { CurrentArtist } from '@modules/artists-auth/decorators/current-artist.decorator'
+import type { UserEntity } from '@modules/users/entities'
+import { CurrentUser } from '@modules/users-auth/decorators/current-user.decorator'
 import { UserAuth } from '@modules/users-auth/users-auth.guard'
 import {
   BadRequestException,
@@ -122,7 +124,7 @@ export class TracksController {
   @Post('')
   @TrackFilesInterceptor()
   async postTrack(
-    @Req() req: ArtistAuthRequest,
+    @CurrentArtist() artist: ArtistEntity,
     @Body(new ZodValidationPipe(CreateTrackSchema))
     createTrackDto: CreateTrackDto,
     @UploadedFiles() files: TrackUploadFiles,
@@ -134,7 +136,7 @@ export class TracksController {
       throw new BadRequestException('Audio file is required')
     }
 
-    return await this.trackUploadService.create(req.artist.id, createTrackDto, audioFile, coverFile)
+    return await this.trackUploadService.create(artist.id, createTrackDto, audioFile, coverFile)
   }
 
   @UpdateTrackByIdSwagger()
@@ -142,14 +144,14 @@ export class TracksController {
   @Put(':id')
   @TrackFilesInterceptor()
   putTrack(
-    @Req() req: ArtistAuthRequest,
+    @CurrentArtist() artist: ArtistEntity,
     @Param('id', ParseUUIDPipe) id: TrackEntity['id'],
     @Body(new ZodValidationPipe(UpdateTrackSchema))
     updateTrackDto: UpdateTrackDto,
     @UploadedFiles() files: TrackUploadFiles,
   ) {
     return this.trackUploadService.update(
-      req.artist.id,
+      artist.id,
       id,
       updateTrackDto,
       files?.audio?.[0],
@@ -161,11 +163,11 @@ export class TracksController {
   @UserAuth()
   @Get('liked')
   getLikedTracks(
-    @Req() req: UserAuthRequest,
+    @CurrentUser() user: UserEntity,
     @Query('page', new ParseIntPipe({ optional: true })) page?: number,
     @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
   ) {
-    return this.tracksService.findLikedTracks(req.user.id, { page, limit })
+    return this.tracksService.findLikedTracks(user.id, { page, limit })
   }
 
   @GetTrackByIdSwagger()
@@ -180,12 +182,12 @@ export class TracksController {
   @Post(':id/play-sessions')
   openPlaySession(
     @Param('id', ParseUUIDPipe) id: TrackEntity['id'],
-    @Req() req: UserAuthRequest,
+    @CurrentUser() user: UserEntity,
     @Body(new ZodValidationPipe(OpenPlaySessionSchema)) dto: OpenPlaySessionDto,
   ) {
     return this.trackPlaybackService.openSession({
       trackId: id,
-      userId: req.user.id,
+      userId: user.id,
       ...(dto?.deviceId ? { deviceId: dto.deviceId } : {}),
     })
   }
@@ -230,15 +232,15 @@ export class TracksController {
   @LikeTrackSwagger()
   @UserAuth()
   @Post(':id/like')
-  likeTrack(@Req() req: UserAuthRequest, @Param('id', ParseUUIDPipe) id: TrackEntity['id']) {
-    return this.tracksService.like(req.user.id, id)
+  likeTrack(@CurrentUser() user: UserEntity, @Param('id', ParseUUIDPipe) id: TrackEntity['id']) {
+    return this.tracksService.like(user.id, id)
   }
 
   @UnlikeTrackSwagger()
   @UserAuth()
   @HttpCode(200)
   @Delete(':id/like')
-  unlikeTrack(@Req() req: UserAuthRequest, @Param('id', ParseUUIDPipe) id: TrackEntity['id']) {
-    return this.tracksService.unlike(req.user.id, id)
+  unlikeTrack(@CurrentUser() user: UserEntity, @Param('id', ParseUUIDPipe) id: TrackEntity['id']) {
+    return this.tracksService.unlike(user.id, id)
   }
 }

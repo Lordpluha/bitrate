@@ -14,20 +14,22 @@ export const scheduleSchema = z
     date: z.string(),
     time: z.string(),
   })
-  .superRefine((values, ctx) => {
+  .check((ctx) => {
+    const values = ctx.value
+    // superRefine's addIssue defaulted `input` and `continue: true`; keep both.
+    const fail = (message: string, path: PropertyKey[]) =>
+      ctx.issues.push({
+        code: 'custom',
+        message,
+        path,
+        input: ctx.value,
+        continue: true,
+      })
     if (!values.planned) return
     if (!dateSchema.safeParse(values.date).success)
-      ctx.addIssue({
-        code: 'custom',
-        path: ['date'],
-        message: messageKey('editRelease.dateInvalid'),
-      })
+      fail(messageKey('editRelease.dateInvalid'), ['date'])
     if (!timeSchema.safeParse(values.time).success)
-      ctx.addIssue({
-        code: 'custom',
-        path: ['time'],
-        message: messageKey('editRelease.timeInvalid'),
-      })
+      fail(messageKey('editRelease.timeInvalid'), ['time'])
   })
 
 export type ScheduleValues = z.infer<typeof scheduleSchema>

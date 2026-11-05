@@ -1,6 +1,7 @@
+import type { ArtistEntity } from '@modules/artists/entities'
 import { ArtistAuth } from '@modules/artists-auth/artists-auth.guard'
-import type { ArtistAuthRequest } from '@modules/artists-auth/types'
-import { Controller, Get, Header, Req } from '@nestjs/common'
+import { CurrentArtist } from '@modules/artists-auth/decorators/current-artist.decorator'
+import { Controller, Get, Header } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
 import { ArtistDashboardService } from './artist-dashboard.service'
 import { ArtistDashboardSwagger } from './decorators'
@@ -14,7 +15,7 @@ export class ArtistDashboardController {
   @ArtistAuth()
   @Header('Cache-Control', 'private, no-store')
   @Get()
-  summary(@Req() request: ArtistAuthRequest) {
-    return this.dashboard.summary(request.artist.id)
+  summary(@CurrentArtist() artist: ArtistEntity) {
+    return this.dashboard.summary(artist.id)
   }
 }

@@ -8,7 +8,7 @@ import { type SubmitHandler, useForm } from 'react-hook-form'
 import { z } from 'zod'
 
 const schema = z.object({
-  email: z.string().email(messageKey('auth.validation.emailInvalid')),
+  email: z.email(messageKey('auth.validation.emailInvalid')),
 })
 
 type FormData = z.infer<typeof schema>

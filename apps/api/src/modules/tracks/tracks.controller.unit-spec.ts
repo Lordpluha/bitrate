@@ -1,6 +1,8 @@
 import { PassThrough, Readable } from 'node:stream'
 import { finished } from 'node:stream/promises'
 import { beforeEach, describe, expect, it, jest } from '@jest/globals'
+import { buildArtist } from '@modules/artists/__tests__/fixtures/artists.fixtures'
+import { buildUser } from '@modules/users/__tests__/fixtures/users.fixtures'
 import { BadRequestException } from '@nestjs/common'
 import { buildAudioFile, buildTrack } from './__tests__/fixtures/tracks.fixtures'
 import { PlaybackPacingError } from './playback-session.service'
@@ -8,8 +10,6 @@ import type { TrackPlaybackService } from './track-playback.service'
 import type { TrackUploadService } from './track-upload.service'
 import { TracksController } from './tracks.controller'
 import type { TracksService } from './tracks.service'
-
-jest.mock('music-metadata', () => ({ parseFile: jest.fn() }), { virtual: true })
 
 const makeServiceMock = () =>
   ({
@@ -163,9 +163,9 @@ describe('TracksController', () => {
   })
 
   it('postTrack should throw BadRequestException when audio file is missing', async () => {
-    const req = { artist: { id: 'artist-1' } } as never
+    const artist = buildArtist({ id: 'artist-1' })
 
-    await expect(controller.postTrack(req, { title: 'T' } as never, {})).rejects.toThrow(
+    await expect(controller.postTrack(artist, { title: 'T' } as never, {})).rejects.toThrow(
       BadRequestException,
     )
   })
@@ -173,11 +173,11 @@ describe('TracksController', () => {
   it('postTrack should call uploadService.create when audio file is present', async () => {
     const track = buildTrack()
     uploadService.create.mockResolvedValue(track as never)
-    const req = { artist: { id: 'artist-1' } } as never
+    const artist = buildArtist({ id: 'artist-1' })
     const audioFile = buildAudioFile()
     const files = { audio: [audioFile] }
 
-    const result = await controller.postTrack(req, { title: 'T' } as never, files)
+    const result = await controller.postTrack(artist, { title: 'T' } as never, files)
 
     expect(uploadService.create).toHaveBeenCalledWith(
       'artist-1',
@@ -192,8 +192,8 @@ describe('TracksController', () => {
     const track = buildTrack()
     uploadService.update.mockResolvedValue(track as never)
 
-    const req = { artist: { id: 'artist-1' } } as never
-    const result = await controller.putTrack(req, 'track-1', { title: 'Updated' } as never, {})
+    const artist = buildArtist({ id: 'artist-1' })
+    const result = await controller.putTrack(artist, 'track-1', { title: 'Updated' } as never, {})
 
     expect(uploadService.update).toHaveBeenCalledWith(
       'artist-1',
@@ -208,9 +208,9 @@ describe('TracksController', () => {
   it('getLikedTracks should call service.findLikedTracks with user id from request', () => {
     const tracks = [buildTrack()]
     service.findLikedTracks.mockResolvedValue(tracks as never)
-    const req = { user: { id: 'user-1' } } as never
+    const user = buildUser({ id: 'user-1' })
 
-    const result = controller.getLikedTracks(req, 1, 10)
+    const result = controller.getLikedTracks(user, 1, 10)
 
     expect(service.findLikedTracks).toHaveBeenCalledWith('user-1', { page: 1, limit: 10 })
     expect(result).resolves.toBe(tracks)
@@ -219,9 +219,9 @@ describe('TracksController', () => {
   it('likeTrack should call service.like with user id and track id', () => {
     const track = buildTrack()
     service.like.mockResolvedValue(track as never)
-    const req = { user: { id: 'user-1' } } as never
+    const user = buildUser({ id: 'user-1' })
 
-    const result = controller.likeTrack(req, 'track-1')
+    const result = controller.likeTrack(user, 'track-1')
 
     expect(service.like).toHaveBeenCalledWith('user-1', 'track-1')
     expect(result).resolves.toBe(track)
@@ -230,9 +230,9 @@ describe('TracksController', () => {
   it('unlikeTrack should call service.unlike with user id and track id', () => {
     const track = buildTrack()
     service.unlike.mockResolvedValue(track as never)
-    const req = { user: { id: 'user-1' } } as never
+    const user = buildUser({ id: 'user-1' })
 
-    const result = controller.unlikeTrack(req, 'track-1')
+    const result = controller.unlikeTrack(user, 'track-1')
 
     expect(service.unlike).toHaveBeenCalledWith('user-1', 'track-1')
     expect(result).resolves.toBe(track)

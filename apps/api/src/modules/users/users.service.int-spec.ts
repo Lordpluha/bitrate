@@ -4,7 +4,7 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it, jest } from '@je
 import { Test, type TestingModule } from '@nestjs/testing'
 import { prismaMock, resetPrismaMock } from '@test/mocks'
 import { buildUser } from './__tests__/fixtures/users.fixtures'
-import { PUBLIC_USER_SELECT } from './users.select'
+import { PUBLIC_USER_SELECT } from './orm'
 import { UsersService } from './users.service'
 
 describe('UsersService (int)', () => {

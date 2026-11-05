@@ -4,7 +4,7 @@ import z from 'zod'
 /** The legal acceptance schema value. */
 export const LegalAcceptanceSchema = z.object({
   acceptLegal: z.literal(true, {
-    message: 'You must accept the Terms of Use and Community Guidelines',
+    error: 'You must accept the Terms of Use and Community Guidelines',
   }),
 })
 

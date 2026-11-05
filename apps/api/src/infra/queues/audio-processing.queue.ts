@@ -48,7 +48,7 @@ const objectKeySchema = z
   .string()
   .min(1)
   .refine((key) => !(key.startsWith('/') || key.includes('\\') || key.split('/').includes('..')), {
-    message: 'must be a relative object key',
+    error: 'must be a relative object key',
   })
 
 const convertAudioJobSchema = z.object({

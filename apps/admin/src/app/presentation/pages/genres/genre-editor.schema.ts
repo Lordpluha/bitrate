@@ -14,10 +14,10 @@ export const genreEditorSchema = z.object({
     .string()
     .max(100, 'genre.invalid.slugTooLong')
     .refine((value) => value === '' || /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(value), {
-      message: 'genre.invalid.slugFormat',
+      error: 'genre.invalid.slugFormat',
     }),
   description: z.string().max(1000, 'genre.invalid.descriptionTooLong'),
   color: z.string().refine((value) => value === '' || /^#[0-9a-fA-F]{6}$/.test(value), {
-    message: 'genre.invalid.colorFormat',
+    error: 'genre.invalid.colorFormat',
   }),
 })

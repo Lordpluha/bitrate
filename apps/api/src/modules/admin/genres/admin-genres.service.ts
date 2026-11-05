@@ -5,7 +5,7 @@ import { BadRequestException, Injectable } from '@nestjs/common'
 import { Prisma } from '@prisma/client'
 import type { ADMIN_GENRES_SORT_FIELDS, CreateGenreDto, UpdateGenreDto } from './dtos'
 import { GenreInUseException, GenreNotFoundException, GenreSlugTakenException } from './errors'
-import { ADMIN_GENRE_SELECT } from './genre.select'
+import { ADMIN_GENRE_SELECT } from './orm'
 
 /** One of the genre list's allowed sort fields. */
 type AdminGenresSortField = (typeof ADMIN_GENRES_SORT_FIELDS)[number]

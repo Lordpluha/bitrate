@@ -1,6 +1,7 @@
 import { isPrismaP2002 } from '@common/utils/prisma'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import { NotificationsProducer } from '@modules/notifications'
+import { PUBLIC_USER_SELECT } from '@modules/users/orm'
 import {
   BadRequestException,
   ConflictException,
@@ -11,40 +12,7 @@ import {
 import type { Prisma } from '@prisma/client'
 import { FRIEND_ERRORS } from './errors/friend.errors'
 import { derivePresence, type PresenceStatus } from './friends.presence'
-
-/** What a profile shows about a friend or a requester. Mirrors the users module's public select. */
-const PUBLIC_USER_SELECT = {
-  id: true,
-  username: true,
-  createdAt: true,
-  description: true,
-  avatar: true,
-  updatedAt: true,
-} as const satisfies Prisma.UserSelect
-
-/** A friend plus the player data their presence is derived from. */
-const FRIEND_SELECT = {
-  ...PUBLIC_USER_SELECT,
-  devices: { orderBy: { lastSeenAt: 'desc' }, take: 1, select: { lastSeenAt: true } },
-  playerState: {
-    select: {
-      isPlaying: true,
-      updatedAt: true,
-      currentTrack: {
-        select: {
-          id: true,
-          title: true,
-          cover: true,
-          deletedAt: true,
-          processingStatus: true,
-          publishedAt: true,
-          artist: { select: { id: true, username: true } },
-        },
-      },
-    },
-  },
-  settings: { select: { privateSession: true, showListeningActivity: true } },
-} as const satisfies Prisma.UserSelect
+import { FRIEND_SELECT } from './orm'
 
 /** Friends listed at most; more than this is not a friend list any more. */
 const MAX_FRIENDS = 500

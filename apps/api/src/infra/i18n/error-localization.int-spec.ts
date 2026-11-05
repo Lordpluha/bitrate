@@ -12,7 +12,7 @@ import { i18nOptions } from '../../i18n/i18n.config'
 
 const BodySchema = z.object({
   name: z.string().min(3),
-  email: z.string().email(),
+  email: z.email(),
   count: z.number().max(5),
   kind: z.enum(['a', 'b']),
 })

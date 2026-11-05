@@ -1,45 +1,12 @@
-import { PrismaService } from '@infra/prisma/prisma.service'
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals'
 import type { INestApplication } from '@nestjs/common'
 import request from 'supertest'
-import { verifyArtistEmail } from '../helpers/db'
-import { closeE2eApp, createE2eApp } from './e2e-app'
+import { closeE2eApp, createE2eApp, makeRunId, registerAndLogin } from './e2e-app'
 
 // Well-formed v4 UUID that matches no album; ParseUUIDPipe rejects ids without a valid version.
 const MISSING_ALBUM_ID = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa'
 
-const makeRunId = () => Math.random().toString(36).slice(2, 8)
-
 let app: INestApplication
-
-const registerAndLoginArtist = async () => {
-  const runId = makeRunId()
-  const registration = {
-    email: `artist_${runId}@example.com`,
-    password: 'password123',
-    username: `artist_${runId}`,
-    acceptLegal: true,
-    acceptArtistAgreement: true,
-  }
-
-  await request(app.getHttpServer())
-    .post('/artists/auth/registration')
-    .send(registration)
-    .expect(201)
-
-  await verifyArtistEmail(app.get(PrismaService), registration.email)
-
-  const loginResponse = await request(app.getHttpServer())
-    .post('/artists/auth/login')
-    .send({ email: registration.email, password: registration.password })
-    .expect(201)
-
-  const cookies = loginResponse.headers['set-cookie']
-  expect(cookies).toBeDefined()
-  if (!cookies) throw new Error('Auth cookies were not set')
-
-  return { cookies, registration }
-}
 
 describe('AlbumsController (e2e)', () => {
   beforeAll(async () => {
@@ -52,7 +19,7 @@ describe('AlbumsController (e2e)', () => {
   })
 
   it('full user scenario: register -> login -> create -> read -> update -> delete', async () => {
-    const { cookies } = await registerAndLoginArtist()
+    const { cookies } = await registerAndLogin(app, 'artist')
 
     const createResponse = await request(app.getHttpServer())
       .post('/albums')
@@ -79,7 +46,7 @@ describe('AlbumsController (e2e)', () => {
   })
 
   it('GET /albums should support title filter', async () => {
-    const { cookies } = await registerAndLoginArtist()
+    const { cookies } = await registerAndLogin(app, 'artist')
     const runId = makeRunId()
 
     await request(app.getHttpServer())
@@ -103,7 +70,7 @@ describe('AlbumsController (e2e)', () => {
   })
 
   it('GET /albums should filter case-insensitively', async () => {
-    const { cookies } = await registerAndLoginArtist()
+    const { cookies } = await registerAndLogin(app, 'artist')
     const runId = makeRunId()
 
     await request(app.getHttpServer())
@@ -147,7 +114,7 @@ describe('AlbumsController (e2e)', () => {
   })
 
   it('PUT /albums/:id should return 404 for missing album', async () => {
-    const { cookies } = await registerAndLoginArtist()
+    const { cookies } = await registerAndLogin(app, 'artist')
 
     await request(app.getHttpServer())
       .put(`/albums/${MISSING_ALBUM_ID}`)

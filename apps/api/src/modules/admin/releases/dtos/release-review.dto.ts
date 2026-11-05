@@ -15,12 +15,11 @@ export const ADMIN_REVIEWED_STATUSES = [
 /** The review queue shows submissions by default. */
 export const ADMIN_RELEASE_STATUSES = [...ADMIN_REVIEWED_STATUSES, 'ALL'] as const
 
-export const ListAdminReleasesQuerySchema = paginationQuerySchema
-  .extend({
-    status: z.enum(ADMIN_RELEASE_STATUSES).default('SUBMITTED'),
-    q: z.string().trim().min(1).max(100).optional().describe('Title or artist handle'),
-  })
-  .strict()
+export const ListAdminReleasesQuerySchema = z.strictObject({
+  ...paginationQuerySchema.shape,
+  status: z.enum(ADMIN_RELEASE_STATUSES).default('SUBMITTED'),
+  q: z.string().trim().min(1).max(100).optional().describe('Title or artist handle'),
+})
 
 const expectedUpdatedAt = z.iso
   .datetime({ offset: true })

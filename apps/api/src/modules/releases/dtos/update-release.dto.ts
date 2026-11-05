@@ -36,7 +36,7 @@ export const UpdateReleaseSchema = z
       input.scheduledAt !== undefined ||
       input.upc !== undefined,
     {
-      message: RELEASE_VALIDATION.UPDATE_EMPTY,
+      error: RELEASE_VALIDATION.UPDATE_EMPTY,
     },
   )
 

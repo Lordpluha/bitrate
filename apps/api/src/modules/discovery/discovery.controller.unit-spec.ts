@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from '@jest/globals'
-import type { OptionalUserAuthRequest, UserAuthRequest } from '@modules/users-auth/types'
+import { buildUser } from '@modules/users/__tests__/fixtures/users.fixtures'
 import { BadRequestException } from '@nestjs/common'
 import { type DeepMockProxy, mockDeep, mockReset } from 'jest-mock-extended'
 import { DiscoveryController } from './discovery.controller'
@@ -81,17 +81,17 @@ describe('DiscoveryController', () => {
     it('reads an anonymous feed with no user id when the session is optional and absent', async () => {
       discovery.getFeed.mockResolvedValue([] as never)
 
-      await controller.feed({} as OptionalUserAuthRequest)
+      await controller.feed(undefined)
 
       expect(discovery.getFeed).toHaveBeenCalledWith(undefined)
     })
   })
 
   describe('personal top', () => {
-    const authedRequest = { user: { id: 'user-1' } } as UserAuthRequest
+    const user = buildUser({ id: 'user-1' })
 
     it('rejects a time range outside short/medium/long', () => {
-      expect(() => controller.topTracks(authedRequest, 'decade')).toThrow(BadRequestException)
+      expect(() => controller.topTracks(user, 'decade')).toThrow(BadRequestException)
       expect(personalTop.getTopTracks).not.toHaveBeenCalled()
     })
 
@@ -103,7 +103,7 @@ describe('DiscoveryController', () => {
         limit: 20,
       } as never)
 
-      await controller.topArtists(authedRequest, 'long')
+      await controller.topArtists(user, 'long')
 
       expect(personalTop.getTopArtists).toHaveBeenCalledWith('user-1', 'long', undefined, undefined)
     })

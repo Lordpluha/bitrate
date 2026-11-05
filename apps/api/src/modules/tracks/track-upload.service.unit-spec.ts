@@ -23,16 +23,6 @@ import { getUploadTempDir } from './audio-scratch'
 import type { CreateTrackDto, UpdateTrackDto } from './dtos/create-track.dto'
 import { TrackUploadService } from './track-upload.service'
 
-jest.mock(
-  'music-metadata',
-  () => ({
-    parseFile: jest.fn().mockResolvedValue({
-      format: { duration: 100, bitrate: 128000 },
-    } as never),
-  }),
-  { virtual: true },
-)
-
 jest.mock('node:fs/promises', () => ({
   rm: jest.fn().mockResolvedValue(undefined as never),
   stat: jest.fn().mockResolvedValue({ size: 9_000 } as never),

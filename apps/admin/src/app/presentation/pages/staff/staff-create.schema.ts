@@ -20,6 +20,6 @@ export const staffCreateSchema = z.object({
   permissions: z
     .array(z.custom<Permission>())
     .refine((permissions) => permissions.every((permission) => !PROTECTED_SET.has(permission)), {
-      message: 'operator.invalid.protected',
+      error: 'operator.invalid.protected',
     }),
 })

@@ -1,12 +1,9 @@
-import { describe, expect, it, jest } from '@jest/globals'
+import { describe, expect, it } from '@jest/globals'
 import type { DynamicModule, ForwardReference, Provider, Type } from '@nestjs/common'
 import { MODULE_METADATA, PATH_METADATA } from '@nestjs/common/constants'
 import { AdminAppModule } from './admin-app.module'
 import { AppController } from './app.controller'
 import { AppModule } from './app.module'
-
-/** `TrackUploadService` pulls in `music-metadata`, which Jest cannot resolve. */
-jest.mock('music-metadata', () => ({ parseFile: jest.fn() }), { virtual: true })
 
 /** Metadata key `@Processor` writes; `@nestjs/bullmq` does not export the constant. */
 const PROCESSOR_METADATA = 'bullmq:processor_metadata'

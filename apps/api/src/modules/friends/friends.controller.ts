@@ -1,4 +1,5 @@
-import type { UserAuthRequest } from '@modules/users-auth/types'
+import type { UserEntity } from '@modules/users/entities'
+import { CurrentUser } from '@modules/users-auth/decorators/current-user.decorator'
 import { UserAuth } from '@modules/users-auth/users-auth.guard'
 import {
   Controller,
@@ -9,7 +10,6 @@ import {
   ParseUUIDPipe,
   Post,
   Query,
-  Req,
 } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
 import { ZodValidationPipe } from 'nestjs-zod'
@@ -36,51 +36,51 @@ export class FriendsController {
 
   @GetFriendsSwagger()
   @Get('me/friends')
-  list(@Req() req: UserAuthRequest) {
-    return this.friends.listFriends(req.user.id)
+  list(@CurrentUser() user: UserEntity) {
+    return this.friends.listFriends(user.id)
   }
 
   @GetFriendRequestsSwagger()
   @Get('me/friend-requests')
   requests(
-    @Req() req: UserAuthRequest,
+    @CurrentUser() user: UserEntity,
     @Query('direction', new ZodValidationPipe(DirectionSchema)) direction: FriendRequestDirection,
   ) {
-    return this.friends.listRequests(req.user.id, direction)
+    return this.friends.listRequests(user.id, direction)
   }
 
   @RemoveFriendSwagger()
   @HttpCode(204)
   @Delete('me/friends/:userId')
-  remove(@Req() req: UserAuthRequest, @Param('userId', ParseUUIDPipe) userId: string) {
-    return this.friends.removeFriend(req.user.id, userId)
+  remove(@CurrentUser() user: UserEntity, @Param('userId', ParseUUIDPipe) userId: string) {
+    return this.friends.removeFriend(user.id, userId)
   }
 
   @SendFriendRequestSwagger()
   @HttpCode(200)
   @Post('users/:id/friend-request')
-  send(@Req() req: UserAuthRequest, @Param('id', ParseUUIDPipe) id: string) {
-    return this.friends.sendRequest(req.user.id, id)
+  send(@CurrentUser() user: UserEntity, @Param('id', ParseUUIDPipe) id: string) {
+    return this.friends.sendRequest(user.id, id)
   }
 
   @AcceptFriendRequestSwagger()
   @HttpCode(204)
   @Post('friend-requests/:id/accept')
-  accept(@Req() req: UserAuthRequest, @Param('id', ParseUUIDPipe) id: string) {
-    return this.friends.accept(req.user.id, id)
+  accept(@CurrentUser() user: UserEntity, @Param('id', ParseUUIDPipe) id: string) {
+    return this.friends.accept(user.id, id)
   }
 
   @DeclineFriendRequestSwagger()
   @HttpCode(204)
   @Post('friend-requests/:id/decline')
-  decline(@Req() req: UserAuthRequest, @Param('id', ParseUUIDPipe) id: string) {
-    return this.friends.decline(req.user.id, id)
+  decline(@CurrentUser() user: UserEntity, @Param('id', ParseUUIDPipe) id: string) {
+    return this.friends.decline(user.id, id)
   }
 
   @CancelFriendRequestSwagger()
   @HttpCode(204)
   @Delete('friend-requests/:id')
-  cancel(@Req() req: UserAuthRequest, @Param('id', ParseUUIDPipe) id: string) {
-    return this.friends.cancel(req.user.id, id)
+  cancel(@CurrentUser() user: UserEntity, @Param('id', ParseUUIDPipe) id: string) {
+    return this.friends.cancel(user.id, id)
   }
 }

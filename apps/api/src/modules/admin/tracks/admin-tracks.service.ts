@@ -9,20 +9,13 @@ import {
 } from '@modules/admin/shared'
 import { TrackUploadService } from '@modules/tracks'
 import { Injectable } from '@nestjs/common'
-import {
-  type AdminTrackDetail,
-  type AdminTrackRow,
-  DELETED_AT_SELECT,
-  DETAIL_INCLUDE,
-  TRACK_ROW_SELECT,
-  type TrackWithDetail,
-  toAdminTrackRow,
-} from './admin-tracks.select'
+import { type AdminTrackDetail, type AdminTrackRow, toAdminTrackRow } from './admin-tracks.types'
 import {
   TrackAlreadyDeletedException,
   TrackNotDeletedException,
   TrackNotFoundException,
 } from './errors'
+import { DELETED_AT_SELECT, DETAIL_INCLUDE, TRACK_ROW_SELECT, type TrackWithDetail } from './orm'
 
 /**
  * One track as the operator sees it — detail, processing history — and the moderation actions

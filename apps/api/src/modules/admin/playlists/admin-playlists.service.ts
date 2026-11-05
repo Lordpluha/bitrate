@@ -4,19 +4,12 @@ import { PrismaService } from '@infra/prisma/prisma.service'
 import type { AdminResourceStatus, AuditContextValue } from '@modules/admin/shared'
 import {
   runTakeDownTransition,
-  statusWhere,
   type TakeDownActor,
   type TakeDownDirection,
   writeTakeDownAudit,
 } from '@modules/admin/shared'
 import { Injectable } from '@nestjs/common'
 import type { Prisma } from '@prisma/client'
-import {
-  PLAYLIST_DETAIL_SELECT,
-  PLAYLIST_ROW_SELECT,
-  type PlaylistDetailRecord,
-  type PlaylistRowRecord,
-} from './admin-playlists.select'
 import type { ADMIN_PLAYLISTS_SORT_FIELDS } from './dtos'
 import type { AdminPlaylistEntity, AdminPlaylistTrackEntity } from './entities'
 import {
@@ -27,6 +20,13 @@ import {
   PlaylistNotFoundException,
   PlaylistNotHiddenByOperatorException,
 } from './errors'
+import {
+  PLAYLIST_DETAIL_SELECT,
+  PLAYLIST_ROW_SELECT,
+  type PlaylistDetailRecord,
+  type PlaylistRowRecord,
+  playlistListWhere,
+} from './orm'
 
 /** One of the playlist list's allowed sort fields. */
 type AdminPlaylistsSortField = (typeof ADMIN_PLAYLISTS_SORT_FIELDS)[number]
@@ -50,19 +50,6 @@ const UNHIDE_ACTION = 'admin-playlists.unhide'
 export class AdminPlaylistsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  /**
-   * Builds the shared `where` clause for listing and counting. `isPublic: true` is not
-   * optional: private playlists are user content, never an operator moderation surface.
-   */
-  private buildWhere({ status, ownerId, q }: Omit<ListPlaylistsInput, 'page' | 'limit'>) {
-    return {
-      isPublic: true,
-      ...statusWhere(status),
-      ...(ownerId && { userId: ownerId }),
-      ...(q && { title: { contains: q, mode: 'insensitive' } }),
-    } satisfies Prisma.PlaylistWhereInput
-  }
-
   /** Flattens a playlist (owner and track count joined) into the operator row shape. */
   private toRow({ user, _count, userId, ...playlist }: PlaylistRowRecord): AdminPlaylistEntity {
     return { ...playlist, ownerId: userId, ownerUsername: user.username, trackCount: _count.tracks }
@@ -78,7 +65,7 @@ export class AdminPlaylistsService {
     sort,
     order,
   }: ListPlaylistsInput) {
-    const where = this.buildWhere({ status, ownerId, q })
+    const where = playlistListWhere({ status, ownerId, q })
     const orderBy = buildSortOrderBy<Prisma.PlaylistOrderByWithRelationInput>({ sort, order }, [
       { createdAt: 'desc' },
       { id: 'desc' },

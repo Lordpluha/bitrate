@@ -10,7 +10,7 @@ const schema = z
     confirm: z.string(),
   })
   .refine((value) => value.password === value.confirm, {
-    message: 'Passwords do not match',
+    error: 'Passwords do not match',
     path: ['confirm'],
   })
 

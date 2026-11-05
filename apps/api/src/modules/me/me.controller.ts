@@ -1,5 +1,6 @@
 import { normalizePagination } from '@common/pagination'
-import type { UserAuthRequest } from '@modules/users-auth/types'
+import type { UserEntity } from '@modules/users/entities'
+import { CurrentUser } from '@modules/users-auth/decorators/current-user.decorator'
 import { UserAuth } from '@modules/users-auth/users-auth.guard'
 import {
   Body,
@@ -13,7 +14,6 @@ import {
   Post,
   Put,
   Query,
-  Req,
 } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
 import { ZodValidationPipe } from 'nestjs-zod'
@@ -51,93 +51,93 @@ export class MeController {
 
   @GetSettingsSwagger()
   @Get('settings')
-  getSettings(@Req() req: UserAuthRequest) {
-    return this.me.getSettings(req.user.id)
+  getSettings(@CurrentUser() user: UserEntity) {
+    return this.me.getSettings(user.id)
   }
 
   @UpdateSettingsSwagger()
   @Put('settings')
   updateSettings(
-    @Req() req: UserAuthRequest,
+    @CurrentUser() user: UserEntity,
     @Body(new ZodValidationPipe(UpdateSettingsSchema)) dto: UpdateSettingsDto,
   ) {
-    return this.me.updateSettings(req.user.id, dto)
+    return this.me.updateSettings(user.id, dto)
   }
 
   @GetPlayerSwagger()
   @Get('player')
-  getPlayer(@Req() req: UserAuthRequest) {
-    return this.me.getPlayer(req.user.id)
+  getPlayer(@CurrentUser() user: UserEntity) {
+    return this.me.getPlayer(user.id)
   }
 
   @UpdatePlayerSwagger()
   @Put('player')
   updatePlayer(
-    @Req() req: UserAuthRequest,
+    @CurrentUser() user: UserEntity,
     @Body(new ZodValidationPipe(UpdatePlayerSchema)) dto: UpdatePlayerDto,
   ) {
-    return this.me.updatePlayer(req.user.id, dto)
+    return this.me.updatePlayer(user.id, dto)
   }
 
   @UpdateQueueSwagger()
   @Put('player/queue')
   updateQueue(
-    @Req() req: UserAuthRequest,
+    @CurrentUser() user: UserEntity,
     @Body(new ZodValidationPipe(UpdateQueueSchema)) dto: UpdateQueueDto,
   ) {
-    return this.me.replaceQueue(req.user.id, dto)
+    return this.me.replaceQueue(user.id, dto)
   }
 
   @GetDevicesSwagger()
   @Get('player/devices')
-  devices(@Req() req: UserAuthRequest) {
-    return this.me.getDevices(req.user.id)
+  devices(@CurrentUser() user: UserEntity) {
+    return this.me.getDevices(user.id)
   }
 
   @UpsertDeviceSwagger()
   @Post('player/devices')
   upsertDevice(
-    @Req() req: UserAuthRequest,
+    @CurrentUser() user: UserEntity,
     @Body(new ZodValidationPipe(UpsertDeviceSchema)) dto: UpsertDeviceDto,
   ) {
-    return this.me.upsertDevice(req.user.id, dto)
+    return this.me.upsertDevice(user.id, dto)
   }
 
   @RemoveDeviceSwagger()
   @HttpCode(204)
   @Delete('player/devices/:id')
-  removeDevice(@Req() req: UserAuthRequest, @Param('id', ParseUUIDPipe) id: string) {
-    return this.me.removeDevice(req.user.id, id)
+  removeDevice(@CurrentUser() user: UserEntity, @Param('id', ParseUUIDPipe) id: string) {
+    return this.me.removeDevice(user.id, id)
   }
 
   @GetNotificationsSwagger()
   @Get('notifications')
   notifications(
-    @Req() req: UserAuthRequest,
+    @CurrentUser() user: UserEntity,
     @Query('page', new ParseIntPipe({ optional: true })) page?: number,
     @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
   ) {
     const pagination = normalizePagination(page, limit)
-    return this.me.getNotifications(req.user.id, pagination.page, pagination.limit)
+    return this.me.getNotifications(user.id, pagination.page, pagination.limit)
   }
 
   @ReadNotificationSwagger()
   @HttpCode(204)
   @Put('notifications/:id/read')
-  readNotification(@Req() req: UserAuthRequest, @Param('id', ParseUUIDPipe) id: string) {
-    return this.me.readNotification(req.user.id, id)
+  readNotification(@CurrentUser() user: UserEntity, @Param('id', ParseUUIDPipe) id: string) {
+    return this.me.readNotification(user.id, id)
   }
 
   @ReadAllNotificationsSwagger()
   @HttpCode(204)
   @Put('notifications/read-all')
-  readAll(@Req() req: UserAuthRequest) {
-    return this.me.readAllNotifications(req.user.id)
+  readAll(@CurrentUser() user: UserEntity) {
+    return this.me.readAllNotifications(user.id)
   }
 
   @GetSubscriptionSwagger()
   @Get('subscription')
-  subscription(@Req() req: UserAuthRequest) {
-    return this.me.getSubscription(req.user.id)
+  subscription(@CurrentUser() user: UserEntity) {
+    return this.me.getSubscription(user.id)
   }
 }

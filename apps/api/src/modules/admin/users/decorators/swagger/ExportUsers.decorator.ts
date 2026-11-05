@@ -2,7 +2,7 @@ import { ADMIN_RESOURCE_STATUSES, CsvExportResponseSwagger } from '@modules/admi
 import { applyDecorators } from '@nestjs/common'
 import { ApiOperation, ApiQuery } from '@nestjs/swagger'
 import { ADMIN_USERS_SORT_FIELDS } from '../../dtos'
-import { ADMIN_USER_EXPORT_COLUMNS } from '../../user.select'
+import { ADMIN_USER_EXPORT_COLUMNS } from '../../orm'
 
 /** Runs the export users swagger operation. */
 export function ExportUsersSwagger() {

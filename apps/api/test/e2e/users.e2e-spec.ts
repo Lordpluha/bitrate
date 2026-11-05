@@ -3,9 +3,7 @@ import { afterAll, beforeAll, describe, expect, it } from '@jest/globals'
 import type { INestApplication } from '@nestjs/common'
 import request from 'supertest'
 import { verifyUserEmail } from '../helpers/db'
-import { closeE2eApp, createE2eApp } from './e2e-app'
-
-const makeRunId = () => Math.random().toString(36).slice(2, 8)
+import { closeE2eApp, createE2eApp, makeRunId } from './e2e-app'
 
 describe('UsersController (e2e)', () => {
   let app: INestApplication

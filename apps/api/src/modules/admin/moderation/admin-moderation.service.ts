@@ -12,6 +12,7 @@ import { Injectable } from '@nestjs/common'
 import type { ModerationReport, ModerationStatus, Prisma } from '@prisma/client'
 import type { ADMIN_REPORTS_SORT_FIELDS, UpdateReportDto } from './dtos'
 import { ReportNotFoundException, ReportStatusChangedException } from './errors'
+import { reportQueueWhere } from './orm'
 import { ADMIN_REPORT_EXPORT_COLUMNS, ADMIN_REPORT_EXPORT_SELECT } from './report-export.columns'
 import { type ModerationSubject, SUBJECT_RESOLVERS } from './report-subjects'
 
@@ -25,14 +26,6 @@ type ListReportsInput = {
   status?: ModerationStatus
   entityType?: string
 } & SortInput<AdminReportsSortField>
-
-/** The queue's `where` clause, shared by the list and its export. */
-function buildWhere({
-  status,
-  entityType,
-}: Pick<ListReportsInput, 'status' | 'entityType'>): Prisma.ModerationReportWhereInput {
-  return { ...(status && { status }), ...(entityType && { entityType }) }
-}
 
 /** How many sibling reports on the same subject the detail response includes. */
 const SIBLING_REPORTS_LIMIT = 20
@@ -59,7 +52,7 @@ export class AdminModerationService {
     sort,
     order,
   }: ListReportsInput) {
-    const where = buildWhere({ status, entityType })
+    const where = reportQueueWhere({ status, entityType })
     const orderBy = buildSortOrderBy<Prisma.ModerationReportOrderByWithRelationInput>(
       { sort, order },
       [{ createdAt: 'desc' }, { id: 'desc' }],
@@ -86,7 +79,7 @@ export class AdminModerationService {
     staffId: string,
     auditContext: AuditContextValue = {},
   ): Promise<CsvExport> {
-    const where = buildWhere({ status, entityType })
+    const where = reportQueueWhere({ status, entityType })
     const orderBy = buildSortOrderBy<Prisma.ModerationReportOrderByWithRelationInput>(
       { sort, order },
       [{ createdAt: 'desc' }, { id: 'desc' }],

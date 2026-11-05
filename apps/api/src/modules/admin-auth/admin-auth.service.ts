@@ -5,7 +5,7 @@ import { JwtService } from '@nestjs/jwt'
 import type { Staff, StaffSession } from '@prisma/client'
 import type { JWTPayload } from '../tokens'
 import type { Permission } from './access'
-import { STAFF_SAFE_SELECT } from './staff.select'
+import { STAFF_SAFE_SELECT } from './orm'
 
 /** A completed staff sign-in: the token pair a session is built from. */
 type StaffTokenPair = {

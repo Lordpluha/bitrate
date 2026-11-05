@@ -1,7 +1,9 @@
 import { HttpCacheable } from '@common/interceptors/http-cacheable.decorator'
+import type { ArtistEntity } from '@modules/artists/entities'
 import { ArtistAuth } from '@modules/artists-auth/artists-auth.guard'
-import { ArtistAuthRequest } from '@modules/artists-auth/types'
-import type { UserAuthRequest } from '@modules/users-auth/types'
+import { CurrentArtist } from '@modules/artists-auth/decorators/current-artist.decorator'
+import type { UserEntity } from '@modules/users/entities'
+import { CurrentUser } from '@modules/users-auth/decorators/current-user.decorator'
 import { UserAuth } from '@modules/users-auth/users-auth.guard'
 import {
   Body,
@@ -15,7 +17,6 @@ import {
   Post,
   Put,
   Query,
-  Req,
 } from '@nestjs/common'
 import { ApiExtraModels, ApiTags } from '@nestjs/swagger'
 import { ZodValidationPipe } from 'nestjs-zod'
@@ -79,11 +80,11 @@ export class AlbumsController {
   @UserAuth()
   @Get('liked')
   getLikedAlbums(
-    @Req() req: UserAuthRequest,
+    @CurrentUser() user: UserEntity,
     @Query('page', new ParseIntPipe({ optional: true })) page?: number,
     @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
   ) {
-    return this.albumsService.findLiked(req.user.id, { page, limit })
+    return this.albumsService.findLiked(user.id, { page, limit })
   }
 
   /** Runs the get by id operation. */
@@ -99,10 +100,10 @@ export class AlbumsController {
   @ArtistAuth()
   @Post('')
   async createAlbum(
-    @Req() req: ArtistAuthRequest,
+    @CurrentArtist() artist: ArtistEntity,
     @Body(new ZodValidationPipe(CreateAlbumSchema)) createDto: CreateAlbumDto,
   ) {
-    const artistId = req.artist.id
+    const artistId = artist.id
     return await this.albumsService.create(artistId, createDto)
   }
 
@@ -111,11 +112,11 @@ export class AlbumsController {
   @ArtistAuth()
   @Put(':id')
   async updateAlbum(
-    @Req() req: ArtistAuthRequest,
+    @CurrentArtist() artist: ArtistEntity,
     @Param('id', ParseUUIDPipe) id: AlbumEntity['id'],
     @Body(new ZodValidationPipe(UpdateAlbumSchema)) updateDto: UpdateAlbumDto,
   ) {
-    const artistId = req.artist.id
+    const artistId = artist.id
     return await this.albumsService.update(artistId, id, updateDto)
   }
 
@@ -124,10 +125,10 @@ export class AlbumsController {
   @ArtistAuth()
   @Delete(':id')
   async deleteAlbum(
-    @Req() req: ArtistAuthRequest,
+    @CurrentArtist() artist: ArtistEntity,
     @Param('id', ParseUUIDPipe) id: AlbumEntity['id'],
   ) {
-    const artistId = req.artist.id
+    const artistId = artist.id
     return await this.albumsService.delete(artistId, id)
   }
 
@@ -135,8 +136,8 @@ export class AlbumsController {
   @LikeAlbumSwagger()
   @UserAuth()
   @Post(':id/like')
-  likeAlbum(@Req() req: UserAuthRequest, @Param('id', ParseUUIDPipe) id: AlbumEntity['id']) {
-    return this.albumsService.like(req.user.id, id)
+  likeAlbum(@CurrentUser() user: UserEntity, @Param('id', ParseUUIDPipe) id: AlbumEntity['id']) {
+    return this.albumsService.like(user.id, id)
   }
 
   /** Runs the unlike album operation. */
@@ -144,7 +145,7 @@ export class AlbumsController {
   @UserAuth()
   @HttpCode(200)
   @Delete(':id/like')
-  unlikeAlbum(@Req() req: UserAuthRequest, @Param('id', ParseUUIDPipe) id: AlbumEntity['id']) {
-    return this.albumsService.unlike(req.user.id, id)
+  unlikeAlbum(@CurrentUser() user: UserEntity, @Param('id', ParseUUIDPipe) id: AlbumEntity['id']) {
+    return this.albumsService.unlike(user.id, id)
   }
 }

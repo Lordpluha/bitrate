@@ -29,7 +29,7 @@ export const UpdateReleaseTrackSchema = z
       .describe('Release version read before editing'),
   })
   .refine((input) => input.title !== undefined || input.isrc !== undefined, {
-    message: RELEASE_VALIDATION.UPDATE_EMPTY,
+    error: RELEASE_VALIDATION.UPDATE_EMPTY,
   })
 
 export class UpdateReleaseTrackDto extends createZodDto(UpdateReleaseTrackSchema) {}

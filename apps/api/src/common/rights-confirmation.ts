@@ -10,7 +10,7 @@ export const RIGHTS_CONFIRMATION_MESSAGE =
  * every field as text, so `'true'` is accepted next to the JSON boolean; anything else is refused.
  */
 export const RightsConfirmedSchema = z
-  .union([z.literal(true), z.literal('true')], { message: RIGHTS_CONFIRMATION_MESSAGE })
+  .union([z.literal(true), z.literal('true')], { error: RIGHTS_CONFIRMATION_MESSAGE })
   .transform(() => true as const)
 
 /** The columns that record a rights confirmation under the current Artist Agreement. */

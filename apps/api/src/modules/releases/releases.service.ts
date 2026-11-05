@@ -19,17 +19,16 @@ import type {
 import type { UpdateReleaseDto } from './dtos/update-release.dto'
 import type { UpdateReleaseTrackDto } from './dtos/update-release-track.dto'
 import { RELEASE_ERRORS } from './errors'
-import { lockOwnedDraft } from './release-draft-lock'
-import { releaseReadiness } from './release-readiness'
-import { type CreditedArtist, creditArtistAlone } from './release-solo-credit'
 import {
   RELEASE_SUMMARY_SELECT,
   type ReadinessRecord,
   type ReleaseWorkspaceRecord,
-  readinessFromRecord,
   releaseReadinessSelect,
   releaseWorkspaceSelect,
-} from './releases.select'
+} from './orm'
+import { lockOwnedDraft } from './release-draft-lock'
+import { readinessFromRecord, releaseReadiness } from './release-readiness'
+import { type CreditedArtist, creditArtistAlone } from './release-solo-credit'
 
 /** Statuses whose release timing (`scheduledAt`) can still change. */
 const TIMING_STATUSES = [ReleaseStatus.DRAFT, ReleaseStatus.READY]

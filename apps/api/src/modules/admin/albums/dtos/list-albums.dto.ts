@@ -13,10 +13,10 @@ export const ADMIN_ALBUMS_SORT_FIELDS = [
 ] as const satisfies readonly Prisma.AlbumScalarFieldEnum[]
 
 export const ListAdminAlbumsQuerySchema = paginationQuerySchema
-  .merge(sortQuerySchema(ADMIN_ALBUMS_SORT_FIELDS))
+  .extend(sortQuerySchema(ADMIN_ALBUMS_SORT_FIELDS).shape)
   .extend({
     status: adminResourceStatusSchema.optional(),
-    artistId: z.string().uuid().optional(),
+    artistId: z.uuid().optional(),
     q: z.string().min(1).max(255).optional(),
   })
 

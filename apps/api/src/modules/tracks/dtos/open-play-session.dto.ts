@@ -3,7 +3,7 @@ import { z } from 'zod'
 
 /** Body of `POST /tracks/:id/play-sessions`. */
 export const OpenPlaySessionSchema = z.object({
-  deviceId: z.string().uuid().optional(),
+  deviceId: z.uuid().optional(),
 })
 
 /** Opens a playback session; the Bitrate Connect device is recorded for later stages. */

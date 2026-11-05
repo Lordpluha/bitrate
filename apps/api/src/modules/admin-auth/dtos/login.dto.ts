@@ -3,11 +3,11 @@ import { z } from 'zod'
 
 /** The login schema value. */
 export const LoginSchema = z.object({
-  email: z.string().email({ message: 'Invalid email format' }),
+  email: z.email({ error: 'Invalid email format' }),
   password: z
     .string()
-    .min(6, { message: 'Password must be at least 6 characters long' })
-    .max(64, { message: 'Password must not exceed 64 characters' }),
+    .min(6, { error: 'Password must be at least 6 characters long' })
+    .max(64, { error: 'Password must not exceed 64 characters' }),
 })
 
 /** Represents the staff login dto. */

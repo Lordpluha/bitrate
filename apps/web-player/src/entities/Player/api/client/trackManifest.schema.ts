@@ -24,13 +24,19 @@ const renditionSchema = z
     initRange: inclusiveRangeSchema,
     fragments: z.array(fragmentSchema).min(1),
   })
-  .superRefine((rendition, context) => {
-    if (rendition.initRange[1] >= rendition.size) {
-      context.addIssue({
+  .check((context) => {
+    const rendition = context.value
+    // superRefine's addIssue defaulted `input` and `continue: true`; keep both.
+    const fail = (message: string, path: PropertyKey[]) =>
+      context.issues.push({
         code: 'custom',
-        message: 'Initialization range exceeds rendition size',
-        path: ['initRange'],
+        message,
+        path,
+        input: context.value,
+        continue: true,
       })
+    if (rendition.initRange[1] >= rendition.size) {
+      fail('Initialization range exceeds rendition size', ['initRange'])
     }
 
     let previousEndTicks = 0
@@ -38,11 +44,10 @@ const renditionSchema = z
     for (const [index, fragment] of rendition.fragments.entries()) {
       const [startTicks, durationTicks, offset, length] = fragment
       if (startTicks !== previousEndTicks) {
-        context.addIssue({
-          code: 'custom',
-          message: 'Fragment timelines must be contiguous and start at zero',
-          path: ['fragments', index],
-        })
+        fail('Fragment timelines must be contiguous and start at zero', [
+          'fragments',
+          index,
+        ])
       }
 
       const byteEndExclusive = offset + length
@@ -50,27 +55,21 @@ const renditionSchema = z
         !Number.isSafeInteger(byteEndExclusive) ||
         byteEndExclusive > rendition.size
       ) {
-        context.addIssue({
-          code: 'custom',
-          message: 'Fragment byte range exceeds rendition size',
-          path: ['fragments', index],
-        })
+        fail('Fragment byte range exceeds rendition size', ['fragments', index])
       }
       if (offset <= previousByteEnd) {
-        context.addIssue({
-          code: 'custom',
-          message: 'Fragment byte ranges must be ordered and non-overlapping',
-          path: ['fragments', index],
-        })
+        fail('Fragment byte ranges must be ordered and non-overlapping', [
+          'fragments',
+          index,
+        ])
       }
 
       const endTicks = startTicks + durationTicks
       if (!Number.isSafeInteger(endTicks)) {
-        context.addIssue({
-          code: 'custom',
-          message: 'Fragment timeline exceeds safe integer precision',
-          path: ['fragments', index],
-        })
+        fail('Fragment timeline exceeds safe integer precision', [
+          'fragments',
+          index,
+        ])
       }
       previousEndTicks = endTicks
       previousByteEnd = byteEndExclusive - 1
@@ -85,52 +84,58 @@ export const trackManifestSchema = z
     durationMs: positiveInteger,
     renditions: z.array(renditionSchema).min(1),
   })
-  .superRefine((manifest, context) => {
+  .check((context) => {
+    const manifest = context.value
+    // superRefine's addIssue defaulted `input` and `continue: true`; keep both.
+    const fail = (message: string, path: PropertyKey[]) =>
+      context.issues.push({
+        code: 'custom',
+        message,
+        path,
+        input: context.value,
+        continue: true,
+      })
     const expectedDurationMs =
       (manifest.durationTicks / manifest.timescale) * 1000
     if (Math.abs(expectedDurationMs - manifest.durationMs) > 1) {
-      context.addIssue({
-        code: 'custom',
-        message: 'Manifest durations are inconsistent',
-        path: ['durationMs'],
-      })
+      fail('Manifest durations are inconsistent', ['durationMs'])
     }
 
     const reference = manifest.renditions[0]
     const seenBitrates = new Set<number>()
     for (const [renditionIndex, rendition] of manifest.renditions.entries()) {
       if (seenBitrates.has(rendition.bitrate)) {
-        context.addIssue({
-          code: 'custom',
-          message: 'Rendition bitrates must be unique',
-          path: ['renditions', renditionIndex, 'bitrate'],
-        })
+        fail('Rendition bitrates must be unique', [
+          'renditions',
+          renditionIndex,
+          'bitrate',
+        ])
       }
       seenBitrates.add(rendition.bitrate)
 
       const previousRendition = manifest.renditions[renditionIndex - 1]
       if (previousRendition && rendition.bitrate <= previousRendition.bitrate) {
-        context.addIssue({
-          code: 'custom',
-          message: 'Renditions must be ordered by increasing bitrate',
-          path: ['renditions', renditionIndex, 'bitrate'],
-        })
+        fail('Renditions must be ordered by increasing bitrate', [
+          'renditions',
+          renditionIndex,
+          'bitrate',
+        ])
       }
 
       if (!reference || renditionIndex === 0) continue
       if (rendition.codec !== reference.codec) {
-        context.addIssue({
-          code: 'custom',
-          message: 'All renditions must use the same codec',
-          path: ['renditions', renditionIndex, 'codec'],
-        })
+        fail('All renditions must use the same codec', [
+          'renditions',
+          renditionIndex,
+          'codec',
+        ])
       }
       if (rendition.fragments.length !== reference.fragments.length) {
-        context.addIssue({
-          code: 'custom',
-          message: 'Renditions must have aligned fragment counts',
-          path: ['renditions', renditionIndex, 'fragments'],
-        })
+        fail('Renditions must have aligned fragment counts', [
+          'renditions',
+          renditionIndex,
+          'fragments',
+        ])
         continue
       }
 
@@ -141,11 +146,12 @@ export const trackManifestSchema = z
           fragment[0] !== referenceFragment[0] ||
           fragment[1] !== referenceFragment[1]
         ) {
-          context.addIssue({
-            code: 'custom',
-            message: 'Rendition fragment timelines must be aligned',
-            path: ['renditions', renditionIndex, 'fragments', fragmentIndex],
-          })
+          fail('Rendition fragment timelines must be aligned', [
+            'renditions',
+            renditionIndex,
+            'fragments',
+            fragmentIndex,
+          ])
         }
       }
     }
@@ -156,11 +162,11 @@ export const trackManifestSchema = z
         !lastFragment ||
         lastFragment[0] + lastFragment[1] !== manifest.durationTicks
       ) {
-        context.addIssue({
-          code: 'custom',
-          message: 'Rendition timeline must cover the manifest duration',
-          path: ['renditions', renditionIndex, 'fragments'],
-        })
+        fail('Rendition timeline must cover the manifest duration', [
+          'renditions',
+          renditionIndex,
+          'fragments',
+        ])
       }
     }
   })

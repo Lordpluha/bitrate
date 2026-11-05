@@ -2,7 +2,7 @@ import { normalizePagination } from '@common/pagination'
 import { readUserSettings } from '@common/user-settings'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import { NotificationsProducer } from '@modules/notifications'
-import { PUBLIC_TRACK_SQL, PUBLIC_TRACK_WHERE } from '@modules/tracks/track-visibility'
+import { PUBLIC_TRACK_SQL, PUBLIC_TRACK_WHERE } from '@modules/tracks/orm'
 import {
   BadRequestException,
   ForbiddenException,
@@ -13,7 +13,7 @@ import {
 import { Prisma } from '@prisma/client'
 import type { UserEntity } from './entities'
 import { USER_ERRORS } from './errors/user.errors'
-import { PUBLIC_USER_SELECT } from './users.select'
+import { PUBLIC_USER_SELECT } from './orm'
 
 /** Which side of the follow relation a list shows. */
 export type FollowListKind = 'followers' | 'following'

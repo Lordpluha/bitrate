@@ -13,17 +13,19 @@ import {
 } from '@modules/admin/shared'
 import { Injectable } from '@nestjs/common'
 import type { Prisma } from '@prisma/client'
-import {
-  ADMIN_ARTIST_EXPORT_COLUMNS,
-  ADMIN_ARTIST_EXPORT_SELECT,
-  ADMIN_ARTIST_SAFE_SELECT,
-} from './artist.select'
 import type { ADMIN_ARTISTS_SORT_FIELDS, UpdateArtistVerificationDto } from './dtos'
 import {
   ArtistAlreadyDeletedException,
   ArtistNotDeletedException,
   ArtistNotFoundException,
 } from './errors'
+import {
+  ADMIN_ARTIST_EXPORT_COLUMNS,
+  ADMIN_ARTIST_EXPORT_SELECT,
+  ADMIN_ARTIST_SAFE_SELECT,
+  artistListWhere,
+  EXISTENCE_SELECT,
+} from './orm'
 
 /** One of the artist directory's allowed sort fields. */
 type AdminArtistsSortField = (typeof ADMIN_ARTISTS_SORT_FIELDS)[number]
@@ -37,9 +39,6 @@ type ListArtistsInput = {
   q?: string
 } & SortInput<AdminArtistsSortField>
 
-/** What the existence/state pre-checks read — never the credential columns. */
-const EXISTENCE_SELECT = { id: true, deletedAt: true } as const satisfies Prisma.ArtistSelect
-
 /** An artist as the operator sees it — the safe columns only. */
 type AdminArtistRow = Prisma.ArtistGetPayload<{ select: typeof ADMIN_ARTIST_SAFE_SELECT }>
 
@@ -47,20 +46,6 @@ type AdminArtistRow = Prisma.ArtistGetPayload<{ select: typeof ADMIN_ARTIST_SAFE
 @Injectable()
 export class AdminArtistsService {
   constructor(private readonly prisma: PrismaService) {}
-
-  /** Builds the shared `where` clause for listing and counting. */
-  private buildWhere({ verified, status, q }: Omit<ListArtistsInput, 'page' | 'limit'>) {
-    return {
-      ...statusWhere(status),
-      ...(verified !== undefined && { verified }),
-      ...(q && {
-        OR: [
-          { username: { contains: q, mode: 'insensitive' } },
-          { email: { contains: q, mode: 'insensitive' } },
-        ],
-      }),
-    } satisfies Prisma.ArtistWhereInput
-  }
 
   /** Lists artists, paginated and optionally filtered. */
   async findAll({
@@ -72,7 +57,7 @@ export class AdminArtistsService {
     sort,
     order,
   }: ListArtistsInput) {
-    const where = this.buildWhere({ verified, status, q })
+    const where = artistListWhere({ verified, status, q })
     const orderBy = buildSortOrderBy<Prisma.ArtistOrderByWithRelationInput>({ sort, order }, [
       { createdAt: 'desc' },
       { id: 'desc' },
@@ -100,7 +85,7 @@ export class AdminArtistsService {
     staffId: string,
     auditContext: AuditContextValue = {},
   ): Promise<CsvExport> {
-    const where = this.buildWhere({ verified, status, q })
+    const where = artistListWhere({ verified, status, q })
     const orderBy = buildSortOrderBy<Prisma.ArtistOrderByWithRelationInput>({ sort, order }, [
       { createdAt: 'desc' },
       { id: 'desc' },

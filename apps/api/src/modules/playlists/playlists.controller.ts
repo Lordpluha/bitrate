@@ -1,6 +1,7 @@
 import { HttpCacheable } from '@common/interceptors/http-cacheable.decorator'
 import { TrackEntity } from '@modules/tracks/entities'
-import type { OptionalUserAuthRequest, UserAuthRequest } from '@modules/users-auth/types'
+import type { UserEntity } from '@modules/users/entities'
+import { CurrentUser } from '@modules/users-auth/decorators/current-user.decorator'
 import { OptionalUserAuth, UserAuth } from '@modules/users-auth/users-auth.guard'
 import {
   Body,
@@ -14,7 +15,6 @@ import {
   Post,
   Put,
   Query,
-  Req,
 } from '@nestjs/common'
 import { ApiExtraModels, ApiTags } from '@nestjs/swagger'
 import { Throttle } from '@nestjs/throttler'
@@ -63,11 +63,11 @@ export class PlaylistsController {
   @UserAuth()
   @Get('me')
   async getMine(
-    @Req() req: UserAuthRequest,
+    @CurrentUser() user: UserEntity,
     @Query('page', new ParseIntPipe({ optional: true })) page?: number,
     @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
   ) {
-    return await this.playlistService.getMine(req.user.id, { page, limit })
+    return await this.playlistService.getMine(user.id, { page, limit })
   }
 
   /** Runs the get by id operation. */
@@ -76,11 +76,11 @@ export class PlaylistsController {
   @UserAuth()
   @Get('liked')
   getLiked(
-    @Req() req: UserAuthRequest,
+    @CurrentUser() user: UserEntity,
     @Query('page', new ParseIntPipe({ optional: true })) page?: number,
     @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
   ) {
-    return this.playlistService.findLiked(req.user.id, { page, limit })
+    return this.playlistService.findLiked(user.id, { page, limit })
   }
 
   @GetPlaylistByIdSwagger()
@@ -89,10 +89,10 @@ export class PlaylistsController {
   @HttpCacheable()
   @Get(':id')
   async getById(
-    @Req() req: OptionalUserAuthRequest,
+    @CurrentUser() user: UserEntity | undefined,
     @Param('id', ParseUUIDPipe) id: PlaylistEntity['id'],
   ) {
-    return await this.playlistService.getByIdPopulated(id, req.user?.id)
+    return await this.playlistService.getByIdPopulated(id, user?.id)
   }
 
   /** Runs the post operation. */
@@ -100,10 +100,10 @@ export class PlaylistsController {
   @UserAuth()
   @Post('')
   async post(
-    @Req() req: UserAuthRequest,
+    @CurrentUser() user: UserEntity,
     @Body(new ZodValidationPipe(CreatePlaylistSchema)) playlistDto: CreatePlaylistDto,
   ) {
-    return await this.playlistService.create(req.user.id, playlistDto)
+    return await this.playlistService.create(user.id, playlistDto)
   }
 
   /** Runs the update operation. */
@@ -111,11 +111,11 @@ export class PlaylistsController {
   @UserAuth()
   @Put(':id')
   async update(
-    @Req() req: UserAuthRequest,
+    @CurrentUser() user: UserEntity,
     @Param('id', ParseUUIDPipe) id: PlaylistEntity['id'],
     @Body(new ZodValidationPipe(UpdatePlaylistSchema)) updateDto: UpdatePlaylistDto,
   ) {
-    return await this.playlistService.update(req.user.id, id, updateDto)
+    return await this.playlistService.update(user.id, id, updateDto)
   }
 
   /** Runs the delete playlist operation. */
@@ -124,10 +124,10 @@ export class PlaylistsController {
   @HttpCode(200)
   @Delete(':id')
   async deletePlaylist(
-    @Req() req: UserAuthRequest,
+    @CurrentUser() user: UserEntity,
     @Param('id', ParseUUIDPipe) id: PlaylistEntity['id'],
   ) {
-    return await this.playlistService.delete(req.user.id, id)
+    return await this.playlistService.delete(user.id, id)
   }
 
   /** Runs the add tracks operation. */
@@ -135,11 +135,11 @@ export class PlaylistsController {
   @UserAuth()
   @Post(':id/tracks')
   async addTracks(
-    @Req() req: UserAuthRequest,
+    @CurrentUser() user: UserEntity,
     @Param('id', ParseUUIDPipe) id: PlaylistEntity['id'],
     @Body(new ZodValidationPipe(AddTracksSchema)) dto: AddTracksDto,
   ) {
-    return await this.playlistService.addTracks(req.user.id, id, dto)
+    return await this.playlistService.addTracks(user.id, id, dto)
   }
 
   /** Runs the remove track operation. */
@@ -148,19 +148,22 @@ export class PlaylistsController {
   @HttpCode(200)
   @Delete(':id/tracks/:trackId')
   async removeTrack(
-    @Req() req: UserAuthRequest,
+    @CurrentUser() user: UserEntity,
     @Param('id', ParseUUIDPipe) id: PlaylistEntity['id'],
     @Param('trackId', ParseUUIDPipe) trackId: string,
   ) {
-    return await this.playlistService.removeTrack(req.user.id, id, trackId)
+    return await this.playlistService.removeTrack(user.id, id, trackId)
   }
 
   /** Runs the like playlist operation. */
   @LikePlaylistSwagger()
   @UserAuth()
   @Post(':id/like')
-  likePlaylist(@Req() req: UserAuthRequest, @Param('id', ParseUUIDPipe) id: PlaylistEntity['id']) {
-    return this.playlistService.like(req.user.id, id)
+  likePlaylist(
+    @CurrentUser() user: UserEntity,
+    @Param('id', ParseUUIDPipe) id: PlaylistEntity['id'],
+  ) {
+    return this.playlistService.like(user.id, id)
   }
 
   /** Runs the unlike playlist operation. */
@@ -169,9 +172,9 @@ export class PlaylistsController {
   @HttpCode(200)
   @Delete(':id/like')
   unlikePlaylist(
-    @Req() req: UserAuthRequest,
+    @CurrentUser() user: UserEntity,
     @Param('id', ParseUUIDPipe) id: PlaylistEntity['id'],
   ) {
-    return this.playlistService.unlike(req.user.id, id)
+    return this.playlistService.unlike(user.id, id)
   }
 }

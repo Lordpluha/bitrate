@@ -13,7 +13,7 @@ export const ADMIN_USERS_SORT_FIELDS = [
 ] as const satisfies readonly Prisma.UserScalarFieldEnum[]
 
 export const ListAdminUsersQuerySchema = paginationQuerySchema
-  .merge(sortQuerySchema(ADMIN_USERS_SORT_FIELDS))
+  .extend(sortQuerySchema(ADMIN_USERS_SORT_FIELDS).shape)
   .extend({
     status: adminResourceStatusSchema.optional(),
     q: z.string().min(1).max(255).optional(),

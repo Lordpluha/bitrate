@@ -12,7 +12,7 @@ export const ADMIN_GENRES_SORT_FIELDS = [
 ] as const satisfies readonly Prisma.GenreScalarFieldEnum[]
 
 export const ListAdminGenresQuerySchema = paginationQuerySchema
-  .merge(sortQuerySchema(ADMIN_GENRES_SORT_FIELDS))
+  .extend(sortQuerySchema(ADMIN_GENRES_SORT_FIELDS).shape)
   .extend({
     q: z.string().min(1).max(255).optional(),
   })

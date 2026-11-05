@@ -4,7 +4,7 @@ import { isPrismaP2002, isPrismaP2025, isPrismaP2034 } from '@common/utils/prism
 import { NS } from '@infra/cache/cache.constants'
 import { CacheService } from '@infra/cache/cache.service'
 import { PrismaService } from '@infra/prisma/prisma.service'
-import { PUBLIC_TRACK_WHERE } from '@modules/tracks/track-visibility'
+import { PUBLIC_TRACK_WHERE } from '@modules/tracks/orm'
 import { UserEntity } from '@modules/users'
 import {
   BadRequestException,
