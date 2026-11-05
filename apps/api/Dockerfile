@@ -102,6 +102,11 @@ COPY packages/tailwind/package.json ./packages/tailwind/
 COPY packages/ui-react/package.json ./packages/ui-react/
 COPY packages/vite-svgr/package.json ./packages/vite-svgr/
 RUN SKIP_GRAPHIFY_INSTALL=1 SKIP_RTK_INSTALL=1 pnpm install --prod --frozen-lockfile
+# The transcode worker imports @bitrate/converter at runtime (audio-encoding.ts). The install
+# above only links apps/api/node_modules/@bitrate/converter to ../../../../packages/converter;
+# the package's own source has to be in the image too, or every conversion job fails with
+# MODULE_NOT_FOUND. It ships plain .mjs, so there is nothing to build.
+COPY packages/converter/src ./packages/converter/src
 
 # Prisma Client is generated here rather than in the production stage so that stage writes
 # nothing at all: every one of its layers is then a `COPY --chown`, and it needs no
@@ -129,6 +134,9 @@ RUN addgroup --system --gid 1001 nodejs && \
 COPY --from=prod-dependencies --chown=bitrateapi:nodejs /app/node_modules ./node_modules
 COPY --from=prod-dependencies --chown=bitrateapi:nodejs /app/apps/api/node_modules ./apps/api/node_modules
 COPY --from=build --chown=bitrateapi:nodejs /app/apps/api/dist ./apps/api/dist
+# The target of apps/api/node_modules/@bitrate/converter — see the prod-dependencies stage.
+# Copied whole so any version the hoisted install nested under it comes along.
+COPY --from=prod-dependencies --chown=bitrateapi:nodejs /app/packages/converter ./packages/converter
 # `task prod:migrate` runs `prisma migrate deploy` in a throwaway container from this image, so
 # the migrations have to be here even though generation happened upstream.
 COPY --chown=bitrateapi:nodejs apps/api/prisma ./apps/api/prisma
@@ -147,6 +155,10 @@ RUN mkdir -p /app/worker-tmp \
     && chown -R bitrateapi:nodejs /app/worker-tmp
 
 USER bitrateapi
+
+# Fails the build, not the first transcode job in production, when the worker's runtime-only
+# workspace dependency cannot be resolved from the API package (a dangling pnpm link).
+RUN cd apps/api && node --input-type=module -e "await import('@bitrate/converter')"
 
 EXPOSE 3000
 HEALTHCHECK --interval=30s --timeout=3s --start-period=40s --retries=3 \
