@@ -201,7 +201,7 @@ function SettingsSections({
         id="settings-danger-heading"
         title={t('settings.danger')}
       >
-        <DeleteAccountSection artistId={artistId} username={profile.username} />
+        <DeleteAccountSection username={profile.username} />
       </Panel>
     </div>
   )

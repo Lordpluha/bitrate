@@ -6,6 +6,11 @@ sidebar_position: 7
 
 Публичные страницы артистов и система подписок.
 
+Всё рабочее пространство вошедшего артиста (релизы, профиль, музыка, уведомления, аналитика,
+поиск, задачи, дистрибуция) живёт под `/api/v1/artists/me/...`, вход — под
+`/api/v1/artists/auth/...` ([ADR-0070](../../architecture/0070-artist-workspace-routes.md)).
+Профиль редактируется через `/api/v1/artists/me/profile`.
+
 ## Эндпоинты
 
 | Метод | Маршрут | Auth | Описание |
@@ -13,9 +18,8 @@ sidebar_position: 7
 | GET | `/api/v1/artists` | — | Список артистов |
 | GET | `/api/v1/artists/:id` | — | Артист по ID |
 | GET | `/api/v1/artists/by-username/:username` | — | Артист по username |
-| PUT | `/api/v1/artists/:id` | Artist (владелец) | Обновить профиль |
-| DELETE | `/api/v1/artists/:id` | Artist (владелец) | Удалить аккаунт |
-| GET | `/api/v1/artists/me/following` | User | Мои подписки |
+| DELETE | `/api/v1/artists/me` | Artist | Удалить свой аккаунт |
+| GET | `/api/v1/users/me/following/artists` | User | Мои подписки на артистов |
 | POST | `/api/v1/artists/:id/follow` | User | Подписаться |
 | DELETE | `/api/v1/artists/:id/follow` | User | Отписаться |
 | POST | `/api/v1/artists/:id/like` | User | Лайкнуть |
@@ -67,7 +71,7 @@ DELETE /api/v1/artists/:id/follow
 ## Мои подписки
 
 ```http
-GET /api/v1/artists/me/following?page=1&limit=20
+GET /api/v1/users/me/following/artists?page=1&limit=20
 ```
 
 Пагинированный список артистов, на которых подписан текущий пользователь. Каждый элемент включает `_count.followers`.

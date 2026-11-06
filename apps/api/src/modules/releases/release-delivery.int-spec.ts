@@ -35,7 +35,7 @@ describe('Release delivery plan (HTTP)', () => {
     transactionMock.release.updateManyAndReturn.mockResolvedValue([])
     transactionMock.release.findFirst.mockResolvedValue({ id: draft.id } as never)
     await request(app.getHttpServer())
-      .put(`/api/v1/releases/${draft.id}/delivery-plan`)
+      .put(`/api/v1/artists/me/releases/${draft.id}/delivery-plan`)
       .set('x-test-artist', ownerId)
       .send(plan)
       .expect(409)

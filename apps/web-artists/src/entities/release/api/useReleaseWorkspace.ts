@@ -25,7 +25,7 @@ export function useReleaseWorkspace(artistId: string, id: string) {
 
 async function getReleaseWorkspace(id: string, signal: AbortSignal) {
   const result = await clientFetchClient.GET(
-    '/api/v1/releases/{id}/workspace',
+    '/api/v1/artists/me/releases/{id}/workspace',
     {
       params: { path: { id } },
       signal,

@@ -6,18 +6,14 @@ import { WorkspaceModal } from '@shared/ui/WorkspaceModal/WorkspaceModal'
 import { useId, useState } from 'react'
 
 interface DeleteAccountSectionProps {
-  artistId: string
   username: string
 }
 
 /** Consequence-aware deletion: the handle must be typed before the request is possible. */
-export function DeleteAccountSection({
-  artistId,
-  username,
-}: DeleteAccountSectionProps) {
+export function DeleteAccountSection({ username }: DeleteAccountSectionProps) {
   const { t, tMessage } = useI18n()
   const id = useId()
-  const remove = useDeleteAccount(artistId)
+  const remove = useDeleteAccount()
   const [open, setOpen] = useState(false)
   const [typed, setTyped] = useState('')
   const matches = typed.trim() === username

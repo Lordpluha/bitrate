@@ -18,7 +18,7 @@ import {
 import { ReleaseDeliveryService } from './release-delivery.service'
 
 @ApiTags('Releases')
-@Controller({ path: 'releases', version: '1' })
+@Controller({ path: 'artists/me/releases', version: '1' })
 export class ReleaseDeliveryController {
   constructor(private readonly delivery: ReleaseDeliveryService) {}
 
@@ -45,7 +45,7 @@ export class ReleaseDeliveryController {
 
 /** The artist-wide list behind the dashboard's Distribution page. */
 @ApiTags('Releases')
-@Controller({ path: 'distribution', version: '1' })
+@Controller({ path: 'artists/me/distribution', version: '1' })
 export class DistributionController {
   constructor(private readonly delivery: ReleaseDeliveryService) {}
 

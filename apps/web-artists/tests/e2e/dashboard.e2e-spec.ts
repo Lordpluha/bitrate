@@ -85,11 +85,11 @@ async function seedCredit(page: Page, context: BrowserContext) {
   await authenticate(context)
   await page.request.post('http://localhost:3103/test/music')
   const response = await page.request.get(
-    `http://localhost:3103/api/v1/releases/${workspaceDraftId}`,
+    `http://localhost:3103/api/v1/artists/me/releases/${workspaceDraftId}`,
   )
   const release: ApiSchemas['ReleaseEntity'] = await response.json()
   const saved = await page.request.post(
-    `http://localhost:3103/api/v1/releases/${workspaceDraftId}/contributors`,
+    `http://localhost:3103/api/v1/artists/me/releases/${workspaceDraftId}/contributors`,
     {
       data: {
         displayName: 'Taylor Reid',
@@ -113,8 +113,8 @@ for (const theme of ['light', 'dark', 'dim']) {
       (value) => localStorage.setItem('bitrate.artist-theme.v1', value),
       theme,
     )
-    const workspaceUrl = `**/api/v1/releases/${workspaceDraftId}/workspace`
-    const contributorUrl = `**/api/v1/releases/${workspaceDraftId}/contributors/${creditId}`
+    const workspaceUrl = `**/api/v1/artists/me/releases/${workspaceDraftId}/workspace`
+    const contributorUrl = `**/api/v1/artists/me/releases/${workspaceDraftId}/contributors/${creditId}`
     await page.route(workspaceUrl, async (route) => {
       const response = await route.fetch()
       const data: ApiSchemas['ReleaseWorkspaceEntity'] = await response.json()
@@ -193,7 +193,7 @@ test('missing contributor role stays visible on a non-draft without an edit acti
   await authenticate(context)
   await page.request.post('http://localhost:3103/test/music')
   await page.route(
-    `**/api/v1/releases/${workspaceDemoId}/workspace`,
+    `**/api/v1/artists/me/releases/${workspaceDemoId}/workspace`,
     async (route) => {
       const response = await route.fetch()
       const data: ApiSchemas['ReleaseWorkspaceEntity'] = await response.json()
@@ -283,7 +283,7 @@ for (const theme of ['light', 'dark', 'dim']) {
       panel.getByRole('heading', { name: 'Taylor Reid Updated', exact: true }),
     ).toBeVisible()
     const detail = await page.request.get(
-      `http://localhost:3103/api/v1/releases/${workspaceDraftId}/contributors/${creditId}`,
+      `http://localhost:3103/api/v1/artists/me/releases/${workspaceDraftId}/contributors/${creditId}`,
     )
     expect(detail.ok()).toBe(true)
     const data = await detail.json()
@@ -314,7 +314,7 @@ for (const status of [404, 409, 503, 200]) {
     await dialog.getByLabel('Contributor name').fill('Updated credit')
     let writes = 0
     await page.route(
-      `**/api/v1/releases/*/contributors/${creditId}`,
+      `**/api/v1/artists/me/releases/*/contributors/${creditId}`,
       async (route) => {
         if (route.request().method() !== 'PATCH') return route.continue()
         writes++
@@ -364,7 +364,7 @@ test('contributor editing rejects a success response for a different participant
   await dialog.getByLabel('Contributor name').fill('Updated credit')
   let writes = 0
   await page.route(
-    `**/api/v1/releases/*/contributors/${creditId}`,
+    `**/api/v1/artists/me/releases/*/contributors/${creditId}`,
     async (route) => {
       if (route.request().method() !== 'PATCH') return route.continue()
       writes++
@@ -403,7 +403,7 @@ test('contributor editing retries a failed read explicitly and blocks unchanged 
 }) => {
   const creditId = await seedCredit(page, context)
   await gotoHydrated(page, `/dashboard/music/${workspaceDraftId}`)
-  const path = `**/api/v1/releases/*/contributors/${creditId}`
+  const path = `**/api/v1/artists/me/releases/*/contributors/${creditId}`
   let reads = 0
   let writes = 0
   let releaseWrite: () => void = () => {}
@@ -485,7 +485,7 @@ test('contributor editing assigns missing roles to a legacy credit', async ({
 }) => {
   const creditId = await seedCredit(page, context)
   await page.route(
-    `**/api/v1/releases/*/contributors/${creditId}`,
+    `**/api/v1/artists/me/releases/*/contributors/${creditId}`,
     async (route) => {
       if (route.request().method() !== 'GET') return route.continue()
       const response = await route.fetch()
@@ -512,7 +512,7 @@ test('contributor editing assigns missing roles to a legacy credit', async ({
     .click()
   await expect(dialog).not.toBeVisible()
   const detail = await page.request.get(
-    `http://localhost:3103/api/v1/releases/${workspaceDraftId}/contributors/${creditId}`,
+    `http://localhost:3103/api/v1/artists/me/releases/${workspaceDraftId}/contributors/${creditId}`,
   )
   expect((await detail.json()).participant).toMatchObject({
     id: creditId,
@@ -527,7 +527,7 @@ test('contributor editing blocks a release that stopped being a draft before loa
 }) => {
   const creditId = await seedCredit(page, context)
   await page.route(
-    `**/api/v1/releases/*/contributors/${creditId}`,
+    `**/api/v1/artists/me/releases/*/contributors/${creditId}`,
     async (route) => {
       const response = await route.fetch()
       const data: ApiSchemas['ReleaseContributorEntity'] = await response.json()
@@ -563,7 +563,7 @@ test('contributor editing rejects concurrent changes and reloads the current cre
     exact: true,
   })
   await dialog.getByLabel('Contributor name').fill('My update')
-  const url = `http://localhost:3103/api/v1/releases/${workspaceDraftId}/contributors/${creditId}`
+  const url = `http://localhost:3103/api/v1/artists/me/releases/${workspaceDraftId}/contributors/${creditId}`
   const response = await page.request.get(url)
   const current: ApiSchemas['ReleaseContributorEntity'] = await response.json()
   const concurrent = await page.request.patch(url, {
@@ -624,14 +624,17 @@ for (const status of [404, 409, 503, 201]) {
     await dialog.getByLabel('Contributor name').fill('Jordan Lee')
     await dialog.getByLabel('Producer', { exact: true }).check()
     let writes = 0
-    await page.route('**/api/v1/releases/*/contributors', async (route) => {
-      writes++
-      await route.fulfill({
-        status,
-        contentType: 'application/json',
-        body: '{}',
-      })
-    })
+    await page.route(
+      '**/api/v1/artists/me/releases/*/contributors',
+      async (route) => {
+        writes++
+        await route.fulfill({
+          status,
+          contentType: 'application/json',
+          body: '{}',
+        })
+      },
+    )
     await dialog
       .getByRole('button', { name: 'Save contributor', exact: true })
       .click()
@@ -685,10 +688,13 @@ test('release contributor validates name and roles and locks a pending save', as
   const gate = new Promise<void>((resolve) => {
     releaseWrite = resolve
   })
-  await page.route('**/api/v1/releases/*/contributors', async (route) => {
-    await gate
-    await route.continue()
-  })
+  await page.route(
+    '**/api/v1/artists/me/releases/*/contributors',
+    async (route) => {
+      await gate
+      await route.continue()
+    },
+  )
   try {
     await dialog
       .getByRole('button', { name: 'Save contributor', exact: true })
@@ -729,13 +735,13 @@ test('release contributor rejects a concurrent metadata edit and saves after reo
   await dialog.getByLabel('Contributor name').fill('Jordan Lee')
   await dialog.getByLabel('Producer', { exact: true }).check()
   const releaseResponse = await page.request.get(
-    `http://localhost:3103/api/v1/releases/${workspaceDraftId}`,
+    `http://localhost:3103/api/v1/artists/me/releases/${workspaceDraftId}`,
   )
   const before: ApiSchemas['ReleaseEntity'] = await releaseResponse.json()
   expect(
     (
       await page.request.patch(
-        `http://localhost:3103/api/v1/releases/${workspaceDraftId}`,
+        `http://localhost:3103/api/v1/artists/me/releases/${workspaceDraftId}`,
         {
           data: {
             title: 'Concurrent title',
@@ -994,7 +1000,7 @@ for (const theme of ['light', 'dark', 'dim']) {
     await page.reload()
     await expect(page.getByText('Right away', { exact: true })).toBeVisible()
     const result = await page.request.get(
-      `http://localhost:3103/api/v1/releases/${workspaceDraftId}`,
+      `http://localhost:3103/api/v1/artists/me/releases/${workspaceDraftId}`,
     )
     expect(await result.json()).toMatchObject({
       title: 'Steel Ball Run',
@@ -1025,12 +1031,12 @@ for (const failure of [409, 503, 'unconfirmed'] as const) {
     await dialog.getByLabel('Premiere on a date').check()
     await dialog.getByLabel('Release date', { exact: true }).fill('2026-11-01')
     let writes = 0
-    await page.route('**/api/v1/releases/*', async (route) => {
+    await page.route('**/api/v1/artists/me/releases/*', async (route) => {
       if (route.request().method() !== 'PATCH') return route.continue()
       writes++
       if (failure === 'unconfirmed') {
         const before = await page.request.get(
-          `http://localhost:3103/api/v1/releases/${workspaceDraftId}`,
+          `http://localhost:3103/api/v1/artists/me/releases/${workspaceDraftId}`,
         )
         return route.fulfill({ json: await before.json() })
       }
@@ -1088,7 +1094,7 @@ test('release schedule validates an enabled empty date and locks dismissal while
   const pending = new Promise<void>((resolve) => {
     finish = resolve
   })
-  await page.route('**/api/v1/releases/*', async (route) => {
+  await page.route('**/api/v1/artists/me/releases/*', async (route) => {
     if (route.request().method() !== 'PATCH') return route.continue()
     await pending
     return route.continue()
@@ -1133,11 +1139,11 @@ test('release schedule reloads the fresh version after a concurrent metadata edi
   await dialog.getByLabel('Release date', { exact: true }).fill('2026-11-01')
   const before = await (
     await page.request.get(
-      `http://localhost:3103/api/v1/releases/${workspaceDraftId}`,
+      `http://localhost:3103/api/v1/artists/me/releases/${workspaceDraftId}`,
     )
   ).json()
   const changed = await page.request.patch(
-    `http://localhost:3103/api/v1/releases/${workspaceDraftId}`,
+    `http://localhost:3103/api/v1/artists/me/releases/${workspaceDraftId}`,
     {
       data: {
         title: 'Changed in another tab',
@@ -1178,10 +1184,13 @@ test('release workspace waits for confirmed data before showing an empty state',
   const gate = new Promise<void>((resolve) => {
     finish = resolve
   })
-  await page.route('**/api/v1/releases/*/workspace', async (route) => {
-    await gate
-    await route.continue()
-  })
+  await page.route(
+    '**/api/v1/artists/me/releases/*/workspace',
+    async (route) => {
+      await gate
+      await route.continue()
+    },
+  )
   try {
     await gotoHydrated(page, `/dashboard/music/${workspaceDraftId}`)
     await expect(page.getByRole('status')).toContainText(
@@ -1207,22 +1216,25 @@ test('release workspace wraps long release, recording and participant names acro
   await authenticate(context)
   await page.request.post('http://localhost:3103/test/music')
   const title = 'LongReleaseTitle'.repeat(15)
-  await page.route('**/api/v1/releases/*/workspace', async (route) => {
-    const response = await route.fetch()
-    const record: ApiSchemas['ReleaseWorkspaceEntity'] = await response.json()
-    await route.fulfill({
-      json: {
-        ...record,
-        title,
-        status: 'DRAFT',
-        trackDrafts: record.trackDrafts.map((track) => ({ ...track, title })),
-        participants: [
-          { id: workspaceDraftId, displayName: title, roles: ['OTHER'] },
-        ],
-        participantCount: 1,
-      },
-    })
-  })
+  await page.route(
+    '**/api/v1/artists/me/releases/*/workspace',
+    async (route) => {
+      const response = await route.fetch()
+      const record: ApiSchemas['ReleaseWorkspaceEntity'] = await response.json()
+      await route.fulfill({
+        json: {
+          ...record,
+          title,
+          status: 'DRAFT',
+          trackDrafts: record.trackDrafts.map((track) => ({ ...track, title })),
+          participants: [
+            { id: workspaceDraftId, displayName: title, roles: ['OTHER'] },
+          ],
+          participantCount: 1,
+        },
+      })
+    },
+  )
   await gotoHydrated(page, `/dashboard/music/${workspaceDemoId}`)
   await expect(
     page.getByRole('heading', { name: title, level: 1 }),
@@ -1374,25 +1386,28 @@ test('release workspace shows scheduled UTC date, real credits and bounded recor
 }) => {
   await authenticate(context)
   await page.request.post('http://localhost:3103/test/music')
-  await page.route('**/api/v1/releases/*/workspace', async (route) => {
-    const response = await route.fetch()
-    const record: ApiSchemas['ReleaseWorkspaceEntity'] = await response.json()
-    await route.fulfill({
-      json: {
-        ...record,
-        scheduledAt: '2026-11-01T12:00:00Z',
-        trackCount: 55,
-        participantCount: 51,
-        participants: [
-          {
-            id: workspaceDraftId,
-            displayName: 'Credited producer',
-            roles: ['PRODUCER', 'COMPOSER'],
-          },
-        ],
-      },
-    })
-  })
+  await page.route(
+    '**/api/v1/artists/me/releases/*/workspace',
+    async (route) => {
+      const response = await route.fetch()
+      const record: ApiSchemas['ReleaseWorkspaceEntity'] = await response.json()
+      await route.fulfill({
+        json: {
+          ...record,
+          scheduledAt: '2026-11-01T12:00:00Z',
+          trackCount: 55,
+          participantCount: 51,
+          participants: [
+            {
+              id: workspaceDraftId,
+              displayName: 'Credited producer',
+              roles: ['PRODUCER', 'COMPOSER'],
+            },
+          ],
+        },
+      })
+    },
+  )
   await gotoHydrated(page, `/dashboard/music/${workspaceDemoId}?step=draft`)
   await expect(
     page.getByText('Producer · Composer', { exact: true }),
@@ -1422,7 +1437,7 @@ for (const status of [404, 503, 200]) {
     await authenticate(context)
     await page.request.post('http://localhost:3103/test/music')
     let reads = 0
-    await page.route('**/api/v1/releases/*/workspace', (route) => {
+    await page.route('**/api/v1/artists/me/releases/*/workspace', (route) => {
       reads++
       return route.fulfill({ status, json: {} })
     })
@@ -1436,7 +1451,7 @@ for (const status of [404, 503, 200]) {
       page.getByRole('heading', { name: 'Afterglow', level: 1 }),
     ).toHaveCount(0)
     expect(reads).toBe(1)
-    await page.unroute('**/api/v1/releases/*/workspace')
+    await page.unroute('**/api/v1/artists/me/releases/*/workspace')
     await page.getByRole('button', { name: 'Try again', exact: true }).click()
     await expect(
       page.getByRole('heading', { name: 'Afterglow', level: 1 }),
@@ -1568,7 +1583,7 @@ test('a draft that changed elsewhere is kept and explained instead of deleted', 
   page,
   context,
 }) => {
-  await page.route('**/api/v1/releases/*', (route) =>
+  await page.route('**/api/v1/artists/me/releases/*', (route) =>
     route.request().method() === 'DELETE'
       ? route.fulfill({ status: 409, json: {} })
       : route.continue(),
@@ -1603,7 +1618,7 @@ for (const status of [409, 503, 200]) {
     context,
   }) => {
     let writes = 0
-    await page.route('**/api/v1/releases/*', (route) => {
+    await page.route('**/api/v1/artists/me/releases/*', (route) => {
       if (route.request().method() !== 'PATCH') return route.continue()
       writes++
       return route.fulfill({ status, json: {} })
@@ -1631,7 +1646,7 @@ for (const status of [409, 503, 200]) {
       .click()
     await page.getByRole('button', { name: 'Edit draft', exact: true }).click()
     await expect(page.getByLabel('Release title')).toHaveValue('Steel Ball Run')
-    await page.unroute('**/api/v1/releases/*')
+    await page.unroute('**/api/v1/artists/me/releases/*')
     await page.getByLabel('Release title').fill('Recovered edit')
     await page
       .getByRole('button', { name: 'Save changes', exact: true })
@@ -1648,7 +1663,7 @@ test('draft editing detects a real concurrent update and loads its new version o
 }) => {
   const dialog = await openSeededDraft(page, context)
   const url =
-    'http://localhost:3103/api/v1/releases/019a0000-0000-7000-8000-000000000200'
+    'http://localhost:3103/api/v1/artists/me/releases/019a0000-0000-7000-8000-000000000200'
   const before = (await (
     await page.request.get(url)
   ).json()) as ApiSchemas['ReleaseEntity']
@@ -1688,7 +1703,7 @@ test('draft editing locks dismissal and repeated submits during an outstanding s
   const gate = new Promise<void>((resolve) => {
     resume = resolve
   })
-  await page.route('**/api/v1/releases/*', async (route) => {
+  await page.route('**/api/v1/artists/me/releases/*', async (route) => {
     if (route.request().method() !== 'PATCH') return route.continue()
     writes++
     await gate
@@ -1725,7 +1740,7 @@ test('draft editing shows recoverable load errors and does not edit a newly subm
   page,
   context,
 }) => {
-  await page.route('**/api/v1/releases/*', (route) =>
+  await page.route('**/api/v1/artists/me/releases/*', (route) =>
     route.fulfill({ status: 503, json: {} }),
   )
   const dialog = await openSeededDraft(page, context)
@@ -1733,8 +1748,8 @@ test('draft editing shows recoverable load errors and does not edit a newly subm
     'Could not load the latest release',
   )
   await expect(dialog.getByLabel('Release title')).toHaveCount(0)
-  await page.unroute('**/api/v1/releases/*')
-  await page.route('**/api/v1/releases/*', async (route) => {
+  await page.unroute('**/api/v1/artists/me/releases/*')
+  await page.route('**/api/v1/artists/me/releases/*', async (route) => {
     const response = await route.fetch()
     const data = (await response.json()) as ApiSchemas['ReleaseEntity']
     await route.fulfill({ response, json: { ...data, status: 'SUBMITTED' } })
@@ -2037,7 +2052,7 @@ test('release drafts validate title locally and cancel without a write', async (
   page.on('request', (request) => {
     if (
       request.method() === 'POST' &&
-      request.url().endsWith('/api/v1/releases')
+      request.url().endsWith('/api/v1/artists/me/releases')
     )
       writes++
   })
@@ -2068,7 +2083,7 @@ test('release drafts keep entered values after an API failure and allow retry', 
   page,
   context,
 }, testInfo) => {
-  await page.route('**/api/v1/releases', (route) =>
+  await page.route('**/api/v1/artists/me/releases', (route) =>
     route.fulfill({
       status: 503,
       json: { message: 'Internal database detail' },
@@ -2094,7 +2109,7 @@ test('release drafts keep entered values after an API failure and allow retry', 
   await expect(dialog.getByLabel('Release title')).toHaveValue(title)
   await expect(page).toHaveURL(/\/dashboard$/)
   await expect(dialog).not.toContainText('Internal database detail')
-  await page.unroute('**/api/v1/releases')
+  await page.unroute('**/api/v1/artists/me/releases')
   await dialog
     .getByRole('button', { name: 'Create draft', exact: true })
     .click()
@@ -2112,7 +2127,7 @@ test('release drafts prevent repeated submits and dismissal while saving', async
   const gate = new Promise<void>((resolve) => {
     resume = resolve
   })
-  await page.route('**/api/v1/releases', async (route) => {
+  await page.route('**/api/v1/artists/me/releases', async (route) => {
     writes++
     await gate
     await route.continue()
@@ -2158,7 +2173,7 @@ for (const invalidResponse of [false, true]) {
     page,
     context,
   }) => {
-    await page.route('**/api/v1/artist-music/releases?*', (route) =>
+    await page.route('**/api/v1/artists/me/music/releases?*', (route) =>
       route.fulfill(
         invalidResponse
           ? { json: { data: [{}], total: 1, page: 1, limit: 20 } }
@@ -2173,7 +2188,7 @@ for (const invalidResponse of [false, true]) {
     await expect(
       page.getByRole('heading', { name: 'Your first release starts here' }),
     ).toHaveCount(0)
-    await page.route('**/api/v1/artist-music/releases?*', (route) =>
+    await page.route('**/api/v1/artists/me/music/releases?*', (route) =>
       route.fulfill({ json: { data: [], total: 0, page: 1, limit: 20 } }),
     )
     await page.getByRole('button', { name: 'Try again', exact: true }).click()
@@ -2204,7 +2219,7 @@ test('release list paginates and restores the selected page on reload', async ({
       updatedAt: '2026-10-02T10:00:00.000Z',
     }),
   )
-  await page.route('**/api/v1/artist-music/releases?*', (route) => {
+  await page.route('**/api/v1/artists/me/music/releases?*', (route) => {
     const pageNumber = Number(
       new URL(route.request().url()).searchParams.get('page'),
     )
@@ -2244,7 +2259,7 @@ test('release drafts do not claim success for an unverified save response', asyn
   page,
   context,
 }) => {
-  await page.route('**/api/v1/releases', (route) =>
+  await page.route('**/api/v1/artists/me/releases', (route) =>
     route.fulfill({ status: 201, json: {} }),
   )
   await authenticate(context)
@@ -2275,7 +2290,7 @@ test('release list shows loading before an empty response is confirmed', async (
   const gate = new Promise<void>((resolve) => {
     resume = resolve
   })
-  await page.route('**/api/v1/artist-music/releases?*', async (route) => {
+  await page.route('**/api/v1/artists/me/music/releases?*', async (route) => {
     await gate
     await route.fulfill({ json: { data: [], total: 0, page: 1, limit: 20 } })
   })

@@ -18,7 +18,7 @@ export function useWorkspaceLayout(artistId: string, page: LayoutPage) {
     queryKey: layoutKey(artistId, page),
     queryFn: async ({ signal }) => {
       const result = await clientFetchClient.GET(
-        '/api/v1/artist-workspace/layouts/{page}',
+        '/api/v1/artists/me/workspace/layouts/{page}',
         { params: { path: { page } }, signal },
       )
       const parsed = storedLayoutSchema.safeParse(result.data)
@@ -41,12 +41,12 @@ export function useSaveWorkspaceLayout(artistId: string, page: LayoutPage) {
         signal: writeSignal(),
       }
       const result = await (tiles
-        ? clientFetchClient.PUT('/api/v1/artist-workspace/layouts/{page}', {
+        ? clientFetchClient.PUT('/api/v1/artists/me/workspace/layouts/{page}', {
             ...options,
             body: { tiles },
           })
         : clientFetchClient.DELETE(
-            '/api/v1/artist-workspace/layouts/{page}',
+            '/api/v1/artists/me/workspace/layouts/{page}',
             options,
           )
       ).catch(() => undefined)

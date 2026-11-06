@@ -45,7 +45,7 @@ sounds (removed).
   keyboard, resized (S/M/L where the tile allows it) and hidden or shown again; Done saves,
   Reset restores the default. Unknown or missing tiles in a stored layout are dropped or
   appended, so new tiles appear without breaking old layouts.
-- **API.** `GET /api/v1/artist-workspace/layouts/{page}` returns
+- **API.** `GET /api/v1/artists/me/workspace/layouts/{page}` returns
   `{ page, tiles: [{ id, size, hidden }], updatedAt }` or `tiles: []` when the artist has
   none; `PUT` replaces it (max 24 tiles, unique ids, `size` one of `S|M|L`); `DELETE`
   resets it. `page` is one of `dashboard|analytics|release-draft`. All routes need the
