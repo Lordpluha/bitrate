@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto'
 import { rm, stat } from 'node:fs/promises'
 import { extname, join } from 'node:path'
-import { RIGHTS_CONFIRMATION_MESSAGE, rightsConfirmationRecord } from '@common/rights-confirmation'
+import { rightsConfirmationRecord } from '@common/rights-confirmation'
 import { resolveSafeMulterPath } from '@common/utils/multer-file'
 import { NS } from '@infra/cache/cache.constants'
 import { CacheService } from '@infra/cache/cache.service'
@@ -22,13 +22,13 @@ import { STORAGE_SERVICE } from '@infra/storage/storage.constants'
 import type { StorageService } from '@infra/storage/storage.types'
 import type { ArtistEntity } from '@modules/artists'
 import { InjectQueue } from '@nestjs/bullmq'
-import { BadRequestException, Inject, Injectable, Logger, NotFoundException } from '@nestjs/common'
+import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common'
 import type { Prisma, TrackProcessingTrigger } from '@prisma/client'
 import type { Queue } from 'bullmq'
 import { downloadObjectToFile, storeMaster } from './audio-master'
 import { getUploadTempDir } from './audio-scratch'
 import { getMasterKey } from './audio-storage-keys'
-import type { CreateTrackDto, UpdateTrackDto } from './dtos'
+import type { CreateTrackDto } from './dtos'
 import type { TrackEntity } from './entities'
 import { ProcessingAttemptRecorder } from './processing-attempt.recorder'
 import { deleteObjectQuietly } from './storage-cleanup'
@@ -75,34 +75,6 @@ function toInputProbe(metadata: AudioMetadata, bytes: number): ConvertAudioJobIn
     container: metadata.container,
     bitrateKbps: metadata.bitrate,
     durationSec: metadata.duration,
-  }
-}
-
-/** A replacement upload's new source file plus what was read from it. */
-type ReplacementAudio = {
-  audioFile: Express.Multer.File
-  metadata: AudioMetadata
-  bitrates: string[]
-}
-
-/** Columns an artist edit writes; an audio replacement also resets the processing state. */
-function trackUpdateData(
-  updateTrackDto: UpdateTrackDto,
-  coverName: string | undefined,
-  replacement: ReplacementAudio | null,
-): Prisma.TrackUpdateInput {
-  const audioFile = replacement?.audioFile
-  return {
-    title: updateTrackDto.title,
-    cover: coverName,
-    audioUrl: audioFile?.filename ?? undefined,
-    ...(audioFile ? rightsConfirmationRecord() : {}),
-    duration: replacement?.metadata.duration ?? undefined,
-    processingStatus: audioFile ? 'PROCESSING' : undefined,
-    processingError: audioFile ? null : undefined,
-    processingAttempts: audioFile ? 0 : undefined,
-    processingStartedAt: audioFile ? null : undefined,
-    processingFinishedAt: audioFile ? null : undefined,
   }
 }
 
@@ -417,118 +389,6 @@ export class TrackUploadService {
       if (!persisted) await this.discardUnpersistedUploads(audioFile, coverName, masterStored)
       throw error
     }
-  }
-
-  /** Updates the artist's own track, replacing its audio and/or cover when given. */
-  async update(
-    artistId: ArtistEntity['id'],
-    id: TrackEntity['id'],
-    updateTrackDto: UpdateTrackDto,
-    audioFile?: Express.Multer.File,
-    coverFile?: Express.Multer.File,
-  ) {
-    let persisted = false
-    let masterStored = false
-    let coverName: string | undefined
-    try {
-      const existingTrack = await this.findEditableTrack(artistId, id, updateTrackDto, audioFile)
-      if (coverFile) validatePublicImage(coverFile, { maxBytes: MAX_COVER_BYTES })
-
-      const replacement = audioFile ? await this.readReplacement(audioFile) : null
-
-      coverName = (await this.storeUploads(audioFile, coverFile)) ?? undefined
-      masterStored = audioFile !== undefined
-
-      const track = await this.saveTrackUpdate(
-        id,
-        existingTrack.audioUrl,
-        trackUpdateData(updateTrackDto, coverName, replacement),
-        replacement !== null,
-      )
-      persisted = true
-
-      if (replacement) await this.convertReplacement(track, existingTrack.audioUrl, replacement)
-      if (coverName && existingTrack.cover !== coverName) {
-        await removePublicImage(this.storage, COVER_FOLDER, existingTrack.cover)
-      }
-
-      await this.invalidateTrackCaches()
-
-      return track
-    } catch (error) {
-      if (!persisted) await this.discardUnpersistedUploads(audioFile, coverName, masterStored)
-      throw error
-    }
-  }
-
-  /**
-   * Loads the artist's own live track for an edit; a new audio file also needs the rights
-   * confirmation.
-   * @throws NotFoundException when the track is missing, deleted or someone else's.
-   * @throws BadRequestException when audio is replaced without the rights confirmation.
-   */
-  private async findEditableTrack(
-    artistId: ArtistEntity['id'],
-    id: TrackEntity['id'],
-    updateTrackDto: UpdateTrackDto,
-    audioFile: Express.Multer.File | undefined,
-  ) {
-    const existingTrack = await this.prisma.track.findFirst({
-      where: { id, artistId, deletedAt: null },
-      select: { audioUrl: true, cover: true },
-    })
-    if (!existingTrack) {
-      throw new NotFoundException('Track not found or does not belong to artist')
-    }
-    if (audioFile && !updateTrackDto.rightsConfirmed) {
-      throw new BadRequestException(RIGHTS_CONFIRMATION_MESSAGE)
-    }
-    return existingTrack
-  }
-
-  /** Reads a replacement upload and picks its bitrate ladder before anything is stored. */
-  private async readReplacement(audioFile: Express.Multer.File): Promise<ReplacementAudio> {
-    const metadata = await this.inspectUpload(audioFile)
-    return { audioFile, metadata, bitrates: getTargetBitrates(metadata.bitrate) }
-  }
-
-  /** Writes the edit and, on an audio replacement, drops the legacy upload row of the old source. */
-  private async saveTrackUpdate(
-    id: TrackEntity['id'],
-    previousAudioUrl: string,
-    data: Prisma.TrackUpdateInput,
-    replacesAudio: boolean,
-  ) {
-    return await this.prisma.$transaction(async (tx) => {
-      const updated = await tx.track.update({ where: { id }, data })
-
-      if (replacesAudio) {
-        // Drops any legacy pre-publication upload row tied to the replaced audioUrl —
-        // a bare multer filename is never a valid storage key.
-        await tx.trackFile.deleteMany({
-          where: { trackId: updated.id, url: previousAudioUrl },
-        })
-      }
-
-      return updated
-    })
-  }
-
-  /** Removes the replaced master and queues the new source's conversion. */
-  private async convertReplacement(
-    track: Pick<TrackEntity, 'id' | 'artistId'>,
-    previousAudioUrl: string,
-    { audioFile, metadata, bitrates }: ReplacementAudio,
-  ) {
-    await this.discardStoredMaster(previousAudioUrl)
-    await this.enqueueAudioConversion({
-      trackId: track.id,
-      artistId: track.artistId,
-      sourceFileName: audioFile.filename,
-      bitrates,
-      trigger: 'REPLACE',
-      input: toInputProbe(metadata, audioFile.size),
-    })
   }
 
   /**

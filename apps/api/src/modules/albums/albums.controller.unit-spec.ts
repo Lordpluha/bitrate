@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from '@jest/globals'
 import { type DeepMockProxy, mockDeep, mockReset } from 'jest-mock-extended'
-import { buildAlbum, buildArtist, type FindAllResult } from './__tests__/fixtures/albums.fixtures'
+import { buildAlbum, type FindAllResult } from './__tests__/fixtures/albums.fixtures'
 import { AlbumsController } from './albums.controller'
 import type { AlbumsService } from './albums.service'
 
@@ -72,68 +72,5 @@ describe('AlbumsController', () => {
     service.getById.mockRejectedValue(error)
 
     await expect(controller.getById('album-1')).rejects.toThrow('boom')
-  })
-
-  it('createAlbum should use artist from request', async () => {
-    const created = buildAlbum()
-    service.create.mockResolvedValue(created)
-
-    const artist = buildArtist()
-    const dto = { title: 'New Album', description: 'desc', rightsConfirmed: true as const }
-
-    const result = await controller.createAlbum(artist, dto)
-
-    expect(service.create).toHaveBeenCalledWith('artist-1', dto)
-    expect(dto).toEqual({ title: 'New Album', description: 'desc', rightsConfirmed: true })
-    expect(result).toBe(created)
-  })
-
-  it('createAlbum should propagate service errors', async () => {
-    const artist = buildArtist()
-    const dto = { title: 'New Album', description: 'desc', rightsConfirmed: true as const }
-    service.create.mockRejectedValue(new Error('create-failed'))
-
-    await expect(controller.createAlbum(artist, dto)).rejects.toThrow('create-failed')
-  })
-
-  it('updateAlbum should use artist from request', async () => {
-    const updated = buildAlbum({ title: 'Updated' })
-    service.update.mockResolvedValue(updated)
-
-    const artist = buildArtist()
-    const dto = { title: 'Updated' }
-
-    const result = await controller.updateAlbum(artist, 'album-1', dto)
-
-    expect(service.update).toHaveBeenCalledWith('artist-1', 'album-1', dto)
-    expect(dto).toEqual({ title: 'Updated' })
-    expect(result).toBe(updated)
-  })
-
-  it('updateAlbum should propagate service errors', async () => {
-    const artist = buildArtist()
-    const dto = { title: 'Updated' }
-    service.update.mockRejectedValue(new Error('update-failed'))
-
-    await expect(controller.updateAlbum(artist, 'album-1', dto)).rejects.toThrow('update-failed')
-  })
-
-  it('deleteAlbum should use artist from request', async () => {
-    const deleted = buildAlbum()
-    service.delete.mockResolvedValue(deleted)
-
-    const artist = buildArtist()
-
-    const result = await controller.deleteAlbum(artist, 'album-1')
-
-    expect(service.delete).toHaveBeenCalledWith('artist-1', 'album-1')
-    expect(result).toBe(deleted)
-  })
-
-  it('deleteAlbum should propagate service errors', async () => {
-    const artist = buildArtist()
-    service.delete.mockRejectedValue(new Error('delete-failed'))
-
-    await expect(controller.deleteAlbum(artist, 'album-1')).rejects.toThrow('delete-failed')
   })
 })

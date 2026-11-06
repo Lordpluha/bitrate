@@ -30,10 +30,13 @@ export function identifierConflict(error: unknown): string | undefined {
 }
 
 export async function getRelease(id: string, signal: AbortSignal) {
-  const result = await clientFetchClient.GET('/api/v1/releases/{id}', {
-    params: { path: { id } },
-    signal,
-  })
+  const result = await clientFetchClient.GET(
+    '/api/v1/artists/me/releases/{id}',
+    {
+      params: { path: { id } },
+      signal,
+    },
+  )
   if (result.response.status === 404)
     throw new Error(messageKey('release.error.gone'))
   const parsed = releaseSummarySchema.safeParse(result.data)
@@ -86,7 +89,7 @@ export async function updateRelease({
 }
 
 function sendUpdate(id: string, input: ApiSchemas['UpdateReleaseDto']) {
-  return clientFetchClient.PATCH('/api/v1/releases/{id}', {
+  return clientFetchClient.PATCH('/api/v1/artists/me/releases/{id}', {
     params: { path: { id } },
     body: input,
     signal: writeSignal(),
@@ -114,7 +117,7 @@ export async function deleteRelease({ id, input }: DeleteReleaseRequest) {
 }
 
 function sendDelete(id: string, input: ApiSchemas['ReleaseDraftVersionDto']) {
-  return clientFetchClient.DELETE('/api/v1/releases/{id}', {
+  return clientFetchClient.DELETE('/api/v1/artists/me/releases/{id}', {
     params: { path: { id } },
     body: input,
     signal: writeSignal(),
@@ -143,7 +146,7 @@ export async function createRelease(input: CreateReleaseValues) {
 }
 
 function sendDraft(input: CreateReleaseValues) {
-  return clientFetchClient.POST('/api/v1/releases', {
+  return clientFetchClient.POST('/api/v1/artists/me/releases', {
     body: input,
     signal: writeSignal(),
   })

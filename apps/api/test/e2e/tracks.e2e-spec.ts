@@ -41,8 +41,8 @@ describe('TracksController (e2e)', () => {
     await request(app.getHttpServer()).get('/tracks/liked').expect(401)
   })
 
-  it('POST /tracks should return 401 without artist auth', async () => {
-    await request(app.getHttpServer()).post('/tracks').expect(401)
+  it('no longer serves the artist upload route POST /tracks (#467)', async () => {
+    await request(app.getHttpServer()).post('/tracks').expect(404)
   })
 
   it('POST /tracks/:id/play-sessions should return 401 without auth', async () => {
@@ -64,11 +64,11 @@ describe('TracksController (e2e)', () => {
       .expect(403)
   })
 
-  it('PUT /tracks/:id should return 401 without artist auth', async () => {
+  it('no longer serves the artist edit route PUT /tracks/:id (#467)', async () => {
     await request(app.getHttpServer())
       .put('/tracks/f47ac10b-58cc-4372-a567-0e02b2c3d479')
       .field('title', 'Updated Title')
-      .expect(401)
+      .expect(404)
   })
 
   it('GET /tracks/liked should return 200 for authenticated user', async () => {

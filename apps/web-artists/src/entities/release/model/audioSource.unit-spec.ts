@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest'
 import { playableAudioUrl } from './audioSource'
 
-const URL = 'http://api.test/api/v1/releases/r1/tracks/t1/audio'
+const URL = 'http://api.test/api/v1/artists/me/releases/r1/tracks/t1/audio'
 
 function probeWith(...statuses: number[]) {
   const queue = [...statuses]

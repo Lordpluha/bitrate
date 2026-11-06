@@ -1,16 +1,14 @@
 import { rm } from 'node:fs/promises'
 import { ARTIST_AGREEMENT_VERSION } from '@common/legal'
-import { RIGHTS_CONFIRMATION_MESSAGE } from '@common/rights-confirmation'
 import { resolveSafeMulterPath } from '@common/utils/multer-file'
 import type { StorageService } from '@infra/storage/storage.types'
 import { beforeEach, describe, expect, it, jest } from '@jest/globals'
-import { BadRequestException, NotFoundException } from '@nestjs/common'
+import { NotFoundException } from '@nestjs/common'
 import {
   makeCacheMock,
   makeProcessingAttemptRecorderMock,
   makeQueueMock,
   makeStorageMock,
-  mockTransaction,
   type PrismaMock,
   prismaMock,
   resetPrismaMock,
@@ -20,7 +18,7 @@ import { parseFile } from 'music-metadata'
 import { buildAudioFile, buildCoverFile, buildTrack } from './__tests__/fixtures/tracks.fixtures'
 import { downloadObjectToFile, storeMaster } from './audio-master'
 import { getUploadTempDir } from './audio-scratch'
-import type { CreateTrackDto, UpdateTrackDto } from './dtos/create-track.dto'
+import type { CreateTrackDto } from './dtos/create-track.dto'
 import { TrackUploadService } from './track-upload.service'
 
 jest.mock('node:fs/promises', () => ({
@@ -296,143 +294,6 @@ describe('TrackUploadService', () => {
       expect(rmMock).toHaveBeenCalledWith(resolveSafeMulterPath(audioFile, getUploadTempDir()), {
         force: true,
       })
-    })
-  })
-
-  describe('update', () => {
-    it('should update track and enqueue job when audio file provided', async () => {
-      const track = buildTrack()
-      const audioFile = buildAudioFile()
-      mockTransaction(prisma)
-      prisma.track.update.mockResolvedValue(track as never)
-      prisma.trackFile.deleteMany.mockResolvedValue({ count: 1 } as never)
-      queue.add.mockResolvedValue({} as never)
-
-      prisma.track.findFirst.mockResolvedValue(track as never)
-
-      const result = await service.update(
-        'artist-1',
-        'track-1',
-        { title: 'Updated', rightsConfirmed: true } as UpdateTrackDto,
-        audioFile,
-      )
-
-      expect(storeMasterMock).toHaveBeenCalledWith(
-        expect.objectContaining({ key: `masters/${audioFile.filename}` }),
-      )
-      expect(storage.deleteObject).toHaveBeenCalledWith(`masters/${track.audioUrl}`)
-      expect(prisma.track.update).toHaveBeenCalled()
-      expect(prisma.trackFile.deleteMany).toHaveBeenCalledWith({
-        where: { trackId: track.id, url: track.audioUrl },
-      })
-      expect(prisma.trackFile.upsert).not.toHaveBeenCalled()
-      expect(queue.add).toHaveBeenCalledWith(
-        'convert-audio',
-        expect.objectContaining({
-          sourceFileName: audioFile.filename,
-          trigger: 'REPLACE',
-          masterKey: `masters/${audioFile.filename}`,
-          input: expect.objectContaining({ bytes: audioFile.size }),
-        }),
-        expect.objectContaining({ attempts: 5 }),
-      )
-      expect(result).toBe(track)
-    })
-
-    it('uploads a replacement cover and deletes the previous cover object', async () => {
-      const track = buildTrack({ cover: 'old-cover.png' })
-      mockTransaction(prisma)
-      prisma.track.update.mockResolvedValue(track as never)
-      prisma.track.findFirst.mockResolvedValue(track as never)
-
-      await service.update(
-        'artist-1',
-        'track-1',
-        { title: 'Updated' } as UpdateTrackDto,
-        undefined,
-        buildCoverFile(),
-      )
-
-      const key = storage.upload.mock.calls[0]?.[0] as string
-      expect(key).toMatch(/^tracks\/covers\/[0-9a-f-]{36}\.png$/)
-      expect(storage.deleteObject).toHaveBeenCalledWith('tracks/covers/old-cover.png')
-    })
-
-    it('should update track without queue when no audio file', async () => {
-      const track = buildTrack()
-      mockTransaction(prisma)
-      prisma.track.update.mockResolvedValue(track as never)
-
-      prisma.track.findFirst.mockResolvedValue(track as never)
-
-      await service.update('artist-1', 'track-1', { title: 'Updated' } as never)
-
-      expect(queue.add).not.toHaveBeenCalled()
-    })
-
-    it('records the rights confirmation when the audio is replaced', async () => {
-      const track = buildTrack()
-      mockTransaction(prisma)
-      prisma.track.update.mockResolvedValue(track as never)
-      prisma.track.findFirst.mockResolvedValue(track as never)
-      queue.add.mockResolvedValue({} as never)
-
-      await service.update(
-        'artist-1',
-        'track-1',
-        { title: 'Updated', rightsConfirmed: true } as UpdateTrackDto,
-        buildAudioFile(),
-      )
-
-      expect(prisma.track.update).toHaveBeenCalledWith({
-        where: { id: 'track-1' },
-        data: expect.objectContaining({
-          rightsConfirmedVersion: ARTIST_AGREEMENT_VERSION,
-          rightsConfirmedAt: expect.any(Date),
-        }),
-      })
-    })
-
-    it('refuses a replacement audio without the rights confirmation and removes the upload', async () => {
-      const audioFile = buildAudioFile()
-      prisma.track.findFirst.mockResolvedValue(buildTrack() as never)
-
-      await expect(
-        service.update('artist-1', 'track-1', { title: 'Updated' } as UpdateTrackDto, audioFile),
-      ).rejects.toThrow(new BadRequestException(RIGHTS_CONFIRMATION_MESSAGE))
-
-      expect(rmMock).toHaveBeenCalledWith(resolveSafeMulterPath(audioFile, getUploadTempDir()), {
-        force: true,
-      })
-      expect(prisma.track.update).not.toHaveBeenCalled()
-      expect(queue.add).not.toHaveBeenCalled()
-    })
-
-    it('keeps the earlier confirmation when only the metadata changes', async () => {
-      const track = buildTrack()
-      mockTransaction(prisma)
-      prisma.track.update.mockResolvedValue(track as never)
-      prisma.track.findFirst.mockResolvedValue(track as never)
-
-      await service.update('artist-1', 'track-1', { title: 'Updated' } as UpdateTrackDto)
-
-      const call = prisma.track.update.mock.calls[0]?.[0] as { data: Record<string, unknown> }
-      expect(call.data).not.toHaveProperty('rightsConfirmedVersion')
-      expect(call.data).not.toHaveProperty('rightsConfirmedAt')
-    })
-
-    it('removes an uploaded replacement when ownership validation fails', async () => {
-      const audioFile = buildAudioFile()
-      prisma.track.findFirst.mockResolvedValue(null)
-
-      await expect(
-        service.update('artist-2', 'track-1', { title: 'Updated' } as never, audioFile),
-      ).rejects.toThrow(NotFoundException)
-
-      expect(rmMock).toHaveBeenCalledWith(resolveSafeMulterPath(audioFile, getUploadTempDir()), {
-        force: true,
-      })
-      expect(prisma.track.update).not.toHaveBeenCalled()
     })
   })
 

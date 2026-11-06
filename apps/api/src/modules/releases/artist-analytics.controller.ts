@@ -9,7 +9,7 @@ import { ArtistAnalyticsSwagger } from './decorators'
 import { type ArtistAnalyticsDto, ArtistAnalyticsSchema } from './dtos/artist-analytics.dto'
 
 @ApiTags('Releases')
-@Controller({ path: 'artist-analytics', version: '1' })
+@Controller({ path: 'artists/me/analytics', version: '1' })
 export class ArtistAnalyticsController {
   constructor(private readonly analytics: ArtistAnalyticsService) {}
 

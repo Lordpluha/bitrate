@@ -14,7 +14,7 @@ export function useArtistDashboard(artistId: string) {
 }
 
 async function getArtistDashboard(signal: AbortSignal) {
-  const result = await clientFetchClient.GET('/api/v1/artist-dashboard', {
+  const result = await clientFetchClient.GET('/api/v1/artists/me/dashboard', {
     signal,
   })
   const parsed = artistDashboardSchema.safeParse(result.data)

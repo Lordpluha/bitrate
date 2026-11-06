@@ -1,12 +1,10 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it, jest } from '@jest/globals'
-import { ArtistAuthGuard } from '@modules/artists-auth/artists-auth.guard'
 import { UserAuthGuard } from '@modules/users-auth/users-auth.guard'
 import type { INestApplication } from '@nestjs/common'
 import { Test, type TestingModule } from '@nestjs/testing'
 import request from 'supertest'
 import { buildTrack } from './__tests__/fixtures/tracks.fixtures'
 import { TrackPlaybackService } from './track-playback.service'
-import { TrackUploadService } from './track-upload.service'
 import { TracksController } from './tracks.controller'
 import { TracksService } from './tracks.service'
 
@@ -17,12 +15,6 @@ const makeServiceMock = () =>
     findLikedTracks: jest.fn(),
   }) as unknown as jest.Mocked<TracksService>
 
-const makeUploadMock = () =>
-  ({
-    create: jest.fn(),
-    update: jest.fn(),
-  }) as unknown as jest.Mocked<TrackUploadService>
-
 const makePlaybackMock = () =>
   ({
     getManifest: jest.fn(),
@@ -32,29 +24,17 @@ const makePlaybackMock = () =>
 describe('TracksController (int)', () => {
   let app: INestApplication
   let service: jest.Mocked<TracksService>
-  let uploadService: jest.Mocked<TrackUploadService>
 
   beforeAll(async () => {
     service = makeServiceMock()
-    uploadService = makeUploadMock()
 
     const module: TestingModule = await Test.createTestingModule({
       controllers: [TracksController],
       providers: [
         { provide: TracksService, useValue: service },
-        { provide: TrackUploadService, useValue: uploadService },
         { provide: TrackPlaybackService, useValue: makePlaybackMock() },
       ],
     })
-      .overrideGuard(ArtistAuthGuard)
-      .useValue({
-        canActivate: (ctx: {
-          switchToHttp: () => { getRequest: () => Record<string, unknown> }
-        }) => {
-          ctx.switchToHttp().getRequest().artist = { id: 'artist-1', username: 'artist' }
-          return true
-        },
-      })
       .overrideGuard(UserAuthGuard)
       .useValue({
         canActivate: (ctx: {
@@ -75,8 +55,6 @@ describe('TracksController (int)', () => {
   beforeEach(() => {
     service.findAll.mockReset()
     service.findTrackById.mockReset()
-    uploadService.create.mockReset()
-    uploadService.update.mockReset()
     service.findLikedTracks.mockReset()
   })
 
@@ -127,20 +105,13 @@ describe('TracksController (int)', () => {
     await request(app.getHttpServer()).get(path).expect(404)
   })
 
-  it('PUT /tracks/:id should call uploadService.update and return 200', async () => {
-    uploadService.update.mockResolvedValue(buildTrack() as never)
-
-    const res = await request(app.getHttpServer())
+  it('no longer serves the artist upload routes POST /tracks and PUT /tracks/:id', async () => {
+    const created = await request(app.getHttpServer()).post('/tracks').field('title', 'New')
+    const updated = await request(app.getHttpServer())
       .put('/tracks/f47ac10b-58cc-4372-a567-0e02b2c3d479')
       .field('title', 'Updated Title')
 
-    expect(res.status).toBe(200)
-    expect(uploadService.update).toHaveBeenCalledWith(
-      'artist-1',
-      'f47ac10b-58cc-4372-a567-0e02b2c3d479',
-      { title: 'Updated Title' } as never,
-      undefined,
-      undefined,
-    )
+    expect(created.status).toBe(404)
+    expect(updated.status).toBe(404)
   })
 })

@@ -7,7 +7,7 @@ import { ArtistDashboardService } from './artist-dashboard.service'
 import { ArtistDashboardSwagger } from './decorators'
 
 @ApiTags('Releases')
-@Controller({ path: 'artist-dashboard', version: '1' })
+@Controller({ path: 'artists/me/dashboard', version: '1' })
 export class ArtistDashboardController {
   constructor(private readonly dashboard: ArtistDashboardService) {}
 

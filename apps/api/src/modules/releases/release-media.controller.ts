@@ -48,7 +48,7 @@ const logger = new Logger('ReleaseMediaController')
 
 /** Artwork and master audio of an owned draft; files stay private until a later delivery stage. */
 @ApiTags('Releases')
-@Controller({ path: 'releases', version: '1' })
+@Controller({ path: 'artists/me/releases', version: '1' })
 export class ReleaseMediaController {
   constructor(
     private readonly media: ReleaseMediaService,

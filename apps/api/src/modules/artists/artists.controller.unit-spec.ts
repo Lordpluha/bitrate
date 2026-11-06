@@ -8,7 +8,6 @@ const makeServiceMock = () =>
     findAll: jest.fn(),
     findById: jest.fn(),
     findByUsername: jest.fn(),
-    update: jest.fn(),
     requestDelete: jest.fn(),
   }) as unknown as jest.Mocked<ArtistsService>
 
@@ -51,25 +50,14 @@ describe('ArtistsController', () => {
     expect(result).toBe(artist)
   })
 
-  it('updateProfile should call service.update with artist id from request', async () => {
-    const updated = buildArtist({ username: 'new-name' })
-    service.update.mockResolvedValue(updated as never)
-    const artist = buildArtist({ id: 'artist-1' })
-
-    const result = await controller.updateProfile(artist, 'artist-1', { username: 'new-name' })
-
-    expect(service.update).toHaveBeenCalledWith('artist-1', { username: 'new-name' }, 'artist-1')
-    expect(result).toBe(updated)
-  })
-
-  it('deleteProfile should call service.requestDelete with artist id from request', async () => {
+  it('deleteProfile deletes the signed-in artist, whose id comes only from the session', async () => {
     const deleted = buildArtist()
     service.requestDelete.mockResolvedValue(deleted as never)
     const artist = buildArtist({ id: 'artist-1' })
 
-    const result = await controller.deleteProfile(artist, 'artist-1')
+    const result = await controller.deleteProfile(artist)
 
-    expect(service.requestDelete).toHaveBeenCalledWith('artist-1', 'artist-1')
+    expect(service.requestDelete).toHaveBeenCalledWith('artist-1')
     expect(result).toBe(deleted)
   })
 })

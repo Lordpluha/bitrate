@@ -1,7 +1,6 @@
 import { CacheService } from '@infra/cache/cache.service'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import { afterAll, beforeAll, beforeEach, describe, expect, it, jest } from '@jest/globals'
-import { buildArtist } from '@modules/artists/__tests__/fixtures/artists.fixtures'
 import { Test, type TestingModule } from '@nestjs/testing'
 import { prismaMock, resetPrismaMock } from '@test/mocks'
 import { buildAlbum } from './__tests__/fixtures/albums.fixtures'
@@ -73,33 +72,5 @@ describe('AlbumsService (int)', () => {
       }),
     )
     expect(result).toEqual({ ...album, tracks: [] })
-  })
-
-  it('create should throw NotFoundException when artist not found', async () => {
-    prismaMock.artist.findUnique.mockResolvedValue(null)
-
-    await expect(
-      service.create('artist-1', {
-        title: 'New Album',
-        description: undefined,
-        rightsConfirmed: true,
-      }),
-    ).rejects.toThrow('Artist not found')
-  })
-
-  it('create should create album when artist exists', async () => {
-    const artist = buildArtist()
-    const album = buildAlbum()
-    prismaMock.artist.findUnique.mockResolvedValue(artist as never)
-    prismaMock.album.create.mockResolvedValue(album as never)
-
-    const result = await service.create('artist-1', {
-      title: 'Album Title',
-      description: undefined,
-      rightsConfirmed: true,
-    })
-
-    expect(prismaMock.album.create).toHaveBeenCalled()
-    expect(result).toEqual(album)
   })
 })

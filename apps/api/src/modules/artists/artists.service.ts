@@ -4,8 +4,8 @@ import { CacheService } from '@infra/cache/cache.service'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import { PUBLIC_TRACK_WHERE } from '@modules/tracks/orm'
 import type { UserEntity } from '@modules/users'
-import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common'
-import type { CreateArtistDto, UpdateArtistDto } from './dtos'
+import { Injectable, NotFoundException } from '@nestjs/common'
+import type { CreateArtistDto } from './dtos'
 import type { ArtistEntity } from './entities'
 import { ARTIST_ERRORS } from './errors/artist.errors'
 import { PUBLIC_ARTIST_SELECT } from './orm'
@@ -85,25 +85,8 @@ export class ArtistsService {
     )
   }
 
-  async update(
-    id: ArtistEntity['id'],
-    artist: UpdateArtistDto,
-    currentArtistId: ArtistEntity['id'],
-  ) {
-    if (id !== currentArtistId) throw new ForbiddenException('Forbidden')
-
-    const updated = await this.prisma.artist.update({
-      where: { id },
-      data: artist,
-      select: PUBLIC_ARTIST_SELECT,
-    })
-    await Promise.all([this.cache.invalidate(NS.ARTISTS), this.cache.invalidate(NS.SEARCH)])
-    return updated
-  }
-
-  async requestDelete(id: ArtistEntity['id'], currentArtistId: ArtistEntity['id']) {
-    if (id !== currentArtistId) throw new ForbiddenException('Forbidden')
-
+  /** Soft-deletes the artist and revokes every session they hold. */
+  async requestDelete(id: ArtistEntity['id']) {
     const [deleted] = await this.prisma.$transaction([
       this.prisma.artist.update({
         where: { id },

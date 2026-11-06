@@ -64,7 +64,7 @@ const FOLLOWED_ARTISTS_PAGE_SIZE = 100
 
 const getFollowedArtistsPage = async (page: number) => {
   const { data, response } = await clientFetchClient.GET(
-    '/api/v1/artists/me/following',
+    '/api/v1/users/me/following/artists',
     { params: { query: { limit: FOLLOWED_ARTISTS_PAGE_SIZE, page } } },
   )
 

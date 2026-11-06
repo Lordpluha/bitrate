@@ -138,7 +138,7 @@ describe('Release drafts (HTTP)', () => {
       roles: [...contributor.roles],
     })
     const response = await request(app.getHttpServer())
-      .post(`/api/v1/releases/${draft.id}/contributors`)
+      .post(`/api/v1/artists/me/releases/${draft.id}/contributors`)
       .set('x-test-artist', ownerId)
       .send({
         displayName: ' Taylor Reid ',
@@ -157,7 +157,7 @@ describe('Release drafts (HTTP)', () => {
 
   it('requires an artist session to add contributors', async () => {
     await request(app.getHttpServer())
-      .post(`/api/v1/releases/${draft.id}/contributors`)
+      .post(`/api/v1/artists/me/releases/${draft.id}/contributors`)
       .send({})
       .expect(401)
     expect(prismaMock.$transaction).not.toHaveBeenCalled()
@@ -177,7 +177,7 @@ describe('Release drafts (HTTP)', () => {
       },
     ])
     const response = await request(app.getHttpServer())
-      .patch(`/api/v1/releases/${draft.id}/contributors/${otherOwnerId}`)
+      .patch(`/api/v1/artists/me/releases/${draft.id}/contributors/${otherOwnerId}`)
       .set('x-test-artist', ownerId)
       .send({
         displayName: ' Jordan Lee ',
@@ -201,7 +201,7 @@ describe('Release drafts (HTTP)', () => {
     'requires an artist session to %s an existing contributor',
     async (method) => {
       await request(app.getHttpServer())
-        [method](`/api/v1/releases/${draft.id}/contributors/${otherOwnerId}`)
+        [method](`/api/v1/artists/me/releases/${draft.id}/contributors/${otherOwnerId}`)
         .expect(401)
       expect(prismaMock.$transaction).not.toHaveBeenCalled()
       expect(prismaMock.release.findFirst).not.toHaveBeenCalled()
@@ -215,7 +215,7 @@ describe('Release drafts (HTTP)', () => {
     }
     prismaMock.release.findFirst.mockResolvedValue(record)
     const response = await request(app.getHttpServer())
-      .get(`/api/v1/releases/${draft.id}/contributors/${otherOwnerId}`)
+      .get(`/api/v1/artists/me/releases/${draft.id}/contributors/${otherOwnerId}`)
       .set('x-test-artist', ownerId)
       .expect(200)
     expect(response.headers['cache-control']).toBe('private, no-store')
@@ -238,7 +238,7 @@ describe('Release drafts (HTTP)', () => {
       const record = { ...draft, contributors: [] }
       prismaMock.release.findFirst.mockResolvedValue(visible ? record : null)
       await request(app.getHttpServer())
-        .get(`/api/v1/releases/${draft.id}/contributors/${otherOwnerId}`)
+        .get(`/api/v1/artists/me/releases/${draft.id}/contributors/${otherOwnerId}`)
         .set('x-test-artist', ownerId)
         .expect(404)
     },
@@ -256,7 +256,7 @@ describe('Release drafts (HTTP)', () => {
     { expectedUpdatedAt: 'yesterday' },
   ])('rejects invalid contributor edits %j', async (invalid) => {
     await request(app.getHttpServer())
-      .patch(`/api/v1/releases/${draft.id}/contributors/${otherOwnerId}`)
+      .patch(`/api/v1/artists/me/releases/${draft.id}/contributors/${otherOwnerId}`)
       .set('x-test-artist', ownerId)
       .send({
         displayName: 'Jordan Lee',
@@ -274,7 +274,7 @@ describe('Release drafts (HTTP)', () => {
       transactionMock.release.updateManyAndReturn.mockResolvedValue([])
       transactionMock.release.findFirst.mockResolvedValue(visible ? draft : null)
       await request(app.getHttpServer())
-        .patch(`/api/v1/releases/${draft.id}/contributors/${otherOwnerId}`)
+        .patch(`/api/v1/artists/me/releases/${draft.id}/contributors/${otherOwnerId}`)
         .set('x-test-artist', ownerId)
         .send({
           displayName: 'Jordan Lee',
@@ -290,7 +290,7 @@ describe('Release drafts (HTTP)', () => {
     transactionMock.release.updateManyAndReturn.mockResolvedValue([draft])
     transactionMock.releaseContributor.updateManyAndReturn.mockResolvedValue([])
     await request(app.getHttpServer())
-      .patch(`/api/v1/releases/${draft.id}/contributors/${otherOwnerId}`)
+      .patch(`/api/v1/artists/me/releases/${draft.id}/contributors/${otherOwnerId}`)
       .set('x-test-artist', ownerId)
       .send({
         displayName: 'Jordan Lee',
@@ -305,7 +305,7 @@ describe('Release drafts (HTTP)', () => {
 
   it('documents contributor detail and edits without changing the existing addition schema', () => {
     const document = SwaggerModule.createDocument(app, new DocumentBuilder().build())
-    const path = document.paths['/api/v1/releases/{id}/contributors/{contributorId}']
+    const path = document.paths['/api/v1/artists/me/releases/{id}/contributors/{contributorId}']
     expect(path?.get?.responses['200']).toBeDefined()
     expect(path?.patch?.requestBody).toBeDefined()
     expect(document.components?.schemas?.UpdateReleaseContributorDto).toMatchObject({
@@ -341,7 +341,7 @@ describe('Release drafts (HTTP)', () => {
     { expectedUpdatedAt: 'yesterday' },
   ])('rejects invalid contributor fields %j', async (invalid) => {
     await request(app.getHttpServer())
-      .post(`/api/v1/releases/${draft.id}/contributors`)
+      .post(`/api/v1/artists/me/releases/${draft.id}/contributors`)
       .set('x-test-artist', ownerId)
       .send({
         displayName: 'Producer',
@@ -359,7 +359,7 @@ describe('Release drafts (HTTP)', () => {
       transactionMock.release.updateManyAndReturn.mockResolvedValue([])
       transactionMock.release.findFirst.mockResolvedValue(visible ? draft : null)
       await request(app.getHttpServer())
-        .post(`/api/v1/releases/${draft.id}/contributors`)
+        .post(`/api/v1/artists/me/releases/${draft.id}/contributors`)
         .set('x-test-artist', otherOwnerId)
         .send({
           displayName: 'Producer',
@@ -380,7 +380,9 @@ describe('Release drafts (HTTP)', () => {
 
   it('documents contributor writes and their response in Swagger', () => {
     const document = SwaggerModule.createDocument(app, new DocumentBuilder().build())
-    expect(document.paths['/api/v1/releases/{id}/contributors']?.post?.requestBody).toBeDefined()
+    expect(
+      document.paths['/api/v1/artists/me/releases/{id}/contributors']?.post?.requestBody,
+    ).toBeDefined()
     const schema = document.components?.schemas?.AddReleaseContributorDto
     expect(schema).toMatchObject({ required: ['displayName', 'roles', 'expectedUpdatedAt'] })
     expect(document.components?.schemas?.ReleaseContributorAddedEntity).toMatchObject({
@@ -392,7 +394,9 @@ describe('Release drafts (HTTP)', () => {
   })
 
   it('requires an artist session before reading a release workspace', async () => {
-    await request(app.getHttpServer()).get(`/api/v1/releases/${draft.id}/workspace`).expect(401)
+    await request(app.getHttpServer())
+      .get(`/api/v1/artists/me/releases/${draft.id}/workspace`)
+      .expect(401)
     expect(prismaMock.release.findFirst).not.toHaveBeenCalled()
   })
 
@@ -421,7 +425,7 @@ describe('Release drafts (HTTP)', () => {
     }
     prismaMock.release.findFirst.mockResolvedValue(workspace)
     const response = await request(app.getHttpServer())
-      .get(`/api/v1/releases/${draft.id}/workspace`)
+      .get(`/api/v1/artists/me/releases/${draft.id}/workspace`)
       .set('x-test-artist', ownerId)
       .expect(200)
     expect(response.body).toMatchObject({
@@ -462,7 +466,7 @@ describe('Release drafts (HTTP)', () => {
     }
     prismaMock.release.findFirst.mockResolvedValue(workspace)
     const response = await request(app.getHttpServer())
-      .get(`/api/v1/releases/${draft.id}/workspace`)
+      .get(`/api/v1/artists/me/releases/${draft.id}/workspace`)
       .set('x-test-artist', ownerId)
       .expect(200)
     expect(response.body).toMatchObject({
@@ -487,7 +491,7 @@ describe('Release drafts (HTTP)', () => {
     }
     prismaMock.release.findFirst.mockResolvedValue(workspace)
     const response = await request(app.getHttpServer())
-      .get(`/api/v1/releases/${draft.id}/workspace`)
+      .get(`/api/v1/artists/me/releases/${draft.id}/workspace`)
       .set('x-test-artist', ownerId)
       .expect(200)
     expect(response.body).toMatchObject({
@@ -503,7 +507,7 @@ describe('Release drafts (HTTP)', () => {
   it('hides foreign or deleted workspaces', async () => {
     prismaMock.release.findFirst.mockResolvedValue(null)
     await request(app.getHttpServer())
-      .get(`/api/v1/releases/${draft.id}/workspace`)
+      .get(`/api/v1/artists/me/releases/${draft.id}/workspace`)
       .set('x-test-artist', otherOwnerId)
       .expect(404)
     expect(prismaMock.release.findFirst).toHaveBeenCalledWith(
@@ -515,7 +519,7 @@ describe('Release drafts (HTTP)', () => {
 
   it('rejects malformed workspace IDs before querying persistence', async () => {
     await request(app.getHttpServer())
-      .get('/api/v1/releases/not-a-uuid/workspace')
+      .get('/api/v1/artists/me/releases/not-a-uuid/workspace')
       .set('x-test-artist', ownerId)
       .expect(400)
     expect(prismaMock.release.findFirst).not.toHaveBeenCalled()
@@ -524,14 +528,14 @@ describe('Release drafts (HTTP)', () => {
   it('does not turn a workspace persistence failure into an empty result', async () => {
     prismaMock.release.findFirst.mockRejectedValue(new Error('Database unavailable'))
     await request(app.getHttpServer())
-      .get(`/api/v1/releases/${draft.id}/workspace`)
+      .get(`/api/v1/artists/me/releases/${draft.id}/workspace`)
       .set('x-test-artist', ownerId)
       .expect(500)
   })
 
   it('documents nested workspace metadata in the generated Swagger schema', () => {
     const document = SwaggerModule.createDocument(app, new DocumentBuilder().build())
-    const operation = document.paths['/api/v1/releases/{id}/workspace']?.get
+    const operation = document.paths['/api/v1/artists/me/releases/{id}/workspace']?.get
     expect(operation?.responses['200']).toMatchObject({
       content: {
         'application/json': { schema: { $ref: '#/components/schemas/ReleaseWorkspaceEntity' } },
@@ -543,24 +547,24 @@ describe('Release drafts (HTTP)', () => {
   })
 
   it('requires an artist session for reading and editing a release', async () => {
-    await request(app.getHttpServer()).get(`/api/v1/releases/${draft.id}`).expect(401)
+    await request(app.getHttpServer()).get(`/api/v1/artists/me/releases/${draft.id}`).expect(401)
     await request(app.getHttpServer())
-      .patch(`/api/v1/releases/${draft.id}`)
+      .patch(`/api/v1/artists/me/releases/${draft.id}`)
       .send({ title: 'Updated release', expectedUpdatedAt: draft.updatedAt.toISOString() })
       .expect(401)
     expect(prismaMock.release.updateManyAndReturn).not.toHaveBeenCalled()
   })
 
   it('requires an artist session before reading the private Music catalogue', async () => {
-    await request(app.getHttpServer()).get('/api/v1/artist-music/tracks').expect(401)
-    await request(app.getHttpServer()).get('/api/v1/artist-music/releases').expect(401)
-    await request(app.getHttpServer()).get('/api/v1/artist-music/counts').expect(401)
+    await request(app.getHttpServer()).get('/api/v1/artists/me/music/tracks').expect(401)
+    await request(app.getHttpServer()).get('/api/v1/artists/me/music/releases').expect(401)
+    await request(app.getHttpServer()).get('/api/v1/artists/me/music/counts').expect(401)
   })
 
   it('reads only an owned active release and disables shared caching', async () => {
     prismaMock.release.findFirst.mockResolvedValue(draft)
     const response = await request(app.getHttpServer())
-      .get(`/api/v1/releases/${draft.id}`)
+      .get(`/api/v1/artists/me/releases/${draft.id}`)
       .set('x-test-artist', ownerId)
       .expect(200)
     expect(response.body).toMatchObject({ id: draft.id, title: draft.title })
@@ -575,7 +579,7 @@ describe('Release drafts (HTTP)', () => {
       { ...draft, title: 'Updated', type: 'EP' },
     ])
     const response = await request(app.getHttpServer())
-      .patch(`/api/v1/releases/${draft.id}`)
+      .patch(`/api/v1/artists/me/releases/${draft.id}`)
       .set('x-test-artist', ownerId)
       .send({ title: '  Updated  ', type: 'EP', expectedUpdatedAt: draft.updatedAt.toISOString() })
       .expect(200)
@@ -601,7 +605,7 @@ describe('Release drafts (HTTP)', () => {
       const date = scheduledAt === null ? null : new Date(scheduledAt)
       prismaMock.release.updateManyAndReturn.mockResolvedValue([{ ...draft, scheduledAt: date }])
       const response = await request(app.getHttpServer())
-        .patch(`/api/v1/releases/${draft.id}`)
+        .patch(`/api/v1/artists/me/releases/${draft.id}`)
         .set('x-test-artist', ownerId)
         .send({ scheduledAt, expectedUpdatedAt: draft.updatedAt.toISOString() })
         .expect(200)
@@ -627,7 +631,7 @@ describe('Release drafts (HTTP)', () => {
     async (fields) => {
       prismaMock.release.updateManyAndReturn.mockResolvedValue([draft])
       await request(app.getHttpServer())
-        .patch(`/api/v1/releases/${draft.id}`)
+        .patch(`/api/v1/artists/me/releases/${draft.id}`)
         .set('x-test-artist', ownerId)
         .send({
           ...fields,
@@ -646,7 +650,7 @@ describe('Release drafts (HTTP)', () => {
     async (fields) => {
       prismaMock.release.updateManyAndReturn.mockResolvedValue([draft])
       await request(app.getHttpServer())
-        .patch(`/api/v1/releases/${draft.id}`)
+        .patch(`/api/v1/artists/me/releases/${draft.id}`)
         .set('x-test-artist', ownerId)
         .send({ ...fields, expectedUpdatedAt: draft.updatedAt.toISOString() })
         .expect(200)
@@ -662,7 +666,7 @@ describe('Release drafts (HTTP)', () => {
       prismaMock.release.updateManyAndReturn.mockResolvedValue([])
       prismaMock.release.findFirst.mockResolvedValue({ ...draft, status })
       await request(app.getHttpServer())
-        .patch(`/api/v1/releases/${draft.id}`)
+        .patch(`/api/v1/artists/me/releases/${draft.id}`)
         .set('x-test-artist', ownerId)
         .send({ title: 'Updated', expectedUpdatedAt: draft.updatedAt.toISOString() })
         .expect(409)
@@ -674,11 +678,11 @@ describe('Release drafts (HTTP)', () => {
     prismaMock.release.findFirst.mockResolvedValue(null)
     prismaMock.release.updateManyAndReturn.mockResolvedValue([])
     await request(app.getHttpServer())
-      .get(`/api/v1/releases/${draft.id}`)
+      .get(`/api/v1/artists/me/releases/${draft.id}`)
       .set('x-test-artist', otherOwnerId)
       .expect(404)
     await request(app.getHttpServer())
-      .patch(`/api/v1/releases/${draft.id}`)
+      .patch(`/api/v1/artists/me/releases/${draft.id}`)
       .set('x-test-artist', otherOwnerId)
       .send({ title: 'Updated', expectedUpdatedAt: draft.updatedAt.toISOString() })
       .expect(404)
@@ -710,7 +714,7 @@ describe('Release drafts (HTTP)', () => {
     { scheduledAt: null, status: 'RELEASED' },
   ])('rejects unsafe or incomplete edits: %j', async (input) => {
     await request(app.getHttpServer())
-      .patch(`/api/v1/releases/${draft.id}`)
+      .patch(`/api/v1/artists/me/releases/${draft.id}`)
       .set('x-test-artist', ownerId)
       .send({ expectedUpdatedAt: draft.updatedAt.toISOString(), ...input })
       .expect(400)
@@ -719,11 +723,11 @@ describe('Release drafts (HTTP)', () => {
 
   it('rejects invalid identifiers before querying and propagates failed writes', async () => {
     await request(app.getHttpServer())
-      .get('/api/v1/releases/not-a-uuid')
+      .get('/api/v1/artists/me/releases/not-a-uuid')
       .set('x-test-artist', ownerId)
       .expect(400)
     await request(app.getHttpServer())
-      .patch('/api/v1/releases/not-a-uuid')
+      .patch('/api/v1/artists/me/releases/not-a-uuid')
       .set('x-test-artist', ownerId)
       .send({ title: 'Updated', expectedUpdatedAt: draft.updatedAt.toISOString() })
       .expect(400)
@@ -731,7 +735,7 @@ describe('Release drafts (HTTP)', () => {
     expect(prismaMock.release.updateManyAndReturn).not.toHaveBeenCalled()
     prismaMock.release.updateManyAndReturn.mockRejectedValue(new Error('Database unavailable'))
     await request(app.getHttpServer())
-      .patch(`/api/v1/releases/${draft.id}`)
+      .patch(`/api/v1/artists/me/releases/${draft.id}`)
       .set('x-test-artist', ownerId)
       .send({ title: 'Updated', expectedUpdatedAt: draft.updatedAt.toISOString() })
       .expect(500)
@@ -741,7 +745,7 @@ describe('Release drafts (HTTP)', () => {
     transactionMock.release.updateManyAndReturn.mockResolvedValue([draft])
     transactionMock.artistTrackDraft.updateMany.mockResolvedValue({ count: 2 })
     await request(app.getHttpServer())
-      .delete(`/api/v1/releases/${draft.id}`)
+      .delete(`/api/v1/artists/me/releases/${draft.id}`)
       .set('x-test-artist', ownerId)
       .send({ expectedUpdatedAt: draft.updatedAt.toISOString() })
       .expect(204)
@@ -768,7 +772,7 @@ describe('Release drafts (HTTP)', () => {
     transactionMock.release.updateManyAndReturn.mockResolvedValue([])
     transactionMock.release.findFirst.mockResolvedValue(null)
     await request(app.getHttpServer())
-      .delete(`/api/v1/releases/${draft.id}`)
+      .delete(`/api/v1/artists/me/releases/${draft.id}`)
       .set('x-test-artist', otherOwnerId)
       .send({ expectedUpdatedAt: draft.updatedAt.toISOString() })
       .expect(404)
@@ -779,7 +783,7 @@ describe('Release drafts (HTTP)', () => {
     transactionMock.release.updateManyAndReturn.mockResolvedValue([])
     transactionMock.release.findFirst.mockResolvedValue({ ...draft, status: 'SUBMITTED' })
     await request(app.getHttpServer())
-      .delete(`/api/v1/releases/${draft.id}`)
+      .delete(`/api/v1/artists/me/releases/${draft.id}`)
       .set('x-test-artist', ownerId)
       .send({ expectedUpdatedAt: draft.updatedAt.toISOString() })
       .expect(409)
@@ -788,16 +792,16 @@ describe('Release drafts (HTTP)', () => {
 
   it('requires a session, a valid ID and the draft version before deleting', async () => {
     await request(app.getHttpServer())
-      .delete(`/api/v1/releases/${draft.id}`)
+      .delete(`/api/v1/artists/me/releases/${draft.id}`)
       .send({ expectedUpdatedAt: draft.updatedAt.toISOString() })
       .expect(401)
     await request(app.getHttpServer())
-      .delete('/api/v1/releases/not-a-uuid')
+      .delete('/api/v1/artists/me/releases/not-a-uuid')
       .set('x-test-artist', ownerId)
       .send({ expectedUpdatedAt: draft.updatedAt.toISOString() })
       .expect(400)
     await request(app.getHttpServer())
-      .delete(`/api/v1/releases/${draft.id}`)
+      .delete(`/api/v1/artists/me/releases/${draft.id}`)
       .set('x-test-artist', ownerId)
       .send({})
       .expect(400)
@@ -806,7 +810,7 @@ describe('Release drafts (HTTP)', () => {
 
   it('documents draft deletion and its failure responses in Swagger', () => {
     const document = SwaggerModule.createDocument(app, new DocumentBuilder().build())
-    const operation = document.paths['/api/v1/releases/{id}']?.delete
+    const operation = document.paths['/api/v1/artists/me/releases/{id}']?.delete
     expect(operation?.responses).toHaveProperty('204')
     expect(operation?.responses).toHaveProperty('404')
     expect(operation?.responses).toHaveProperty('409')
@@ -815,8 +819,10 @@ describe('Release drafts (HTTP)', () => {
 
   it('documents the edit version and conflict response without exposing ownership or status input', () => {
     const document = SwaggerModule.createDocument(app, new DocumentBuilder().build())
-    expect(document.paths['/api/v1/releases/{id}']?.get?.responses).toHaveProperty('200')
-    expect(document.paths['/api/v1/releases/{id}']?.patch?.responses).toHaveProperty('409')
+    expect(document.paths['/api/v1/artists/me/releases/{id}']?.get?.responses).toHaveProperty('200')
+    expect(document.paths['/api/v1/artists/me/releases/{id}']?.patch?.responses).toHaveProperty(
+      '409',
+    )
     expect(document.components?.schemas?.UpdateReleaseDto).toMatchObject({
       required: ['expectedUpdatedAt'],
       properties: { title: { maxLength: 255 }, expectedUpdatedAt: { type: 'string' } },
@@ -833,7 +839,7 @@ describe('Release drafts (HTTP)', () => {
     prismaMock.artistTrackDraft.count.mockResolvedValue(0)
     await request(app.getHttpServer())
       .get(
-        '/api/v1/artist-music/tracks?search=night&status=READY&type=ORIGINAL&sort=title&page=2&limit=6',
+        '/api/v1/artists/me/music/tracks?search=night&status=READY&type=ORIGINAL&sort=title&page=2&limit=6',
       )
       .set('x-test-artist', ownerId)
       .expect(200)
@@ -890,7 +896,7 @@ describe('Release drafts (HTTP)', () => {
     prismaMock.artistTrackDraft.count.mockResolvedValue(3)
 
     const response = await request(app.getHttpServer())
-      .get('/api/v1/artist-music/tracks')
+      .get('/api/v1/artists/me/music/tracks')
       .set('x-test-artist', ownerId)
       .expect(200)
 
@@ -905,7 +911,7 @@ describe('Release drafts (HTTP)', () => {
     prismaMock.artistTrackDraft.count.mockResolvedValue(6)
     prismaMock.release.count.mockResolvedValue(3)
     const response = await request(app.getHttpServer())
-      .get('/api/v1/artist-music/counts')
+      .get('/api/v1/artists/me/music/counts')
       .set('x-test-artist', otherOwnerId)
       .expect(200)
     expect(response.body).toEqual({ tracks: 6, releases: 3 })
@@ -919,7 +925,7 @@ describe('Release drafts (HTTP)', () => {
     prismaMock.release.findMany.mockResolvedValue([])
     prismaMock.release.count.mockResolvedValue(0)
     await request(app.getHttpServer())
-      .get('/api/v1/artist-music/releases?type=EP&status=DRAFT&sort=oldest')
+      .get('/api/v1/artists/me/music/releases?type=EP&status=DRAFT&sort=oldest')
       .set('x-test-artist', ownerId)
       .expect(200)
     expect(prismaMock.release.findMany).toHaveBeenCalledWith(
@@ -940,7 +946,7 @@ describe('Release drafts (HTTP)', () => {
     `search=${'x'.repeat(101)}`,
   ])('rejects invalid Music track filters: %s', async (query) => {
     await request(app.getHttpServer())
-      .get(`/api/v1/artist-music/tracks?${query}`)
+      .get(`/api/v1/artists/me/music/tracks?${query}`)
       .set('x-test-artist', ownerId)
       .expect(400)
     expect(prismaMock.artistTrackDraft.findMany).not.toHaveBeenCalled()
@@ -950,7 +956,7 @@ describe('Release drafts (HTTP)', () => {
     const document = SwaggerModule.createDocument(app, new DocumentBuilder().build())
     expect(document).toMatchObject({
       paths: {
-        '/api/v1/releases': {
+        '/api/v1/artists/me/releases': {
           post: {
             requestBody: {
               content: {
@@ -1000,7 +1006,7 @@ describe('Release drafts (HTTP)', () => {
     transactionMock.release.create.mockResolvedValue(draft)
     transactionMock.releaseContributor.create.mockResolvedValue(soloCredit)
     const response = await request(app.getHttpServer())
-      .post('/api/v1/releases')
+      .post('/api/v1/artists/me/releases')
       .set('x-test-artist', ownerId)
       .send({ title: '  First release  ' })
 
@@ -1022,10 +1028,10 @@ describe('Release drafts (HTTP)', () => {
 
   it('requires an artist session for both creating and listing drafts', async () => {
     await request(app.getHttpServer())
-      .post('/api/v1/releases')
+      .post('/api/v1/artists/me/releases')
       .send({ title: draft.title })
       .expect(401)
-    await request(app.getHttpServer()).get('/api/v1/releases').expect(401)
+    await request(app.getHttpServer()).get('/api/v1/artists/me/releases').expect(401)
     expect(transactionMock.release.create).not.toHaveBeenCalled()
     expect(prismaMock.release.findMany).not.toHaveBeenCalled()
   })
@@ -1040,7 +1046,7 @@ describe('Release drafts (HTTP)', () => {
     { title: draft.title, status: 'RELEASED' },
   ])('rejects invalid or server-controlled fields: %j', async (body) => {
     await request(app.getHttpServer())
-      .post('/api/v1/releases')
+      .post('/api/v1/artists/me/releases')
       .set('x-test-artist', ownerId)
       .send(body)
       .expect(400)
@@ -1051,7 +1057,7 @@ describe('Release drafts (HTTP)', () => {
     transactionMock.release.create.mockResolvedValue({ ...draft, type: 'EP' })
     transactionMock.releaseContributor.create.mockResolvedValue(soloCredit)
     await request(app.getHttpServer())
-      .post('/api/v1/releases')
+      .post('/api/v1/artists/me/releases')
       .set('x-test-artist', ownerId)
       .send({ title: draft.title, type: 'EP' })
       .expect(201)
@@ -1088,7 +1094,7 @@ describe('Release drafts (HTTP)', () => {
     )
 
     const response = await request(app.getHttpServer())
-      .get('/api/v1/releases')
+      .get('/api/v1/artists/me/releases')
       .set('x-test-artist', ownerId)
       .expect(200)
     expect(response.body).toMatchObject({ data: [{ id: draft.id }], total: 1, page: 1, limit: 20 })
@@ -1096,7 +1102,7 @@ describe('Release drafts (HTTP)', () => {
     expect(response.headers['cache-control']).toBe('private, no-store')
 
     const otherResponse = await request(app.getHttpServer())
-      .get('/api/v1/releases')
+      .get('/api/v1/artists/me/releases')
       .set('x-test-artist', otherOwnerId)
       .expect(200)
     expect(otherResponse.body.data).toHaveLength(1)
@@ -1108,7 +1114,7 @@ describe('Release drafts (HTTP)', () => {
     prismaMock.release.findMany.mockResolvedValue([])
     prismaMock.release.count.mockResolvedValue(0)
     const response = await request(app.getHttpServer())
-      .get('/api/v1/releases')
+      .get('/api/v1/artists/me/releases')
       .set('x-test-artist', ownerId)
       .expect(200)
     expect(response.body).toEqual({ data: [], total: 0, page: 1, limit: 20 })
@@ -1118,7 +1124,7 @@ describe('Release drafts (HTTP)', () => {
     prismaMock.release.findMany.mockResolvedValue([])
     prismaMock.release.count.mockResolvedValue(0)
     const response = await request(app.getHttpServer())
-      .get('/api/v1/releases?page=2&limit=5')
+      .get('/api/v1/artists/me/releases?page=2&limit=5')
       .set('x-test-artist', ownerId)
       .expect(200)
     expect(response.body).toMatchObject({ page: 2, limit: 5 })
@@ -1135,7 +1141,7 @@ describe('Release drafts (HTTP)', () => {
     'rejects invalid or unsupported query fields: %s',
     async (query) => {
       await request(app.getHttpServer())
-        .get(`/api/v1/releases?${query}`)
+        .get(`/api/v1/artists/me/releases?${query}`)
         .set('x-test-artist', ownerId)
         .expect(400)
       expect(prismaMock.release.findMany).not.toHaveBeenCalled()
@@ -1146,7 +1152,7 @@ describe('Release drafts (HTTP)', () => {
   it('propagates persistence failures instead of reporting a saved draft', async () => {
     transactionMock.release.create.mockRejectedValue(new Error('Database unavailable'))
     await request(app.getHttpServer())
-      .post('/api/v1/releases')
+      .post('/api/v1/artists/me/releases')
       .set('x-test-artist', ownerId)
       .send({ title: draft.title })
       .expect(500)

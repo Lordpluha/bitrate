@@ -510,7 +510,7 @@ const ROUTES = [
   ],
   [
     'GET',
-    /^\/api\/v1\/artists\/me\/following$/,
+    /^\/api\/v1\/users\/me\/following\/artists$/,
     () => page(ARTISTS.slice(0, 3).map(artist)),
   ],
   [
