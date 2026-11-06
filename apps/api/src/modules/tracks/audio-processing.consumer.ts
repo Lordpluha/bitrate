@@ -298,14 +298,38 @@ export class AudioProcessingConsumer extends WorkerHost implements OnModuleInit 
     }
   }
 
-  /** After the final attempt: marks the track FAILED and dead-letters the job. */
+  /**
+   * Once BullMQ has failed the job for good: marks the track FAILED and dead-letters the job.
+   *
+   * "For good" is `finishedOn`, which BullMQ sets only when it moves the job to the failed set
+   * with no retry to follow -- not `attemptsMade >= attempts`. A job that stalled past
+   * `maxStalledCount` (its process was killed mid-transcode three times, e.g. by deploys) is
+   * failed as unrecoverable after a single counted attempt; the attempt count missed it, and
+   * the track stayed PROCESSING forever.
+   *
+   * Never rejects: Nest binds this as a bare event listener, so a thrown database or Redis
+   * error would be an unhandled rejection that nothing retries. It is reported instead, and
+   * the stuck-track sweep fails the track later if this left it PROCESSING.
+   */
   @OnWorkerEvent('failed')
   async onFailed(job: Job<ConvertAudioJob> | undefined, error: Error) {
     if (job?.name !== 'convert-audio') return
+    if (!job.finishedOn) return
 
-    const maxAttempts = job.opts.attempts ?? 1
-    if (job.attemptsMade < maxAttempts) return
+    try {
+      await this.settlePermanentFailure(job, error)
+    } catch (settleError) {
+      const message = `Could not settle permanently failed job ${job.id} for track ${job.data.trackId}`
+      this.logger.error(message, settleError instanceof Error ? settleError.stack : undefined)
+      Sentry.captureException(settleError, {
+        tags: { trackId: job.data.trackId, jobId: String(job.id) },
+        fingerprint: ['audio-processing', 'SETTLE_FAILED'],
+      })
+    }
+  }
 
+  /** Marks the track FAILED, dead-letters the job and settles its release, in that order. */
+  private async settlePermanentFailure(job: Job<ConvertAudioJob>, error: Error) {
     const jobId = String(job.id)
     const attempt = job.attemptsMade
     const deadLetterJobId = `failed-${jobId}-${job.attemptsMade}`

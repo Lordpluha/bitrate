@@ -123,6 +123,7 @@ Per-app файлы до контейнера тоже не доходят: ни 
 | `JWT_REFRESH_EXPIRES_IN` | аутентификация | `30d` | Срок жизни refresh token |
 | `S3_REGION` | файлы | `us-east-1` | Регион S3 |
 | `S3_FORCE_PATH_STYLE` | файлы | `true` | Path-style адресация бакета |
+| `S3_SOCKET_TIMEOUT_MS` | файлы | `0` | Закрывает сокет хранилища, по которому столько мс не шли байты; `0` — выключено. Включается только у transcode worker: у API воспроизведение на паузе законно держит сокет без трафика |
 | `SMTP_PORT` | почта | `587` | SMTP-порт |
 | `HEALTH_CHECK_TIMEOUT_MS` | наблюдаемость | `2000` | Таймаут health-проверок (100–10000) |
 | `DEV_MAIL_LOG_TOKENS` | разработка | `false` | Логировать токены писем. В production обязан быть `false` |
@@ -343,6 +344,7 @@ JWT_REFRESH_EXPIRES_IN=30d
 # files
 S3_REGION=us-east-1
 S3_FORCE_PATH_STYLE=true
+S3_SOCKET_TIMEOUT_MS=0
 # mail
 SMTP_PORT=587
 # observability

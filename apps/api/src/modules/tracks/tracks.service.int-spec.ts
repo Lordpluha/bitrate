@@ -17,6 +17,8 @@ import { TracksService } from './tracks.service'
 const makeQueueMock = () =>
   ({
     add: jest.fn(),
+    // No job under the id yet: the common case for a first enqueue.
+    getJob: jest.fn().mockResolvedValue(undefined as never),
   }) as unknown as jest.Mocked<Queue>
 
 const makeConfigMock = () =>

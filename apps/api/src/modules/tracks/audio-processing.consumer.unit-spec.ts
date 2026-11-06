@@ -360,6 +360,7 @@ describe('AudioProcessingConsumer', () => {
     const job = buildJob('convert-audio', jobData, {
       attemptsMade: 5,
       opts: { attempts: 5 },
+      finishedOn: Date.now(),
     })
     recorder.finalize.mockResolvedValueOnce('CMAF_ENCODE' as never)
 
@@ -397,11 +398,68 @@ describe('AudioProcessingConsumer', () => {
     )
   })
 
+  it('marks the track failed when BullMQ fails the job for good before attempts run out', async () => {
+    // Exceeding maxStalledCount fails the job as unrecoverable after a single counted
+    // attempt: no retry follows, so this is final even though attemptsMade < attempts.
+    const job = buildJob('convert-audio', jobData, {
+      attemptsMade: 1,
+      opts: { attempts: 5 },
+      finishedOn: Date.now(),
+    })
+    const error = new Error('job stalled more than allowable limit')
+    error.name = 'UnrecoverableError'
+
+    await consumer.onFailed(job as never, error)
+
+    expect(prisma.track.updateMany).toHaveBeenCalledWith({
+      where: { id: 'track-1', audioUrl: 'track.mp3' },
+      data: expect.objectContaining({ processingStatus: 'FAILED' }),
+    })
+    expect(deadLetterQueue.add).toHaveBeenCalledWith(
+      'convert-audio-failed',
+      jobData,
+      expect.objectContaining({ jobId: 'failed-job-1-1' }),
+    )
+    expect(recorder.finalize).toHaveBeenCalledWith(
+      expect.objectContaining({ trackId: 'track-1', attempt: 1 }),
+    )
+  })
+
+  it('leaves the track processing while BullMQ will retry the job', async () => {
+    const job = buildJob('convert-audio', jobData, {
+      attemptsMade: 2,
+      opts: { attempts: 5 },
+    })
+
+    await consumer.onFailed(job as never, new Error('transient failure'))
+
+    expect(prisma.track.updateMany).not.toHaveBeenCalled()
+    expect(deadLetterQueue.add).not.toHaveBeenCalled()
+  })
+
+  it('logs instead of rejecting when settling a failed job throws', async () => {
+    prisma.track.updateMany.mockRejectedValue(new Error('database unavailable') as never)
+    const job = buildJob('convert-audio', jobData, {
+      attemptsMade: 5,
+      opts: { attempts: 5 },
+      finishedOn: Date.now(),
+    })
+
+    await expect(consumer.onFailed(job as never, new Error('permanent failure'))).resolves.toBe(
+      undefined,
+    )
+    expect(Sentry.captureException).toHaveBeenCalledWith(
+      expect.objectContaining({ message: 'database unavailable' }),
+      expect.anything(),
+    )
+  })
+
   it('does not mark a newer upload failed when an old job exhausts retries', async () => {
     prisma.track.updateMany.mockResolvedValue({ count: 0 } as never)
     const job = buildJob('convert-audio', jobData, {
       attemptsMade: 5,
       opts: { attempts: 5 },
+      finishedOn: Date.now(),
     })
 
     await consumer.onFailed(job as never, new Error('old upload failed'))

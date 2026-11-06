@@ -5,6 +5,23 @@ import { z } from 'zod'
 export const AUDIO_PROCESSING_QUEUE = 'audio-processing'
 export const AUDIO_PROCESSING_DEAD_LETTER_QUEUE = 'audio-processing-dead-letter'
 
+/**
+ * BullMQ job id of one track's conversion of one source file. Deterministic on purpose: a
+ * double-submitted upload maps to the job already queued instead of converting twice.
+ */
+export function audioConversionJobId(trackId: string, sourceFileName: string): string {
+  return `convert-audio-${trackId}-${sourceFileName}`
+}
+
+/** Job states in which a conversion is still going to run; anything else is finished or gone. */
+export const LIVE_AUDIO_JOB_STATES: ReadonlySet<string> = new Set([
+  'waiting',
+  'active',
+  'delayed',
+  'prioritized',
+  'waiting-children',
+])
+
 /** Retry and retention policy for audio conversion jobs. */
 export const AUDIO_PROCESSING_JOB_OPTIONS = {
   attempts: 5,

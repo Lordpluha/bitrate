@@ -6,6 +6,7 @@ import {
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals'
 import { LISTENING_STATS_QUEUE } from '@modules/history/listening-stats.consumer'
 import { NOTIFICATIONS_QUEUE } from '@modules/notifications'
+import { STUCK_TRACKS_QUEUE } from '@modules/tracks/stuck-tracks.consumer'
 import { getQueueToken } from '@nestjs/bullmq'
 import type { TestingModule } from '@nestjs/testing'
 import { Test } from '@nestjs/testing'
@@ -72,6 +73,8 @@ describe('AppModule DI graph (boot smoke)', () => {
       .overrideProvider(getQueueToken(LISTENING_STATS_QUEUE))
       .useValue(makeQueueMock())
       .overrideProvider(getQueueToken(NOTIFICATIONS_QUEUE))
+      .useValue(makeQueueMock())
+      .overrideProvider(getQueueToken(STUCK_TRACKS_QUEUE))
       .useValue(makeQueueMock())
       .compile()
 

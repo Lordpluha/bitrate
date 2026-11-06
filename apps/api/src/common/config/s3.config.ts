@@ -9,4 +9,6 @@ export const s3Config = registerAs('s3', () => ({
   secretKey: process.env.S3_SECRET_KEY as string,
   publicUrl: process.env.S3_PUBLIC_URL,
   forcePathStyle: process.env.S3_FORCE_PATH_STYLE === 'true',
+  /** Idle-socket limit in ms; 0 (the default) disables it. See S3_SOCKET_TIMEOUT_MS. */
+  socketTimeoutMs: Number(process.env.S3_SOCKET_TIMEOUT_MS ?? 0) || 0,
 }))
