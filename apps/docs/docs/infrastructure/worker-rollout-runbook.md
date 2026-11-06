@@ -1,14 +1,18 @@
 # Transcode worker rollout and rollback runbook
 
 Staged production rollout of the standalone transcode worker (ADR-0049, epic #206, issue #211).
-Until the last switch is flipped, the `api` container keeps consuming the `audio-processing`
-queue itself, so merging the code changes nothing in production by itself.
+
+**Status: completed.** The compose default for `api` is now `false`, so the worker is the only
+consumer. `api` consuming as well lost jobs on every deploy: it is stopped within Docker's 10 s
+default, mid-transcode, and three such stalls fail a job for good. The steps below stay as the
+record of the cutover and as the procedure for draining the queue through `api` while the worker
+is down.
 
 All commands run on the server from `~/bitrate` and use `task` (see
 [Deployment](./deployment.md)). The one switch is the GitHub **environment variable**
 `AUDIO_PROCESSING_WORKER_ENABLED` of the `production` environment (a variable, not a secret). The
 deploy workflow renders it into the server's `.env` when set; when it is unset, the compose
-default `true` applies to `api`. The `worker` service always forces it to `true`.
+default `false` applies to `api`. The `worker` service always forces it to `true`.
 
 ## 1. Prerequisites
 
@@ -116,14 +120,15 @@ Docker healthcheck (after three failed 30 s probes) and, where Prometheus scrape
 docker compose --env-file .env -f infra/docker-compose.prod.yaml restart worker
 ```
 
-The 300 s `stop_grace_period` lets a healthy-but-slow job finish; for a truly hung process,
+The 660 s `stop_grace_period` (longer than the 600 s ffmpeg timeout) lets a healthy-but-slow job
+finish; for a truly hung process,
 Docker sends SIGKILL after the grace period and BullMQ retries the job. Automatic recovery
 (a watchdog such as autoheal) is left to the owner (ADR-0049).
 
 ## Rollback
 
-Set `AUDIO_PROCESSING_WORKER_ENABLED` back to `true`, or delete the variable, and re-run the
-deploy workflow. `api` consumes the queue again; the worker may stay up (both consumers is the
+Set the `AUDIO_PROCESSING_WORKER_ENABLED` variable to `true` and re-run the deploy workflow
+(deleting it now means the `false` default). `api` consumes the queue again; the worker may stay up (both consumers is the
 safe state from step 2). Queued jobs are not lost: they sit in Redis until a consumer takes them.
 
 There is no storage rollback: the local storage driver and the `api_storage` volume are removed
