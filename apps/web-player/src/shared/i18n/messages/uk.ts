@@ -148,6 +148,9 @@ export const uk = {
   'playlist.noTracksFound': 'Треків не знайдено.',
   'playlist.search': 'Пошук пісень',
   'search.browseAll': 'Переглянути все',
+  'search.browseEmptyDescription':
+    'Жанри й настрої скоро з’являться тут. А поки шукайте трек, виконавця чи альбом угорі.',
+  'search.browseEmptyTitle': 'Тут поки нічого переглядати',
   'search.genre': 'Жанр',
   'search.placeholder': 'Що хочете послухати?',
   'search.recent': 'Нещодавні пошуки',

@@ -146,6 +146,9 @@ export const pl = {
   'playlist.noTracksFound': 'Nie znaleziono utworów.',
   'playlist.search': 'Szukaj utworów',
   'search.browseAll': 'Przeglądaj wszystko',
+  'search.browseEmptyDescription':
+    'Gatunki i nastroje wkrótce pojawią się tutaj. Do tego czasu wyszukaj utwór, artystę lub album powyżej.',
+  'search.browseEmptyTitle': 'Na razie nie ma czego przeglądać',
   'search.genre': 'Gatunek',
   'search.placeholder': 'Czego chcesz posłuchać?',
   'search.recent': 'Ostatnie wyszukiwania',
