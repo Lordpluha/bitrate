@@ -5,7 +5,6 @@ import type { UserEntity } from '@modules/users/entities'
 import { CurrentUser } from '@modules/users-auth/decorators/current-user.decorator'
 import { UserAuth } from '@modules/users-auth/users-auth.guard'
 import {
-  Body,
   Controller,
   Delete,
   Get,
@@ -14,11 +13,9 @@ import {
   ParseIntPipe,
   ParseUUIDPipe,
   Post,
-  Put,
   Query,
 } from '@nestjs/common'
 import { ApiExtraModels, ApiTags } from '@nestjs/swagger'
-import { ZodValidationPipe } from 'nestjs-zod'
 import { ArtistsService } from './artists.service'
 import {
   DeleteArtistSwagger,
@@ -28,12 +25,8 @@ import {
   GetArtistPlaylistsSwagger,
   GetArtistsSwagger,
   GetArtistTopTracksSwagger,
-  GetFollowingSwagger,
   UnfollowArtistSwagger,
-  UpdateArtistSwagger,
 } from './decorators'
-import type { UpdateArtistDto } from './dtos'
-import { UpdateArtistSchema } from './dtos'
 import { ArtistEntity, SafeArtistEntity } from './entities'
 
 /** Represents the artists controller. */
@@ -96,40 +89,12 @@ export class ArtistsController {
     return this.artistsService.findByUsername(username)
   }
 
-  /** Runs the update profile operation. */
-  @UpdateArtistSwagger()
-  @ArtistAuth()
-  @Put(':id')
-  updateProfile(
-    @CurrentArtist() artist: ArtistEntity,
-    @Param('id', ParseUUIDPipe) id: ArtistEntity['id'],
-    @Body(new ZodValidationPipe(UpdateArtistSchema)) input: UpdateArtistDto,
-  ) {
-    return this.artistsService.update(id, input, artist.id)
-  }
-
-  /** Runs the delete profile operation. */
+  /** Deletes the signed-in artist's account; the id comes only from the session (ADR-0070). */
   @DeleteArtistSwagger()
   @ArtistAuth()
-  @Delete(':id')
-  deleteProfile(
-    @CurrentArtist() artist: ArtistEntity,
-    @Param('id', ParseUUIDPipe) id: ArtistEntity['id'],
-  ) {
-    const artistId = artist.id
-    return this.artistsService.requestDelete(id, artistId)
-  }
-
-  /** Runs the get following operation. */
-  @GetFollowingSwagger()
-  @UserAuth()
-  @Get('me/following')
-  getFollowing(
-    @CurrentUser() user: UserEntity,
-    @Query('page', new ParseIntPipe({ optional: true })) page?: number,
-    @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
-  ) {
-    return this.artistsService.getFollowing(user.id, page, limit)
+  @Delete('me')
+  deleteProfile(@CurrentArtist() artist: ArtistEntity) {
+    return this.artistsService.requestDelete(artist.id)
   }
 
   /** Runs the follow operation. */

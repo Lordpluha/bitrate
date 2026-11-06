@@ -5,9 +5,10 @@ import { TokensModule } from '@modules/tokens/tokens.module'
 import { Module } from '@nestjs/common'
 import { ArtistsController } from './artists.controller'
 import { ArtistsService } from './artists.service'
+import { FollowedArtistsController } from './followed-artists.controller'
 
 @Module({
-  controllers: [ArtistsController],
+  controllers: [ArtistsController, FollowedArtistsController],
   providers: [ArtistsService, ArtistsPrivateService],
   imports: [PrismaModule, CacheModule, TokensModule],
   exports: [ArtistsService, ArtistsPrivateService],

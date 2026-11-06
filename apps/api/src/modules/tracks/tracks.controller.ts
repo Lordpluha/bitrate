@@ -1,12 +1,8 @@
 import { pipeToResponse } from '@common/utils/stream'
-import type { ArtistEntity } from '@modules/artists/entities'
-import { ArtistAuth } from '@modules/artists-auth/artists-auth.guard'
-import { CurrentArtist } from '@modules/artists-auth/decorators/current-artist.decorator'
 import type { UserEntity } from '@modules/users/entities'
 import { CurrentUser } from '@modules/users-auth/decorators/current-user.decorator'
 import { UserAuth } from '@modules/users-auth/users-auth.guard'
 import {
-  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -17,11 +13,9 @@ import {
   ParseIntPipe,
   ParseUUIDPipe,
   Post,
-  Put,
   Query,
   Req,
   Res,
-  UploadedFiles,
 } from '@nestjs/common'
 import { ApiExtraModels, ApiTags } from '@nestjs/swagger'
 import { Throttle } from '@nestjs/throttler'
@@ -31,19 +25,11 @@ import {
   GetTrackByIdSwagger,
   LikeTrackSwagger,
   OpenPlaySessionSwagger,
-  PostTrackSwagger,
   StreamTrackRenditionSwagger,
   TracksGetAllSwagger,
   TracksGetLikedSwagger,
   UnlikeTrackSwagger,
-  UpdateTrackByIdSwagger,
 } from './decorators'
-import {
-  type CreateTrackDto,
-  CreateTrackSchema,
-  type UpdateTrackDto,
-  UpdateTrackSchema,
-} from './dtos/create-track.dto'
 import { type OpenPlaySessionDto, OpenPlaySessionSchema } from './dtos/open-play-session.dto'
 import {
   PlaySessionEntity,
@@ -54,12 +40,7 @@ import {
 import { PlaybackPacingError } from './playback-session.service'
 import { TrackPlaybackService } from './track-playback.service'
 import { UnsatisfiableRangeError } from './track-playback.types'
-import { TrackFilesInterceptor } from './track-upload.interceptor'
-import { TrackUploadService } from './track-upload.service'
 import { TracksService } from './tracks.service'
-
-/** The multipart parts accepted when creating or updating a track. */
-type TrackUploadFiles = { audio?: Express.Multer.File[]; cover?: Express.Multer.File[] }
 
 /** Rendition bytes never change, so they can be cached for a long time. */
 const IMMUTABLE_CACHE_CONTROL = 'private, max-age=31536000, immutable, no-transform'
@@ -97,14 +78,13 @@ function sendRangeStream(
   pipeToResponse(data.stream, res, logger, 'Audio')
 }
 
-/** Track catalogue, uploads, likes and audio delivery. */
+/** Track catalogue, likes and audio delivery. */
 @ApiExtraModels(TrackEntity, TrackManifestEntity, TrackManifestRenditionEntity, PlaySessionEntity)
 @ApiTags('Tracks')
 @Controller({ path: 'tracks', version: '1' })
 export class TracksController {
   constructor(
     private tracksService: TracksService,
-    private trackUploadService: TrackUploadService,
     private trackPlaybackService: TrackPlaybackService,
   ) {}
 
@@ -117,46 +97,6 @@ export class TracksController {
     @Query('artistId', new ParseUUIDPipe({ optional: true })) artistId?: string,
   ) {
     return this.tracksService.findAll({ artistId, limit, page, title })
-  }
-
-  @PostTrackSwagger()
-  @ArtistAuth()
-  @Post('')
-  @TrackFilesInterceptor()
-  async postTrack(
-    @CurrentArtist() artist: ArtistEntity,
-    @Body(new ZodValidationPipe(CreateTrackSchema))
-    createTrackDto: CreateTrackDto,
-    @UploadedFiles() files: TrackUploadFiles,
-  ) {
-    const audioFile = files?.audio?.[0]
-    const coverFile = files?.cover?.[0]
-
-    if (!audioFile) {
-      throw new BadRequestException('Audio file is required')
-    }
-
-    return await this.trackUploadService.create(artist.id, createTrackDto, audioFile, coverFile)
-  }
-
-  @UpdateTrackByIdSwagger()
-  @ArtistAuth()
-  @Put(':id')
-  @TrackFilesInterceptor()
-  putTrack(
-    @CurrentArtist() artist: ArtistEntity,
-    @Param('id', ParseUUIDPipe) id: TrackEntity['id'],
-    @Body(new ZodValidationPipe(UpdateTrackSchema))
-    updateTrackDto: UpdateTrackDto,
-    @UploadedFiles() files: TrackUploadFiles,
-  ) {
-    return this.trackUploadService.update(
-      artist.id,
-      id,
-      updateTrackDto,
-      files?.audio?.[0],
-      files?.cover?.[0],
-    )
   }
 
   @TracksGetLikedSwagger()

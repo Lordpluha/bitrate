@@ -42,7 +42,7 @@ const IMAGE_KINDS = { avatar: 'avatar', background: 'background' } as const
 
 /** The signed-in artist's own profile; the public artist routes stay read-oriented. */
 @ApiTags('Artist profile')
-@Controller({ path: 'artist-profile', version: '1' })
+@Controller({ path: 'artists/me/profile', version: '1' })
 export class ArtistProfileController {
   constructor(private readonly profile: ArtistProfileService) {}
 

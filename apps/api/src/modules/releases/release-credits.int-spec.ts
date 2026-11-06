@@ -51,7 +51,7 @@ describe('Release credits (HTTP)', () => {
       transactionMock.release.create.mockResolvedValue(draft)
       transactionMock.releaseContributor.create.mockResolvedValue(soloCredit)
       const response = await request(app.getHttpServer())
-        .post('/api/v1/releases')
+        .post('/api/v1/artists/me/releases')
         .set('x-test-artist', ownerId)
         .send({ title: draft.title })
         .expect(201)
@@ -68,7 +68,7 @@ describe('Release credits (HTTP)', () => {
   })
 
   describe('POST /releases/:id/contributors/self', () => {
-    const url = `/api/v1/releases/${draft.id}/contributors/self`
+    const url = `/api/v1/artists/me/releases/${draft.id}/contributors/self`
 
     it('credits the artist alone on a draft without credits', async () => {
       transactionMock.releaseContributor.count.mockResolvedValue(0)
@@ -115,7 +115,7 @@ describe('Release credits (HTTP)', () => {
   })
 
   describe('DELETE /releases/:id/contributors/:contributorId', () => {
-    const url = `/api/v1/releases/${draft.id}/contributors/${creditId}`
+    const url = `/api/v1/artists/me/releases/${draft.id}/contributors/${creditId}`
 
     it('removes the credit and clears both rights confirmations', async () => {
       transactionMock.releaseContributor.deleteMany.mockResolvedValue({ count: 1 })
@@ -169,7 +169,7 @@ describe('Release credits (HTTP)', () => {
         .send({})
         .expect(400)
       await request(app.getHttpServer())
-        .delete(`/api/v1/releases/${draft.id}/contributors/not-a-uuid`)
+        .delete(`/api/v1/artists/me/releases/${draft.id}/contributors/not-a-uuid`)
         .set('x-test-artist', ownerId)
         .send({ expectedUpdatedAt: version })
         .expect(400)

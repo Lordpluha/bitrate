@@ -9,7 +9,7 @@ import { ArtistSearchSwagger } from './decorators'
 import { type ArtistSearchDto, ArtistSearchSchema } from './dtos/artist-search.dto'
 
 @ApiTags('Releases')
-@Controller({ path: 'artist-search', version: '1' })
+@Controller({ path: 'artists/me/search', version: '1' })
 export class ArtistSearchController {
   constructor(private readonly searchService: ArtistSearchService) {}
 

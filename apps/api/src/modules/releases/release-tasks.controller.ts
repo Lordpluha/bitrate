@@ -36,7 +36,7 @@ import {
 import { ReleaseTasksService } from './release-tasks.service'
 
 @ApiTags('Releases')
-@Controller({ path: 'releases', version: '1' })
+@Controller({ path: 'artists/me/releases', version: '1' })
 export class ReleaseTasksController {
   constructor(private readonly tasks: ReleaseTasksService) {}
 
@@ -90,7 +90,7 @@ export class ReleaseTasksController {
 
 /** The artist-wide task list behind the dashboard's Tasks page. */
 @ApiTags('Releases')
-@Controller({ path: 'release-tasks', version: '1' })
+@Controller({ path: 'artists/me/tasks', version: '1' })
 export class ArtistTasksController {
   constructor(private readonly tasks: ReleaseTasksService) {}
 

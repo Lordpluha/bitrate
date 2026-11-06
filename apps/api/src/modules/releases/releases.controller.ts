@@ -75,7 +75,7 @@ import { ReleasesService } from './releases.service'
 
 @ApiTags('Releases')
 @ApiExtraModels(ReleaseEntity, ReleaseBlockerEntity)
-@Controller({ path: 'releases', version: '1' })
+@Controller({ path: 'artists/me/releases', version: '1' })
 export class ReleasesController {
   constructor(
     private readonly releases: ReleasesService,

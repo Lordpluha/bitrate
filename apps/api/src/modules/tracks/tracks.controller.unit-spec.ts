@@ -1,13 +1,10 @@
 import { PassThrough, Readable } from 'node:stream'
 import { finished } from 'node:stream/promises'
 import { beforeEach, describe, expect, it, jest } from '@jest/globals'
-import { buildArtist } from '@modules/artists/__tests__/fixtures/artists.fixtures'
 import { buildUser } from '@modules/users/__tests__/fixtures/users.fixtures'
-import { BadRequestException } from '@nestjs/common'
-import { buildAudioFile, buildTrack } from './__tests__/fixtures/tracks.fixtures'
+import { buildTrack } from './__tests__/fixtures/tracks.fixtures'
 import { PlaybackPacingError } from './playback-session.service'
 import type { TrackPlaybackService } from './track-playback.service'
-import type { TrackUploadService } from './track-upload.service'
 import { TracksController } from './tracks.controller'
 import type { TracksService } from './tracks.service'
 
@@ -19,12 +16,6 @@ const makeServiceMock = () =>
     like: jest.fn(),
     unlike: jest.fn(),
   }) as unknown as jest.Mocked<TracksService>
-
-const makeUploadServiceMock = () =>
-  ({
-    create: jest.fn(),
-    update: jest.fn(),
-  }) as unknown as jest.Mocked<TrackUploadService>
 
 /** A source whose first read fails, as a dropped storage connection does. */
 const failingStream = () =>
@@ -50,14 +41,12 @@ const makePlaybackServiceMock = () =>
 describe('TracksController', () => {
   let controller: TracksController
   let service: jest.Mocked<TracksService>
-  let uploadService: jest.Mocked<TrackUploadService>
   let playbackService: jest.Mocked<TrackPlaybackService>
 
   beforeEach(() => {
     service = makeServiceMock()
-    uploadService = makeUploadServiceMock()
     playbackService = makePlaybackServiceMock()
-    controller = new TracksController(service, uploadService, playbackService)
+    controller = new TracksController(service, playbackService)
   })
 
   it('getAll should delegate to service.findAll', () => {
@@ -157,49 +146,6 @@ describe('TracksController', () => {
 
     expect(res.status).toHaveBeenCalledWith(429)
     expect(res.set).toHaveBeenCalledWith({ 'Retry-After': '7' })
-  })
-
-  it('postTrack should throw BadRequestException when audio file is missing', async () => {
-    const artist = buildArtist({ id: 'artist-1' })
-
-    await expect(controller.postTrack(artist, { title: 'T' } as never, {})).rejects.toThrow(
-      BadRequestException,
-    )
-  })
-
-  it('postTrack should call uploadService.create when audio file is present', async () => {
-    const track = buildTrack()
-    uploadService.create.mockResolvedValue(track as never)
-    const artist = buildArtist({ id: 'artist-1' })
-    const audioFile = buildAudioFile()
-    const files = { audio: [audioFile] }
-
-    const result = await controller.postTrack(artist, { title: 'T' } as never, files)
-
-    expect(uploadService.create).toHaveBeenCalledWith(
-      'artist-1',
-      { title: 'T' } as never,
-      audioFile,
-      undefined,
-    )
-    expect(result).toBe(track)
-  })
-
-  it('putTrack should call uploadService.update', async () => {
-    const track = buildTrack()
-    uploadService.update.mockResolvedValue(track as never)
-
-    const artist = buildArtist({ id: 'artist-1' })
-    const result = await controller.putTrack(artist, 'track-1', { title: 'Updated' } as never, {})
-
-    expect(uploadService.update).toHaveBeenCalledWith(
-      'artist-1',
-      'track-1',
-      { title: 'Updated' } as never,
-      undefined,
-      undefined,
-    )
-    expect(result).toBe(track)
   })
 
   it('getLikedTracks should call service.findLikedTracks with user id from request', () => {
