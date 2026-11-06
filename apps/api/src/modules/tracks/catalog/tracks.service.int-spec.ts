@@ -32,7 +32,7 @@ const makeConfigMock = () =>
  * `node:fs` mock does not provide. Its creation is covered in `audio-scratch.unit-spec.ts`.
  */
 jest.mock('../shared/audio-scratch', () => ({
-  ...jest.requireActual<typeof import('../shared/audio-scratch')>('./audio-scratch'),
+  ...jest.requireActual<typeof import('../shared/audio-scratch')>('../shared/audio-scratch'),
   getUploadTempDir: jest.fn().mockReturnValue('/tmp/bitrate-upload-test'),
 }))
 
