@@ -9,7 +9,9 @@ import { PrismaService } from '@infra/prisma/prisma.service'
 import {
   AUDIO_PROCESSING_JOB_OPTIONS,
   AUDIO_PROCESSING_QUEUE,
+  audioConversionJobId,
   type ConvertAudioJobInputProbe,
+  LIVE_AUDIO_JOB_STATES,
 } from '@infra/queues/audio-processing.queue'
 import {
   removePublicImage,
@@ -126,8 +128,9 @@ export class TrackUploadService {
     trigger,
     input,
   }: EnqueueConversionInput) {
-    const jobId = `convert-audio-${trackId}-${sourceFileName}`
+    const jobId = audioConversionJobId(trackId, sourceFileName)
     try {
+      await this.clearFinishedJob(jobId)
       await this.audioQueue.add(
         'convert-audio',
         {
@@ -153,6 +156,22 @@ export class TrackUploadService {
       await this.recorder.recordEnqueueFailure({ trackId, sourceFileName, jobId, trigger, error })
       throw error
     }
+  }
+
+  /**
+   * Removes a finished job that still holds this id, so the next `add` really queues one.
+   *
+   * The id is deterministic per source file, and BullMQ answers `add` for an id it still
+   * stores by returning the old job without queueing anything -- a failed job is kept for
+   * days. A reprocess or a release retry then flipped the track to PROCESSING with nothing
+   * queued, and it stayed there. A job that is still waiting or running is kept: it will
+   * convert the same source, and replacing it would only race it.
+   */
+  private async clearFinishedJob(jobId: string) {
+    const existing = await this.audioQueue.getJob(jobId)
+    if (!existing) return
+    if (LIVE_AUDIO_JOB_STATES.has(await existing.getState())) return
+    await existing.remove()
   }
 
   /** Uploads a Multer-written audio file to storage as the track's master, then removes the temp file. */

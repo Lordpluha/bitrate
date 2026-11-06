@@ -19,6 +19,8 @@ export const makeCacheMock = () =>
 export const makeQueueMock = () =>
   ({
     add: jest.fn(),
+    // No job under the id yet: the common case for a first enqueue.
+    getJob: jest.fn().mockResolvedValue(undefined as never),
   }) as unknown as jest.Mocked<Queue>
 
 /** Object storage that serves a fixed 2 KB Ogg body for any key. */

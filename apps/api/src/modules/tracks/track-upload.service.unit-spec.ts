@@ -464,6 +464,45 @@ describe('TrackUploadService', () => {
       expect(result).toBe(track)
     })
 
+    it('replaces a finished job under the same id, so the reprocess actually runs', async () => {
+      // BullMQ keeps a failed job for days and silently ignores add() with its id; the
+      // reprocess would otherwise flip the track to PROCESSING with nothing queued.
+      const track = buildTrack()
+      prisma.track.findFirst.mockResolvedValue(track as never)
+      prisma.track.update.mockResolvedValue(track as never)
+      const finished = {
+        getState: jest.fn().mockResolvedValue('failed' as never),
+        remove: jest.fn().mockResolvedValue(undefined as never),
+      }
+      queue.getJob.mockResolvedValue(finished as never)
+      queue.add.mockResolvedValue({} as never)
+
+      await service.reprocess(track.id)
+
+      expect(queue.getJob).toHaveBeenCalledWith(`convert-audio-${track.id}-${track.audioUrl}`)
+      expect(finished.remove).toHaveBeenCalledTimes(1)
+      expect(finished.remove.mock.invocationCallOrder[0]).toBeLessThan(
+        queue.add.mock.invocationCallOrder[0] ?? Number.POSITIVE_INFINITY,
+      )
+    })
+
+    it('keeps a job that is still queued or running instead of replacing it', async () => {
+      const track = buildTrack()
+      prisma.track.findFirst.mockResolvedValue(track as never)
+      prisma.track.update.mockResolvedValue(track as never)
+      const live = {
+        getState: jest.fn().mockResolvedValue('active' as never),
+        remove: jest.fn().mockResolvedValue(undefined as never),
+      }
+      queue.getJob.mockResolvedValue(live as never)
+      queue.add.mockResolvedValue({} as never)
+
+      await service.reprocess(track.id)
+
+      expect(live.remove).not.toHaveBeenCalled()
+      expect(queue.add).toHaveBeenCalledTimes(1)
+    })
+
     it('throws when the master is missing from storage', async () => {
       prisma.track.findFirst.mockResolvedValue(buildTrack() as never)
       storage.exists.mockResolvedValue(false as never)
