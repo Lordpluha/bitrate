@@ -315,6 +315,7 @@ describe('PlaylistsService', () => {
     mockInteractiveTransaction(prisma)
     prisma.playlist.findFirst.mockResolvedValue(playlist)
     prisma.track.count.mockResolvedValue(2)
+    prisma.playlistTrack.findMany.mockResolvedValue([])
     prisma.playlistTrack.findFirst.mockResolvedValue({ position: 3 } as never)
     prisma.playlistTrack.createMany.mockResolvedValue({ count: 2 })
     prisma.playlist.update.mockResolvedValue(playlist)
@@ -346,6 +347,63 @@ describe('PlaylistsService', () => {
         },
       ],
     })
+  })
+
+  it('addTracks skips tracks the playlist already has', async () => {
+    const playlist = buildPlaylistWithTracks({ userId: 'user-1' })
+    mockInteractiveTransaction(prisma)
+    prisma.playlist.findFirst.mockResolvedValue(playlist)
+    prisma.track.count.mockResolvedValue(2)
+    prisma.playlistTrack.findMany.mockResolvedValue([
+      { trackId: '00000000-0000-0000-0000-000000000001' },
+    ] as never)
+    prisma.playlistTrack.findFirst.mockResolvedValue({ position: 0 } as never)
+    prisma.playlistTrack.createMany.mockResolvedValue({ count: 1 })
+    prisma.playlist.update.mockResolvedValue(playlist)
+
+    await service.addTracks('user-1', 'playlist-1', {
+      trackIds: ['00000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000002'],
+    })
+
+    expect(prisma.playlistTrack.findMany).toHaveBeenCalledWith({
+      where: {
+        playlistId: 'playlist-1',
+        trackId: {
+          in: ['00000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000002'],
+        },
+      },
+      select: { trackId: true },
+    })
+    expect(prisma.playlistTrack.createMany).toHaveBeenCalledWith({
+      data: [
+        {
+          playlistId: 'playlist-1',
+          trackId: '00000000-0000-0000-0000-000000000002',
+          addedById: 'user-1',
+          position: 1,
+        },
+      ],
+    })
+  })
+
+  it('addTracks rejects a batch whose tracks are all in the playlist already', async () => {
+    const playlist = buildPlaylistWithTracks({ userId: 'user-1' })
+    mockInteractiveTransaction(prisma)
+    prisma.playlist.findFirst.mockResolvedValue(playlist)
+    prisma.track.count.mockResolvedValue(1)
+    prisma.playlistTrack.findMany.mockResolvedValue([
+      { trackId: '00000000-0000-0000-0000-000000000001' },
+    ] as never)
+
+    const request = service.addTracks('user-1', 'playlist-1', {
+      trackIds: ['00000000-0000-0000-0000-000000000001'],
+    })
+
+    await expect(request).rejects.toThrow(ConflictException)
+    await expect(request).rejects.toThrow('Track is already in this playlist')
+    expect(prisma.playlistTrack.createMany).not.toHaveBeenCalled()
+    expect(prisma.playlist.update).not.toHaveBeenCalled()
+    expect(cache.invalidate).not.toHaveBeenCalled()
   })
 
   it.each(['P2002', 'P2034'])(
