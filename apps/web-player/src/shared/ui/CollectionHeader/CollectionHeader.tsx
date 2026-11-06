@@ -2,9 +2,10 @@
 
 import { cn } from '@bitrate/ui-react'
 import { useImageColor } from '@shared/hooks/useImageColor'
+import { useI18n } from '@shared/i18n'
 import { BackButton } from '@shared/ui/BackButton'
 import { MediaImage } from '@shared/ui/MediaImage'
-import { ArrowLeft } from 'lucide-react'
+import { ChevronLeft } from 'lucide-react'
 import type { CSSProperties, ReactNode } from 'react'
 
 type CollectionHeaderProps = {
@@ -41,6 +42,7 @@ export const CollectionHeader = ({
   type,
   washColor,
 }: CollectionHeaderProps) => {
+  const { t } = useI18n()
   const [r, g, b] = useImageColor(coverUrl)
   const washStart = washColor ?? `rgb(${dim(r)}, ${dim(g)}, ${dim(b)})`
   const wash = {
@@ -55,8 +57,12 @@ export const CollectionHeader = ({
       )}
       style={wash}
     >
-      <BackButton className="absolute top-0 left-0 flex size-8 items-center justify-center rounded-full bg-black/40 transition-colors hover:bg-black/60 md:top-0.5 md:left-6 md:size-7">
-        <ArrowLeft aria-hidden="true" className="text-white" size={20} />
+      {/* Desktop moves Back into the top bar beside the logo; below `xl` the hero keeps it. */}
+      <BackButton
+        aria-label={t('common.back')}
+        className="absolute top-0 left-0 flex size-8 items-center justify-center rounded-full bg-background/70 text-foreground transition-colors hover:bg-background md:top-3 md:left-3 xl:hidden"
+      >
+        <ChevronLeft aria-hidden="true" size={20} />
       </BackButton>
 
       {coverUrl ? (

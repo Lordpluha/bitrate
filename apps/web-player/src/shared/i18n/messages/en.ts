@@ -233,6 +233,8 @@ export const en = {
   'charts.topSongs': 'Top songs',
   'charts.unavailable': 'Charts are unavailable',
   'common.back': 'Back',
+  'common.forward': 'Forward',
+  'common.history': 'History',
   'common.backToHome': 'Back to home',
   'common.durationHours': '{hours} hr {minutes} min',
   'common.durationMinutes': '{minutes} min',

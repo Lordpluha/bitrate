@@ -242,6 +242,8 @@ export const pl = {
   'charts.topSongs': 'Najpopularniejsze utwory',
   'charts.unavailable': 'Listy przebojów są niedostępne',
   'common.back': 'Wstecz',
+  'common.forward': 'Dalej',
+  'common.history': 'Historia',
   'common.backToHome': 'Wróć na stronę główną',
   'common.durationHours': '{hours} godz. {minutes} min',
   'common.durationMinutes': '{minutes} min',

@@ -242,6 +242,8 @@ export const uk = {
   'charts.topSongs': 'Топ пісень',
   'charts.unavailable': 'Чарти недоступні',
   'common.back': 'Назад',
+  'common.forward': 'Вперед',
+  'common.history': 'Історія',
   'common.backToHome': 'На головну',
   'common.durationHours': '{hours} год {minutes} хв',
   'common.durationMinutes': '{minutes} хв',
