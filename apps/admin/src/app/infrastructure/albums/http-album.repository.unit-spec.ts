@@ -4,7 +4,7 @@ import { TestBed } from '@angular/core/testing'
 import { AlbumRepository } from '@domain/album'
 import { ResourceNotFoundError, ResourceWriteError } from '@domain/shared'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
-import { ADMIN_API } from '../http/api.config'
+import { ADMIN_API, API_BASE_URL } from '../http/api.config'
 import { HttpAlbumRepository } from './http-album.repository'
 
 const BASE = `${ADMIN_API}/albums`
@@ -73,6 +73,18 @@ describe('HttpAlbumRepository', () => {
       releaseDate: new Date('2026-01-01T00:00:00.000Z'),
     })
     expect(result.items[0]?.coverUrl).toContain('/static/albums/covers/night-signal.webp')
+  })
+
+  it('renders a cover published from a release at its stored /static path', async () => {
+    const cover = '/static/releases/covers/25af8977-5d97-45c7-9869-13927d03984d.jpg'
+    const page = repository.list({ page: 1, filter: {} })
+
+    http
+      .expectOne((candidate) => candidate.url === BASE)
+      .flush({ data: [{ ...ALBUM_RESPONSE, cover }], total: 1, page: 1, limit: 20 })
+
+    const result = await page
+    expect(result.items[0]?.coverUrl).toBe(`${API_BASE_URL}${cover}`)
   })
 
   it('treats an absent optional field as no value', async () => {
