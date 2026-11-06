@@ -1,4 +1,5 @@
-import type { PrismaService } from '@infra/prisma/prisma.service'
+// biome-ignore lint/style/useImportType: constructor-injected — NestJS DI needs the real class reference at runtime, not a type-only import.
+import { PrismaService } from '@infra/prisma/prisma.service'
 import {
   AUDIO_PROCESSING_QUEUE,
   audioConversionJobId,
@@ -28,7 +29,7 @@ export const STUCK_PROCESSING_AFTER_MS = 90 * 60 * 1000
 const SWEEP_BATCH_SIZE = 100
 
 /** What an artist and an operator see on a track the sweep gave up on. */
-export const STUCK_PROCESSING_ERROR =
+const STUCK_PROCESSING_ERROR =
   'Processing stopped without a result. Retry the track to convert it again.'
 
 /** One candidate the sweep inspects. */

@@ -1,3 +1,4 @@
+import { PrismaService } from '@infra/prisma/prisma.service'
 import { beforeEach, describe, expect, it, jest } from '@jest/globals'
 import * as Sentry from '@sentry/nestjs'
 import { makeQueueMock, type PrismaMock, prismaMock, resetPrismaMock } from '@test/mocks'
@@ -27,6 +28,16 @@ describe('StuckTrackSweeper', () => {
     prisma.track.findMany.mockResolvedValue([stuck] as never)
     prisma.track.updateMany.mockResolvedValue({ count: 1 } as never)
     prisma.releaseTrack.findFirst.mockResolvedValue(null)
+  })
+
+  it('should expose runtime constructor metadata for Nest dependency injection', () => {
+    // A type-only PrismaService import erases to Function here, and the worker then fails to
+    // boot with "Nest can't resolve dependencies of StuckTrackSweeper".
+    expect(Reflect.getMetadata('design:paramtypes', StuckTrackSweeper)).toEqual([
+      PrismaService,
+      Function,
+      Function,
+    ])
   })
 
   it('looks only at tracks processing for longer than the grace period', async () => {
