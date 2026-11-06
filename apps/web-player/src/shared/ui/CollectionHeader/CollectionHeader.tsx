@@ -55,7 +55,7 @@ export const CollectionHeader = ({
       )}
       style={wash}
     >
-      <BackButton className="absolute top-0 left-0 flex size-8 items-center justify-center rounded-full bg-black/40 transition-colors hover:bg-black/60 md:top-7 md:left-7">
+      <BackButton className="absolute top-0 left-0 flex size-8 items-center justify-center rounded-full bg-black/40 transition-colors hover:bg-black/60 md:top-0.5 md:left-6 md:size-7">
         <ArrowLeft aria-hidden="true" className="text-white" size={20} />
       </BackButton>
 
