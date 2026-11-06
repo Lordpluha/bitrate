@@ -5,10 +5,9 @@ import { CacheService } from '@infra/cache/cache.service'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import type { UserEntity } from '@modules/users'
 import { Injectable } from '@nestjs/common'
-import type { Artist } from '@prisma/client'
-import type { TrackEntity } from './entities'
-import { TrackNotFoundException } from './errors'
-import { PUBLIC_TRACK_WHERE } from './orm'
+import type { TrackEntity } from '../entities'
+import { TrackNotFoundException } from '../errors'
+import { PUBLIC_TRACK_WHERE } from '../orm'
 
 /** Filters accepted by the public track listing. */
 type FindAllTracksInput = PaginationInput & Pick<Partial<TrackEntity>, 'artistId' | 'title'>
@@ -114,24 +113,5 @@ export class TracksService {
         where: { id, ...PUBLIC_TRACK_WHERE },
       }),
     )
-  }
-
-  /** Runs the find tracks by artist id operation. */
-  async findTracksByArtistId(artistId: Artist['id']) {
-    return await this.cache.wrap(NS.TRACKS, `artist:${artistId}`, TTL.SHORT, () =>
-      this.prisma.track.findMany({
-        where: { artistId, ...PUBLIC_TRACK_WHERE },
-      }),
-    )
-  }
-
-  /** Runs the find tracks by artist name operation. */
-  async findTracksByArtistName(artistUsername: Artist['username']) {
-    return await this.prisma.track.findMany({
-      where: {
-        ...PUBLIC_TRACK_WHERE,
-        artist: { username: artistUsername },
-      },
-    })
   }
 }

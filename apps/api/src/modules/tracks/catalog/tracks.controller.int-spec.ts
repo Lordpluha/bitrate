@@ -3,8 +3,7 @@ import { UserAuthGuard } from '@modules/users-auth/users-auth.guard'
 import type { INestApplication } from '@nestjs/common'
 import { Test, type TestingModule } from '@nestjs/testing'
 import request from 'supertest'
-import { buildTrack } from './__tests__/fixtures/tracks.fixtures'
-import { TrackPlaybackService } from './track-playback.service'
+import { buildTrack } from '../__tests__/fixtures/tracks.fixtures'
 import { TracksController } from './tracks.controller'
 import { TracksService } from './tracks.service'
 
@@ -15,12 +14,6 @@ const makeServiceMock = () =>
     findLikedTracks: jest.fn(),
   }) as unknown as jest.Mocked<TracksService>
 
-const makePlaybackMock = () =>
-  ({
-    getManifest: jest.fn(),
-    getRenditionStream: jest.fn(),
-  }) as unknown as jest.Mocked<TrackPlaybackService>
-
 describe('TracksController (int)', () => {
   let app: INestApplication
   let service: jest.Mocked<TracksService>
@@ -30,10 +23,7 @@ describe('TracksController (int)', () => {
 
     const module: TestingModule = await Test.createTestingModule({
       controllers: [TracksController],
-      providers: [
-        { provide: TracksService, useValue: service },
-        { provide: TrackPlaybackService, useValue: makePlaybackMock() },
-      ],
+      providers: [{ provide: TracksService, useValue: service }],
     })
       .overrideGuard(UserAuthGuard)
       .useValue({

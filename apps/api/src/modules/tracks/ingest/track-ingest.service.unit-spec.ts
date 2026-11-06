@@ -15,18 +15,19 @@ import {
 } from '@test/mocks'
 import type { Queue } from 'bullmq'
 import { parseFile } from 'music-metadata'
-import { buildAudioFile, buildCoverFile, buildTrack } from './__tests__/fixtures/tracks.fixtures'
-import { downloadObjectToFile, storeMaster } from './audio-master'
-import { getUploadTempDir } from './audio-scratch'
-import type { CreateTrackDto } from './dtos/create-track.dto'
-import { TrackUploadService } from './track-upload.service'
+import { buildAudioFile, buildCoverFile, buildTrack } from '../__tests__/fixtures/tracks.fixtures'
+import type { CreateTrackDto } from '../dtos/create-track.dto'
+import { AudioConversionProducer } from '../processing/audio-conversion.producer'
+import { downloadObjectToFile, storeMaster } from '../shared/audio-master'
+import { getUploadTempDir } from '../shared/audio-scratch'
+import { TrackIngestService } from './track-ingest.service'
 
 jest.mock('node:fs/promises', () => ({
   rm: jest.fn().mockResolvedValue(undefined as never),
   stat: jest.fn().mockResolvedValue({ size: 9_000 } as never),
 }))
 
-jest.mock('./audio-master', () => ({
+jest.mock('../shared/audio-master', () => ({
   storeMaster: jest.fn().mockResolvedValue(undefined as never),
   downloadObjectToFile: jest.fn().mockResolvedValue(undefined as never),
 }))
@@ -36,8 +37,8 @@ const storeMasterMock = storeMaster as jest.MockedFunction<typeof storeMaster>
 const downloadMock = downloadObjectToFile as jest.MockedFunction<typeof downloadObjectToFile>
 const parseFileMock = parseFile as jest.MockedFunction<typeof parseFile>
 
-describe('TrackUploadService', () => {
-  let service: TrackUploadService
+describe('TrackIngestService', () => {
+  let service: TrackIngestService
   let prisma: PrismaMock
   let queue: jest.Mocked<Queue>
   let storage: jest.Mocked<StorageService>
@@ -50,7 +51,12 @@ describe('TrackUploadService', () => {
     queue = makeQueueMock()
     storage = makeStorageMock()
     storage.deleteObject.mockResolvedValue(undefined as never)
-    service = new TrackUploadService(prisma, queue, makeCacheMock(), recorder, storage)
+    service = new TrackIngestService(
+      prisma,
+      makeCacheMock(),
+      new AudioConversionProducer(prisma, queue, recorder),
+      storage,
+    )
   })
 
   describe('create', () => {

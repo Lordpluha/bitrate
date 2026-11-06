@@ -5,9 +5,7 @@ import { UserAuth } from '@modules/users-auth/users-auth.guard'
 import {
   Body,
   Controller,
-  Delete,
   Get,
-  HttpCode,
   Logger,
   Param,
   ParseIntPipe,
@@ -21,31 +19,22 @@ import { ApiExtraModels, ApiTags } from '@nestjs/swagger'
 import { Throttle } from '@nestjs/throttler'
 import type { Request, Response } from 'express'
 import { ZodValidationPipe } from 'nestjs-zod'
-import {
-  GetTrackByIdSwagger,
-  LikeTrackSwagger,
-  OpenPlaySessionSwagger,
-  StreamTrackRenditionSwagger,
-  TracksGetAllSwagger,
-  TracksGetLikedSwagger,
-  UnlikeTrackSwagger,
-} from './decorators'
-import { type OpenPlaySessionDto, OpenPlaySessionSchema } from './dtos/open-play-session.dto'
+import { OpenPlaySessionSwagger, StreamTrackRenditionSwagger } from '../decorators'
+import { type OpenPlaySessionDto, OpenPlaySessionSchema } from '../dtos/open-play-session.dto'
 import {
   PlaySessionEntity,
-  TrackEntity,
+  type TrackEntity,
   TrackManifestEntity,
   TrackManifestRenditionEntity,
-} from './entities'
+} from '../entities'
 import { PlaybackPacingError } from './playback-session.service'
 import { TrackPlaybackService } from './track-playback.service'
 import { UnsatisfiableRangeError } from './track-playback.types'
-import { TracksService } from './tracks.service'
 
 /** Rendition bytes never change, so they can be cached for a long time. */
 const IMMUTABLE_CACHE_CONTROL = 'private, max-age=31536000, immutable, no-transform'
 
-const logger = new Logger('TracksController')
+const logger = new Logger('TrackPlaybackController')
 
 /** A storage read answering an optional HTTP Range request. */
 type RangeStream = {
@@ -78,43 +67,12 @@ function sendRangeStream(
   pipeToResponse(data.stream, res, logger, 'Audio')
 }
 
-/** Track catalogue, likes and audio delivery. */
-@ApiExtraModels(TrackEntity, TrackManifestEntity, TrackManifestRenditionEntity, PlaySessionEntity)
+/** Audio delivery: play sessions and CMAF renditions under `/tracks/:id`. */
+@ApiExtraModels(TrackManifestEntity, TrackManifestRenditionEntity, PlaySessionEntity)
 @ApiTags('Tracks')
 @Controller({ path: 'tracks', version: '1' })
-export class TracksController {
-  constructor(
-    private tracksService: TracksService,
-    private trackPlaybackService: TrackPlaybackService,
-  ) {}
-
-  @TracksGetAllSwagger()
-  @Get('')
-  getAll(
-    @Query('page', new ParseIntPipe({ optional: true })) page?: number,
-    @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
-    @Query('title') title?: TrackEntity['title'],
-    @Query('artistId', new ParseUUIDPipe({ optional: true })) artistId?: string,
-  ) {
-    return this.tracksService.findAll({ artistId, limit, page, title })
-  }
-
-  @TracksGetLikedSwagger()
-  @UserAuth()
-  @Get('liked')
-  getLikedTracks(
-    @CurrentUser() user: UserEntity,
-    @Query('page', new ParseIntPipe({ optional: true })) page?: number,
-    @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
-  ) {
-    return this.tracksService.findLikedTracks(user.id, { page, limit })
-  }
-
-  @GetTrackByIdSwagger()
-  @Get(':id')
-  getById(@Param('id', ParseUUIDPipe) id: TrackEntity['id']) {
-    return this.tracksService.findTrackById(id)
-  }
+export class TrackPlaybackController {
+  constructor(private trackPlaybackService: TrackPlaybackService) {}
 
   @OpenPlaySessionSwagger()
   @UserAuth()
@@ -167,20 +125,5 @@ export class TracksController {
       'Content-Length': String(rendition.contentLength),
       'Cache-Control': IMMUTABLE_CACHE_CONTROL,
     })
-  }
-
-  @LikeTrackSwagger()
-  @UserAuth()
-  @Post(':id/like')
-  likeTrack(@CurrentUser() user: UserEntity, @Param('id', ParseUUIDPipe) id: TrackEntity['id']) {
-    return this.tracksService.like(user.id, id)
-  }
-
-  @UnlikeTrackSwagger()
-  @UserAuth()
-  @HttpCode(200)
-  @Delete(':id/like')
-  unlikeTrack(@CurrentUser() user: UserEntity, @Param('id', ParseUUIDPipe) id: TrackEntity['id']) {
-    return this.tracksService.unlike(user.id, id)
   }
 }

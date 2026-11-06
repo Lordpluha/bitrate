@@ -5,10 +5,11 @@ import {
 import { RELEASE_PUBLISHING_QUEUE } from '@infra/queues/release-publishing.queue'
 import { BullModule } from '@nestjs/bullmq'
 import { Module } from '@nestjs/common'
+import { AudioConversionProducer } from './audio-conversion.producer'
 import { ProcessingAttemptRecorder } from './processing-attempt.recorder'
 
 /**
- * The audio-conversion queues and the attempt recorder, without the consumer: what a producer
+ * The audio-conversion queues, the producer and the attempt recorder, without the consumer: what a producer
  * needs. `TranscodeModule` adds the consumer on top; the operator process imports only this, so
  * it never runs a conversion worker (#458).
  */
@@ -24,7 +25,7 @@ import { ProcessingAttemptRecorder } from './processing-attempt.recorder'
       { name: RELEASE_PUBLISHING_QUEUE },
     ),
   ],
-  providers: [ProcessingAttemptRecorder],
-  exports: [ProcessingAttemptRecorder, BullModule],
+  providers: [ProcessingAttemptRecorder, AudioConversionProducer],
+  exports: [ProcessingAttemptRecorder, AudioConversionProducer, BullModule],
 })
 export class AudioProcessingQueueModule {}

@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, jest } from '@jest/globals'
 import { makeCacheMock, type PrismaMock, prismaMock, resetPrismaMock } from '@test/mocks'
-import { buildTrack } from './__tests__/fixtures/tracks.fixtures'
+import { buildTrack } from '../__tests__/fixtures/tracks.fixtures'
 import { TracksService } from './tracks.service'
 
 describe('TracksService', () => {
@@ -83,44 +83,6 @@ describe('TracksService', () => {
         },
       })
       expect(result).toBe(track)
-    })
-  })
-
-  describe('findTracksByArtistId', () => {
-    it('should return tracks by artistId', async () => {
-      const tracks = [buildTrack()]
-      prisma.track.findMany.mockResolvedValue(tracks as never)
-
-      const result = await service.findTracksByArtistId('artist-1')
-
-      expect(prisma.track.findMany).toHaveBeenCalledWith({
-        where: {
-          artistId: 'artist-1',
-          processingStatus: 'READY',
-          deletedAt: null,
-          publishedAt: { not: null },
-        },
-      })
-      expect(result).toBe(tracks)
-    })
-  })
-
-  describe('findTracksByArtistName', () => {
-    it('should return tracks by artist username', async () => {
-      const tracks = [buildTrack()]
-      prisma.track.findMany.mockResolvedValue(tracks as never)
-
-      const result = await service.findTracksByArtistName('artist')
-
-      expect(prisma.track.findMany).toHaveBeenCalledWith({
-        where: {
-          processingStatus: 'READY',
-          publishedAt: { not: null },
-          deletedAt: null,
-          artist: { username: 'artist' },
-        },
-      })
-      expect(result).toBe(tracks)
     })
   })
 })

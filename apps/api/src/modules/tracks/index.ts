@@ -1,7 +1,13 @@
-export { resolveRange } from './cmaf-range'
+/**
+ * Tracks public API. Subdomains: catalog/ (listing, likes), ingest/ (masters, release tracks),
+ * processing/ (conversion; also loaded by the worker), playback/ (sessions, CMAF delivery),
+ * shared/ (audio storage helpers). The worker must import `@modules/tracks/processing`, never
+ * this barrel, because it pulls in the HTTP controllers.
+ */
+export * from './catalog'
 export * from './dtos'
 export * from './entities'
-export { CMAF_CONTENT_TYPE, CMAF_FORMAT, UnsatisfiableRangeError } from './track-playback.types'
-export * from './track-upload.service'
+export * from './ingest'
+export * from './playback'
 export * from './tracks.module'
 export * from './tracks-core.module'

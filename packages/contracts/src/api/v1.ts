@@ -836,6 +836,24 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/api/v1/tracks/{id}/like': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /** Like a track */
+    post: operations['TracksController_likeTrack_v1']
+    /** Unlike a track */
+    delete: operations['TracksController_unlikeTrack_v1']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/api/v1/tracks/{id}/play-sessions': {
     parameters: {
       query?: never
@@ -849,7 +867,7 @@ export interface paths {
      * Open a playback session for a track
      * @description Returns the byte-range manifest and a signed token. Every rendition request must carry it as `?t=`; it lasts the track plus 15 minutes and is revoked on logout and password reset. See ADR-0067.
      */
-    post: operations['TracksController_openPlaySession_v1']
+    post: operations['TrackPlaybackController_openPlaySession_v1']
     delete?: never
     options?: never
     head?: never
@@ -867,28 +885,10 @@ export interface paths {
      * Authorised by the session token alone (D9): a native `<audio>` cannot refresh a cookie.
      * @description Serves bytes for a playback session (`?t=` from `POST /tracks/:id/play-sessions`). A `Range` of at most the largest fragment (~10 s) is served exactly; a missing or longer range gets one response to the end of the file, released no faster than the session budget: real time since it opened plus 60 s of audio. See ADR-0067.
      */
-    get: operations['TracksController_streamRendition_v1']
+    get: operations['TrackPlaybackController_streamRendition_v1']
     put?: never
     post?: never
     delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/api/v1/tracks/{id}/like': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get?: never
-    put?: never
-    /** Like a track */
-    post: operations['TracksController_likeTrack_v1']
-    /** Unlike a track */
-    delete: operations['TracksController_unlikeTrack_v1']
     options?: never
     head?: never
     patch?: never
@@ -11361,300 +11361,6 @@ export interface operations {
       }
     }
   }
-  TracksController_openPlaySession_v1: {
-    parameters: {
-      query?: never
-      header?: never
-      path: {
-        /** @description Track ID */
-        id: string
-      }
-      cookie?: never
-    }
-    requestBody?: {
-      content: {
-        'application/json': components['schemas']['OpenPlaySessionDto']
-      }
-    }
-    responses: {
-      201: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['PlaySessionEntity']
-        }
-      }
-      /**
-       * @description Unauthorized
-       *
-       *     Not signed in
-       */
-      401: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': {
-            /** @example 401 */
-            statusCode?: number
-            /**
-             * @example errors.auth.invalid_or_expired_token
-             * @enum {string}
-             */
-            message?:
-              | 'errors.auth.access_token_required'
-              | 'errors.auth.refresh_token_required'
-              | 'errors.auth.invalid_token_requirement'
-              | 'errors.auth.invalid_or_expired_token'
-              | 'errors.auth.user_not_found'
-              | 'errors.auth.session_not_found'
-            /** @example Unauthorized */
-            error?: string
-            /**
-             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
-             * @example errors.auth.invalid_or_expired_token
-             * @enum {string}
-             */
-            code?:
-              | 'errors.auth.access_token_required'
-              | 'errors.auth.refresh_token_required'
-              | 'errors.auth.invalid_token_requirement'
-              | 'errors.auth.invalid_or_expired_token'
-              | 'errors.auth.user_not_found'
-              | 'errors.auth.session_not_found'
-          }
-        }
-      }
-      /** @description Track not found or has no CMAF renditions */
-      404: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Method not allowed */
-      405: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Request timeout */
-      408: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Too many sessions opened */
-      429: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Internal server error */
-      500: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Not implemented */
-      501: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Bad gateway */
-      502: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Service unavailable */
-      503: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Gateway timeout */
-      504: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description HTTP version not supported */
-      505: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Insufficient storage */
-      507: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Loop detected */
-      508: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      default: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': Record<string, never>
-        }
-      }
-    }
-  }
-  TracksController_streamRendition_v1: {
-    parameters: {
-      query: {
-        /** @description Playback session token */
-        t: unknown
-      }
-      header?: {
-        /** @description Inclusive byte window, e.g. `bytes=929-100915` */
-        Range?: string
-      }
-      path: {
-        /** @description Rendition kbps */
-        bitrate: number
-        /** @description Track ID */
-        id: string
-      }
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      /** @description The requested fragment, or the rest of the file at real-time pace */
-      206: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'audio/mp4': string
-        }
-      }
-      /** @description Missing, forged, expired, revoked or other-track session token */
-      403: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Rendition not found */
-      404: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Method not allowed */
-      405: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Request timeout */
-      408: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Range outside the file */
-      416: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description The session is ahead of real time; retry after `Retry-After` seconds */
-      429: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Internal server error */
-      500: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Not implemented */
-      501: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Bad gateway */
-      502: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Service unavailable */
-      503: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Gateway timeout */
-      504: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description HTTP version not supported */
-      505: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Insufficient storage */
-      507: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Loop detected */
-      508: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      default: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-    }
-  }
   TracksController_likeTrack_v1: {
     parameters: {
       query?: never
@@ -11886,6 +11592,300 @@ export interface operations {
         content?: never
       }
       /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  TrackPlaybackController_openPlaySession_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /** @description Track ID */
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: {
+      content: {
+        'application/json': components['schemas']['OpenPlaySessionDto']
+      }
+    }
+    responses: {
+      201: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PlaySessionEntity']
+        }
+      }
+      /**
+       * @description Unauthorized
+       *
+       *     Not signed in
+       */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            message?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
+            /** @example Unauthorized */
+            error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
+          }
+        }
+      }
+      /** @description Track not found or has no CMAF renditions */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many sessions opened */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': Record<string, never>
+        }
+      }
+    }
+  }
+  TrackPlaybackController_streamRendition_v1: {
+    parameters: {
+      query: {
+        /** @description Playback session token */
+        t: unknown
+      }
+      header?: {
+        /** @description Inclusive byte window, e.g. `bytes=929-100915` */
+        Range?: string
+      }
+      path: {
+        /** @description Rendition kbps */
+        bitrate: number
+        /** @description Track ID */
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description The requested fragment, or the rest of the file at real-time pace */
+      206: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'audio/mp4': string
+        }
+      }
+      /** @description Missing, forged, expired, revoked or other-track session token */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Rendition not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Range outside the file */
+      416: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description The session is ahead of real time; retry after `Retry-After` seconds */
       429: {
         headers: {
           [name: string]: unknown

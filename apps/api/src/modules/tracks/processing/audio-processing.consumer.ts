@@ -22,12 +22,16 @@ import { Inject, Logger, type OnModuleInit } from '@nestjs/common'
 import type { TrackProcessingStep, TrackProcessingTrigger } from '@prisma/client'
 import * as Sentry from '@sentry/nestjs'
 import type { Job, Queue } from 'bullmq'
+import { downloadObjectToFile } from '../shared/audio-master'
+import {
+  createJobScratchDir,
+  getJobScratchBase,
+  removeStaleScratchDirs,
+} from '../shared/audio-scratch'
+import { getAudioGenerationRoot } from '../shared/audio-storage-keys'
 import { StaleAudioJobError } from './audio-artifact.types'
-import { downloadObjectToFile } from './audio-master'
 import { type ConversionStepContext, runConversionPhases } from './audio-processing.phases'
 import { isAudioProcessingWorkerAutorunEnabled } from './audio-processing.worker-autorun'
-import { createJobScratchDir, getJobScratchBase, removeStaleScratchDirs } from './audio-scratch'
-import { getAudioGenerationRoot } from './audio-storage-keys'
 import { ProcessingAttemptRecorder } from './processing-attempt.recorder'
 import { classifyProcessingError, errorMessageOf } from './processing-log/classify'
 import { PROCESSING_LOG_LIMITS } from './processing-log/limits'

@@ -1,5 +1,5 @@
 /** The slice of the track upload service the seeder needs, without importing it. */
-export interface ITrackUploadService {
+export interface ITrackIngestService {
   create(
     artistId: string,
     createTrackDto: { title: string },
