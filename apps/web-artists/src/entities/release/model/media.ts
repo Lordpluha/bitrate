@@ -40,7 +40,7 @@ export function trackCoverUrl(cover: string): string {
 
 /** Owner-only playback route of an uploaded master; the session cookie authorizes it. */
 export function releaseAudioUrl(releaseId: string, trackId: string): string {
-  return `${apiBaseUrl}/api/v1/releases/${releaseId}/tracks/${trackId}/audio`
+  return `${apiBaseUrl}/api/v1/artists/me/releases/${releaseId}/tracks/${trackId}/audio`
 }
 
 /** What is wrong with a chosen cover, as a catalog key, or null when it can be uploaded. */

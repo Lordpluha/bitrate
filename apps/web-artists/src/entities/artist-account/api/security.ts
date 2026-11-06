@@ -74,16 +74,13 @@ export function usePasswordResetEmail() {
   })
 }
 
-/** Requests account deletion; the session ends and the artist returns to sign-in. */
-export function useDeleteAccount(artistId: string) {
+/** Deletes the signed-in artist's account; the session ends and the artist returns to sign-in. */
+export function useDeleteAccount() {
   return useMutation({
     retry: false,
     mutationFn: async () => {
       const result = await clientFetchClient
-        .DELETE('/api/v1/artists/{id}', {
-          params: { path: { id: artistId } },
-          signal: signal(),
-        })
+        .DELETE('/api/v1/artists/me', { signal: signal() })
         .catch(() => undefined)
       if (!result?.response.ok)
         throw new Error(messageKey('account.error.deleteAccount'))

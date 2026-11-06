@@ -15,7 +15,7 @@ import {
 
 async function getTracks(search: CatalogueSearch, signal: AbortSignal) {
   const { data, error } = await clientFetchClient.GET(
-    '/api/v1/artist-music/tracks',
+    '/api/v1/artists/me/music/tracks',
     {
       params: {
         query: {
@@ -38,7 +38,7 @@ async function getTracks(search: CatalogueSearch, signal: AbortSignal) {
 
 async function getReleases(search: CatalogueSearch, signal: AbortSignal) {
   const { data, error } = await clientFetchClient.GET(
-    '/api/v1/artist-music/releases',
+    '/api/v1/artists/me/music/releases',
     {
       params: {
         query: {
@@ -90,7 +90,7 @@ export function useMusicCounts(artistId: string | undefined) {
     queryKey: [...artistMusicKeys.artist(artistId), 'counts'],
     queryFn: async ({ signal }) => {
       const { data, error } = await clientFetchClient.GET(
-        '/api/v1/artist-music/counts',
+        '/api/v1/artists/me/music/counts',
         { signal },
       )
       const parsed = musicCountsSchema.safeParse(data)
