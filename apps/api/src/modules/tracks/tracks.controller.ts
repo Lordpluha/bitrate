@@ -18,7 +18,7 @@ import {
   Res,
 } from '@nestjs/common'
 import { ApiExtraModels, ApiTags } from '@nestjs/swagger'
-import { SkipThrottle, Throttle } from '@nestjs/throttler'
+import { Throttle } from '@nestjs/throttler'
 import type { Request, Response } from 'express'
 import { ZodValidationPipe } from 'nestjs-zod'
 import {
@@ -132,15 +132,9 @@ export class TracksController {
     })
   }
 
-  /**
-   * Authorised by the session token alone (D9): a native `<audio>` cannot refresh a cookie.
-   * Not throttled per request: the signed session token gates access and real-time pacing
-   * (D16) bounds how much audio a listener pulls. A request ceiling on top of that only banned
-   * listeners who switched tracks quickly; the edge still caps raw request rate (nginx
-   * `media_limit`).
-   */
+  /** Authorised by the session token alone (D9): a native `<audio>` cannot refresh a cookie. */
   @StreamTrackRenditionSwagger()
-  @SkipThrottle()
+  @Throttle({ default: { ttl: 60_000, limit: 1_200 } })
   @Get(':id/cmaf/:bitrate')
   async streamRendition(
     @Param('id', ParseUUIDPipe) id: TrackEntity['id'],

@@ -8,6 +8,4 @@ Switching tracks no longer floods the API with fragment requests. The API now ex
 (429) fragment in a tight loop until the throttler blocked the listener. The player now waits
 a second when the header is missing and gives up after five 429s, handing the fragment to its
 regular backoff. nginx answers its own rate limit with 429 instead of 503 and gives CMAF
-fragment ranges their own budget, so a track switch no longer trips the generic API limit. The API's per-request
-throttler no longer applies to CMAF ranges either: the session token and real-time pacing
-already bound them.
+fragment ranges their own budget, so a track switch no longer trips the generic API limit.
