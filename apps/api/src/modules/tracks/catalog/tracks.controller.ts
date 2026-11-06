@@ -29,17 +29,17 @@ import {
   TracksGetAllSwagger,
   TracksGetLikedSwagger,
   UnlikeTrackSwagger,
-} from './decorators'
-import { type OpenPlaySessionDto, OpenPlaySessionSchema } from './dtos/open-play-session.dto'
+} from '../decorators'
+import { type OpenPlaySessionDto, OpenPlaySessionSchema } from '../dtos/open-play-session.dto'
 import {
   PlaySessionEntity,
   TrackEntity,
   TrackManifestEntity,
   TrackManifestRenditionEntity,
-} from './entities'
-import { PlaybackPacingError } from './playback-session.service'
-import { TrackPlaybackService } from './track-playback.service'
-import { UnsatisfiableRangeError } from './track-playback.types'
+} from '../entities'
+import { PlaybackPacingError } from '../playback/playback-session.service'
+import { TrackPlaybackService } from '../playback/track-playback.service'
+import { UnsatisfiableRangeError } from '../playback/track-playback.types'
 import { TracksService } from './tracks.service'
 
 /** Rendition bytes never change, so they can be cached for a long time. */

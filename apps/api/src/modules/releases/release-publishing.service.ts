@@ -7,7 +7,7 @@ import {
 } from '@infra/queues/release-publishing.queue'
 import { AlbumsService } from '@modules/albums/albums.service'
 import { NotificationsProducer } from '@modules/notifications'
-import { type PendingReleaseTrack, TrackUploadService } from '@modules/tracks/track-upload.service'
+import { type PendingReleaseTrack, TrackUploadService } from '@modules/tracks/ingest'
 import { InjectQueue } from '@nestjs/bullmq'
 import {
   ConflictException,

@@ -6,7 +6,7 @@ import type {
   AttachReleaseTrack,
   PendingReleaseTrack,
   TrackUploadService,
-} from '@modules/tracks/track-upload.service'
+} from '@modules/tracks/ingest'
 import { ConflictException, NotFoundException } from '@nestjs/common'
 import type { Prisma } from '@prisma/client'
 import { type PrismaMock, prismaMock, resetPrismaMock } from '@test/mocks'

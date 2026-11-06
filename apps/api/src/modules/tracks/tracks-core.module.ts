@@ -2,9 +2,9 @@ import { CacheModule } from '@infra/cache/cache.module'
 import { PrismaModule } from '@infra/prisma/prisma.module'
 import { StorageCoreModule } from '@infra/storage/storage-core.module'
 import { Module } from '@nestjs/common'
-import { AudioProcessingQueueModule } from './audio-processing-queue.module'
-import { TrackUploadService } from './track-upload.service'
-import { TracksService } from './tracks.service'
+import { TracksService } from './catalog/tracks.service'
+import { TrackUploadService } from './ingest/track-upload.service'
+import { AudioProcessingQueueModule } from './processing/audio-processing-queue.module'
 
 /**
  * The tracks services without controllers, auth or the conversion consumer, so the operator

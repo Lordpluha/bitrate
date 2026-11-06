@@ -2,7 +2,7 @@ import { writeFile } from 'node:fs/promises'
 import * as path from 'node:path'
 import type { Song as NCSSong } from '@bitrate/ncs-parser'
 import { Logger } from '@nestjs/common'
-import { getUploadTempDir } from '../../modules/tracks/audio-scratch'
+import { getUploadTempDir } from '../../modules/tracks/shared'
 import config from './config'
 
 /** The bytes of a downloaded file. */

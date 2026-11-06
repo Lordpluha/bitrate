@@ -9,9 +9,9 @@ import { ConfigService } from '@nestjs/config'
 import { Test, type TestingModule } from '@nestjs/testing'
 import { prismaMock, resetPrismaMock } from '@test/mocks'
 import type { Queue } from 'bullmq'
-import { buildAudioFile, buildTrack } from './__tests__/fixtures/tracks.fixtures'
-import { ProcessingAttemptRecorder } from './processing-attempt.recorder'
-import { TrackUploadService } from './track-upload.service'
+import { buildAudioFile, buildTrack } from '../__tests__/fixtures/tracks.fixtures'
+import { TrackUploadService } from '../ingest/track-upload.service'
+import { ProcessingAttemptRecorder } from '../processing/processing-attempt.recorder'
 import { TracksService } from './tracks.service'
 
 const makeQueueMock = () =>
@@ -30,8 +30,8 @@ const makeConfigMock = () =>
  * The upload temp directory is created with real `mkdtemp`/`lstat` calls, which this spec's
  * `node:fs` mock does not provide. Its creation is covered in `audio-scratch.unit-spec.ts`.
  */
-jest.mock('./audio-scratch', () => ({
-  ...jest.requireActual<typeof import('./audio-scratch')>('./audio-scratch'),
+jest.mock('../shared/audio-scratch', () => ({
+  ...jest.requireActual<typeof import('../shared/audio-scratch')>('./audio-scratch'),
   getUploadTempDir: jest.fn().mockReturnValue('/tmp/bitrate-upload-test'),
 }))
 

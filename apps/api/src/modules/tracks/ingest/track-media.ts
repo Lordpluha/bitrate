@@ -2,7 +2,7 @@ import { rm } from 'node:fs/promises'
 import { resolveSafeMulterPath } from '@common/utils/multer-file'
 import { BadRequestException, Logger } from '@nestjs/common'
 import { parseFile } from 'music-metadata'
-import { getUploadTempDir } from './audio-scratch'
+import { getUploadTempDir } from '../shared/audio-scratch'
 
 const logger = new Logger('TrackMedia', { timestamp: true })
 

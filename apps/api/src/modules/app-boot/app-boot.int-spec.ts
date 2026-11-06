@@ -6,7 +6,7 @@ import {
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals'
 import { LISTENING_STATS_QUEUE } from '@modules/history/listening-stats.consumer'
 import { NOTIFICATIONS_QUEUE } from '@modules/notifications'
-import { STUCK_TRACKS_QUEUE } from '@modules/tracks/stuck-tracks.consumer'
+import { STUCK_TRACKS_QUEUE } from '@modules/tracks/processing'
 import { getQueueToken } from '@nestjs/bullmq'
 import type { TestingModule } from '@nestjs/testing'
 import { Test } from '@nestjs/testing'

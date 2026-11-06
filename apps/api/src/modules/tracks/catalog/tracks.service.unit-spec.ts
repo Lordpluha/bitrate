@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, jest } from '@jest/globals'
 import { makeCacheMock, type PrismaMock, prismaMock, resetPrismaMock } from '@test/mocks'
-import { buildTrack } from './__tests__/fixtures/tracks.fixtures'
+import { buildTrack } from '../__tests__/fixtures/tracks.fixtures'
 import { TracksService } from './tracks.service'
 
 describe('TracksService', () => {

@@ -1,7 +1,7 @@
 import { PrismaService } from '@infra/prisma/prisma.service'
 import { STORAGE_SERVICE } from '@infra/storage/storage.constants'
 import type { StorageService } from '@infra/storage/storage.types'
-import { deleteObjectQuietly } from '@modules/tracks/storage-cleanup'
+import { deleteObjectQuietly } from '@modules/tracks/shared'
 import {
   Inject,
   Injectable,

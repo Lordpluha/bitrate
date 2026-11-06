@@ -11,10 +11,10 @@ import {
   prismaMock,
   resetPrismaMock,
 } from '@test/mocks'
+import { downloadObjectToFile } from '../shared/audio-master'
+import { removeStaleScratchDirs } from '../shared/audio-scratch'
 import { buildJob, cmafResult, jobData } from './__tests__/fixtures/audio-processing.fixtures'
-import { downloadObjectToFile } from './audio-master'
 import { AudioProcessingConsumer } from './audio-processing.consumer'
-import { removeStaleScratchDirs } from './audio-scratch'
 import { ProcessingAttemptRecorder } from './processing-attempt.recorder'
 
 jest.mock('@bitrate/converter', () => ({
@@ -37,12 +37,12 @@ function buildFfmpegError({ message, ...rest }: FfmpegErrorOverrides): Error {
   return Object.assign(error, rest)
 }
 
-jest.mock('./audio-master', () => ({
+jest.mock('../shared/audio-master', () => ({
   downloadObjectToFile: jest.fn().mockResolvedValue(undefined as never),
 }))
 
-jest.mock('./audio-scratch', () => ({
-  ...(jest.requireActual('./audio-scratch') as object),
+jest.mock('../shared/audio-scratch', () => ({
+  ...(jest.requireActual('../shared/audio-scratch') as object),
   removeStaleScratchDirs: jest.fn().mockResolvedValue(undefined as never),
   createJobScratchDir: jest
     .fn()

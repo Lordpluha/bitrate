@@ -5,7 +5,7 @@ import { MetricsService } from '@infra/observability/metrics.service'
 import { ForbiddenException, Inject, Injectable, Logger } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import type { Redis } from 'ioredis'
-import { PLAYBACK_ERRORS } from './errors'
+import { PLAYBACK_ERRORS } from '../errors'
 import { createPlaybackToken, verifyPlaybackToken } from './playback-token'
 
 /** A session outlives its track by this much, so an ordinary play never needs a new token. */

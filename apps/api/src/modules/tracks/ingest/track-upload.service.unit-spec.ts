@@ -15,10 +15,10 @@ import {
 } from '@test/mocks'
 import type { Queue } from 'bullmq'
 import { parseFile } from 'music-metadata'
-import { buildAudioFile, buildCoverFile, buildTrack } from './__tests__/fixtures/tracks.fixtures'
-import { downloadObjectToFile, storeMaster } from './audio-master'
-import { getUploadTempDir } from './audio-scratch'
-import type { CreateTrackDto } from './dtos/create-track.dto'
+import { buildAudioFile, buildCoverFile, buildTrack } from '../__tests__/fixtures/tracks.fixtures'
+import type { CreateTrackDto } from '../dtos/create-track.dto'
+import { downloadObjectToFile, storeMaster } from '../shared/audio-master'
+import { getUploadTempDir } from '../shared/audio-scratch'
 import { TrackUploadService } from './track-upload.service'
 
 jest.mock('node:fs/promises', () => ({
@@ -26,7 +26,7 @@ jest.mock('node:fs/promises', () => ({
   stat: jest.fn().mockResolvedValue({ size: 9_000 } as never),
 }))
 
-jest.mock('./audio-master', () => ({
+jest.mock('../shared/audio-master', () => ({
   storeMaster: jest.fn().mockResolvedValue(undefined as never),
   downloadObjectToFile: jest.fn().mockResolvedValue(undefined as never),
 }))

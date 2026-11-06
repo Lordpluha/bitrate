@@ -4,11 +4,11 @@ import { StorageModule } from '@infra/storage/storage.module'
 import { TokensModule } from '@modules/tokens/tokens.module'
 import { UsersAuthModule } from '@modules/users-auth/users-auth.module'
 import { Module } from '@nestjs/common'
-import { PlaybackSessionsModule } from './playback-sessions.module'
-import { TrackPlaybackService } from './track-playback.service'
-import { TracksController } from './tracks.controller'
+import { TracksController } from './catalog/tracks.controller'
+import { PlaybackSessionsModule } from './playback/playback-sessions.module'
+import { TrackPlaybackService } from './playback/track-playback.service'
+import { TranscodeModule } from './processing/transcode.module'
 import { TracksCoreModule } from './tracks-core.module'
-import { TranscodeModule } from './transcode.module'
 
 @Module({
   providers: [TrackPlaybackService],
