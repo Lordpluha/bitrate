@@ -3,7 +3,7 @@ import { basename, extname } from 'node:path'
 import { Readable } from 'node:stream'
 import { detectAllowedImageMime } from '@common/utils/image'
 
-/** Common fields of the Multer file objects the seeds hand to `TrackUploadService`. */
+/** Common fields of the Multer file objects the seeds hand to `TrackIngestService`. */
 function multerFile(
   fieldname: 'audio' | 'cover',
   originalname: string,

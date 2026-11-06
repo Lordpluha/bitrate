@@ -10,7 +10,8 @@ import { Test, type TestingModule } from '@nestjs/testing'
 import { prismaMock, resetPrismaMock } from '@test/mocks'
 import type { Queue } from 'bullmq'
 import { buildAudioFile, buildTrack } from '../__tests__/fixtures/tracks.fixtures'
-import { TrackUploadService } from '../ingest/track-upload.service'
+import { TrackIngestService } from '../ingest/track-ingest.service'
+import { AudioConversionProducer } from '../processing/audio-conversion.producer'
 import { ProcessingAttemptRecorder } from '../processing/processing-attempt.recorder'
 import { TracksService } from './tracks.service'
 
@@ -44,7 +45,7 @@ jest.mock('node:fs', () => ({
 
 describe('TracksService (int)', () => {
   let service: TracksService
-  let uploadService: TrackUploadService
+  let uploadService: TrackIngestService
   let module: TestingModule
   let queueMock: jest.Mocked<Queue>
   let configMock: jest.Mocked<ConfigService<AppConfig>>
@@ -56,7 +57,8 @@ describe('TracksService (int)', () => {
     module = await Test.createTestingModule({
       providers: [
         TracksService,
-        TrackUploadService,
+        TrackIngestService,
+        AudioConversionProducer,
         { provide: PrismaService, useValue: prismaMock },
         { provide: getQueueToken('audio-processing'), useValue: queueMock },
         { provide: ConfigService, useValue: configMock },
@@ -88,7 +90,7 @@ describe('TracksService (int)', () => {
           },
         },
         /**
-         * `TrackUploadService` records a failed enqueue through the recorder, which owns its
+         * `AudioConversionProducer` records a failed enqueue through the recorder, which owns its
          * own Prisma writes and Sentry reporting — neither belongs in this spec's subject.
          */
         {
@@ -99,7 +101,7 @@ describe('TracksService (int)', () => {
     }).compile()
 
     service = module.get(TracksService)
-    uploadService = module.get(TrackUploadService)
+    uploadService = module.get(TrackIngestService)
   })
 
   afterAll(() => module?.close())

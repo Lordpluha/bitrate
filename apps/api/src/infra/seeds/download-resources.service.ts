@@ -13,7 +13,7 @@ type Downloaded = { success: true; data: Buffer } | { success: false }
  *
  * Nothing is kept in a local storage directory: a cover is returned as an in-memory buffer and an
  * audio file is written to the private upload directory (`getUploadTempDir`), exactly where a
- * multipart upload would land. `TrackUploadService.create` then moves both into STORAGE_SERVICE.
+ * multipart upload would land. `TrackIngestService.create` then moves both into STORAGE_SERVICE.
  */
 export class DownloadResourcesService {
   /** The logger value. */

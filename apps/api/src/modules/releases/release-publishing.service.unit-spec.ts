@@ -5,7 +5,8 @@ import type { NotificationsProducer } from '@modules/notifications'
 import type {
   AttachReleaseTrack,
   PendingReleaseTrack,
-  TrackUploadService,
+  ReleaseTrackService,
+  TrackIngestService,
 } from '@modules/tracks/ingest'
 import { ConflictException, NotFoundException } from '@nestjs/common'
 import type { Prisma } from '@prisma/client'
@@ -45,7 +46,8 @@ const completionRecord = (statuses: Array<'PROCESSING' | 'READY' | 'FAILED'>) =>
 describe('ReleasePublishingService', () => {
   let prisma: PrismaMock
   let tx: DeepMockProxy<Prisma.TransactionClient>
-  let tracks: DeepMockProxy<TrackUploadService>
+  let tracks: DeepMockProxy<ReleaseTrackService>
+  let trackIngest: DeepMockProxy<TrackIngestService>
   let albums: DeepMockProxy<AlbumsService>
   let notifications: DeepMockProxy<NotificationsProducer>
   let queue: DeepMockProxy<Queue>
@@ -59,11 +61,19 @@ describe('ReleasePublishingService', () => {
     prisma.$transaction.mockImplementation(async (callback: unknown) =>
       (callback as (client: Prisma.TransactionClient) => unknown)(tx),
     )
-    tracks = mockDeep<TrackUploadService>()
+    tracks = mockDeep<ReleaseTrackService>()
+    trackIngest = mockDeep<TrackIngestService>()
     albums = mockDeep<AlbumsService>()
     notifications = mockDeep<NotificationsProducer>()
     queue = mockDeep<Queue>()
-    service = new ReleasePublishingService(prisma, tracks, albums, notifications, queue)
+    service = new ReleasePublishingService(
+      prisma,
+      tracks,
+      trackIngest,
+      albums,
+      notifications,
+      queue,
+    )
   })
 
   afterEach(() => {
@@ -243,8 +253,8 @@ describe('ReleasePublishingService', () => {
       await service.materialize(RELEASE)
 
       expect(tracks.createReleaseTrack).not.toHaveBeenCalled()
-      expect(tracks.reprocess).toHaveBeenCalledTimes(1)
-      expect(tracks.reprocess).toHaveBeenCalledWith('failed-track')
+      expect(trackIngest.reprocess).toHaveBeenCalledTimes(1)
+      expect(trackIngest.reprocess).toHaveBeenCalledWith('failed-track')
     })
 
     it('starts a premiere whose time has come before reading the release', async () => {

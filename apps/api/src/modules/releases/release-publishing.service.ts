@@ -7,7 +7,11 @@ import {
 } from '@infra/queues/release-publishing.queue'
 import { AlbumsService } from '@modules/albums/albums.service'
 import { NotificationsProducer } from '@modules/notifications'
-import { type PendingReleaseTrack, TrackUploadService } from '@modules/tracks/ingest'
+import {
+  type PendingReleaseTrack,
+  ReleaseTrackService,
+  TrackIngestService,
+} from '@modules/tracks/ingest'
 import { InjectQueue } from '@nestjs/bullmq'
 import {
   ConflictException,
@@ -58,7 +62,8 @@ export class ReleasePublishingService implements OnApplicationBootstrap {
 
   constructor(
     private readonly prisma: PrismaService,
-    private readonly tracks: TrackUploadService,
+    private readonly tracks: ReleaseTrackService,
+    private readonly trackIngest: TrackIngestService,
     private readonly albums: AlbumsService,
     private readonly notifications: NotificationsProducer,
     @InjectQueue(RELEASE_PUBLISHING_QUEUE) private readonly queue: Queue<ReleasePublishJob>,
@@ -226,7 +231,7 @@ export class ReleasePublishingService implements OnApplicationBootstrap {
       )
     }
     for (const { conversion } of created) await this.tracks.startReleaseConversion(conversion)
-    for (const trackId of restart) await this.tracks.reprocess(trackId)
+    for (const trackId of restart) await this.trackIngest.reprocess(trackId)
     await this.complete(releaseId)
   }
 
