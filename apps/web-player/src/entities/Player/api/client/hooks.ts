@@ -38,15 +38,34 @@ type WaitForRetryInput = {
   signal: AbortSignal
 }
 
+/**
+ * 429s one fragment waits out before failing it. Past this the error goes to the
+ * fragment retry policy (bounded backoff) instead of looping here forever.
+ */
+const MAX_PACED_RETRIES = 5
+
+/**
+ * Milliseconds a `Retry-After` value asks for. A missing or blank header falls back to
+ * the default — `Number(null)` is `0`, and a header hidden by CORS reads as `null`,
+ * which used to turn the wait into a request storm.
+ */
+const retryAfterMs = (retryAfter: string | null) => {
+  const trimmed = retryAfter?.trim()
+  if (!trimmed) return DEFAULT_RETRY_AFTER_SECONDS * 1000
+
+  const seconds = Number(trimmed)
+  if (Number.isFinite(seconds) && seconds >= 0) return seconds * 1000
+
+  const date = Date.parse(trimmed)
+  if (Number.isFinite(date)) return Math.max(date - Date.now(), 0)
+
+  return DEFAULT_RETRY_AFTER_SECONDS * 1000
+}
+
 /** Waits the `Retry-After` a paced session asked for, unless the request is aborted. */
 const waitForRetry = ({ retryAfter, signal }: WaitForRetryInput) =>
   new Promise<void>((resolve, reject) => {
-    const seconds = Number(retryAfter)
-    const delayMs =
-      Number.isFinite(seconds) && seconds >= 0
-        ? seconds * 1000
-        : DEFAULT_RETRY_AFTER_SECONDS * 1000
-    const timer = setTimeout(resolve, delayMs)
+    const timer = setTimeout(resolve, retryAfterMs(retryAfter))
     signal.addEventListener(
       'abort',
       () => {
@@ -105,6 +124,7 @@ export const fetchRenditionRange = async ({
    * silent refresh instead of failing the fragment and killing playback.
    */
   let reopened = false
+  let pacedRetries = 0
   let response: Response
   while (true) {
     response = await fetchWithAuthRefresh(
@@ -122,6 +142,13 @@ export const fetchRenditionRange = async ({
     }
     /** The session is ahead of real time (D16): wait as asked and retry. */
     if (response.status === 429) {
+      if (pacedRetries >= MAX_PACED_RETRIES) {
+        throw new ApiRequestError(
+          'Audio fragment request is still rate limited',
+          response.status,
+        )
+      }
+      pacedRetries += 1
       await waitForRetry({
         retryAfter: response.headers.get('Retry-After'),
         signal,

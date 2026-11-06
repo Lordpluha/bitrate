@@ -104,6 +104,35 @@ describe('fetchRenditionRange with playback sessions', () => {
     expect(fetchWithAuthRefresh).toHaveBeenCalledTimes(2)
     expect(openPlaySession).not.toHaveBeenCalled()
   })
+
+  it('waits a second, not zero, when a 429 hides its Retry-After (CORS)', async () => {
+    vi.useFakeTimers()
+    try {
+      fetchWithAuthRefresh
+        .mockResolvedValueOnce(new Response(null, { status: 429 }))
+        .mockResolvedValueOnce(response(206, [1, 2, 3]))
+
+      const pending = fetchRange()
+      await vi.advanceTimersByTimeAsync(999)
+      expect(fetchWithAuthRefresh).toHaveBeenCalledTimes(1)
+
+      await vi.advanceTimersByTimeAsync(1)
+      await expect(pending).resolves.toBeInstanceOf(ArrayBuffer)
+      expect(fetchWithAuthRefresh).toHaveBeenCalledTimes(2)
+    } finally {
+      vi.useRealTimers()
+    }
+  })
+
+  it('stops retrying a session that keeps answering 429', async () => {
+    fetchWithAuthRefresh.mockImplementation(
+      async () =>
+        new Response(null, { headers: { 'Retry-After': '0' }, status: 429 }),
+    )
+
+    await expect(fetchRange()).rejects.toMatchObject({ status: 429 })
+    expect(fetchWithAuthRefresh.mock.calls.length).toBeLessThanOrEqual(6)
+  })
 })
 
 describe('fetchRenditionRange', () => {
