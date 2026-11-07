@@ -14,8 +14,7 @@ type HistoryNavProps = {
 
 /**
  * The desktop top bar's Back and Forward through the browser history, left of the search.
- * Pages no longer carry their own Back on desktop; phones keep theirs in the hero or mobile
- * header.
+ * Pages carry no Back of their own; below `xl` the mobile header shows it instead.
  */
 export const HistoryNav = ({ className }: HistoryNavProps) => {
   const { t } = useI18n()

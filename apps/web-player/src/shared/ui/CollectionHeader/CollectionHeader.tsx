@@ -1,11 +1,7 @@
 'use client'
 
-import { cn } from '@bitrate/ui-react'
 import { useImageColor } from '@shared/hooks/useImageColor'
-import { useI18n } from '@shared/i18n'
-import { BackButton } from '@shared/ui/BackButton'
 import { MediaImage } from '@shared/ui/MediaImage'
-import { ChevronLeft } from 'lucide-react'
 import type { CSSProperties, ReactNode } from 'react'
 
 type CollectionHeaderProps = {
@@ -31,7 +27,8 @@ const dim = (value: number) => Math.round(value * WASH_STRENGTH)
 /**
  * The design system's Collection Header (playlist, album, Liked Songs): a 200px cover beside the
  * type, an Unbounded title and the owner line, on a rounded wash running from the cover's colour
- * into the card surface. Phones stack a 220px cover over the title, without the wash.
+ * into the card surface. Phones stack a 220px cover over the title, without the wash. It has no
+ * Back of its own: the desktop top bar and the mobile header carry it.
  */
 export const CollectionHeader = ({
   coverUrl,
@@ -42,7 +39,6 @@ export const CollectionHeader = ({
   type,
   washColor,
 }: CollectionHeaderProps) => {
-  const { t } = useI18n()
   const [r, g, b] = useImageColor(coverUrl)
   const washStart = washColor ?? `rgb(${dim(r)}, ${dim(g)}, ${dim(b)})`
   const wash = {
@@ -51,20 +47,9 @@ export const CollectionHeader = ({
 
   return (
     <section
-      className={cn(
-        'relative flex flex-col gap-5 md:h-65 md:flex-row md:items-end md:gap-6 md:rounded-2xl md:bg-(image:--collection-wash) md:p-7 md:text-white',
-        !coverUrl && 'max-md:pt-12',
-      )}
+      className="flex flex-col gap-5 md:h-65 md:flex-row md:items-end md:gap-6 md:rounded-2xl md:bg-(image:--collection-wash) md:p-7 md:text-white"
       style={wash}
     >
-      {/* Desktop moves Back into the top bar beside the logo; below `xl` the hero keeps it. */}
-      <BackButton
-        aria-label={t('common.back')}
-        className="absolute top-0 left-0 flex size-8 items-center justify-center rounded-full bg-background/70 text-foreground transition-colors hover:bg-background md:top-3 md:left-3 xl:hidden"
-      >
-        <ChevronLeft aria-hidden="true" size={20} />
-      </BackButton>
-
       {coverUrl ? (
         <div className="flex justify-center">
           <MediaImage

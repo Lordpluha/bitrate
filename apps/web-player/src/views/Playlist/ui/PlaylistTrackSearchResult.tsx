@@ -23,12 +23,12 @@ export const PlaylistTrackSearchResult = ({
     <li className="grid grid-cols-[40px_minmax(0,1fr)_auto] items-center gap-2 rounded px-2 py-2 transition-colors hover:bg-surface sm:grid-cols-[44px_minmax(0,1fr)_auto] sm:gap-3 sm:px-3">
       <MediaImage
         alt=""
-        className="h-10 w-10 rounded object-cover"
+        className="size-10 rounded object-cover sm:size-11"
         fallback="track"
-        height={40}
+        height={44}
         src={getTrackCoverUrl(track.cover)}
         unoptimized
-        width={40}
+        width={44}
       />
       <div className="min-w-0">
         <p className="truncate font-medium text-foreground">{track.title}</p>
