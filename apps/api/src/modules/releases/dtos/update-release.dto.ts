@@ -8,7 +8,10 @@ import { CreateReleaseSchema } from './create-release.dto'
 export const UpdateReleaseSchema = z
   .strictObject({
     title: CreateReleaseSchema.shape.title.optional(),
-    type: z.enum(AlbumType).optional(),
+    type: z
+      .enum(AlbumType)
+      .optional()
+      .describe('Detected automatically from recording count; supplied values are ignored'),
     scheduledAt: z.iso
       .datetime({ offset: true, precision: 3 })
       .refine((value) => {

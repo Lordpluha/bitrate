@@ -203,6 +203,11 @@ export class AlbumsService {
     await tx.album.update({ where: { id: albumId }, data: { publishedAt: at } })
   }
 
+  /** Removes the catalogue album in the transaction that deletes its owned release. */
+  async deleteReleaseAlbum(tx: Prisma.TransactionClient, albumId: string, deletedAt: Date) {
+    await tx.album.update({ where: { id: albumId }, data: { deletedAt, publishedAt: null } })
+  }
+
   /** Drops album and search caches after a release changed what listeners can see. */
   async invalidateCatalogueCaches() {
     await Promise.all([this.cache.invalidate(NS.ALBUMS), this.cache.invalidate(NS.SEARCH)])

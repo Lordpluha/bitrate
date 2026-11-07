@@ -294,6 +294,53 @@
     }
   }
 
+  .artist-sidebar-preferences {
+    display: grid;
+    gap: 0.125rem;
+  }
+  .artist-sidebar-preference-button {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    width: 100%;
+    min-height: 2.5rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8125rem;
+    color: var(--color-artist-text-secondary);
+    text-align: start;
+    background: transparent;
+    border: 0;
+    border-radius: 0.75rem;
+    transition:
+      color 150ms,
+      background-color 150ms;
+  }
+  .artist-sidebar-preference-button svg {
+    flex: none;
+  }
+  .artist-sidebar-preference-button:hover {
+    color: var(--color-foreground);
+    background: var(--color-secondary);
+  }
+  .artist-sidebar-preference-button:focus-visible {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 2px;
+  }
+  .artist-sidebar-preferences[data-compact="true"]
+    .artist-sidebar-preference-button {
+    justify-content: center;
+    padding-inline: 0;
+  }
+  .artist-dashboard-sidebar .artist-workspace-design-navigation {
+    min-height: 0;
+    overflow-y: auto;
+  }
+  .artist-dashboard-sidebar .artist-workspace-sidebar-footer {
+    flex: none;
+    gap: 0.625rem;
+    padding-top: 0.75rem;
+  }
+
   .artist-dashboard-menu::backdrop {
     background-color: color-mix(in srgb, var(--color-black) 80%, transparent);
   }

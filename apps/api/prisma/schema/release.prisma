@@ -48,11 +48,15 @@ model ArtistTrackDraft {
   previewUrl       String?
   // Compact ISO 3901 form (no hyphens); optional until a distributor assigns one.
   isrc             String?            @unique @db.VarChar(12)
+  // A reused, approved recording; its identity and audio remain canonical.
+  sourceTrackId    String?            @db.Uuid
   // Private uploaded master in STORAGE_SERVICE; never served publicly.
   audioKey         String?            @unique
   audioFileName    String?
   audioContentType String?
   audioSizeBytes   Int?
+  // SHA-256 of the original bytes; private, for duplicate detection inside one release.
+  audioSha256      String?            @db.Char(64)
   /// Normalised peak levels (0–1) of the uploaded master, for drawing its waveform; empty until computed.
   waveform         Float[]            @default([])
   /// Zero-based order on its release; new recordings go last.
@@ -62,11 +66,13 @@ model ArtistTrackDraft {
   createdAt        DateTime           @default(now())
   updatedAt        DateTime           @default(now()) @updatedAt
 
+  sourceTrack Track? @relation("CompilationRecording", fields: [sourceTrackId], references: [id], onDelete: Restrict)
   owner   Artist   @relation(fields: [ownerArtistId], references: [id], onDelete: Restrict)
   release Release? @relation(fields: [releaseId, ownerArtistId], references: [id, ownerArtistId], onDelete: Restrict)
 
   @@index([ownerArtistId, deletedAt, updatedAt(sort: Desc)])
   @@index([releaseId])
+  @@index([sourceTrackId])
 }
 
 enum ReleaseCreditRole {
@@ -268,6 +274,7 @@ model ReleaseTrack {
   releaseId String @db.Uuid
   trackId   String @db.Uuid
   position  Int
+  reused    Boolean @default(false)
 
   release Release @relation(fields: [releaseId], references: [id], onDelete: Cascade)
   track   Track   @relation(fields: [trackId], references: [id], onDelete: Restrict)

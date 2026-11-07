@@ -16,12 +16,23 @@ export async function gotoHydrated(page: Page, path: string) {
 
   await expect
     .poll(
-      () =>
-        page.evaluate(() =>
-          [...document.querySelectorAll('body *')].some((element) =>
-            Object.keys(element).some((key) => key.startsWith('__react')),
-          ),
-        ),
+      async () => {
+        try {
+          return await page.evaluate(() =>
+            [...document.querySelectorAll('body *')].some((element) =>
+              Object.keys(element).some((key) => key.startsWith('__react')),
+            ),
+          )
+        } catch (error) {
+          // A redirect can replace the document between goto() and this hydration check.
+          if (
+            error instanceof Error &&
+            error.message.includes('Execution context was destroyed')
+          )
+            return false
+          throw error
+        }
+      },
       // Cold, code-split dashboard bundles can take over five seconds on CI's four workers.
       { timeout: 15_000 },
     )

@@ -168,6 +168,7 @@ export function uploadTrack({
     {
       invalid: messageKey('release.error.audioInvalid'),
       unconfirmed: messageKey('release.error.audioUnconfirmed'),
+      statusMessages: { 422: messageKey('release.error.audioDuplicate') },
     },
   )
 }

@@ -18,7 +18,7 @@ export function ExternalSources({ data }: { data: ArtistAnalytics }) {
       <ul className="mt-3 divide-y divide-border">
         {data.external.map((item) => (
           <li
-            className="flex items-center justify-between gap-3 py-2.5 text-sm"
+            className="flex flex-wrap items-center justify-between gap-3 py-2.5 text-sm"
             key={item.source}
           >
             <span>{destinationLabels[item.source]}</span>

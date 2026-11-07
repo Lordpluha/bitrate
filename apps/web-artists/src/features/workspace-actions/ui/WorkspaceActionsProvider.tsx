@@ -14,17 +14,20 @@ export function WorkspaceActionsProvider({
   children,
   destinations,
   accountContent,
-  createReleaseDialog,
-  notificationsContent,
+  onCreateRelease,
+  creatingRelease,
 }: {
   artistId: string
   children: ReactNode
   destinations: readonly WorkspaceDestination[]
   accountContent: (onNavigate: () => void) => ReactNode
-  createReleaseDialog: (onClose: () => void) => ReactNode
-  notificationsContent: (onNavigate: () => void) => ReactNode
+  onCreateRelease: () => Promise<void>
+  creatingRelease: boolean
 }) {
-  const [action, setAction] = useState<WorkspaceAction | null>(null)
+  const [action, setAction] = useState<Exclude<
+    WorkspaceAction,
+    'create-release'
+  > | null>(null)
   const { t } = useI18n()
 
   useEffect(() => {
@@ -43,51 +46,55 @@ export function WorkspaceActionsProvider({
     action === 'search'
       ? t('shell.search')
       : action === 'account'
-        ? t('shell.artistAccount')
-        : action === 'create-release'
-          ? t('music.create.title')
-          : action
-            ? t(workspaceNotices[action].title)
-            : ''
+        ? t('account.switcher.title')
+        : action
+          ? t(workspaceNotices[action].title)
+          : ''
 
   return (
-    <WorkspaceActionsContext.Provider value={{ openAction: setAction }}>
+    <WorkspaceActionsContext.Provider
+      value={{
+        creatingRelease,
+        openAction: (next) => {
+          if (next === 'create-release') {
+            setAction(null)
+            void onCreateRelease()
+          } else setAction(next)
+        },
+      }}
+    >
       {children}
-      {action === 'create-release'
-        ? createReleaseDialog(close)
-        : action && (
-            <WorkspaceModal key={action} onClose={close} title={title}>
-              {action === 'search' ? (
-                <WorkspaceSearch
-                  artistId={artistId}
-                  destinations={destinations}
-                  onNavigate={close}
-                />
-              ) : action === 'notifications' ? (
-                notificationsContent(close)
-              ) : action === 'account' ? (
-                <div className="space-y-6">{accountContent(close)}</div>
-              ) : (
-                <div className="space-y-6">
-                  {action !== 'upload-track' && (
-                    <p className="text-sm font-medium text-accent">
-                      {t('music.actions.comingSoon')}
-                    </p>
-                  )}
-                  <p className="text-sm leading-relaxed text-text-secondary">
-                    {t(workspaceNotices[action].description)}
-                  </p>
-                  <Button
-                    className="artist-workspace-primary"
-                    onClick={close}
-                    variant="primary"
-                  >
-                    {t('music.actions.gotIt')}
-                  </Button>
-                </div>
+      {action && (
+        <WorkspaceModal key={action} onClose={close} title={title}>
+          {action === 'search' ? (
+            <WorkspaceSearch
+              artistId={artistId}
+              destinations={destinations}
+              onNavigate={close}
+            />
+          ) : action === 'account' ? (
+            <div className="space-y-6">{accountContent(close)}</div>
+          ) : (
+            <div className="space-y-6">
+              {action !== 'upload-track' && (
+                <p className="text-sm font-medium text-accent">
+                  {t('music.actions.comingSoon')}
+                </p>
               )}
-            </WorkspaceModal>
+              <p className="text-sm leading-relaxed text-text-secondary">
+                {t(workspaceNotices[action].description)}
+              </p>
+              <Button
+                className="artist-workspace-primary"
+                onClick={close}
+                variant="primary"
+              >
+                {t('music.actions.gotIt')}
+              </Button>
+            </div>
           )}
+        </WorkspaceModal>
+      )}
     </WorkspaceActionsContext.Provider>
   )
 }

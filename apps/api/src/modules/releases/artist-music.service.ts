@@ -12,7 +12,7 @@ export class ArtistMusicService {
   async counts(ownerArtistId: string) {
     const where = { ownerArtistId, deletedAt: null }
     const [tracks, releases] = await Promise.all([
-      this.prisma.artistTrackDraft.count({ where }),
+      this.prisma.artistTrackDraft.count({ where: { ...where, sourceTrackId: null } }),
       this.prisma.release.count({ where }),
     ])
     return { tracks, releases }
@@ -22,6 +22,7 @@ export class ArtistMusicService {
     const { page, limit, skip } = normalizePagination(input.page, input.limit)
     const where = {
       ownerArtistId,
+      sourceTrackId: null,
       deletedAt: null,
       ...(input.search ? { title: { contains: input.search, mode: 'insensitive' as const } } : {}),
       ...(input.status ? { status: input.status } : {}),

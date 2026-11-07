@@ -89,7 +89,10 @@ const server = createServer(async (request, response) => {
   ) {
     response.setHeader('Access-Control-Allow-Origin', origin)
     response.setHeader('Access-Control-Allow-Credentials', 'true')
-    response.setHeader('Access-Control-Allow-Headers', 'Content-Type')
+    response.setHeader(
+      'Access-Control-Allow-Headers',
+      'Content-Type, X-Artist-Account',
+    )
     response.setHeader(
       'Access-Control-Allow-Methods',
       'GET, POST, PUT, PATCH, DELETE, OPTIONS',
@@ -119,10 +122,28 @@ const server = createServer(async (request, response) => {
   if (request.url === '/health') return json(200, { ok: true })
   if (request.url === '/test/music' && request.method === 'POST') {
     if (!cookie.includes('artist_access_token=test-valid')) return json(401, {})
+    let body = ''
+    for await (const chunk of request) body += chunk
+    const options = body ? JSON.parse(body) : {}
+    const draftStatus = options.draftStatus ?? 'DRAFT'
+    if (
+      ![
+        'DRAFT',
+        'READY',
+        'SUBMITTED',
+        'REJECTED',
+        'RELEASED',
+        'SCHEDULED',
+        'PUBLISHING',
+        'PUBLISH_FAILED',
+        'UNPUBLISHED',
+      ].includes(draftStatus)
+    )
+      return json(400, {})
     releases.set(
       scoped('artist'),
       [
-        ['Steel Ball Run', 'SINGLE', 'DRAFT', null],
+        ['Steel Ball Run', 'SINGLE', draftStatus, null],
         ['Afterglow', 'EP', 'REJECTED', '/demo/music/album-afterglow.webp'],
         [
           'Echoes EP',
@@ -406,11 +427,8 @@ const server = createServer(async (request, response) => {
       let body = ''
       for await (const chunk of request) body += chunk
       const input = JSON.parse(body)
-      if (
-        release.status !== 'DRAFT' ||
-        input.expectedUpdatedAt !== release.updatedAt
-      )
-        return json(409, { message: 'Release changed or is no longer a draft' })
+      if (input.expectedUpdatedAt !== release.updatedAt)
+        return json(409, { message: 'Release changed' })
       releases.set(
         scoped(owner),
         (releases.get(scoped(owner)) ?? []).filter((item) => item.id !== id),
@@ -449,7 +467,12 @@ const server = createServer(async (request, response) => {
         return json(400, { message: 'Invalid draft' })
       Object.assign(release, {
         ...(input.title === undefined ? {} : { title: input.title.trim() }),
-        ...(input.type === undefined ? {} : { type: input.type }),
+        type:
+          (release.trackCount ?? 0) >= 7
+            ? 'ALBUM'
+            : (release.trackCount ?? 0) >= 5
+              ? 'EP'
+              : 'SINGLE',
         ...(input.scheduledAt === undefined
           ? {}
           : {
@@ -528,7 +551,7 @@ const server = createServer(async (request, response) => {
       for await (const chunk of request) body += chunk
       const input = JSON.parse(body)
       const title = typeof input.title === 'string' ? input.title.trim() : ''
-      const type = input.type ?? 'SINGLE'
+      const type = 'SINGLE'
       if (
         !title ||
         title.length > 255 ||

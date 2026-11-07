@@ -7,7 +7,7 @@ export type TileSize = (typeof tileSizes)[number]
 /** Workspace pages whose tiles an artist can arrange; matches the API's page names. */
 export type LayoutPage = 'dashboard' | 'analytics' | 'release-draft'
 
-/** A tile a page offers: its name and the sizes that keep its content readable. */
+/** A tile a page offers, with legacy presets for existing saved layouts. */
 export interface TileDefinition {
   id: string
   label: TranslationKey
@@ -19,12 +19,21 @@ export interface TileDefinition {
 export interface LayoutTile {
   id: string
   size: TileSize
+  columns?: number
+  /** Fixed content height in grid rows; omitted means fit the content. */
+  rows?: number
   hidden: boolean
 }
 
 export const storedLayoutSchema = z.object({
   tiles: z.array(
-    z.object({ id: z.string(), size: z.enum(tileSizes), hidden: z.boolean() }),
+    z.object({
+      id: z.string(),
+      size: z.enum(tileSizes),
+      columns: z.number().int().min(1).max(12).optional(),
+      rows: z.number().int().min(1).max(12).optional(),
+      hidden: z.boolean(),
+    }),
   ),
 })
 
@@ -55,6 +64,8 @@ export function mergeLayout(
     merged.push({
       id: tile.id,
       size: definition.sizes.includes(tile.size) ? tile.size : definition.size,
+      ...(tile.columns === undefined ? {} : { columns: tile.columns }),
+      ...(tile.rows === undefined ? {} : { rows: tile.rows }),
       hidden: tile.hidden,
     })
   }
@@ -70,11 +81,42 @@ export function sameLayout(
 ) {
   return (
     left.length === right.length &&
-    left.every(
-      (tile, index) =>
-        tile.id === right[index]?.id &&
-        tile.size === right[index]?.size &&
-        tile.hidden === right[index]?.hidden,
-    )
+    left.every((tile, index) => {
+      const other = right[index]
+      return (
+        other !== undefined &&
+        tile.id === other.id &&
+        tileColumns(tile) === tileColumns(other) &&
+        tile.rows === other.rows &&
+        tile.hidden === other.hidden
+      )
+    })
   )
+}
+
+/** Numeric widths take precedence; existing presets keep their original geometry. */
+export function tileColumns(
+  tile: Pick<LayoutTile, 'size' | 'columns'>,
+  variant: 'thirds' | 'halves' = 'thirds',
+): number {
+  if (tile.columns !== undefined) return tile.columns
+  if (variant === 'halves') return tile.size === 'S' ? 6 : 12
+  return { S: 4, M: 8, L: 12 }[tile.size]
+}
+
+export function clampColumns(columns: number): number {
+  return Math.min(12, Math.max(1, Math.round(columns)))
+}
+
+export function columnsAfterDrag(
+  start: number,
+  delta: number,
+  columnWidth: number,
+): number {
+  return clampColumns(start + delta / columnWidth)
+}
+
+/** The row pitch includes the gap, so a one-row card has exactly rowHeight pixels. */
+export function rowsForHeight(height: number, rowHeight: number, gap: number) {
+  return Math.max(1, Math.ceil((height + gap) / (rowHeight + gap)))
 }

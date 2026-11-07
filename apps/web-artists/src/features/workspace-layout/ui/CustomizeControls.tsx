@@ -13,6 +13,7 @@ export function CustomizeControls({ layout }: { layout: CustomizableLayout }) {
     return (
       <Button
         className="artist-layout-customize"
+        disabled={layout.loading}
         onClick={layout.edit}
         size="sm"
         title={t('layout.customizeHint')}
@@ -31,11 +32,21 @@ export function CustomizeControls({ layout }: { layout: CustomizableLayout }) {
           {tMessage(layout.saveError)}
         </p>
       )}
-      <Button onClick={layout.reset} size="sm" variant="ghost">
+      <Button
+        disabled={layout.saving}
+        onClick={layout.reset}
+        size="sm"
+        variant="ghost"
+      >
         <RotateCcw aria-hidden="true" className="size-4" />
         {t('layout.reset')}
       </Button>
-      <Button onClick={layout.cancel} size="sm" variant="outline">
+      <Button
+        disabled={layout.saving}
+        onClick={layout.cancel}
+        size="sm"
+        variant="outline"
+      >
         {t('common.cancel')}
       </Button>
       <Button

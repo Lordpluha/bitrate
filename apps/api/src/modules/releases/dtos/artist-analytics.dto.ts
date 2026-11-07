@@ -11,3 +11,9 @@ export const ArtistAnalyticsSchema = z.strictObject({
 })
 
 export class ArtistAnalyticsDto extends createZodDto(ArtistAnalyticsSchema) {}
+
+export const ArtistTopTracksSchema = ArtistAnalyticsSchema.extend({
+  page: z.coerce.number().int().min(1).max(2_147_483_647).default(1),
+})
+
+export class ArtistTopTracksDto extends createZodDto(ArtistTopTracksSchema) {}

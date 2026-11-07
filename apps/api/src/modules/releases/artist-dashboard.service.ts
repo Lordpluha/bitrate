@@ -46,7 +46,7 @@ export class ArtistDashboardService {
       nextTasks,
     ] = await Promise.all([
       this.prisma.release.groupBy({ by: ['status'], where: owned, _count: { _all: true } }),
-      this.prisma.artistTrackDraft.count({ where: owned }),
+      this.prisma.artistTrackDraft.count({ where: { ...owned, sourceTrackId: null } }),
       this.currentRelease(ownerArtistId),
       this.prisma.release.findMany({
         where: { ...owned, status: ReleaseStatus.DRAFT },
@@ -149,7 +149,16 @@ export class ArtistDashboardService {
       }))
     if (!record) return null
     const { trackDrafts, ...summary } = record
-    return { summary, leadTrack: trackDrafts[0] ?? null }
+    const lead = trackDrafts[0]
+    const leadTrack = lead
+      ? {
+          id: lead.id,
+          title: lead.sourceTrack?.title ?? lead.title,
+          duration: lead.sourceTrack?.duration ?? lead.duration,
+          waveform: lead.waveform,
+        }
+      : null
+    return { summary, leadTrack }
   }
 
   private async blockerCount(ownerArtistId: string, id: string): Promise<number> {

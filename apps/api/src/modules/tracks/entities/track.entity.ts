@@ -3,6 +3,9 @@ import type { Track } from '@prisma/client'
 
 /** Represents the track entity. */
 export class TrackEntity implements Track {
+  @ApiHideProperty()
+  moderationBlockedAt: Date | null
+
   /** The id value. */
   @ApiProperty()
   id: string

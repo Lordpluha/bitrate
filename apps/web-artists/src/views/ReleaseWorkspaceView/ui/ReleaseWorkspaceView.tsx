@@ -4,18 +4,16 @@ import {
   type ReleaseStage,
   useReleaseWorkspace,
 } from '@entities/release'
-import {
-  CustomizeControls,
-  useCustomizableLayout,
-} from '@features/workspace-layout'
+import { ReleaseTitleEditor } from '@features/edit-release'
 import { useI18n } from '@shared/i18n'
 import { ROUTES } from '@shared/routes/routes'
+import { PageSkeleton } from '@shared/ui'
 import { Link } from '@tanstack/react-router'
 import { ReleaseDeliveryPanel } from '@widgets/ReleaseDelivery'
 import {
   DraftStage,
-  draftTiles,
   LaunchStage,
+  ReleaseDangerZone,
   ReleaseHeader,
   ReleaseStepper,
   ReviewStage,
@@ -37,11 +35,6 @@ export function ReleaseWorkspaceView({
   step,
 }: ReleaseWorkspaceViewProps) {
   const query = useReleaseWorkspace(artistId, releaseId)
-  const draftLayout = useCustomizableLayout(
-    artistId,
-    'release-draft',
-    draftTiles,
-  )
   const { t, tMessage } = useI18n()
   const [saved, setSaved] = useState(false)
   const [dialog, setDialog] = useState<WorkspaceAction | null>(null)
@@ -54,7 +47,7 @@ export function ReleaseWorkspaceView({
   return (
     <div aria-busy={query.isFetching} className="artist-release-workspace">
       {query.isPending ? (
-        <p role="status">{t('workspace.loading')}</p>
+        <PageSkeleton label={t('workspace.loading')} variant="release" />
       ) : query.isError ? (
         <div className="space-y-4 py-8">
           <h1 className="text-2xl">{t('workspace.unavailable')}</h1>
@@ -92,20 +85,21 @@ export function ReleaseWorkspaceView({
           >
             {t('shell.backToMusic')}
           </Link>
-          <ReleaseHeader onAction={openDialog} release={query.data} />
-          <ReleaseStepper
-            actions={
-              stage === 'draft' && !draftLayout.editing ? (
-                <CustomizeControls layout={draftLayout} />
-              ) : undefined
-            }
-            active={stage ?? 'draft'}
+          <ReleaseHeader
+            onAction={openDialog}
             release={query.data}
+            titleEditor={
+              <ReleaseTitleEditor
+                artistId={artistId}
+                onSaved={() => setSaved(true)}
+                release={query.data}
+              />
+            }
           />
+          <ReleaseStepper active={stage ?? 'draft'} release={query.data} />
           {stage === 'draft' && (
             <DraftStage
               artistId={artistId}
-              layout={draftLayout}
               onAction={openDialog}
               release={query.data}
             />
@@ -123,6 +117,7 @@ export function ReleaseWorkspaceView({
           {stage === 'launch' && (
             <LaunchStage artistId={artistId} release={query.data} />
           )}
+          <ReleaseDangerZone onDelete={() => openDialog({ kind: 'delete' })} />
         </>
       )}
       {dialog && (

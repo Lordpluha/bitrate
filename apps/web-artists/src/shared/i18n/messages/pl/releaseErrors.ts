@@ -1,4 +1,6 @@
 export const releaseErrors = {
+  'release.error.audioDuplicate':
+    'Ten plik audio jest już w tym wydaniu. Wybierz inny plik.',
   'release.error.stale':
     'Wydanie się zmieniło lub nie jest już szkicem. Twoje dane zostały tutaj; zamknij i ponownie otwórz formularz, aby zobaczyć najnowszą wersję.',
   'release.error.gone': 'To wydanie nie jest już dostępne.',
@@ -13,9 +15,9 @@ export const releaseErrors = {
   'release.error.updateInvalid':
     'Sprawdź szczegóły wydania i spróbuj ponownie.',
   'release.error.deleteUnconfirmed':
-    'Nie udało się potwierdzić usunięcia szkicu. Sprawdź Muzykę przed ponowną próbą.',
+    'Nie udało się potwierdzić usunięcia wydania. Sprawdź Muzykę przed ponowną próbą.',
   'release.error.deleteStale':
-    'Wydanie się zmieniło lub nie jest już szkicem. Odśwież Muzykę, aby zobaczyć jego aktualny status.',
+    'Wydanie zostało zmienione. Odśwież jego przestrzeń roboczą, aby sprawdzić aktualną wersję przed usunięciem.',
   'release.error.createUnconfirmed':
     'Nie udało się potwierdzić zapisania szkicu. Sprawdź Muzykę przed ponowną próbą.',
   'release.error.createInvalid':

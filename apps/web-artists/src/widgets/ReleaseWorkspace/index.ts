@@ -1,7 +1,7 @@
-export { draftTiles } from './config/draftTiles'
 export type { WorkspaceAction } from './model/workspaceAction'
 export { DraftStage } from './ui/DraftStage'
 export { LaunchStage } from './ui/LaunchStage'
+export { ReleaseDangerZone } from './ui/ReleaseDangerZone'
 export { ReleaseHeader } from './ui/ReleaseHeader'
 export { ReleaseStepper } from './ui/ReleaseStepper'
 export { ReviewStage } from './ui/ReviewStage'

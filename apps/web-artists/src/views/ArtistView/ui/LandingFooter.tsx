@@ -12,20 +12,30 @@ const LEGAL_LINKS = [
 export const LandingFooter = () => {
   const { t } = useI18n()
   return (
-    <footer className="border-t border-border">
-      <div className="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-8 text-sm text-text-secondary sm:px-8 lg:flex-row lg:items-center lg:justify-between">
+    <footer className="artist-landing-footer">
+      <div className="artist-landing-footer-inner mx-auto flex max-w-7xl flex-col gap-4 px-4 py-8 text-sm text-text-secondary sm:px-8 lg:flex-row lg:items-center lg:justify-between">
         <nav aria-label={t('landing.legal')}>
-          <ul className="flex flex-wrap gap-x-6 gap-y-2">
+          <ul className="artist-landing-legal-links flex flex-wrap gap-x-6 gap-y-2">
             {LEGAL_LINKS.map((link) => (
               <li key={link.href}>
-                <a className="hover:text-foreground" href={link.href}>
+                <a
+                  className="transition-colors hover:text-foreground"
+                  href={link.href}
+                >
                   {t(link.label)}
                 </a>
               </li>
             ))}
           </ul>
         </nav>
-        <p>© {new Date().getFullYear()} Bitrate</p>
+        <p className="artist-landing-copyright text-sm text-text-secondary">
+          <span>© {new Date().getFullYear()} Bitrate</span>
+          <span aria-hidden="true" className="artist-landing-copyright-divider">
+            {' '}
+            ·{' '}
+          </span>
+          <span>FOR ARTISTS</span>
+        </p>
       </div>
     </footer>
   )

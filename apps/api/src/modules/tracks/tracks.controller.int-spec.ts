@@ -1,10 +1,12 @@
+import { readdir, rm } from 'node:fs/promises'
 import { afterAll, beforeAll, beforeEach, describe, expect, it, jest } from '@jest/globals'
 import { ArtistAuthGuard } from '@modules/artists-auth/artists-auth.guard'
 import { UserAuthGuard } from '@modules/users-auth/users-auth.guard'
-import type { INestApplication } from '@nestjs/common'
+import { type ExecutionContext, type INestApplication, UnauthorizedException } from '@nestjs/common'
 import { Test, type TestingModule } from '@nestjs/testing'
 import request from 'supertest'
 import { buildTrack } from './__tests__/fixtures/tracks.fixtures'
+import { getUploadTempDir } from './audio-scratch'
 import { TrackPlaybackService } from './track-playback.service'
 import { TrackUploadService } from './track-upload.service'
 import { TracksController } from './tracks.controller'
@@ -33,8 +35,10 @@ describe('TracksController (int)', () => {
   let app: INestApplication
   let service: jest.Mocked<TracksService>
   let uploadService: jest.Mocked<TrackUploadService>
+  let uploadDir: string
 
   beforeAll(async () => {
+    uploadDir = getUploadTempDir()
     service = makeServiceMock()
     uploadService = makeUploadMock()
 
@@ -48,10 +52,13 @@ describe('TracksController (int)', () => {
     })
       .overrideGuard(ArtistAuthGuard)
       .useValue({
-        canActivate: (ctx: {
-          switchToHttp: () => { getRequest: () => Record<string, unknown> }
-        }) => {
-          ctx.switchToHttp().getRequest().artist = { id: 'artist-1', username: 'artist' }
+        canActivate: (ctx: ExecutionContext) => {
+          const req = ctx.switchToHttp().getRequest<{
+            headers: Record<string, string | undefined>
+            artist?: { id: string; username: string }
+          }>()
+          if (req.headers['x-test-artist'] !== 'artist-1') throw new UnauthorizedException()
+          req.artist = { id: 'artist-1', username: 'artist' }
           return true
         },
       })
@@ -70,7 +77,10 @@ describe('TracksController (int)', () => {
     await app.init()
   })
 
-  afterAll(() => app.close())
+  afterAll(async () => {
+    await app.close()
+    await rm(uploadDir, { recursive: true, force: true })
+  })
 
   beforeEach(() => {
     service.findAll.mockReset()
@@ -127,20 +137,41 @@ describe('TracksController (int)', () => {
     await request(app.getHttpServer()).get(path).expect(404)
   })
 
-  it('PUT /tracks/:id should call uploadService.update and return 200', async () => {
-    uploadService.update.mockResolvedValue(buildTrack() as never)
+  it.each(['post', 'put'] as const)(
+    '%s rejects authenticated direct uploads before staging files',
+    async (method) => {
+      const before = await readdir(uploadDir)
+      const path = method === 'post' ? '/tracks' : '/tracks/f47ac10b-58cc-4372-a567-0e02b2c3d479'
+      const res = await request(app.getHttpServer())
+        [method](path)
+        .set('x-test-artist', 'artist-1')
+        .field('title', 'Unreviewed recording')
+        .field('rightsConfirmed', 'true')
+        .attach('audio', Buffer.from('RIFF-audio'), {
+          filename: 'track.wav',
+          contentType: 'audio/wav',
+        })
+      expect(res.status).toBe(403)
+      expect(res.body.message).toBe('errors.track.release_workflow_required')
+      expect(await readdir(uploadDir)).toEqual(before)
+      expect(uploadService.create).not.toHaveBeenCalled()
+      expect(uploadService.update).not.toHaveBeenCalled()
+    },
+  )
 
-    const res = await request(app.getHttpServer())
+  it.each(['post', 'put'] as const)('%s still requires artist authentication', async (method) => {
+    const path = method === 'post' ? '/tracks' : '/tracks/f47ac10b-58cc-4372-a567-0e02b2c3d479'
+    await request(app.getHttpServer())[method](path).send({ title: 'Unreviewed' }).expect(401)
+    expect(uploadService.create).not.toHaveBeenCalled()
+    expect(uploadService.update).not.toHaveBeenCalled()
+  })
+
+  it('also rejects direct JSON metadata edits to the catalogue', async () => {
+    await request(app.getHttpServer())
       .put('/tracks/f47ac10b-58cc-4372-a567-0e02b2c3d479')
-      .field('title', 'Updated Title')
-
-    expect(res.status).toBe(200)
-    expect(uploadService.update).toHaveBeenCalledWith(
-      'artist-1',
-      'f47ac10b-58cc-4372-a567-0e02b2c3d479',
-      { title: 'Updated Title' } as never,
-      undefined,
-      undefined,
-    )
+      .set('x-test-artist', 'artist-1')
+      .send({ title: 'Unreviewed title' })
+      .expect(403)
+    expect(uploadService.update).not.toHaveBeenCalled()
   })
 })

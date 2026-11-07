@@ -13,6 +13,15 @@ export class WorkspaceTrackDraftEntity {
   @ApiProperty({ format: 'uuid' })
   id: string
 
+  @ApiProperty({
+    type: String,
+    format: 'uuid',
+    nullable: true,
+    required: false,
+    description: 'Canonical catalogue recording reused by a compilation',
+  })
+  sourceTrackId?: string | null
+
   @ApiProperty()
   title: string
 

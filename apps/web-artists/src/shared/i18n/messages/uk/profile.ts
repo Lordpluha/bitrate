@@ -1,4 +1,12 @@
 export const profile = {
+  'profile.compilations.title': 'Збірки',
+  'profile.compilations.description':
+    'Об’єднайте випущені треки в нову збірку — від Best Of до добірки улюблених записів.',
+  'profile.compilations.note':
+    'Оригінальні записи, історія прослуховувань і вподобання зберігаються.',
+  'profile.compilations.create': 'Створити збірку',
+  'profile.compilations.untitled': 'Нова збірка',
+
   'profile.validation.https': 'Введіть повне посилання https://.',
   'profile.validation.min': 'Використайте щонайменше 3 символи.',
   'profile.validation.max': 'Використайте не більше 50 символів.',

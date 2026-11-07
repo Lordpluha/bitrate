@@ -48,6 +48,15 @@ export const artistAnalyticsSchema = z.object({
 
 export type ArtistAnalytics = z.infer<typeof artistAnalyticsSchema>
 
+export const topTracksPageSchema = z.object({
+  data: artistAnalyticsSchema.shape.topTracks.max(5),
+  page: z.number().int().positive(),
+  limit: z.literal(5),
+  total: z.number().int().nonnegative(),
+  days: artistAnalyticsSchema.shape.period.shape.days,
+  maxPlays: z.number().int().nonnegative(),
+}) satisfies z.ZodType<ApiSchemas['ArtistTopTracksEntity']>
+
 /** Change against the previous period as text; never a bare color. */
 export function changeLabel(
   current: number,

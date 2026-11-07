@@ -1,6 +1,8 @@
 import { execFile } from 'node:child_process'
-import { randomUUID } from 'node:crypto'
+import { createHash, randomUUID } from 'node:crypto'
+import { createReadStream } from 'node:fs'
 import { rm } from 'node:fs/promises'
+import type { Readable } from 'node:stream'
 import { promisify } from 'node:util'
 import { resolveSafeMulterPath } from '@common/utils/multer-file'
 import type { StorageService } from '@infra/storage/storage.types'
@@ -26,6 +28,7 @@ export interface StoredMaster {
   fileName: string
   contentType: string
   sizeBytes: number
+  sha256: string
   duration: number | null
   /** Normalised peaks for drawing the waveform; empty when the file could not be decoded. */
   waveform: number[]
@@ -43,9 +46,10 @@ export async function storeReleaseMaster(
   try {
     if (!extension) throw new BadRequestException(RELEASE_ERRORS.AUDIO_TYPE_INVALID)
     const key = `release-masters/${ownerArtistId}/${randomUUID()}${extension}`
-    const [duration, waveform] = await Promise.all([
+    const [duration, waveform, sha256] = await Promise.all([
       probeDurationSeconds(path),
       extractWaveform(path),
+      hashAudioStream(createReadStream(path)),
     ])
     await storeMaster({ storage, key, filePath: path, contentType: file.mimetype })
     return {
@@ -53,6 +57,7 @@ export async function storeReleaseMaster(
       fileName: displayFileName(file.originalname),
       contentType: file.mimetype,
       sizeBytes: file.size,
+      sha256,
       duration,
       waveform,
     }
@@ -70,8 +75,16 @@ export function masterColumns(master: StoredMaster) {
     audioFileName: master.fileName,
     audioContentType: master.contentType,
     audioSizeBytes: master.sizeBytes,
+    audioSha256: master.sha256,
     waveform: master.waveform,
   } satisfies Prisma.ArtistTrackDraftUpdateManyMutationInput
+}
+
+/** Stream the original bytes so large masters never need to fit in memory. */
+export async function hashAudioStream(stream: Readable): Promise<string> {
+  const hash = createHash('sha256')
+  for await (const chunk of stream) hash.update(chunk)
+  return hash.digest('hex')
 }
 
 /**

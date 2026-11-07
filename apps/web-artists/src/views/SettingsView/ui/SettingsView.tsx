@@ -14,7 +14,7 @@ import { LanguagePreference } from '@features/workspace-language'
 import { AppearancePreferences } from '@features/workspace-theme'
 import { useI18n } from '@shared/i18n'
 import { ROUTES } from '@shared/routes/routes'
-import { PanelIcon } from '@shared/ui'
+import { PageSkeleton, PanelIcon } from '@shared/ui'
 import { Link } from '@tanstack/react-router'
 import {
   Bell,
@@ -48,7 +48,7 @@ export function SettingsView({ artistId }: SettingsViewProps) {
         </p>
       </div>
       {profile.isPending ? (
-        <p role="status">{t('settings.loading')}</p>
+        <PageSkeleton label={t('settings.loading')} />
       ) : profile.isError ? (
         <div className="space-y-3">
           <p role="alert">{tMessage(profile.error.message)}</p>

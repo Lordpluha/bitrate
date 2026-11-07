@@ -1,12 +1,11 @@
 import { Button, cn } from '@bitrate/ui-react'
-import { CreateReleaseDialog } from '@features/create-release'
+import {
+  CreateReleaseFeedback,
+  useCreateReleaseAction,
+} from '@features/create-release'
 import { NowPlayingProvider } from '@features/now-playing'
 import { WorkspaceActionsProvider } from '@features/workspace-actions'
-import {
-  AccountLocaleSync,
-  LanguagePreference,
-} from '@features/workspace-language'
-import { ThemeSwitcher } from '@features/workspace-theme'
+import { AccountLocaleSync } from '@features/workspace-language'
 import type { ArtistIdentity } from '@shared/auth/artistSession.types'
 import { useI18n } from '@shared/i18n'
 import { ROUTES } from '@shared/routes/routes'
@@ -15,14 +14,14 @@ import { PanelLeftClose, PanelLeftOpen } from 'lucide-react'
 import { type ReactNode, useMemo, useState } from 'react'
 import { dashboardNavigation } from '../config/navigation'
 import { useSpotlight } from '../lib/useSpotlight'
+import { ArtistSessionSync } from './ArtistSessionSync'
 import { DashboardAccount } from './DashboardAccount'
 import { DashboardAccountMenu } from './DashboardAccountMenu'
 import { DashboardCommands } from './DashboardCommands'
 import { DashboardDesignNavigation } from './DashboardDesignNavigation'
 import { DashboardMobileMenu } from './DashboardMobileMenu'
-import { DashboardNotifications } from './DashboardNotifications'
-import { DashboardSettingsLink } from './DashboardSettingsLink'
 import { DashboardSupport } from './DashboardSupport'
+import { SidebarPreferences } from './SidebarPreferences'
 
 interface ArtistDashboardProps {
   artist: ArtistIdentity
@@ -31,6 +30,7 @@ interface ArtistDashboardProps {
 
 export function ArtistDashboard({ artist, children }: ArtistDashboardProps) {
   const [compact, setCompact] = useState(false)
+  const createRelease = useCreateReleaseAction(artist.id)
   useSpotlight()
   const pathname = useLocation({ select: (location) => location.pathname })
   const { t } = useI18n()
@@ -48,24 +48,15 @@ export function ArtistDashboard({ artist, children }: ArtistDashboardProps) {
 
   return (
     <WorkspaceActionsProvider
-      accountContent={(onNavigate) => (
-        <>
-          <DashboardAccount artist={artist} />
-          <ThemeSwitcher />
-          <LanguagePreference artistId={artist.id} />
-          <DashboardSettingsLink onNavigate={onNavigate} />
-        </>
-      )}
+      accountContent={() => <DashboardAccount artist={artist} />}
       artistId={artist.id}
-      createReleaseDialog={(onClose) => (
-        <CreateReleaseDialog artistId={artist.id} onClose={onClose} />
-      )}
+      creatingRelease={createRelease.pending}
       destinations={destinations}
-      notificationsContent={(onNavigate) => (
-        <DashboardNotifications artistId={artist.id} onNavigate={onNavigate} />
-      )}
+      onCreateRelease={createRelease.create}
     >
+      <ArtistSessionSync artistId={artist.id} />
       <AccountLocaleSync artistId={artist.id} />
+      <CreateReleaseFeedback action={createRelease} />
       <div
         className="artist-dashboard isolate flex min-h-dvh bg-background text-foreground"
         data-workspace-page={current?.page ?? 'workspace'}
@@ -132,6 +123,7 @@ export function ArtistDashboard({ artist, children }: ArtistDashboardProps) {
               <DashboardDesignNavigation compact={compact} />
             </div>
             <div className="artist-workspace-sidebar-footer mt-auto flex flex-col gap-6 pt-6">
+              <SidebarPreferences artistId={artist.id} compact={compact} />
               {!compact && <DashboardSupport />}
               <DashboardAccountMenu artist={artist} compact={compact} />
             </div>

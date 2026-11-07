@@ -1,3 +1,4 @@
+import { CacheService } from '@infra/cache/cache.service'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import { STORAGE_SERVICE } from '@infra/storage/storage.constants'
 import type { StorageService } from '@infra/storage/storage.types'
@@ -91,6 +92,8 @@ describe('Release drafts (HTTP)', () => {
       .overrideProvider(PrismaService)
       .useValue(prismaMock)
       // Uploads never reach S3 in HTTP tests.
+      .overrideProvider(CacheService)
+      .useValue(mockDeep<CacheService>())
       .overrideProvider(STORAGE_SERVICE)
       .useValue(mockDeep<StorageService>())
       .overrideGuard(ArtistAuthGuard)
@@ -117,6 +120,9 @@ describe('Release drafts (HTTP)', () => {
   beforeEach(() => {
     resetPrismaMock()
     mockReset(transactionMock)
+    transactionMock.release.updateManyAndReturn.mockResolvedValue([draft])
+    transactionMock.release.update.mockResolvedValue(draft)
+    transactionMock.artistTrackDraft.count.mockResolvedValue(0)
     prismaMock.$transaction.mockImplementation(async (operation) => {
       if (typeof operation !== 'function') throw new Error('Expected an interactive transaction')
       return await operation(transactionMock)
@@ -570,10 +576,10 @@ describe('Release drafts (HTTP)', () => {
     )
   })
 
-  it('updates title and type with an atomic owner, lifecycle and version guard', async () => {
-    prismaMock.release.updateManyAndReturn.mockResolvedValue([
-      { ...draft, title: 'Updated', type: 'EP' },
-    ])
+  it('updates title and detects type with an atomic owner, lifecycle and version guard', async () => {
+    transactionMock.release.updateManyAndReturn.mockResolvedValue([draft])
+    transactionMock.artistTrackDraft.count.mockResolvedValue(5)
+    transactionMock.release.update.mockResolvedValue({ ...draft, title: 'Updated', type: 'EP' })
     const response = await request(app.getHttpServer())
       .patch(`/api/v1/releases/${draft.id}`)
       .set('x-test-artist', ownerId)
@@ -581,7 +587,7 @@ describe('Release drafts (HTTP)', () => {
       .expect(200)
     expect(response.body).toMatchObject({ title: 'Updated', type: 'EP', status: 'DRAFT' })
     expect(response.headers['cache-control']).toBe('private, no-store')
-    expect(prismaMock.release.updateManyAndReturn).toHaveBeenCalledWith(
+    expect(transactionMock.release.updateManyAndReturn).toHaveBeenCalledWith(
       expect.objectContaining({
         where: {
           id: draft.id,
@@ -590,7 +596,7 @@ describe('Release drafts (HTTP)', () => {
           status: 'DRAFT',
           updatedAt: draft.updatedAt,
         },
-        data: { title: 'Updated', type: 'EP' },
+        data: expect.objectContaining({ updatedAt: expect.any(Date) }),
       }),
     )
   })
@@ -599,14 +605,17 @@ describe('Release drafts (HTTP)', () => {
     'saves or clears only the planned schedule: %s',
     async (scheduledAt) => {
       const date = scheduledAt === null ? null : new Date(scheduledAt)
-      prismaMock.release.updateManyAndReturn.mockResolvedValue([{ ...draft, scheduledAt: date }])
+      transactionMock.release.updateManyAndReturn.mockResolvedValue([
+        { ...draft, scheduledAt: date },
+      ])
+      transactionMock.release.update.mockResolvedValue({ ...draft, scheduledAt: date })
       const response = await request(app.getHttpServer())
         .patch(`/api/v1/releases/${draft.id}`)
         .set('x-test-artist', ownerId)
         .send({ scheduledAt, expectedUpdatedAt: draft.updatedAt.toISOString() })
         .expect(200)
       expect(response.body.scheduledAt).toBe(date?.toISOString() ?? null)
-      expect(prismaMock.release.updateManyAndReturn).toHaveBeenCalledWith(
+      expect(transactionMock.release.updateManyAndReturn).toHaveBeenCalledWith(
         expect.objectContaining({
           // The release timing stays editable after approval, until publishing starts.
           where: {
@@ -616,7 +625,7 @@ describe('Release drafts (HTTP)', () => {
             status: { in: ['DRAFT', 'READY'] },
             updatedAt: draft.updatedAt,
           },
-          data: { scheduledAt: date },
+          data: expect.objectContaining({ updatedAt: expect.any(Date) }),
         }),
       )
     },
@@ -625,7 +634,7 @@ describe('Release drafts (HTTP)', () => {
   it.each([{ title: 'Updated' }, { upc: '036000291452' }])(
     'keeps every other field draft-only, even next to a schedule: %j',
     async (fields) => {
-      prismaMock.release.updateManyAndReturn.mockResolvedValue([draft])
+      transactionMock.release.updateManyAndReturn.mockResolvedValue([draft])
       await request(app.getHttpServer())
         .patch(`/api/v1/releases/${draft.id}`)
         .set('x-test-artist', ownerId)
@@ -635,7 +644,7 @@ describe('Release drafts (HTTP)', () => {
           expectedUpdatedAt: draft.updatedAt.toISOString(),
         })
         .expect(200)
-      expect(prismaMock.release.updateManyAndReturn).toHaveBeenCalledWith(
+      expect(transactionMock.release.updateManyAndReturn).toHaveBeenCalledWith(
         expect.objectContaining({ where: expect.objectContaining({ status: 'DRAFT' }) }),
       )
     },
@@ -644,14 +653,14 @@ describe('Release drafts (HTTP)', () => {
   it.each([{ title: 'Updated' }, { type: 'EP' }])(
     'preserves fields omitted from a partial update: %j',
     async (fields) => {
-      prismaMock.release.updateManyAndReturn.mockResolvedValue([draft])
+      transactionMock.release.updateManyAndReturn.mockResolvedValue([draft])
       await request(app.getHttpServer())
         .patch(`/api/v1/releases/${draft.id}`)
         .set('x-test-artist', ownerId)
         .send({ ...fields, expectedUpdatedAt: draft.updatedAt.toISOString() })
         .expect(200)
-      expect(prismaMock.release.updateManyAndReturn).toHaveBeenCalledWith(
-        expect.objectContaining({ data: fields }),
+      expect(transactionMock.release.updateManyAndReturn).toHaveBeenCalledWith(
+        expect.objectContaining({ data: expect.objectContaining({ updatedAt: expect.any(Date) }) }),
       )
     },
   )
@@ -659,20 +668,20 @@ describe('Release drafts (HTTP)', () => {
   it.each(['DRAFT', 'READY', 'SUBMITTED', 'RELEASED', 'REJECTED'] as const)(
     'reports a stale or non-draft %s release as a conflict without retrying',
     async (status) => {
-      prismaMock.release.updateManyAndReturn.mockResolvedValue([])
-      prismaMock.release.findFirst.mockResolvedValue({ ...draft, status })
+      transactionMock.release.updateManyAndReturn.mockResolvedValue([])
+      transactionMock.release.findFirst.mockResolvedValue({ ...draft, status })
       await request(app.getHttpServer())
         .patch(`/api/v1/releases/${draft.id}`)
         .set('x-test-artist', ownerId)
         .send({ title: 'Updated', expectedUpdatedAt: draft.updatedAt.toISOString() })
         .expect(409)
-      expect(prismaMock.release.updateManyAndReturn).toHaveBeenCalledTimes(1)
+      expect(transactionMock.release.updateManyAndReturn).toHaveBeenCalledTimes(1)
     },
   )
 
   it('hides unavailable releases on reads and writes, including from another artist', async () => {
-    prismaMock.release.findFirst.mockResolvedValue(null)
-    prismaMock.release.updateManyAndReturn.mockResolvedValue([])
+    transactionMock.release.findFirst.mockResolvedValue(null)
+    transactionMock.release.updateManyAndReturn.mockResolvedValue([])
     await request(app.getHttpServer())
       .get(`/api/v1/releases/${draft.id}`)
       .set('x-test-artist', otherOwnerId)
@@ -682,7 +691,7 @@ describe('Release drafts (HTTP)', () => {
       .set('x-test-artist', otherOwnerId)
       .send({ title: 'Updated', expectedUpdatedAt: draft.updatedAt.toISOString() })
       .expect(404)
-    expect(prismaMock.release.updateManyAndReturn).toHaveBeenCalledWith(
+    expect(transactionMock.release.updateManyAndReturn).toHaveBeenCalledWith(
       expect.objectContaining({
         where: expect.objectContaining({ ownerArtistId: otherOwnerId, deletedAt: null }),
       }),
@@ -714,7 +723,7 @@ describe('Release drafts (HTTP)', () => {
       .set('x-test-artist', ownerId)
       .send({ expectedUpdatedAt: draft.updatedAt.toISOString(), ...input })
       .expect(400)
-    expect(prismaMock.release.updateManyAndReturn).not.toHaveBeenCalled()
+    expect(transactionMock.release.updateManyAndReturn).not.toHaveBeenCalled()
   })
 
   it('rejects invalid identifiers before querying and propagates failed writes', async () => {
@@ -727,9 +736,9 @@ describe('Release drafts (HTTP)', () => {
       .set('x-test-artist', ownerId)
       .send({ title: 'Updated', expectedUpdatedAt: draft.updatedAt.toISOString() })
       .expect(400)
-    expect(prismaMock.release.findFirst).not.toHaveBeenCalled()
-    expect(prismaMock.release.updateManyAndReturn).not.toHaveBeenCalled()
-    prismaMock.release.updateManyAndReturn.mockRejectedValue(new Error('Database unavailable'))
+    expect(transactionMock.release.findFirst).not.toHaveBeenCalled()
+    expect(transactionMock.release.updateManyAndReturn).not.toHaveBeenCalled()
+    transactionMock.release.updateManyAndReturn.mockRejectedValue(new Error('Database unavailable'))
     await request(app.getHttpServer())
       .patch(`/api/v1/releases/${draft.id}`)
       .set('x-test-artist', ownerId)
@@ -737,35 +746,73 @@ describe('Release drafts (HTTP)', () => {
       .expect(500)
   })
 
-  it('deletes an owned draft with its recordings and frees their UPC and ISRCs', async () => {
-    transactionMock.release.updateManyAndReturn.mockResolvedValue([draft])
-    transactionMock.artistTrackDraft.updateMany.mockResolvedValue({ count: 2 })
+  it.each([
+    'DRAFT',
+    'READY',
+    'SUBMITTED',
+    'RELEASED',
+    'REJECTED',
+    'SCHEDULED',
+    'PUBLISHING',
+    'PUBLISH_FAILED',
+    'UNPUBLISHED',
+  ] as const)(
+    'deletes an owned %s release and its recordings at the read version',
+    async (status) => {
+      transactionMock.release.updateMany.mockResolvedValue({ count: 1 })
+      transactionMock.release.findUniqueOrThrow.mockResolvedValue({
+        ...draft,
+        status,
+        tracks: [],
+        albumId: null,
+      } as never)
+      await request(app.getHttpServer())
+        .delete(`/api/v1/releases/${draft.id}`)
+        .set('x-test-artist', ownerId)
+        .send({ expectedUpdatedAt: draft.updatedAt.toISOString() })
+        .expect(204)
+        .expect('Cache-Control', 'private, no-store')
+      expect(transactionMock.release.updateMany).toHaveBeenCalledWith({
+        where: {
+          id: draft.id,
+          ownerArtistId: ownerId,
+          deletedAt: null,
+          updatedAt: draft.updatedAt,
+        },
+        data: { deletedAt: expect.any(Date), upc: null },
+      })
+      expect(transactionMock.artistTrackDraft.updateMany).toHaveBeenCalledWith({
+        where: { releaseId: draft.id, ownerArtistId: ownerId, deletedAt: null },
+        data: { deletedAt: expect.any(Date), isrc: null },
+      })
+    },
+  )
+
+  it('removes the released album and catalogue recordings in the same transaction', async () => {
+    transactionMock.release.updateMany.mockResolvedValue({ count: 1 })
+    transactionMock.release.findUniqueOrThrow.mockResolvedValue({
+      ...draft,
+      status: 'RELEASED',
+      albumId: 'album-1',
+      tracks: [{ trackId: 'track-1' }],
+    } as never)
     await request(app.getHttpServer())
       .delete(`/api/v1/releases/${draft.id}`)
       .set('x-test-artist', ownerId)
       .send({ expectedUpdatedAt: draft.updatedAt.toISOString() })
       .expect(204)
-      .expect('Cache-Control', 'private, no-store')
-    expect(transactionMock.release.updateManyAndReturn).toHaveBeenCalledWith(
-      expect.objectContaining({
-        where: {
-          id: draft.id,
-          ownerArtistId: ownerId,
-          deletedAt: null,
-          status: 'DRAFT',
-          updatedAt: draft.updatedAt,
-        },
-        data: expect.objectContaining({ deletedAt: expect.any(Date), upc: null }),
-      }),
-    )
-    expect(transactionMock.artistTrackDraft.updateMany).toHaveBeenCalledWith({
-      where: { releaseId: draft.id, ownerArtistId: ownerId, deletedAt: null },
-      data: { deletedAt: expect.any(Date), isrc: null },
+    expect(transactionMock.track.updateMany).toHaveBeenCalledWith({
+      where: { id: { in: ['track-1'] }, releases: { none: { release: { deletedAt: null } } } },
+      data: { deletedAt: expect.any(Date), publishedAt: null, isrc: null },
+    })
+    expect(transactionMock.album.update).toHaveBeenCalledWith({
+      where: { id: 'album-1' },
+      data: { deletedAt: expect.any(Date), publishedAt: null },
     })
   })
 
   it('hides foreign or deleted releases from deletion', async () => {
-    transactionMock.release.updateManyAndReturn.mockResolvedValue([])
+    transactionMock.release.updateMany.mockResolvedValue({ count: 0 })
     transactionMock.release.findFirst.mockResolvedValue(null)
     await request(app.getHttpServer())
       .delete(`/api/v1/releases/${draft.id}`)
@@ -773,10 +820,11 @@ describe('Release drafts (HTTP)', () => {
       .send({ expectedUpdatedAt: draft.updatedAt.toISOString() })
       .expect(404)
     expect(transactionMock.artistTrackDraft.updateMany).not.toHaveBeenCalled()
+    expect(transactionMock.track.updateMany).not.toHaveBeenCalled()
   })
 
-  it('refuses to delete a release past the draft or changed since it was read', async () => {
-    transactionMock.release.updateManyAndReturn.mockResolvedValue([])
+  it('refuses to delete a release changed since it was read', async () => {
+    transactionMock.release.updateMany.mockResolvedValue({ count: 0 })
     transactionMock.release.findFirst.mockResolvedValue({ ...draft, status: 'SUBMITTED' })
     await request(app.getHttpServer())
       .delete(`/api/v1/releases/${draft.id}`)
@@ -843,6 +891,7 @@ describe('Release drafts (HTTP)', () => {
       title: { contains: 'night', mode: 'insensitive' },
       status: 'READY',
       version: 'ORIGINAL',
+      sourceTrackId: null,
     } satisfies Prisma.ArtistTrackDraftWhereInput
     expect(prismaMock.artistTrackDraft.findMany).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -852,7 +901,9 @@ describe('Release drafts (HTTP)', () => {
         orderBy: [{ title: 'asc' }, { id: 'asc' }],
       }),
     )
-    expect(prismaMock.artistTrackDraft.count).toHaveBeenCalledWith({ where })
+    expect(prismaMock.artistTrackDraft.count).toHaveBeenCalledWith({
+      where: { ...where, sourceTrackId: null },
+    })
   })
 
   it('shows a recording without its own artwork with the cover of its live release', async () => {
@@ -911,7 +962,9 @@ describe('Release drafts (HTTP)', () => {
     expect(response.body).toEqual({ tracks: 6, releases: 3 })
     expect(response.headers['cache-control']).toBe('private, no-store')
     const where = { ownerArtistId: otherOwnerId, deletedAt: null }
-    expect(prismaMock.artistTrackDraft.count).toHaveBeenCalledWith({ where })
+    expect(prismaMock.artistTrackDraft.count).toHaveBeenCalledWith({
+      where: { ...where, sourceTrackId: null },
+    })
     expect(prismaMock.release.count).toHaveBeenCalledWith({ where })
   })
 
@@ -1020,6 +1073,26 @@ describe('Release drafts (HTTP)', () => {
     expect(response.headers['cache-control']).toBe('private, no-store')
   })
 
+  it('creates an empty compilation draft explicitly without publishing it', async () => {
+    transactionMock.release.create.mockResolvedValue({ ...draft, type: 'COMPILATION' })
+    transactionMock.releaseContributor.create.mockResolvedValue(soloCredit)
+    const response = await request(app.getHttpServer())
+      .post('/api/v1/releases')
+      .set('x-test-artist', ownerId)
+      .send({ title: draft.title, type: 'COMPILATION' })
+      .expect(201)
+    expect(response.body).toMatchObject({ type: 'COMPILATION', status: 'DRAFT' })
+    expect(transactionMock.release.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          ownerArtistId: ownerId,
+          type: 'COMPILATION',
+          status: 'DRAFT',
+        }),
+      }),
+    )
+  })
+
   it('requires an artist session for both creating and listing drafts', async () => {
     await request(app.getHttpServer())
       .post('/api/v1/releases')
@@ -1047,8 +1120,8 @@ describe('Release drafts (HTTP)', () => {
     expect(transactionMock.release.create).not.toHaveBeenCalled()
   })
 
-  it('accepts an explicit album type', async () => {
-    transactionMock.release.create.mockResolvedValue({ ...draft, type: 'EP' })
+  it('starts empty drafts as singles even when a legacy client sends another type', async () => {
+    transactionMock.release.create.mockResolvedValue(draft)
     transactionMock.releaseContributor.create.mockResolvedValue(soloCredit)
     await request(app.getHttpServer())
       .post('/api/v1/releases')
@@ -1057,7 +1130,7 @@ describe('Release drafts (HTTP)', () => {
       .expect(201)
     expect(transactionMock.release.create).toHaveBeenCalledWith(
       expect.objectContaining({
-        data: expect.objectContaining({ type: 'EP', ownerArtistId: ownerId, status: 'DRAFT' }),
+        data: expect.objectContaining({ type: 'SINGLE', ownerArtistId: ownerId, status: 'DRAFT' }),
       }),
     )
   })

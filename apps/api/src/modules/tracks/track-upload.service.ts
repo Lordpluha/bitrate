@@ -104,7 +104,7 @@ function trackUpdateData(
   }
 }
 
-/** Accepts artist uploads, persists them, and queues the transcoding ladder. */
+/** Catalogue audio pipeline for reviewed release publication and trusted server-side imports. */
 @Injectable()
 export class TrackUploadService {
   constructor(
@@ -330,15 +330,50 @@ export class TrackUploadService {
     publishedAt: Date,
   ): Promise<number> {
     const published = await tx.track.updateMany({
-      where: { id: { in: trackIds }, processingStatus: 'READY', deletedAt: null },
+      where: {
+        id: { in: trackIds },
+        processingStatus: 'READY',
+        deletedAt: null,
+        moderationBlockedAt: null,
+      },
       data: { publishedAt },
     })
     return published.count
   }
 
-  /** Hides a release's tracks from listeners inside the caller's transaction; files are kept. */
+  /** Hides recordings with no remaining live release; shared audio and files are kept. */
   async hideReleaseTracks(tx: Prisma.TransactionClient, trackIds: string[]): Promise<void> {
-    await tx.track.updateMany({ where: { id: { in: trackIds } }, data: { publishedAt: null } })
+    await tx.track.updateMany({
+      where: {
+        id: { in: trackIds },
+        releases: { none: { release: { deletedAt: null, status: 'RELEASED' } } },
+      },
+      data: { publishedAt: null },
+    })
+  }
+
+  /** Reopening a compilation never changes the date of recordings that are already live. */
+  async restoreSharedReleaseTracks(tx: Prisma.TransactionClient, trackIds: string[], at: Date) {
+    if (!trackIds.length) return
+    await tx.track.updateMany({
+      where: {
+        id: { in: trackIds },
+        deletedAt: null,
+        moderationBlockedAt: null,
+        processingStatus: 'READY',
+        publishedAt: null,
+      },
+      data: { publishedAt: at },
+    })
+  }
+
+  /** Removing the original recording administratively revokes every compilation appearance. */
+  async blockReleaseTracks(tx: Prisma.TransactionClient, trackIds: string[]) {
+    if (!trackIds.length) return
+    await tx.track.updateMany({
+      where: { id: { in: trackIds } },
+      data: { moderationBlockedAt: new Date(), publishedAt: null },
+    })
   }
 
   /** Drops track and search caches after a release changed what listeners can see. */
@@ -346,7 +381,7 @@ export class TrackUploadService {
     await this.invalidateTrackCaches()
   }
 
-  /** Stores a new upload and queues its conversion. */
+  /** Trusted server-side imports only. Artist HTTP uploads must use the release workflow. */
   async create(
     artistId: ArtistEntity['id'],
     createTrackDto: CreateTrackDto,
@@ -374,6 +409,8 @@ export class TrackUploadService {
           duration: metadata.duration,
           ...rightsConfirmationRecord(),
           processingStatus: 'PROCESSING',
+          // The importer explicitly permits catalogue publication; conversion alone cannot.
+          publishedAt: new Date(),
           processingError: null,
           processingAttempts: 0,
           processingStartedAt: null,
@@ -400,7 +437,7 @@ export class TrackUploadService {
     }
   }
 
-  /** Updates the artist's own track, replacing its audio and/or cover when given. */
+  /** Internal catalogue maintenance only; never expose this method through artist HTTP routes. */
   async update(
     artistId: ArtistEntity['id'],
     id: TrackEntity['id'],

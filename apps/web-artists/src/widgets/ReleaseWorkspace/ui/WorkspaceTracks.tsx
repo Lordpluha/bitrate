@@ -6,7 +6,7 @@ import {
 } from '@entities/release'
 import { useI18n } from '@shared/i18n'
 import { PanelIcon } from '@shared/ui'
-import { ListMusic, Music2, Upload } from 'lucide-react'
+import { Library, ListMusic, Music2, Upload } from 'lucide-react'
 import { durationLabel, isrcLabel } from '../lib/trackLabels'
 import type { WorkspaceActionHandler } from '../model/workspaceAction'
 import { DraftTrackRow } from './DraftTrackRow'
@@ -56,7 +56,7 @@ export function WorkspaceTracks({
           <PanelIcon icon={ListMusic} />
           {t('workspace.tracks.title')} <span>({release.trackCount})</span>
         </h2>
-        {draft && (
+        {draft && release.type !== 'COMPILATION' && (
           <Button
             className="gap-1.5"
             onClick={() => onAction({ kind: 'track-add' })}
@@ -67,8 +67,25 @@ export function WorkspaceTracks({
             {t('music.uploadTrack')}
           </Button>
         )}
+        {draft && release.type === 'COMPILATION' && (
+          <Button
+            disabled={release.trackCount >= 50}
+            onClick={() => onAction({ kind: 'compilation-add' })}
+            size="sm"
+            variant="outline"
+          >
+            <Library aria-hidden="true" className="size-4" />
+            {t('compilation.pick')}
+          </Button>
+        )}
       </div>
-      <p>{t('workspace.tracks.description')}</p>
+      <p>
+        {t(
+          release.type === 'COMPILATION'
+            ? 'compilation.description'
+            : 'workspace.tracks.description',
+        )}
+      </p>
       {reorder.error && (
         <p className="text-sm text-destructive" role="alert">
           {tMessage(reorder.error.message)}
@@ -79,12 +96,21 @@ export function WorkspaceTracks({
           <Music2 aria-hidden="true" className="size-5 shrink-0 text-accent" />
           <p>
             {draft
-              ? t('workspace.tracks.emptyDraft')
+              ? t(
+                  release.type === 'COMPILATION'
+                    ? 'compilation.emptyDraft'
+                    : 'workspace.tracks.emptyDraft',
+                )
               : t('workspace.tracks.empty')}
           </p>
         </div>
       ) : (
-        <ul>
+        <ul
+          aria-labelledby="release-tracks-heading"
+          className="artist-release-track-list"
+          // biome-ignore lint/a11y/noNoninteractiveTabindex: Keyboard users must be able to focus and scroll this list.
+          tabIndex={0}
+        >
           {release.trackDrafts.map((track, index) => (
             <DraftTrackRow
               count={ids.length}

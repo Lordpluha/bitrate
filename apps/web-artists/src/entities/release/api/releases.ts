@@ -71,7 +71,6 @@ export async function updateRelease({
     parsed.data.id !== id ||
     parsed.data.status !== 'DRAFT' ||
     (input.title !== undefined && parsed.data.title !== input.title.trim()) ||
-    (input.type !== undefined && parsed.data.type !== input.type) ||
     (input.scheduledAt !== undefined &&
       (parsed.data.scheduledAt === null
         ? null
@@ -98,7 +97,7 @@ export interface DeleteReleaseRequest {
   input: ApiSchemas['ReleaseDraftVersionDto']
 }
 
-/** Deletes a draft; only an explicit 204 confirms it. */
+/** Deletes an owned release; only an explicit 204 confirms it. */
 export async function deleteRelease({ id, input }: DeleteReleaseRequest) {
   const unconfirmed = messageKey('release.error.deleteUnconfirmed')
   let result: Awaited<ReturnType<typeof sendDelete>>
@@ -136,7 +135,8 @@ export async function createRelease(input: CreateReleaseValues) {
     !parsed.success ||
     parsed.data.status !== 'DRAFT' ||
     parsed.data.title !== input.title.trim() ||
-    parsed.data.type !== input.type
+    parsed.data.type !==
+      (input.type === 'COMPILATION' ? 'COMPILATION' : 'SINGLE')
   )
     throw new Error(messageKey('release.error.createUnconfirmed'))
   return parsed.data

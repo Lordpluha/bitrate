@@ -15,14 +15,15 @@ import {
   sortableKeyboardCoordinates,
 } from '@dnd-kit/sortable'
 import { useI18n } from '@shared/i18n'
-import type { ReactNode } from 'react'
-import type { LayoutTile } from '../model/layout'
+import type { CSSProperties, ReactNode } from 'react'
+import { type LayoutTile, tileColumns } from '../model/layout'
 import type { CustomizableLayout } from '../model/useCustomizableLayout'
+import { useGridGeometry } from '../model/useGridGeometry'
 import { SortableTile } from './SortableTile'
 
 interface LayoutGridProps {
   layout: CustomizableLayout
-  /** `thirds`: S, M and L take one, two and three columns; `halves`: S is half, M and L full. */
+  /** Interprets legacy S/M/L preferences; numeric widths always use twelve columns. */
   variant: 'thirds' | 'halves'
   renderTile: (id: string) => ReactNode
   /** Shown beside the editing hint, for pages whose heading has no room for the controls. */
@@ -39,6 +40,12 @@ export function LayoutGrid({
   className,
 }: LayoutGridProps) {
   const { t } = useI18n()
+  const dimensional = layout.tiles.some((tile) => tile.rows !== undefined)
+  const { gridRef, capture } = useGridGeometry(
+    layout.tiles,
+    layout.editing,
+    layout.editing || dimensional,
+  )
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
     useSensor(KeyboardSensor, {
@@ -51,12 +58,14 @@ export function LayoutGrid({
   }
   const position = (id: string | number) =>
     layout.tiles.findIndex((tile) => tile.id === id) + 1
-  const update = (id: string, patch: Partial<LayoutTile>) =>
+  const update = (id: string, patch: Partial<LayoutTile>) => {
+    capture()
     layout.change(
       layout.tiles.map((tile) =>
         tile.id === id ? { ...tile, ...patch } : tile,
       ),
     )
+  }
   const onDragEnd = ({ active, over }: DragEndEvent) => {
     if (!over || active.id === over.id) return
     const from = layout.tiles.findIndex((tile) => tile.id === active.id)
@@ -67,8 +76,10 @@ export function LayoutGrid({
   const grid = (
     <div
       className={cn('artist-layout-grid', className)}
+      data-dimensional={dimensional}
       data-editing={layout.editing}
       data-variant={variant}
+      ref={gridRef}
     >
       {layout.tiles.map((tile) => {
         const definition = layout.definitions.find(
@@ -79,18 +90,27 @@ export function LayoutGrid({
           return tile.hidden ? null : (
             <div
               className="artist-layout-tile"
+              data-columns={tileColumns(tile, variant)}
+              data-rows={tile.rows ?? 'auto'}
               data-size={tile.size}
               key={tile.id}
+              style={
+                {
+                  '--layout-columns': tileColumns(tile, variant),
+                } as CSSProperties
+              }
             >
-              {renderTile(tile.id)}
+              <div className="artist-layout-content">{renderTile(tile.id)}</div>
             </div>
           )
         return (
           <SortableTile
+            columns={tileColumns(tile, variant)}
             definition={definition}
             key={tile.id}
-            onResize={(size) => update(tile.id, { size })}
+            onResize={(size) => update(tile.id, size)}
             onToggleHidden={() => update(tile.id, { hidden: !tile.hidden })}
+            saving={layout.saving}
             tile={tile}
           >
             {renderTile(tile.id)}
@@ -107,6 +127,12 @@ export function LayoutGrid({
         <p className="artist-layout-hint">{t('layout.editingHint')}</p>
         {editingActions}
       </div>
+      <div aria-hidden="true" className="artist-layout-ruler">
+        {Array.from({ length: 12 }, (_, index) => index + 1).map((column) => (
+          <span key={column}>{column}</span>
+        ))}
+      </div>
+      <p className="artist-layout-mobile-hint">{t('layout.mobileHint')}</p>
       <DndContext
         accessibility={{
           screenReaderInstructions: { draggable: t('layout.instructions') },

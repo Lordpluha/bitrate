@@ -1,4 +1,8 @@
 export {
+  useAddCompilationTracks,
+  useCompilationCatalogue,
+} from './api/compilation'
+export {
   useContributor,
   useCreditSelf,
   useRemoveContributor,
