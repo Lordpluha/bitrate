@@ -10,19 +10,25 @@ export function CreateReleaseButton({
   first?: boolean
   className?: string
 }) {
-  const { openAction } = useWorkspaceActions()
+  const { openAction, creatingRelease } = useWorkspaceActions()
   const { t } = useI18n()
   return (
     <Button
+      aria-busy={creatingRelease}
       className={cn(
         'artist-workspace-primary h-11 gap-[0.5625rem] rounded-full px-[1.125rem] text-sm font-semibold',
         className,
       )}
+      disabled={creatingRelease}
       onClick={() => openAction('create-release')}
       variant="primary"
     >
       <Plus aria-hidden="true" className="size-[1.0625rem]" />
-      {first ? t('music.create.first') : t('music.create.title')}
+      {creatingRelease
+        ? t('music.create.submitting')
+        : first
+          ? t('music.create.first')
+          : t('music.create.title')}
     </Button>
   )
 }

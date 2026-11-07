@@ -1,4 +1,37 @@
 export const workspace = {
+  'compilation.emptyDraft':
+    'Choose published recordings from your catalogue to start this compilation.',
+  'compilation.formatHint':
+    'This collection keeps the Compilation format as you add or remove recordings.',
+
+  'compilation.removeConfirm':
+    'Remove {title} from this compilation? The original recording, its ISRC and listening history stay in your catalogue.',
+  'compilation.title': 'Build a compilation',
+  'compilation.intro':
+    'Choose your published recordings. Their audio, ISRC, likes and listening history stay the same. The compilation has its own artwork and still goes through review.',
+  'compilation.searchAction': 'Search',
+  'compilation.search': 'Find a recording',
+  'compilation.loading': 'Loading your published recordings',
+  'compilation.loadError': 'Could not load your catalogue. Try again.',
+  'compilation.saveError':
+    'Could not confirm the recordings were added. Reload the release before trying again.',
+  'compilation.conflict':
+    'The release or a selected recording changed. Close this picker and reload the release to review what is available.',
+  'compilation.noResults': 'No published recordings match your search.',
+  'compilation.empty':
+    'No more eligible recordings. Publish an original release first; removed recordings are unavailable.',
+  'compilation.pages': 'Catalogue recording pages',
+  'compilation.selected':
+    'Selected: {count}. You can add up to {limit} recordings.',
+  'compilation.adding': 'Adding…',
+  'compilation.add': 'Add recordings ({count})',
+  'compilation.pick': 'Add from catalogue',
+  'compilation.description':
+    'Existing recordings in running order. Audio and identifiers belong to the original recording.',
+  'compilation.reused': 'Linked from your published catalogue',
+  'compilation.unavailable':
+    'The original recording is unavailable. Remove it or choose another recording.',
+
   'workspace.loading': 'Loading release workspace…',
   'workspace.unavailable': 'Release workspace unavailable',
   'workspace.returnToMusic': 'Return to Music',
@@ -181,4 +214,8 @@ export const workspace = {
   'workspace.launch.copyFailed':
     'Could not copy the link. Copy it manually: {url}',
   'workspace.launch.openInPlayer': 'Open in player',
+  'workspace.title.edit': 'Edit release title',
+  'workspace.danger.title': 'Danger zone',
+  'workspace.danger.description':
+    'Delete this release from your workspace and the player. Recordings used by another release remain available. This cannot be undone.',
 } as const

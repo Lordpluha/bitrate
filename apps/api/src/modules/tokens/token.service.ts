@@ -37,11 +37,13 @@ export class TokenService {
     entityId: string,
     username: string,
     type: JWTPayload['type'],
+    jwtid?: string,
   ): Promise<string> {
     return await this.jwtService.signAsync(
       { username, type },
       {
         subject: entityId,
+        ...(jwtid ? { jwtid } : {}),
         expiresIn: this.accessTokenExpiry,
         secret: this.configService.getOrThrow('JWT_SECRET'),
       },
@@ -53,15 +55,35 @@ export class TokenService {
     entityId: string,
     username: string,
     type: JWTPayload['type'],
+    jwtid?: string,
   ): Promise<string> {
     return await this.jwtService.signAsync(
       { username, type },
       {
         subject: entityId,
+        ...(jwtid ? { jwtid } : {}),
         expiresIn: this.refreshTokenExpiry,
         secret: this.configService.getOrThrow('JWT_SECRET'),
       },
     )
+  }
+
+  /** Host-only, HttpOnly switcher credential; __Host- prevents cookie tossing in production. */
+  artistAccountsCookieName() {
+    return this.configService.getOrThrow('cookie').secure
+      ? '__Host-artist_accounts'
+      : 'artist_accounts'
+  }
+
+  setArtistAccountsCookie(res: Response, value: string) {
+    const { secure } = this.configService.getOrThrow('cookie')
+    res.cookie(this.artistAccountsCookieName(), value, {
+      httpOnly: true,
+      secure,
+      sameSite: 'strict',
+      path: '/',
+      expires: this.getRefreshTokenExpiresAt(),
+    })
   }
 
   /** Runs the verify token operation. */

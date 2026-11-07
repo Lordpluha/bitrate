@@ -1,4 +1,24 @@
 export const account = {
+  'account.switcher.title': 'Облікові записи',
+  'account.switcher.description':
+    'Облікові записи, у які ви ввійшли в цьому браузері.',
+  'account.switcher.current': 'Активний обліковий запис',
+  'account.switcher.switch': 'Перемкнутися на цей обліковий запис',
+  'account.switcher.add': 'Додати інший обліковий запис',
+  'account.switcher.addDescription':
+    'Увійдіть в інший обліковий запис артиста. Поточний вхід залишиться збереженим у цьому браузері.',
+  'account.switcher.back': 'Повернутися до кабінету',
+  'account.switcher.remove': 'Прибрати «{name}» з цього браузера',
+  'account.switcher.loading': 'Завантажуємо збережені входи…',
+  'account.switcher.hint':
+    'Можна зберегти до {limit} входів. Прибирання завершує вхід у цьому браузері та не видаляє обліковий запис.',
+  'account.switcher.loadFailed':
+    'Не вдалося завантажити збережені входи. Спробуйте ще раз.',
+  'account.switcher.failed':
+    'Не вдалося оновити збережені входи. Спробуйте ще раз.',
+  'account.switcher.unavailable':
+    'Цей збережений вхід більше недоступний. Оновіть список або ввійдіть у цей обліковий запис знову.',
+
   'account.error.loadSessions':
     'Не вдалося завантажити ваші пристрої з активним входом. Спробуйте ще раз.',
   'account.error.signOutUnconfirmed':

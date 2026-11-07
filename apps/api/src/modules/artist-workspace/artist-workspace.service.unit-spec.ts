@@ -5,7 +5,7 @@ import { ArtistWorkspaceService } from './artist-workspace.service'
 import { SaveWorkspaceLayoutSchema } from './dtos/workspace-layout.dto'
 
 const tiles = [
-  { id: 'current-release', size: 'L' as const, hidden: false },
+  { id: 'current-release', size: 'L' as const, columns: 7, rows: 5, hidden: false },
   { id: 'activity', size: 'S' as const, hidden: true },
 ]
 
@@ -87,6 +87,31 @@ describe('ArtistWorkspaceService', () => {
 })
 
 describe('SaveWorkspaceLayoutSchema', () => {
+  it('accepts every integer column width and preserves it', () => {
+    for (let columns = 1; columns <= 12; columns++) {
+      const input = { tiles: [{ ...tiles[0], columns }] }
+      expect(SaveWorkspaceLayoutSchema.parse(input)).toEqual(input)
+    }
+  })
+
+  it('accepts heights 1–12 and rejects malformed heights', () => {
+    for (let rows = 1; rows <= 12; rows++) {
+      const input = { tiles: [{ ...tiles[0], rows }] }
+      expect(SaveWorkspaceLayoutSchema.parse(input)).toEqual(input)
+    }
+    for (const rows of [0, 13, -1, 2.5, '6', null])
+      expect(SaveWorkspaceLayoutSchema.safeParse({ tiles: [{ ...tiles[0], rows }] }).success).toBe(
+        false,
+      )
+  })
+
+  it('rejects invalid column widths', () => {
+    for (const columns of [0, 13, -1, 2.5, '6', null])
+      expect(
+        SaveWorkspaceLayoutSchema.safeParse({ tiles: [{ ...tiles[0], columns }] }).success,
+      ).toBe(false)
+  })
+
   it('accepts a full layout', () => {
     expect(SaveWorkspaceLayoutSchema.safeParse({ tiles }).success).toBe(true)
   })

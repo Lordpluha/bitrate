@@ -1,0 +1,766 @@
+/* Presentation layout only: production workspace panels retain their original geometry. */
+@layer utilities {
+  .artist-studio-screen {
+    height: clamp(28rem, 72dvh, 42rem);
+    container: artist-studio / inline-size;
+  }
+  .studio-preview-canvas
+    :is(
+      .artist-release-cover-hint,
+      .artist-release-chip,
+      .artist-release-step-dot,
+      .artist-release-step-name,
+      .artist-release-progress-count,
+      .artist-release-track-index
+    ) {
+    font-size: 0.875rem;
+  }
+  .studio-preview-canvas .artist-release-step-dot {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+  .studio-preview-canvas
+    :is(
+      .artist-track-player-time,
+      .artist-dash-numbers dt,
+      .artist-dash-share-legend li,
+      .artist-dash-share-legend b,
+      .artist-dash-releases-status,
+      .artist-countdown-unit > span:last-child,
+      .artist-analytics-change,
+      .artist-analytics-gridline > span,
+      .artist-analytics-axis > span,
+      .artist-analytics-peak > b,
+      .artist-analytics-tooltip
+    ) {
+    font-size: 0.875rem;
+  }
+  .studio-preview-replica {
+    height: 100%;
+    min-height: 0;
+  }
+  .studio-preview-main-shell {
+    --studio-preview-header-height: 3.5rem;
+    position: relative;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-width: 0;
+    min-height: 0;
+  }
+  .studio-preview-sidebar {
+    display: none;
+    flex: none;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 1rem 0.75rem;
+    background: var(--color-artist-sidebar-start);
+    border-right: 1px solid var(--color-border);
+  }
+  .studio-preview-profile {
+    display: flex;
+    gap: 0.625rem;
+    align-items: center;
+    min-width: 0;
+    padding: 0.75rem 0.375rem;
+    margin-top: auto;
+    border-top: 1px solid var(--color-border);
+  }
+  .studio-preview-sidebar .artist-workspace-brand-row {
+    gap: 0.25rem;
+    align-items: center;
+    padding-inline: 0;
+  }
+  .studio-preview-sidebar[data-compact="true"] .artist-workspace-brand-row {
+    justify-content: center;
+  }
+  .studio-preview-sidebar[data-compact="true"] .artist-workspace-brand {
+    display: none;
+  }
+  .studio-preview-sidebar[data-compact="true"] .studio-preview-sidebar-toggle {
+    width: 100%;
+    height: 2.5rem;
+  }
+  .studio-preview-sidebar .artist-workspace-brand > span > span:first-child {
+    font-size: 1.125rem;
+  }
+  .studio-preview-sidebar .artist-workspace-nav-item {
+    min-height: 2.5rem;
+    padding-inline: 0.625rem;
+    font-size: 0.875rem;
+  }
+  .studio-preview-header {
+    display: flex;
+    flex: none;
+    gap: 1rem;
+    align-items: center;
+    height: var(--studio-preview-header-height);
+    padding: 0.75rem 1.25rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .studio-preview-demo-label {
+    display: flex;
+    gap: 0.375rem;
+    align-items: center;
+    margin-left: auto;
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    white-space: nowrap;
+  }
+  .studio-preview-demo-label > span {
+    width: 0.3125rem;
+    height: 0.3125rem;
+    background: var(--color-artist-status-live);
+    border-radius: 50%;
+  }
+  .studio-preview-header-link {
+    display: inline-flex;
+    gap: 0.375rem;
+    align-items: center;
+    font-size: 0.875rem;
+    color: var(--color-artist-icon);
+    white-space: nowrap;
+  }
+  .studio-preview-canvas {
+    flex: 1;
+    min-width: 0;
+    min-height: 0;
+    padding: 1rem;
+    overflow: auto;
+    scrollbar-gutter: stable;
+    overscroll-behavior: auto;
+  }
+  .studio-preview-canvas .artist-release-workspace-panel {
+    min-width: 0;
+    padding: 0.875rem;
+  }
+  .studio-preview-canvas .artist-release-workspace-panel h2 {
+    font-size: 0.875rem;
+  }
+  .studio-preview-canvas .artist-release-workspace-panel :where(p) {
+    font-size: 0.875rem;
+    line-height: 1.5;
+  }
+  .studio-preview-tab-short {
+    display: none;
+  }
+  .studio-preview-workspace {
+    gap: 0.75rem;
+  }
+  .studio-preview-workspace .artist-release-header {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 1rem;
+    min-height: 0;
+    padding: 0.875rem;
+  }
+  .studio-preview-workspace .artist-release-header-identity {
+    gap: 0.875rem;
+  }
+  .studio-preview-workspace .artist-release-cover-stage,
+  .studio-preview-workspace .artist-release-cover {
+    width: 4.5rem;
+    height: 4.5rem;
+  }
+  .studio-preview-workspace .artist-release-header-identity p {
+    font-size: 0.875rem;
+  }
+  .studio-preview-workspace .artist-release-header-identity p:first-child {
+    font-size: 1.125rem;
+  }
+  .studio-preview-workspace .artist-release-header-countdown,
+  .studio-preview-workspace .artist-release-header-meta > span:last-child,
+  .studio-preview-workspace .artist-release-header-action > div {
+    display: none;
+  }
+  .studio-preview-workspace .artist-release-header-action {
+    display: flex;
+    justify-content: flex-end;
+    padding: 0;
+    border: 0;
+  }
+  .studio-preview-workspace .artist-release-header-action button,
+  .studio-preview-workspace .artist-release-header-action a {
+    width: auto;
+    min-height: 2rem;
+    padding: 0.5rem 0.875rem;
+    font-size: 0.875rem;
+  }
+  .studio-preview-workspace .artist-release-stepper {
+    padding: 0.5rem 0.75rem;
+  }
+  .studio-preview-workspace .artist-release-stage {
+    grid-template-columns: minmax(0, 1.2fr) minmax(14rem, 0.9fr);
+    gap: 0.875rem;
+    align-items: start;
+  }
+  .studio-preview-workspace .artist-release-stage-main {
+    order: 1;
+  }
+  .studio-preview-workspace .artist-release-stage-side {
+    position: static;
+    order: 2;
+  }
+  .studio-preview-workspace .artist-layout-grid {
+    display: block;
+  }
+  .studio-preview-workspace .artist-release-tracks > p,
+  .studio-preview-workspace .artist-release-progress-body > p,
+  .studio-preview-workspace .artist-release-checklist-detail,
+  .studio-preview-workspace .artist-release-submit p {
+    display: none;
+  }
+  .studio-preview-workspace .artist-release-track-list {
+    max-height: none;
+    margin-top: 0.75rem;
+    overscroll-behavior: auto;
+  }
+  .studio-preview-workspace .artist-release-tracks li {
+    gap: 0.875rem;
+    padding: 0.75rem;
+  }
+  .studio-preview-workspace .artist-release-track-head h3 {
+    font-size: 0.875rem;
+  }
+  .studio-preview-workspace .artist-release-track-head p {
+    font-size: 0.875rem;
+  }
+  .studio-preview-workspace .artist-track-player {
+    min-height: 3.5rem;
+    padding: 0.5rem;
+  }
+  .studio-preview-workspace .artist-track-player button {
+    width: 2rem;
+    height: 2rem;
+  }
+  .studio-preview-workspace .artist-track-player-wave {
+    height: 2rem;
+  }
+  .studio-preview-workspace .artist-track-player-time {
+    font-size: 0.875rem;
+  }
+  .studio-preview-detail-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .studio-preview-workspace .studio-preview-detail-actions button {
+    gap: 0.375rem;
+    min-height: 2rem;
+    font-size: 0.875rem;
+  }
+  .studio-preview-workspace .artist-release-checklist {
+    margin-top: 0.5rem;
+  }
+  .studio-preview-workspace .artist-release-checklist li {
+    gap: 0.5rem;
+    padding-block: 0.375rem;
+  }
+  .studio-preview-workspace .artist-release-checklist-name {
+    font-size: 0.875rem;
+  }
+  .studio-preview-workspace .artist-release-checklist button {
+    min-height: 1.75rem;
+    padding: 0.25rem;
+    font-size: 0.875rem;
+  }
+  .studio-preview-workspace .artist-release-submit {
+    padding-top: 0.75rem;
+    margin-top: 0.5rem;
+  }
+  .studio-preview-workspace .artist-release-submit button {
+    min-height: 2rem;
+    font-size: 0.875rem;
+  }
+  .studio-preview-workspace .artist-release-submit a {
+    min-height: 2rem;
+    font-size: 0.875rem;
+  }
+  .studio-preview-dashboard {
+    gap: 0.875rem;
+    min-height: 0;
+  }
+  .studio-preview-title {
+    font-size: 1.125rem;
+  }
+  .studio-preview-dashboard > div:first-child > div > p:last-child,
+  .studio-preview-dashboard .artist-layout-customize {
+    display: none;
+  }
+  .studio-preview-dashboard-grid {
+    grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
+    gap: 0.875rem;
+    margin-top: 0;
+  }
+  .studio-preview-dashboard-grid > .artist-layout-tile {
+    grid-column: auto;
+  }
+  .studio-preview-dashboard .artist-dash-current-cover {
+    width: 4rem;
+    height: 4rem;
+  }
+  .studio-preview-dashboard .artist-dash-current-release {
+    gap: 0.875rem;
+  }
+  .studio-preview-dashboard p.artist-dash-current-title {
+    font-size: 1.125rem;
+  }
+  .studio-preview-dashboard .artist-track-player {
+    min-height: 3rem;
+    padding: 0.375rem;
+  }
+  .studio-preview-dashboard .artist-track-player button {
+    width: 2rem;
+    height: 2rem;
+  }
+  .studio-preview-dashboard .artist-track-player-wave {
+    height: 1.75rem;
+  }
+  .studio-preview-dashboard .artist-dash-current-next {
+    flex-wrap: nowrap;
+    gap: 0.75rem;
+    padding-top: 0.75rem;
+    margin-top: 0.75rem;
+  }
+  .studio-preview-dashboard .artist-dash-current-ring {
+    flex: 0 0 3.5rem;
+    width: 3.5rem;
+  }
+  .studio-preview-dashboard .artist-stage-ring-centre b {
+    font-size: 0.875rem;
+  }
+  .studio-preview-dashboard .artist-stage-ring-centre > span {
+    display: none;
+  }
+  .studio-preview-dashboard .artist-dash-current-next > div:last-child {
+    flex-basis: 0;
+  }
+  .studio-preview-dashboard .artist-dash-current-next p {
+    display: none;
+  }
+  .studio-preview-dashboard .artist-dash-current-next button {
+    min-height: 2rem;
+    font-size: 0.875rem;
+  }
+  .studio-preview-dashboard .artist-dash-catalogue {
+    gap: 0.5rem;
+    min-height: 10rem;
+  }
+  .studio-preview-dashboard .artist-dash-fan {
+    display: flex;
+    width: 9rem;
+    padding: 0;
+    overflow: visible;
+  }
+  .studio-preview-dashboard .artist-dash-fan > img {
+    flex: none;
+    width: 4rem;
+    height: 4rem;
+  }
+  .studio-preview-dashboard .artist-dash-fan > :where(img + img) {
+    margin-left: -2.5rem;
+  }
+  .studio-preview-dashboard .artist-dash-premiere .artist-countdown {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.375rem;
+    margin-top: 0.875rem;
+  }
+  .studio-preview-dashboard .artist-dash-premiere .artist-countdown-unit {
+    min-width: 0;
+    padding-inline: 0;
+    border: 0;
+  }
+  .studio-preview-dashboard .artist-dash-numbers {
+    margin-top: 0.875rem;
+  }
+  .studio-preview-dashboard .artist-dash-numbers dd {
+    font-size: 1.75rem;
+  }
+  .studio-preview-dashboard .artist-dash-premiere-list > li > a {
+    grid-template-columns: 2.5rem minmax(0, 1fr);
+    gap: 0.625rem;
+    align-items: start;
+  }
+  .studio-preview-dashboard .artist-dash-premiere-list img {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+  .studio-preview-dashboard .artist-dash-premiere-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    align-items: flex-start;
+  }
+  .studio-preview-dashboard
+    .artist-dash-premiere-meta
+    > .artist-release-row-title {
+    font-size: 0.875rem;
+    line-height: 1.25;
+  }
+  .studio-preview-dashboard .artist-dash-premiere-meta > time {
+    font-size: 0.875rem;
+    line-height: 1.4;
+  }
+  .studio-preview-dashboard .artist-countdown-unit b {
+    font-size: 1.5rem;
+  }
+  .studio-preview-analytics {
+    display: grid;
+    gap: 0.875rem;
+  }
+  .studio-preview-analytics .artist-analytics-hero {
+    min-height: 0;
+    padding: 0;
+    background: none;
+    border: 0;
+    box-shadow: none;
+  }
+  .studio-preview-analytics .artist-analytics-hero > img,
+  .studio-preview-analytics .artist-analytics-hero-subtitle,
+  .studio-preview-analytics .artist-layout-customize {
+    display: none;
+  }
+
+  .studio-preview-analytics-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.75rem;
+  }
+  .studio-preview-analytics-grid > .artist-layout-tile {
+    grid-column: auto;
+  }
+  .studio-preview-analytics-grid > .artist-layout-tile:first-child {
+    grid-row: 2;
+  }
+  .studio-preview-analytics-grid > .artist-layout-tile:nth-child(2) {
+    grid-row: 1;
+  }
+  .studio-preview-analytics .artist-analytics-side {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.75rem;
+    height: auto;
+  }
+  .studio-preview-analytics .artist-analytics-side .artist-analytics-value {
+    font-size: 1.5rem;
+  }
+  .studio-preview-analytics .artist-analytics-hint {
+    display: none;
+  }
+  .studio-preview-analytics .artist-analytics-hero-value {
+    font-size: 1.625rem;
+  }
+  .studio-preview-analytics .artist-analytics-plot {
+    height: 7rem;
+    min-height: 0;
+  }
+  .studio-preview-analytics .artist-analytics-top {
+    min-width: 0;
+  }
+  .studio-preview-analytics .artist-analytics-top img {
+    width: 1.75rem;
+    height: 1.75rem;
+  }
+  .studio-preview-analytics .artist-analytics-top :is(th, td) {
+    padding-block: 0.5rem;
+    font-size: 0.875rem;
+  }
+  .studio-preview-detail {
+    position: absolute;
+    inset: var(--studio-preview-header-height) 0 0;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    padding: 1rem;
+    background: var(--color-background);
+    border-radius: 0.75rem;
+  }
+  .studio-preview-detail > header {
+    display: flex;
+    flex: none;
+    gap: 0.75rem;
+    align-items: center;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .studio-preview-detail-title {
+    flex: 1;
+    font-size: 0.875rem;
+    text-align: center;
+  }
+  .studio-preview-detail-control {
+    gap: 0.5rem;
+    font-size: 0.875rem;
+  }
+  .studio-preview-detail-body {
+    display: grid;
+    gap: 1rem;
+    min-height: 0;
+    padding: 1rem 0;
+    overflow-y: auto;
+    overscroll-behavior: auto;
+  }
+  .studio-preview-detail-summary {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: center;
+    padding: 1rem;
+    text-align: center;
+  }
+  .studio-preview-detail-artwork {
+    width: 7rem;
+    height: 7rem;
+    object-fit: cover;
+    border-radius: 1rem;
+  }
+  .studio-preview-detail-cta {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.5rem;
+    font-size: 0.875rem;
+    color: var(--color-artist-icon);
+  }
+  @container artist-studio (min-width: 44rem) {
+    .studio-preview-sidebar .artist-workspace-brand-row {
+      justify-content: center;
+    }
+    .studio-preview-analytics-grid {
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    }
+    .studio-preview-analytics-grid > .artist-layout-tile:first-child {
+      grid-column: 1;
+    }
+    .studio-preview-analytics-grid > .artist-layout-tile:nth-child(2) {
+      grid-column: 1 / -1;
+    }
+    .studio-preview-analytics-grid > .artist-layout-tile:nth-child(3) {
+      grid-area: 2 / 2;
+    }
+    .studio-preview-analytics .artist-analytics-plot {
+      height: 12rem;
+    }
+    .studio-preview-analytics
+      .artist-analytics-top
+      :is(th, td):nth-child(n + 3) {
+      width: 3.5rem;
+      padding-left: 0.375rem;
+    }
+    .studio-preview-analytics .artist-analytics-top th {
+      font-size: 0.875rem;
+    }
+    .studio-preview-sidebar {
+      display: flex;
+      width: 4.5rem;
+    }
+    .studio-preview-sidebar .artist-workspace-brand > span,
+    .studio-preview-sidebar .artist-workspace-brand-row > button,
+    .studio-preview-sidebar [data-nav-item] > span,
+    .studio-preview-sidebar .studio-preview-profile > span {
+      display: none;
+    }
+    .studio-preview-sidebar .artist-workspace-nav-item {
+      justify-content: center;
+      padding-inline: 0;
+    }
+  }
+  @container artist-studio (min-width: 64rem) {
+    .studio-preview-sidebar:not([data-compact="true"])
+      .artist-workspace-brand-row {
+      justify-content: space-between;
+    }
+    .studio-preview-sidebar:not([data-compact="true"]) {
+      width: 12rem;
+    }
+    .studio-preview-sidebar:not([data-compact="true"])
+      .artist-workspace-brand
+      > span,
+    .studio-preview-sidebar:not([data-compact="true"]) [data-nav-item] > span,
+    .studio-preview-sidebar:not([data-compact="true"])
+      .studio-preview-profile
+      > span {
+      display: block;
+    }
+    .studio-preview-sidebar .artist-workspace-brand-row > button {
+      display: inline-flex;
+    }
+    .studio-preview-sidebar:not([data-compact="true"])
+      .artist-workspace-brand
+      > span {
+      display: flex;
+      flex-direction: column;
+    }
+    .studio-preview-sidebar:not([data-compact="true"])
+      .artist-workspace-nav-item {
+      justify-content: flex-start;
+      padding-inline: 0.625rem;
+    }
+  }
+  @container artist-studio (max-width: 43.999rem) {
+    .studio-preview-header {
+      gap: 0.5rem;
+      padding-inline: 0.875rem;
+    }
+    .studio-preview-header-link,
+    .studio-preview-breadcrumb {
+      display: none;
+    }
+    .studio-preview-canvas {
+      padding: 0.75rem;
+    }
+    .studio-preview-workspace .artist-release-stage {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .studio-preview-workspace .artist-release-header {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .studio-preview-workspace .artist-release-header-action {
+      display: none;
+    }
+    .studio-preview-workspace .artist-release-header-identity {
+      gap: 0.625rem;
+    }
+    .studio-preview-workspace .artist-release-cover-stage,
+    .studio-preview-workspace .artist-release-cover {
+      width: 3.5rem;
+      height: 3.5rem;
+    }
+    .studio-preview-workspace
+      .artist-release-header-identity
+      button[aria-label] {
+      width: 2rem;
+      height: 2rem;
+    }
+    .studio-preview-workspace .artist-release-progress-body {
+      display: none;
+    }
+    .studio-preview-workspace .artist-release-track-head {
+      display: grid;
+      grid-template-columns: 2rem minmax(0, 1fr);
+      gap: 0.5rem;
+    }
+    .studio-preview-workspace .artist-release-track-head > div {
+      display: contents;
+    }
+    .studio-preview-workspace .artist-release-track-head h3 {
+      grid-area: 1 / 2;
+    }
+    .studio-preview-workspace .artist-release-track-head p {
+      grid-column: 1 / -1;
+      overflow-wrap: anywhere;
+    }
+    .studio-preview-workspace .artist-release-track-status {
+      grid-column: 1 / -1;
+      justify-self: start;
+    }
+    .studio-preview-workspace .artist-release-stepper nav {
+      width: 100%;
+      min-width: 0;
+    }
+    .studio-preview-workspace
+      .artist-release-stepper
+      li:has(a[aria-current="page"]) {
+      flex: 0 0 auto;
+    }
+    .studio-preview-workspace .artist-release-stepper a {
+      gap: 0.375rem;
+      padding: 0.1875rem;
+    }
+    .studio-preview-workspace .artist-release-step-line {
+      min-width: 0.25rem;
+      margin-inline: 0.1875rem;
+    }
+    .studio-preview-workspace .artist-release-step-name {
+      font-size: 0.875rem;
+    }
+    .studio-preview-dashboard-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .studio-preview-dashboard-grid > .artist-layout-tile:nth-child(2) {
+      display: none;
+    }
+    .studio-preview-dashboard-grid > .artist-layout-tile:nth-child(4) {
+      display: none;
+    }
+    .studio-preview-dashboard .artist-dash-current-release {
+      display: grid;
+      grid-template-columns: 3rem minmax(0, 1fr);
+      gap: 0.625rem;
+    }
+    .studio-preview-dashboard .artist-dash-current-cover {
+      width: 3rem;
+      height: 3rem;
+    }
+    .studio-preview-dashboard .artist-dash-fan {
+      width: 6rem;
+    }
+    .studio-preview-dashboard .artist-dash-fan > img {
+      width: 3rem;
+      height: 3rem;
+    }
+    .studio-preview-dashboard .artist-dash-fan > :where(img + img) {
+      margin-left: -2rem;
+    }
+    .studio-preview-dashboard .artist-dash-current-next > div:last-child {
+      flex-basis: 0;
+    }
+    .studio-preview-dashboard .artist-dash-catalogue {
+      min-height: 9rem;
+    }
+    .studio-preview-analytics .artist-analytics-hero {
+      flex-direction: row;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    .studio-preview-analytics .artist-analytics-hero nav > span:not(.bg-card) {
+      display: none;
+    }
+    .studio-preview-analytics .artist-analytics-side {
+      display: grid;
+      gap: 0.5rem;
+      height: auto;
+    }
+    .studio-preview-analytics .artist-analytics-stat {
+      padding: 0.625rem;
+    }
+    .studio-preview-analytics .artist-analytics-side .artist-analytics-value {
+      font-size: 1.125rem;
+    }
+    .studio-preview-analytics .artist-analytics-label {
+      gap: 0.25rem;
+      font-size: 0.875rem;
+    }
+    .studio-preview-analytics .artist-analytics-label svg {
+      display: none;
+    }
+    .studio-preview-analytics .artist-analytics-change {
+      font-size: 0.875rem;
+    }
+    .studio-preview-analytics .artist-analytics-top :is(th, td):last-child {
+      display: none;
+    }
+    .studio-preview-analytics .artist-analytics-top tbody tr:last-child {
+      display: none;
+    }
+  }
+  @media (max-width: 650px) {
+    .artist-scroll-bezel {
+      padding: 0.375rem;
+      border-radius: 1.25rem;
+      transform: none;
+    }
+    .studio-preview-tab-step,
+    .studio-preview-tab-label {
+      display: none;
+    }
+    .studio-preview-tab-short {
+      display: inline;
+    }
+    .artist-landing-dock .artist-landing-dock-pill {
+      gap: 0.375rem;
+      padding-inline: 0.625rem;
+      font-size: 0.875rem;
+    }
+  }
+}

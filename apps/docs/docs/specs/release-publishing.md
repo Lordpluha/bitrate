@@ -38,6 +38,37 @@ team members acting on releases (see [artist-team-roles](./artist-team-roles.md)
 - The button opens a confirmation summarizing title, tracks, cover and timing. Publishing is
   the artist's decision, so they can re-check stages 1–4 first.
 
+### Direct drafts, automatic format and deletion (2026-11-06)
+
+- Create release immediately saves an owned empty draft and opens its workspace; no creation dialog
+  or manual format selector is shown. The initial title is localized and editable inline in Draft.
+- The server derives format from active draft recordings: 0–4 Single, 5–6 EP, 7+ Album. Adding or
+  removing a recording updates format under the same release lock. Empty drafts use Single until
+  recordings are added. Existing editable drafts are migrated to this rule; reviewed metadata stays.
+- Draft uses a fixed editor layout; Customize remains available on other workspace pages.
+- The track list scrolls within its panel. Adding or replacing audio rejects an identical file
+  already used by another active recording in the same release (422). Original bytes are compared
+  by SHA-256, including older uploads without a saved checksum. Names do not determine duplicates;
+  using the same file in different releases is allowed. Existing duplicates are not removed.
+- A Danger zone in the release workspace requires explicit confirmation to delete. Owners may
+  delete any lifecycle state, including approved, scheduled, publishing and released music. An
+  outdated version returns 409; another owner's or already deleted release returns 404.
+- Deletion soft-deletes the preparation rows and their catalogue album/tracks in one transaction,
+  frees unused identifiers, and invalidates catalogue caches. Tracks linked to another active
+  release remain. Private source files and review history are retained; delayed publishing jobs
+  cannot republish the deleted release. This differs from reversible Unpublish below.
+
+### Artist publication boundary (2026-11-06)
+
+- Artist writes to legacy `POST /tracks` and `PUT /tracks/:id` return 403 before multipart
+  processing. Uploads and edits belong to an owned draft, followed by Bitrate review. Catalogue
+  audio and metadata cannot be changed directly; live revision support remains a separate stage.
+- `Track.publishedAt` has no database default. Conversion only marks audio READY and preserves
+  visibility, including moderator takedowns. Release publication explicitly grants visibility
+  after approval; trusted server-side imports explicitly set their publication timestamp.
+- The migration preserves visibility of existing tracks. Previously published content is not
+  retroactively reviewed by this change; historical uploads need a separate moderation audit.
+
 ### Release timing (prerequisite, being built separately)
 
 - Chosen in Draft → Release details: **Right away** (`scheduledAt = null`) or **Premiere**
@@ -213,3 +244,14 @@ Checks per PR: `pnpm --filter @bitrate/api check-types`, the releases/tracks/not
 Jest suites (`--maxWorkers=2`, through `.claude/scripts/run-heavy.py`),
 `pnpm --filter @bitrate/web-artists check-types` and `test:unit`, the dashboard e2e project,
 admin unit tests.
+
+
+### Compilations from an artist's catalogue
+
+The Compilations block at the bottom of Dashboard → Profile creates a compilation draft.
+Its editor selects the artist's own published recordings from the catalogue.
+Compilation recordings keep the canonical Track ID, ISRC, audio, likes and listening history;
+the compilation has its own artwork, order, date and Bitrate review. Removing a compilation
+leaves recordings used by other releases available. Administrative removal of the original
+recording blocks reuse and restoration through every compilation. See
+[compilation releases](./compilation-releases.md) for API details and verification.

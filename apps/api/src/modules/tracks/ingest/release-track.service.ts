@@ -143,7 +143,12 @@ export class ReleaseTrackService {
     publishedAt: Date,
   ): Promise<number> {
     const published = await tx.track.updateMany({
-      where: { id: { in: trackIds }, processingStatus: 'READY', deletedAt: null },
+      where: {
+        id: { in: trackIds },
+        processingStatus: 'READY',
+        deletedAt: null,
+        moderationBlockedAt: null,
+      },
       data: { publishedAt },
     })
     return published.count
@@ -151,7 +156,37 @@ export class ReleaseTrackService {
 
   /** Hides a release's tracks from listeners inside the caller's transaction; files are kept. */
   async hideReleaseTracks(tx: Prisma.TransactionClient, trackIds: string[]): Promise<void> {
-    await tx.track.updateMany({ where: { id: { in: trackIds } }, data: { publishedAt: null } })
+    await tx.track.updateMany({
+      where: {
+        id: { in: trackIds },
+        releases: { none: { release: { deletedAt: null, status: 'RELEASED' } } },
+      },
+      data: { publishedAt: null },
+    })
+  }
+
+  /** Restores approved recordings still shared by another live release. */
+  async restoreSharedReleaseTracks(tx: Prisma.TransactionClient, trackIds: string[], at: Date) {
+    if (trackIds.length === 0) return
+    await tx.track.updateMany({
+      where: {
+        id: { in: trackIds },
+        deletedAt: null,
+        moderationBlockedAt: null,
+        processingStatus: 'READY',
+        publishedAt: null,
+      },
+      data: { publishedAt: at },
+    })
+  }
+
+  /** A moderation withdrawal blocks the recording across every compilation. */
+  async blockReleaseTracks(tx: Prisma.TransactionClient, trackIds: string[]) {
+    if (trackIds.length === 0) return
+    await tx.track.updateMany({
+      where: { id: { in: trackIds } },
+      data: { moderationBlockedAt: new Date(), publishedAt: null },
+    })
   }
 
   /** Drops track and search caches after a release changed what listeners can see. */

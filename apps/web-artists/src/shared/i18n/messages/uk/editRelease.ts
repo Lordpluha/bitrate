@@ -86,4 +86,9 @@ export const editRelease = {
   'editRelease.total': '{right}: разом {total} зі 100%',
   'editRelease.saveSplits': 'Зберегти частки',
   'editRelease.savingSplits': 'Зберігаємо частки…',
+  'editRelease.deleteReleaseConfirm':
+    'Видалити «{title}»? Реліз буде видалено з кабінету та плеєра. Записи в інших релізах залишаться доступними. Цю дію не можна скасувати.',
+  'editRelease.keepRelease': 'Залишити реліз',
+  'editRelease.editAutoIntro':
+    'Змініть назву релізу. Його тип визначається автоматично за кількістю треків.',
 } as const

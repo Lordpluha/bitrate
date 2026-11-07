@@ -8,7 +8,27 @@ import {
 } from '@entities/notification'
 import { useI18n } from '@shared/i18n'
 import { Link } from '@tanstack/react-router'
-import { BellOff, CircleAlert, Info } from 'lucide-react'
+import {
+  BadgeCheck,
+  BellOff,
+  CheckCheck,
+  CircleAlert,
+  CircleCheck,
+  Clock3,
+  LoaderCircle,
+  MessageSquareWarning,
+  Radio,
+} from 'lucide-react'
+
+const notificationIcons = {
+  CHANGES_REQUESTED: MessageSquareWarning,
+  DELIVERY_FAILED: CircleAlert,
+  RELEASE_SUBMITTED: Clock3,
+  RELEASE_APPROVED: BadgeCheck,
+  RELEASE_RELEASED: Radio,
+  PUBLISH_FAILED: CircleAlert,
+  DELIVERY_LIVE: CircleCheck,
+} as const
 
 interface DashboardNotificationsProps {
   artistId: string
@@ -25,10 +45,18 @@ export function DashboardNotifications({
   const { tMessage, t } = useI18n()
 
   if (notifications.isPending)
-    return <p role="status">{t('shell.notifications.loading')}</p>
+    return (
+      <div className="artist-notifications-state" role="status">
+        <LoaderCircle
+          aria-hidden="true"
+          className="size-5 animate-spin motion-reduce:animate-none"
+        />
+        <p>{t('shell.notifications.loading')}</p>
+      </div>
+    )
   if (notifications.isError)
     return (
-      <div className="space-y-3">
+      <div className="artist-notifications-state">
         <p role="alert">{tMessage(notifications.error.message)}</p>
         <Button
           onClick={() => {
@@ -44,8 +72,10 @@ export function DashboardNotifications({
   const { data, unread } = notifications.data
   if (data.length === 0)
     return (
-      <div className="flex items-start gap-3 text-sm text-text-secondary">
-        <BellOff aria-hidden="true" className="size-5 shrink-0" />
+      <div className="artist-notifications-state">
+        <span aria-hidden="true" className="artist-notifications-empty-icon">
+          <BellOff className="size-6" />
+        </span>
         <p>{t('shell.notifications.empty')}</p>
       </div>
     )
@@ -53,43 +83,47 @@ export function DashboardNotifications({
   const actions = data.filter((item) => item.actionRequired)
   const updates = data.filter((item) => !item.actionRequired)
   return (
-    <div className="space-y-5">
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <p className="text-sm text-text-secondary" role="status">
+    <div className="artist-notifications-content">
+      <div className="artist-notifications-toolbar">
+        <p className="text-xs text-text-secondary" role="status">
           {unread === 0
             ? t('shell.notifications.caughtUp')
             : t('shell.notifications.unreadCount', { count: unread })}
         </p>
         {unread > 0 && (
           <Button
+            className="gap-1.5 text-xs"
             disabled={markSeen.isPending}
             onClick={() => markSeen.mutate()}
             size="sm"
-            variant="outline"
+            variant="ghost"
           >
+            <CheckCheck aria-hidden="true" className="size-3.5" />
             {t('shell.notifications.markAllRead')}
           </Button>
         )}
       </div>
       {markSeen.error && (
-        <p className="text-sm text-destructive" role="alert">
+        <p className="px-4 pb-2 text-xs text-destructive" role="alert">
           {tMessage(markSeen.error.message)}
         </p>
       )}
-      {actions.length > 0 && (
-        <NotificationGroup
-          items={actions}
-          onNavigate={onNavigate}
-          title={t('shell.notifications.actionRequired')}
-        />
-      )}
-      {updates.length > 0 && (
-        <NotificationGroup
-          items={updates}
-          onNavigate={onNavigate}
-          title={t('shell.notifications.updates')}
-        />
-      )}
+      <div className="artist-notifications-list">
+        {actions.length > 0 && (
+          <NotificationGroup
+            items={actions}
+            onNavigate={onNavigate}
+            title={t('shell.notifications.actionRequired')}
+          />
+        )}
+        {updates.length > 0 && (
+          <NotificationGroup
+            items={updates}
+            onNavigate={onNavigate}
+            title={t('shell.notifications.updates')}
+          />
+        )}
+      </div>
     </div>
   )
 }
@@ -106,36 +140,34 @@ function NotificationGroup({
   const i18n = useI18n()
   const { t } = i18n
   return (
-    <section className="space-y-1">
-      <h3 className="text-xs uppercase tracking-wide text-text-secondary">
+    <section className="artist-notifications-group">
+      <h3 className="px-3 pb-2 pt-1 text-[0.625rem] font-medium uppercase tracking-widest text-text-secondary">
         {title}
       </h3>
       <ul className="space-y-1">
         {items.map((item) => {
-          const Icon = item.actionRequired ? CircleAlert : Info
+          const Icon = notificationIcons[item.kind]
           return (
             <li key={item.id}>
               <Link
-                className={cn(
-                  'flex items-start gap-3 rounded-lg px-3 py-2 hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
-                  item.unread && 'bg-secondary/60',
-                )}
+                className="artist-notification-item"
+                data-unread={item.unread}
                 onClick={onNavigate}
                 params={{ releaseId: item.releaseId }}
                 preload={false}
                 to="/dashboard/music/$releaseId"
               >
-                <Icon
+                <span
                   aria-hidden="true"
-                  className={cn(
-                    'mt-0.5 size-4 shrink-0',
-                    item.actionRequired ? 'text-destructive' : 'text-accent',
-                  )}
-                />
+                  className="artist-notification-icon"
+                  data-action={item.actionRequired}
+                >
+                  <Icon className="size-4" />
+                </span>
                 <span className="min-w-0 flex-1">
                   <span
                     className={cn(
-                      'block text-sm',
+                      'block text-xs leading-relaxed',
                       item.unread && 'font-medium',
                     )}
                   >
@@ -147,7 +179,10 @@ function NotificationGroup({
                       </span>
                     )}
                   </span>
-                  <span className="block truncate text-xs text-text-secondary">
+                  <span
+                    className="mt-0.5 block truncate text-[0.6875rem] text-text-secondary"
+                    title={item.releaseTitle}
+                  >
                     {item.releaseTitle} · {notificationTime(item.at, i18n)}
                   </span>
                 </span>

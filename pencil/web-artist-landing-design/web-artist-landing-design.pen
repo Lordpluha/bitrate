@@ -1,0 +1,580 @@
+{
+  "version": "2.21",
+  "children": [
+    {
+      "type": "frame",
+      "id": "OIh1p",
+      "x": 1665,
+      "y": -110,
+      "name": "01 • Header / Violet Nebula (Reflect & Wope style)",
+      "context": "Variant 1 (Reflect.app / Wope.com reference): Translucent top bar + radial fading hairline + floating glass pill nav + inner-glow violet CTA.",
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "clip": true,
+      "width": 1440,
+      "height": 220,
+      "fill": [
+        "$ds:--background",
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "enabled": true,
+          "opacity": 0.42,
+          "rotation": 0,
+          "size": {
+            "width": 0.9,
+            "height": 0.95
+          },
+          "colors": [
+            {
+              "color": "$ds:--primary",
+              "position": 0
+            },
+            {
+              "color": "$ds:--primary",
+              "position": 1
+            }
+          ],
+          "center": {
+            "y": -0.1
+          }
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "enabled": true,
+          "opacity": 0.22,
+          "rotation": 0,
+          "size": {
+            "width": 0.55,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$ds:--magenta-500",
+              "position": 0
+            },
+            {
+              "color": "$ds:--magenta-500",
+              "position": 1
+            }
+          ],
+          "center": {
+            "x": 0.22,
+            "y": 0
+          }
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "enabled": true,
+          "opacity": 0.2,
+          "rotation": 0,
+          "size": {
+            "width": 0.55,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$ds:--blue-500",
+              "position": 0
+            },
+            {
+              "color": "$ds:--blue-500",
+              "position": 1
+            }
+          ],
+          "center": {
+            "x": 0.78,
+            "y": 0.05
+          }
+        }
+      ],
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "hyjha",
+          "name": "Header Bar",
+          "width": "fill_container",
+          "fill": {
+            "type": "gradient",
+            "gradientType": "linear",
+            "enabled": true,
+            "opacity": 0.35,
+            "rotation": 0,
+            "size": {
+              "height": 1
+            },
+            "colors": [
+              {
+                "color": "$ds:--background",
+                "position": 0
+              },
+              {
+                "color": "$ds:--background",
+                "position": 1
+              }
+            ]
+          },
+          "effect": {
+            "type": "background_blur",
+            "radius": 18
+          },
+          "layout": "vertical",
+          "padding": [
+            0,
+            80
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "dOgdT",
+              "name": "Header Container",
+              "width": 1280,
+              "height": 84,
+              "gap": 12,
+              "justifyContent": "space_between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "cz02X",
+                  "name": "Brand Lockup",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "id": "sdpRy",
+                      "type": "ref",
+                      "ref": "ds:J95vY0",
+                      "name": "Logo/Lockup"
+                    },
+                    {
+                      "type": "text",
+                      "id": "y20nF",
+                      "name": "/",
+                      "fill": "$ds:--text-subdued",
+                      "content": "/",
+                      "fontFamily": "$ds:--font-sans",
+                      "fontSize": 16,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "NixI5",
+                      "name": "FOR ARTISTS",
+                      "fill": "$ds:--accent",
+                      "content": "FOR ARTISTS",
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 11,
+                      "fontWeight": "600",
+                      "letterSpacing": 1.2
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "d1jiMo",
+                  "name": "Glass Nav Capsule",
+                  "height": 44,
+                  "fill": {
+                    "type": "gradient",
+                    "gradientType": "linear",
+                    "enabled": true,
+                    "opacity": 0.04,
+                    "rotation": 0,
+                    "size": {
+                      "height": 1
+                    },
+                    "colors": [
+                      {
+                        "color": "$ds:--foreground",
+                        "position": 0
+                      },
+                      {
+                        "color": "$ds:--foreground",
+                        "position": 1
+                      }
+                    ]
+                  },
+                  "cornerRadius": 999,
+                  "stroke": {
+                    "type": "gradient",
+                    "gradientType": "linear",
+                    "enabled": true,
+                    "opacity": 0.1,
+                    "rotation": 0,
+                    "size": {
+                      "height": 1
+                    },
+                    "colors": [
+                      {
+                        "color": "$ds:--foreground",
+                        "position": 0
+                      },
+                      {
+                        "color": "$ds:--foreground",
+                        "position": 1
+                      }
+                    ]
+                  },
+                  "strokeWidth": 1,
+                  "effect": {
+                    "type": "background_blur",
+                    "radius": 16
+                  },
+                  "gap": 2,
+                  "padding": [
+                    0,
+                    8
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "XHWrS",
+                      "name": "Nav / Product",
+                      "height": 32,
+                      "fill": {
+                        "type": "gradient",
+                        "gradientType": "linear",
+                        "enabled": true,
+                        "opacity": 0.08,
+                        "rotation": 0,
+                        "size": {
+                          "height": 1
+                        },
+                        "colors": [
+                          {
+                            "color": "$ds:--foreground",
+                            "position": 0
+                          },
+                          {
+                            "color": "$ds:--foreground",
+                            "position": 1
+                          }
+                        ]
+                      },
+                      "cornerRadius": 999,
+                      "stroke": {
+                        "type": "gradient",
+                        "gradientType": "linear",
+                        "enabled": true,
+                        "opacity": 0.1,
+                        "rotation": 0,
+                        "size": {
+                          "height": 1
+                        },
+                        "colors": [
+                          {
+                            "color": "$ds:--foreground",
+                            "position": 0
+                          },
+                          {
+                            "color": "$ds:--foreground",
+                            "position": 1
+                          }
+                        ]
+                      },
+                      "strokeWidth": 1,
+                      "gap": 12,
+                      "padding": [
+                        0,
+                        16
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "J3Aky",
+                          "name": "Product",
+                          "fill": "$ds:--foreground",
+                          "content": "Product",
+                          "fontFamily": "$ds:--font-sans",
+                          "fontSize": 14,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "PyAk0",
+                      "name": "Nav / Releases",
+                      "height": 32,
+                      "cornerRadius": 999,
+                      "gap": 12,
+                      "padding": [
+                        0,
+                        16
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "MwQHF",
+                          "name": "Releases",
+                          "fill": "$ds:--muted-foreground",
+                          "content": "Releases",
+                          "fontFamily": "$ds:--font-sans",
+                          "fontSize": 14
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "U7h0aY",
+                      "name": "Nav / Workspace",
+                      "height": 32,
+                      "cornerRadius": 999,
+                      "gap": 12,
+                      "padding": [
+                        0,
+                        16
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "C81u5x",
+                          "name": "Workspace",
+                          "fill": "$ds:--muted-foreground",
+                          "content": "Workspace",
+                          "fontFamily": "$ds:--font-sans",
+                          "fontSize": 14
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "e6K33",
+                      "name": "Nav / Analytics",
+                      "height": 32,
+                      "cornerRadius": 999,
+                      "gap": 12,
+                      "padding": [
+                        0,
+                        16
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "DiOeU",
+                          "name": "Analytics",
+                          "fill": "$ds:--muted-foreground",
+                          "content": "Analytics",
+                          "fontFamily": "$ds:--font-sans",
+                          "fontSize": 14
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "RDJX4",
+                      "name": "Nav / Distribution",
+                      "height": 32,
+                      "cornerRadius": 999,
+                      "gap": 12,
+                      "padding": [
+                        0,
+                        16
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "j4lC3",
+                          "name": "Distribution",
+                          "fill": "$ds:--muted-foreground",
+                          "content": "Distribution",
+                          "fontFamily": "$ds:--font-sans",
+                          "fontSize": 14
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "kgln1",
+                  "name": "Header Actions",
+                  "gap": 16,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "EDMbK",
+                      "name": "Login Link",
+                      "height": 36,
+                      "gap": 12,
+                      "padding": [
+                        0,
+                        8
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "F9wK9D",
+                          "name": "Login",
+                          "fill": "$ds:--muted-foreground",
+                          "content": "Login",
+                          "fontFamily": "$ds:--font-sans",
+                          "fontSize": 14,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "nlP9o",
+                      "name": "CTA / Start releasing",
+                      "height": 38,
+                      "fill": [
+                        {
+                          "type": "gradient",
+                          "gradientType": "linear",
+                          "enabled": true,
+                          "opacity": 0.28,
+                          "rotation": 0,
+                          "size": {
+                            "height": 1
+                          },
+                          "colors": [
+                            {
+                              "color": "$ds:--primary",
+                              "position": 0
+                            },
+                            {
+                              "color": "$ds:--primary",
+                              "position": 1
+                            }
+                          ]
+                        },
+                        {
+                          "type": "gradient",
+                          "gradientType": "linear",
+                          "enabled": true,
+                          "opacity": 0.55,
+                          "rotation": 180,
+                          "size": {
+                            "height": 1
+                          },
+                          "colors": [
+                            {
+                              "color": "#7C3AED00",
+                              "position": 0
+                            },
+                            {
+                              "color": "$ds:--primary",
+                              "position": 1
+                            }
+                          ]
+                        }
+                      ],
+                      "cornerRadius": 10,
+                      "stroke": {
+                        "type": "gradient",
+                        "gradientType": "linear",
+                        "enabled": true,
+                        "opacity": 0.55,
+                        "rotation": 0,
+                        "size": {
+                          "height": 1
+                        },
+                        "colors": [
+                          {
+                            "color": "$ds:--accent",
+                            "position": 0
+                          },
+                          {
+                            "color": "$ds:--accent",
+                            "position": 1
+                          }
+                        ]
+                      },
+                      "strokeWidth": 1,
+                      "effect": {
+                        "type": "shadow",
+                        "shadowType": "outer",
+                        "color": "$ds:--primary",
+                        "offset": {
+                          "x": 0,
+                          "y": 8
+                        },
+                        "blur": 24
+                      },
+                      "gap": 8,
+                      "padding": [
+                        0,
+                        18
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "Ze5Vd",
+                          "name": "Start releasing",
+                          "fill": "$ds:--primary-foreground",
+                          "content": "Start releasing",
+                          "fontFamily": "$ds:--font-sans",
+                          "fontSize": 14,
+                          "fontWeight": "500"
+                        },
+                        {
+                          "type": "icon",
+                          "id": "nbsEO",
+                          "name": "Icon / arrow-right",
+                          "width": 14,
+                          "height": 14,
+                          "icon": "arrow-right",
+                          "library": "lucide",
+                          "fill": "$ds:--accent"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "M5kKkv",
+              "name": "Radial Gradient Hairline",
+              "width": 1280,
+              "height": 1,
+              "fill": {
+                "type": "gradient",
+                "gradientType": "radial",
+                "enabled": true,
+                "opacity": 0.45,
+                "rotation": 0,
+                "size": {
+                  "width": 1,
+                  "height": 1
+                },
+                "colors": [
+                  {
+                    "color": "$ds:--accent",
+                    "position": 0
+                  },
+                  {
+                    "color": "#FFFFFF00",
+                    "position": 1
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "imports": {
+    "ds": "../web-player-design/design-system/bitrate.lib.pen"
+  },
+  "fileToken": "0e9823ea-c17b-4e8c-9fc3-a64eaebe6457"
+}

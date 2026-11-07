@@ -1,6 +1,7 @@
 'use client'
 
 import { clientFetchClient } from '@shared/api/fetchClient'
+import { notifyArtistSessionChange } from '@shared/auth/accountSelection'
 import { artistSessionCheck } from '@shared/auth/artistSessionCheck'
 import { messageKey } from '@shared/i18n'
 import { ROUTES } from '@shared/routes/routes'
@@ -57,6 +58,7 @@ export function useAuth() {
       return response.data
     },
     onSuccess: async () => {
+      notifyArtistSessionChange('signed-out')
       artistSessionCheck.clear()
       await queryClient.cancelQueries()
       await router.navigate({ to: ROUTES.auth.login, replace: true })

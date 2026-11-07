@@ -1,10 +1,11 @@
 import { PrismaService } from '@infra/prisma/prisma.service'
 import { Injectable } from '@nestjs/common'
 import { Prisma } from '@prisma/client'
-import type { ArtistAnalyticsDto } from './dtos/artist-analytics.dto'
+import type { ArtistAnalyticsDto, ArtistTopTracksDto } from './dtos/artist-analytics.dto'
 
 const DAY_MS = 86_400_000
 const TOP_TRACK_LIMIT = 10
+const TOP_TRACK_PAGE_SIZE = 5
 
 /** External sources the design lists; none is connected, so none reports numbers. */
 const EXTERNAL_SOURCES = ['SPOTIFY', 'APPLE_MUSIC', 'YOUTUBE_MUSIC'] as const
@@ -38,11 +39,38 @@ interface TopRow {
 export class ArtistAnalyticsService {
   constructor(private readonly prisma: PrismaService) {}
 
+  async topTracks(artistId: string, input: ArtistTopTracksDto) {
+    const from = periodStart(input.days, new Date())
+    const scope = trackHistoryScope(artistId)
+    const [count] = await this.prisma.queryRaw<{ total: bigint }[]>(Prisma.sql`
+      SELECT COUNT(DISTINCT t.id)::bigint AS total
+      ${scope} AND h."listenedAt" >= ${from}`)
+    const total = Number(count?.total ?? 0)
+    const page = Math.min(input.page, Math.max(1, Math.ceil(total / TOP_TRACK_PAGE_SIZE)))
+    const rows =
+      total === 0
+        ? []
+        : await this.prisma.queryRaw<(TopRow & { maxPlays: bigint })[]>(Prisma.sql`
+      SELECT t.id, t.title, t.cover, COUNT(*)::bigint AS plays,
+             COUNT(DISTINCT h."userId")::bigint AS listeners,
+             MAX(COUNT(*)) OVER () AS "maxPlays"
+      ${scope} AND h."listenedAt" >= ${from}
+      GROUP BY t.id, t.title, t.cover ORDER BY plays DESC, t.id ASC
+      LIMIT ${TOP_TRACK_PAGE_SIZE} OFFSET ${(page - 1) * TOP_TRACK_PAGE_SIZE}`)
+    return {
+      data: rows.map(topTrack),
+      total,
+      page,
+      limit: TOP_TRACK_PAGE_SIZE,
+      days: input.days,
+      maxPlays: Number(rows[0]?.maxPlays ?? 0),
+    }
+  }
+
   async overview(artistId: string, input: ArtistAnalyticsDto) {
     const days = input.days
     const now = new Date()
-    const todayStart = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())
-    const from = new Date(todayStart - (days - 1) * DAY_MS)
+    const from = periodStart(days, now)
     const previousFrom = new Date(from.getTime() - days * DAY_MS)
     const period = { from, to: now, days, timezone: 'UTC' as const }
     const external = EXTERNAL_SOURCES.map((source) => ({
@@ -58,10 +86,7 @@ export class ArtistAnalyticsService {
     })
     if (everPlayed === 0) return this.empty('NO_DATA_YET', period, now, external)
 
-    const scope = Prisma.sql`
-      FROM "ListeningHistory" h
-      JOIN "Track" t ON t.id = h."trackId"
-      WHERE t."artistId" = ${artistId}::uuid AND t."deletedAt" IS NULL`
+    const scope = trackHistoryScope(artistId)
     const [current, previous, daily, top] = await Promise.all([
       this.prisma.queryRaw<TotalsRow[]>(Prisma.sql`
         SELECT COUNT(*)::bigint AS plays, COUNT(DISTINCT h."userId")::bigint AS listeners
@@ -94,13 +119,7 @@ export class ArtistAnalyticsService {
         const date = isoDay(new Date(from.getTime() + index * DAY_MS))
         return { date, plays: byDay.get(date) ?? 0 }
       }),
-      topTracks: top.map((row) => ({
-        trackId: row.id,
-        title: row.title,
-        cover: row.cover,
-        plays: Number(row.plays),
-        listeners: Number(row.listeners),
-      })),
+      topTracks: top.map(topTrack),
       external,
     }
   }
@@ -121,6 +140,28 @@ export class ArtistAnalyticsService {
       topTracks: [],
       external,
     }
+  }
+}
+
+function periodStart(days: number, now: Date): Date {
+  const today = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())
+  return new Date(today - (days - 1) * DAY_MS)
+}
+
+function trackHistoryScope(artistId: string) {
+  return Prisma.sql`
+    FROM "ListeningHistory" h
+    JOIN "Track" t ON t.id = h."trackId"
+    WHERE t."artistId" = ${artistId}::uuid AND t."deletedAt" IS NULL`
+}
+
+function topTrack(row: TopRow) {
+  return {
+    trackId: row.id,
+    title: row.title,
+    cover: row.cover,
+    plays: Number(row.plays),
+    listeners: Number(row.listeners),
   }
 }
 

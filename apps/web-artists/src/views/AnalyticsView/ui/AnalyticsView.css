@@ -167,6 +167,7 @@
     font-weight: 500;
     font-variant-numeric: tabular-nums;
     color: var(--color-foreground);
+    white-space: nowrap;
     transform: translateX(-50%);
   }
   .artist-analytics-crosshair {
@@ -273,7 +274,7 @@
     width: 5.5rem;
     text-align: right;
   }
-  @variant max-sm {
+  @container artist-tile (max-width: 32rem) {
     .artist-analytics-top :is(th, td):nth-child(n + 3) {
       width: 3.75rem;
     }
@@ -361,5 +362,37 @@
   .artist-analytics-empty .artist-analytics-empty-icon :where(svg) {
     width: 1.375rem;
     height: 1.375rem;
+  }
+  .artist-analytics-table-scroll {
+    max-width: 100%;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+  }
+  .artist-analytics-table-scroll:focus-visible {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 2px;
+  }
+  .artist-analytics-top {
+    min-width: 20rem;
+  }
+  .artist-analytics-table table {
+    min-width: 12rem;
+  }
+  @container artist-tile (max-width: 15rem) {
+    .artist-release-workspace-panel .artist-analytics-label {
+      flex-wrap: wrap;
+    }
+    .artist-release-workspace-panel .artist-analytics-value,
+    .artist-release-workspace-panel .artist-analytics-hero-value {
+      font-size: clamp(1rem, 20cqi, 2.25rem);
+    }
+    .artist-analytics-change,
+    .artist-analytics-axis {
+      flex-wrap: wrap;
+    }
+    .artist-analytics-tooltip {
+      max-width: 100%;
+      white-space: normal;
+    }
   }
 }

@@ -87,4 +87,9 @@ export const editRelease = {
   'editRelease.total': '{right}: razem {total} ze 100%',
   'editRelease.saveSplits': 'Zapisz udziały',
   'editRelease.savingSplits': 'Zapisywanie udziałów…',
+  'editRelease.deleteReleaseConfirm':
+    'Usunąć „{title}”? Wydanie zostanie usunięte z panelu i odtwarzacza. Nagrania używane w innych wydaniach pozostaną dostępne. Tej operacji nie można cofnąć.',
+  'editRelease.keepRelease': 'Zachowaj wydanie',
+  'editRelease.editAutoIntro':
+    'Zmień tytuł wydania. Typ jest wykrywany automatycznie na podstawie liczby utworów.',
 } as const

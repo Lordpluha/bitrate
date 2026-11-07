@@ -59,9 +59,11 @@ model Track {
   language    String?
   deletedAt   DateTime?
   /// Listeners see the track only once this has passed; null while its release is publishing or
-  /// offline. Defaults to creation time, so tracks uploaded outside a release stay public as soon
-  /// as they are READY.
-  publishedAt DateTime? @default(now()) @db.Timestamptz(3)
+  /// offline. New rows stay private until the reviewed release flow or a trusted server-side
+  /// import explicitly sets this value; conversion alone never grants publication.
+  publishedAt DateTime? @db.Timestamptz(3)
+  /// Administrative removal of the recording applies to every release using it.
+  moderationBlockedAt DateTime? @db.Timestamptz(3)
 
   /// Revision of the Artist Agreement the artist confirmed their rights under at upload, and when.
   /// Null for tracks uploaded before the confirmation was recorded.
@@ -85,6 +87,7 @@ model Track {
   processingAttemptsLog TrackProcessingAttempt[]
   albums                AlbumTrack[]
   releases              ReleaseTrack[]
+  compilationDrafts     ArtistTrackDraft[] @relation("CompilationRecording")
   playlists             PlaylistTrack[]
   likedBy               UserLikedTrack[]
   artists               TrackArtist[]

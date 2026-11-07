@@ -1,6 +1,13 @@
 /** Message keys the `HttpExceptionFilter` translates — never literal English. */
 export const RELEASE_ERRORS = {
+  COMPILATION_SOURCE_UNAVAILABLE: 'errors.release.compilation_source_unavailable',
+  COMPILATION_ONLY_CATALOGUE: 'errors.release.compilation_only_catalogue',
+  COMPILATION_TRACK_LOCKED: 'errors.release.compilation_track_locked',
+  COMPILATION_DUPLICATE: 'errors.release.compilation_duplicate',
+  COMPILATION_LIMIT: 'errors.release.compilation_limit',
+
   NOT_FOUND: 'errors.release.not_found',
+  CHANGED: 'errors.release.changed',
   CHANGED_OR_NOT_DRAFT: 'errors.release.changed_or_not_draft',
   CHANGED_OR_NOT_SUBMITTED: 'errors.release.changed_or_not_submitted',
   CHANGED_OR_NOT_REJECTED: 'errors.release.changed_or_not_rejected',
@@ -19,6 +26,7 @@ export const RELEASE_ERRORS = {
   AUDIO_FILE_REQUIRED: 'errors.release.audio_file_required',
   AUDIO_TYPE_INVALID: 'errors.release.audio_type_invalid',
   AUDIO_NOT_FOUND: 'errors.release.audio_not_found',
+  AUDIO_DUPLICATE: 'errors.release.audio_duplicate',
   TASK_NOT_FOUND: 'errors.release.task_not_found',
   TRACK_ORDER_MISMATCH: 'errors.release.track_order_mismatch',
   TASK_CHANGED: 'errors.release.task_changed',

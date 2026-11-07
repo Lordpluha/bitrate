@@ -1,4 +1,12 @@
 export const profile = {
+  'profile.compilations.title': 'Compilations',
+  'profile.compilations.description':
+    'Bring your released tracks together in a new collection, from a Best Of to a selection of favourites.',
+  'profile.compilations.note':
+    'Original recordings, listening history and likes stay with your tracks.',
+  'profile.compilations.create': 'Create compilation',
+  'profile.compilations.untitled': 'Untitled compilation',
+
   'profile.validation.https': 'Enter a full https:// link.',
   'profile.validation.min': 'Use at least 3 characters.',
   'profile.validation.max': 'Use at most 50 characters.',

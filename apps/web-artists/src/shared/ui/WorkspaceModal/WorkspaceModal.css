@@ -1,0 +1,96 @@
+@layer utilities {
+  .artist-workspace-modal,
+  .artist-workspace-modal.artist-release-credit-modal,
+  .artist-workspace-modal.artist-release-schedule-modal {
+    padding: 0;
+    overflow: hidden;
+    color: var(--color-foreground);
+    background:
+      radial-gradient(
+        ellipse at 100% 0,
+        color-mix(in oklab, var(--color-artist-selection) 25%, transparent),
+        transparent 65%
+      ),
+      linear-gradient(
+        145deg,
+        var(--color-artist-release-panel-start),
+        var(--color-artist-release-panel-middle) 60%,
+        var(--color-artist-release-panel-end)
+      );
+    border: 1px solid var(--color-artist-release-border);
+    border-radius: calc(var(--radius-artist-panel) + 0.25rem);
+    box-shadow: 0 2rem 6rem -1.5rem
+      color-mix(in oklab, var(--color-black) 65%, transparent);
+  }
+  .artist-workspace-modal[open] {
+    display: flex;
+    flex-direction: column;
+  }
+  .artist-workspace-modal::backdrop {
+    background: color-mix(in oklab, var(--color-black) 62%, transparent);
+    backdrop-filter: blur(6px);
+  }
+  .artist-workspace-modal-header {
+    display: flex;
+    flex: none;
+    gap: 1rem;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.125rem 1.5rem;
+    border-bottom: 1px solid var(--color-artist-release-border);
+  }
+  .artist-workspace-modal-header h2 {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+  .artist-workspace-modal-body {
+    min-height: 0;
+    padding: 1.5rem;
+    overflow-y: auto;
+    scrollbar-gutter: stable;
+    overscroll-behavior: contain;
+  }
+  .artist-account-list {
+    display: grid;
+    gap: 0.5rem;
+  }
+  .artist-account-list > li {
+    display: flex;
+    gap: 0.25rem;
+    align-items: center;
+    min-width: 0;
+    padding: 0.25rem;
+    background: color-mix(in oklab, var(--color-background) 55%, transparent);
+    border: 1px solid var(--color-artist-release-border);
+    border-radius: 0.875rem;
+  }
+  .artist-account-list > li[data-current="true"] {
+    background: var(--color-artist-selection);
+    border-color: var(--color-artist-selection-border);
+  }
+  .artist-account-choice {
+    display: flex;
+    flex: 1;
+    gap: 0.75rem;
+    align-items: center;
+    min-width: 0;
+    padding: 0.75rem;
+    text-align: start;
+    border-radius: 0.625rem;
+  }
+  .artist-account-choice:focus-visible {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 2px;
+  }
+  .artist-account-choice:not(:disabled):hover {
+    background: var(--color-secondary);
+  }
+  @variant max-sm {
+    .artist-workspace-modal-header {
+      padding: 1rem;
+    }
+    .artist-workspace-modal-body {
+      padding: 1rem;
+    }
+  }
+}

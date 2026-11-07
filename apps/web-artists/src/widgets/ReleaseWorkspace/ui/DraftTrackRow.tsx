@@ -42,6 +42,7 @@ export function DraftTrackRow({
   onAction,
 }: DraftTrackRowProps) {
   const { t } = useI18n()
+  const reused = !!track.sourceTrackId
   return (
     <li>
       <div className="artist-release-track-head">
@@ -111,39 +112,49 @@ export function DraftTrackRow({
       )}
       {editable && (
         <div className="artist-release-track-actions">
-          <Button
-            aria-label={t(
-              track.hasAudio
-                ? 'workspace.track.replaceAudioFor'
-                : 'workspace.track.uploadAudioFor',
-              { title: track.title },
-            )}
-            onClick={() => onAction({ kind: 'track-audio', trackId: track.id })}
-            size="sm"
-            variant="outline"
-          >
-            {track.hasAudio
-              ? t('workspace.track.replaceAudio')
-              : t('workspace.track.uploadAudio')}
-          </Button>
-          <Button
-            aria-label={t('workspace.track.renameFor', { title: track.title })}
-            onClick={() =>
-              onAction({ kind: 'track-rename', trackId: track.id })
-            }
-            size="sm"
-            variant="outline"
-          >
-            {t('workspace.track.rename')}
-          </Button>
-          <Button
-            aria-label={t('workspace.track.isrcFor', { title: track.title })}
-            onClick={() => onAction({ kind: 'isrc', trackId: track.id })}
-            size="sm"
-            variant="outline"
-          >
-            ISRC
-          </Button>
+          {!reused && (
+            <>
+              <Button
+                aria-label={t(
+                  track.hasAudio
+                    ? 'workspace.track.replaceAudioFor'
+                    : 'workspace.track.uploadAudioFor',
+                  { title: track.title },
+                )}
+                onClick={() =>
+                  onAction({ kind: 'track-audio', trackId: track.id })
+                }
+                size="sm"
+                variant="outline"
+              >
+                {track.hasAudio
+                  ? t('workspace.track.replaceAudio')
+                  : t('workspace.track.uploadAudio')}
+              </Button>
+              <Button
+                aria-label={t('workspace.track.renameFor', {
+                  title: track.title,
+                })}
+                onClick={() =>
+                  onAction({ kind: 'track-rename', trackId: track.id })
+                }
+                size="sm"
+                variant="outline"
+              >
+                {t('workspace.track.rename')}
+              </Button>
+              <Button
+                aria-label={t('workspace.track.isrcFor', {
+                  title: track.title,
+                })}
+                onClick={() => onAction({ kind: 'isrc', trackId: track.id })}
+                size="sm"
+                variant="outline"
+              >
+                ISRC
+              </Button>
+            </>
+          )}
           <Button
             aria-label={t('workspace.track.removeFor', { title: track.title })}
             onClick={() =>

@@ -20,6 +20,7 @@ export const DATA_OWNERS = {
   artistOAuthAccount: ['artists-auth'],
   artistPasswordReset: ['artists-auth'],
   artistSession: ['artists-auth'],
+  artistAccountLink: ['artists-auth'],
   artistWorkspaceLayout: ['artist-workspace'],
 
   staff: ['admin-auth', 'admin/staff'],

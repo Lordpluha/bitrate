@@ -5,6 +5,7 @@ export {
   useSetAccountLocale,
   useUpdateProfile,
 } from './api/account'
+export { useManageArtistAccounts, useSavedArtistAccounts } from './api/accounts'
 export {
   useDeleteAccount,
   usePasswordResetEmail,

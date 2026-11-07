@@ -6,10 +6,11 @@ import {
   type TokenRequirement,
 } from '@modules/auth-core'
 import { TokenService } from '@modules/tokens/token.service'
-import { Injectable } from '@nestjs/common'
+import { ConflictException, Injectable } from '@nestjs/common'
 import { Reflector } from '@nestjs/core'
 import type { Artist } from '@prisma/client'
 import type { Request } from 'express'
+import { ARTIST_AUTH_ERRORS } from './errors'
 
 export type { TokenRequirement } from '@modules/auth-core'
 
@@ -43,6 +44,9 @@ export class ArtistAuthGuard extends SessionAuthGuard<Artist> {
   }
 
   protected attach(request: Request, artist: Artist) {
+    const expected = request.headers?.['x-artist-account']
+    if (expected && expected !== artist.id)
+      throw new ConflictException(ARTIST_AUTH_ERRORS.ACCOUNT_CHANGED)
     request.artist = artist
   }
 }

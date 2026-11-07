@@ -2,7 +2,7 @@ import { Button } from '@bitrate/ui-react'
 import { useDistribution } from '@entities/delivery'
 import { useI18n } from '@shared/i18n'
 import { ROUTES } from '@shared/routes/routes'
-import { PanelIcon } from '@shared/ui'
+import { PageSkeleton, Pagination, PanelIcon } from '@shared/ui'
 import { Link } from '@tanstack/react-router'
 import { CircleCheck, CircleDashed, Send, Unplug } from 'lucide-react'
 import { DeliveryMatrix } from './DeliveryMatrix'
@@ -61,8 +61,8 @@ export function DistributionView({ artistId, page }: DistributionViewProps) {
           </ol>
         </div>
       )}
-      {distribution.isPending ? (
-        <p role="status">{t('delivery.page.loading')}</p>
+      {distribution.isPending || distribution.isPlaceholderData ? (
+        <PageSkeleton label={t('delivery.page.loading')} variant="table" />
       ) : distribution.isError ? (
         <div className="space-y-3">
           <p role="alert">{tMessage(distribution.error.message)}</p>
@@ -91,36 +91,16 @@ export function DistributionView({ artistId, page }: DistributionViewProps) {
         <DeliveryMatrix releases={distribution.data.data} />
       )}
       {distribution.data && pages > 1 && (
-        <nav
-          aria-label={t('delivery.page.pages')}
-          className="flex items-center justify-between gap-3"
-        >
-          {page > 1 ? (
-            <Link
-              className="artist-dash-link"
-              search={{ page: page - 1 }}
-              to={ROUTES.dashboard.distribution}
-            >
-              {t('music.pagination.previous')}
+        <Pagination
+          label={t('delivery.page.pages')}
+          page={page}
+          pages={pages}
+          renderLink={(target, content) => (
+            <Link search={{ page: target }} to={ROUTES.dashboard.distribution}>
+              {content}
             </Link>
-          ) : (
-            <span />
           )}
-          <span className="text-sm text-text-secondary">
-            {t('common.pageOf', { page, total: pages })}
-          </span>
-          {page < pages ? (
-            <Link
-              className="artist-dash-link"
-              search={{ page: page + 1 }}
-              to={ROUTES.dashboard.distribution}
-            >
-              {t('music.pagination.next')}
-            </Link>
-          ) : (
-            <span />
-          )}
-        </nav>
+        />
       )}
     </section>
   )
