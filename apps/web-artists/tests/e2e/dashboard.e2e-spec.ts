@@ -52,19 +52,39 @@ async function openNavigation(page: Page) {
   if (await menu.isVisible()) await menu.click()
 }
 
-async function openAppearance(page: Page) {
-  const account = page.getByRole('dialog', { name: 'Artist account' })
-  if (await account.isVisible())
-    return account.getByRole('group', { name: 'Appearance' })
-  await openNavigation(page)
-  await page.getByRole('button', { name: 'Artist account menu' }).click()
-  return account.getByRole('group', { name: 'Appearance' })
+async function openAccount(page: Page) {
+  const account = page.getByRole('dialog', { name: 'Accounts', exact: true })
+  if (!(await account.isVisible())) {
+    await openNavigation(page)
+    await page.getByRole('button', { name: 'Artist account menu' }).click()
+  }
+  await expect(account).toBeVisible()
+  return account
 }
 
-async function closeAccountMenu(page: Page) {
-  const menu = page.getByRole('dialog', { name: 'Artist account' })
-  if (await menu.isVisible())
-    await menu.getByRole('button', { name: 'Close dialog' }).click()
+async function openPreferences(page: Page) {
+  await openNavigation(page)
+  const preferences = page.locator('.artist-sidebar-preferences:visible')
+  await expect(preferences).toBeVisible()
+  return preferences
+}
+
+async function closeNavigation(page: Page) {
+  if (await page.getByRole('dialog', { name: 'Workspace menu' }).isVisible())
+    await page.keyboard.press('Escape')
+}
+
+/** The sidebar button cycles Dark → Light → Dim → Dark. */
+async function selectTheme(page: Page, name: 'Light' | 'Dark' | 'Dim') {
+  const preferences = await openPreferences(page)
+  const button = preferences.getByRole('button', { name: /^Theme:/ })
+  for (let step = 0; step < 3; step++) {
+    if ((await button.getAttribute('aria-label')) === `Theme: ${name}`) return
+    const previous = await button.getAttribute('aria-label')
+    await button.click()
+    await expect(button).not.toHaveAttribute('aria-label', previous ?? '')
+  }
+  await expect(button).toHaveAccessibleName(`Theme: ${name}`)
 }
 
 async function openSeededDraft(page: Page, context: BrowserContext) {
@@ -399,7 +419,7 @@ test('contributor editing rejects a success response for a different participant
   )
   expect(writes).toBe(1)
   await dialog.getByRole('button', { name: 'Cancel', exact: true }).click()
-  await gotoHydrated(page, page.url())
+  await page.reload()
   await expect(
     page.getByRole('heading', { name: 'Updated credit', exact: true }),
   ).toBeVisible()
@@ -988,7 +1008,7 @@ for (const theme of ['light', 'dark', 'dim']) {
     await expect(
       page.getByText('Nov 1, 2026, 12:30 PM UTC', { exact: true }),
     ).toBeVisible()
-    await page.reload()
+    await gotoHydrated(page, page.url())
     await expect(
       page.getByText('Nov 1, 2026, 12:30 PM UTC', { exact: true }),
     ).toBeVisible()
@@ -1008,7 +1028,7 @@ for (const theme of ['light', 'dark', 'dim']) {
       .click()
     await expect(dialog).not.toBeVisible()
     await expect(page.getByText('Right away', { exact: true })).toBeVisible()
-    await page.reload()
+    await gotoHydrated(page, page.url())
     await expect(page.getByText('Right away', { exact: true })).toBeVisible()
     const result = await page.request.get(
       `http://localhost:3103/api/v1/artists/me/releases/${workspaceDraftId}`,
@@ -2413,7 +2433,7 @@ test('release list belongs to the signed-in artist after signing out and switchi
   ).toBeVisible()
   const title = `Private draft ${testInfo.project.name}`
   await renameWorkspaceDraft(page, title)
-  await openAppearance(page)
+  await openAccount(page)
   await page.getByRole('button', { name: 'Sign out' }).click()
   await expect(page).toHaveURL(/\/login$/)
   await authenticate(context, 'test-other')
@@ -2427,28 +2447,50 @@ test('release list belongs to the signed-in artist after signing out and switchi
   expect(refreshes).toBe(0)
 })
 
-test('account dialog opens the settings page and closes on the way', async ({
+test('account dialog manages accounts while settings remain in the sidebar', async ({
   page,
   context,
 }) => {
   await authenticate(context)
   await gotoHydrated(page, '/dashboard')
-  await openAppearance(page)
-  const account = page.getByRole('dialog', { name: 'Artist account' })
-  await account.getByRole('link', { name: 'Settings', exact: true }).click()
+  await openAccount(page)
+  const account = page.getByRole('dialog', { name: 'Accounts', exact: true })
+  await expect(
+    account.getByRole('button', { name: 'Add another account' }),
+  ).toBeEnabled()
+  await expect(account.getByRole('alert')).toHaveCount(0)
+  await expect(account.getByRole('radio')).toHaveCount(0)
+  await expect(account.getByRole('combobox')).toHaveCount(0)
+  await account.getByRole('button', { name: 'Close dialog' }).click()
+  await openNavigation(page)
+  await page.getByRole('link', { name: 'Settings', exact: true }).click()
   await expect(page).toHaveURL(/\/dashboard\/settings$/)
   await expect(account).toHaveCount(0)
 })
 
-test('account dialog switches the workspace language', async ({
+test('sidebar switches the workspace language and saves it to the account', async ({
   page,
   context,
 }) => {
   await authenticate(context)
   await gotoHydrated(page, '/dashboard')
-  await openAppearance(page)
-  const account = page.getByRole('dialog', { name: 'Artist account' })
-  await account.getByLabel('Language').selectOption('pl')
+  const preferences = await openPreferences(page)
+  await preferences
+    .getByRole('button', { name: 'Interface language: English', exact: true })
+    .click()
+  await expect(page.locator('html')).toHaveAttribute('lang', 'uk')
+  const saved = page.waitForResponse(
+    (response) =>
+      response.url().endsWith('/api/v1/artists/me/profile/locale') &&
+      response.request().method() === 'PUT',
+  )
+  await preferences
+    .getByRole('button', { name: 'Мова інтерфейсу: Українська', exact: true })
+    .click()
+  expect((await saved).ok()).toBe(true)
+  await expect(page.locator('html')).toHaveAttribute('lang', 'pl')
+  await closeNavigation(page)
+  await gotoHydrated(page, page.url())
   await expect(page.locator('html')).toHaveAttribute('lang', 'pl')
 })
 
@@ -2492,18 +2534,15 @@ test('workspace theme switches all three palettes and persists across navigation
     ['Dark', 'rgb(5, 6, 10)'],
     ['Dim', 'rgb(11, 13, 18)'],
   ] as const) {
-    const appearance = await openAppearance(page)
-    const option = appearance.getByRole('radio', { name, exact: true })
-    await option.check()
-    const currentAppearance = await openAppearance(page)
+    await selectTheme(page, name)
     await expect(
-      currentAppearance.getByRole('radio', { name, exact: true }),
-    ).toBeChecked()
+      page.getByRole('button', { name: `Theme: ${name}`, exact: true }),
+    ).toBeVisible()
     await expect(page.locator('.artist-dashboard').first()).toHaveCSS(
       'background-color',
       background,
     )
-    await closeAccountMenu(page)
+    await closeNavigation(page)
     await expect(
       page.getByRole('heading', { name: 'Dashboard', exact: true }),
     ).toBeVisible()
@@ -2517,15 +2556,18 @@ test('workspace theme switches all three palettes and persists across navigation
     await page.getByRole('link', { name: 'Music', exact: true }).click()
     await expect(page).toHaveURL(/\/dashboard\/music$/)
     await gotoHydrated(page, page.url())
-    const restoredAppearance = await openAppearance(page)
+    const restoredAppearance = await openPreferences(page)
     await expect(
-      restoredAppearance.getByRole('radio', { name, exact: true }),
-    ).toBeChecked()
+      restoredAppearance.getByRole('button', {
+        name: `Theme: ${name}`,
+        exact: true,
+      }),
+    ).toBeVisible()
     await expect(page.locator('.artist-dashboard').first()).toHaveCSS(
       'background-color',
       background,
     )
-    await closeAccountMenu(page)
+    await closeNavigation(page)
     await openNavigation(page)
     await page.getByRole('link', { name: 'Dashboard', exact: true }).click()
   }
@@ -2541,11 +2583,12 @@ test('workspace theme ignores invalid stored values and keeps authentication rea
   })
   await authenticate(context)
   await gotoHydrated(page, '/dashboard')
-  await openAppearance(page)
+  const preferences = await openPreferences(page)
   await expect(
-    page.getByRole('radio', { name: 'Dim', exact: true }),
-  ).toBeChecked()
-  await page.getByRole('radio', { name: 'Light', exact: true }).check()
+    preferences.getByRole('button', { name: 'Theme: Dim', exact: true }),
+  ).toBeVisible()
+  await selectTheme(page, 'Light')
+  await openAccount(page)
   await page.getByRole('button', { name: 'Sign out' }).click()
   await expect(page).toHaveURL(/\/login$/)
   await expect(page.locator('html')).toHaveClass('dark')
@@ -2565,17 +2608,20 @@ test('workspace theme supports keyboard selection when browser storage is unavai
   })
   await authenticate(context)
   await gotoHydrated(page, '/dashboard')
-  await openAppearance(page)
-  const light = page.getByRole('radio', { name: 'Light', exact: true })
-  await light.focus()
+  const preferences = await openPreferences(page)
+  const theme = preferences.getByRole('button', { name: /^Theme:/ })
+  await expect(theme).toHaveAccessibleName('Theme: Dim')
+  await theme.focus()
   await page.keyboard.press('Space')
-  await expect(light).toBeChecked()
-  await page.keyboard.press('ArrowRight')
+  await expect(theme).toHaveAccessibleName('Theme: Dark')
   await expect(page.locator('html')).toHaveClass('dark')
-  await openAppearance(page)
-  await expect(
-    page.getByRole('radio', { name: 'Dark', exact: true }),
-  ).toBeChecked()
+  await page.keyboard.press('Enter')
+  await expect(theme).toHaveAccessibleName('Theme: Light')
+  await expect(page.locator('html')).toHaveClass('light')
+  await page.keyboard.press('Space')
+  await expect(theme).toHaveAccessibleName('Theme: Dim')
+  await page.keyboard.press('Enter')
+  await expect(theme).toHaveAccessibleName('Theme: Dark')
   await expect(page.locator('.artist-dashboard').first()).toHaveCSS(
     'background-color',
     'rgb(5, 6, 10)',
@@ -2672,18 +2718,12 @@ for (const theme of ['dark', 'light', 'dim'] as const) {
       .getByRole('link', { name: 'Distribution', exact: true })
       .click()
     await expect(page).toHaveURL(/\/dashboard\/distribution(\?|$)/)
-    await openAppearance(page)
-    const account = page.getByRole('dialog', {
-      name: 'Artist account',
-      exact: true,
-    })
-    const dark = account.getByRole('radio', { name: 'Dark', exact: true })
-    await dark.check()
-    await dark.focus()
-    await page.keyboard.press('ArrowLeft')
-    await expect(
-      account.getByRole('radio', { name: 'Light', exact: true }),
-    ).toBeChecked()
+    await selectTheme(page, 'Dark')
+    const themeButton = page.getByRole('button', { name: /^Theme:/ })
+    await themeButton.focus()
+    await page.keyboard.press('Space')
+    await expect(themeButton).toHaveAccessibleName('Theme: Light')
+    const account = await openAccount(page)
     await expect(account).toBeVisible()
     await account.getByRole('button', { name: 'Sign out', exact: true }).click()
     await expect(page).toHaveURL(/\/login$/)
@@ -2873,7 +2913,7 @@ test('authenticated shell supports navigation and signing out', async ({
   await expect(
     page.getByRole('heading', { name: 'Music', exact: true }),
   ).toBeVisible()
-  await openAppearance(page)
+  await openAccount(page)
   await expect(page.getByRole('button', { name: 'Sign out' })).toBeVisible()
   await page.getByRole('button', { name: 'Sign out' }).click()
   await expect(page).toHaveURL(/\/login$/)
@@ -3026,7 +3066,7 @@ test('failed logout leaves the workspace visible and offers retry', async ({
 }) => {
   await authenticate(context, 'test-valid', 'test-logout-failure')
   await gotoHydrated(page, '/dashboard')
-  await openAppearance(page)
+  await openAccount(page)
   await page.getByRole('button', { name: 'Sign out' }).click()
   await expect(page.getByRole('alert')).toHaveText(
     'Could not sign out. Please try again.',

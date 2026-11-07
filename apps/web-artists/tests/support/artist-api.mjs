@@ -613,6 +613,28 @@ const server = createServer(async (request, response) => {
     response.writeHead(200).end()
     return
   }
+  if (
+    request.url === '/api/v1/artists/auth/accounts' &&
+    request.method === 'GET'
+  ) {
+    const other = cookie.includes('artist_access_token=test-other')
+    if (!other && !cookie.includes('artist_access_token=test-valid'))
+      return json(401, { message: 'Unauthorized' })
+    response.setHeader('Cache-Control', 'private, no-store')
+    return json(200, {
+      accounts: [
+        {
+          id: other
+            ? 'de14c750-95c6-4f17-a22a-5a08d0c7f777'
+            : 'ce14c750-95c6-4f17-a22a-5a08d0c7f777',
+          username: other ? 'Other artist' : 'Test artist',
+          avatar: null,
+          current: true,
+        },
+      ],
+      limit: 5,
+    })
+  }
   if (request.url === '/api/v1/artists/auth/me') {
     if (cookie.includes('test-outage'))
       return json(503, { message: 'Unavailable' })
