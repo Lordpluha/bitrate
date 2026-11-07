@@ -1,6 +1,6 @@
 import type { ApiSchemas } from '@bitrate/contracts'
 import { type BrowserContext, expect, type Page, test } from '@playwright/test'
-import { gotoHydrated } from '@tests/support/hydration'
+import { gotoHydrated, reloadHydrated } from '@tests/support/hydration'
 
 async function authenticate(
   context: BrowserContext,
@@ -210,7 +210,7 @@ for (const theme of ['light', 'dark', 'dim']) {
     await expect(dialog).not.toBeVisible()
     await expect(panel.getByText('Needs role', { exact: true })).toHaveCount(0)
     await expect(panel.getByText('Producer', { exact: true })).toBeVisible()
-    await page.reload()
+    await reloadHydrated(page)
     await expect(panel.getByText('Producer', { exact: true })).toBeVisible()
     await expect(panel.getByText('Needs role', { exact: true })).toHaveCount(0)
     expect(errors).toEqual([])
@@ -309,7 +309,7 @@ for (const theme of ['light', 'dark', 'dim']) {
     await expect(
       panel.getByText('Producer · Composer', { exact: true }),
     ).toBeVisible()
-    await page.reload()
+    await reloadHydrated(page)
     await expect(
       panel.getByRole('heading', { name: 'Taylor Reid Updated', exact: true }),
     ).toBeVisible()
@@ -419,7 +419,7 @@ test('contributor editing rejects a success response for a different participant
   )
   expect(writes).toBe(1)
   await dialog.getByRole('button', { name: 'Cancel', exact: true }).click()
-  await page.reload()
+  await reloadHydrated(page)
   await expect(
     page.getByRole('heading', { name: 'Updated credit', exact: true }),
   ).toBeVisible()
@@ -936,7 +936,7 @@ for (const theme of ['light', 'dark', 'dim']) {
     await expect(
       panel.getByText('Performer · Composer', { exact: true }),
     ).toBeVisible()
-    await page.reload()
+    await reloadHydrated(page)
     await expect(
       panel.getByRole('heading', { name: 'Taylor Reid' }),
     ).toBeVisible()
@@ -1387,7 +1387,7 @@ for (const theme of ['light', 'dark', 'dim'] as const) {
         ),
       ).toBe(true)
     }
-    await page.reload()
+    await reloadHydrated(page)
     await expect(
       page.getByRole('heading', { name: 'Afterglow', level: 1 }),
     ).toBeVisible()
@@ -1431,7 +1431,7 @@ test('release workspace edits an owned draft, refreshes its summary and persists
   await expect(
     page.getByRole('status').filter({ hasText: 'Draft updated.' }),
   ).toBeVisible()
-  await page.reload()
+  await reloadHydrated(page)
   await expect(
     page.getByRole('heading', { name: 'Workspace draft updated', level: 1 }),
   ).toBeVisible()
@@ -1530,7 +1530,7 @@ test('release workspace keeps a foreign release unavailable after switching arti
     page.getByRole('heading', { name: 'Steel Ball Run', level: 1 }),
   ).toBeVisible()
   await authenticate(context, 'test-other')
-  await page.reload()
+  await reloadHydrated(page)
   await expect(page.getByRole('alert')).toContainText(
     'This release is no longer available.',
   )
@@ -1881,7 +1881,7 @@ for (const theme of ['light', 'dark', 'dim'] as const) {
     })
     await expect(row).toContainText('Single')
     await expect(row).toContainText('Draft')
-    await page.reload()
+    await reloadHydrated(page)
     await expect(
       page.getByRole('button', {
         name: 'Open Steel Ball Run Deluxe',

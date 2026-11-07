@@ -13,7 +13,21 @@ import { expect, type Page } from '@playwright/test'
  */
 export async function gotoHydrated(page: Page, path: string) {
   const response = await page.goto(path)
+  await waitForHydration(page)
+  return response
+}
 
+/** A reload starts from server skeletons while Vite loads the route's browser modules again. */
+export async function reloadHydrated(page: Page) {
+  const response = await page.reload()
+  await waitForHydration(page)
+  await expect(page.locator('[data-skeleton="page"]')).toHaveCount(0, {
+    timeout: 15_000,
+  })
+  return response
+}
+
+async function waitForHydration(page: Page) {
   await expect
     .poll(
       async () => {
@@ -37,6 +51,4 @@ export async function gotoHydrated(page: Page, path: string) {
       { timeout: 15_000 },
     )
     .toBe(true)
-
-  return response
 }
