@@ -39,7 +39,7 @@ describe('Release identifiers (HTTP)', () => {
   describe('UPC', () => {
     const patch = (body: object) =>
       request(app.getHttpServer())
-        .patch(`/api/v1/releases/${draft.id}`)
+        .patch(`/api/v1/artists/me/releases/${draft.id}`)
         .set('x-test-artist', ownerId)
         .send({ ...body, expectedUpdatedAt: version })
 
@@ -69,7 +69,7 @@ describe('Release identifiers (HTTP)', () => {
   })
 
   describe('ISRC', () => {
-    const url = `/api/v1/releases/${draft.id}/tracks/${trackDraftId}`
+    const url = `/api/v1/artists/me/releases/${draft.id}/tracks/${trackDraftId}`
     const patch = (body: object) =>
       request(app.getHttpServer())
         .patch(url)

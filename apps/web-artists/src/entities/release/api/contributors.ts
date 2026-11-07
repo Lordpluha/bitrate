@@ -21,7 +21,7 @@ export async function getContributor(
   signal: AbortSignal,
 ) {
   const result = await clientFetchClient.GET(
-    '/api/v1/releases/{id}/contributors/{contributorId}',
+    '/api/v1/artists/me/releases/{id}/contributors/{contributorId}',
     { params: { path: { id, contributorId } }, signal },
   )
   if (result.response.status === 404)
@@ -81,14 +81,17 @@ function sendContributor(
   const signal = writeSignal()
   if (contributorId)
     return clientFetchClient.PATCH(
-      '/api/v1/releases/{id}/contributors/{contributorId}',
+      '/api/v1/artists/me/releases/{id}/contributors/{contributorId}',
       { params: { path: { id, contributorId } }, body: input, signal },
     )
-  return clientFetchClient.POST('/api/v1/releases/{id}/contributors', {
-    params: { path: { id } },
-    body: input,
-    signal,
-  })
+  return clientFetchClient.POST(
+    '/api/v1/artists/me/releases/{id}/contributors',
+    {
+      params: { path: { id } },
+      body: input,
+      signal,
+    },
+  )
 }
 
 const removedContributorSchema = z.object({
@@ -110,7 +113,7 @@ export function removeContributor({
   return guardedWrite(
     () =>
       clientFetchClient.DELETE(
-        '/api/v1/releases/{id}/contributors/{contributorId}',
+        '/api/v1/artists/me/releases/{id}/contributors/{contributorId}',
         {
           params: { path: { id, contributorId } },
           body: { expectedUpdatedAt },
@@ -141,11 +144,14 @@ export interface CreditSelfRequest {
 export function creditSelf({ id, expectedUpdatedAt }: CreditSelfRequest) {
   return guardedWrite(
     () =>
-      clientFetchClient.POST('/api/v1/releases/{id}/contributors/self', {
-        params: { path: { id } },
-        body: { expectedUpdatedAt },
-        signal: writeSignal(),
-      }),
+      clientFetchClient.POST(
+        '/api/v1/artists/me/releases/{id}/contributors/self',
+        {
+          params: { path: { id } },
+          body: { expectedUpdatedAt },
+          signal: writeSignal(),
+        },
+      ),
     (data) => {
       const parsed = contributorResultSchema.safeParse(data)
       return parsed.success &&

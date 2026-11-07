@@ -15,7 +15,7 @@ import {
 import { ArtistTopTracksEntity } from './entities/artist-analytics.entity'
 
 @ApiTags('Releases')
-@Controller({ path: 'artist-analytics', version: '1' })
+@Controller({ path: 'artists/me/analytics', version: '1' })
 export class ArtistAnalyticsController {
   constructor(private readonly analytics: ArtistAnalyticsService) {}
 

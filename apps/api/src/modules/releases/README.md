@@ -7,22 +7,22 @@ contributor relationship does not grant workspace access.
 
 | Endpoint | Behavior |
 | --- | --- |
-| `POST /api/v1/releases` | Creates a `DRAFT` owned by the authenticated artist. |
-| `GET /api/v1/releases?page=1&limit=20` | Lists that artist's active workspaces, newest first, with `{ data, total, page, limit }`. |
-| `GET /api/v1/releases/:id` | Reads one owned active workspace, including its edit version. |
-| `GET /api/v1/releases/:id/workspace` | Reads summary, active linked recording metadata, optional schedule and credited participants; each relation preview is capped at 50. |
-| `POST /api/v1/releases/:id/contributors` | Adds a name and unique roles to an owned DRAFT using expectedUpdatedAt; credit and release version persist in one transaction. |
-| `GET /api/v1/releases/:id/contributors/:contributorId` | Reads exactly one credit and current release version within the owned active release. |
-| `PATCH /api/v1/releases/:id/contributors/:contributorId` | Corrects a DRAFT credit's name/roles with expectedUpdatedAt, preserving its identity, artist link and splits. |
-| `PATCH /api/v1/releases/:id` | Updates title, type, planned date and/or optional UPC of an owned `DRAFT`, requiring the previously read `updatedAt`. |
-| `PATCH /api/v1/releases/:id/rights` | Replaces the master owner and both rights confirmations of a DRAFT. |
-| `PUT /api/v1/releases/:id/splits` | Replaces one right type's shares (≤ 100% in a draft); clears the accuracy confirmation. |
-| `PATCH /api/v1/releases/:id/tracks/:trackId` | Sets or clears the optional ISRC of an owned recording on the DRAFT. |
-| `POST /api/v1/releases/:id/submit` | Re-checks readiness and moves DRAFT → SUBMITTED (Bitrate review only); blockers return 422. |
-| `POST /api/v1/releases/:id/withdraw` | Returns SUBMITTED → DRAFT. |
-| `GET /api/v1/artist-music/counts` | Counts the artist's active private recordings and releases. |
-| `GET /api/v1/artist-music/tracks` | Lists private preparation recordings, with artwork, version, duration, status and optional owned release. |
-| `GET /api/v1/artist-music/releases` | Lists release summaries with artwork and active track counts. |
+| `POST /api/v1/artists/me/releases` | Creates a `DRAFT` owned by the authenticated artist. |
+| `GET /api/v1/artists/me/releases?page=1&limit=20` | Lists that artist's active workspaces, newest first, with `{ data, total, page, limit }`. |
+| `GET /api/v1/artists/me/releases/:id` | Reads one owned active workspace, including its edit version. |
+| `GET /api/v1/artists/me/releases/:id/workspace` | Reads summary, active linked recording metadata, optional schedule and credited participants; each relation preview is capped at 50. |
+| `POST /api/v1/artists/me/releases/:id/contributors` | Adds a name and unique roles to an owned DRAFT using expectedUpdatedAt; credit and release version persist in one transaction. |
+| `GET /api/v1/artists/me/releases/:id/contributors/:contributorId` | Reads exactly one credit and current release version within the owned active release. |
+| `PATCH /api/v1/artists/me/releases/:id/contributors/:contributorId` | Corrects a DRAFT credit's name/roles with expectedUpdatedAt, preserving its identity, artist link and splits. |
+| `PATCH /api/v1/artists/me/releases/:id` | Updates title, type, planned date and/or optional UPC of an owned `DRAFT`, requiring the previously read `updatedAt`. |
+| `PATCH /api/v1/artists/me/releases/:id/rights` | Replaces the master owner and both rights confirmations of a DRAFT. |
+| `PUT /api/v1/artists/me/releases/:id/splits` | Replaces one right type's shares (≤ 100% in a draft); clears the accuracy confirmation. |
+| `PATCH /api/v1/artists/me/releases/:id/tracks/:trackId` | Sets or clears the optional ISRC of an owned recording on the DRAFT. |
+| `POST /api/v1/artists/me/releases/:id/submit` | Re-checks readiness and moves DRAFT → SUBMITTED (Bitrate review only); blockers return 422. |
+| `POST /api/v1/artists/me/releases/:id/withdraw` | Returns SUBMITTED → DRAFT. |
+| `GET /api/v1/artists/me/music/counts` | Counts the artist's active private recordings and releases. |
+| `GET /api/v1/artists/me/music/tracks` | Lists private preparation recordings, with artwork, version, duration, status and optional owned release. |
+| `GET /api/v1/artists/me/music/releases` | Lists release summaries with artwork and active track counts. |
 
 Create input:
 
@@ -64,7 +64,7 @@ also require the same owner. Credited participants expose only ID, display name 
 roles; recording source/playback URLs and account credentials are not included.
 Missing, foreign and deleted releases return the same 404; malformed IDs return 400.
 Credited participants can be added to an owned DRAFT with
-`POST /api/v1/releases/:id/contributors`: name, at least one unique existing role,
+`POST /api/v1/artists/me/releases/:id/contributors`: name, at least one unique existing role,
 and the release's `expectedUpdatedAt`. The release version and new credit are
 saved in one transaction; rejected writes persist neither change. Foreign/deleted
 releases return 404, stale/non-DRAFT writes 409. Credits do not grant membership
@@ -124,12 +124,12 @@ URLs resolve to the artist portal's identified synthetic sample audio.
 
 | Route | Purpose |
 | --- | --- |
-| `PUT /releases/:id/cover` | Multipart `cover` (JPEG/PNG/WebP, 20 MB, magic-byte checked) |
-| `DELETE /releases/:id/cover` | Removes the artwork |
-| `POST /releases/:id/tracks` | Multipart `audio` + `title`: creates a recording from a master |
-| `PUT /releases/:id/tracks/:trackId/audio` | Replaces the master of a recording |
-| `DELETE /releases/:id/tracks/:trackId` | Removes a recording, its master and its ISRC |
-| `GET /releases/:id/tracks/:trackId/audio` | Owner-only playback with HTTP Range |
+| `PUT /artists/me/releases/:id/cover` | Multipart `cover` (JPEG/PNG/WebP, 20 MB, magic-byte checked) |
+| `DELETE /artists/me/releases/:id/cover` | Removes the artwork |
+| `POST /artists/me/releases/:id/tracks` | Multipart `audio` + `title`: creates a recording from a master |
+| `PUT /artists/me/releases/:id/tracks/:trackId/audio` | Replaces the master of a recording |
+| `DELETE /artists/me/releases/:id/tracks/:trackId` | Removes a recording, its master and its ISRC |
+| `GET /artists/me/releases/:id/tracks/:trackId/audio` | Owner-only playback with HTTP Range |
 
 Covers are public images under `releases/covers` and are stored on `Release.cover` as
 `/static/...` paths, like avatars. Masters (WAV, FLAC, MP3, OGG up to 512 MB) stream to
@@ -143,8 +143,8 @@ and delivers nothing.
 ## Release tasks
 
 `ReleaseTasksController` manages preparation tasks of an owned release:
-`GET|POST /releases/:id/tasks` and `PATCH|DELETE /releases/:id/tasks/:taskId`.
-`ArtistTasksController` serves `GET /release-tasks`, the artist-wide paginated list behind
+`GET|POST /artists/me/releases/:id/tasks` and `PATCH|DELETE /artists/me/releases/:id/tasks/:taskId`.
+`ArtistTasksController` serves `GET /artists/me/tasks`, the artist-wide paginated list behind
 the Tasks page, with an `OPEN` filter and counts per status plus overdue.
 
 Tasks are planning notes, not release data: they stay editable in every release status and
@@ -155,10 +155,10 @@ the single-owner stand-in for collaboration roles. Setting `DONE` records `compl
 
 ## Delivery plan and distribution
 
-`GET /releases/:id/delivery` returns the plan (stores in `ReleaseDestination`, territories in
+`GET /artists/me/releases/:id/delivery` returns the plan (stores in `ReleaseDestination`, territories in
 `ReleaseTerritory`, where no rows means worldwide) and a state per store.
-`PUT /releases/:id/delivery-plan` replaces the plan of a DRAFT under the version lock;
-`GET /distribution` lists every release for the Distribution page.
+`PUT /artists/me/releases/:id/delivery-plan` replaces the plan of a DRAFT under the version lock;
+`GET /artists/me/distribution` lists every release for the Distribution page.
 
 The single partner sits behind `DISTRIBUTION_ADAPTER` (`distribution/distribution-adapter.ts`).
 Until one is confirmed (#248) it is bound to `NotConnectedDistributionAdapter`, so every
@@ -169,7 +169,7 @@ re-submission). A store reads PENDING, LIVE, FAILED or TAKEN_DOWN only from such
 
 ## Artist dashboard
 
-`GET /artist-dashboard` returns the returning-artist summary in one request: the current
+`GET /artists/me/dashboard` returns the returning-artist summary in one request: the current
 release (most recently updated in-progress release) with its blocker count, attention items
 (drafts with blockers, requested changes, overdue tasks), catalogue counts, the next planned
 dates and the next open tasks. It reads saved data only and implies no listening figures.

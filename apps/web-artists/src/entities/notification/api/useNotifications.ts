@@ -22,7 +22,7 @@ export function useNotifications(artistId: string) {
     queryKey: key(artistId),
     queryFn: async ({ signal }) => {
       const result = await clientFetchClient.GET(
-        '/api/v1/artist-notifications',
+        '/api/v1/artists/me/notifications',
         {
           signal,
         },
@@ -44,7 +44,7 @@ export function useMarkNotificationsSeen(artistId: string) {
     retry: false,
     mutationFn: async () => {
       const result = await clientFetchClient
-        .POST('/api/v1/artist-notifications/seen', {})
+        .POST('/api/v1/artists/me/notifications/seen', {})
         .catch(() => undefined)
       if (!result?.response.ok)
         throw new Error(messageKey('notifications.error.markRead'))
@@ -58,7 +58,7 @@ export function useNotificationPreferences(artistId: string) {
     queryKey: preferencesKey(artistId),
     queryFn: async ({ signal }) => {
       const result = await clientFetchClient.GET(
-        '/api/v1/artist-notifications/preferences',
+        '/api/v1/artists/me/notifications/preferences',
         { signal },
       )
       const parsed = notificationPreferencesSchema.safeParse(result.data)
@@ -76,7 +76,7 @@ export function useSaveNotificationPreferences(artistId: string) {
     retry: false,
     mutationFn: async (input: NotificationPreferences) => {
       const result = await clientFetchClient
-        .PUT('/api/v1/artist-notifications/preferences', {
+        .PUT('/api/v1/artists/me/notifications/preferences', {
           body: input,
           signal: writeSignal(),
         })

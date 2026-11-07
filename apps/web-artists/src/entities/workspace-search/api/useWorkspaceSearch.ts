@@ -12,7 +12,7 @@ export function useWorkspaceSearch(artistId: string, query: string) {
   return useQuery({
     queryKey: [...artistMusicKeys.artist(artistId), 'search', q],
     queryFn: async ({ signal }) => {
-      const result = await clientFetchClient.GET('/api/v1/artist-search', {
+      const result = await clientFetchClient.GET('/api/v1/artists/me/search', {
         params: { query: { q } },
         signal,
       })

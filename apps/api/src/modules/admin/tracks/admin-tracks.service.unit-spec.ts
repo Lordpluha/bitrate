@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, jest } from '@jest/globals'
-import type { TrackUploadService } from '@modules/tracks'
+import type { TrackIngestService } from '@modules/tracks'
 import type { Prisma } from '@prisma/client'
 import { type PrismaMock, prismaMock, resetPrismaMock } from '@test/mocks'
 import { type DeepMockProxy, mockDeep } from 'jest-mock-extended'
@@ -22,12 +22,12 @@ const STAFF_ID = 'staff-1'
 const makeTrackUploadMock = () =>
   ({
     reprocess: jest.fn(),
-  }) as unknown as jest.Mocked<TrackUploadService>
+  }) as unknown as jest.Mocked<TrackIngestService>
 
 describe('AdminTracksService', () => {
   let service: AdminTracksService
   let prisma: PrismaMock
-  let trackUpload: jest.Mocked<TrackUploadService>
+  let trackUpload: jest.Mocked<TrackIngestService>
   let transaction: DeepMockProxy<Prisma.TransactionClient>
 
   beforeEach(() => {
@@ -155,7 +155,7 @@ describe('AdminTracksService', () => {
       expect(trackUpload.reprocess).not.toHaveBeenCalled()
     })
 
-    it('delegates to TrackUploadService.reprocess — reuses the existing producer', async () => {
+    it('delegates to TrackIngestService.reprocess — reuses the existing producer', async () => {
       prisma.track.findFirst.mockResolvedValue(buildTrack({ id: 'track-1' }) as never)
       trackUpload.reprocess.mockResolvedValue(buildTrack({ id: 'track-1' }) as never)
 

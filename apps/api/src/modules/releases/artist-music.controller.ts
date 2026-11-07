@@ -21,7 +21,7 @@ import {
 
 @ApiTags('Artist Music')
 @ApiExtraModels(MusicTrackEntity, MusicTrackReleaseEntity, MusicReleaseEntity, MusicCountsEntity)
-@Controller({ path: 'artist-music', version: '1' })
+@Controller({ path: 'artists/me/music', version: '1' })
 export class ArtistMusicController {
   constructor(private readonly music: ArtistMusicService) {}
 

@@ -42,9 +42,9 @@ numbered pagination (20 recordings per page), selections across pages and up to 
 per compilation. The profile entry explicitly creates COMPILATION mode. Removing every
 recording preserves compilation mode. Compilation masters cannot be uploaded or replaced.
 
-- `GET /api/v1/releases/:id/catalogue-tracks?page=1&search=...`: eligible owned recordings,
+- `GET /api/v1/artists/me/releases/:id/catalogue-tracks?page=1&search=...`: eligible owned recordings,
   excluding those already attached to this draft. Private, authenticated and owner-scoped.
-- `POST /api/v1/releases/:id/compilation-tracks`: `{trackIds, expectedUpdatedAt}`. Adds canonical
+- `POST /api/v1/artists/me/releases/:id/compilation-tracks`: `{trackIds, expectedUpdatedAt}`. Adds canonical
   references in selection order under the draft version lock. Rejects stale versions, mixed
   uploaded masters, repeated IDs and identical original audio checksums when available.
 - `ArtistTrackDraft.sourceTrackId` stores the canonical source; the private uploaded master is

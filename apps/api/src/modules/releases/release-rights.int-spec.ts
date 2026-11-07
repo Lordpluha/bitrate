@@ -32,8 +32,8 @@ describe('Release rights confirmation (HTTP)', () => {
   })
 
   it.each([
-    ['adding', 'post', `/api/v1/releases/${draft.id}/contributors`],
-    ['editing', 'patch', `/api/v1/releases/${draft.id}/contributors/${creditId}`],
+    ['adding', 'post', `/api/v1/artists/me/releases/${draft.id}/contributors`],
+    ['editing', 'patch', `/api/v1/artists/me/releases/${draft.id}/contributors/${creditId}`],
   ] as const)('clears both confirmations when %s a credit', async (_action, method, url) => {
     const credit = { id: creditId, releaseId: draft.id, artistId: null, displayName: 'Taylor Reid' }
     transactionMock.release.updateManyAndReturn.mockResolvedValue([advanced])
@@ -52,7 +52,7 @@ describe('Release rights confirmation (HTTP)', () => {
   it('records the artist as master owner and the songwriter confirmation', async () => {
     transactionMock.release.updateManyAndReturn.mockResolvedValue([advanced])
     const response = await request(app.getHttpServer())
-      .patch(`/api/v1/releases/${draft.id}/rights`)
+      .patch(`/api/v1/artists/me/releases/${draft.id}/rights`)
       .set('x-test-artist', ownerId)
       .send({
         masterOwner: { type: 'ARTIST' },
@@ -84,7 +84,7 @@ describe('Release rights confirmation (HTTP)', () => {
   it('saves the master owner alone and leaves the songwriter confirmation untouched', async () => {
     transactionMock.release.updateManyAndReturn.mockResolvedValue([advanced])
     await request(app.getHttpServer())
-      .patch(`/api/v1/releases/${draft.id}/rights`)
+      .patch(`/api/v1/artists/me/releases/${draft.id}/rights`)
       .set('x-test-artist', ownerId)
       .send({ masterOwner: { type: 'ARTIST' }, expectedUpdatedAt: version })
       .expect(200)
@@ -94,7 +94,7 @@ describe('Release rights confirmation (HTTP)', () => {
 
   it('rejects the retired accuracy confirmation', async () => {
     await request(app.getHttpServer())
-      .patch(`/api/v1/releases/${draft.id}/rights`)
+      .patch(`/api/v1/artists/me/releases/${draft.id}/rights`)
       .set('x-test-artist', ownerId)
       .send({
         masterOwner: { type: 'ARTIST' },
@@ -109,7 +109,7 @@ describe('Release rights confirmation (HTTP)', () => {
   it('records another master owner by name and clears withdrawn confirmations', async () => {
     transactionMock.release.updateManyAndReturn.mockResolvedValue([advanced])
     await request(app.getHttpServer())
-      .patch(`/api/v1/releases/${draft.id}/rights`)
+      .patch(`/api/v1/artists/me/releases/${draft.id}/rights`)
       .set('x-test-artist', ownerId)
       .send({
         masterOwner: { type: 'OTHER', name: ' North Label ' },
@@ -130,7 +130,7 @@ describe('Release rights confirmation (HTTP)', () => {
     ['an unknown owner type', { type: 'LABEL', name: 'North Label' }],
   ])('rejects %s', async (_case, masterOwner) => {
     await request(app.getHttpServer())
-      .patch(`/api/v1/releases/${draft.id}/rights`)
+      .patch(`/api/v1/artists/me/releases/${draft.id}/rights`)
       .set('x-test-artist', ownerId)
       .send({
         masterOwner,
@@ -145,7 +145,7 @@ describe('Release rights confirmation (HTTP)', () => {
     transactionMock.release.updateManyAndReturn.mockResolvedValue([])
     transactionMock.release.findFirst.mockResolvedValue(null)
     await request(app.getHttpServer())
-      .patch(`/api/v1/releases/${draft.id}/rights`)
+      .patch(`/api/v1/artists/me/releases/${draft.id}/rights`)
       .set('x-test-artist', otherOwnerId)
       .send({
         masterOwner: null,
@@ -159,7 +159,7 @@ describe('Release rights confirmation (HTTP)', () => {
     transactionMock.release.updateManyAndReturn.mockResolvedValue([])
     transactionMock.release.findFirst.mockResolvedValue(draft)
     await request(app.getHttpServer())
-      .patch(`/api/v1/releases/${draft.id}/rights`)
+      .patch(`/api/v1/artists/me/releases/${draft.id}/rights`)
       .set('x-test-artist', ownerId)
       .send({
         masterOwner: null,
@@ -170,7 +170,9 @@ describe('Release rights confirmation (HTTP)', () => {
   })
 
   it('requires an artist session', async () => {
-    await request(app.getHttpServer()).patch(`/api/v1/releases/${draft.id}/rights`).expect(401)
+    await request(app.getHttpServer())
+      .patch(`/api/v1/artists/me/releases/${draft.id}/rights`)
+      .expect(401)
     expect(prismaMock.$transaction).not.toHaveBeenCalled()
   })
 })

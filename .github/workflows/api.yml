@@ -19,6 +19,7 @@ on:
       - 'turbo.json'
       - '.github/workflows/api.yml'
       - '.github/workflows/api_reusable.yml'
+      - 'scripts/smoke-api-image.mjs'
   pull_request:
     branches: [master, develop]
     paths:
@@ -29,6 +30,7 @@ on:
       - 'turbo.json'
       - '.github/workflows/api.yml'
       - '.github/workflows/api_reusable.yml'
+      - 'scripts/smoke-api-image.mjs'
   workflow_dispatch:
     inputs:
       mode:

@@ -94,7 +94,7 @@ describe('Top tracks pagination', () => {
       screen.queryByText('Track 12', { exact: true }),
     ).not.toBeInTheDocument()
     expect(get).toHaveBeenCalledWith(
-      '/api/v1/artist-analytics/top-tracks',
+      '/api/v1/artists/me/analytics/top-tracks',
       expect.objectContaining({ params: { query: { days: 28, page: 3 } } }),
     )
   })

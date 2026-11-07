@@ -7,6 +7,7 @@ import request from 'supertest'
 import { buildArtist } from './__tests__/fixtures/artists.fixtures'
 import { ArtistsController } from './artists.controller'
 import { ArtistsService } from './artists.service'
+import { FollowedArtistsController } from './followed-artists.controller'
 
 const makeServiceMock = () =>
   ({
@@ -15,8 +16,8 @@ const makeServiceMock = () =>
     findTopTracks: jest.fn(),
     findPlaylists: jest.fn(),
     findByUsername: jest.fn(),
-    update: jest.fn(),
     requestDelete: jest.fn(),
+    getFollowing: jest.fn(),
   }) as unknown as jest.Mocked<ArtistsService>
 
 describe('ArtistsController (int)', () => {
@@ -28,7 +29,7 @@ describe('ArtistsController (int)', () => {
     service = makeServiceMock()
 
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [ArtistsController],
+      controllers: [ArtistsController, FollowedArtistsController],
       providers: [{ provide: ArtistsService, useValue: service }],
     })
       .overrideGuard(UserAuthGuard)
@@ -63,7 +64,7 @@ describe('ArtistsController (int)', () => {
     service.findTopTracks.mockReset()
     service.findPlaylists.mockReset()
     service.findByUsername.mockReset()
-    service.update.mockReset()
+    service.getFollowing.mockReset()
     service.requestDelete.mockReset()
   })
 
@@ -102,33 +103,42 @@ describe('ArtistsController (int)', () => {
     expect(service.findByUsername).toHaveBeenCalledWith('artist')
   })
 
-  it('PUT /artists/:id should call service.update and return 200', async () => {
-    service.update.mockResolvedValue(buildArtist({ username: 'updated' }) as never)
-
-    const res = await request(app.getHttpServer())
-      .put('/artists/f47ac10b-58cc-4372-a567-0e02b2c3d479')
-      .send({ username: 'updated' })
-
-    expect(res.status).toBe(200)
-    expect(service.update).toHaveBeenCalledWith(
-      'f47ac10b-58cc-4372-a567-0e02b2c3d479',
-      expect.objectContaining({ username: 'updated' }),
-      artist.id,
-    )
-  })
-
-  it('DELETE /artists/:id should call service.requestDelete and return 200', async () => {
+  it('DELETE /artists/me deletes the signed-in artist', async () => {
     service.requestDelete.mockResolvedValue(artist as never)
 
-    const res = await request(app.getHttpServer()).delete(
-      '/artists/f47ac10b-58cc-4372-a567-0e02b2c3d479',
+    const res = await request(app.getHttpServer()).delete('/artists/me')
+
+    expect(res.status).toBe(200)
+    expect(service.requestDelete).toHaveBeenCalledWith(artist.id)
+  })
+
+  it('no longer serves DELETE /artists/:id or PUT /artists/:id', async () => {
+    const id = 'f47ac10b-58cc-4372-a567-0e02b2c3d479'
+
+    const removed = await request(app.getHttpServer()).delete(`/artists/${id}`)
+    const updated = await request(app.getHttpServer()).put(`/artists/${id}`).send({ username: 'x' })
+
+    expect(removed.status).toBe(404)
+    expect(updated.status).toBe(404)
+    expect(service.requestDelete).not.toHaveBeenCalled()
+  })
+
+  it("GET /users/me/following/artists lists the listener's followed artists", async () => {
+    service.getFollowing.mockResolvedValue({ data: [], limit: 10, page: 1, total: 0 } as never)
+
+    const res = await request(app.getHttpServer()).get(
+      '/users/me/following/artists?page=1&limit=10',
     )
 
     expect(res.status).toBe(200)
-    expect(service.requestDelete).toHaveBeenCalledWith(
-      'f47ac10b-58cc-4372-a567-0e02b2c3d479',
-      artist.id,
-    )
+    expect(service.getFollowing).toHaveBeenCalledWith('user-1', 1, 10)
+  })
+
+  it('no longer serves GET /artists/me/following', async () => {
+    const res = await request(app.getHttpServer()).get('/artists/me/following')
+
+    expect(res.status).toBe(404)
+    expect(service.getFollowing).not.toHaveBeenCalled()
   })
 
   it('GET /artists/:id/top-tracks should pass the limit', async () => {

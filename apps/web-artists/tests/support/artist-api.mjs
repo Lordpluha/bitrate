@@ -168,7 +168,7 @@ const server = createServer(async (request, response) => {
     )
     return json(200, { ok: true })
   }
-  if (request.url?.startsWith('/api/v1/artist-music/')) {
+  if (request.url?.startsWith('/api/v1/artists/me/music/')) {
     if (
       !cookie.includes('artist_access_token=test-valid') &&
       !cookie.includes('artist_access_token=test-other')
@@ -218,7 +218,7 @@ const server = createServer(async (request, response) => {
       limit,
     })
   }
-  if (request.url?.startsWith('/api/v1/releases/')) {
+  if (request.url?.startsWith('/api/v1/artists/me/releases/')) {
     if (
       !cookie.includes('artist_access_token=test-valid') &&
       !cookie.includes('artist_access_token=test-other')
@@ -230,8 +230,8 @@ const server = createServer(async (request, response) => {
     const workspace = request.url.endsWith('/workspace')
     const contributorWrite = request.url.endsWith('/contributors')
     const parts = request.url.split('/')
-    const contributorId = parts[5] === 'contributors' ? parts[6] : undefined
-    const id = parts[4]
+    const contributorId = parts[7] === 'contributors' ? parts[8] : undefined
+    const id = parts[6]
     const release = (releases.get(scoped(owner)) ?? []).find(
       (item) => item.id === id,
     )
@@ -274,9 +274,9 @@ const server = createServer(async (request, response) => {
         latestReview: null,
       })
     }
-    if (parts[5] === 'tasks' && request.method === 'GET')
+    if (parts[7] === 'tasks' && request.method === 'GET')
       return json(200, { data: [], total: 0 })
-    if (parts[5] === 'delivery' && request.method === 'GET')
+    if (parts[7] === 'delivery' && request.method === 'GET')
       return json(200, {
         releaseId: release.id,
         title: release.title,
@@ -351,7 +351,7 @@ const server = createServer(async (request, response) => {
       ).toISOString()
       return json(existingCredit ? 200 : 201, { release, participant })
     }
-    const action = parts[5]
+    const action = parts[7]
     if (
       (action === 'rights' && request.method === 'PATCH') ||
       (action === 'splits' && request.method === 'PUT') ||
@@ -423,7 +423,7 @@ const server = createServer(async (request, response) => {
       return json(200, release)
     }
     if (request.method === 'GET') return json(200, release)
-    if (request.method === 'DELETE' && parts.length === 5) {
+    if (request.method === 'DELETE' && parts.length === 7) {
       let body = ''
       for await (const chunk of request) body += chunk
       const input = JSON.parse(body)
@@ -488,7 +488,7 @@ const server = createServer(async (request, response) => {
       return json(200, release)
     }
   }
-  if (request.url === '/api/v1/artist-dashboard')
+  if (request.url === '/api/v1/artists/me/dashboard')
     return json(200, {
       counts: { releases: 0, drafts: 0, inReview: 0, released: 0, tracks: 0 },
       currentRelease: null,
@@ -496,17 +496,17 @@ const server = createServer(async (request, response) => {
       upcoming: [],
       tasks: { open: 0, overdue: 0, next: [] },
     })
-  if (request.url?.startsWith('/api/v1/artist-workspace/layouts/'))
+  if (request.url?.startsWith('/api/v1/artists/me/workspace/layouts/'))
     return json(200, {
       page: request.url.split('/').pop(),
       tiles: [],
       updatedAt: null,
     })
-  if (request.url === '/api/v1/artist-notifications')
+  if (request.url === '/api/v1/artists/me/notifications')
     return json(200, { data: [], unread: 0, seenAt: null })
-  if (request.url?.startsWith('/api/v1/artist-search'))
+  if (request.url?.startsWith('/api/v1/artists/me/search'))
     return json(200, { releases: [], tracks: [], tasks: [] })
-  if (request.url?.startsWith('/api/v1/release-tasks')) {
+  if (request.url?.startsWith('/api/v1/artists/me/tasks')) {
     const page = Number(
       new URL(request.url, 'http://fixture').searchParams.get('page') ?? 1,
     )
@@ -518,13 +518,13 @@ const server = createServer(async (request, response) => {
       counts: { TODO: 0, IN_PROGRESS: 0, DONE: 0, overdue: 0 },
     })
   }
-  if (request.url?.startsWith('/api/v1/distribution')) {
+  if (request.url?.startsWith('/api/v1/artists/me/distribution')) {
     const page = Number(
       new URL(request.url, 'http://fixture').searchParams.get('page') ?? 1,
     )
     return json(200, { data: [], total: 0, page, limit: 20 })
   }
-  if (request.url?.split('?')[0] === '/api/v1/releases') {
+  if (request.url?.split('?')[0] === '/api/v1/artists/me/releases') {
     if (
       !cookie.includes('artist_access_token=test-valid') &&
       !cookie.includes('artist_access_token=test-other')
@@ -631,8 +631,9 @@ const server = createServer(async (request, response) => {
     })
   }
   if (
-    (request.url === '/api/v1/artist-profile' && request.method === 'GET') ||
-    (request.url === '/api/v1/artist-profile/locale' &&
+    (request.url === '/api/v1/artists/me/profile' &&
+      request.method === 'GET') ||
+    (request.url === '/api/v1/artists/me/profile/locale' &&
       request.method === 'PUT')
   ) {
     const other = cookie.includes('artist_access_token=test-other')

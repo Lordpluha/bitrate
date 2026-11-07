@@ -35,7 +35,7 @@ let app: INestApplication
 
 const submit = (body: object, artist = ownerId) =>
   request(app.getHttpServer())
-    .post(`/api/v1/releases/${draft.id}/submit`)
+    .post(`/api/v1/artists/me/releases/${draft.id}/submit`)
     .set('x-test-artist', artist)
     .send(body)
 
@@ -128,7 +128,7 @@ describe('Release submission (HTTP)', () => {
   describe('withdraw', () => {
     const withdraw = (artist = ownerId) =>
       request(app.getHttpServer())
-        .post(`/api/v1/releases/${draft.id}/withdraw`)
+        .post(`/api/v1/artists/me/releases/${draft.id}/withdraw`)
         .set('x-test-artist', artist)
         .send({ expectedUpdatedAt: version })
 
@@ -165,7 +165,7 @@ describe('Release submission (HTTP)', () => {
 
   it.each(['submit', 'withdraw'])('requires an artist session to %s', async (action) => {
     await request(app.getHttpServer())
-      .post(`/api/v1/releases/${draft.id}/${action}`)
+      .post(`/api/v1/artists/me/releases/${draft.id}/${action}`)
       .send({})
       .expect(401)
   })
@@ -200,7 +200,7 @@ describe('Release submission (HTTP)', () => {
         .mockResolvedValueOnce(record as never)
         .mockResolvedValueOnce(readyRelease as never)
       const response = await request(app.getHttpServer())
-        .get(`/api/v1/releases/${draft.id}/workspace`)
+        .get(`/api/v1/artists/me/releases/${draft.id}/workspace`)
         .set('x-test-artist', ownerId)
         .expect(200)
       expect(response.body).toMatchObject({

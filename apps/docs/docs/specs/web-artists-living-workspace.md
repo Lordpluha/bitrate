@@ -46,7 +46,7 @@ sounds (removed).
   Reset restores the default. Unknown or missing tiles in a stored layout are dropped or
   appended, so new tiles appear without breaking old layouts. A numbered two-dimensional grid provides right, bottom and corner resize handles; width/height selectors and arrow/Home/End keys provide precise sizing. Auto height follows content. Automatic row spans are measured from natural content, while fixed-height content scrolls inside its card. Geometry transitions ease between snapped sizes and stop with reduced motion. Cards stack with natural height on narrow screens; desktop dimensions remain saved.
   The draft editor uses a fixed layout without Customize.
-- **API.** `GET /api/v1/artist-workspace/layouts/{page}` returns
+- **API.** `GET /api/v1/artists/me/workspace/layouts/{page}` returns
   `{ page, tiles: [{ id, size, columns?, rows?, hidden }], updatedAt }` or `tiles: []` when the artist has
   none; `PUT` replaces it (max 24 tiles, unique ids, `size` one of `S|M|L`, optional integer `columns` and `rows` from 1–12); `DELETE`
   resets it. `page` is one of `dashboard|analytics|release-draft`. All routes need the

@@ -23,7 +23,7 @@ export interface RightsRequest {
 export function saveRights({ id, input }: RightsRequest) {
   return guardedWrite(
     () =>
-      clientFetchClient.PATCH('/api/v1/releases/{id}/rights', {
+      clientFetchClient.PATCH('/api/v1/artists/me/releases/{id}/rights', {
         params: { path: { id } },
         body: input,
         signal: signal(),
@@ -55,7 +55,7 @@ export interface SplitsRequest {
 export function saveSplits({ id, input }: SplitsRequest) {
   return guardedWrite(
     () =>
-      clientFetchClient.PUT('/api/v1/releases/{id}/splits', {
+      clientFetchClient.PUT('/api/v1/artists/me/releases/{id}/splits', {
         params: { path: { id } },
         body: input,
         signal: signal(),
@@ -92,11 +92,14 @@ export interface TrackIsrcRequest {
 export function saveTrackIsrc({ id, trackId, input }: TrackIsrcRequest) {
   return guardedWrite(
     () =>
-      clientFetchClient.PATCH('/api/v1/releases/{id}/tracks/{trackId}', {
-        params: { path: { id, trackId } },
-        body: input,
-        signal: signal(),
-      }),
+      clientFetchClient.PATCH(
+        '/api/v1/artists/me/releases/{id}/tracks/{trackId}',
+        {
+          params: { path: { id, trackId } },
+          body: input,
+          signal: signal(),
+        },
+      ),
     (data) => {
       const parsed = trackResultSchema.safeParse(data)
       if (
@@ -125,7 +128,7 @@ export function submitRelease({ id, input }: SubmitRequest) {
   const unconfirmed = messageKey('release.error.submitUnconfirmed')
   return guardedWrite(
     () =>
-      clientFetchClient.POST('/api/v1/releases/{id}/submit', {
+      clientFetchClient.POST('/api/v1/artists/me/releases/{id}/submit', {
         params: { path: { id } },
         body: input,
         signal: signal(),
@@ -156,7 +159,7 @@ export interface WithdrawRequest {
 export function withdrawRelease({ id, input }: WithdrawRequest) {
   return guardedWrite(
     () =>
-      clientFetchClient.POST('/api/v1/releases/{id}/withdraw', {
+      clientFetchClient.POST('/api/v1/artists/me/releases/{id}/withdraw', {
         params: { path: { id } },
         body: input,
         signal: signal(),
@@ -179,7 +182,7 @@ export interface ReviseRequest {
 export function reviseRelease({ id, input }: ReviseRequest) {
   return guardedWrite(
     () =>
-      clientFetchClient.POST('/api/v1/releases/{id}/revise', {
+      clientFetchClient.POST('/api/v1/artists/me/releases/{id}/revise', {
         params: { path: { id } },
         body: input,
         signal: signal(),
@@ -202,7 +205,7 @@ export interface PublishRequest {
 export function publishRelease({ id, input }: PublishRequest) {
   return guardedWrite(
     () =>
-      clientFetchClient.POST('/api/v1/releases/{id}/publish', {
+      clientFetchClient.POST('/api/v1/artists/me/releases/{id}/publish', {
         params: { path: { id } },
         body: input,
         signal: signal(),
@@ -227,9 +230,9 @@ export function publishRelease({ id, input }: PublishRequest) {
 /** Owner actions on a release that went live or is waiting for its premiere. */
 function launchWrite(
   path:
-    | '/api/v1/releases/{id}/publish/cancel'
-    | '/api/v1/releases/{id}/unpublish'
-    | '/api/v1/releases/{id}/republish',
+    | '/api/v1/artists/me/releases/{id}/publish/cancel'
+    | '/api/v1/artists/me/releases/{id}/unpublish'
+    | '/api/v1/artists/me/releases/{id}/republish',
   expected: ReleaseSummary['status'],
   messages: Required<Omit<WriteMessages, 'statusMessages'>>,
 ) {
@@ -254,7 +257,7 @@ function launchWrite(
 }
 
 export const cancelPremiere = launchWrite(
-  '/api/v1/releases/{id}/publish/cancel',
+  '/api/v1/artists/me/releases/{id}/publish/cancel',
   'READY',
   {
     invalid: messageKey('release.error.cancelInvalid'),
@@ -264,7 +267,7 @@ export const cancelPremiere = launchWrite(
 )
 
 export const unpublishRelease = launchWrite(
-  '/api/v1/releases/{id}/unpublish',
+  '/api/v1/artists/me/releases/{id}/unpublish',
   'UNPUBLISHED',
   {
     invalid: messageKey('release.error.unpublishInvalid'),
@@ -274,7 +277,7 @@ export const unpublishRelease = launchWrite(
 )
 
 export const republishRelease = launchWrite(
-  '/api/v1/releases/{id}/republish',
+  '/api/v1/artists/me/releases/{id}/republish',
   'RELEASED',
   {
     invalid: messageKey('release.error.republishInvalid'),

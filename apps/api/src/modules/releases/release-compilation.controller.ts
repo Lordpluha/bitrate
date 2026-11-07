@@ -17,7 +17,7 @@ import {
 import { ReleaseCompilationService } from './release-compilation.service'
 
 @ApiTags('Releases')
-@Controller({ path: 'releases', version: '1' })
+@Controller({ path: 'artists/me/releases', version: '1' })
 export class ReleaseCompilationController {
   constructor(private readonly compilations: ReleaseCompilationService) {}
 

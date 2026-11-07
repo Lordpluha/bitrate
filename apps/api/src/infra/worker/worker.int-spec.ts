@@ -6,8 +6,8 @@ import { AUDIO_PROCESSING_QUEUE } from '@infra/queues/audio-processing.queue'
 import { STORAGE_SERVICE } from '@infra/storage/storage.constants'
 import type { StorageService } from '@infra/storage/storage.types'
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals'
-import { runConversionPhases } from '@modules/tracks/audio-processing.phases'
-import { getJobScratchBase } from '@modules/tracks/audio-scratch'
+import { runConversionPhases } from '@modules/tracks/processing/audio-processing.phases'
+import { getJobScratchBase } from '@modules/tracks/shared'
 import { getQueueToken } from '@nestjs/bullmq'
 import type { INestApplicationContext } from '@nestjs/common'
 import type { Queue } from 'bullmq'
@@ -18,7 +18,7 @@ import { bootstrapWorker } from './bootstrap-worker'
  * is not what this spec is about. Everything around them — the Bull connection, the consumer, the
  * recorder, Prisma and storage — is real.
  */
-jest.mock('@modules/tracks/audio-processing.phases', () => ({
+jest.mock('@modules/tracks/processing/audio-processing.phases', () => ({
   runConversionPhases: jest.fn(),
 }))
 

@@ -16,7 +16,7 @@ export function useTopTracks(
     queryKey: [...artistMusicKeys.artist(artistId), 'top-tracks', days, page],
     queryFn: async ({ signal }) => {
       const result = await clientFetchClient.GET(
-        '/api/v1/artist-analytics/top-tracks',
+        '/api/v1/artists/me/analytics/top-tracks',
         {
           params: { query: { days, page } },
           signal,

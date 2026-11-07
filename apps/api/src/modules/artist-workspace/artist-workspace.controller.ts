@@ -28,7 +28,7 @@ import {
 
 /** The signed-in artist's own workspace preferences. */
 @ApiTags('Artist workspace')
-@Controller({ path: 'artist-workspace', version: '1' })
+@Controller({ path: 'artists/me/workspace', version: '1' })
 export class ArtistWorkspaceController {
   constructor(private readonly workspace: ArtistWorkspaceService) {}
 

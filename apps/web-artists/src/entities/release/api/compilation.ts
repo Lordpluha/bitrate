@@ -47,7 +47,7 @@ export function useCompilationCatalogue(
     retry: false,
     queryFn: async ({ signal }) => {
       const result = await clientFetchClient.GET(
-        '/api/v1/releases/{id}/catalogue-tracks',
+        '/api/v1/artists/me/releases/{id}/catalogue-tracks',
         {
           params: {
             path: { id },
@@ -76,11 +76,14 @@ async function addRecordings({
 }: AddRecordingsRequest) {
   return guardedWrite(
     () =>
-      clientFetchClient.POST('/api/v1/releases/{id}/compilation-tracks', {
-        params: { path: { id } },
-        body: { trackIds, expectedUpdatedAt },
-        signal: writeSignal(),
-      }),
+      clientFetchClient.POST(
+        '/api/v1/artists/me/releases/{id}/compilation-tracks',
+        {
+          params: { path: { id } },
+          body: { trackIds, expectedUpdatedAt },
+          signal: writeSignal(),
+        },
+      ),
     (data) => {
       const parsed = addedSchema.safeParse(data)
       return parsed.success &&
