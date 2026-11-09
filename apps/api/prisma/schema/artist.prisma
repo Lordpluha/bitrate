@@ -13,10 +13,10 @@ model ArtistSession {
   expiresAt DateTime
 
   artist Artist @relation(fields: [artistId], references: [id], onDelete: Cascade)
+  accountLinks ArtistAccountLink[]
 
+  @@unique([id, artistId])
   @@index([artistId])
-  @@index([access_token])
-  @@index([refresh_token])
 }
 
 model Artist {
@@ -73,8 +73,6 @@ model Artist {
   likedBy   UserLikedArtist[]
   followers UserFollowedArtist[]
 
-  @@index([email])
-  @@index([username])
   @@index([monthlyListeners(sort: Desc)])
   @@index([deletedAt])
 }
@@ -171,4 +169,17 @@ model ArtistWorkspaceLayout {
   artist Artist @relation(fields: [artistId], references: [id], onDelete: Cascade)
 
   @@id([artistId, page])
+}
+
+// Previously authenticated accounts available to one browser. Only a hash of its HttpOnly
+// credential is stored; revoking a session also removes the corresponding saved account.
+model ArtistAccountLink {
+  browserTokenHash String @db.Char(64)
+  artistId String @db.Uuid
+  sessionId String @db.Uuid
+  addedAt DateTime @default(now())
+  session ArtistSession @relation(fields: [sessionId, artistId], references: [id, artistId], onDelete: Cascade)
+
+  @@id([browserTokenHash, artistId])
+  @@index([sessionId, artistId])
 }

@@ -1,0 +1,127 @@
+@layer utilities {
+  .artist-notifications-popover {
+    display: flex;
+    flex-direction: column;
+    width: min(25rem, calc(100vw - 1.5rem));
+    max-height: min(36rem, var(--available-height, calc(100dvh - 6rem)));
+    padding: 0;
+    overflow: hidden;
+    color: var(--color-foreground);
+    background: linear-gradient(
+      145deg,
+      var(--color-artist-release-panel-start),
+      var(--color-artist-release-panel-middle) 60%,
+      var(--color-artist-release-panel-end)
+    );
+    border: 1px solid var(--color-artist-release-border);
+    border-radius: 1rem;
+    box-shadow: 0 1.25rem 4rem -0.75rem
+      color-mix(in oklab, var(--color-black) 45%, transparent);
+    translate: 0 0;
+    transition:
+      opacity 160ms ease,
+      scale 160ms ease,
+      translate 160ms ease;
+  }
+  .artist-notifications-popover[data-starting-style],
+  .artist-notifications-popover[data-ending-style] {
+    opacity: 0;
+    scale: 0.98;
+    translate: 0 -0.25rem;
+  }
+  .artist-notifications-header {
+    display: flex;
+    flex: none;
+    gap: 0.75rem;
+    align-items: center;
+    padding: 0.875rem 1rem;
+    border-bottom: 1px solid var(--color-artist-release-border);
+  }
+  .artist-notifications-heading-icon,
+  .artist-notification-icon,
+  .artist-notifications-empty-icon {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    color: var(--color-artist-icon);
+    background: var(--color-artist-selection);
+    border-radius: 0.75rem;
+  }
+  .artist-notifications-content {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+  .artist-notifications-toolbar {
+    display: flex;
+    flex: none;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.625rem 1rem;
+  }
+  .artist-notifications-list {
+    display: grid;
+    gap: 1rem;
+    min-height: 0;
+    padding: 0.25rem 0.5rem 0.5rem;
+    overflow-y: auto;
+    scrollbar-gutter: stable;
+    overscroll-behavior: contain;
+  }
+  .artist-notification-item {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    min-width: 0;
+    padding: 0.75rem;
+    border: 1px solid transparent;
+    border-radius: 0.75rem;
+    transition:
+      background-color 150ms ease,
+      border-color 150ms ease;
+  }
+  .artist-notification-item[data-unread="true"] {
+    background: color-mix(
+      in oklab,
+      var(--color-artist-selection) 45%,
+      transparent
+    );
+  }
+  .artist-notification-item:hover {
+    background: var(--color-secondary);
+    border-color: var(--color-artist-release-border);
+  }
+  .artist-notification-item:focus-visible {
+    outline: 2px solid var(--color-ring);
+    outline-offset: -2px;
+  }
+  .artist-notification-icon[data-action="true"] {
+    color: var(--color-destructive);
+    background: color-mix(in oklab, var(--color-destructive) 12%, transparent);
+  }
+  .artist-notifications-state {
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+    align-items: center;
+    padding: 2.5rem 1.5rem;
+    overflow-y: auto;
+    font-size: 0.8125rem;
+    color: var(--color-text-secondary);
+    text-align: center;
+  }
+  .artist-notifications-empty-icon {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 1rem;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .artist-notifications-popover {
+      transition: none;
+    }
+  }
+}

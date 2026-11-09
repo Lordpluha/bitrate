@@ -55,6 +55,26 @@ export class AnalyticsExternalSourceEntity {
   state: 'NOT_CONNECTED'
 }
 
+export class ArtistTopTracksEntity {
+  @ApiProperty({ type: [AnalyticsTopTrackEntity], maxItems: 5 })
+  data: AnalyticsTopTrackEntity[]
+
+  @ApiProperty({ minimum: 0 })
+  total: number
+
+  @ApiProperty({ minimum: 1, description: 'Clamped to the available pages' })
+  page: number
+
+  @ApiProperty({ enum: [5] })
+  limit: number
+
+  @ApiProperty({ enum: [7, 28, 90] })
+  days: number
+
+  @ApiProperty({ minimum: 0, description: 'Plays of the leading track across all pages' })
+  maxPlays: number
+}
+
 export class ArtistAnalyticsEntity {
   @ApiProperty({
     enum: ['NO_TRACKS', 'NO_DATA_YET', 'READY'],

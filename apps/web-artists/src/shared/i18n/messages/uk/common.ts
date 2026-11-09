@@ -1,4 +1,5 @@
 export const common = {
+  'common.loadingPage': 'Завантаження сторінки',
   'common.cancel': 'Скасувати',
   'common.saving': 'Зберігаємо…',
   'common.continue': 'Продовжити',
@@ -7,9 +8,13 @@ export const common = {
   'common.verifying': 'Перевіряємо…',
   'common.sending': 'Надсилаємо…',
   'common.pageOf': 'Сторінка {page} з {total}',
+  'common.pageNumber': 'Сторінка {page}',
+  'common.previousPage': 'Попередня',
+  'common.nextPage': 'Наступна',
   'common.tracks.one': '{count} трек',
   'common.tracks.few': '{count} треки',
   'common.tracks.many': '{count} треків',
   'common.tracks.other': '{count} трека',
   'common.closeDialog': 'Закрити вікно',
+  'common.dismissNotice': 'Закрити повідомлення',
 } as const

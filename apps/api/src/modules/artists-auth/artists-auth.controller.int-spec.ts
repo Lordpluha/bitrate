@@ -6,6 +6,7 @@ import type { INestApplication } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { Test, type TestingModule } from '@nestjs/testing'
 import request from 'supertest'
+import { ArtistAccountsService } from './artist-accounts.service'
 import { ArtistOAuthService } from './artist-oauth.service'
 import { ArtistTwoFactorService } from './artist-two-factor.service'
 import { AuthController } from './artists-auth.controller'
@@ -33,6 +34,8 @@ const makeTokenServiceMock = () =>
   ({
     setAuthCookies: jest.fn(),
     clearAuthCookies: jest.fn(),
+    clearArtistAccountsCookie: jest.fn(),
+    readArtistAccountsCookie: jest.fn(),
   }) as unknown as jest.Mocked<TokenService>
 
 describe('AuthController artists (int)', () => {
@@ -55,6 +58,7 @@ describe('AuthController artists (int)', () => {
         { provide: TokenService, useValue: tokenService },
         { provide: ArtistOAuthService, useValue: {} },
         { provide: ArtistTwoFactorService, useValue: {} },
+        { provide: ArtistAccountsService, useValue: { forgetBrowser: jest.fn() } },
         { provide: ConfigService, useValue: { get: jest.fn() } },
       ],
     })

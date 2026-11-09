@@ -93,6 +93,20 @@
   .artist-release-tracks > p {
     margin-top: 0.375rem;
   }
+  .artist-release-track-list {
+    max-height: min(42rem, 70dvh);
+    overflow-y: auto;
+    scrollbar-gutter: stable;
+    overscroll-behavior-y: contain;
+    scroll-padding-block: 0.75rem;
+    scrollbar-color: var(--color-border) transparent;
+    scrollbar-width: thin;
+  }
+  .artist-release-track-list:focus-visible {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 2px;
+    border-radius: 0.75rem;
+  }
   .artist-release-tracks li {
     flex-direction: column;
     gap: 0.75rem;

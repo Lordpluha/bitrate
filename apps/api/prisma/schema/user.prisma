@@ -52,8 +52,6 @@ model User {
   auditLogs              AuditLog[]
   moderationReports      ModerationReport[]
 
-  @@index([email])
-  @@index([username])
 }
 
 model UserEmailVerification {
@@ -106,8 +104,6 @@ model UserSession {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
-  @@index([access_token])
-  @@index([refresh_token])
 }
 
 model UserFollow {

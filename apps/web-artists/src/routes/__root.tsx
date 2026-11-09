@@ -4,6 +4,7 @@ import { AuthProvider } from '@shared/hooks'
 import { getRequestLocale, I18nProvider } from '@shared/i18n'
 import { WorkspaceThemeProvider } from '@shared/theme/WorkspaceThemeProvider'
 import { WorkspaceThemeScript } from '@shared/theme/WorkspaceThemeScript'
+import { RouteProgress } from '@shared/ui/Loading'
 import {
   createRootRoute,
   HeadContent,
@@ -89,7 +90,10 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
         <I18nProvider initialLocale={locale}>
           <QueryClientProvider>
             <AuthProvider>
-              <WorkspaceThemeProvider>{children}</WorkspaceThemeProvider>
+              <WorkspaceThemeProvider>
+                <RouteProgress />
+                {children}
+              </WorkspaceThemeProvider>
             </AuthProvider>
           </QueryClientProvider>
         </I18nProvider>

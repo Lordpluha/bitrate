@@ -1,4 +1,5 @@
 import { useI18n } from '@shared/i18n'
+import { monotonePath } from '@shared/lib/chartPath'
 import { type KeyboardEvent, type PointerEvent, useId, useState } from 'react'
 
 interface DailyPlays {
@@ -29,38 +30,6 @@ function niceScale(max: number) {
   const factor = [1, 2, 2.5, 5, 10].find((item) => item * power >= rough) ?? 10
   const step = Math.max(factor * power, 1)
   return { step, top: Math.ceil(Math.max(max, 1) / step) * step }
-}
-
-/**
- * A smooth path through the points that never overshoots them (monotone cubic, as d3's
- * curveMonotoneX): peaks stay where the data puts them.
- */
-function monotonePath(points: readonly { x: number; y: number }[]) {
-  if (points.length < 2) return points.map((p) => `M${p.x},${p.y}`).join('')
-  const slopes = points
-    .slice(1)
-    .map((p, i) => (p.y - points[i].y) / (p.x - points[i].x))
-  const tangents = points.map((_, i) => {
-    if (i === 0) return slopes[0]
-    if (i === points.length - 1) return slopes[i - 1]
-    const before = slopes[i - 1]
-    const after = slopes[i]
-    if (before * after <= 0) return 0
-    // Equal spacing reduces d3's slope3 to this; it bounds the tangent so no segment overshoots.
-    return (
-      2 *
-      Math.sign(before) *
-      Math.min(Math.abs(before), Math.abs(after), Math.abs(before + after) / 4)
-    )
-  })
-  let path = `M${points[0].x},${points[0].y}`
-  for (let i = 0; i < points.length - 1; i++) {
-    const from = points[i]
-    const to = points[i + 1]
-    const third = (to.x - from.x) / 3
-    path += ` C${from.x + third},${from.y + tangents[i] * third} ${to.x - third},${to.y - tangents[i + 1] * third} ${to.x},${to.y}`
-  }
-  return path
 }
 
 /**

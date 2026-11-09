@@ -1,5 +1,6 @@
 export const common = {
   'common.cancel': 'Cancel',
+  'common.loadingPage': 'Loading page',
   'common.saving': 'Saving…',
   'common.continue': 'Continue',
   'common.or': 'or',
@@ -7,7 +8,11 @@ export const common = {
   'common.verifying': 'Verifying…',
   'common.sending': 'Sending…',
   'common.pageOf': 'Page {page} of {total}',
+  'common.pageNumber': 'Page {page}',
+  'common.previousPage': 'Previous',
+  'common.nextPage': 'Next',
   'common.tracks.one': '{count} track',
   'common.tracks.other': '{count} tracks',
   'common.closeDialog': 'Close dialog',
+  'common.dismissNotice': 'Dismiss message',
 } as const

@@ -45,7 +45,7 @@ export function WorkspaceModal({
     <dialog
       aria-labelledby={titleId}
       className={cn(
-        'artist-dashboard artist-workspace-modal m-auto max-h-[calc(100dvh-2rem)] w-[calc(100vw-2rem)] max-w-lg overflow-y-auto rounded-xl border border-border bg-card p-6 text-foreground',
+        'artist-dashboard artist-workspace-modal m-auto max-h-[calc(100dvh-2rem)] w-[calc(100vw-2rem)] max-w-lg text-foreground',
         className,
       )}
       onCancel={(event) => {
@@ -71,13 +71,13 @@ export function WorkspaceModal({
       }}
       ref={dialog}
     >
-      <div className="mb-6 flex items-center justify-between gap-3">
-        <h2 className="text-xl font-medium" id={titleId}>
+      <div className="artist-workspace-modal-header">
+        <h2 className="text-lg font-medium leading-snug" id={titleId}>
           {title}
         </h2>
         <Button
           aria-label={t('common.closeDialog')}
-          className="shrink-0"
+          className="shrink-0 rounded-full bg-secondary"
           disabled={!canClose}
           onClick={onClose}
           size="icon"
@@ -86,7 +86,7 @@ export function WorkspaceModal({
           <X aria-hidden="true" className="size-5" />
         </Button>
       </div>
-      {children}
+      <div className="artist-workspace-modal-body">{children}</div>
     </dialog>
   )
 }

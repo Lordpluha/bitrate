@@ -119,4 +119,10 @@ export const music = {
   'music.search.searching': 'Wyszukiwanie…',
   'music.search.empty': 'Nic nie pasuje do wyszukiwania.',
   'music.search.unavailable': 'Wyszukiwanie jest teraz niedostępne.',
+  'music.create.untitled': 'Wydanie bez tytułu',
+  'music.create.openFailed':
+    'Szkic został zapisany. Otwórz go, aby kontynuować — drugi szkic nie zostanie utworzony.',
+  'music.item.deleteRelease': 'Usuń wydanie',
+  'music.fields.typeAutomatic':
+    'Wykrywany automatycznie: 1–4 utwory — singiel, 5–6 — EP, 7 lub więcej — album.',
 } as const

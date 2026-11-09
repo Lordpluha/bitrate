@@ -82,4 +82,9 @@ export const editRelease = {
   'editRelease.total': '{right} total {total} of 100%',
   'editRelease.saveSplits': 'Save splits',
   'editRelease.savingSplits': 'Saving splits…',
+  'editRelease.deleteReleaseConfirm':
+    'Delete “{title}”? This removes the release from your workspace and the player. Recordings used by other releases remain available. This cannot be undone.',
+  'editRelease.keepRelease': 'Keep release',
+  'editRelease.editAutoIntro':
+    'Update the release title. Its type is detected automatically from the number of tracks.',
 } as const

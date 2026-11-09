@@ -171,6 +171,67 @@
   .artist-profile-actions > p {
     margin-inline-end: auto;
   }
+  .artist-profile-compilations {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    align-items: center;
+    padding: 1.5rem;
+    background:
+      radial-gradient(
+        ellipse at 0 100%,
+        color-mix(in oklab, var(--color-artist-selection) 22%, transparent),
+        transparent 65%
+      ),
+      var(--color-card);
+  }
+  .artist-profile-compilations-art {
+    position: relative;
+    flex: none;
+    width: 6.5rem;
+    height: 5rem;
+  }
+  .artist-profile-compilations-art span {
+    position: absolute;
+    inset-block: 0;
+    display: grid;
+    place-items: center;
+    width: 4.25rem;
+    color: var(--color-artist-icon);
+    background: var(--color-secondary);
+    border: 1px solid var(--color-artist-selection-border);
+    border-radius: 0.75rem;
+  }
+  .artist-profile-compilations-art span:first-child {
+    left: 0;
+    rotate: -12deg;
+  }
+  .artist-profile-compilations-art span:nth-child(2) {
+    left: 1rem;
+    rotate: 4deg;
+  }
+  .artist-profile-compilations-art span:last-child {
+    left: 2rem;
+    background: var(--color-card);
+    rotate: 14deg;
+  }
+  .artist-profile-compilations-art svg {
+    width: 2rem;
+    height: 2rem;
+  }
+  .artist-release-workspace-panel p.artist-profile-compilations-note {
+    margin-top: 0.75rem;
+    font-size: 0.75rem;
+    color: var(--color-artist-icon);
+  }
+  @variant max-md {
+    .artist-profile-compilations > .min-w-0 {
+      flex-basis: calc(100% - 8rem);
+    }
+    .artist-profile-compilations > button {
+      width: 100%;
+    }
+  }
   @variant max-sm {
     .artist-profile-banner {
       height: 9rem;

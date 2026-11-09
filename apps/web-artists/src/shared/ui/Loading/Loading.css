@@ -1,0 +1,88 @@
+@layer utilities {
+  .artist-skeleton {
+    position: relative;
+    overflow: hidden;
+    background-color: color-mix(in oklab, currentColor 14%, transparent);
+    isolation: isolate;
+  }
+
+  .artist-skeleton::after {
+    position: absolute;
+    inset: 0;
+    content: "";
+    background: linear-gradient(
+      90deg,
+      transparent,
+      color-mix(in oklab, currentColor 24%, transparent),
+      transparent
+    );
+    animation: artist-skeleton-shimmer 1.6s ease-in-out infinite;
+  }
+
+  @keyframes artist-skeleton-shimmer {
+    from {
+      transform: translateX(-100%);
+    }
+    to {
+      transform: translateX(100%);
+    }
+  }
+
+  .artist-route-progress {
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: 100;
+    height: 3px;
+    overflow: hidden;
+    pointer-events: none;
+    background: color-mix(
+      in oklab,
+      var(--color-artist-selection-border) 20%,
+      transparent
+    );
+    box-shadow: 0 0 0.75rem
+      color-mix(in oklab, var(--color-artist-selection-border) 40%, transparent);
+  }
+
+  .artist-route-progress-indicator {
+    width: 35%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      var(--color-artist-selection-border),
+      var(--color-chart-2),
+      var(--color-artist-selection-border)
+    );
+    animation: artist-route-loading 1.2s ease-in-out infinite;
+  }
+
+  @keyframes artist-route-loading {
+    from {
+      transform: translateX(-100%);
+    }
+    to {
+      transform: translateX(300%);
+    }
+  }
+
+  :root[data-motion="reduced"] .artist-skeleton::after {
+    opacity: 0;
+    animation: none;
+  }
+
+  :root[data-motion="reduced"] .artist-route-progress-indicator {
+    width: 100%;
+    animation: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .artist-skeleton::after {
+      opacity: 0;
+      animation: none;
+    }
+    .artist-route-progress-indicator {
+      width: 100%;
+      animation: none;
+    }
+  }
+}

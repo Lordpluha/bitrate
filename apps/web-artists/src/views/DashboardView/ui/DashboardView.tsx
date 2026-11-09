@@ -6,6 +6,7 @@ import {
   useCustomizableLayout,
 } from '@features/workspace-layout'
 import { Interpolate, useI18n } from '@shared/i18n'
+import { PageSkeleton } from '@shared/ui'
 import { DashboardOverview, dashboardTiles } from '@widgets/DashboardOverview'
 import { Upload } from 'lucide-react'
 
@@ -36,9 +37,7 @@ export function DashboardView({ artistId }: DashboardViewProps) {
         {overview && <CustomizeControls layout={layout} />}
       </div>
       {dashboard.isPending ? (
-        <p className="mt-8" role="status">
-          {t('dashboard.loading')}
-        </p>
+        <PageSkeleton className="mt-8" label={t('dashboard.loading')} />
       ) : dashboard.isError ? (
         <div className="mt-8 space-y-3">
           <p role="alert">{tMessage(dashboard.error.message)}</p>

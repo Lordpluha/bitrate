@@ -78,6 +78,7 @@ describe('TrackIngestService', () => {
           title: 'Track title',
           rightsConfirmedVersion: ARTIST_AGREEMENT_VERSION,
           rightsConfirmedAt: expect.any(Date),
+          publishedAt: expect.any(Date),
         }),
       })
       expect(queue.add).toHaveBeenCalledWith(

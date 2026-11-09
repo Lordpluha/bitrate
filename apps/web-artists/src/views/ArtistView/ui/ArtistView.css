@@ -1,0 +1,632 @@
+/* Public artist landing page (`/`): Violet Nebula header, Wope spotlight beams,
+   Aceternity 3D container scroll studio frame, border beams, animated signal beams,
+   and pointer-tracked spotlight cards. */
+@layer utilities {
+  .artist-landing {
+    --text-xs: 0.875rem;
+    position: relative;
+    overflow-x: clip;
+    background-color: var(--color-artist-canvas-start);
+    background-image:
+      radial-gradient(
+        70rem 36rem at 50% -6rem,
+        color-mix(in oklab, var(--color-purple-500) 34%, transparent),
+        transparent 70%
+      ),
+      radial-gradient(
+        48rem 28rem at 18% 6rem,
+        color-mix(in oklab, var(--color-magenta-500) 18%, transparent),
+        transparent 72%
+      ),
+      radial-gradient(
+        48rem 28rem at 82% 8rem,
+        color-mix(in oklab, var(--color-blue-500) 16%, transparent),
+        transparent 72%
+      ),
+      linear-gradient(
+        180deg,
+        var(--color-artist-canvas-start) 0%,
+        var(--color-artist-canvas-middle) 48%,
+        var(--color-artist-canvas-end) 100%
+      );
+    isolation: isolate;
+  }
+
+  .artist-landing .lucide,
+  .artist-landing-preference-panel .lucide {
+    flex-shrink: 0;
+    min-width: 1rem;
+    min-height: 1rem;
+  }
+
+  /* Wope-style diagonal spotlight cones + subtle studio grid mask. */
+  .artist-landing-backdrop {
+    position: absolute;
+    inset: 0 auto auto 0;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    max-height: 68rem;
+    contain: paint;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .artist-landing-spotlight-left,
+  .artist-landing-spotlight-right {
+    position: absolute;
+    top: -14rem;
+    width: 54rem;
+    height: 54rem;
+    opacity: 0.62;
+    filter: blur(52px);
+    animation: artist-spotlight-drift 11s ease-in-out infinite alternate;
+  }
+
+  .artist-landing-spotlight-left {
+    left: -12rem;
+    background: conic-gradient(
+      from 118deg at 20% 15%,
+      transparent 0deg,
+      color-mix(in oklab, var(--color-purple-500) 42%, transparent) 22deg,
+      color-mix(in oklab, var(--color-magenta-500) 28%, transparent) 44deg,
+      transparent 72deg
+    );
+    transform: rotate(-12deg);
+  }
+
+  .artist-landing-spotlight-right {
+    right: -12rem;
+    background: conic-gradient(
+      from 200deg at 80% 15%,
+      transparent 0deg,
+      color-mix(in oklab, var(--color-blue-500) 32%, transparent) 24deg,
+      color-mix(in oklab, var(--color-purple-400) 38%, transparent) 48deg,
+      transparent 76deg
+    );
+    transform: rotate(12deg);
+    animation-delay: -5.5s;
+  }
+
+  .artist-landing-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(
+        to right,
+        color-mix(in oklab, var(--color-white) 5%, transparent) 1px,
+        transparent 1px
+      ),
+      linear-gradient(
+        to bottom,
+        color-mix(in oklab, var(--color-white) 5%, transparent) 1px,
+        transparent 1px
+      );
+    background-size: 3.5rem 3.5rem;
+    mask-image: radial-gradient(
+      ellipse 70% 55% at 50% 24%,
+      var(--color-black) 15%,
+      transparent 80%
+    );
+  }
+
+  .artist-landing-horizon {
+    position: absolute;
+    top: 26rem;
+    left: 50%;
+    width: min(76rem, 96vw);
+    height: 16rem;
+    background: radial-gradient(
+      ellipse 55% 50% at 50% 50%,
+      color-mix(in oklab, var(--color-purple-500) 38%, transparent),
+      color-mix(in oklab, var(--color-magenta-500) 16%, transparent) 48%,
+      transparent 78%
+    );
+    filter: blur(28px);
+    transform: translateX(-50%);
+  }
+
+  /* Header 01: Violet Nebula (Reflect & Wope style) */
+  .artist-landing-header {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    background: color-mix(
+      in oklab,
+      var(--color-artist-canvas-start) 72%,
+      transparent
+    );
+    backdrop-filter: blur(18px);
+  }
+
+  .artist-landing-header-hairline {
+    height: 1px;
+    background: radial-gradient(
+      50% 50% at 50% 50%,
+      color-mix(in oklab, var(--color-purple-400) 55%, transparent) 0%,
+      color-mix(in oklab, var(--color-white) 10%, transparent) 52%,
+      transparent 100%
+    );
+  }
+
+  /* Center Magnetic Glass Nav Capsule */
+  .artist-landing-dock {
+    display: inline-flex;
+    gap: 0.25rem;
+    align-items: center;
+    padding: 0.3125rem;
+    background: var(--color-white-alpha-4);
+    border: 1px solid var(--color-white-alpha-10);
+    border-radius: 9999px;
+    box-shadow:
+      0 8px 24px color-mix(in oklab, var(--color-black) 35%, transparent),
+      inset 0 1px 0 var(--color-white-alpha-10);
+    backdrop-filter: blur(16px);
+  }
+
+  .artist-magnetic-item {
+    position: relative;
+    transform: translate3d(var(--mag-x, 0px), var(--mag-y, 0px), 0);
+    transition:
+      transform 220ms cubic-bezier(0.16, 1, 0.3, 1),
+      color 180ms ease,
+      background-color 180ms ease;
+  }
+
+  .artist-landing-dock-pill[data-active="true"] {
+    color: var(--color-foreground);
+    background: linear-gradient(
+      180deg,
+      color-mix(in oklab, var(--color-purple-500) 32%, transparent),
+      color-mix(in oklab, var(--color-purple-700) 18%, transparent)
+    );
+    border: 1px solid
+      color-mix(in oklab, var(--color-purple-400) 45%, transparent);
+    box-shadow:
+      0 2px 12px color-mix(in oklab, var(--color-purple-500) 28%, transparent),
+      inset 0 1px 0 var(--color-white-alpha-15);
+  }
+
+  /* Moving Border / Hover Border Gradient for Badge & Primary CTA */
+  .artist-moving-border {
+    position: relative;
+    contain: paint;
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  .artist-moving-border::before {
+    position: absolute;
+    inset: -120%;
+    z-index: -2;
+    pointer-events: none;
+    content: "";
+    background: conic-gradient(
+      from 0deg,
+      transparent 0deg 200deg,
+      var(--color-blue-400) 245deg,
+      var(--color-purple-400) 295deg,
+      var(--color-magenta-500) 335deg,
+      transparent 360deg
+    );
+    animation: artist-orbit-spin 4.2s linear infinite;
+  }
+
+  .artist-moving-border::after {
+    position: absolute;
+    inset: 1px;
+    z-index: -1;
+    pointer-events: none;
+    content: "";
+    border-radius: inherit;
+  }
+
+  .artist-moving-border-badge::after {
+    background: linear-gradient(
+      180deg,
+      color-mix(in oklab, var(--color-purple-900) 65%, var(--color-black)),
+      color-mix(in oklab, var(--color-artist-canvas-start) 92%, transparent)
+    );
+  }
+
+  .artist-moving-border-cta {
+    box-shadow:
+      0 0 28px color-mix(in oklab, var(--color-purple-500) 45%, transparent),
+      inset 0 1px 0 var(--color-white-alpha-20);
+  }
+
+  .artist-moving-border-cta::after {
+    background: linear-gradient(
+      135deg,
+      var(--color-purple-500) 0%,
+      var(--color-purple-600) 55%,
+      color-mix(in oklab, var(--color-magenta-500) 65%, var(--color-purple-600))
+        100%
+    );
+  }
+
+  .artist-hero-copy {
+    width: 100%;
+    min-width: 0;
+  }
+  .artist-hero-eyebrow {
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 100%;
+    text-wrap: balance;
+  }
+  .artist-hero-copy h1,
+  .artist-hero-capabilities {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+  }
+  .artist-hero-copy .artist-hero-lead {
+    max-width: min(100%, 42rem);
+  }
+  /* Split Text word reveal + metallic gradient */
+  .artist-split-word {
+    display: inline-block;
+    -webkit-text-fill-color: transparent;
+    background: linear-gradient(
+      180deg,
+      var(--color-white) 15%,
+      color-mix(in oklab, var(--color-purple-200) 88%, var(--color-white)) 100%
+    );
+    background-clip: text;
+    animation: artist-word-reveal 680ms cubic-bezier(0.16, 1, 0.3, 1) backwards;
+    animation-delay: calc(var(--word-index, 0) * 65ms);
+  }
+
+  /* Text Morph animated capability pill */
+  .artist-text-morph-pill {
+    display: inline-flex;
+    gap: 0.45rem;
+    align-items: center;
+    min-width: 0;
+    max-width: 100%;
+    padding: 0.25rem 0.75rem;
+    font-family:
+      ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.875rem;
+    color: var(--color-purple-200);
+    text-wrap: balance;
+    background: color-mix(in oklab, var(--color-purple-500) 18%, transparent);
+    border: 1px solid
+      color-mix(in oklab, var(--color-purple-400) 40%, transparent);
+    border-radius: 9999px;
+    animation: artist-morph-enter 420ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .artist-text-morph-pill > span:first-child {
+    flex: none;
+  }
+  @media (max-width: 650px) {
+    .artist-hero-eyebrow-divider,
+    .artist-hero-eyebrow-meta {
+      display: none;
+    }
+    .artist-hero-capabilities {
+      display: grid;
+      grid-template-rows: auto minmax(3.5rem, auto);
+      justify-items: center;
+    }
+    .artist-text-morph-pill {
+      justify-content: center;
+      min-height: 3.5rem;
+      line-height: 1.5;
+    }
+  }
+  /* Aceternity-style 3D Container Scroll Stage */
+  .artist-scroll-perspective {
+    perspective: 1300px;
+  }
+
+  .artist-scroll-bezel {
+    position: relative;
+    padding: 0.625rem;
+    overflow: hidden;
+    background: linear-gradient(
+      160deg,
+      color-mix(in oklab, var(--color-white) 12%, var(--color-neutral-900)) 0%,
+      var(--color-artist-canvas-start) 45%,
+      color-mix(in oklab, var(--color-purple-900) 35%, var(--color-black)) 100%
+    );
+    border: 1px solid
+      color-mix(in oklab, var(--color-purple-400) 34%, var(--color-border));
+    border-radius: 1.5rem;
+    box-shadow:
+      0 34px 90px -18px color-mix(in oklab, var(--color-black) 85%, transparent),
+      0 0 65px -12px
+      color-mix(in oklab, var(--color-purple-500) 34%, transparent),
+      inset 0 1px 0 var(--color-white-alpha-20);
+    isolation: isolate;
+    transform: rotateX(calc((1 - var(--scroll-flatten, 0)) * 4deg))
+      scale(calc(0.94 + var(--scroll-flatten, 0) * 0.06))
+      translateY(calc((1 - var(--scroll-flatten, 0)) * 16px));
+    transform-origin: 50% 0%;
+    transition: transform 140ms cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: transform;
+  }
+
+  /* Magic UI Border Beam around the Studio Frame */
+  .artist-border-beam {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    padding: 1.5px;
+    contain: paint;
+    overflow: hidden;
+    pointer-events: none;
+    border-radius: inherit;
+    mask:
+      linear-gradient(var(--color-black) 0 0) content-box exclude,
+      linear-gradient(var(--color-black) 0 0);
+  }
+
+  .artist-border-beam::before {
+    position: absolute;
+    inset: -100%;
+    content: "";
+    background: conic-gradient(
+      from 0deg,
+      transparent 0deg 265deg,
+      var(--color-blue-400) 295deg,
+      var(--color-purple-400) 328deg,
+      var(--color-magenta-500) 352deg,
+      transparent 360deg
+    );
+    animation: artist-orbit-spin 7.5s linear infinite;
+  }
+
+  .artist-studio-screen {
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+    background: linear-gradient(
+      155deg,
+      var(--color-artist-release-panel-start) 0%,
+      var(--color-artist-release-panel-middle) 52%,
+      var(--color-artist-release-panel-end) 100%
+    );
+    border: 1px solid var(--color-white-alpha-8);
+    border-radius: 1.05rem;
+  }
+
+  /* Sliding & spinning vinyl disc behind the Night Signal cover */
+  .artist-hero-vinyl-wrap {
+    position: relative;
+    width: 6.5rem;
+    height: 6.5rem;
+  }
+
+  .artist-hero-vinyl {
+    position: absolute;
+    top: 0.25rem;
+    right: -2.1rem;
+    width: 6rem;
+    height: 6rem;
+    background:
+      radial-gradient(
+        circle at 50% 50%,
+        var(--color-artist-canvas-start) 0 14%,
+        var(--color-purple-500) 15% 27%,
+        var(--color-magenta-500) 28% 32%,
+        #12131a 33% 100%
+      ),
+      repeating-radial-gradient(
+        circle at 50% 50%,
+        #12131a 0 2px,
+        #1e2030 2px 4px
+      );
+    border: 1px solid var(--color-white-alpha-15);
+    border-radius: 9999px;
+    box-shadow: 0 10px 24px
+      color-mix(in oklab, var(--color-black) 65%, transparent);
+    transition: transform 420ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .artist-hero-vinyl[data-playing="true"] {
+    right: -2.75rem;
+    animation: artist-orbit-spin 5.5s linear infinite;
+  }
+
+  /* Animated waveform bars */
+  .artist-waveform-bar {
+    width: 3px;
+    border-radius: 9999px;
+    transition:
+      height 180ms ease,
+      background-color 180ms ease;
+  }
+
+  .artist-waveform-bar[data-playing="true"] {
+    animation: artist-wave-bounce 1.1s ease-in-out infinite alternate;
+    animation-delay: calc(var(--bar-index, 0) * 45ms);
+  }
+
+  /* Animated Beam SVG paths */
+  .artist-beam-path {
+    stroke-dasharray: 12 140;
+    animation: artist-beam-flow 3.2s linear infinite;
+  }
+
+  .artist-beam-path-reverse {
+    stroke-dasharray: 14 150;
+    animation: artist-beam-flow-reverse 3.6s linear infinite;
+  }
+
+  /* Spotlight Card (cursor-tracked surface & border glow) */
+  .artist-spotlight-card {
+    position: relative;
+    contain: paint;
+    overflow: hidden;
+    background: linear-gradient(
+      145deg,
+      color-mix(
+        in oklab,
+        var(--color-artist-release-panel-start) 86%,
+        transparent
+      ),
+      color-mix(
+          in oklab,
+          var(--color-artist-release-panel-middle) 88%,
+          transparent
+        )
+        55%,
+      color-mix(
+        in oklab,
+        var(--color-artist-release-panel-end) 86%,
+        transparent
+      )
+    );
+    border: 1px solid
+      color-mix(in oklab, var(--color-purple-400) 22%, var(--color-border));
+    border-radius: 1rem;
+    box-shadow: 0 16px 40px -16px
+      color-mix(in oklab, var(--color-black) 70%, transparent);
+    isolation: isolate;
+    transition:
+      transform 240ms cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 240ms ease;
+  }
+
+  .artist-spotlight-card:hover {
+    border-color: color-mix(
+      in oklab,
+      var(--color-purple-400) 52%,
+      var(--color-border)
+    );
+    transform: translateY(-2px);
+  }
+
+  .artist-spotlight-card::before {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    content: "";
+    background: radial-gradient(
+      22rem circle at var(--spot-x, 50%) var(--spot-y, 0%),
+      color-mix(in oklab, var(--color-purple-500) 20%, transparent),
+      color-mix(in oklab, var(--color-magenta-500) 8%, transparent) 42%,
+      transparent 72%
+    );
+    opacity: 0;
+    transition: opacity 260ms ease;
+  }
+
+  .artist-spotlight-card::after {
+    position: absolute;
+    inset: -1px;
+    z-index: 1;
+    padding: 1px;
+    pointer-events: none;
+    content: "";
+    background: radial-gradient(
+      16rem circle at var(--spot-x, 50%) var(--spot-y, 0%),
+      color-mix(in oklab, var(--color-purple-300) 85%, transparent),
+      transparent 70%
+    );
+    border-radius: inherit;
+    opacity: 0;
+    mask:
+      linear-gradient(var(--color-black) 0 0) content-box exclude,
+      linear-gradient(var(--color-black) 0 0);
+    transition: opacity 260ms ease;
+  }
+
+  .artist-spotlight-card[data-lit="true"]::before,
+  .artist-spotlight-card[data-lit="true"]::after {
+    opacity: 1;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .artist-landing-spotlight-left,
+    .artist-landing-spotlight-right,
+    .artist-moving-border::before,
+    .artist-border-beam::before,
+    .artist-split-word,
+    .artist-text-morph-pill,
+    .artist-hero-vinyl[data-playing="true"],
+    .artist-waveform-bar[data-playing="true"],
+    .artist-beam-path,
+    .artist-beam-path-reverse {
+      animation: none;
+    }
+
+    .artist-scroll-bezel {
+      transform: none;
+    }
+  }
+}
+
+@keyframes artist-orbit-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes artist-spotlight-drift {
+  from {
+    opacity: 0.48;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  to {
+    opacity: 0.75;
+    transform: translate3d(1.25rem, 0.75rem, 0) scale(1.06);
+  }
+}
+
+@keyframes artist-word-reveal {
+  from {
+    opacity: 0;
+    filter: blur(10px);
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+  }
+}
+
+@keyframes artist-morph-enter {
+  from {
+    opacity: 0;
+    filter: blur(6px);
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+  }
+}
+
+@keyframes artist-wave-bounce {
+  0% {
+    transform: scaleY(0.45);
+  }
+  100% {
+    transform: scaleY(1.25);
+  }
+}
+
+@keyframes artist-beam-flow {
+  from {
+    stroke-dashoffset: 152;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes artist-beam-flow-reverse {
+  from {
+    stroke-dashoffset: 0;
+  }
+  to {
+    stroke-dashoffset: 164;
+  }
+}
