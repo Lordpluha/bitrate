@@ -367,7 +367,6 @@ export const pl: LandingCatalog = {
   'chrome.start_listening': 'Zacznij słuchać',
   'hero.free': 'ZA DARMO',
   'hero.no_install': 'BEZ INSTALACJI',
-  'hero.open_source_on_github': 'OTWARTY KOD NA GITHUBIE',
   'cta.github': 'GitHub',
   'hero.preview_desktop_alt':
     'Odtwarzacz Bitrate na laptopie: biblioteka, rekomendacje i aktualnie odtwarzany utwór',
@@ -391,7 +390,10 @@ export const pl: LandingCatalog = {
   'team.jar_close': 'Zamknij słoik',
   'team.jar_shake': 'Wytrząśnij',
   'team.jar_collect': 'Zbierz z powrotem',
-  'team.jar_lid': 'Pokrywka słoika',
+  'team.jar_lid':
+    'Pokrywka słoika — przeciągnij w bok, by odkręcić, lub użyj strzałek',
   'team.jar_in_footer': 'Poza słoikiem: {count} · lądują w stopce',
   'cta.pull_and_release': 'Odciągnij kulkę i puść',
+  'hero.open_source': 'OTWARTY KOD',
+  'team.jar_unscrew_hint': '← Chwyć pokrywkę i odkręć →',
 }

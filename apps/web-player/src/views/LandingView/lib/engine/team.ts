@@ -9,6 +9,7 @@ import {
   type JarBox,
   jarBox,
 } from './jar'
+import { LID, turnLid } from './lidThread'
 import { collideBalls, type PhysicsBall } from './physics'
 
 /**
@@ -39,6 +40,14 @@ const GRAB_PULL = 16
 const ESCAPE_SPEED = 200
 const SHAKE = { up: [1500, 2300], side: 900 } as const
 const AIR_DRAG = 0.996
+/** How far the lid rises per turn of thread (jar pixels at full size). */
+const THREAD_PITCH = 7
+/** How far the knurling slides past per turn, so the lid reads as spinning. */
+const KNURL_PER_TURN = 220
+/** A press that moves less than this is a tap, not a twist. */
+const TAP_PX = 4
+/** One arrow-key press turns the lid this much. */
+const KEY_TURN = 0.125
 
 /**
  * Team jar: people and stack bubbles in a jar with a lid. Hover a bubble for its card, drag to
@@ -105,6 +114,12 @@ export const mountTeam = (ctx: EngineContext) => {
     cardH: number
     hideT: number
     run: boolean
+    /** How far the lid is unscrewed, 0 (tight) … LID.offTurns (off). */
+    turns: number
+    /** A twist in progress: where the pointer started and how far the lid was turned then. */
+    twist: { x: number; turns: number; moved: number } | null
+    /** The lid is moving on its own (popping off, going back on). */
+    lidBusy: boolean
   } = {
     w: 880,
     h: 780,
@@ -117,6 +132,9 @@ export const mountTeam = (ctx: EngineContext) => {
     cardH: 0,
     hideT: 0,
     run: false,
+    turns: 0,
+    twist: null,
+    lidBusy: false,
   }
 
   const sceneId = () => ctx.scenes[state.index]?.id
@@ -154,6 +172,13 @@ export const mountTeam = (ctx: EngineContext) => {
       width: `${right - left + 24 * scale}px`,
       height: `${34 * scale}px`,
     })
+    if (hint)
+      Object.assign(hint.style, {
+        left: `${left}px`,
+        top: `${top - 62 * scale}px`,
+        width: `${right - left}px`,
+      })
+    if (!TP.open && !TP.lidBusy) renderLid()
     for (const b of bubbles) {
       b.rJar = b.d.r * scale
       if (b.place === 'jar') {
@@ -199,24 +224,98 @@ export const mountTeam = (ctx: EngineContext) => {
     syncControls()
   }
 
-  const setLid = (open: boolean) => {
-    TP.open = open
-    lid.setAttribute('aria-pressed', String(open))
+  const hint = root.querySelector<HTMLElement>('#jarHint')
+  const syncToggles = () => {
+    lid.setAttribute('aria-pressed', String(TP.open))
     for (const t of toggles)
       if (t !== lid)
-        t.textContent = ctx.copy(open ? 'team.jar_close' : 'team.jar_open')
-    /* off, the lid leans against the jar's right wall, pivoting on its right end */
+        t.textContent = ctx.copy(TP.open ? 'team.jar_close' : 'team.jar_open')
+  }
+  /** Draws the lid at its place on the thread: higher and with the knurling slid round. */
+  const renderLid = () => {
     const { scale } = TP.jar
-    gsap.to(lid, {
-      transformOrigin: '100% 50%',
-      x: open ? 18 * scale : 0,
-      y: open ? 70 * scale : 0,
-      rotate: open ? -90 : 0,
-      duration: ctx.reduce ? 0 : 0.7,
-      ease: open ? 'back.out(1.4)' : 'power3.inOut',
-      overwrite: 'auto',
+    lid.style.setProperty('--twist', `${TP.turns * KNURL_PER_TURN * scale}px`)
+    gsap.set(lid, {
+      x: 0,
+      y: -TP.turns * THREAD_PITCH * scale,
+      rotate: Math.sin(TP.turns * Math.PI * 2) * 0.6,
+      transformOrigin: '50% 50%',
     })
   }
+  /** Off the end of the thread: the lid hops free and comes to rest against the jar. */
+  const popLid = () => {
+    TP.open = true
+    TP.twist = null
+    TP.lidBusy = true
+    syncToggles()
+    if (hint) hint.hidden = true
+    navigator.vibrate?.(18)
+    const { scale } = TP.jar
+    gsap
+      .timeline({
+        onComplete: () => {
+          TP.lidBusy = false
+        },
+      })
+      .to(lid, {
+        y: `-=${26 * scale}`,
+        rotate: -6,
+        duration: ctx.reduce ? 0 : 0.16,
+        ease: 'power2.out',
+      })
+      /* off, the lid leans against the jar's right wall, pivoting on its right end */
+      .to(lid, {
+        transformOrigin: '100% 50%',
+        x: 18 * scale,
+        y: 70 * scale,
+        rotate: -90,
+        duration: ctx.reduce ? 0 : 0.6,
+        ease: 'back.out(1.4)',
+      })
+  }
+  /** Unscrews the lid by itself (the "Open the jar" button, Enter on the lid). */
+  const unscrew = () => {
+    if (TP.open || TP.lidBusy) return
+    TP.lidBusy = true
+    gsap.to(TP, {
+      turns: LID.offTurns,
+      duration: ctx.reduce ? 0 : 1.1 * (1 - TP.turns / LID.offTurns) + 0.2,
+      ease: 'power1.inOut',
+      onUpdate: renderLid,
+      onComplete: popLid,
+    })
+  }
+  /** Puts the lid back on the rim and screws it down tight. */
+  const screwOn = () => {
+    if (!TP.open || TP.lidBusy) return
+    TP.lidBusy = true
+    const { scale } = TP.jar
+    gsap
+      .timeline({
+        onComplete: () => {
+          TP.lidBusy = false
+        },
+      })
+      .to(lid, {
+        x: 0,
+        y: -LID.offTurns * THREAD_PITCH * scale,
+        rotate: 0,
+        duration: ctx.reduce ? 0 : 0.55,
+        ease: 'power3.inOut',
+        onComplete: () => {
+          /* seated: from here on the lid is a ceiling again */
+          TP.open = false
+          syncToggles()
+        },
+      })
+      .to(TP, {
+        turns: 0,
+        duration: ctx.reduce ? 0 : 0.9,
+        ease: 'power2.out',
+        onUpdate: renderLid,
+      })
+  }
+  const toggleLid = () => (TP.open ? screwOn() : unscrew())
 
   const syncControls = () => {
     const out = bubbles.filter((b) => b.place !== 'jar').length
@@ -244,7 +343,7 @@ export const mountTeam = (ctx: EngineContext) => {
   /** Every bubble back in the jar, lid on. */
   const collect = () => {
     for (const b of bubbles) if (b.place !== 'jar') toJar(b)
-    setLid(false)
+    screwOn()
     reset()
   }
 
@@ -363,7 +462,76 @@ export const mountTeam = (ctx: EngineContext) => {
   window.addEventListener('pointercancel', drop, { signal })
 
   for (const t of toggles)
-    t.addEventListener('click', () => setLid(!TP.open), { signal })
+    if (t !== lid) t.addEventListener('click', toggleLid, { signal })
+
+  /* the lid itself: grab it and drag sideways to turn it along the thread, like a real jar */
+  lid.addEventListener(
+    'pointerdown',
+    (e) => {
+      if (TP.open || TP.lidBusy) return
+      e.preventDefault()
+      lid.setPointerCapture(e.pointerId)
+      TP.twist = { x: e.clientX, turns: TP.turns, moved: 0 }
+      state.dragging = true
+      lid.classList.add('twisting')
+    },
+    { signal },
+  )
+  lid.addEventListener(
+    'pointermove',
+    (e) => {
+      if (!TP.twist) return
+      const { k } = pitScale()
+      const dx = (e.clientX - TP.twist.x) / k
+      TP.twist.moved = Math.max(TP.twist.moved, Math.abs(dx))
+      /* a full turn is about one and a half lid widths of drag: several grips, as by hand */
+      const span = (TP.jar.right - TP.jar.left) * 1.5
+      TP.turns = turnLid({ turns: TP.twist.turns, dx, span })
+      renderLid()
+      if (TP.turns >= LID.offTurns) popLid()
+    },
+    { signal },
+  )
+  const letGo = () => {
+    if (!TP.twist) return
+    const tap = TP.twist.moved < TAP_PX
+    TP.twist = null
+    state.dragging = false
+    lid.classList.remove('twisting')
+    /* a tap does not open a jar: wiggle the lid and show how */
+    if (tap && !ctx.reduce) {
+      if (hint) hint.hidden = false
+      gsap.fromTo(
+        lid,
+        { rotate: -1.5 },
+        { rotate: 0, duration: 0.45, ease: 'elastic.out(1.4, .3)' },
+      )
+    }
+  }
+  lid.addEventListener('pointerup', letGo, { signal })
+  lid.addEventListener('pointercancel', letGo, { signal })
+  lid.addEventListener(
+    'click',
+    (e) => {
+      /* keyboard activation (no pointer): unscrew or screw on; a leaning lid goes back on with a tap */
+      if (e.detail === 0 || TP.open) toggleLid()
+    },
+    { signal },
+  )
+  lid.addEventListener(
+    'keydown',
+    (e) => {
+      if (TP.open || TP.lidBusy) return
+      const dir = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0
+      if (!dir) return
+      e.preventDefault()
+      const span = 1
+      TP.turns = turnLid({ turns: TP.turns, dx: dir * KEY_TURN, span })
+      renderLid()
+      if (TP.turns >= LID.offTurns) popLid()
+    },
+    { signal },
+  )
   shakeBtn?.addEventListener('click', shake, { signal })
   collectBtn?.addEventListener('click', collect, { signal })
 

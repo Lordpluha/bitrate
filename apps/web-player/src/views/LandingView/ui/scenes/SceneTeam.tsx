@@ -96,6 +96,9 @@ export const SceneTeam = () => {
         <div aria-hidden="true" className={lc('jar')} id="jar">
           <i className={lc('jar-shine')} />
         </div>
+        <span className={lc('jar-hint')} hidden id="jarHint">
+          {c('team.jar_unscrew_hint')}
+        </span>
         <button
           aria-label={c('team.jar_lid')}
           aria-pressed="false"

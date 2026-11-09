@@ -2,7 +2,6 @@ import { useI18n } from '@shared/i18n'
 import { ROUTES } from '@shared/routes'
 import Link from 'next/link'
 import { lc } from '../../lib/styles/lc'
-import { GITHUB_REPO_URL } from '../../model/links'
 import type { LandingKey } from '../../model/messages/en'
 import { formatStat, type PlatformStats } from '../../model/platformStats'
 import { useLandingCopy } from '../../model/useLandingCopy'
@@ -82,17 +81,7 @@ export const SceneSignal = ({ signedIn, stats }: HeroSceneProps) => {
             <i aria-hidden="true" />
             <span>{c('hero.no_install')}</span>
             <i aria-hidden="true" />
-            <a
-              className={lc('ulink trust-gh')}
-              href={GITHUB_REPO_URL}
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              <svg aria-hidden="true" className={lc('i')}>
-                <use href="#i-github" />
-              </svg>
-              {c('hero.open_source_on_github')}
-            </a>
+            <span>{c('hero.open_source')}</span>
           </div>
         </div>
       </Abs>

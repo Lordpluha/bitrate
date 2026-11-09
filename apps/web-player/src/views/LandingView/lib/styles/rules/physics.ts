@@ -24,13 +24,23 @@ export const PHYSICS: readonly LandingRule[] = [
     'jar-shine',
     'absolute top-[10%] bottom-[14%] left-[9%] w-[7%] rounded-[999px] bg-[image:linear-gradient(to_bottom,color-mix(in_srgb,var(--color-white)_26%,transparent),transparent)]',
   ],
+  /* the lid seen from the side: a knurled band that slides round as it turns, under a fixed
+     cylinder shine, so a sideways drag reads as the lid spinning on its thread */
   [
     'jar-lid',
-    'absolute z-[4] p-0 origin-[90%_50%] border border-solid border-[color:color-mix(in_srgb,var(--color-white)_20%,transparent)] rounded-[10px] bg-[image:linear-gradient(to_bottom,var(--color-neutral-400),var(--color-neutral-700)_55%,var(--color-neutral-800))] [box-shadow:0_10px_24px_-10px_var(--shadow)] [html:not(.has-cursor)_&]:cursor-pointer',
+    'absolute z-[4] p-0 overflow-hidden touch-none border border-solid border-[color:color-mix(in_srgb,var(--color-white)_20%,transparent)] rounded-[8px_8px_5px_5px] bg-[image:linear-gradient(to_bottom,var(--color-neutral-400),var(--color-neutral-700)_55%,var(--color-neutral-800))] [box-shadow:0_10px_24px_-10px_var(--shadow)] [html:not(.has-cursor)_&]:cursor-grab [html:not(.has-cursor)_&.twisting]:cursor-grabbing',
   ],
   [
     'jar-lid',
-    "[&::after]:absolute [&::after]:inset-[30%_6%] [&::after]:[content:''] [&::after]:rounded-[3px] [&::after]:bg-[image:repeating-linear-gradient(90deg,color-mix(in_srgb,var(--color-black)_25%,transparent)_0_2px,transparent_2px_7px)]",
+    "[&::after]:absolute [&::after]:inset-[22%_0_14%] [&::after]:[content:''] [&::after]:bg-[image:repeating-linear-gradient(90deg,color-mix(in_srgb,var(--color-black)_32%,transparent)_0_2px,transparent_2px_6px,color-mix(in_srgb,var(--color-white)_14%,transparent)_6px_7px,transparent_7px_9px)] [&::after]:[background-position-x:var(--twist,0px)]",
+  ],
+  [
+    'jar-lid',
+    "[&::before]:absolute [&::before]:inset-0 [&::before]:z-[1] [&::before]:[content:''] [&::before]:pointer-events-none [&::before]:bg-[image:linear-gradient(90deg,color-mix(in_srgb,var(--color-black)_45%,transparent),transparent_18%,color-mix(in_srgb,var(--color-white)_22%,transparent)_42%,transparent_62%,color-mix(in_srgb,var(--color-black)_45%,transparent))]",
+  ],
+  [
+    'jar-hint',
+    'absolute z-[4] text-center pointer-events-none font-[500] [font-size:11px] leading-[1] font-[family-name:var(--font-data)] text-accent tracking-[0.12em] uppercase [&[hidden]]:hidden',
   ],
   [
     'jar-lid',

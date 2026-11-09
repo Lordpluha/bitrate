@@ -366,7 +366,6 @@ export const uk: LandingCatalog = {
   'chrome.start_listening': 'Почати слухати',
   'hero.free': 'БЕЗКОШТОВНО',
   'hero.no_install': 'БЕЗ ВСТАНОВЛЕННЯ',
-  'hero.open_source_on_github': 'ВІДКРИТИЙ КОД НА GITHUB',
   'cta.github': 'GitHub',
   'hero.preview_desktop_alt':
     'Вебплеєр Bitrate на ноутбуці: ваша бібліотека, рекомендації та трек, що грає зараз',
@@ -390,7 +389,9 @@ export const uk: LandingCatalog = {
   'team.jar_close': 'Закрити банку',
   'team.jar_shake': 'Витрусити',
   'team.jar_collect': 'Зібрати назад',
-  'team.jar_lid': 'Кришка банки',
+  'team.jar_lid': 'Кришка банки — тягніть убік, щоб відкрутити, або стрілками',
   'team.jar_in_footer': 'Поза банкою: {count} · вони падають у футер',
   'cta.pull_and_release': 'Відтягніть кульку й відпустіть',
+  'hero.open_source': 'ВІДКРИТИЙ КОД',
+  'team.jar_unscrew_hint': '← Візьміть кришку й відкрутіть →',
 }

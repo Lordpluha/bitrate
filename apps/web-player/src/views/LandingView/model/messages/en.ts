@@ -425,7 +425,6 @@ export const en = {
   'chrome.start_listening': 'Start listening',
   'hero.free': 'FREE',
   'hero.no_install': 'NO INSTALL',
-  'hero.open_source_on_github': 'OPEN SOURCE ON GITHUB',
   'cta.github': 'GitHub',
   'hero.preview_desktop_alt':
     'The Bitrate web player on a laptop: your library, recommendations and the track now playing',
@@ -449,9 +448,12 @@ export const en = {
   'team.jar_close': 'Close the jar',
   'team.jar_shake': 'Shake it out',
   'team.jar_collect': 'Collect them back',
-  'team.jar_lid': 'Jar lid',
+  'team.jar_lid':
+    'Jar lid — drag it sideways to unscrew, or use the arrow keys',
   'team.jar_in_footer': '{count} out of the jar · they land in the footer',
   'cta.pull_and_release': 'Pull a ball and let go',
+  'hero.open_source': 'OPEN SOURCE',
+  'team.jar_unscrew_hint': '← Grab the lid and twist it →',
 } as const
 
 export type LandingKey = keyof typeof en
