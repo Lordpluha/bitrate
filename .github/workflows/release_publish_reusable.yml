@@ -299,7 +299,7 @@ jobs:
     permissions:
       contents: read
       actions: read
-    uses: $/.github/workflows/deploy_reusable.yml
+    uses: $/.github/workflows/deploy_reusable.yml # zizmor: ignore[secrets-inherit]
     with:
       environment: ${{ inputs.environment }}
       wait-for-images: false

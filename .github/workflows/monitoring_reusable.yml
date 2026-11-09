@@ -2,6 +2,11 @@ name: "[monitoring] Reusable"
 
 on:
   workflow_call:
+    secrets:
+      CF_ACCESS_CLIENT_ID:
+        required: false
+      CF_ACCESS_CLIENT_SECRET:
+        required: false
 
 permissions:
   contents: read
@@ -10,7 +15,9 @@ permissions:
 jobs:
   health:
     uses: $/.github/workflows/monitoring_health_reusable.yml
-    secrets: inherit
+    secrets:
+      CF_ACCESS_CLIENT_ID: ${{ secrets.CF_ACCESS_CLIENT_ID }}
+      CF_ACCESS_CLIENT_SECRET: ${{ secrets.CF_ACCESS_CLIENT_SECRET }}
 
   ssl:
     uses: $/.github/workflows/monitoring_ssl_reusable.yml
