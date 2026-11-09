@@ -6,6 +6,7 @@ import {
   type SocialProvider,
   socialProviders,
 } from '@features/Auth/model/oauthProviders'
+import { useI18n } from '@shared/i18n'
 import { ChevronDown, ChevronUp } from 'lucide-react'
 import { useId, useState } from 'react'
 import { AUTH_BUTTON_CLASS } from './authStyles'
@@ -19,11 +20,15 @@ const LIVE_LABELS = socialProviders
   .filter((provider) => provider.activeProvider)
   .map((provider) => provider.label)
 
-const SoonBadge = () => (
-  <span className="rounded-full bg-secondary px-2 py-0.5 text-xs leading-4 font-semibold text-secondary-foreground">
-    Soon
-  </span>
-)
+const SoonBadge = () => {
+  const { t } = useI18n()
+
+  return (
+    <span className="rounded-full bg-secondary px-2 py-0.5 text-xs leading-4 font-semibold text-secondary-foreground">
+      {t('auth.oauth.soon')}
+    </span>
+  )
+}
 
 type ProviderTileProps = {
   isUnlocked: boolean
@@ -32,6 +37,10 @@ type ProviderTileProps = {
 
 /** A compact provider: a link once usable, otherwise its name (and "Soon" when not built yet). */
 const ProviderTile = ({ isUnlocked, provider }: ProviderTileProps) => {
+  const { t } = useI18n()
+  const continueLabel = t('auth.oauth.continueWith', {
+    provider: provider.label,
+  })
   const tileClass =
     'flex h-10 min-w-0 flex-1 items-center justify-center gap-1.5 rounded-lg border border-border text-xs leading-[1.25] font-semibold text-foreground'
 
@@ -40,7 +49,7 @@ const ProviderTile = ({ isUnlocked, provider }: ProviderTileProps) => {
       <span className={tileClass}>
         <span className="truncate">{provider.label}</span>
         <SoonBadge />
-        <span className="sr-only">: sign in is not available yet</span>
+        <span className="sr-only">: {t('auth.oauth.notAvailable')}</span>
       </span>
     )
   }
@@ -48,7 +57,7 @@ const ProviderTile = ({ isUnlocked, provider }: ProviderTileProps) => {
   if (!isUnlocked) {
     return (
       <button
-        aria-label={`Continue with ${provider.label}`}
+        aria-label={continueLabel}
         className={cn(tileClass, 'cursor-not-allowed')}
         disabled
         type="button"
@@ -60,7 +69,7 @@ const ProviderTile = ({ isUnlocked, provider }: ProviderTileProps) => {
 
   return (
     <a
-      aria-label={`Continue with ${provider.label}`}
+      aria-label={continueLabel}
       className={cn(tileClass, 'transition-colors hover:bg-muted')}
       href={getOAuthUrl(provider.activeProvider, { acceptLegal: true })}
     >
@@ -82,11 +91,18 @@ type OAuthButtonsProps = {
  * locked until the Terms of Use, Community Guidelines and Privacy Policy are accepted.
  */
 export const OAuthButtons = ({ accepted }: OAuthButtonsProps) => {
+  const { locale, t } = useI18n()
   const [ownAccepted, setOwnAccepted] = useState(false)
   const [isMoreOpen, setIsMoreOpen] = useState(false)
   const moreId = useId()
   const hasOwnCheckbox = accepted === undefined
   const isUnlocked = accepted ?? ownAccepted
+  const googleLabel = GOOGLE
+    ? t('auth.oauth.continueWith', { provider: GOOGLE.label })
+    : ''
+  const liveProviders = new Intl.ListFormat(locale, {
+    type: 'conjunction',
+  }).format(LIVE_LABELS)
   const googleUrl =
     GOOGLE?.activeProvider &&
     getOAuthUrl(GOOGLE.activeProvider, { acceptLegal: true })
@@ -108,7 +124,7 @@ export const OAuthButtons = ({ accepted }: OAuthButtonsProps) => {
             className={cn(AUTH_BUTTON_CLASS, 'px-4')}
             variant="outline"
           >
-            <a href={googleUrl}>Continue with {GOOGLE.label}</a>
+            <a href={googleUrl}>{googleLabel}</a>
           </Button>
         ) : (
           <Button
@@ -117,7 +133,7 @@ export const OAuthButtons = ({ accepted }: OAuthButtonsProps) => {
             type="button"
             variant="outline"
           >
-            Continue with {GOOGLE.label}
+            {googleLabel}
           </Button>
         )
       ) : null}
@@ -143,12 +159,12 @@ export const OAuthButtons = ({ accepted }: OAuthButtonsProps) => {
               className="text-sm leading-[1.2] font-semibold text-foreground"
               id={`${moreId}-title`}
             >
-              More sign-in options
+              {t('auth.oauth.moreTitle')}
             </h2>
             <Button
               aria-controls={moreId}
               aria-expanded
-              aria-label="Hide more sign-in options"
+              aria-label={t('auth.oauth.hideMore')}
               className="size-9 rounded-lg p-0"
               onClick={() => setIsMoreOpen(false)}
               type="button"
@@ -167,7 +183,7 @@ export const OAuthButtons = ({ accepted }: OAuthButtonsProps) => {
             ))}
           </div>
           <p className="text-xs leading-[1.25] text-muted-foreground">
-            Coming soon — {LIVE_LABELS.join(' and ')} are live today.
+            {t('auth.oauth.comingSoon', { providers: liveProviders })}
           </p>
         </section>
       ) : (
@@ -179,7 +195,7 @@ export const OAuthButtons = ({ accepted }: OAuthButtonsProps) => {
           variant="ghost"
         >
           <ChevronDown aria-hidden="true" className="size-4" />
-          More options · {MORE.length}
+          {t('auth.oauth.more', { count: MORE.length })}
         </Button>
       )}
     </div>
