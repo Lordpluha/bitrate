@@ -46,8 +46,8 @@ export const metadata: Metadata = {
     images: [
       {
         url: '/opengraph-image.png',
-        width: 1187,
-        height: 636,
+        width: 1200,
+        height: 630,
         alt: SITE_NAME,
         type: 'image/png',
       },
