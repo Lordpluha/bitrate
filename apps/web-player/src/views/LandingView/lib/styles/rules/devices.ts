@@ -6,7 +6,12 @@ export const DEVICES: readonly LandingRule[] = [
   ['laptop', 'absolute top-[30px] left-[80px] w-[600px]'],
   [
     'laptop-screen',
-    'relative w-full aspect-[1440/900] overflow-hidden bg-neutral-900 bg-none border-[10px] border-solid border-neutral-900 rounded-[18px] [box-shadow:0_0_0_1px_color-mix(in_srgb,var(--color-white)_10%,transparent),0_50px_90px_-40px_var(--shadow)]',
+    'relative w-full box-border p-[10px] bg-neutral-900 bg-none rounded-[18px] [box-shadow:0_0_0_1px_color-mix(in_srgb,var(--color-white)_10%,transparent),0_50px_90px_-40px_var(--shadow)]',
+  ],
+  /* the display itself has the capture's exact proportions, so every hotspot lands on its control */
+  [
+    'pv-viewport',
+    'relative w-full aspect-[1440/900] overflow-hidden rounded-[6px]',
   ],
   [
     'laptop-base',
@@ -18,14 +23,31 @@ export const DEVICES: readonly LandingRule[] = [
   ],
   [
     'handset',
-    'absolute top-[190px] left-0 z-[2] w-[190px] aspect-[390/844] box-border overflow-hidden bg-neutral-900 bg-none border-[8px] border-solid border-neutral-900 rounded-[34px] [box-shadow:0_0_0_1px_color-mix(in_srgb,var(--color-white)_14%,transparent),0_40px_70px_-30px_var(--shadow)]',
+    'absolute top-[190px] left-0 z-[2] w-[190px] box-border p-[8px] bg-neutral-900 bg-none rounded-[34px] [box-shadow:0_0_0_1px_color-mix(in_srgb,var(--color-white)_14%,transparent),0_40px_70px_-30px_var(--shadow)]',
   ],
-  ['handset-screen', 'absolute inset-0 overflow-hidden rounded-[26px]'],
+  [
+    'handset-screen',
+    'relative w-full aspect-[390/844] overflow-hidden rounded-[26px]',
+  ],
   [
     'handset-island',
     'absolute top-[7px] left-1/2 z-[1] w-[56px] h-[15px] ml-[-28px] bg-black bg-none rounded-[999px]',
   ],
-  ['pv', 'absolute inset-0 w-full h-full object-cover object-top'],
+  ['pv', 'absolute inset-0 w-full h-full'],
+  /* a new screen fades in over the old one, like the app's own route change */
+  [
+    'pv-frame',
+    'absolute inset-0 animate-[landing-pv-in_0.28s_ease-out] motion-reduce:animate-none',
+  ],
+  /* the real controls on the capture: invisible until the device is hovered, then outlined */
+  [
+    'pv-spot',
+    'absolute z-[1] p-0 m-0 bg-transparent bg-none border-0 rounded-[8px] [html:not(.has-cursor)_&]:cursor-pointer [transition:box-shadow_0.2s,background-color_0.2s]',
+  ],
+  [
+    'pv-spot',
+    '[&:hover]:[box-shadow:0_0_0_1.5px_var(--color-primary)] [&:hover]:bg-[color:color-mix(in_srgb,var(--color-primary)_18%,transparent)] focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2',
+  ],
   ['pv-dark', 'block [html.light_&]:hidden [html.dim_&]:hidden'],
   ['pv-light', 'hidden [html.light_&]:block'],
   ['pv-dim', 'hidden [html.dim_&]:block'],
@@ -41,7 +63,7 @@ export const DEVICES: readonly LandingRule[] = [
   ['devices', 'max-[820px]:flex max-[820px]:justify-center max-[820px]:h-auto'],
   [
     'handset',
-    'max-[820px]:relative max-[820px]:top-auto max-[820px]:left-auto max-[820px]:w-auto max-[820px]:h-[min(30vh,300px)] max-[820px]:border-[6px] max-[820px]:rounded-[24px]',
+    'max-[820px]:relative max-[820px]:top-auto max-[820px]:left-auto max-[820px]:w-[min(136px,34vw)] max-[820px]:p-[6px] max-[820px]:rounded-[24px]',
   ],
   ['handset-screen', 'max-[820px]:rounded-[18px]'],
   [
