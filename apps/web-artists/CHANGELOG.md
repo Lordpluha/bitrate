@@ -1,5 +1,61 @@
 # @bitrate/web-artists
 
+## 1.6.0
+
+### Minor Changes
+
+- 1b113a3: Move appearance and language controls into the responsive workspace sidebar. Restyle shared dialogs and add switching between accounts authenticated in the same browser, with server-side session links, token rotation, scoped removal and cross-tab account synchronization.
+- 1b113a3: Create releases directly in their draft workspace, edit titles inline, and detect Single/EP/Album
+  from active recording counts. Replace draft customization with a fixed editor layout and a danger
+  zone. Owners can delete releases in every lifecycle state, including approved and published music;
+  publication cannot restore a deleted release and shared recordings remain available elsewhere.
+  Keep the recording list scrollable and reject exact audio-file duplicates within a release.
+- 1b113a3: Build reviewed compilation releases from the artist's own published catalogue.
+  Reuse canonical recordings, identifiers, likes and listening history without audio reupload
+  or reconversion. Preserve shared recordings when a release is removed, and enforce original
+  recording administrative takedowns across compilation appearances. Add a paginated, searchable
+  recording picker and immutable linked recording metadata in the release workspace.
+
+  Start compilation drafts from a dedicated card at the bottom of the artist profile;
+  ordinary drafts keep their master upload flow.
+
+- 1b113a3: Paginate artist analytics top tracks in groups of five, including tracks beyond the previous
+  top-ten limit. Keep global ranking and the leader's bar scale across pages without reloading
+  the rest of the analytics dashboard.
+  Use a shared pagination component with clickable page numbers in analytics, Music and Distribution.
+- 1b113a3: Allow Dashboard and Analytics tiles to use any width from one to twelve columns.
+  Support fixed heights from one to twelve grid steps or automatic content height.
+  Add edge/corner resize handles, precise size selectors and keyboard resizing, with
+  smooth geometry transitions and matching card dimensions in preview and saved layouts.
+  Persist dimensions while retaining compatibility with existing S/M/L layouts and stack
+  cards at their natural height on mobile.
+- 1b113a3: Show responsive skeletons while workspace pages load. Add an indeterminate top progress bar
+  for route navigation and active queries awaiting initial data, with a delay to avoid flashing
+  on short requests and reduced-motion support.
+  Render the initial progress indicator in server HTML and use visible, animated shimmer placeholders
+  so loading remains apparent while client scripts download on slow connections.
+
+### Patch Changes
+
+- 1b113a3: Add responsive animated contributor connections and a share orbit to the landing credits scene, plus visual palette previews and native-language cards in the header popovers.
+- 1b113a3: Let scrolling continue from the landing studio preview to the page. Add a soundprint orbit, artwork lighting, a review scan and publication effects to the release journey, with offscreen animation pausing and reduced motion support.
+- 1b113a3: Add a contributor and share preview to the artists landing page, with responsive header navigation, language controls, and persistent light, dark, and dim themes.
+- 1b113a3: Add a responsive final release invitation to the artists landing page with an animated sleeve, pointer effects, and accessible account links.
+- 1b113a3: Connect the artists landing sections with a responsive abstract sound ribbon and a scroll-driven light, with a static reduced-motion version.
+- 1b113a3: Recompose the landing listening preview into a compact graph, a reactive featured sleeve, audience metrics, and a separate animated track card.
+- d18744d: Moved every artist-only endpoint under `/artists/` (ADR-0070). The artist workspace is now `/artists/me/...`: `/releases/**` → `/artists/me/releases/**`, `/release-tasks` → `/artists/me/tasks`, `/distribution` → `/artists/me/distribution`, and `/artist-{dashboard,analytics,music,notifications,profile,search,workspace}` → `/artists/me/{dashboard,analytics,music,notifications,profile,search,workspace}`. Account deletion is `DELETE /artists/me` instead of `DELETE /artists/:id`. The listener's followed artists moved from `GET /artists/me/following` to `GET /users/me/following/artists`. Removed the unused `POST /tracks`, `PUT /tracks/:id`, `POST /albums`, `PUT /albums/:id`, `DELETE /albums/:id` and `PUT /artists/:id`. web-artists and web-player call the new paths.
+- 1b113a3: Keep the landing page studio preview in a consistent, responsive frame. Simplify the release workspace, arrange dashboard and analytics cards for the available space, and open release details inside the preview.
+- 76b06e7: Fixed compilation previews and duplicate-audio checks matching the wrong original master after a
+  recording was removed, signing out of saved accounts on logout, switching away from an account
+  signed in past the saved-account limit, uploads into an emptied compilation, and uploads failing
+  on a missing older master. A release whose recordings a compilation draft still uses can no longer
+  be deleted. Top tracks reset to the first page when the period changes, read their page in one
+  history scan, and sign-in pages no longer download workspace and landing styles.
+- 1b113a3: Replace the landing capability cards with an interactive listening analytics section. Animate a sound wave into the chart, transition counters and track rankings across periods, and add a subtle magnetic background. Keep the layout responsive and respect reduced motion.
+- 1b113a3: Open notifications in an anchored, responsive popover with an independently scrolling list, status icons and unread styling, preserving mark-all-read and release navigation.
+- 1b113a3: Replace the landing page's technical pipeline with a pinned release journey. Native scrolling connects draft, review and publication through one persistent artwork, animated details and a progress timeline. Include keyboard navigation and reduced motion support.
+- 1b113a3: Smooth theme and language changes with short view transitions. Respect system and workspace reduced-motion preferences, preserve immediate switching in unsupported browsers, and discard superseded animations on repeated selections.
+
 ## 1.5.0
 
 ### Minor Changes
