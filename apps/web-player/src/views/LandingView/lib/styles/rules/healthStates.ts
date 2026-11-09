@@ -20,6 +20,6 @@ export const HEALTH_STATES: readonly LandingRule[] = [
   ['hstate', '[&.is-unreachable]:text-destructive'],
   [
     'hrow',
-    '[&.is-single]:grid-cols-[minmax(0,1fr)_auto] [&.is-single]:[border-bottom:0]',
+    '[&.is-single]:grid-cols-[minmax(0,1fr)_auto] [&.is-single:last-child]:[border-bottom:0]',
   ],
 ]
