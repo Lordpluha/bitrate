@@ -11,7 +11,7 @@ type DeviceScreenProps = {
 /**
  * Lays real mobile UI out at a real device width and scales it down to fit its frame, so
  * components built for a 390px phone (the island, the sidebar) keep their own proportions
- * instead of being squeezed into a narrower box.
+ * instead of being squeezed into a narrower box. It uses CSS `zoom` so text stays crisp.
  */
 export const DeviceScreen = ({ width, children }: DeviceScreenProps) => {
   const box = useRef<HTMLDivElement>(null)
@@ -33,11 +33,13 @@ export const DeviceScreen = ({ width, children }: DeviceScreenProps) => {
   return (
     <div className="relative h-full w-full overflow-hidden" ref={box}>
       <div
-        className="absolute top-0 left-0 origin-top-left"
+        className="absolute top-0 left-0"
         style={{
           width,
           height: fit.height || undefined,
-          transform: `scale(${fit.scale})`,
+          /* zoom, not a scale transform: text is laid out again at the final size, so glyphs keep
+             their spacing (a scaled 390px layout smears letters together) */
+          zoom: fit.scale,
         }}
       >
         {children}
