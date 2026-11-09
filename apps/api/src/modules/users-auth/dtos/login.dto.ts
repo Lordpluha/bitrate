@@ -1,9 +1,10 @@
+import { EmailSchema } from '@common/email'
 import { ApiProperty } from '@nestjs/swagger'
 import { z } from 'zod'
 
 /** The login schema value. */
 export const LoginSchema = z.object({
-  email: z.email({ error: 'Invalid email format' }),
+  email: EmailSchema,
   password: z
     .string()
     .min(6, { error: 'Password must be at least 6 characters long' })

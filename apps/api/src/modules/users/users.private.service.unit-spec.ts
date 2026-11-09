@@ -40,7 +40,7 @@ describe('UsersPrivateService', () => {
     const result = await service.getByEmail('user@example.com')
 
     expect(prisma.user.findFirst).toHaveBeenCalledWith({
-      where: { email: 'user@example.com', deletedAt: null },
+      where: { email: { equals: 'user@example.com', mode: 'insensitive' }, deletedAt: null },
     })
     expect(result).toBe(user)
   })
