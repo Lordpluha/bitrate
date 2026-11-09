@@ -1,9 +1,13 @@
 'use client'
 
+import { useSettingsStore } from '@entities/Settings'
 import { Theme, Themes } from '@shared/constants'
 import { useTheme } from '@shared/contexts'
+import { localeLabels, normalizeLocale, useI18n } from '@shared/i18n'
 import { ROUTES } from '@shared/routes'
+import Link from 'next/link'
 import { lc } from '../lib/styles/lc'
+import { GITHUB_REPO_URL } from '../model/links'
 import type { LandingKey } from '../model/messages/en'
 import { useLandingCopy } from '../model/useLandingCopy'
 
@@ -19,9 +23,16 @@ const THEME_LABEL: Record<Theme, LandingKey> = {
   [Theme.dim]: 'chrome.dim',
 }
 
-/** Landing header: brand, scene links and the app theme switch. */
-export const LandingHeader = () => {
+type LandingHeaderProps = {
+  /** The visitor has a session: the header button opens the player instead of sign-up. */
+  signedIn: boolean
+}
+
+/** Landing header: brand, scene links, GitHub, language and theme switches and the way into the player. */
+export const LandingHeader = ({ signedIn }: LandingHeaderProps) => {
   const c = useLandingCopy()
+  const { locale } = useI18n()
+  const setSetting = useSettingsStore((s) => s.setSetting)
   const { theme, setTheme } = useTheme()
   return (
     <header className={lc('top')}>
@@ -37,7 +48,7 @@ export const LandingHeader = () => {
         >
           <use fill="url(#bm)" href="#bitrate-logo" />
         </svg>
-        Bitrate
+        <span className={lc('brand-name')}>Bitrate</span>
       </a>
       <nav aria-label={c('chrome.nav')} className={lc('nav')}>
         {NAV.map(({ scene, label }) => (
@@ -47,10 +58,37 @@ export const LandingHeader = () => {
         ))}
       </nav>
       <div className={lc('top-actions')}>
+        <a
+          className={lc('top-icon top-github')}
+          href={GITHUB_REPO_URL}
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <svg aria-hidden="true" className={lc('i')}>
+            <use href="#i-github" />
+          </svg>
+          <span className="sr-only">{c('chrome.github_aria')}</span>
+        </a>
+        <label className={lc('top-lang')}>
+          <span className="sr-only">{c('chrome.language')}</span>
+          <select
+            onChange={(e) =>
+              setSetting('language', normalizeLocale(e.target.value))
+            }
+            value={locale}
+          >
+            {localeLabels.map(({ label, value }) => (
+              <option key={value} title={label} value={value}>
+                {value.toUpperCase()}
+              </option>
+            ))}
+          </select>
+        </label>
         <fieldset aria-label={c('chrome.theme')} className={lc('themes')}>
           {Themes.map((t) => (
             <button
               aria-pressed={theme === t}
+              data-theme={t}
               key={t}
               onClick={() => setTheme(t)}
               type="button"
@@ -59,6 +97,15 @@ export const LandingHeader = () => {
             </button>
           ))}
         </fieldset>
+        <Link
+          className={lc('btn btn-primary btn-sm top-cta')}
+          href={signedIn ? ROUTES.main : ROUTES.auth.registration}
+        >
+          {c(signedIn ? 'chrome.open_player' : 'chrome.start_listening')}
+          <svg aria-hidden="true" className={lc('i')}>
+            <use href="#i-arrow" />
+          </svg>
+        </Link>
       </div>
     </header>
   )

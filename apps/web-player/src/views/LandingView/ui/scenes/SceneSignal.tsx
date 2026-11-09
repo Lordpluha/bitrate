@@ -1,21 +1,32 @@
+import { useI18n } from '@shared/i18n'
 import { ROUTES } from '@shared/routes'
 import Link from 'next/link'
 import { lc } from '../../lib/styles/lc'
-import { DEMO_TRACKS } from '../../model/demoTracks'
+import { GITHUB_REPO_URL } from '../../model/links'
+import type { LandingKey } from '../../model/messages/en'
+import { formatStat, type PlatformStats } from '../../model/platformStats'
 import { useLandingCopy } from '../../model/useLandingCopy'
-import { Abs, SceneShell, TrackRow } from './parts'
-import type { SceneProps } from './scene.types'
+import { PlayerPreview } from './PlayerPreview'
+import { Abs, SceneShell } from './parts'
+import type { HeroSceneProps } from './scene.types'
+
+const STAT_ROWS = [
+  { key: 'tracks', label: 'hero.stat_tracks' },
+  { key: 'artists', label: 'hero.stat_artists' },
+  { key: 'listeners', label: 'hero.stat_listeners' },
+] as const satisfies readonly { key: keyof PlatformStats; label: LandingKey }[]
 
 /** Scene "Signal" — ported from the motion prototype; the landing engine animates it after mount. */
-export const SceneSignal = ({ signedIn }: SceneProps) => {
+export const SceneSignal = ({ signedIn, stats }: HeroSceneProps) => {
   const c = useLandingCopy()
+  const { locale } = useI18n()
   return (
     <SceneShell
       active
       id="hero"
       labelKey="hero.your_music_already_where_you_are"
     >
-      <Abs w={540} x={54} y={262}>
+      <Abs w={540} x={54} y={stats ? 222 : 262}>
         <div className={lc('col', 'gap-[26px]')}>
           <div className={lc('eyebrow')} data-a="up">
             {c('hero.web_player')}
@@ -56,180 +67,37 @@ export const SceneSignal = ({ signedIn }: SceneProps) => {
               </Link>
             )}
           </div>
-          <div className={lc('row mono')} data-a="up">
-            <svg
-              aria-hidden="true"
-              className={lc('i', 'w-[15px]! h-[15px]! text-accent')}
+          {stats && (
+            <dl className={lc('hstats')} data-a="up">
+              {STAT_ROWS.map(({ key, label }) => (
+                <div key={key}>
+                  <dt>{c(label)}</dt>
+                  <dd>{formatStat({ value: stats[key], locale })}</dd>
+                </div>
+              ))}
+            </dl>
+          )}
+          <div className={lc('row mono trust')} data-a="up">
+            <span>{c('hero.free')}</span>
+            <i aria-hidden="true" />
+            <span>{c('hero.no_install')}</span>
+            <i aria-hidden="true" />
+            <a
+              className={lc('ulink trust-gh')}
+              href={GITHUB_REPO_URL}
+              rel="noopener noreferrer"
+              target="_blank"
             >
-              <use href="#i-signal" />
-            </svg>
-            {c('hero.interactive_player_preview')}
+              <svg aria-hidden="true" className={lc('i')}>
+                <use href="#i-github" />
+              </svg>
+              {c('hero.open_source_on_github')}
+            </a>
           </div>
         </div>
       </Abs>
-      <Abs markers="persp d-only" w={786} x={610} y={170}>
-        <div className={lc('win')} data-a="win" id="heroWin">
-          <div className={lc('wbar')}>
-            <span className={lc('live')}>
-              <i></i>
-              <span
-                className={lc('glitch glitch-auto')}
-                data-text={c('hero.now_playing')}
-              >
-                {c('hero.now_playing')}
-              </span>
-            </span>
-            <span className={lc('grow')}></span>
-            <span className={lc('d-only')}>{c('hero.preview_session')}</span>
-            <span className={lc('live ok d-only')}>
-              <i></i>
-              <span
-                className={lc('glitch glitch-auto')}
-                data-text={c('hero.signal_stable')}
-              >
-                {c('hero.signal_stable')}
-              </span>
-            </span>
-          </div>
-          <div className={lc('row m-fit', 'items-stretch gap-0 h-[520px]')}>
-            <div
-              className={lc(
-                'col d-only',
-                'w-[56px] items-center p-[16px_0] gap-[18px] [border-right:1px_solid_var(--border)] text-muted-foreground',
-              )}
-            >
-              <svg aria-hidden="true" className={lc('i', 'text-foreground')}>
-                <use href="#i-home" />
-              </svg>
-              <svg aria-hidden="true" className={lc('i')}>
-                <use href="#i-search" />
-              </svg>
-              <svg aria-hidden="true" className={lc('i')}>
-                <use href="#i-lib" />
-              </svg>
-              <span className={lc('grow')}></span>
-              <span className={lc('av', 'bg-purple-500 bg-none')}>
-                {c('hero.dj')}
-              </span>
-            </div>
-            <div
-              className={lc('col', 'w-[410px] p-[20px] gap-[16px] box-border')}
-            >
-              <div className={lc('art', 'h-[300px]')}></div>
-              <div className={lc('row')}>
-                <div className={lc('grow')}>
-                  <p
-                    className={lc(
-                      't-title',
-                      'font-[600] [font-size:22px] leading-[1.1] font-[family-name:var(--font-display)]',
-                    )}
-                  >
-                    {DEMO_TRACKS.nightSignal}
-                  </p>
-                  <p className={lc('t-meta')}>{c('common.demo_artist')}</p>
-                </div>
-                <svg aria-hidden="true" className={lc('i', 'text-accent')}>
-                  <use href="#i-heart" />
-                </svg>
-              </div>
-              <div>
-                <div className={lc('prog')}>
-                  <i id="heroProg"></i>
-                </div>
-                <div className={lc('times')}>
-                  <span>{'1:38'}</span>
-                  <span>{'3:56'}</span>
-                </div>
-              </div>
-              <div className={lc('transport')}>
-                <svg aria-hidden="true" className={lc('i')}>
-                  <use href="#i-shuffle" />
-                </svg>
-                <svg aria-hidden="true" className={lc('i')}>
-                  <use href="#i-prev" />
-                </svg>
-                <span className={lc('playbtn')}>
-                  <svg aria-hidden="true" className={lc('i')}>
-                    <use href="#i-pause" />
-                  </svg>
-                </span>
-                <svg aria-hidden="true" className={lc('i')}>
-                  <use href="#i-next" />
-                </svg>
-                <svg aria-hidden="true" className={lc('i')}>
-                  <use href="#i-repeat" />
-                </svg>
-              </div>
-            </div>
-            <div
-              className={lc(
-                'col grow d-only',
-                'p-[18px_18px_18px_6px] gap-[4px] [border-left:1px_solid_var(--border)]',
-              )}
-            >
-              <div
-                className={lc('row label', 'justify-between p-[4px_10px_10px]')}
-              >
-                <span>{c('hero.up_next')}</span>
-                <span className="tracking-[.04em]">{c('hero.clear')}</span>
-              </div>
-              <TrackRow
-                artist={c('hero.lumen_choir')}
-                cover="cv2"
-                title={DEMO_TRACKS.echoesInMotion}
-              >
-                <span className={lc('mono')}>{'4:21'}</span>
-              </TrackRow>
-              <TrackRow
-                artist={c('hero.kite_harbor')}
-                cover="cv3"
-                title={DEMO_TRACKS.staticLines}
-              >
-                <span className={lc('mono')}>{'3:47'}</span>
-              </TrackRow>
-              <TrackRow
-                artist={c('hero.mira_sol')}
-                cover="cv4"
-                title={DEMO_TRACKS.driftControl}
-              >
-                <span className={lc('mono')}>{'3:12'}</span>
-              </TrackRow>
-              <TrackRow
-                artist={c('hero.nova_the_static')}
-                cover="cv1"
-                title={DEMO_TRACKS.afterglow}
-              >
-                <span className={lc('mono')}>{'3:42'}</span>
-              </TrackRow>
-              <span className={lc('grow')}></span>
-              <div className={lc('row', 'p-[0_10px] text-muted-foreground')}>
-                <svg aria-hidden="true" className={lc('i')}>
-                  <use href="#i-vol" />
-                </svg>
-                <div className={lc('prog grow')}>
-                  <i className="[transform:scaleX(.7)]!"></i>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className={lc('tech d-only')}>
-            <div>
-              <span className={lc('label')}>{c('hero.source')}</span>
-              <b>{c('hero.bitrate')}</b>
-            </div>
-            <div>
-              <span className={lc('label')}>{c('hero.output')}</span>
-              <b>{c('hero.web')}</b>
-            </div>
-            <div>
-              <span className={lc('label')}>{c('hero.mode')}</span>
-              <b>{c('hero.preview')}</b>
-            </div>
-            <div className={lc('grow', 'h-[32px]')}>
-              <canvas className={lc('spec')} data-bars="48"></canvas>
-            </div>
-          </div>
-        </div>
+      <Abs h={640} markers="persp hero-devices" w={820} x={540} y={140}>
+        <PlayerPreview />
       </Abs>
     </SceneShell>
   )

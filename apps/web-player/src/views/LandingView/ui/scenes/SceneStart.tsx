@@ -1,6 +1,7 @@
 import { ROUTES } from '@shared/routes'
 import Link from 'next/link'
 import { lc } from '../../lib/styles/lc'
+import { GITHUB_REPO_URL } from '../../model/links'
 import { useLandingCopy } from '../../model/useLandingCopy'
 import { ServiceStatus } from '../ServiceStatus'
 import { Abs, SceneShell } from './parts'
@@ -83,9 +84,16 @@ export const SceneStart = ({ signedIn }: SceneProps) => {
       <Abs data-a="up" h={118} w={1440} x={0} y={782}>
         <div className={lc('footer')}>
           <span className={lc('row')}>
-            <b className="font-[600] [font-size:20px] leading-[1] font-[family-name:var(--font-display)] text-foreground">
+            <a
+              aria-label={c('chrome.home')}
+              className={lc('f-brand')}
+              href={ROUTES.landingScene('hero')}
+            >
+              <svg aria-hidden="true" viewBox="371 117 795 775">
+                <use fill="url(#bm)" href="#bitrate-logo" />
+              </svg>
               {c('cta.bitrate')}
-            </b>
+            </a>
             <span className={lc('d-only')}>
               {c('cta.playback_is_the_product')}
             </span>
@@ -107,12 +115,23 @@ export const SceneStart = ({ signedIn }: SceneProps) => {
             )}
             {signedIn && (
               <Link className={lc('ulink u-center d-only')} href={ROUTES.main}>
-                {c('cta.player_preview')}
+                {c('cta.open_web_player')}
               </Link>
             )}
             <Link className={lc('ulink d-only')} href={ROUTES.terms}>
               {c('cta.legal')}
             </Link>
+            <a
+              className={lc('ulink f-gh')}
+              href={GITHUB_REPO_URL}
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              <svg aria-hidden="true" className={lc('i')}>
+                <use href="#i-github" />
+              </svg>
+              {c('cta.github')}
+            </a>
             <ServiceStatus />
           </span>
         </div>

@@ -14,10 +14,41 @@ export const CHROME: readonly LandingRule[] = [
     'flex gap-[10px] items-center font-[family-name:var(--font-display)] [font-size:20px] font-[600] text-foreground no-underline',
   ],
   ['mark', 'w-[30px] h-[30px]'],
+  /* idle brand motion: runs until the pointer or focus rests on the brand, never with reduced motion */
+  [
+    'mark',
+    '[.brand_&]:animate-[landing-brand-mark_3.6s_ease-in-out_infinite] [.brand:hover_&]:[animation-play-state:paused] [.brand:focus-visible_&]:[animation-play-state:paused] motion-reduce:[.brand_&]:animate-none',
+  ],
+  [
+    'brand-name',
+    'bg-[image:linear-gradient(100deg,var(--color-foreground)_40%,var(--color-purple-400)_50%,var(--color-magenta-500)_55%,var(--color-foreground)_65%)] bg-[length:200%_100%] bg-clip-text text-transparent animate-[landing-brand-shimmer_4.8s_linear_infinite]',
+  ],
+  [
+    'brand-name',
+    '[.brand:hover_&]:[animation-play-state:paused] [.brand:focus-visible_&]:[animation-play-state:paused] motion-reduce:animate-none motion-reduce:text-foreground',
+  ],
   ['nav', 'flex gap-[26px] [font-size:13px] text-muted-foreground'],
   ['nav', '[&_a]:text-inherit [&_a]:no-underline'],
   ['nav', '[&_a:hover]:text-foreground'],
   ['top-actions', 'flex gap-[10px] items-center'],
+  /* header: GitHub, language and the always-visible way into the player */
+  [
+    'top-icon',
+    'grid place-items-center w-[36px] h-[36px] text-muted-foreground [background:var(--glass)] border border-solid border-border rounded-[999px] [backdrop-filter:blur(8px)] [transition:color_0.2s,border-color_0.2s] [&:hover]:text-foreground [&:hover]:border-muted-foreground',
+  ],
+  ['top-icon', '[&_.i]:w-[17px] [&_.i]:h-[17px]'],
+  [
+    'top-lang',
+    'relative flex items-center h-[36px] [background:var(--glass)] border border-solid border-border rounded-[999px] [backdrop-filter:blur(8px)] [&:focus-within]:outline-2 [&:focus-within]:outline-ring [&:focus-within]:outline-offset-2',
+  ],
+  [
+    'top-lang',
+    '[&_select]:h-full [&_select]:p-[0_12px] [&_select]:font-[500] [&_select]:[font-size:12px] [&_select]:font-[family-name:var(--font-body)] [&_select]:text-foreground [&_select]:[background:none] [&_select]:border-0 [&_select]:outline-none [&_select]:appearance-none [html:not(.has-cursor)_&_select]:cursor-pointer [&_option]:text-foreground [&_option]:bg-card',
+  ],
+  [
+    'top-cta',
+    'h-[36px] p-[0_14px] rounded-[999px] [&_.i]:w-[15px] [&_.i]:h-[15px]',
+  ],
   [
     'themes',
     'flex min-w-0 p-[3px] m-0 [background:var(--glass)] border border-solid border-border rounded-[999px] [backdrop-filter:blur(8px)]',

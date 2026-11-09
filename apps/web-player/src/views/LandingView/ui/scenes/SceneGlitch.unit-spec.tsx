@@ -7,7 +7,7 @@ import { SceneSignal } from './SceneSignal'
 const glitchTexts = (locale: Locale) => {
   const { container, unmount } = render(
     <I18nProvider locale={locale}>
-      <SceneSignal signedIn={false} />
+      <SceneSignal signedIn={false} stats={null} />
       <SceneDevices />
     </I18nProvider>,
   )
