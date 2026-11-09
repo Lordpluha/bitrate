@@ -92,7 +92,7 @@ export class OAuthService {
     // `deletedAt: null` — a soft-deleted account's email is treated as free, matching every
     // other lookup this module makes; see `UserAuthGuard` for the request-time half.
     const existingUser = await this.prisma.user.findFirst({
-      where: { email: profile.email, deletedAt: null },
+      where: { email: { equals: profile.email, mode: 'insensitive' }, deletedAt: null },
     })
     if (existingUser?.password) {
       throw new ConflictException(

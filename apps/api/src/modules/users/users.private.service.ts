@@ -24,7 +24,7 @@ export class UsersPrivateService {
    * like a nonexistent one, never leaking its take-down state. */
   async getByEmail(email: UserEntity['email']) {
     return await this.prisma.user.findFirst({
-      where: { email, deletedAt: null },
+      where: { email: { equals: email, mode: 'insensitive' }, deletedAt: null },
     })
   }
 

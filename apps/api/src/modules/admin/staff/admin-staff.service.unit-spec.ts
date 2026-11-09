@@ -50,9 +50,15 @@ describe('AdminStaffService', () => {
         name: 'MODERATOR',
         permissions: ['tracks:read'],
       } as never)
-      prisma.staff.findUnique.mockResolvedValueOnce(buildRawStaff() as never)
+      prisma.staff.findFirst.mockResolvedValueOnce(buildRawStaff() as never)
 
-      await expect(service.create(dto as never, ACTOR_ID)).rejects.toThrow('already in use')
+      await expect(service.create(dto as never, ACTOR_ID)).rejects.toThrow(
+        /Email .* already in use/,
+      )
+      expect(prisma.staff.findFirst).toHaveBeenCalledWith({
+        where: { email: { equals: dto.email, mode: 'insensitive' } },
+        select: { id: true },
+      })
     })
 
     it('copies the role template when no permissions override is given', async () => {
