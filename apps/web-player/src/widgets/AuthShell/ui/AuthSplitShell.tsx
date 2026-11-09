@@ -13,9 +13,9 @@ type AuthSplitShellProps = {
 
 /**
  * Sign-in, 2FA and sign-up: the brand panel on the left from 1024px up, the form on the right.
- * As in the design, the panel stops 76px above the bottom of the screen.
- * Phones get the logo above the form instead of the panel. The form is centred above the
- * 76px strip the design keeps free at the bottom.
+ * Both columns fill the whole viewport height: the panel stays pinned while a long form
+ * scrolls, and the form is centred in the full height. Phones get the logo above the form
+ * instead of the panel and scroll the page as usual.
  */
 export const AuthSplitShell = ({
   children,
@@ -25,7 +25,7 @@ export const AuthSplitShell = ({
 
   return (
     <div className="flex min-h-dvh">
-      <aside className="sticky top-0 hidden h-[calc(100dvh-76px)] self-start w-[44%] shrink-0 xl:w-160 flex-col justify-between bg-[url(/images/auth/night-signal.webp)] bg-cover bg-center p-12 lg:flex">
+      <aside className="sticky top-0 hidden h-dvh self-start w-[44%] shrink-0 xl:w-160 flex-col justify-between bg-[url(/images/auth/night-signal.webp)] bg-cover bg-center p-12 lg:flex">
         <AuthLogo size="panel" />
         <div className="flex flex-col gap-3">
           <p className="max-w-115 font-[family-name:var(--font-landing-display)] text-[44px] font-semibold leading-[1.05] tracking-[-0.6px] text-white">
@@ -36,7 +36,7 @@ export const AuthSplitShell = ({
           </p>
         </div>
       </aside>
-      <main className="flex flex-1 justify-center px-5 py-5 lg:items-center lg:px-10 lg:pt-0 lg:pb-19">
+      <main className="flex flex-1 justify-center px-5 py-5 lg:items-center lg:px-10 lg:py-10">
         <div className="flex w-full max-w-100 flex-col gap-5.5">
           <div className="flex items-center justify-between gap-3">
             <AuthLogo className="lg:hidden" />
