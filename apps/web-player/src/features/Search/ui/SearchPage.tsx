@@ -53,8 +53,8 @@ export const SearchPage = ({ onPlayItem }: SearchPageProps) => {
 
   return (
     <div className="h-full overflow-y-auto custom-scrollbar">
-      <div className="px-4 pt-2 pb-3 md:px-8 md:py-6">
-        <div className="flex w-full flex-col">
+      <div className="flex min-h-full flex-col px-4 pt-2 pb-3 md:px-8 md:py-6">
+        <div className="flex w-full flex-1 flex-col">
           {hasQuery ? (
             <SearchQueryState
               data={{

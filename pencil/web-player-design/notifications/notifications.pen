@@ -1,27 +1,36 @@
 {
-  "version": "2.20",
-  "imports": {
-    "ds": "../design-system/bitrate.lib.pen"
-  },
+  "version": "2.22",
   "children": [
     {
       "type": "frame",
       "id": "XFuPAC",
+      "x": 0,
+      "y": 0,
       "name": "Notifications / Desktop / Dark",
+      "context": "concept — header popover exists; full page parked until a backend exists — Followers, releases, playlists and events. Concept.",
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "clip": true,
       "width": 1440,
       "height": 900,
-      "clip": true,
-      "layout": "vertical",
       "fill": "$ds:--background",
+      "layout": "vertical",
       "children": [
         {
-          "type": "ref",
           "id": "wFh42k",
+          "type": "ref",
           "ref": "ds:OPciE",
           "name": "App Layout",
           "width": 1440,
           "height": 900,
           "descendants": {
+            "ds:VZD6U": {
+              "enabled": true
+            },
+            "ds:z5MVM": {
+              "enabled": false
+            },
             "ds:xvsK3": {
               "type": "frame",
               "id": "Jf4aUy",
@@ -40,10 +49,10 @@
                   "type": "frame",
                   "id": "XbhJNh",
                   "name": "Row",
+                  "width": "fill_container",
                   "gap": 12,
-                  "alignItems": "center",
-                  "width": 760,
                   "justifyContent": "space_between",
+                  "alignItems": "center",
                   "children": [
                     {
                       "type": "frame",
@@ -53,15 +62,15 @@
                       "alignItems": "center",
                       "children": [
                         {
-                          "type": "ref",
                           "id": "aQPMag",
+                          "type": "ref",
                           "ref": "ds:MgMQ2L",
                           "name": "Text/H1",
                           "content": "Notifications"
                         },
                         {
-                          "type": "ref",
                           "id": "WBpgYZ",
+                          "type": "ref",
                           "ref": "ds:FJUa1",
                           "name": "Badge / Concept",
                           "descendants": {
@@ -73,16 +82,16 @@
                       ]
                     },
                     {
-                      "type": "ref",
                       "id": "FJESLk",
+                      "type": "ref",
                       "ref": "ds:DTwJb",
                       "name": "Button / Mark all read",
                       "descendants": {
-                        "ds:GyGLK": {
-                          "content": "Mark all read"
-                        },
                         "ds:uRXDu": {
                           "enabled": false
+                        },
+                        "ds:GyGLK": {
+                          "content": "Mark all read"
                         }
                       }
                     }
@@ -96,8 +105,8 @@
                   "alignItems": "center",
                   "children": [
                     {
-                      "type": "ref",
                       "id": "dBK7bT",
+                      "type": "ref",
                       "ref": "ds:AdNrrb",
                       "name": "Chip/Active",
                       "descendants": {
@@ -107,8 +116,8 @@
                       }
                     },
                     {
-                      "type": "ref",
                       "id": "DqU6aD",
+                      "type": "ref",
                       "ref": "ds:LUcTan",
                       "name": "Chip/Default",
                       "descendants": {
@@ -118,8 +127,8 @@
                       }
                     },
                     {
-                      "type": "ref",
                       "id": "NAYqg5",
+                      "type": "ref",
                       "ref": "ds:LUcTan",
                       "name": "Chip/Default",
                       "descendants": {
@@ -129,8 +138,8 @@
                       }
                     },
                     {
-                      "type": "ref",
                       "id": "pnS4cz",
+                      "type": "ref",
                       "ref": "ds:LUcTan",
                       "name": "Chip/Default",
                       "descendants": {
@@ -140,8 +149,8 @@
                       }
                     },
                     {
-                      "type": "ref",
                       "id": "8WQcFk",
+                      "type": "ref",
                       "ref": "ds:LUcTan",
                       "name": "Chip/Default",
                       "descendants": {
@@ -156,15 +165,16 @@
                   "type": "frame",
                   "id": "FxUkJy",
                   "name": "Column",
+                  "width": "fill_container",
                   "layout": "vertical",
                   "gap": 4,
-                  "width": 760,
                   "children": [
                     {
-                      "type": "ref",
                       "id": "7ubXdq",
+                      "type": "ref",
                       "ref": "ds:w7kIfD",
                       "name": "Notification Row/Unread",
+                      "width": "fill_container",
                       "descendants": {
                         "ds:eVpsWQ": {
                           "icon": "user-plus"
@@ -178,10 +188,11 @@
                       }
                     },
                     {
-                      "type": "ref",
                       "id": "xvxH9x",
+                      "type": "ref",
                       "ref": "ds:w7kIfD",
                       "name": "Notification Row/Unread",
+                      "width": "fill_container",
                       "descendants": {
                         "ds:eVpsWQ": {
                           "icon": "disc-3"
@@ -195,10 +206,11 @@
                       }
                     },
                     {
-                      "type": "ref",
                       "id": "b9qHt7",
+                      "type": "ref",
                       "ref": "ds:1ATiw1",
                       "name": "Notification Row/Read",
+                      "width": "fill_container",
                       "descendants": {
                         "ds:V2yFd8": {
                           "icon": "list-music"
@@ -212,10 +224,11 @@
                       }
                     },
                     {
-                      "type": "ref",
                       "id": "RVviLq",
+                      "type": "ref",
                       "ref": "ds:1ATiw1",
                       "name": "Notification Row/Read",
+                      "width": "fill_container",
                       "descendants": {
                         "ds:V2yFd8": {
                           "icon": "calendar"
@@ -234,41 +247,41 @@
             },
             "ds:Nn2KW": {
               "enabled": false
-            },
-            "ds:VZD6U": {
-              "enabled": true
-            },
-            "ds:z5MVM": {
-              "enabled": false
             }
           }
         }
-      ],
-      "x": 0,
-      "y": 0,
-      "theme": {
-        "ds:Mode": "Dark"
-      },
-      "context": "concept — header popover exists; full page parked until a backend exists — Followers, releases, playlists and events. Concept."
+      ]
     },
     {
       "type": "frame",
       "id": "Sogf4w",
+      "x": 1540,
+      "y": 0,
       "name": "Notifications / Desktop / Light",
+      "context": "concept — header popover exists; full page parked until a backend exists — Followers, releases, playlists and events. Concept.",
+      "theme": {
+        "ds:Mode": "Light"
+      },
+      "clip": true,
       "width": 1440,
       "height": 900,
-      "clip": true,
-      "layout": "vertical",
       "fill": "$ds:--background",
+      "layout": "vertical",
       "children": [
         {
-          "type": "ref",
           "id": "rxFfD8",
+          "type": "ref",
           "ref": "ds:OPciE",
           "name": "App Layout",
           "width": 1440,
           "height": 900,
           "descendants": {
+            "ds:VZD6U": {
+              "enabled": true
+            },
+            "ds:z5MVM": {
+              "enabled": false
+            },
             "ds:xvsK3": {
               "type": "frame",
               "id": "vSoGYa",
@@ -287,10 +300,10 @@
                   "type": "frame",
                   "id": "jSnpK3",
                   "name": "Row",
+                  "width": "fill_container",
                   "gap": 12,
-                  "alignItems": "center",
-                  "width": 760,
                   "justifyContent": "space_between",
+                  "alignItems": "center",
                   "children": [
                     {
                       "type": "frame",
@@ -300,15 +313,15 @@
                       "alignItems": "center",
                       "children": [
                         {
-                          "type": "ref",
                           "id": "WerKzn",
+                          "type": "ref",
                           "ref": "ds:MgMQ2L",
                           "name": "Text/H1",
                           "content": "Notifications"
                         },
                         {
-                          "type": "ref",
                           "id": "brHqMB",
+                          "type": "ref",
                           "ref": "ds:FJUa1",
                           "name": "Badge / Concept",
                           "descendants": {
@@ -320,16 +333,16 @@
                       ]
                     },
                     {
-                      "type": "ref",
                       "id": "XQAbiT",
+                      "type": "ref",
                       "ref": "ds:DTwJb",
                       "name": "Button / Mark all read",
                       "descendants": {
-                        "ds:GyGLK": {
-                          "content": "Mark all read"
-                        },
                         "ds:uRXDu": {
                           "enabled": false
+                        },
+                        "ds:GyGLK": {
+                          "content": "Mark all read"
                         }
                       }
                     }
@@ -343,8 +356,8 @@
                   "alignItems": "center",
                   "children": [
                     {
-                      "type": "ref",
                       "id": "R2baan",
+                      "type": "ref",
                       "ref": "ds:AdNrrb",
                       "name": "Chip/Active",
                       "descendants": {
@@ -354,8 +367,8 @@
                       }
                     },
                     {
-                      "type": "ref",
                       "id": "yKjNXz",
+                      "type": "ref",
                       "ref": "ds:LUcTan",
                       "name": "Chip/Default",
                       "descendants": {
@@ -365,8 +378,8 @@
                       }
                     },
                     {
-                      "type": "ref",
                       "id": "Fdd2JL",
+                      "type": "ref",
                       "ref": "ds:LUcTan",
                       "name": "Chip/Default",
                       "descendants": {
@@ -376,8 +389,8 @@
                       }
                     },
                     {
-                      "type": "ref",
                       "id": "tz8DXb",
+                      "type": "ref",
                       "ref": "ds:LUcTan",
                       "name": "Chip/Default",
                       "descendants": {
@@ -387,8 +400,8 @@
                       }
                     },
                     {
-                      "type": "ref",
                       "id": "SmjVwy",
+                      "type": "ref",
                       "ref": "ds:LUcTan",
                       "name": "Chip/Default",
                       "descendants": {
@@ -403,15 +416,16 @@
                   "type": "frame",
                   "id": "UbuV3h",
                   "name": "Column",
+                  "width": "fill_container",
                   "layout": "vertical",
                   "gap": 4,
-                  "width": 760,
                   "children": [
                     {
-                      "type": "ref",
                       "id": "twkRyD",
+                      "type": "ref",
                       "ref": "ds:w7kIfD",
                       "name": "Notification Row/Unread",
+                      "width": "fill_container",
                       "descendants": {
                         "ds:eVpsWQ": {
                           "icon": "user-plus"
@@ -425,10 +439,11 @@
                       }
                     },
                     {
-                      "type": "ref",
                       "id": "9epaNZ",
+                      "type": "ref",
                       "ref": "ds:w7kIfD",
                       "name": "Notification Row/Unread",
+                      "width": "fill_container",
                       "descendants": {
                         "ds:eVpsWQ": {
                           "icon": "disc-3"
@@ -442,10 +457,11 @@
                       }
                     },
                     {
-                      "type": "ref",
                       "id": "S9kEW4",
+                      "type": "ref",
                       "ref": "ds:1ATiw1",
                       "name": "Notification Row/Read",
+                      "width": "fill_container",
                       "descendants": {
                         "ds:V2yFd8": {
                           "icon": "list-music"
@@ -459,10 +475,11 @@
                       }
                     },
                     {
-                      "type": "ref",
                       "id": "LrR3t5",
+                      "type": "ref",
                       "ref": "ds:1ATiw1",
                       "name": "Notification Row/Read",
+                      "width": "fill_container",
                       "descendants": {
                         "ds:V2yFd8": {
                           "icon": "calendar"
@@ -481,41 +498,41 @@
             },
             "ds:Nn2KW": {
               "enabled": false
-            },
-            "ds:VZD6U": {
-              "enabled": true
-            },
-            "ds:z5MVM": {
-              "enabled": false
             }
           }
         }
-      ],
-      "x": 1540,
-      "y": 0,
-      "theme": {
-        "ds:Mode": "Light"
-      },
-      "context": "concept — header popover exists; full page parked until a backend exists — Followers, releases, playlists and events. Concept."
+      ]
     },
     {
       "type": "frame",
       "id": "CCchka",
+      "x": 3080,
+      "y": 0,
       "name": "Notifications / Desktop / Dim",
+      "context": "concept — header popover exists; full page parked until a backend exists — Followers, releases, playlists and events. Concept.",
+      "theme": {
+        "ds:Mode": "Dim"
+      },
+      "clip": true,
       "width": 1440,
       "height": 900,
-      "clip": true,
-      "layout": "vertical",
       "fill": "$ds:--background",
+      "layout": "vertical",
       "children": [
         {
-          "type": "ref",
           "id": "6r3giC",
+          "type": "ref",
           "ref": "ds:OPciE",
           "name": "App Layout",
           "width": 1440,
           "height": 900,
           "descendants": {
+            "ds:VZD6U": {
+              "enabled": true
+            },
+            "ds:z5MVM": {
+              "enabled": false
+            },
             "ds:xvsK3": {
               "type": "frame",
               "id": "pa3ZT5",
@@ -534,10 +551,10 @@
                   "type": "frame",
                   "id": "xe9nhG",
                   "name": "Row",
+                  "width": "fill_container",
                   "gap": 12,
-                  "alignItems": "center",
-                  "width": 760,
                   "justifyContent": "space_between",
+                  "alignItems": "center",
                   "children": [
                     {
                       "type": "frame",
@@ -547,15 +564,15 @@
                       "alignItems": "center",
                       "children": [
                         {
-                          "type": "ref",
                           "id": "ydEgjY",
+                          "type": "ref",
                           "ref": "ds:MgMQ2L",
                           "name": "Text/H1",
                           "content": "Notifications"
                         },
                         {
-                          "type": "ref",
                           "id": "ApHwZk",
+                          "type": "ref",
                           "ref": "ds:FJUa1",
                           "name": "Badge / Concept",
                           "descendants": {
@@ -567,16 +584,16 @@
                       ]
                     },
                     {
-                      "type": "ref",
                       "id": "WNyP7h",
+                      "type": "ref",
                       "ref": "ds:DTwJb",
                       "name": "Button / Mark all read",
                       "descendants": {
-                        "ds:GyGLK": {
-                          "content": "Mark all read"
-                        },
                         "ds:uRXDu": {
                           "enabled": false
+                        },
+                        "ds:GyGLK": {
+                          "content": "Mark all read"
                         }
                       }
                     }
@@ -590,8 +607,8 @@
                   "alignItems": "center",
                   "children": [
                     {
-                      "type": "ref",
                       "id": "8uSPym",
+                      "type": "ref",
                       "ref": "ds:AdNrrb",
                       "name": "Chip/Active",
                       "descendants": {
@@ -601,8 +618,8 @@
                       }
                     },
                     {
-                      "type": "ref",
                       "id": "5rNqyb",
+                      "type": "ref",
                       "ref": "ds:LUcTan",
                       "name": "Chip/Default",
                       "descendants": {
@@ -612,8 +629,8 @@
                       }
                     },
                     {
-                      "type": "ref",
                       "id": "QFeCsu",
+                      "type": "ref",
                       "ref": "ds:LUcTan",
                       "name": "Chip/Default",
                       "descendants": {
@@ -623,8 +640,8 @@
                       }
                     },
                     {
-                      "type": "ref",
                       "id": "rQkfsS",
+                      "type": "ref",
                       "ref": "ds:LUcTan",
                       "name": "Chip/Default",
                       "descendants": {
@@ -634,8 +651,8 @@
                       }
                     },
                     {
-                      "type": "ref",
                       "id": "uM3awz",
+                      "type": "ref",
                       "ref": "ds:LUcTan",
                       "name": "Chip/Default",
                       "descendants": {
@@ -650,15 +667,16 @@
                   "type": "frame",
                   "id": "ykc7wK",
                   "name": "Column",
+                  "width": "fill_container",
                   "layout": "vertical",
                   "gap": 4,
-                  "width": 760,
                   "children": [
                     {
-                      "type": "ref",
                       "id": "TbWr3V",
+                      "type": "ref",
                       "ref": "ds:w7kIfD",
                       "name": "Notification Row/Unread",
+                      "width": "fill_container",
                       "descendants": {
                         "ds:eVpsWQ": {
                           "icon": "user-plus"
@@ -672,10 +690,11 @@
                       }
                     },
                     {
-                      "type": "ref",
                       "id": "7ohkMC",
+                      "type": "ref",
                       "ref": "ds:w7kIfD",
                       "name": "Notification Row/Unread",
+                      "width": "fill_container",
                       "descendants": {
                         "ds:eVpsWQ": {
                           "icon": "disc-3"
@@ -689,10 +708,11 @@
                       }
                     },
                     {
-                      "type": "ref",
                       "id": "xvHt6F",
+                      "type": "ref",
                       "ref": "ds:1ATiw1",
                       "name": "Notification Row/Read",
+                      "width": "fill_container",
                       "descendants": {
                         "ds:V2yFd8": {
                           "icon": "list-music"
@@ -706,10 +726,11 @@
                       }
                     },
                     {
-                      "type": "ref",
                       "id": "q6AipR",
+                      "type": "ref",
                       "ref": "ds:1ATiw1",
                       "name": "Notification Row/Read",
+                      "width": "fill_container",
                       "descendants": {
                         "ds:V2yFd8": {
                           "icon": "calendar"
@@ -728,43 +749,37 @@
             },
             "ds:Nn2KW": {
               "enabled": false
-            },
-            "ds:VZD6U": {
-              "enabled": true
-            },
-            "ds:z5MVM": {
-              "enabled": false
             }
           }
         }
-      ],
-      "x": 3080,
-      "y": 0,
-      "theme": {
-        "ds:Mode": "Dim"
-      },
-      "context": "concept — header popover exists; full page parked until a backend exists — Followers, releases, playlists and events. Concept."
+      ]
     },
     {
       "type": "frame",
       "id": "AVmPVy",
+      "x": 4620,
+      "y": 0,
       "name": "Notifications / Mobile / Dark",
+      "context": "concept — header popover exists; full page parked until a backend exists — Followers, releases, playlists and events. Concept.",
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "clip": true,
       "width": 390,
       "height": 844,
-      "clip": true,
-      "layout": "vertical",
       "fill": "$ds:--background",
+      "layout": "vertical",
       "children": [
         {
-          "type": "ref",
           "id": "rejrdd",
+          "type": "ref",
           "ref": "ds:xBZUrc",
           "name": "Mobile/Status Bar",
           "width": "fill_container"
         },
         {
-          "type": "ref",
           "id": "exztjo",
+          "type": "ref",
           "ref": "ds:pmBZPg",
           "name": "Mobile/Header",
           "width": "fill_container",
@@ -784,6 +799,7 @@
           "type": "frame",
           "id": "9tMdum",
           "name": "Content",
+          "clip": true,
           "width": "fill_container",
           "height": "fill_container",
           "layout": "vertical",
@@ -794,7 +810,6 @@
             12,
             16
           ],
-          "clip": true,
           "children": [
             {
               "type": "frame",
@@ -804,8 +819,8 @@
               "alignItems": "center",
               "children": [
                 {
-                  "type": "ref",
                   "id": "JCFATB",
+                  "type": "ref",
                   "ref": "ds:AdNrrb",
                   "name": "Chip/Active",
                   "descendants": {
@@ -815,8 +830,8 @@
                   }
                 },
                 {
-                  "type": "ref",
                   "id": "hR2Cqq",
+                  "type": "ref",
                   "ref": "ds:LUcTan",
                   "name": "Chip/Default",
                   "descendants": {
@@ -826,8 +841,8 @@
                   }
                 },
                 {
-                  "type": "ref",
                   "id": "qbLDiW",
+                  "type": "ref",
                   "ref": "ds:LUcTan",
                   "name": "Chip/Default",
                   "descendants": {
@@ -839,8 +854,8 @@
               ]
             },
             {
-              "type": "ref",
               "id": "iKGaKL",
+              "type": "ref",
               "ref": "ds:w7kIfD",
               "name": "Notification Row/Unread",
               "descendants": {
@@ -856,8 +871,8 @@
               }
             },
             {
-              "type": "ref",
               "id": "rDMnPE",
+              "type": "ref",
               "ref": "ds:w7kIfD",
               "name": "Notification Row/Unread",
               "descendants": {
@@ -873,8 +888,8 @@
               }
             },
             {
-              "type": "ref",
               "id": "64DF8B",
+              "type": "ref",
               "ref": "ds:1ATiw1",
               "name": "Notification Row/Read",
               "descendants": {
@@ -890,8 +905,8 @@
               }
             },
             {
-              "type": "ref",
               "id": "snRwo3",
+              "type": "ref",
               "ref": "ds:1ATiw1",
               "name": "Notification Row/Read",
               "descendants": {
@@ -922,8 +937,8 @@
           "justifyContent": "center",
           "children": [
             {
-              "type": "ref",
               "id": "aVN4b3",
+              "type": "ref",
               "ref": "ds:DrlRuW",
               "name": "Mobile/Island",
               "width": "fill_container",
@@ -938,32 +953,38 @@
             }
           ]
         }
-      ],
-      "x": 4620,
-      "y": 0,
-      "theme": {
-        "ds:Mode": "Dark"
-      },
-      "context": "concept — header popover exists; full page parked until a backend exists — Followers, releases, playlists and events. Concept."
+      ]
     },
     {
       "type": "frame",
       "id": "ayyEeS",
+      "x": 5110,
+      "y": 0,
       "name": "Notifications / All caught up / Desktop",
+      "context": "concept — header popover exists; full page parked until a backend exists — Followers, releases, playlists and events. Concept.",
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "clip": true,
       "width": 1440,
       "height": 900,
-      "clip": true,
-      "layout": "vertical",
       "fill": "$ds:--background",
+      "layout": "vertical",
       "children": [
         {
-          "type": "ref",
           "id": "rsE9kh",
+          "type": "ref",
           "ref": "ds:OPciE",
           "name": "App Layout",
           "width": 1440,
           "height": 900,
           "descendants": {
+            "ds:VZD6U": {
+              "enabled": true
+            },
+            "ds:z5MVM": {
+              "enabled": false
+            },
             "ds:xvsK3": {
               "type": "frame",
               "id": "SCGrAa",
@@ -979,11 +1000,75 @@
               ],
               "children": [
                 {
-                  "type": "ref",
                   "id": "jDV9GT",
+                  "type": "ref",
                   "ref": "ds:MgMQ2L",
                   "name": "Text/H1",
                   "content": "Notifications"
+                },
+                {
+                  "type": "frame",
+                  "id": "wJfSD",
+                  "name": "Chips",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "id": "vrBhV",
+                      "type": "ref",
+                      "ref": "ds:AdNrrb",
+                      "name": "Chip/Active",
+                      "descendants": {
+                        "ds:cUY4Fi": {
+                          "content": "All"
+                        }
+                      }
+                    },
+                    {
+                      "id": "fXLrn",
+                      "type": "ref",
+                      "ref": "ds:LUcTan",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:lXs2ja": {
+                          "content": "Followers"
+                        }
+                      }
+                    },
+                    {
+                      "id": "u0NcO0",
+                      "type": "ref",
+                      "ref": "ds:LUcTan",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:lXs2ja": {
+                          "content": "Releases"
+                        }
+                      }
+                    },
+                    {
+                      "id": "Bh8LI",
+                      "type": "ref",
+                      "ref": "ds:LUcTan",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:lXs2ja": {
+                          "content": "Playlists"
+                        }
+                      }
+                    },
+                    {
+                      "id": "vUjx6",
+                      "type": "ref",
+                      "ref": "ds:LUcTan",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:lXs2ja": {
+                          "content": "Events"
+                        }
+                      }
+                    }
+                  ]
                 },
                 {
                   "type": "frame",
@@ -991,13 +1076,13 @@
                   "name": "State Area",
                   "width": "fill_container",
                   "height": "fill_container",
+                  "layout": "vertical",
                   "justifyContent": "center",
                   "alignItems": "center",
-                  "layout": "vertical",
                   "children": [
                     {
-                      "type": "ref",
                       "id": "4T8AbE",
+                      "type": "ref",
                       "ref": "ds:UacIqy",
                       "name": "State / You're all caught up",
                       "descendants": {
@@ -1024,43 +1109,37 @@
             },
             "ds:Nn2KW": {
               "enabled": false
-            },
-            "ds:VZD6U": {
-              "enabled": true
-            },
-            "ds:z5MVM": {
-              "enabled": false
             }
           }
         }
-      ],
-      "x": 5110,
-      "y": 0,
-      "theme": {
-        "ds:Mode": "Dark"
-      },
-      "context": "concept — header popover exists; full page parked until a backend exists — Followers, releases, playlists and events. Concept."
+      ]
     },
     {
       "type": "frame",
       "id": "DTGTCC",
+      "x": 6650,
+      "y": 0,
       "name": "Notifications / All caught up / Mobile",
+      "context": "concept — header popover exists; full page parked until a backend exists — Followers, releases, playlists and events. Concept.",
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "clip": true,
       "width": 390,
       "height": 844,
-      "clip": true,
-      "layout": "vertical",
       "fill": "$ds:--background",
+      "layout": "vertical",
       "children": [
         {
-          "type": "ref",
           "id": "CHbZ8T",
+          "type": "ref",
           "ref": "ds:xBZUrc",
           "name": "Mobile/Status Bar",
           "width": "fill_container"
         },
         {
-          "type": "ref",
           "id": "jejYGC",
+          "type": "ref",
           "ref": "ds:pmBZPg",
           "name": "Mobile/Header",
           "width": "fill_container",
@@ -1080,6 +1159,7 @@
           "type": "frame",
           "id": "98t8pz",
           "name": "Content",
+          "clip": true,
           "width": "fill_container",
           "height": "fill_container",
           "layout": "vertical",
@@ -1090,7 +1170,6 @@
             12,
             16
           ],
-          "clip": true,
           "children": [
             {
               "type": "frame",
@@ -1098,15 +1177,16 @@
               "name": "State Area",
               "width": "fill_container",
               "height": "fill_container",
+              "layout": "vertical",
               "justifyContent": "center",
               "alignItems": "center",
-              "layout": "vertical",
               "children": [
                 {
-                  "type": "ref",
                   "id": "dps4io",
+                  "type": "ref",
                   "ref": "ds:UacIqy",
                   "name": "State / You're all caught up",
+                  "width": "fill_container",
                   "descendants": {
                     "ds:QTS6fY": {
                       "icon": "circle-check"
@@ -1123,8 +1203,7 @@
                     "ds:Sk1EVh": {
                       "enabled": false
                     }
-                  },
-                  "width": "fill_container"
+                  }
                 }
               ]
             }
@@ -1144,8 +1223,8 @@
           "justifyContent": "center",
           "children": [
             {
-              "type": "ref",
               "id": "SKJP6y",
+              "type": "ref",
               "ref": "ds:DrlRuW",
               "name": "Mobile/Island",
               "width": "fill_container",
@@ -1160,32 +1239,38 @@
             }
           ]
         }
-      ],
-      "x": 6650,
-      "y": 0,
-      "theme": {
-        "ds:Mode": "Dark"
-      },
-      "context": "concept — header popover exists; full page parked until a backend exists — Followers, releases, playlists and events. Concept."
+      ]
     },
     {
       "type": "frame",
       "id": "LHRWPp",
+      "x": 7140,
+      "y": 0,
       "name": "Notifications / Loading / Desktop",
+      "context": "concept — header popover exists; full page parked until a backend exists — Followers, releases, playlists and events. Concept.",
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "clip": true,
       "width": 1440,
       "height": 900,
-      "clip": true,
-      "layout": "vertical",
       "fill": "$ds:--background",
+      "layout": "vertical",
       "children": [
         {
-          "type": "ref",
           "id": "hWvvRs",
+          "type": "ref",
           "ref": "ds:OPciE",
           "name": "App Layout",
           "width": 1440,
           "height": 900,
           "descendants": {
+            "ds:VZD6U": {
+              "enabled": true
+            },
+            "ds:z5MVM": {
+              "enabled": false
+            },
             "ds:xvsK3": {
               "type": "frame",
               "id": "ckijbJ",
@@ -1201,8 +1286,8 @@
               ],
               "children": [
                 {
-                  "type": "ref",
                   "id": "XtvjS9",
+                  "type": "ref",
                   "ref": "ds:MgMQ2L",
                   "name": "Text/H1",
                   "content": "Notifications"
@@ -1211,98 +1296,97 @@
                   "type": "frame",
                   "id": "PDrX43",
                   "name": "Loading",
+                  "width": "fill_container",
                   "layout": "vertical",
                   "gap": 24,
-                  "width": "fill_container",
                   "children": [
                     {
                       "type": "frame",
                       "id": "6c4EC9",
                       "name": "Skeleton Rows",
-                      "layout": "vertical",
-                      "gap": 0,
                       "width": "fill_container",
+                      "layout": "vertical",
                       "children": [
                         {
-                          "type": "ref",
                           "id": "QHaZtg",
+                          "type": "ref",
                           "ref": "ds:WNtv9r",
                           "name": "Skeleton/Notification Row",
                           "width": "fill_container"
                         },
                         {
-                          "type": "ref",
                           "id": "nV9rWE",
+                          "type": "ref",
                           "ref": "ds:WNtv9r",
                           "name": "Skeleton/Notification Row",
                           "width": "fill_container"
                         },
                         {
-                          "type": "ref",
                           "id": "R83odn",
+                          "type": "ref",
                           "ref": "ds:WNtv9r",
                           "name": "Skeleton/Notification Row",
                           "width": "fill_container"
                         },
                         {
-                          "type": "ref",
                           "id": "tVV5X4",
+                          "type": "ref",
                           "ref": "ds:WNtv9r",
                           "name": "Skeleton/Notification Row",
                           "width": "fill_container"
                         },
                         {
-                          "type": "ref",
                           "id": "sEgiV8",
+                          "type": "ref",
                           "ref": "ds:WNtv9r",
                           "name": "Skeleton/Notification Row",
                           "width": "fill_container"
                         },
                         {
-                          "type": "ref",
                           "id": "HbDyYJ",
+                          "type": "ref",
                           "ref": "ds:WNtv9r",
                           "name": "Skeleton/Notification Row",
                           "width": "fill_container"
                         },
                         {
-                          "type": "ref",
                           "id": "wmKtgJ",
+                          "type": "ref",
                           "ref": "ds:WNtv9r",
                           "name": "Skeleton/Notification Row",
                           "width": "fill_container"
                         },
                         {
-                          "type": "ref",
                           "id": "GBVhkB",
+                          "type": "ref",
                           "ref": "ds:WNtv9r",
                           "name": "Skeleton/Notification Row",
                           "width": "fill_container"
                         },
                         {
-                          "type": "ref",
                           "id": "zzvGGS",
+                          "type": "ref",
                           "ref": "ds:WNtv9r",
                           "name": "Skeleton/Notification Row",
                           "width": "fill_container"
                         },
                         {
-                          "type": "ref",
                           "id": "FcZ5Vw",
+                          "type": "ref",
                           "ref": "ds:WNtv9r",
                           "name": "Skeleton/Notification Row",
                           "width": "fill_container"
                         },
                         {
-                          "type": "ref",
                           "id": "PFENVz",
+                          "type": "ref",
                           "ref": "ds:WNtv9r",
                           "name": "Skeleton/Notification Row",
                           "width": "fill_container"
                         },
                         {
-                          "type": "ref",
                           "id": "jN8aZR",
+                          "type": "ref",
                           "ref": "ds:WNtv9r",
                           "name": "Skeleton/Notification Row",
                           "width": "fill_container"
@@ -1315,43 +1399,37 @@
             },
             "ds:Nn2KW": {
               "enabled": false
-            },
-            "ds:VZD6U": {
-              "enabled": true
-            },
-            "ds:z5MVM": {
-              "enabled": false
             }
           }
         }
-      ],
-      "x": 7140,
-      "y": 0,
-      "theme": {
-        "ds:Mode": "Dark"
-      },
-      "context": "concept — header popover exists; full page parked until a backend exists — Followers, releases, playlists and events. Concept."
+      ]
     },
     {
       "type": "frame",
       "id": "xncbGi",
+      "x": 8680,
+      "y": 0,
       "name": "Notifications / Loading / Mobile",
+      "context": "concept — header popover exists; full page parked until a backend exists — Followers, releases, playlists and events. Concept.",
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "clip": true,
       "width": 390,
       "height": 844,
-      "clip": true,
-      "layout": "vertical",
       "fill": "$ds:--background",
+      "layout": "vertical",
       "children": [
         {
-          "type": "ref",
           "id": "nzXx7G",
+          "type": "ref",
           "ref": "ds:xBZUrc",
           "name": "Mobile/Status Bar",
           "width": "fill_container"
         },
         {
-          "type": "ref",
           "id": "RbPqow",
+          "type": "ref",
           "ref": "ds:pmBZPg",
           "name": "Mobile/Header",
           "width": "fill_container",
@@ -1371,6 +1449,7 @@
           "type": "frame",
           "id": "SxHqAZ",
           "name": "Content",
+          "clip": true,
           "width": "fill_container",
           "height": "fill_container",
           "layout": "vertical",
@@ -1381,90 +1460,88 @@
             12,
             16
           ],
-          "clip": true,
           "children": [
             {
               "type": "frame",
               "id": "8y4owP",
               "name": "Loading",
+              "width": "fill_container",
               "layout": "vertical",
               "gap": 24,
-              "width": "fill_container",
               "children": [
                 {
                   "type": "frame",
                   "id": "AtBMQ4",
                   "name": "Skeleton Rows",
-                  "layout": "vertical",
-                  "gap": 0,
                   "width": "fill_container",
+                  "layout": "vertical",
                   "children": [
                     {
-                      "type": "ref",
                       "id": "vgFz5s",
+                      "type": "ref",
                       "ref": "ds:WNtv9r",
                       "name": "Skeleton/Notification Row",
                       "width": "fill_container"
                     },
                     {
-                      "type": "ref",
                       "id": "HEPZuF",
+                      "type": "ref",
                       "ref": "ds:WNtv9r",
                       "name": "Skeleton/Notification Row",
                       "width": "fill_container"
                     },
                     {
-                      "type": "ref",
                       "id": "Q2V6AD",
+                      "type": "ref",
                       "ref": "ds:WNtv9r",
                       "name": "Skeleton/Notification Row",
                       "width": "fill_container"
                     },
                     {
-                      "type": "ref",
                       "id": "eWJSLJ",
+                      "type": "ref",
                       "ref": "ds:WNtv9r",
                       "name": "Skeleton/Notification Row",
                       "width": "fill_container"
                     },
                     {
-                      "type": "ref",
                       "id": "HKRK2i",
+                      "type": "ref",
                       "ref": "ds:WNtv9r",
                       "name": "Skeleton/Notification Row",
                       "width": "fill_container"
                     },
                     {
-                      "type": "ref",
                       "id": "9wRZye",
+                      "type": "ref",
                       "ref": "ds:WNtv9r",
                       "name": "Skeleton/Notification Row",
                       "width": "fill_container"
                     },
                     {
-                      "type": "ref",
                       "id": "ma53Tr",
+                      "type": "ref",
                       "ref": "ds:WNtv9r",
                       "name": "Skeleton/Notification Row",
                       "width": "fill_container"
                     },
                     {
-                      "type": "ref",
                       "id": "vsyako",
+                      "type": "ref",
                       "ref": "ds:WNtv9r",
                       "name": "Skeleton/Notification Row",
                       "width": "fill_container"
                     },
                     {
-                      "type": "ref",
                       "id": "uHywRj",
+                      "type": "ref",
                       "ref": "ds:WNtv9r",
                       "name": "Skeleton/Notification Row",
                       "width": "fill_container"
                     },
                     {
-                      "type": "ref",
                       "id": "jBKu6F",
+                      "type": "ref",
                       "ref": "ds:WNtv9r",
                       "name": "Skeleton/Notification Row",
                       "width": "fill_container"
@@ -1489,8 +1566,8 @@
           "justifyContent": "center",
           "children": [
             {
-              "type": "ref",
               "id": "Q2B83a",
+              "type": "ref",
               "ref": "ds:DrlRuW",
               "name": "Mobile/Island",
               "width": "fill_container",
@@ -1505,32 +1582,38 @@
             }
           ]
         }
-      ],
-      "x": 8680,
-      "y": 0,
-      "theme": {
-        "ds:Mode": "Dark"
-      },
-      "context": "concept — header popover exists; full page parked until a backend exists — Followers, releases, playlists and events. Concept."
+      ]
     },
     {
       "type": "frame",
       "id": "hTZpiA",
+      "x": 9170,
+      "y": 0,
       "name": "Notifications / Error / Desktop",
+      "context": "concept — header popover exists; full page parked until a backend exists — Followers, releases, playlists and events. Concept.",
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "clip": true,
       "width": 1440,
       "height": 900,
-      "clip": true,
-      "layout": "vertical",
       "fill": "$ds:--background",
+      "layout": "vertical",
       "children": [
         {
-          "type": "ref",
           "id": "WjUbsx",
+          "type": "ref",
           "ref": "ds:OPciE",
           "name": "App Layout",
           "width": 1440,
           "height": 900,
           "descendants": {
+            "ds:VZD6U": {
+              "enabled": true
+            },
+            "ds:z5MVM": {
+              "enabled": false
+            },
             "ds:xvsK3": {
               "type": "frame",
               "id": "BmPLoY",
@@ -1546,11 +1629,75 @@
               ],
               "children": [
                 {
-                  "type": "ref",
                   "id": "zugbFF",
+                  "type": "ref",
                   "ref": "ds:MgMQ2L",
                   "name": "Text/H1",
                   "content": "Notifications"
+                },
+                {
+                  "type": "frame",
+                  "id": "cT73n",
+                  "name": "Chips",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "id": "lxBeN",
+                      "type": "ref",
+                      "ref": "ds:AdNrrb",
+                      "name": "Chip/Active",
+                      "descendants": {
+                        "ds:cUY4Fi": {
+                          "content": "All"
+                        }
+                      }
+                    },
+                    {
+                      "id": "BUQZT",
+                      "type": "ref",
+                      "ref": "ds:LUcTan",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:lXs2ja": {
+                          "content": "Followers"
+                        }
+                      }
+                    },
+                    {
+                      "id": "rTfUQ",
+                      "type": "ref",
+                      "ref": "ds:LUcTan",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:lXs2ja": {
+                          "content": "Releases"
+                        }
+                      }
+                    },
+                    {
+                      "id": "HOktU",
+                      "type": "ref",
+                      "ref": "ds:LUcTan",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:lXs2ja": {
+                          "content": "Playlists"
+                        }
+                      }
+                    },
+                    {
+                      "id": "K0sddS",
+                      "type": "ref",
+                      "ref": "ds:LUcTan",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:lXs2ja": {
+                          "content": "Events"
+                        }
+                      }
+                    }
+                  ]
                 },
                 {
                   "type": "frame",
@@ -1558,13 +1705,13 @@
                   "name": "State Area",
                   "width": "fill_container",
                   "height": "fill_container",
+                  "layout": "vertical",
                   "justifyContent": "center",
                   "alignItems": "center",
-                  "layout": "vertical",
                   "children": [
                     {
-                      "type": "ref",
                       "id": "RUpKn9",
+                      "type": "ref",
                       "ref": "ds:LQ8GwL",
                       "name": "State / Notifications are unavailable right now.",
                       "descendants": {
@@ -1591,43 +1738,37 @@
             },
             "ds:Nn2KW": {
               "enabled": false
-            },
-            "ds:VZD6U": {
-              "enabled": true
-            },
-            "ds:z5MVM": {
-              "enabled": false
             }
           }
         }
-      ],
-      "x": 9170,
-      "y": 0,
-      "theme": {
-        "ds:Mode": "Dark"
-      },
-      "context": "concept — header popover exists; full page parked until a backend exists — Followers, releases, playlists and events. Concept."
+      ]
     },
     {
       "type": "frame",
       "id": "MFKiSv",
+      "x": 10710,
+      "y": 0,
       "name": "Notifications / Error / Mobile",
+      "context": "concept — header popover exists; full page parked until a backend exists — Followers, releases, playlists and events. Concept.",
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "clip": true,
       "width": 390,
       "height": 844,
-      "clip": true,
-      "layout": "vertical",
       "fill": "$ds:--background",
+      "layout": "vertical",
       "children": [
         {
-          "type": "ref",
           "id": "QUExqS",
+          "type": "ref",
           "ref": "ds:xBZUrc",
           "name": "Mobile/Status Bar",
           "width": "fill_container"
         },
         {
-          "type": "ref",
           "id": "o46aoS",
+          "type": "ref",
           "ref": "ds:pmBZPg",
           "name": "Mobile/Header",
           "width": "fill_container",
@@ -1647,6 +1788,7 @@
           "type": "frame",
           "id": "ELYa6H",
           "name": "Content",
+          "clip": true,
           "width": "fill_container",
           "height": "fill_container",
           "layout": "vertical",
@@ -1657,7 +1799,6 @@
             12,
             16
           ],
-          "clip": true,
           "children": [
             {
               "type": "frame",
@@ -1665,15 +1806,16 @@
               "name": "State Area",
               "width": "fill_container",
               "height": "fill_container",
+              "layout": "vertical",
               "justifyContent": "center",
               "alignItems": "center",
-              "layout": "vertical",
               "children": [
                 {
-                  "type": "ref",
                   "id": "yeUjsu",
+                  "type": "ref",
                   "ref": "ds:LQ8GwL",
                   "name": "State / Notifications are unavailable right now.",
+                  "width": "fill_container",
                   "descendants": {
                     "ds:zG3uZd": {
                       "icon": "triangle-alert"
@@ -1690,8 +1832,7 @@
                     "ds:voqjVU/ds:i6a4e": {
                       "content": "Back to home"
                     }
-                  },
-                  "width": "fill_container"
+                  }
                 }
               ]
             }
@@ -1711,8 +1852,8 @@
           "justifyContent": "center",
           "children": [
             {
-              "type": "ref",
               "id": "NLtepk",
+              "type": "ref",
               "ref": "ds:DrlRuW",
               "name": "Mobile/Island",
               "width": "fill_container",
@@ -1727,32 +1868,38 @@
             }
           ]
         }
-      ],
-      "x": 10710,
-      "y": 0,
-      "theme": {
-        "ds:Mode": "Dark"
-      },
-      "context": "concept — header popover exists; full page parked until a backend exists — Followers, releases, playlists and events. Concept."
+      ]
     },
     {
       "type": "frame",
       "id": "UtGZjf",
+      "x": 11200,
+      "y": 0,
       "name": "Notifications / Loading more / Desktop",
+      "context": "concept — header popover exists; full page parked until a backend exists — Followers, releases, playlists and events. Concept.",
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "clip": true,
       "width": 1440,
       "height": 900,
-      "clip": true,
-      "layout": "vertical",
       "fill": "$ds:--background",
+      "layout": "vertical",
       "children": [
         {
-          "type": "ref",
           "id": "WGvfz2",
+          "type": "ref",
           "ref": "ds:OPciE",
           "name": "App Layout",
           "width": 1440,
           "height": 900,
           "descendants": {
+            "ds:VZD6U": {
+              "enabled": true
+            },
+            "ds:z5MVM": {
+              "enabled": false
+            },
             "ds:xvsK3": {
               "type": "frame",
               "id": "ZZQvjE",
@@ -1771,10 +1918,10 @@
                   "type": "frame",
                   "id": "sVckZ3",
                   "name": "Row",
+                  "width": "fill_container",
                   "gap": 12,
-                  "alignItems": "center",
-                  "width": 760,
                   "justifyContent": "space_between",
+                  "alignItems": "center",
                   "children": [
                     {
                       "type": "frame",
@@ -1784,15 +1931,15 @@
                       "alignItems": "center",
                       "children": [
                         {
-                          "type": "ref",
                           "id": "iYGLg6",
+                          "type": "ref",
                           "ref": "ds:MgMQ2L",
                           "name": "Text/H1",
                           "content": "Notifications"
                         },
                         {
-                          "type": "ref",
                           "id": "kMcdEJ",
+                          "type": "ref",
                           "ref": "ds:FJUa1",
                           "name": "Badge / Concept",
                           "descendants": {
@@ -1804,16 +1951,16 @@
                       ]
                     },
                     {
-                      "type": "ref",
                       "id": "WPnxPb",
+                      "type": "ref",
                       "ref": "ds:DTwJb",
                       "name": "Button / Mark all read",
                       "descendants": {
-                        "ds:GyGLK": {
-                          "content": "Mark all read"
-                        },
                         "ds:uRXDu": {
                           "enabled": false
+                        },
+                        "ds:GyGLK": {
+                          "content": "Mark all read"
                         }
                       }
                     }
@@ -1827,8 +1974,8 @@
                   "alignItems": "center",
                   "children": [
                     {
-                      "type": "ref",
                       "id": "mNBdDY",
+                      "type": "ref",
                       "ref": "ds:AdNrrb",
                       "name": "Chip/Active",
                       "descendants": {
@@ -1838,8 +1985,8 @@
                       }
                     },
                     {
-                      "type": "ref",
                       "id": "WAM88G",
+                      "type": "ref",
                       "ref": "ds:LUcTan",
                       "name": "Chip/Default",
                       "descendants": {
@@ -1849,8 +1996,8 @@
                       }
                     },
                     {
-                      "type": "ref",
                       "id": "aWAeBp",
+                      "type": "ref",
                       "ref": "ds:LUcTan",
                       "name": "Chip/Default",
                       "descendants": {
@@ -1860,8 +2007,8 @@
                       }
                     },
                     {
-                      "type": "ref",
                       "id": "nESRyK",
+                      "type": "ref",
                       "ref": "ds:LUcTan",
                       "name": "Chip/Default",
                       "descendants": {
@@ -1871,8 +2018,8 @@
                       }
                     },
                     {
-                      "type": "ref",
                       "id": "KEvqJp",
+                      "type": "ref",
                       "ref": "ds:LUcTan",
                       "name": "Chip/Default",
                       "descendants": {
@@ -1887,15 +2034,16 @@
                   "type": "frame",
                   "id": "DEKPdT",
                   "name": "Column",
+                  "width": "fill_container",
                   "layout": "vertical",
                   "gap": 4,
-                  "width": 760,
                   "children": [
                     {
-                      "type": "ref",
                       "id": "fLFFrS",
+                      "type": "ref",
                       "ref": "ds:w7kIfD",
                       "name": "Notification Row/Unread",
+                      "width": "fill_container",
                       "descendants": {
                         "ds:eVpsWQ": {
                           "icon": "user-plus"
@@ -1909,10 +2057,11 @@
                       }
                     },
                     {
-                      "type": "ref",
                       "id": "nhiyup",
+                      "type": "ref",
                       "ref": "ds:w7kIfD",
                       "name": "Notification Row/Unread",
+                      "width": "fill_container",
                       "descendants": {
                         "ds:eVpsWQ": {
                           "icon": "disc-3"
@@ -1926,10 +2075,11 @@
                       }
                     },
                     {
-                      "type": "ref",
                       "id": "wiuX9h",
+                      "type": "ref",
                       "ref": "ds:1ATiw1",
                       "name": "Notification Row/Read",
+                      "width": "fill_container",
                       "descendants": {
                         "ds:V2yFd8": {
                           "icon": "list-music"
@@ -1943,10 +2093,11 @@
                       }
                     },
                     {
-                      "type": "ref",
                       "id": "Haca2T",
+                      "type": "ref",
                       "ref": "ds:1ATiw1",
                       "name": "Notification Row/Read",
+                      "width": "fill_container",
                       "descendants": {
                         "ds:V2yFd8": {
                           "icon": "calendar"
@@ -1965,27 +2116,27 @@
                   "type": "frame",
                   "id": "aiUzbm",
                   "name": "Loading More",
+                  "width": "fill_container",
                   "layout": "vertical",
                   "gap": 4,
-                  "width": "fill_container",
                   "children": [
                     {
-                      "type": "ref",
                       "id": "iXoeJV",
+                      "type": "ref",
                       "ref": "ds:WNtv9r",
                       "name": "Skeleton/Notification Row",
                       "width": "fill_container"
                     },
                     {
-                      "type": "ref",
                       "id": "8pLais",
+                      "type": "ref",
                       "ref": "ds:WNtv9r",
                       "name": "Skeleton/Notification Row",
                       "width": "fill_container"
                     },
                     {
-                      "type": "ref",
                       "id": "HvTe4E",
+                      "type": "ref",
                       "ref": "ds:Nk6cmg",
                       "name": "List/Load More",
                       "descendants": {
@@ -2000,43 +2151,37 @@
             },
             "ds:Nn2KW": {
               "enabled": false
-            },
-            "ds:VZD6U": {
-              "enabled": true
-            },
-            "ds:z5MVM": {
-              "enabled": false
             }
           }
         }
-      ],
-      "x": 11200,
-      "y": 0,
-      "theme": {
-        "ds:Mode": "Dark"
-      },
-      "context": "concept — header popover exists; full page parked until a backend exists — Followers, releases, playlists and events. Concept."
+      ]
     },
     {
       "type": "frame",
       "id": "26kdCV",
+      "x": 12740,
+      "y": 0,
       "name": "Notifications / Loading more / Mobile",
+      "context": "concept — header popover exists; full page parked until a backend exists — Followers, releases, playlists and events. Concept.",
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "clip": true,
       "width": 390,
       "height": 844,
-      "clip": true,
-      "layout": "vertical",
       "fill": "$ds:--background",
+      "layout": "vertical",
       "children": [
         {
-          "type": "ref",
           "id": "kt2554",
+          "type": "ref",
           "ref": "ds:xBZUrc",
           "name": "Mobile/Status Bar",
           "width": "fill_container"
         },
         {
-          "type": "ref",
           "id": "iutkqZ",
+          "type": "ref",
           "ref": "ds:pmBZPg",
           "name": "Mobile/Header",
           "width": "fill_container",
@@ -2056,6 +2201,7 @@
           "type": "frame",
           "id": "CCV4zt",
           "name": "Content",
+          "clip": true,
           "width": "fill_container",
           "height": "fill_container",
           "layout": "vertical",
@@ -2066,7 +2212,6 @@
             12,
             16
           ],
-          "clip": true,
           "children": [
             {
               "type": "frame",
@@ -2076,8 +2221,8 @@
               "alignItems": "center",
               "children": [
                 {
-                  "type": "ref",
                   "id": "psp7bi",
+                  "type": "ref",
                   "ref": "ds:AdNrrb",
                   "name": "Chip/Active",
                   "descendants": {
@@ -2087,8 +2232,8 @@
                   }
                 },
                 {
-                  "type": "ref",
                   "id": "5SWBaD",
+                  "type": "ref",
                   "ref": "ds:LUcTan",
                   "name": "Chip/Default",
                   "descendants": {
@@ -2098,8 +2243,8 @@
                   }
                 },
                 {
-                  "type": "ref",
                   "id": "tAH8YM",
+                  "type": "ref",
                   "ref": "ds:LUcTan",
                   "name": "Chip/Default",
                   "descendants": {
@@ -2111,8 +2256,8 @@
               ]
             },
             {
-              "type": "ref",
               "id": "ssY6oV",
+              "type": "ref",
               "ref": "ds:w7kIfD",
               "name": "Notification Row/Unread",
               "descendants": {
@@ -2128,8 +2273,8 @@
               }
             },
             {
-              "type": "ref",
               "id": "TQbpzs",
+              "type": "ref",
               "ref": "ds:w7kIfD",
               "name": "Notification Row/Unread",
               "descendants": {
@@ -2145,8 +2290,8 @@
               }
             },
             {
-              "type": "ref",
               "id": "h6YCY4",
+              "type": "ref",
               "ref": "ds:1ATiw1",
               "name": "Notification Row/Read",
               "descendants": {
@@ -2162,8 +2307,8 @@
               }
             },
             {
-              "type": "ref",
               "id": "ec9ZtV",
+              "type": "ref",
               "ref": "ds:1ATiw1",
               "name": "Notification Row/Read",
               "descendants": {
@@ -2182,34 +2327,34 @@
               "type": "frame",
               "id": "5TynMB",
               "name": "Loading More",
+              "width": "fill_container",
               "layout": "vertical",
               "gap": 16,
-              "width": "fill_container",
               "children": [
                 {
-                  "type": "ref",
                   "id": "uubsBg",
+                  "type": "ref",
                   "ref": "ds:WNtv9r",
                   "name": "Skeleton/Notification Row",
                   "width": "fill_container"
                 },
                 {
-                  "type": "ref",
                   "id": "fwncax",
+                  "type": "ref",
                   "ref": "ds:WNtv9r",
                   "name": "Skeleton/Notification Row",
                   "width": "fill_container"
                 },
                 {
-                  "type": "ref",
                   "id": "QkDZ3n",
+                  "type": "ref",
                   "ref": "ds:WNtv9r",
                   "name": "Skeleton/Notification Row",
                   "width": "fill_container"
                 },
                 {
-                  "type": "ref",
                   "id": "5NnbXk",
+                  "type": "ref",
                   "ref": "ds:Nk6cmg",
                   "name": "List/Load More",
                   "descendants": {
@@ -2236,8 +2381,8 @@
           "justifyContent": "center",
           "children": [
             {
-              "type": "ref",
               "id": "HxKVsJ",
+              "type": "ref",
               "ref": "ds:DrlRuW",
               "name": "Mobile/Island",
               "width": "fill_container",
@@ -2252,13 +2397,11 @@
             }
           ]
         }
-      ],
-      "x": 12740,
-      "y": 0,
-      "theme": {
-        "ds:Mode": "Dark"
-      },
-      "context": "concept — header popover exists; full page parked until a backend exists — Followers, releases, playlists and events. Concept."
+      ]
     }
-  ]
+  ],
+  "imports": {
+    "ds": "../design-system/bitrate.lib.pen"
+  },
+  "fileToken": "a59f29b9-e5d1-441a-bc1d-8a4d410887c9"
 }
