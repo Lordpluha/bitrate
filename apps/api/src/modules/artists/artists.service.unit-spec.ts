@@ -1,6 +1,6 @@
 import type { CacheService } from '@infra/cache/cache.service'
 import { beforeEach, describe, expect, it, jest } from '@jest/globals'
-import { ForbiddenException, NotFoundException } from '@nestjs/common'
+import { NotFoundException } from '@nestjs/common'
 import { type PrismaMock, prismaMock, resetPrismaMock } from '@test/mocks'
 import { buildArtist } from './__tests__/fixtures/artists.fixtures'
 import { ArtistsService } from './artists.service'
@@ -118,33 +118,11 @@ describe('ArtistsService', () => {
     expect(result).toBe(artist)
   })
 
-  it('update should throw ForbiddenException when id differs from currentArtistId', async () => {
-    await expect(service.update('artist-1', {}, 'other-id')).rejects.toThrow(ForbiddenException)
-  })
-
-  it('update should update artist when authorized', async () => {
-    const updated = buildArtist({ username: 'updated' })
-    prisma.artist.update.mockResolvedValue(updated)
-
-    const result = await service.update('artist-1', { username: 'updated' }, 'artist-1')
-
-    expect(prisma.artist.update).toHaveBeenCalledWith({
-      where: { id: 'artist-1' },
-      data: { username: 'updated' },
-      select: PUBLIC_ARTIST_SELECT,
-    })
-    expect(result).toBe(updated)
-  })
-
-  it('requestDelete should throw ForbiddenException when id differs from currentArtistId', async () => {
-    await expect(service.requestDelete('artist-1', 'other-id')).rejects.toThrow(ForbiddenException)
-  })
-
-  it('requestDelete should soft-delete artist when authorized', async () => {
+  it('requestDelete soft-deletes the artist and revokes their sessions', async () => {
     const deleted = buildArtist()
     prisma.$transaction.mockResolvedValue([deleted, { count: 1 }] as never)
 
-    const result = await service.requestDelete('artist-1', 'artist-1')
+    const result = await service.requestDelete('artist-1')
 
     expect(prisma.artist.update).toHaveBeenCalledWith({
       where: { id: 'artist-1' },

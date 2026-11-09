@@ -1,15 +1,11 @@
 import { normalizePagination, type PaginationInput } from '@common/pagination'
 import { rightsConfirmationRecord } from '@common/rights-confirmation'
-import { isPrismaP2025 } from '@common/utils/prisma'
 import { NS, TTL } from '@infra/cache/cache.constants'
 import { CacheService } from '@infra/cache/cache.service'
 import { PrismaService } from '@infra/prisma/prisma.service'
-import { ArtistEntity } from '@modules/artists'
 import type { UserEntity } from '@modules/users'
 import { Injectable, NotFoundException } from '@nestjs/common'
 import type { AlbumType, Prisma } from '@prisma/client'
-import { CreateAlbumDto } from './dtos/create-album.dto'
-import { UpdateAlbumDto } from './dtos/update-album.dto'
 import { AlbumEntity } from './entities'
 import { ALBUM_TRACKS_INCLUDE, PUBLIC_ALBUM_WHERE } from './orm'
 
@@ -159,21 +155,6 @@ export class AlbumsService {
     )
   }
 
-  async create(artistId: ArtistEntity['id'], createDto: CreateAlbumDto) {
-    const artist = await this.prisma.artist.findUnique({
-      where: { id: artistId },
-      select: { id: true, deletedAt: true },
-    })
-    if (!artist || artist.deletedAt) throw new NotFoundException('Artist not found')
-
-    const { rightsConfirmed: _rightsConfirmed, ...albumData } = createDto
-    const album = await this.prisma.album.create({
-      data: { artistId: artist.id, ...albumData, ...rightsConfirmationRecord() },
-    })
-    await Promise.all([this.cache.invalidate(NS.ALBUMS), this.cache.invalidate(NS.SEARCH)])
-    return album
-  }
-
   /**
    * Creates the published album of a release that just went live, inside the caller's
    * transaction, with its tracks in running order. Callers drop caches after commit.
@@ -203,31 +184,14 @@ export class AlbumsService {
     await tx.album.update({ where: { id: albumId }, data: { publishedAt: at } })
   }
 
+  /** Removes the catalogue album in the transaction that deletes its owned release. */
+  async deleteReleaseAlbum(tx: Prisma.TransactionClient, albumId: string, deletedAt: Date) {
+    await tx.album.update({ where: { id: albumId }, data: { deletedAt, publishedAt: null } })
+  }
+
   /** Drops album and search caches after a release changed what listeners can see. */
   async invalidateCatalogueCaches() {
     await Promise.all([this.cache.invalidate(NS.ALBUMS), this.cache.invalidate(NS.SEARCH)])
-  }
-
-  /** Updates an album the artist owns; a missing, deleted or foreign album is a 404. */
-  async update(artistId: ArtistEntity['id'], id: AlbumEntity['id'], updateDto: UpdateAlbumDto) {
-    const updated = await this.ownedAlbumWrite(() =>
-      this.prisma.album.update({ where: { id, artistId, deletedAt: null }, data: updateDto }),
-    )
-    await Promise.all([this.cache.invalidate(NS.ALBUMS), this.cache.invalidate(NS.SEARCH)])
-    return updated
-  }
-
-  /** Soft-deletes an album the artist owns; a missing, deleted or foreign album is a 404. */
-  async delete(artistId: ArtistEntity['id'], id: AlbumEntity['id']) {
-    const deleted = await this.ownedAlbumWrite(() =>
-      this.prisma.album.update({
-        where: { id, artistId, deletedAt: null },
-        data: { deletedAt: new Date() },
-        omit: { artistId: true },
-      }),
-    )
-    await Promise.all([this.cache.invalidate(NS.ALBUMS), this.cache.invalidate(NS.SEARCH)])
-    return deleted
   }
 
   async like(userId: UserEntity['id'], albumId: AlbumEntity['id']) {
@@ -250,20 +214,5 @@ export class AlbumsService {
     if (!album) throw new NotFoundException('Album not found')
     await this.prisma.userLikedAlbum.deleteMany({ where: { userId, albumId } })
     return album
-  }
-
-  /**
-   * Runs a write filtered on the album's owner and deletion state, so the check and the write are
-   * one query; Prisma's "record not found" becomes the module's 404.
-   */
-  private async ownedAlbumWrite<T>(write: () => Promise<T>): Promise<T> {
-    try {
-      return await write()
-    } catch (error: unknown) {
-      if (isPrismaP2025(error)) {
-        throw new NotFoundException('Album not found or does not belong to the artist')
-      }
-      throw error
-    }
   }
 }

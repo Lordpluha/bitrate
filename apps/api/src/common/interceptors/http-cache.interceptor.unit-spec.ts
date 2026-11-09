@@ -78,7 +78,7 @@ describe('HttpCacheInterceptor', () => {
   })
 
   it('never marks a route without @HttpCacheable() cacheable, even anonymously', async () => {
-    const { context, setHeaders } = makeContext('/api/v1/artists/me/following', {
+    const { context, setHeaders } = makeContext('/api/v1/users/me/following/artists', {
       handler: plainHandler,
     })
 

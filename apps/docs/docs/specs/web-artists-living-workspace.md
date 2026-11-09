@@ -40,25 +40,27 @@ sounds (removed).
   the user's request.
 - **Celebrations.** A short confetti burst plays once when the artist first sees a release
   approved or released, remembered per release in this browser.
-- **Customizable layouts.** Dashboard, Analytics and the release Draft stage have a
+- **Customizable layouts.** Dashboard and Analytics have a
   Customize button in the page heading. In customize mode tiles can be reordered by drag or
-  keyboard, resized (S/M/L where the tile allows it) and hidden or shown again; Done saves,
+  keyboard, resized to any integer width from 1 to 12 columns and optional height from 1 to 12 rows, and hidden or shown again; Done saves,
   Reset restores the default. Unknown or missing tiles in a stored layout are dropped or
-  appended, so new tiles appear without breaking old layouts.
-- **API.** `GET /api/v1/artist-workspace/layouts/{page}` returns
-  `{ page, tiles: [{ id, size, hidden }], updatedAt }` or `tiles: []` when the artist has
-  none; `PUT` replaces it (max 24 tiles, unique ids, `size` one of `S|M|L`); `DELETE`
+  appended, so new tiles appear without breaking old layouts. A numbered two-dimensional grid provides right, bottom and corner resize handles; width/height selectors and arrow/Home/End keys provide precise sizing. Auto height follows content. Automatic row spans are measured from natural content, while fixed-height content scrolls inside its card. Geometry transitions ease between snapped sizes and stop with reduced motion. Cards stack with natural height on narrow screens; desktop dimensions remain saved.
+  The draft editor uses a fixed layout without Customize.
+- **API.** `GET /api/v1/artists/me/workspace/layouts/{page}` returns
+  `{ page, tiles: [{ id, size, columns?, rows?, hidden }], updatedAt }` or `tiles: []` when the artist has
+  none; `PUT` replaces it (max 24 tiles, unique ids, `size` one of `S|M|L`, optional integer `columns` and `rows` from 1–12); `DELETE`
   resets it. `page` is one of `dashboard|analytics|release-draft`. All routes need the
-  artist session and only touch the caller's own layout.
+  artist session and only touch the caller's own layout. Omitted rows preserve automatic height. Explicit columns override legacy
+  S/M/L widths; existing preferences remain valid without a database migration.
 - Every animation respects `prefers-reduced-motion` and the workspace Motion setting.
 
 ## Acceptance and evidence
 
 | ID | Observable criterion | Verification | Result / limitation |
 |---|---|---|---|
-| AC-1 | Layout routes validate input, scope to the caller and round-trip a layout | API unit specs | Pass: `artist-workspace.service.unit-spec.ts`, 9 tests |
+| AC-1 | Layout routes validate input, scope to the caller and round-trip a layout | API unit specs | Pass: `artist-workspace.service.unit-spec.ts`, 12 tests |
 | AC-2 | Stored layouts merge with the page's default tiles (unknown dropped, new appended, sizes clamped) | web-artists unit spec | Pass: `layout.unit-spec.ts` |
-| AC-3 | Customize mode reorders, resizes and hides tiles and persists through the API | Manual in the running app | Pending |
+| AC-3 | Customize mode reorders, resizes and hides tiles and persists through the API | Browser with API fixture | Pass: widths 1–12, mixed spans, keyboard/pointer resizing, cancel/reset and save/reload |
 | AC-4 | Playback continues across route changes; one track plays at a time | Manual in the running app | Pending |
 | AC-5 | All workspace motion stops with Motion → Reduced | Manual | Pending |
 | AC-6 | Type checks, lint and scoped unit tests pass for api and web-artists | Commands in the PR | web-artists check-types, Biome, 177 unit + 12 int tests, knip pass; player browser spec and svelte-check pass; API `check-types` deferred (memory pressure) |

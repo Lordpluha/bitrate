@@ -77,7 +77,13 @@ export function uploadCover({
   form.append('expectedUpdatedAt', expectedUpdatedAt)
   form.append('cover', file)
   return guardedWrite(
-    () => multipart('PUT', `/api/v1/releases/${id}/cover`, form, onProgress),
+    () =>
+      multipart(
+        'PUT',
+        `/api/v1/artists/me/releases/${id}/cover`,
+        form,
+        onProgress,
+      ),
     (data) => {
       const parsed = coverResultSchema.safeParse(data)
       return parsed.success &&
@@ -101,7 +107,7 @@ export interface DraftVersionRequest {
 export function removeCover({ id, expectedUpdatedAt }: DraftVersionRequest) {
   return guardedWrite(
     () =>
-      clientFetchClient.DELETE('/api/v1/releases/{id}/cover', {
+      clientFetchClient.DELETE('/api/v1/artists/me/releases/{id}/cover', {
         params: { path: { id } },
         body: { expectedUpdatedAt },
         signal: writeSignal(),
@@ -149,11 +155,16 @@ export function uploadTrack({
       replacing
         ? multipart(
             'PUT',
-            `/api/v1/releases/${id}/tracks/${trackId}/audio`,
+            `/api/v1/artists/me/releases/${id}/tracks/${trackId}/audio`,
             form,
             onProgress,
           )
-        : multipart('POST', `/api/v1/releases/${id}/tracks`, form, onProgress),
+        : multipart(
+            'POST',
+            `/api/v1/artists/me/releases/${id}/tracks`,
+            form,
+            onProgress,
+          ),
     (data) => {
       const parsed = trackResultSchema.safeParse(data)
       if (
@@ -168,6 +179,7 @@ export function uploadTrack({
     {
       invalid: messageKey('release.error.audioInvalid'),
       unconfirmed: messageKey('release.error.audioUnconfirmed'),
+      statusMessages: { 422: messageKey('release.error.audioDuplicate') },
     },
   )
 }
@@ -179,11 +191,14 @@ export interface TrackRequest extends DraftVersionRequest {
 export function removeTrack({ id, trackId, expectedUpdatedAt }: TrackRequest) {
   return guardedWrite(
     () =>
-      clientFetchClient.DELETE('/api/v1/releases/{id}/tracks/{trackId}', {
-        params: { path: { id, trackId } },
-        body: { expectedUpdatedAt },
-        signal: writeSignal(),
-      }),
+      clientFetchClient.DELETE(
+        '/api/v1/artists/me/releases/{id}/tracks/{trackId}',
+        {
+          params: { path: { id, trackId } },
+          body: { expectedUpdatedAt },
+          signal: writeSignal(),
+        },
+      ),
     (data) => {
       const parsed = removedTrackSchema.safeParse(data)
       return parsed.success &&
@@ -211,11 +226,14 @@ export function renameTrack({
 }: RenameTrackRequest) {
   return guardedWrite(
     () =>
-      clientFetchClient.PATCH('/api/v1/releases/{id}/tracks/{trackId}', {
-        params: { path: { id, trackId } },
-        body: { title, expectedUpdatedAt },
-        signal: writeSignal(),
-      }),
+      clientFetchClient.PATCH(
+        '/api/v1/artists/me/releases/{id}/tracks/{trackId}',
+        {
+          params: { path: { id, trackId } },
+          body: { title, expectedUpdatedAt },
+          signal: writeSignal(),
+        },
+      ),
     (data) => {
       const parsed = renamedTrackSchema.safeParse(data)
       return parsed.success &&
@@ -249,7 +267,7 @@ export function reorderTracks({
 }: ReorderTracksRequest) {
   return guardedWrite(
     () =>
-      clientFetchClient.PUT('/api/v1/releases/{id}/tracks/order', {
+      clientFetchClient.PUT('/api/v1/artists/me/releases/{id}/tracks/order', {
         params: { path: { id } },
         body: { trackIds, expectedUpdatedAt },
         signal: writeSignal(),

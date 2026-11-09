@@ -104,7 +104,7 @@ export class AdminOverviewService {
           deletedAt: null,
           processingStatus: 'PROCESSING',
           // A track a worker never picked up has `processingStartedAt: null` forever — see
-          // `track-upload.service.ts`, which only ever sets it to `null` on create/reprocess;
+          // `tracks/ingest/track-ingest.service.ts`, which only ever sets it to `null` on create/reprocess;
           // only `audio-processing.consumer.ts` stamps a real timestamp once a worker dequeues
           // the job. Falling back to `updatedAt` (bumped by the same create/reprocess writes)
           // keeps a never-dequeued track from being invisible to this count forever.

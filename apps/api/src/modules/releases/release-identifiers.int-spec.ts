@@ -32,12 +32,14 @@ describe('Release identifiers (HTTP)', () => {
 
   beforeEach(() => {
     resetReleaseMocks()
+    transactionMock.release.updateManyAndReturn.mockResolvedValue([advanced])
+    transactionMock.artistTrackDraft.count.mockResolvedValue(0)
   })
 
   describe('UPC', () => {
     const patch = (body: object) =>
       request(app.getHttpServer())
-        .patch(`/api/v1/releases/${draft.id}`)
+        .patch(`/api/v1/artists/me/releases/${draft.id}`)
         .set('x-test-artist', ownerId)
         .send({ ...body, expectedUpdatedAt: version })
 
@@ -45,26 +47,29 @@ describe('Release identifiers (HTTP)', () => {
       ['saves', '036000291452'],
       ['clears', null],
     ])('%s the release barcode', async (_action, upc) => {
-      prismaMock.release.updateManyAndReturn.mockResolvedValue([{ ...advanced, upc }])
+      transactionMock.release.update.mockResolvedValue({ ...advanced, upc })
       const response = await patch({ upc }).expect(200)
       expect(response.body.upc).toBe(upc)
-      expect(prismaMock.release.updateManyAndReturn.mock.calls[0]?.[0]?.data).toEqual({ upc })
+      expect(transactionMock.release.update.mock.calls[0]?.[0]?.data).toEqual({
+        upc,
+        updatedAt: expect.any(Date),
+      })
     })
 
     it('rejects a barcode with a wrong check digit', async () => {
       await patch({ upc: '036000291453' }).expect(400)
-      expect(prismaMock.release.updateManyAndReturn).not.toHaveBeenCalled()
+      expect(transactionMock.release.update).not.toHaveBeenCalled()
     })
 
     it('reports a barcode already used by another release', async () => {
-      prismaMock.release.updateManyAndReturn.mockRejectedValue(uniqueViolation())
+      transactionMock.release.update.mockRejectedValue(uniqueViolation())
       const response = await patch({ upc: '036000291452' }).expect(409)
       expect(response.body.message).toBe('This UPC is already used by another release')
     })
   })
 
   describe('ISRC', () => {
-    const url = `/api/v1/releases/${draft.id}/tracks/${trackDraftId}`
+    const url = `/api/v1/artists/me/releases/${draft.id}/tracks/${trackDraftId}`
     const patch = (body: object) =>
       request(app.getHttpServer())
         .patch(url)

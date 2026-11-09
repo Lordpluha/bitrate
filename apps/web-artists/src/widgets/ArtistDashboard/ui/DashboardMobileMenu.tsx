@@ -8,6 +8,7 @@ import { useEffect, useId, useRef, useState } from 'react'
 import { DashboardAccountMenu } from './DashboardAccountMenu'
 import { DashboardDesignNavigation } from './DashboardDesignNavigation'
 import { DashboardSupport } from './DashboardSupport'
+import { SidebarPreferences } from './SidebarPreferences'
 
 interface DashboardMobileMenuProps {
   artist: ArtistIdentity
@@ -117,6 +118,9 @@ export function DashboardMobileMenu({ artist }: DashboardMobileMenuProps) {
           </p>
           <div className="w-full max-w-56">
             <DashboardDesignNavigation onNavigate={() => setOpen(false)} />
+          </div>
+          <div className="mt-5">
+            <SidebarPreferences artistId={artist.id} />
           </div>
         </div>
         <div className="mb-2 mt-6 flex w-full max-w-56 shrink-0 flex-col gap-6 pb-[env(safe-area-inset-bottom)]">

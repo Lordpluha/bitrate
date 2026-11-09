@@ -1,4 +1,5 @@
 export const analytics = {
+  'analytics.topPages': 'Сторінки популярних треків',
   'analytics.subtitle': 'Відтворення й слухачі на Bitrate за днями (UTC).',
   'analytics.period': 'Період',
   'analytics.days.one': '{count} день',
@@ -20,8 +21,9 @@ export const analytics = {
   'analytics.change': '{change}% порівняно з попереднім періодом',
   'analytics.chartLabel':
     'Прослуховування за днями. Стрілками можна переглянути кожен день.',
-  'analytics.perListener': 'Відтворень на слухача',
-  'analytics.perListenerHint': 'Як часто кожен слухач повертався',
+  'analytics.perListener': 'Середня кількість відтворень на слухача',
+  'analytics.perListenerHint':
+    'Усі відтворення, поділені на кількість унікальних слухачів за вибраний період.',
   'analytics.bestDay': 'Найкращий день',
   'analytics.bestDayPlays.one': '{plays} відтворення',
   'analytics.bestDayPlays.few': '{plays} відтворення',

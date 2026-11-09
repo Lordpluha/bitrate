@@ -10,9 +10,9 @@ describe('createLocaleMiddleware', () => {
     let locale = 'uk'
     client.use(createLocaleMiddleware(() => locale))
 
-    await client.GET('/api/v1/artist-music/counts')
+    await client.GET('/api/v1/artists/me/music/counts')
     locale = 'pl'
-    await client.GET('/api/v1/artist-music/counts')
+    await client.GET('/api/v1/artists/me/music/counts')
 
     expect(fetch.mock.calls[0]?.[0].headers.get('Accept-Language')).toBe('uk')
     expect(fetch.mock.calls[1]?.[0].headers.get('Accept-Language')).toBe('pl')

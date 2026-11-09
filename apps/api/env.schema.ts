@@ -85,6 +85,13 @@ export const envSchema = z
     S3_SECRET_KEY: z.string().min(1),
     S3_PUBLIC_URL: z.string().url().optional(),
     S3_FORCE_PATH_STYLE: z.coerce.boolean().default(true),
+    /**
+     * Closes a storage socket that carried no bytes for this long; 0 disables it. Set on the
+     * transcode worker only, where a silent storage hang would otherwise hold a job active
+     * forever. The API leaves it off: playback streams an object for a whole track at
+     * real-time pace, and a paused listener legitimately leaves that socket idle.
+     */
+    S3_SOCKET_TIMEOUT_MS: z.coerce.number().int().min(0).max(600_000).default(0),
 
     /**
      * Directory for the audio pipeline's local working files: upload temp files, and the

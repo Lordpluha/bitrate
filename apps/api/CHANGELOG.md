@@ -1,5 +1,63 @@
 # @bitrate/api
 
+## 3.0.0
+
+### Major Changes
+
+- d18744d: Moved every artist-only endpoint under `/artists/` (ADR-0070). The artist workspace is now `/artists/me/...`: `/releases/**` → `/artists/me/releases/**`, `/release-tasks` → `/artists/me/tasks`, `/distribution` → `/artists/me/distribution`, and `/artist-{dashboard,analytics,music,notifications,profile,search,workspace}` → `/artists/me/{dashboard,analytics,music,notifications,profile,search,workspace}`. Account deletion is `DELETE /artists/me` instead of `DELETE /artists/:id`. The listener's followed artists moved from `GET /artists/me/following` to `GET /users/me/following/artists`. Removed the unused `POST /tracks`, `PUT /tracks/:id`, `POST /albums`, `PUT /albums/:id`, `DELETE /albums/:id` and `PUT /artists/:id`. web-artists and web-player call the new paths.
+
+### Minor Changes
+
+- 1b113a3: Move appearance and language controls into the responsive workspace sidebar. Restyle shared dialogs and add switching between accounts authenticated in the same browser, with server-side session links, token rotation, scoped removal and cross-tab account synchronization.
+- 1b113a3: Create releases directly in their draft workspace, edit titles inline, and detect Single/EP/Album
+  from active recording counts. Replace draft customization with a fixed editor layout and a danger
+  zone. Owners can delete releases in every lifecycle state, including approved and published music;
+  publication cannot restore a deleted release and shared recordings remain available elsewhere.
+  Keep the recording list scrollable and reject exact audio-file duplicates within a release.
+- 1b113a3: Build reviewed compilation releases from the artist's own published catalogue.
+  Reuse canonical recordings, identifiers, likes and listening history without audio reupload
+  or reconversion. Preserve shared recordings when a release is removed, and enforce original
+  recording administrative takedowns across compilation appearances. Add a paginated, searchable
+  recording picker and immutable linked recording metadata in the release workspace.
+
+  Start compilation drafts from a dedicated card at the bottom of the artist profile;
+  ordinary drafts keep their master upload flow.
+
+- 1b113a3: Paginate artist analytics top tracks in groups of five, including tracks beyond the previous
+  top-ten limit. Keep global ranking and the leader's bar scale across pages without reloading
+  the rest of the analytics dashboard.
+  Use a shared pagination component with clickable page numbers in analytics, Music and Distribution.
+- 1b113a3: Allow Dashboard and Analytics tiles to use any width from one to twelve columns.
+  Support fixed heights from one to twelve grid steps or automatic content height.
+  Add edge/corner resize handles, precise size selectors and keyboard resizing, with
+  smooth geometry transitions and matching card dimensions in preview and saved layouts.
+  Persist dimensions while retaining compatibility with existing S/M/L layouts and stack
+  cards at their natural height on mobile.
+
+### Patch Changes
+
+- 1b113a3: Block direct artist catalogue uploads and edits so recordings must pass through release review.
+  New tracks stay private by default; approved release publishing and trusted imports explicitly
+  grant visibility. Existing catalogue visibility is preserved.
+- 01651ca: Switching tracks no longer floods the API with fragment requests. The API now exposes
+  `Retry-After` to the browser; the player read the hidden header as `0` and retried a paced
+  (429) fragment in a tight loop until the throttler blocked the listener. The player now waits
+  a second when the header is missing and gives up after five 429s, handing the fragment to its
+  regular backoff. nginx answers its own rate limit with 429 instead of 503 and gives CMAF
+  fragment ranges their own budget, so a track switch no longer trips the generic API limit.
+- 76b06e7: Fixed compilation previews and duplicate-audio checks matching the wrong original master after a
+  recording was removed, signing out of saved accounts on logout, switching away from an account
+  signed in past the saved-account limit, uploads into an emptied compilation, and uploads failing
+  on a missing older master. A release whose recordings a compilation draft still uses can no longer
+  be deleted. Top tracks reset to the first page when the period changes, read their page in one
+  history scan, and sign-in pages no longer download workspace and landing styles.
+- 11df63e: Tracks no longer stay in PROCESSING forever. Reprocessing a track or retrying a release now
+  queued a new conversion even when an earlier failed one was still stored; a conversion that
+  BullMQ failed for good outside the normal retries (a worker killed mid-job three times) marked
+  the track FAILED; a sweep every 10 minutes failed tracks left processing with no live
+  conversion, so their release stopped waiting; and storage calls on the worker got timeouts.
+- 8c6109f: Split the API tracks module into `catalog/`, `ingest/`, `processing/`, `playback/` and `shared/`. `TrackUploadService` is replaced by `TrackIngestService`, `ReleaseTrackService` and `AudioConversionProducer`, and play sessions and CMAF delivery move to `TrackPlaybackController`. Routes, responses and queues are unchanged; in the contract only the two playback operation IDs are renamed (`TracksController_openPlaySession_v1` → `TrackPlaybackController_openPlaySession_v1`, `TracksController_streamRendition_v1` → `TrackPlaybackController_streamRendition_v1`).
+
 ## 2.0.0
 
 ### Major Changes

@@ -28,6 +28,7 @@ export function useCustomizableLayout(
   const fallback = defaultLayout(definitions)
   return {
     definitions,
+    loading: stored.isPending,
     tiles: draft ?? saved,
     editing: draft !== null,
     saving: save.isPending,

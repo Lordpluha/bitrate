@@ -1,7 +1,6 @@
 import { CacheService } from '@infra/cache/cache.service'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import { afterAll, beforeAll, beforeEach, describe, expect, it, jest } from '@jest/globals'
-import { ForbiddenException } from '@nestjs/common'
 import { Test, type TestingModule } from '@nestjs/testing'
 import { prismaMock, resetPrismaMock } from '@test/mocks'
 import { buildArtist } from './__tests__/fixtures/artists.fixtures'
@@ -69,15 +68,5 @@ describe('ArtistsService (int)', () => {
       select: PUBLIC_ARTIST_SELECT,
     })
     expect(result).toEqual(artist)
-  })
-
-  it('update should throw ForbiddenException when artist is not owner', async () => {
-    await expect(service.update('artist-1', {}, 'other-artist')).rejects.toThrow(ForbiddenException)
-  })
-
-  it('requestDelete should throw ForbiddenException when artist is not owner', async () => {
-    await expect(service.requestDelete('artist-1', 'other-artist')).rejects.toThrow(
-      ForbiddenException,
-    )
   })
 })

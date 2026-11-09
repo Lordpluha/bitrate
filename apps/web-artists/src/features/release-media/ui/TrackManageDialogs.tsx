@@ -157,7 +157,11 @@ export function RemoveTrackDialog({
       <div aria-busy={remove.isPending} className="space-y-6">
         <p>
           <Interpolate
-            message={t('media.removeConfirm')}
+            message={t(
+              track?.sourceTrackId
+                ? 'compilation.removeConfirm'
+                : 'media.removeConfirm',
+            )}
             values={{
               title: (
                 <strong>

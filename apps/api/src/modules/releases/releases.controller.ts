@@ -71,15 +71,17 @@ import {
 import { ReleaseEntity } from './entities/release.entity'
 import { ReleaseBlockerEntity } from './entities/release-workspace.entity'
 import { ReleaseCreditsService } from './release-credits.service'
+import { ReleaseDeletionService } from './release-deletion.service'
 import { ReleasesService } from './releases.service'
 
 @ApiTags('Releases')
 @ApiExtraModels(ReleaseEntity, ReleaseBlockerEntity)
-@Controller({ path: 'releases', version: '1' })
+@Controller({ path: 'artists/me/releases', version: '1' })
 export class ReleasesController {
   constructor(
     private readonly releases: ReleasesService,
     private readonly credits: ReleaseCreditsService,
+    private readonly deletion: ReleaseDeletionService,
   ) {}
 
   @CreateReleaseSwagger()
@@ -142,7 +144,7 @@ export class ReleasesController {
     @Param('id', ParseUUIDPipe) id: string,
     @Body(new ZodValidationPipe(ReleaseDraftVersionSchema)) input: ReleaseDraftVersionDto,
   ): Promise<void> {
-    await this.releases.deleteDraft(artist.id, id, input)
+    await this.deletion.remove(artist.id, id, input)
   }
 
   @AddReleaseContributorSwagger()

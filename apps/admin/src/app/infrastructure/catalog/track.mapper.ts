@@ -6,7 +6,7 @@ import type {
   TrackProcessingStatus,
   TrackSortField,
 } from '@domain/track'
-import { API_BASE_URL } from '../http/api.config'
+import { toStaticMediaUrl } from '../http/static-media-url'
 import type { WireFilters } from '../http/wire-page'
 import type {
   TrackDetailDto,
@@ -15,16 +15,6 @@ import type {
   WireTrackSortField,
   WireTrackStatus,
 } from './track.dto'
-
-/**
- * Joins the stored cover filename into the URL the API serves it at — a bare storage key never
- * leaves this layer. `encodeURIComponent` covers a filename needing escaping; `null` stays `null`
- * rather than becoming an empty string or a broken URL.
- */
-function toCoverUrl(cover: string | null): string | null {
-  if (cover === null) return null
-  return `${API_BASE_URL}/static/tracks/covers/${encodeURIComponent(cover)}`
-}
 
 /**
  * The seam that lets the domain declare its own status union without losing the contract
@@ -79,7 +69,7 @@ export function toTrack(dto: TrackDto): Track {
     id: dto.id,
     title: dto.title,
     artistUsername: dto.artistUsername,
-    coverUrl: toCoverUrl(dto.cover),
+    coverUrl: toStaticMediaUrl(dto.cover, 'tracks/covers'),
     processingStatus: TO_DOMAIN_STATUS[dto.processingStatus],
     processingError: dto.processingError,
     processingAttempts: dto.processingAttempts,

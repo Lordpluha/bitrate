@@ -1,9 +1,13 @@
 import { describe, expect, it } from 'vitest'
 import {
+  columnsAfterDrag,
   defaultLayout,
   mergeLayout,
+  rowsForHeight,
   sameLayout,
+  storedLayoutSchema,
   type TileDefinition,
+  tileColumns,
 } from './layout'
 
 const definitions: TileDefinition[] = [
@@ -80,5 +84,86 @@ describe('sameLayout', () => {
         ),
       ),
     ).toBe(false)
+  })
+})
+
+describe('twelve-column layouts', () => {
+  it('keeps custom widths even when the old preset is unavailable', () => {
+    const stored = [
+      { id: 'current', size: 'S' as const, columns: 3, hidden: false },
+    ]
+    expect(mergeLayout(definitions, stored)[0]).toEqual({
+      ...stored[0],
+      size: 'M',
+    })
+  })
+
+  it('preserves the geometry of legacy presets', () => {
+    expect(
+      ['S', 'M', 'L'].map((size) =>
+        tileColumns({ size: size as 'S' | 'M' | 'L' }),
+      ),
+    ).toEqual([4, 8, 12])
+    expect(tileColumns({ size: 'S' }, 'halves')).toBe(6)
+    expect(tileColumns({ size: 'M' }, 'halves')).toBe(12)
+    expect(tileColumns({ size: 'L', columns: 7 })).toBe(7)
+  })
+
+  it('recognizes explicit default widths and detects resized layouts', () => {
+    const defaults = defaultLayout(definitions)
+    expect(
+      sameLayout(
+        defaults,
+        defaults.map((tile) => ({ ...tile, columns: tileColumns(tile) })),
+      ),
+    ).toBe(true)
+    expect(
+      sameLayout(
+        defaults,
+        defaults.map((tile) => ({ ...tile, columns: 7 })),
+      ),
+    ).toBe(false)
+  })
+
+  it('snaps dragging to columns and clamps both edges', () => {
+    expect(columnsAfterDrag(6, 49, 100)).toBe(6)
+    expect(columnsAfterDrag(6, 51, 100)).toBe(7)
+    expect(columnsAfterDrag(6, -151, 100)).toBe(4)
+    expect(columnsAfterDrag(6, -2000, 100)).toBe(1)
+    expect(columnsAfterDrag(6, 2000, 100)).toBe(12)
+  })
+
+  it('rejects fractional, out-of-range and incorrectly typed saved widths', () => {
+    for (const columns of [0, 13, 1.5, '6', null])
+      expect(
+        storedLayoutSchema.safeParse({
+          tiles: [{ id: 'activity', size: 'S', hidden: false, columns }],
+        }).success,
+      ).toBe(false)
+  })
+})
+
+describe('two-dimensional layouts', () => {
+  it('preserves fixed heights and detects returning to automatic height', () => {
+    const stored = [
+      { id: 'current', size: 'M' as const, columns: 5, rows: 7, hidden: false },
+    ]
+    expect(mergeLayout(definitions, stored)[0]).toEqual(stored[0])
+    expect(sameLayout(stored, [{ ...stored[0], rows: undefined }])).toBe(false)
+    expect(storedLayoutSchema.parse({ tiles: stored }).tiles).toEqual(stored)
+  })
+  it('rejects malformed heights while allowing legacy automatic heights', () => {
+    const base = { id: 'current', size: 'M', hidden: false }
+    expect(storedLayoutSchema.safeParse({ tiles: [base] }).success).toBe(true)
+    for (const rows of [0, 13, -1, 1.5, '4', null])
+      expect(
+        storedLayoutSchema.safeParse({ tiles: [{ ...base, rows }] }).success,
+      ).toBe(false)
+  })
+  it('includes gaps when fitting the natural height to the grid', () => {
+    expect(rowsForHeight(64, 64, 20)).toBe(1)
+    expect(rowsForHeight(65, 64, 20)).toBe(2)
+    expect(rowsForHeight(148, 64, 20)).toBe(2)
+    expect(rowsForHeight(149, 64, 20)).toBe(3)
   })
 })

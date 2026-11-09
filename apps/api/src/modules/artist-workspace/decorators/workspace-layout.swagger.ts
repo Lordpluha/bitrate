@@ -21,7 +21,8 @@ export function SaveWorkspaceLayoutSwagger() {
   return applyDecorators(
     ApiOperation({
       summary: "Replace the artist's tile layout for a workspace page",
-      description: 'The list is the whole layout: order, size and visibility of every tile.',
+      description:
+        'The list is the whole layout: order, width (1–12 columns), optional height (1–12 rows) and visibility of every tile. Legacy S/M/L layouts remain supported; explicit columns takes precedence.',
     }),
     PageParam,
     ApiBody({ type: SaveWorkspaceLayoutDto }),

@@ -40,6 +40,7 @@ const httpConfig = (surface: ApiSurface): CorsOptions => ({
     'Access-Control-Request-Method',
     'Access-Control-Request-Headers',
     'X-Request-ID',
+    'X-Artist-Account',
   ],
   exposedHeaders: [
     'Set-Cookie',
@@ -50,6 +51,8 @@ const httpConfig = (surface: ApiSurface): CorsOptions => ({
     'X-Request-ID',
     'X-Export-Truncated',
     'Content-Disposition',
+    /** Paced playback (429) and the throttler name the wait; the player must be able to read it. */
+    'Retry-After',
   ],
   credentials: true,
   preflightContinue: false,

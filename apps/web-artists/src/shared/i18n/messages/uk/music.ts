@@ -119,4 +119,10 @@ export const music = {
   'music.search.searching': 'Шукаємо…',
   'music.search.empty': 'Нічого не знайдено.',
   'music.search.unavailable': 'Пошук зараз недоступний.',
+  'music.create.untitled': 'Реліз без назви',
+  'music.create.openFailed':
+    'Чернетку збережено. Відкрийте її, щоб продовжити — другу чернетку не буде створено.',
+  'music.item.deleteRelease': 'Видалити реліз',
+  'music.fields.typeAutomatic':
+    'Визначається автоматично: 1–4 треки — сингл, 5–6 — EP, 7 і більше — альбом.',
 } as const

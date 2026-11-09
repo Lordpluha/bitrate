@@ -15,7 +15,7 @@ import {
 const version = draft.updatedAt.toISOString()
 const advanced = { ...draft, updatedAt: new Date('2026-10-05T10:00:00Z') }
 const secondCreditId = '0199aee0-0000-7000-8000-0000000000c2'
-const url = `/api/v1/releases/${draft.id}/splits`
+const url = `/api/v1/artists/me/releases/${draft.id}/splits`
 
 const put = (body: object, artist = ownerId) =>
   request(app.getHttpServer()).put(url).set('x-test-artist', artist).send(body)

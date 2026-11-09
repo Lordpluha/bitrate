@@ -1,7 +1,7 @@
 import type { CacheService } from '@infra/cache/cache.service'
 import type { StorageService } from '@infra/storage/storage.types'
 import { jest } from '@jest/globals'
-import type { ProcessingAttemptRecorder } from '@modules/tracks/processing-attempt.recorder'
+import type { ProcessingAttemptRecorder } from '@modules/tracks/processing'
 import type { Queue } from 'bullmq'
 import type { PrismaMock } from './prisma.mock'
 
@@ -19,6 +19,8 @@ export const makeCacheMock = () =>
 export const makeQueueMock = () =>
   ({
     add: jest.fn(),
+    // No job under the id yet: the common case for a first enqueue.
+    getJob: jest.fn().mockResolvedValue(undefined as never),
   }) as unknown as jest.Mocked<Queue>
 
 /** Object storage that serves a fixed 2 KB Ogg body for any key. */

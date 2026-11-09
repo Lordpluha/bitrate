@@ -1,0 +1,351 @@
+@layer utilities {
+  .artist-landing-header-inner {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 80rem;
+    min-height: 5rem;
+    padding-inline: 2rem;
+    margin-inline: auto;
+  }
+  .artist-landing-brand {
+    display: flex;
+    flex: none;
+    gap: 0.625rem;
+    align-items: center;
+  }
+  .artist-landing-brand-name {
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+  }
+  .artist-landing-brand-divider {
+    margin-inline: 0.125rem;
+    color: var(--color-text-secondary);
+  }
+  .artist-landing-brand-badge {
+    padding: 0.125rem 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    color: var(--color-purple-300);
+    letter-spacing: 0.12em;
+    white-space: nowrap;
+    border: 1px solid
+      color-mix(in oklab, var(--color-purple-400) 35%, transparent);
+    border-radius: 0.25rem;
+  }
+  .artist-landing-header-nav {
+    flex: none;
+  }
+  .artist-landing-header-nav a {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    white-space: nowrap;
+    border-radius: 999px;
+  }
+  .artist-landing-header-actions,
+  .artist-landing-account-nav {
+    display: flex;
+    flex: none;
+    gap: 0.75rem;
+    align-items: center;
+  }
+  .artist-landing-account-nav {
+    gap: 1rem;
+  }
+  .artist-landing-preferences {
+    display: flex;
+    gap: 0.125rem;
+    align-items: center;
+    padding: 0.125rem;
+    background: color-mix(
+      in oklab,
+      var(--color-artist-canvas-middle) 65%,
+      transparent
+    );
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+  }
+  .artist-landing-preference-trigger {
+    display: inline-flex;
+    flex: none;
+    gap: 0.375rem;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    padding: 0;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    transition:
+      background-color 180ms,
+      color 180ms,
+      border-color 180ms;
+  }
+  .artist-landing-preference-trigger svg {
+    width: 1rem;
+    height: 1rem;
+  }
+  .artist-landing-language-trigger {
+    width: auto;
+    padding-inline: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+  }
+  .artist-landing-preference-trigger:hover,
+  .artist-landing-preference-trigger[data-popup-open] {
+    color: var(--color-foreground);
+    background: color-mix(in oklab, var(--color-purple-500) 14%, transparent);
+    border-color: color-mix(in oklab, var(--color-purple-400) 30%, transparent);
+  }
+  .artist-landing-login {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+  }
+  .artist-landing-login:hover {
+    color: var(--color-foreground);
+  }
+  .artist-landing-signup {
+    display: inline-flex;
+    gap: 0.5rem;
+    align-items: center;
+    min-height: 2.25rem;
+    padding: 0.5rem 0.875rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-white);
+    border-radius: 0.75rem;
+  }
+  .artist-landing-signup svg {
+    width: 1rem;
+    height: 1rem;
+  }
+  .artist-landing-mobile-menu {
+    display: none;
+    border-color: var(--color-border);
+  }
+  .artist-landing-preference-panel {
+    width: min(18rem, calc(100vw - 2rem));
+    padding: 1rem;
+    color: var(--color-foreground);
+    background: linear-gradient(
+      145deg,
+      var(--color-artist-release-panel-start),
+      var(--color-artist-canvas-middle)
+    );
+    border: 1px solid
+      color-mix(in oklab, var(--color-purple-400) 25%, var(--color-border));
+    border-radius: 1rem;
+    box-shadow:
+      0 20px 60px -20px color-mix(in oklab, var(--color-black) 70%, transparent),
+      inset 0 1px 0 var(--color-white-alpha-8);
+  }
+  .artist-landing-menu-sheet {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    max-width: none;
+    height: 100dvh;
+    max-height: none;
+    padding: max(1rem, env(safe-area-inset-top))
+      max(1.25rem, env(safe-area-inset-right))
+      max(1.5rem, env(safe-area-inset-bottom))
+      max(1.25rem, env(safe-area-inset-left));
+    margin: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    color: var(--color-foreground);
+    background: var(--color-artist-canvas-middle);
+    border: 0;
+    translate: 100% 0;
+    transition:
+      translate 320ms cubic-bezier(0.22, 1, 0.36, 1),
+      display 320ms allow-discrete,
+      overlay 320ms allow-discrete;
+  }
+  .artist-landing-menu-sheet[open] {
+    display: flex;
+    flex-direction: column;
+    translate: 0 0;
+  }
+  @starting-style {
+    .artist-landing-menu-sheet[open] {
+      translate: 100% 0;
+    }
+  }
+  .artist-landing-menu-sheet::backdrop {
+    background: color-mix(in oklab, var(--color-black) 35%, transparent);
+  }
+  .artist-landing-menu-top,
+  .artist-landing-menu-brand {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+  }
+  .artist-landing-menu-top {
+    justify-content: space-between;
+  }
+  .artist-landing-menu-brand {
+    font-size: 1.125rem;
+    font-weight: 500;
+  }
+  .artist-landing-menu-brand > span {
+    font-size: 0.875rem;
+    font-weight: 400;
+    color: var(--color-text-secondary);
+  }
+  .artist-landing-menu-close {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    cursor: pointer;
+    border: 1px solid var(--color-border);
+    border-radius: 50%;
+  }
+  .artist-landing-menu-close > svg {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+  .artist-landing-menu-links {
+    display: grid;
+    gap: 0.25rem;
+    width: 100%;
+    max-width: 48rem;
+    padding-block: 2rem;
+    margin: auto;
+  }
+  .artist-landing-menu-links a {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 3.5rem;
+    padding-block: 1rem;
+    font-size: clamp(1.5rem, 4vw, 2.75rem);
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .artist-landing-menu-links :where(a) > svg {
+    flex: none;
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+  .artist-landing-menu-links a[aria-current="location"],
+  .artist-landing-menu-links a:hover {
+    color: var(--color-purple-300);
+  }
+  .artist-landing-menu-account {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 1rem;
+    align-items: center;
+    width: 100%;
+    max-width: 48rem;
+    margin-inline: auto;
+  }
+  .artist-landing-menu-register,
+  .artist-landing-menu-login {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    justify-content: center;
+    min-height: 3rem;
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    text-align: center;
+    border-radius: 0.75rem;
+  }
+  .artist-landing-menu-register {
+    color: var(--color-white);
+  }
+  .artist-landing-menu-register > svg {
+    flex: none;
+    width: 1rem;
+    height: 1rem;
+  }
+  .artist-landing-menu-login {
+    border: 1px solid var(--color-border);
+  }
+  .artist-landing-menu-sheet :is(a, button):focus-visible {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 3px;
+  }
+  .artist-landing-header :is(a, button):focus-visible,
+  .artist-landing-preference-panel :is(a, button):focus-visible {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 3px;
+  }
+  @media (max-width: 1279px) {
+    .artist-landing-header-nav {
+      display: none;
+    }
+    .artist-landing-mobile-menu {
+      display: inline-flex;
+      width: 2.75rem;
+      height: 2.75rem;
+    }
+  }
+  @media (max-width: 900px) {
+    .artist-landing-brand-divider,
+    .artist-landing-brand-badge {
+      display: none;
+    }
+  }
+  @media (max-width: 650px) {
+    .artist-landing-header-inner {
+      gap: 0.5rem;
+      min-height: 4.25rem;
+      padding-inline: 1rem;
+    }
+    .artist-landing-header-actions {
+      gap: 0.5rem;
+    }
+    .artist-landing-brand {
+      gap: 0.375rem;
+    }
+    .artist-landing-brand-divider,
+    .artist-landing-brand-badge,
+    .artist-landing-login {
+      display: none;
+    }
+    .artist-landing-brand-name {
+      font-size: 0.875rem;
+    }
+    .artist-landing-signup {
+      gap: 0.25rem;
+      padding-inline: 0.625rem;
+      font-size: 0.875rem;
+    }
+    .artist-landing-language-trigger svg {
+      display: none;
+    }
+  }
+  @media (max-width: 480px) {
+    .artist-landing-account-nav {
+      display: none;
+    }
+    .artist-landing-menu-brand > span {
+      display: none;
+    }
+    .artist-landing-menu-account {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 0.5rem;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .artist-landing-menu-sheet {
+      transition: none;
+    }
+  }
+  :root[data-motion="reduced"] .artist-landing-menu-sheet {
+    transition: none;
+  }
+}

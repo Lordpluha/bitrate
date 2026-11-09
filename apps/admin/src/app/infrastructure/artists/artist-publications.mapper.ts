@@ -1,19 +1,7 @@
 import type { ArtistAlbum, ArtistAlbumType, ArtistTrack } from '@domain/artist'
 import type { TrackProcessingStatus } from '@domain/track'
-import { API_BASE_URL } from '../http/api.config'
+import { toStaticMediaUrl } from '../http/static-media-url'
 import type { ArtistAlbumDto, ArtistTrackDto } from './artist-publications.dto'
-
-/** See `track.mapper.ts`'s `toCoverUrl` — same join, a different storage bucket. */
-function toTrackCoverUrl(cover: string | null | undefined): string | null {
-  if (!cover) return null
-  return `${API_BASE_URL}/static/tracks/covers/${encodeURIComponent(cover)}`
-}
-
-/** Albums are stored under their own bucket — served by the API at `/static/albums/covers/`. */
-function toAlbumCoverUrl(cover: string | null | undefined): string | null {
-  if (!cover) return null
-  return `${API_BASE_URL}/static/albums/covers/${encodeURIComponent(cover)}`
-}
 
 /**
  * See `track.mapper.ts`'s `TO_DOMAIN_STATUS` — a member the API grows later has no entry here,
@@ -36,7 +24,7 @@ export function toArtistTrack(dto: ArtistTrackDto): ArtistTrack {
   return {
     id: dto.id,
     title: dto.title,
-    coverUrl: toTrackCoverUrl(dto.cover),
+    coverUrl: toStaticMediaUrl(dto.cover, 'tracks/covers'),
     processingStatus: TO_DOMAIN_STATUS[dto.processingStatus],
     playCount: dto.playCount,
     takenDownAt: dto.deletedAt ? new Date(dto.deletedAt) : null,
@@ -48,7 +36,7 @@ export function toArtistAlbum(dto: ArtistAlbumDto): ArtistAlbum {
   return {
     id: dto.id,
     title: dto.title,
-    coverUrl: toAlbumCoverUrl(dto.cover),
+    coverUrl: toStaticMediaUrl(dto.cover, 'albums/covers'),
     type: TO_DOMAIN_ALBUM_TYPE[dto.type],
     totalTracks: dto.totalTracks,
     releaseDate: dto.releaseDate ? new Date(dto.releaseDate) : null,

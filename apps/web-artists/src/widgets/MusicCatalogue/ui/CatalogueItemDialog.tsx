@@ -36,7 +36,8 @@ export function CatalogueItemDialog({
   const close = () => onChange(null)
   const editableDraft =
     !('version' in item) && item.status === 'DRAFT' && !!artistId
-  if (mode === 'delete' && editableDraft && artistId)
+  const deletableRelease = !('version' in item) && !!artistId
+  if (mode === 'delete' && deletableRelease && artistId)
     return (
       <DeleteReleaseDialog
         artistId={artistId}
@@ -107,12 +108,12 @@ export function CatalogueItemDialog({
             >
               {t('music.item.viewDetails')}
             </Button>
-            {editableDraft && (
+            {deletableRelease && (
               <Button
                 onClick={() => onChange({ ...details, mode: 'delete' })}
                 variant="destructive"
               >
-                {t('music.item.deleteDraft')}
+                {t('music.item.deleteRelease')}
               </Button>
             )}
           </div>

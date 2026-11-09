@@ -79,7 +79,7 @@ services:
   # in the spirit of admin/admin.
   # The application identity is scoped to one bucket; there is no admin S3 identity.
   seaweedfs:
-    image: chrislusf/seaweedfs:4.51
+    image: chrislusf/seaweedfs:4.53
     container_name: bitrate-seaweedfs
     restart: unless-stopped
     entrypoint: ["/bin/sh", "-c"]
@@ -113,7 +113,7 @@ services:
 
   # One-shot: creates the bucket if it is missing, then exits 0. Safe on every `up -d`.
   seaweedfs-init:
-    image: chrislusf/seaweedfs:4.51
+    image: chrislusf/seaweedfs:4.53
     restart: "no"
     entrypoint: ["/bin/sh", "-c"]
     command:
@@ -179,6 +179,8 @@ services:
     environment:
       <<: *api-env
       AUDIO_PROCESSING_WORKER_ENABLED: "true"
+      # Same as production: a storage call silent for 2 minutes fails instead of hanging the job.
+      S3_SOCKET_TIMEOUT_MS: "120000"
     volumes:
       - ../apps/api:/app/apps/api
       - ../packages:/app/packages
@@ -197,7 +199,8 @@ services:
       timeout: 3s
       start_period: 40s
       retries: 3
-    stop_grace_period: 300s
+    # Longer than the 600s ffmpeg timeout, as in production, so a restart waits for the transcode.
+    stop_grace_period: 660s
     depends_on:
       postgres:
         condition: service_healthy

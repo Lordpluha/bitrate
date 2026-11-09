@@ -26,7 +26,7 @@ export function DeleteReleaseDialog({
       })
       onDeleted()
     } catch {
-      // The draft stays; the error explains what to do next.
+      // The release stays; the error explains what to do next.
     }
   }
   return (
@@ -34,12 +34,12 @@ export function DeleteReleaseDialog({
       canClose={!remove.isPending}
       className="artist-release-credit-modal"
       onClose={onClose}
-      title={t('music.item.deleteDraft')}
+      title={t('music.item.deleteRelease')}
     >
       <div aria-busy={remove.isPending} className="space-y-6">
         <p>
           <Interpolate
-            message={t('editRelease.deleteConfirm')}
+            message={t('editRelease.deleteReleaseConfirm')}
             values={{ title: <strong>{release.title}</strong> }}
           />
         </p>
@@ -56,7 +56,7 @@ export function DeleteReleaseDialog({
             type="button"
             variant="outline"
           >
-            {t('editRelease.keepDraft')}
+            {t('editRelease.keepRelease')}
           </Button>
           <Button
             disabled={remove.isPending}
@@ -68,7 +68,7 @@ export function DeleteReleaseDialog({
           >
             {remove.isPending
               ? t('editRelease.deleting')
-              : t('music.item.deleteDraft')}
+              : t('music.item.deleteRelease')}
           </Button>
         </div>
       </div>

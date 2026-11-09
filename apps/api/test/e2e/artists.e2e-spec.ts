@@ -34,42 +34,21 @@ describe('ArtistsController (e2e)', () => {
     await request(app.getHttpServer()).get('/artists/not-a-uuid').expect(400)
   })
 
-  it('full artist CRUD: register -> get by username -> update -> get by id', async () => {
-    const { cookies, username } = await registerAndLogin(app, 'artist')
+  it('register -> get by username -> get by id', async () => {
+    const { username } = await registerAndLogin(app, 'artist')
 
     const byUsernameRes = await request(app.getHttpServer())
       .get(`/artists/username/${username}`)
       .expect(200)
 
     expect(byUsernameRes.body).toMatchObject({ username })
-    const artistId = byUsernameRes.body.id
-
-    const updateRes = await request(app.getHttpServer())
-      .put(`/artists/${artistId}`)
-      .set('Cookie', cookies)
-      .send({ bio: 'My artist bio' })
+    const byIdRes = await request(app.getHttpServer())
+      .get(`/artists/${byUsernameRes.body.id}`)
       .expect(200)
-
-    expect(updateRes.body).toMatchObject({ bio: 'My artist bio' })
-
-    const byIdRes = await request(app.getHttpServer()).get(`/artists/${artistId}`).expect(200)
-    expect(byIdRes.body.id).toBe(artistId)
+    expect(byIdRes.body.id).toBe(byUsernameRes.body.id)
   })
 
-  it('PUT /artists/:id should return 401 without auth', async () => {
-    const { runId } = await registerAndLogin(app, 'artist')
-
-    const byUsernameRes = await request(app.getHttpServer())
-      .get(`/artists/username/artist_${runId}`)
-      .expect(200)
-
-    await request(app.getHttpServer())
-      .put(`/artists/${byUsernameRes.body.id}`)
-      .send({ bio: 'No auth' })
-      .expect(401)
-  })
-
-  it('DELETE /artists/:id should delete the authenticated artist', async () => {
+  it('DELETE /artists/me deletes the signed-in artist', async () => {
     const { cookies, runId } = await registerAndLogin(app, 'artist')
 
     const byUsernameRes = await request(app.getHttpServer())
@@ -77,7 +56,7 @@ describe('ArtistsController (e2e)', () => {
       .expect(200)
 
     const deleteRes = await request(app.getHttpServer())
-      .delete(`/artists/${byUsernameRes.body.id}`)
+      .delete('/artists/me')
       .set('Cookie', cookies)
       .expect(200)
 
@@ -92,13 +71,25 @@ describe('ArtistsController (e2e)', () => {
     expect(getRes.body).toEqual({})
   })
 
-  it('DELETE /artists/:id should return 401 without auth', async () => {
-    const { runId } = await registerAndLogin(app, 'artist')
+  it('DELETE /artists/me should return 401 without auth', async () => {
+    await request(app.getHttpServer()).delete('/artists/me').expect(401)
+  })
+
+  it('no longer serves PUT or DELETE /artists/:id (#467)', async () => {
+    const { cookies, runId } = await registerAndLogin(app, 'artist')
 
     const byUsernameRes = await request(app.getHttpServer())
       .get(`/artists/username/artist_${runId}`)
       .expect(200)
 
-    await request(app.getHttpServer()).delete(`/artists/${byUsernameRes.body.id}`).expect(401)
+    await request(app.getHttpServer())
+      .put(`/artists/${byUsernameRes.body.id}`)
+      .set('Cookie', cookies)
+      .send({ bio: 'Gone' })
+      .expect(404)
+    await request(app.getHttpServer())
+      .delete(`/artists/${byUsernameRes.body.id}`)
+      .set('Cookie', cookies)
+      .expect(404)
   })
 })

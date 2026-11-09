@@ -55,7 +55,7 @@ function EditReleaseForm({
     try {
       const saved = await update.mutateAsync({
         id: release.id,
-        input: { ...values, expectedUpdatedAt },
+        input: { title: values.title, expectedUpdatedAt },
       })
       onSaved(saved)
     } catch {
@@ -75,7 +75,7 @@ function EditReleaseForm({
         onSubmit={form.handleSubmit(submit)}
       >
         <p className="text-sm leading-relaxed text-text-secondary">
-          {t('editRelease.editIntro')}
+          {t('editRelease.editAutoIntro')}
         </p>
         <ReleaseFields
           busy={busy}

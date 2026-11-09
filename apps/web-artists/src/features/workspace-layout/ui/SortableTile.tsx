@@ -3,13 +3,16 @@ import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { useI18n } from '@shared/i18n'
 import { Eye, EyeOff, GripVertical } from 'lucide-react'
-import type { ReactNode } from 'react'
-import type { LayoutTile, TileDefinition, TileSize } from '../model/layout'
+import { type CSSProperties, type ReactNode, useState } from 'react'
+import type { LayoutTile, TileDefinition } from '../model/layout'
+import { TileWidthControl } from './TileWidthControl'
 
 interface SortableTileProps {
   tile: LayoutTile
   definition: TileDefinition
-  onResize: (size: TileSize) => void
+  columns: number
+  saving: boolean
+  onResize: (size: Pick<LayoutTile, 'columns' | 'rows'>) => void
   onToggleHidden: () => void
   children: ReactNode
 }
@@ -18,11 +21,14 @@ interface SortableTileProps {
 export function SortableTile({
   tile,
   definition,
+  columns,
+  saving,
   onResize,
   onToggleHidden,
   children,
 }: SortableTileProps) {
   const { t } = useI18n()
+  const [resizing, setResizing] = useState(false)
   const label = t(definition.label)
   const {
     attributes,
@@ -32,23 +38,33 @@ export function SortableTile({
     transform,
     transition,
     isDragging,
-  } = useSortable({ id: tile.id })
+  } = useSortable({ id: tile.id, disabled: saving || resizing })
   return (
     <div
       className={cn(
         'artist-layout-tile',
         isDragging && 'artist-layout-dragging',
       )}
+      data-columns={columns}
       data-editing="true"
       data-hidden={tile.hidden}
+      data-resizing={resizing}
+      data-rows={tile.rows ?? 'auto'}
       data-size={tile.size}
       ref={setNodeRef}
-      style={{ transform: CSS.Translate.toString(transform), transition }}
+      style={
+        {
+          '--layout-columns': columns,
+          transform: CSS.Translate.toString(transform),
+          transition,
+        } as CSSProperties
+      }
     >
       <div className="artist-layout-toolbar">
         <button
           aria-label={t('layout.move', { tile: label })}
           className="artist-layout-handle"
+          disabled={saving}
           ref={setActivatorNodeRef}
           type="button"
           {...attributes}
@@ -57,30 +73,21 @@ export function SortableTile({
           <GripVertical aria-hidden="true" className="size-4" />
           <span>{label}</span>
         </button>
-        {definition.sizes.length > 1 && (
-          <fieldset className="artist-layout-sizes">
-            <legend className="sr-only">
-              {t('layout.size', { tile: label })}
-            </legend>
-            {definition.sizes.map((size) => (
-              <button
-                aria-label={t(`layout.size.${size}`)}
-                aria-pressed={tile.size === size}
-                key={size}
-                onClick={() => onResize(size)}
-                type="button"
-              >
-                {size}
-              </button>
-            ))}
-          </fieldset>
-        )}
+        <TileWidthControl
+          columns={columns}
+          disabled={saving}
+          label={label}
+          onResize={onResize}
+          onResizing={setResizing}
+          rows={tile.rows}
+        />
         <button
           aria-label={t(tile.hidden ? 'layout.show' : 'layout.hide', {
             tile: label,
           })}
           aria-pressed={tile.hidden}
           className="artist-layout-visibility"
+          disabled={saving}
           onClick={onToggleHidden}
           type="button"
         >

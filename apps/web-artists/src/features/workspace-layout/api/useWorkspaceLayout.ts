@@ -6,6 +6,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import {
   type LayoutPage,
   type LayoutTile,
+  sameLayout,
   storedLayoutSchema,
 } from '../model/layout'
 
@@ -18,7 +19,7 @@ export function useWorkspaceLayout(artistId: string, page: LayoutPage) {
     queryKey: layoutKey(artistId, page),
     queryFn: async ({ signal }) => {
       const result = await clientFetchClient.GET(
-        '/api/v1/artist-workspace/layouts/{page}',
+        '/api/v1/artists/me/workspace/layouts/{page}',
         { params: { path: { page } }, signal },
       )
       const parsed = storedLayoutSchema.safeParse(result.data)
@@ -41,17 +42,23 @@ export function useSaveWorkspaceLayout(artistId: string, page: LayoutPage) {
         signal: writeSignal(),
       }
       const result = await (tiles
-        ? clientFetchClient.PUT('/api/v1/artist-workspace/layouts/{page}', {
+        ? clientFetchClient.PUT('/api/v1/artists/me/workspace/layouts/{page}', {
             ...options,
             body: { tiles },
           })
         : clientFetchClient.DELETE(
-            '/api/v1/artist-workspace/layouts/{page}',
+            '/api/v1/artists/me/workspace/layouts/{page}',
             options,
           )
       ).catch(() => undefined)
-      if (!result?.response.ok) throw new Error(messageKey('layout.error.save'))
-      return tiles ?? []
+      const parsed = storedLayoutSchema.safeParse(result?.data)
+      if (
+        !result?.response.ok ||
+        !parsed.success ||
+        !sameLayout(parsed.data.tiles, tiles ?? [])
+      )
+        throw new Error(messageKey('layout.error.save'))
+      return parsed.data.tiles
     },
     onSuccess: (tiles) =>
       queryClient.setQueryData(layoutKey(artistId, page), tiles),

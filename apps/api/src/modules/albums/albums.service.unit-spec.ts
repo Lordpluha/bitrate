@@ -1,9 +1,6 @@
-import { ARTIST_AGREEMENT_VERSION } from '@common/legal'
 import { beforeEach, describe, expect, it } from '@jest/globals'
-import { NotFoundException } from '@nestjs/common'
-import { Prisma } from '@prisma/client'
 import { makeCacheMock, type PrismaMock, prismaMock, resetPrismaMock } from '@test/mocks'
-import { buildAlbum, buildArtist } from './__tests__/fixtures/albums.fixtures'
+import { buildAlbum } from './__tests__/fixtures/albums.fixtures'
 import { AlbumsService } from './albums.service'
 import { ALBUM_TRACKS_INCLUDE } from './orm'
 
@@ -15,12 +12,6 @@ const buildAlbumWithTracks = (overrides: Partial<AlbumWithTracks> = {}): AlbumWi
   tracks: [],
   ...overrides,
 })
-
-const recordNotFound = () =>
-  new Prisma.PrismaClientKnownRequestError('Record to update not found.', {
-    clientVersion: 'test',
-    code: 'P2025',
-  })
 
 describe('AlbumsService', () => {
   let service: AlbumsService
@@ -149,156 +140,6 @@ describe('AlbumsService', () => {
       include: ALBUM_TRACKS_INCLUDE,
     })
     expect(result).toBeNull()
-  })
-
-  it('create should throw when artist not found', async () => {
-    prisma.artist.findUnique.mockResolvedValue(null)
-
-    await expect(
-      service.create('artist-1', {
-        title: 'New Album',
-        description: 'desc',
-        rightsConfirmed: true,
-      }),
-    ).rejects.toBeInstanceOf(NotFoundException)
-  })
-
-  it('create should refuse an artist that was soft-deleted', async () => {
-    prisma.artist.findUnique.mockResolvedValue({ id: 'artist-1', deletedAt: new Date() } as never)
-
-    await expect(
-      service.create('artist-1', { title: 'New Album', rightsConfirmed: true }),
-    ).rejects.toBeInstanceOf(NotFoundException)
-    expect(prisma.artist.findUnique).toHaveBeenCalledWith({
-      where: { id: 'artist-1' },
-      select: { id: true, deletedAt: true },
-    })
-    expect(prisma.album.create).not.toHaveBeenCalled()
-  })
-
-  it('create should create album for artist', async () => {
-    prisma.artist.findUnique.mockResolvedValue(buildArtist())
-    const created = buildAlbum({ title: 'New Album' })
-    prisma.album.create.mockResolvedValue(created)
-
-    const result = await service.create('artist-1', { title: 'New Album', rightsConfirmed: true })
-
-    expect(prisma.album.create).toHaveBeenCalledWith({
-      data: {
-        artistId: 'artist-1',
-        title: 'New Album',
-        rightsConfirmedVersion: ARTIST_AGREEMENT_VERSION,
-        rightsConfirmedAt: expect.any(Date),
-      },
-    })
-    expect(result).toBe(created)
-  })
-
-  it('create should pass optional description', async () => {
-    prisma.artist.findUnique.mockResolvedValue(buildArtist())
-    const created = buildAlbum({ title: 'New Album', description: 'desc' })
-    prisma.album.create.mockResolvedValue(created)
-
-    const result = await service.create('artist-1', {
-      title: 'New Album',
-      description: 'desc',
-      rightsConfirmed: true,
-    })
-
-    expect(prisma.album.create).toHaveBeenCalledWith({
-      data: {
-        artistId: 'artist-1',
-        title: 'New Album',
-        description: 'desc',
-        rightsConfirmedVersion: ARTIST_AGREEMENT_VERSION,
-        rightsConfirmedAt: expect.any(Date),
-      },
-    })
-    expect(result).toBe(created)
-  })
-
-  it('create should allow undefined description', async () => {
-    prisma.artist.findUnique.mockResolvedValue(buildArtist())
-    const created = buildAlbum({ title: 'New Album', description: null })
-    prisma.album.create.mockResolvedValue(created)
-
-    const result = await service.create('artist-1', {
-      title: 'New Album',
-      description: undefined,
-      rightsConfirmed: true,
-    })
-
-    expect(prisma.album.create).toHaveBeenCalledWith({
-      data: {
-        artistId: 'artist-1',
-        title: 'New Album',
-        description: undefined,
-        rightsConfirmedVersion: ARTIST_AGREEMENT_VERSION,
-        rightsConfirmedAt: expect.any(Date),
-      },
-    })
-    expect(result).toBe(created)
-  })
-
-  it('update should throw when album not found', async () => {
-    prisma.album.update.mockRejectedValue(recordNotFound())
-
-    await expect(service.update('artist-1', 'album-1', { title: 'Updated' })).rejects.toThrow(
-      'Album not found or does not belong to the artist',
-    )
-  })
-
-  it('update should update album', async () => {
-    const updated = buildAlbum({ title: 'Updated' })
-    prisma.album.update.mockResolvedValue(updated)
-
-    const result = await service.update('artist-1', 'album-1', { title: 'Updated' })
-
-    expect(prisma.album.findFirst).not.toHaveBeenCalled()
-    expect(prisma.album.update).toHaveBeenCalledWith({
-      where: { id: 'album-1', artistId: 'artist-1', deletedAt: null },
-      data: { title: 'Updated' },
-    })
-    expect(result).toBe(updated)
-  })
-
-  it('update should pass description when provided', async () => {
-    const updated = buildAlbum({ title: 'Updated', description: 'new desc' })
-    prisma.album.update.mockResolvedValue(updated)
-
-    const result = await service.update('artist-1', 'album-1', {
-      title: 'Updated',
-      description: 'new desc',
-    })
-
-    expect(prisma.album.update).toHaveBeenCalledWith({
-      where: { id: 'album-1', artistId: 'artist-1', deletedAt: null },
-      data: { title: 'Updated', description: 'new desc' },
-    })
-    expect(result).toBe(updated)
-  })
-
-  it('delete should throw when album not found', async () => {
-    prisma.album.update.mockRejectedValue(recordNotFound())
-
-    await expect(service.delete('artist-1', 'album-1')).rejects.toThrow(
-      'Album not found or does not belong to the artist',
-    )
-  })
-
-  it('delete should soft-delete album', async () => {
-    const deleted = buildAlbum()
-    prisma.album.update.mockResolvedValue(deleted)
-
-    const result = await service.delete('artist-1', 'album-1')
-
-    expect(prisma.album.findFirst).not.toHaveBeenCalled()
-    expect(prisma.album.update).toHaveBeenCalledWith({
-      where: { id: 'album-1', artistId: 'artist-1', deletedAt: null },
-      data: { deletedAt: expect.any(Date) },
-      omit: { artistId: true },
-    })
-    expect(result).toBe(deleted)
   })
 
   it('like should upsert an explicit album like', async () => {

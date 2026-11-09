@@ -1,5 +1,5 @@
 import { randomUUID } from 'node:crypto'
-import { getUploadTempDir } from '@modules/tracks/audio-scratch'
+import { getUploadTempDir } from '@modules/tracks/shared'
 import { applyDecorators, BadRequestException, UseInterceptors } from '@nestjs/common'
 import { FileInterceptor } from '@nestjs/platform-express'
 import { diskStorage, memoryStorage } from 'multer'

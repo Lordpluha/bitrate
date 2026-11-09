@@ -71,14 +71,48 @@ jobs:
           ghcr-username: ${{ github.actor }}
           ghcr-password: ${{ secrets.GITHUB_TOKEN }}
 
+      # Built and loaded, NOT pushed: the smoke test below decides whether this image may be
+      # published at all. The publish step afterwards rebuilds from this builder's layer cache,
+      # so it costs seconds, not a second build.
       - name: Build API Docker image
         uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
         with:
           context: .
           file: ./apps/api/Dockerfile
-          push: ${{ inputs.push-image }}
-          # Loaded as well, so the scan below reads this exact image instead of a rebuild.
+          push: false
           load: true
+          tags: ${{ inputs.image-tags }}
+          cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/api:buildcache
+          secrets: |
+            turbo_token=${{ secrets.turbo-token }}
+          target: production
+
+      - name: Resolve image reference for scanning
+        id: scan-ref
+        env:
+          TAGS: ${{ inputs.image-tags }}
+        run: echo "ref=$(printf '%s\n' "$TAGS" | sed -e 's/^[[:space:]]*//' -e '/^$/d' | head -n1)" >> "$GITHUB_OUTPUT"
+
+      # v0.7.0 shipped an image whose @bitrate/converter link pointed at nothing; it booted fine
+      # and every transcode then failed with MODULE_NOT_FOUND. Resolving each runtime dependency
+      # from inside the image catches that before the image reaches the registry.
+      - name: Smoke-test the image
+        env:
+          IMAGE_REF: ${{ steps.scan-ref.outputs.ref }}
+        run: |
+          docker run --rm --entrypoint node \
+            -v "${GITHUB_WORKSPACE}/scripts/smoke-api-image.mjs:/app/apps/api/smoke.mjs:ro" \
+            "${IMAGE_REF}" /app/apps/api/smoke.mjs
+
+      # Same inputs as the build above, so every layer comes from the builder's cache. Only
+      # reached when the smoke test passed.
+      - name: Publish API Docker image
+        if: ${{ inputs.push-image }}
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
+        with:
+          context: .
+          file: ./apps/api/Dockerfile
+          push: true
           tags: ${{ inputs.image-tags }}
           cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/api:buildcache
           # zstd compresses the node_modules layers several times faster than the default gzip;
@@ -90,12 +124,8 @@ jobs:
             turbo_token=${{ secrets.turbo-token }}
           target: production
 
-      - name: Resolve image reference for scanning
-        id: scan-ref
-        env:
-          TAGS: ${{ inputs.image-tags }}
-        run: echo "ref=$(printf '%s\n' "$TAGS" | sed -e 's/^[[:space:]]*//' -e '/^$/d' | head -n1)" >> "$GITHUB_OUTPUT"
-
+      # After the publish, as before: the scan only reports (SARIF), and a Trivy outage must
+      # not hold back an image that passed the smoke test.
       - name: Scan image
         uses: $/.github/actions/scan-image
         with:

@@ -21,10 +21,13 @@ const deliveryKeys = {
 }
 
 async function getReleaseDelivery(id: string, signal: AbortSignal) {
-  const result = await clientFetchClient.GET('/api/v1/releases/{id}/delivery', {
-    params: { path: { id } },
-    signal,
-  })
+  const result = await clientFetchClient.GET(
+    '/api/v1/artists/me/releases/{id}/delivery',
+    {
+      params: { path: { id } },
+      signal,
+    },
+  )
   if (result.response.status === 404)
     throw new Error(messageKey('release.error.gone'))
   const parsed = releaseDeliverySchema.safeParse(result.data)
@@ -34,10 +37,13 @@ async function getReleaseDelivery(id: string, signal: AbortSignal) {
 }
 
 async function getDistribution(page: number, signal: AbortSignal) {
-  const result = await clientFetchClient.GET('/api/v1/distribution', {
-    params: { query: { page, limit: 20 } },
-    signal,
-  })
+  const result = await clientFetchClient.GET(
+    '/api/v1/artists/me/distribution',
+    {
+      params: { query: { page, limit: 20 } },
+      signal,
+    },
+  )
   const parsed = distributionPageSchema.safeParse(result.data)
   if (!result.response.ok || !parsed.success || parsed.data.page !== page)
     throw new Error(messageKey('delivery.error.loadList'))
@@ -81,7 +87,7 @@ interface DeliveryPlanRequest {
 /** Never reports success unless the response proves a newer version of this release. */
 async function saveDeliveryPlan({ id, input }: DeliveryPlanRequest) {
   const send = () =>
-    clientFetchClient.PUT('/api/v1/releases/{id}/delivery-plan', {
+    clientFetchClient.PUT('/api/v1/artists/me/releases/{id}/delivery-plan', {
       params: { path: { id } },
       body: input,
       signal: writeSignal(),

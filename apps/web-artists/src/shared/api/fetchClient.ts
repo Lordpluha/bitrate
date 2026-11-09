@@ -1,6 +1,7 @@
 'use client'
 
 import type { ApiPaths } from '@bitrate/contracts'
+import { selectedRequestArtist } from '@shared/auth/accountSelection'
 import { clientLocale } from '@shared/i18n'
 import { ROUTES } from '@shared/routes/routes'
 import createClient, { type Middleware } from 'openapi-fetch'
@@ -43,6 +44,8 @@ export async function refreshToken(): Promise<boolean> {
 
 const authRefreshMiddleware: Middleware = {
   onRequest({ request }) {
+    const selected = selectedRequestArtist()
+    if (selected) request.headers.set('X-Artist-Account', selected)
     retryRequests.set(request, request.clone())
     return request
   },
@@ -50,6 +53,19 @@ const authRefreshMiddleware: Middleware = {
     const retryRequest = retryRequests.get(request)
     retryRequests.delete(request)
 
+    if (response.status === 409 && selectedRequestArtist()) {
+      const body: unknown = await response
+        .clone()
+        .json()
+        .catch(() => null)
+      if (
+        typeof body === 'object' &&
+        body !== null &&
+        'code' in body &&
+        body.code === 'errors.artist_auth.account_changed'
+      )
+        window.location.replace('/dashboard')
+    }
     if (response.status === 401) {
       if (
         request.url.includes('/artists/auth/refresh') ||

@@ -17,7 +17,7 @@ import {
 } from './dtos/notification-preferences.dto'
 
 @ApiTags('Releases')
-@Controller({ path: 'artist-notifications', version: '1' })
+@Controller({ path: 'artists/me/notifications', version: '1' })
 export class ArtistNotificationsController {
   constructor(private readonly notifications: ArtistNotificationsService) {}
 

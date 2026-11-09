@@ -1,4 +1,23 @@
 export const account = {
+  'account.switcher.title': 'Accounts',
+  'account.switcher.description':
+    'Accounts you have signed in to on this browser.',
+  'account.switcher.current': 'Active account',
+  'account.switcher.switch': 'Switch to this account',
+  'account.switcher.add': 'Add another account',
+  'account.switcher.addDescription':
+    'Sign in to another artist account. Your current account stays saved in this browser.',
+  'account.switcher.back': 'Back to workspace',
+  'account.switcher.remove': 'Remove {name} from this browser',
+  'account.switcher.loading': 'Loading saved accounts…',
+  'account.switcher.hint':
+    'Save up to {limit} accounts. Removing one here signs it out on this browser; it does not delete the account.',
+  'account.switcher.loadFailed': 'Could not load saved accounts. Try again.',
+  'account.switcher.failed':
+    'Could not update saved accounts. Please try again.',
+  'account.switcher.unavailable':
+    'This saved session is no longer available. Refresh the list or sign in to that account again.',
+
   'account.error.loadSessions':
     'Could not load your signed-in devices. Please try again.',
   'account.error.signOutUnconfirmed':

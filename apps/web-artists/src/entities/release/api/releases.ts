@@ -30,10 +30,13 @@ export function identifierConflict(error: unknown): string | undefined {
 }
 
 export async function getRelease(id: string, signal: AbortSignal) {
-  const result = await clientFetchClient.GET('/api/v1/releases/{id}', {
-    params: { path: { id } },
-    signal,
-  })
+  const result = await clientFetchClient.GET(
+    '/api/v1/artists/me/releases/{id}',
+    {
+      params: { path: { id } },
+      signal,
+    },
+  )
   if (result.response.status === 404)
     throw new Error(messageKey('release.error.gone'))
   const parsed = releaseSummarySchema.safeParse(result.data)
@@ -71,7 +74,6 @@ export async function updateRelease({
     parsed.data.id !== id ||
     parsed.data.status !== 'DRAFT' ||
     (input.title !== undefined && parsed.data.title !== input.title.trim()) ||
-    (input.type !== undefined && parsed.data.type !== input.type) ||
     (input.scheduledAt !== undefined &&
       (parsed.data.scheduledAt === null
         ? null
@@ -86,7 +88,7 @@ export async function updateRelease({
 }
 
 function sendUpdate(id: string, input: ApiSchemas['UpdateReleaseDto']) {
-  return clientFetchClient.PATCH('/api/v1/releases/{id}', {
+  return clientFetchClient.PATCH('/api/v1/artists/me/releases/{id}', {
     params: { path: { id } },
     body: input,
     signal: writeSignal(),
@@ -98,7 +100,7 @@ export interface DeleteReleaseRequest {
   input: ApiSchemas['ReleaseDraftVersionDto']
 }
 
-/** Deletes a draft; only an explicit 204 confirms it. */
+/** Deletes an owned release; only an explicit 204 confirms it. */
 export async function deleteRelease({ id, input }: DeleteReleaseRequest) {
   const unconfirmed = messageKey('release.error.deleteUnconfirmed')
   let result: Awaited<ReturnType<typeof sendDelete>>
@@ -114,7 +116,7 @@ export async function deleteRelease({ id, input }: DeleteReleaseRequest) {
 }
 
 function sendDelete(id: string, input: ApiSchemas['ReleaseDraftVersionDto']) {
-  return clientFetchClient.DELETE('/api/v1/releases/{id}', {
+  return clientFetchClient.DELETE('/api/v1/artists/me/releases/{id}', {
     params: { path: { id } },
     body: input,
     signal: writeSignal(),
@@ -136,14 +138,15 @@ export async function createRelease(input: CreateReleaseValues) {
     !parsed.success ||
     parsed.data.status !== 'DRAFT' ||
     parsed.data.title !== input.title.trim() ||
-    parsed.data.type !== input.type
+    parsed.data.type !==
+      (input.type === 'COMPILATION' ? 'COMPILATION' : 'SINGLE')
   )
     throw new Error(messageKey('release.error.createUnconfirmed'))
   return parsed.data
 }
 
 function sendDraft(input: CreateReleaseValues) {
-  return clientFetchClient.POST('/api/v1/releases', {
+  return clientFetchClient.POST('/api/v1/artists/me/releases', {
     body: input,
     signal: writeSignal(),
   })

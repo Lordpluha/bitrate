@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, jest } from '@jest/globals'
 import { buildArtist } from '@modules/artists/__tests__/fixtures/artists.fixtures'
 import type { TokenService } from '@modules/tokens/token.service'
-import { UnauthorizedException } from '@nestjs/common'
+import { ConflictException, UnauthorizedException } from '@nestjs/common'
 import type { Reflector } from '@nestjs/core'
 import { type PrismaMock, prismaMock, resetPrismaMock } from '@test/mocks'
 import { buildArtistSession } from './__tests__/fixtures/artists-auth.fixtures'
@@ -126,5 +126,27 @@ describe('ArtistAuthGuard', () => {
     expect(prisma.artist.findFirst).toHaveBeenCalledWith({
       where: { id: 'artist-1', deletedAt: null },
     })
+  })
+
+  it('rejects a stale tab bound to a different artist before attaching the account', async () => {
+    guard = new ArtistAuthGuard(prisma, makeReflectorMock('access'), tokenService)
+    tokenService.verifyToken.mockResolvedValue({
+      sub: 'artist-1',
+      username: 'artist',
+      type: 'artist',
+    })
+    prisma.artist.findFirst.mockResolvedValue(buildArtist({ id: 'artist-1' }))
+    prisma.artistSession.findFirst.mockResolvedValue(buildArtistSession())
+    const request = {
+      cookies: { artist_access_token: 'at' },
+      headers: { 'x-artist-account': 'previous-artist' },
+    }
+    const context = {
+      getHandler: () => ({}),
+      getClass: () => ({}),
+      switchToHttp: () => ({ getRequest: () => request }),
+    }
+    await expect(guard.canActivate(context as never)).rejects.toThrow(ConflictException)
+    expect(request).not.toHaveProperty('artist')
   })
 })

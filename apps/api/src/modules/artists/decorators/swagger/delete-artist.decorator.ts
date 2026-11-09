@@ -1,10 +1,7 @@
 import { applyDecorators } from '@nestjs/common'
-import { ApiOperation, ApiParam } from '@nestjs/swagger'
+import { ApiOperation } from '@nestjs/swagger'
 
-/** Runs the delete artist swagger operation. */
+/** Swagger for `DELETE /artists/me`: the signed-in artist deletes their own account. */
 export function DeleteArtistSwagger() {
-  return applyDecorators(
-    ApiOperation({ summary: 'Delete artist profile' }),
-    ApiParam({ name: 'id', description: 'Artist ID (UUID)', type: 'string', format: 'uuid' }),
-  )
+  return applyDecorators(ApiOperation({ summary: "Delete the signed-in artist's account" }))
 }

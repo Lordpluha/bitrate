@@ -7,7 +7,7 @@ import { PrismaClient } from '@prisma/client'
 import { Pool } from 'pg'
 import { AppModule } from '../../app.module'
 import { TokenService } from '../../modules/tokens/token.service'
-import { TrackUploadService } from '../../modules/tracks/track-upload.service'
+import { TrackIngestService } from '../../modules/tracks/ingest'
 import config from './config'
 import { DownloadResourcesService } from './download-resources.service'
 import { FakerService } from './faker.service'
@@ -38,7 +38,7 @@ async function main() {
     })
 
     // Получаем необходимые сервисы через DI
-    const trackUploadService = app.get(TrackUploadService)
+    const trackUploadService = app.get(TrackIngestService)
     const tokenService = app.get(TokenService)
 
     // Создаём сервисы для импорта

@@ -1,3 +1,4 @@
+import { PrismaService } from '@infra/prisma/prisma.service'
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals'
 import type { INestApplication } from '@nestjs/common'
 import request from 'supertest'
@@ -7,6 +8,14 @@ import { closeE2eApp, createE2eApp, makeRunId, registerAndLogin } from './e2e-ap
 const MISSING_ALBUM_ID = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa'
 
 let app: INestApplication
+
+/** Artist-side album writes left the public API (#467): albums come from releases. */
+const seedAlbum = async (title: string) => {
+  const prisma = app.get(PrismaService)
+  const { email } = await registerAndLogin(app, 'artist')
+  const artist = await prisma.artist.findFirstOrThrow({ where: { email }, select: { id: true } })
+  return prisma.album.create({ data: { title, artistId: artist.id }, select: { id: true } })
+}
 
 describe('AlbumsController (e2e)', () => {
   beforeAll(async () => {
@@ -18,42 +27,18 @@ describe('AlbumsController (e2e)', () => {
     await closeE2eApp(app)
   })
 
-  it('full user scenario: register -> login -> create -> read -> update -> delete', async () => {
-    const { cookies } = await registerAndLogin(app, 'artist')
-
-    const createResponse = await request(app.getHttpServer())
-      .post('/albums')
-      .set('Cookie', cookies)
-      .send({ title: 'Album title', description: 'desc', rightsConfirmed: true })
-      .expect(201)
-
-    const albumId = createResponse.body.id as string
+  it('reads a published album through the listener routes', async () => {
+    const album = await seedAlbum(`Listener Album ${makeRunId()}`)
 
     await request(app.getHttpServer()).get('/albums').query({ page: 1, limit: 10 }).expect(200)
-
-    await request(app.getHttpServer()).get(`/albums/${albumId}`).expect(200)
-
-    await request(app.getHttpServer())
-      .put(`/albums/${albumId}`)
-      .set('Cookie', cookies)
-      .send({ title: 'Updated Album' })
-      .expect(200)
-
-    await request(app.getHttpServer())
-      .delete(`/albums/${albumId}`)
-      .set('Cookie', cookies)
-      .expect(200)
+    await request(app.getHttpServer()).get(`/albums/${album.id}`).expect(200)
   })
 
-  it('GET /albums should support title filter', async () => {
-    const { cookies } = await registerAndLogin(app, 'artist')
-    const runId = makeRunId()
-
-    await request(app.getHttpServer())
-      .post('/albums')
-      .set('Cookie', cookies)
-      .send({ title: `Rock Album ${runId}`, description: 'desc', rightsConfirmed: true })
-      .expect(201)
+  it.each([
+    ['support title filter', 'Rock Album'],
+    ['filter case-insensitively', 'RoCk Case'],
+  ])('GET /albums should %s', async (_label, prefix) => {
+    await seedAlbum(`${prefix} ${makeRunId()}`)
 
     const response = await request(app.getHttpServer())
       .get('/albums')
@@ -61,31 +46,6 @@ describe('AlbumsController (e2e)', () => {
       .expect(200)
 
     expect(Array.isArray(response.body.data)).toBe(true)
-    expect(response.body.data.length).toBeGreaterThan(0)
-    expect(
-      response.body.data.some((album: { title?: string }) =>
-        album.title?.toLowerCase().includes('rock'),
-      ),
-    ).toBe(true)
-  })
-
-  it('GET /albums should filter case-insensitively', async () => {
-    const { cookies } = await registerAndLogin(app, 'artist')
-    const runId = makeRunId()
-
-    await request(app.getHttpServer())
-      .post('/albums')
-      .set('Cookie', cookies)
-      .send({ title: `RoCk Case ${runId}`, description: 'desc', rightsConfirmed: true })
-      .expect(201)
-
-    const response = await request(app.getHttpServer())
-      .get('/albums')
-      .query({ title: 'rock', page: 1, limit: 10 })
-      .expect(200)
-
-    expect(Array.isArray(response.body.data)).toBe(true)
-    expect(response.body.data.length).toBeGreaterThan(0)
     expect(
       response.body.data.some((album: { title?: string }) =>
         album.title?.toLowerCase().includes('rock'),
@@ -113,28 +73,20 @@ describe('AlbumsController (e2e)', () => {
     expect(response.body).toEqual({})
   })
 
-  it('PUT /albums/:id should return 404 for missing album', async () => {
+  it('no longer serves artist album writes, even to a signed-in artist', async () => {
     const { cookies } = await registerAndLogin(app, 'artist')
+    const server = app.getHttpServer()
 
-    await request(app.getHttpServer())
+    await request(server)
+      .post('/albums')
+      .set('Cookie', cookies)
+      .send({ title: 'Gone', rightsConfirmed: true })
+      .expect(404)
+    await request(server)
       .put(`/albums/${MISSING_ALBUM_ID}`)
       .set('Cookie', cookies)
-      .send({ title: 'Updated Album' })
+      .send({ title: 'Gone' })
       .expect(404)
-  })
-
-  it('POST /albums should reject without auth', async () => {
-    await request(app.getHttpServer()).post('/albums').send({ title: 'No Auth' }).expect(401)
-  })
-
-  it('PUT /albums/:id should reject without auth', async () => {
-    await request(app.getHttpServer())
-      .put(`/albums/${MISSING_ALBUM_ID}`)
-      .send({ title: 'Should Fail' })
-      .expect(401)
-  })
-
-  it('DELETE /albums/:id should reject without auth', async () => {
-    await request(app.getHttpServer()).delete(`/albums/${MISSING_ALBUM_ID}`).expect(401)
+    await request(server).delete(`/albums/${MISSING_ALBUM_ID}`).set('Cookie', cookies).expect(404)
   })
 })

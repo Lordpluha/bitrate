@@ -7,7 +7,7 @@ import config from '../config'
 import type { DownloadResourcesService } from '../download-resources.service'
 import { createMulterFileFromBuffer, createMulterFileFromPath } from '../file-helper'
 import { sanitizeUsername } from './seed.helpers'
-import type { ITrackUploadService, NcsImportStats } from './seed.types'
+import type { ITrackIngestService, NcsImportStats } from './seed.types'
 
 /** Imports NoCopyrightSounds artists and their tracks into the database. */
 export class NcsImportSeeder {
@@ -15,7 +15,7 @@ export class NcsImportSeeder {
   constructor(
     private readonly prisma: PrismaClient,
     private readonly downloadService: DownloadResourcesService,
-    private readonly trackUploadService: ITrackUploadService,
+    private readonly trackUploadService: ITrackIngestService,
   ) {}
 
   /** The logger value. */

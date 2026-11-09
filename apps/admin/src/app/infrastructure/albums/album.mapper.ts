@@ -1,7 +1,7 @@
 import type { Album, AlbumDetail, AlbumSortField, AlbumTrack, AlbumType } from '@domain/album'
 import type { ResourceStatus } from '@domain/shared'
 import type { TrackProcessingStatus } from '@domain/track'
-import { API_BASE_URL } from '../http/api.config'
+import { toStaticMediaUrl } from '../http/static-media-url'
 import type {
   AlbumDetailDto,
   AlbumDto,
@@ -10,12 +10,6 @@ import type {
   WireAlbumTrackStatus,
   WireAlbumType,
 } from './album.dto'
-
-/** Albums are stored under their own bucket, apart from track covers. */
-function toCoverUrl(cover: string | null | undefined): string | null {
-  if (!cover) return null
-  return `${API_BASE_URL}/static/albums/covers/${encodeURIComponent(cover)}`
-}
 
 function toDate(value: string | null | undefined): Date | null {
   return value ? new Date(value) : null
@@ -66,7 +60,7 @@ export function toAlbum(dto: AlbumDto): Album {
     title: dto.title,
     artistId: dto.artistId,
     artistUsername: dto.artistUsername,
-    coverUrl: toCoverUrl(dto.cover),
+    coverUrl: toStaticMediaUrl(dto.cover, 'albums/covers'),
     type: TO_DOMAIN_TYPE[dto.type],
     totalTracks: dto.totalTracks,
     releaseDate: toDate(dto.releaseDate),

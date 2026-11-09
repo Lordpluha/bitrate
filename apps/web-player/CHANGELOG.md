@@ -1,5 +1,17 @@
 # @bitrate/web-player
 
+## 1.5.1
+
+### Patch Changes
+
+- d18744d: Moved every artist-only endpoint under `/artists/` (ADR-0070). The artist workspace is now `/artists/me/...`: `/releases/**` → `/artists/me/releases/**`, `/release-tasks` → `/artists/me/tasks`, `/distribution` → `/artists/me/distribution`, and `/artist-{dashboard,analytics,music,notifications,profile,search,workspace}` → `/artists/me/{dashboard,analytics,music,notifications,profile,search,workspace}`. Account deletion is `DELETE /artists/me` instead of `DELETE /artists/:id`. The listener's followed artists moved from `GET /artists/me/following` to `GET /users/me/following/artists`. Removed the unused `POST /tracks`, `PUT /tracks/:id`, `POST /albums`, `PUT /albums/:id`, `DELETE /albums/:id` and `PUT /artists/:id`. web-artists and web-player call the new paths.
+- 01651ca: Switching tracks no longer floods the API with fragment requests. The API now exposes
+  `Retry-After` to the browser; the player read the hidden header as `0` and retried a paced
+  (429) fragment in a tight loop until the throttler blocked the listener. The player now waits
+  a second when the header is missing and gives up after five 429s, handing the fragment to its
+  regular backoff. nginx answers its own rate limit with 429 instead of 503 and gives CMAF
+  fragment ranges their own budget, so a track switch no longer trips the generic API limit.
+
 ## 1.5.0
 
 ### Minor Changes

@@ -20,6 +20,8 @@ export const isrcLabel = (isrc: string | null, t: Translate) =>
     : t('workspace.track.noIsrc')
 
 export function audioLabel(track: TrackDraft, t: Translate) {
+  if (track.sourceTrackId)
+    return t(track.hasAudio ? 'compilation.reused' : 'compilation.unavailable')
   if (!track.hasAudio) return t('workspace.track.noAudio')
   const size =
     track.audioSizeBytes === null

@@ -13,7 +13,7 @@ import {
 } from '@aws-sdk/client-s3'
 import { verifySignedStorageToken } from '@infra/storage/signed-storage-token'
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals'
-import { downloadObjectToFile, storeMaster } from '@modules/tracks/audio-master'
+import { downloadObjectToFile, storeMaster } from '@modules/tracks/shared'
 import type { ConfigService } from '@nestjs/config'
 import { S3Service } from './s3.service'
 

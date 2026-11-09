@@ -15,7 +15,7 @@ import { ReleasePublishingService } from './release-publishing.service'
 
 /** The owner's publication of an approved release on Bitrate. */
 @ApiTags('Releases')
-@Controller({ path: 'releases', version: '1' })
+@Controller({ path: 'artists/me/releases', version: '1' })
 export class ReleasePublishingController {
   constructor(private readonly publishing: ReleasePublishingService) {}
 

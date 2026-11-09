@@ -33,12 +33,12 @@ x-api-env: &api-env
   # production stack did before this line existed.
   WEB_HOST: ${WEB_HOST}
   # Whether this process consumes the audio-processing queue. `api` reads it from here and `worker`
-  # overrides it to "true". The default is true on purpose: until the worker is deployed, healthy
-  # and verified, the API is the only consumer, and setting this false on `api` any earlier would
-  # leave transcode jobs with no consumer at all. The storage cutover and the flip are #211's
-  # runbook: after the worker is verified, set AUDIO_PROCESSING_WORKER_ENABLED=false in the
-  # server's .env (or change this default) and recreate `api`.
-  AUDIO_PROCESSING_WORKER_ENABLED: ${AUDIO_PROCESSING_WORKER_ENABLED:-true}
+  # overrides it to "true". The default is false: the worker is deployed and verified (#211's
+  # runbook flip), so it is the only consumer. `api` consuming as well was how jobs kept dying on
+  # deploys -- it stops within Docker's 10s default under a 512M limit, mid-transcode, and three
+  # such stalls fail a job for good. Set it to true in the server's .env only to drain the queue
+  # while the worker is down.
+  AUDIO_PROCESSING_WORKER_ENABLED: ${AUDIO_PROCESSING_WORKER_ENABLED:-false}
   # Optional — passed through only when set in .env
   SHADOW_DATABASE_URL:
   USER_WEB_HOST:
@@ -137,7 +137,7 @@ services:
   # kernel OOM killer is not the thing that trims it.
   seaweedfs:
     logging: *default-logging
-    image: chrislusf/seaweedfs:4.51
+    image: chrislusf/seaweedfs:4.53
     container_name: bitrate-seaweedfs-prod
     restart: always
     entrypoint: ["/bin/sh", "-c"]
@@ -174,7 +174,7 @@ services:
   # `up -d`; an existing bucket and its objects are left untouched.
   seaweedfs-init:
     logging: *default-logging
-    image: chrislusf/seaweedfs:4.51
+    image: chrislusf/seaweedfs:4.53
     restart: "no"
     entrypoint: ["/bin/sh", "-c"]
     command:
@@ -250,6 +250,9 @@ services:
       # against the memory limit below. The path is created and chowned in apps/api/Dockerfile, so
       # Docker seeds the empty volume with the non-root user's ownership.
       AUDIO_SCRATCH_ROOT: /app/worker-tmp
+      # A storage call that goes silent for 2 minutes fails instead of holding the job active
+      # forever. Worker only: see S3_SOCKET_TIMEOUT_MS in apps/api/env.schema.ts.
+      S3_SOCKET_TIMEOUT_MS: "120000"
     volumes:
       - worker_tmp:/app/worker-tmp
     # The image's HEALTHCHECK probes the API's HTTP port, which this process does not open. The
@@ -264,8 +267,10 @@ services:
       timeout: 3s
       start_period: 40s
       retries: 3
-    # BullMQ finishes its active job on SIGTERM; a transcode can run for minutes.
-    stop_grace_period: 300s
+    # BullMQ finishes its active job on SIGTERM. Longer than the 600s ffmpeg timeout
+    # (CONVERSION_TIMEOUT_MS) plus upload, so a deploy waits for the transcode instead of
+    # SIGKILLing it: every kill mid-job is a stall, and the third stall fails the job for good.
+    stop_grace_period: 660s
     depends_on:
       postgres:
         condition: service_healthy

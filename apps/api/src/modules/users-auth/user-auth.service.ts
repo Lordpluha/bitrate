@@ -8,7 +8,7 @@ import {
 } from '@infra/mail/templates/mail-locale'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import { AccountAuthCore, type SignInAccount } from '@modules/auth-core'
-import { PlaybackSessionService } from '@modules/tracks/playback-session.service'
+import { PlaybackSessionService } from '@modules/tracks/playback'
 import { UsersPrivateService } from '@modules/users/users.private.service'
 import {
   BadRequestException,

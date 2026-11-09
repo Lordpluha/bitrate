@@ -7,7 +7,7 @@ import type {
   ReviewedReleaseStatus,
   SubmissionReview,
 } from '@domain/release-review'
-import { API_BASE_URL } from '../http/api.config'
+import { toStaticMediaUrl } from '../http/static-media-url'
 import type {
   ReleaseDetailDto,
   ReleaseReviewDto,
@@ -17,12 +17,6 @@ import type {
   WireReleaseType,
   WireReviewDecision,
 } from './release-review.dto'
-
-/** Covers uploaded through the API are stored as a `/static/...` path on its origin. */
-function toCoverUrl(cover: string | null): string | null {
-  if (!cover) return null
-  return cover.startsWith('/') ? `${API_BASE_URL}${cover}` : cover
-}
 
 function toDate(value: string | null): Date | null {
   return value ? new Date(value) : null
@@ -73,7 +67,7 @@ export function toReleaseSubmission(dto: ReleaseRowDto): ReleaseSubmission {
     title: dto.title,
     kind: TO_DOMAIN_KIND[dto.type],
     status: TO_DOMAIN_STATUS[dto.status],
-    coverUrl: toCoverUrl(dto.cover),
+    coverUrl: toStaticMediaUrl(dto.cover, 'releases/covers'),
     submittedAt: toDate(dto.submittedAt),
     updatedAt: new Date(dto.updatedAt),
     artistId: dto.artistId,

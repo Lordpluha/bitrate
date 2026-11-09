@@ -22,7 +22,7 @@ export function useArtistProfile(artistId: string) {
   return useQuery({
     queryKey: accountKeys.profile(artistId),
     queryFn: async ({ signal }) => {
-      const result = await clientFetchClient.GET('/api/v1/artist-profile', {
+      const result = await clientFetchClient.GET('/api/v1/artists/me/profile', {
         signal,
       })
       const parsed = artistProfileSchema.safeParse(result.data)
@@ -83,7 +83,7 @@ export function useUpdateProfile(artistId: string) {
   return useProfileWrite(artistId, async ({ input }: ProfileUpdateRequest) => {
     const unconfirmed = messageKey('profile.error.unconfirmed')
     const send = () =>
-      clientFetchClient.PATCH('/api/v1/artist-profile', {
+      clientFetchClient.PATCH('/api/v1/artists/me/profile', {
         body: input,
         signal: writeSignal(),
       })
@@ -131,7 +131,7 @@ export function useProfileImage(artistId: string) {
       }
       if (file === null) {
         const send = () =>
-          clientFetchClient.DELETE('/api/v1/artist-profile/{kind}', {
+          clientFetchClient.DELETE('/api/v1/artists/me/profile/{kind}', {
             params: { path: { kind } },
             body: { expectedUpdatedAt },
             signal: writeSignal(),
@@ -157,7 +157,7 @@ export function useProfileImage(artistId: string) {
       try {
         result = await uploadForm({
           method: 'PUT',
-          path: `/api/v1/artist-profile/${kind}`,
+          path: `/api/v1/artists/me/profile/${kind}`,
           form,
           onProgress,
           signal: AbortSignal.timeout(5 * 60_000),
@@ -186,7 +186,7 @@ export function useSetAccountLocale(artistId: string) {
   return useMutation({
     mutationFn: async (locale: Locale) => {
       const result = await clientFetchClient
-        .PUT('/api/v1/artist-profile/locale', {
+        .PUT('/api/v1/artists/me/profile/locale', {
           body: { locale },
           signal: writeSignal(),
         })

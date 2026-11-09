@@ -1,4 +1,5 @@
 import type { Prisma } from '@prisma/client'
+import { SOURCE_AVAILABILITY_SELECT } from '../compilation-source'
 
 export const RELEASE_SUMMARY_SELECT = {
   id: true,
@@ -27,7 +28,13 @@ export const releaseReadinessSelect = (ownerArtistId: string) =>
     masterOwnerType: true,
     trackDrafts: {
       where: { ownerArtistId, deletedAt: null },
-      select: { id: true, isrc: true, audioKey: true },
+      select: {
+        id: true,
+        isrc: true,
+        audioKey: true,
+        sourceTrackId: true,
+        sourceTrack: { select: { ...SOURCE_AVAILABILITY_SELECT, isrc: true } },
+      },
     },
     tracks: {
       where: { track: { deletedAt: null } },
@@ -75,6 +82,10 @@ export const releaseWorkspaceSelect = (ownerArtistId: string) => {
         isDemo: true,
         isrc: true,
         audioKey: true,
+        sourceTrackId: true,
+        sourceTrack: {
+          select: { ...SOURCE_AVAILABILITY_SELECT, title: true, duration: true, isrc: true },
+        },
         audioFileName: true,
         audioSizeBytes: true,
         waveform: true,

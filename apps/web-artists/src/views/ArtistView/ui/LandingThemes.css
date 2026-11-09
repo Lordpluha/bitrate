@@ -1,0 +1,59 @@
+@layer utilities {
+  :root.light :is(.artist-landing, .artist-landing-preference-panel) {
+    --color-purple-200: var(--color-purple-700);
+    --color-purple-300: var(--color-purple-600);
+    --color-blue-300: var(--color-blue-600);
+    --color-emerald-200: var(--color-emerald-700);
+    --color-emerald-300: var(--color-emerald-600);
+  }
+  :root.light .artist-landing-backdrop {
+    opacity: 0.55;
+  }
+  :root.light .artist-split-word {
+    background-image: linear-gradient(
+      180deg,
+      var(--color-foreground) 15%,
+      var(--color-purple-700)
+    );
+  }
+  :root.light .artist-moving-border-cta svg {
+    color: var(--color-white);
+  }
+  :root.light .artist-finale-plus {
+    color: var(--color-purple-600);
+  }
+  :root.light .artist-response-periods button[aria-pressed="true"] {
+    color: var(--color-purple-700);
+  }
+  :root.light .artist-response-gridline {
+    border-top-color: var(--color-border);
+  }
+  :root.light .artist-response-audience {
+    background: linear-gradient(
+      125deg,
+      color-mix(
+        in oklab,
+        var(--color-purple-500) 8%,
+        var(--color-artist-canvas-start)
+      ),
+      var(--color-artist-canvas-middle)
+    );
+  }
+  :root.light .artist-landing-preference-panel {
+    color: var(--color-foreground);
+    box-shadow: 0 16px 45px -20px
+      color-mix(in oklab, var(--color-black) 25%, transparent);
+  }
+  :root.light
+    :is(.artist-credits-panel, .artist-response-glass, .artist-landing-dock) {
+    box-shadow:
+      0 16px 40px -24px color-mix(in oklab, var(--color-black) 25%, transparent),
+      inset 0 1px 0 var(--color-white-alpha-15);
+  }
+  :root.light .artist-scroll-bezel {
+    box-shadow:
+      0 34px 90px -18px color-mix(in oklab, var(--color-black) 18%, transparent),
+      0 0 65px -12px
+      color-mix(in oklab, var(--color-purple-500) 15%, transparent);
+  }
+}

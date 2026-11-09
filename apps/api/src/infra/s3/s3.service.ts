@@ -19,6 +19,12 @@ import type {
 import { Injectable, Logger } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 
+/**
+ * How long opening a connection to storage may take. Storage sits on the same host network, so
+ * anything slower means it is down, and failing lets BullMQ retry instead of hanging.
+ */
+const S3_CONNECTION_TIMEOUT_MS = 10_000
+
 /** Provides S3-compatible object storage operations (the StorageService). */
 @Injectable()
 export class S3Service implements StorageService {
@@ -47,6 +53,12 @@ export class S3Service implements StorageService {
         secretAccessKey: s3.secretKey,
       },
       forcePathStyle: s3.forcePathStyle,
+      // Without these the SDK waits forever: a storage call that never answers held a
+      // transcode job active indefinitely, renewing its lock, so nothing ever recovered it.
+      requestHandler: {
+        connectionTimeout: S3_CONNECTION_TIMEOUT_MS,
+        ...(s3.socketTimeoutMs > 0 ? { socketTimeout: s3.socketTimeoutMs } : {}),
+      },
     })
   }
 
