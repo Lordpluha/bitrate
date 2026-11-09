@@ -128,7 +128,6 @@ model TrackFile {
   track Track @relation(fields: [trackId], references: [id], onDelete: Cascade)
 
   @@unique([trackId, format, bitrate])
-  @@index([trackId])
   @@index([format])
 }
 

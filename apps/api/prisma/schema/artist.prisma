@@ -17,8 +17,6 @@ model ArtistSession {
 
   @@unique([id, artistId])
   @@index([artistId])
-  @@index([access_token])
-  @@index([refresh_token])
 }
 
 model Artist {
@@ -75,8 +73,6 @@ model Artist {
   likedBy   UserLikedArtist[]
   followers UserFollowedArtist[]
 
-  @@index([email])
-  @@index([username])
   @@index([monthlyListeners(sort: Desc)])
   @@index([deletedAt])
 }

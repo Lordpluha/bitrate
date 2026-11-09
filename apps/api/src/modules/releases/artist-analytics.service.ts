@@ -30,6 +30,12 @@ interface TopRow {
   listeners: bigint
 }
 
+/** A ranking row with its window totals: the period's track count and its leader's plays. */
+interface RankedTopRow extends TopRow {
+  maxPlays: bigint
+  total: bigint
+}
+
 /**
  * Listening analytics from Bitrate's own playback history only. Periods are whole UTC days
  * ending today; a day without plays inside a period with data is an observed zero, while an
@@ -39,24 +45,33 @@ interface TopRow {
 export class ArtistAnalyticsService {
   constructor(private readonly prisma: PrismaService) {}
 
+  /**
+   * One page of the period's ranking. The page, its total and the leader's plays come from one
+   * scan of the history; only a page past the end costs a count and a second read.
+   */
   async topTracks(artistId: string, input: ArtistTopTracksDto) {
     const from = periodStart(input.days, new Date())
     const scope = trackHistoryScope(artistId)
-    const [count] = await this.prisma.queryRaw<{ total: bigint }[]>(Prisma.sql`
-      SELECT COUNT(DISTINCT t.id)::bigint AS total
-      ${scope} AND h."listenedAt" >= ${from}`)
-    const total = Number(count?.total ?? 0)
-    const page = Math.min(input.page, Math.max(1, Math.ceil(total / TOP_TRACK_PAGE_SIZE)))
-    const rows =
-      total === 0
-        ? []
-        : await this.prisma.queryRaw<(TopRow & { maxPlays: bigint })[]>(Prisma.sql`
+    const readPage = (page: number) =>
+      this.prisma.queryRaw<RankedTopRow[]>(Prisma.sql`
       SELECT t.id, t.title, t.cover, COUNT(*)::bigint AS plays,
              COUNT(DISTINCT h."userId")::bigint AS listeners,
-             MAX(COUNT(*)) OVER () AS "maxPlays"
+             MAX(COUNT(*)) OVER () AS "maxPlays",
+             COUNT(*) OVER ()::bigint AS total
       ${scope} AND h."listenedAt" >= ${from}
       GROUP BY t.id, t.title, t.cover ORDER BY plays DESC, t.id ASC
       LIMIT ${TOP_TRACK_PAGE_SIZE} OFFSET ${(page - 1) * TOP_TRACK_PAGE_SIZE}`)
+    let page = input.page
+    let rows = await readPage(page)
+    let total = Number(rows[0]?.total ?? 0)
+    if (rows.length === 0 && page > 1) {
+      const [count] = await this.prisma.queryRaw<{ total: bigint }[]>(Prisma.sql`
+        SELECT COUNT(DISTINCT t.id)::bigint AS total
+        ${scope} AND h."listenedAt" >= ${from}`)
+      total = Number(count?.total ?? 0)
+      page = Math.max(1, Math.ceil(total / TOP_TRACK_PAGE_SIZE))
+      rows = total === 0 ? [] : await readPage(page)
+    }
     return {
       data: rows.map(topTrack),
       total,
