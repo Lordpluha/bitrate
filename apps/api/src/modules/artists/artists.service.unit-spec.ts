@@ -118,6 +118,12 @@ describe('ArtistsService', () => {
     expect(result).toBe(artist)
   })
 
+  it('findByUsername should throw NotFoundException for an unknown or deleted username', async () => {
+    prisma.artist.findFirst.mockResolvedValue(null)
+
+    await expect(service.findByUsername('nobody')).rejects.toBeInstanceOf(NotFoundException)
+  })
+
   it('requestDelete soft-deletes the artist and revokes their sessions', async () => {
     const deleted = buildArtist()
     prisma.$transaction.mockResolvedValue([deleted, { count: 1 }] as never)

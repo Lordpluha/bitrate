@@ -1,12 +1,13 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it, jest } from '@jest/globals'
 import { ArtistAuthGuard } from '@modules/artists-auth/artists-auth.guard'
 import { UserAuthGuard } from '@modules/users-auth/users-auth.guard'
-import type { INestApplication } from '@nestjs/common'
+import { type INestApplication, NotFoundException } from '@nestjs/common'
 import { Test, type TestingModule } from '@nestjs/testing'
 import request from 'supertest'
 import { buildArtist } from './__tests__/fixtures/artists.fixtures'
 import { ArtistsController } from './artists.controller'
 import { ArtistsService } from './artists.service'
+import { ARTIST_ERRORS } from './errors/artist.errors'
 import { FollowedArtistsController } from './followed-artists.controller'
 
 const makeServiceMock = () =>
@@ -101,6 +102,14 @@ describe('ArtistsController (int)', () => {
 
     expect(res.status).toBe(200)
     expect(service.findByUsername).toHaveBeenCalledWith('artist')
+  })
+
+  it('GET /artists/username/:username should return 404 for an unknown username', async () => {
+    service.findByUsername.mockRejectedValue(new NotFoundException(ARTIST_ERRORS.NOT_FOUND))
+
+    const res = await request(app.getHttpServer()).get('/artists/username/nobody')
+
+    expect(res.status).toBe(404)
   })
 
   it('DELETE /artists/me deletes the signed-in artist', async () => {
