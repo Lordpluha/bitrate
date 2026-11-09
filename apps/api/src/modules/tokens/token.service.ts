@@ -4,7 +4,7 @@ import { Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { JwtService } from '@nestjs/jwt'
 import * as argon2 from 'argon2'
-import type { Response } from 'express'
+import type { Request, Response } from 'express'
 import ms, { type StringValue } from 'ms'
 import {
   isHostOnlySession,
@@ -84,6 +84,23 @@ export class TokenService {
       path: '/',
       expires: this.getRefreshTokenExpiresAt(),
     })
+  }
+
+  /** Drops the switcher credential with the scope {@link setArtistAccountsCookie} wrote it. */
+  clearArtistAccountsCookie(res: Response) {
+    const { secure } = this.configService.getOrThrow('cookie')
+    res.clearCookie(this.artistAccountsCookieName(), {
+      httpOnly: true,
+      secure,
+      sameSite: 'strict',
+      path: '/',
+    })
+  }
+
+  /** The switcher credential this browser sent, if any. */
+  readArtistAccountsCookie(req: Request): string | undefined {
+    const value: unknown = req.cookies?.[this.artistAccountsCookieName()]
+    return typeof value === 'string' ? value : undefined
   }
 
   /** Runs the verify token operation. */

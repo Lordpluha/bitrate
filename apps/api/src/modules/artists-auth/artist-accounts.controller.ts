@@ -33,8 +33,7 @@ export class ArtistAccountsController {
     private readonly token: TokenService,
   ) {}
   private credential(request: Request): string | undefined {
-    const value: unknown = request.cookies?.[this.token.artistAccountsCookieName()]
-    return typeof value === 'string' ? value : undefined
+    return this.token.readArtistAccountsCookie(request)
   }
 
   @Get()

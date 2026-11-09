@@ -13,6 +13,8 @@ import { type SessionClient, sessionActivity } from './session-client'
 
 export const SAVED_ACCOUNT_LIMIT = 5
 const identitySelect = { id: true, username: true, avatar: true } satisfies Prisma.ArtistSelect
+/** What saving the current account does when the browser already holds the limit. */
+type SavedAccountOverflow = 'reject' | 'signOut'
 const liveSession = () => ({ expiresAt: { gt: new Date() }, artist: { deletedAt: null } })
 
 @Injectable()
@@ -83,7 +85,9 @@ export class ArtistAccountsService {
         },
       })
       if (!target) throw new NotFoundException(ARTIST_AUTH_ERRORS.ACCOUNT_NOT_SAVED)
-      await this.rememberCurrent(tx, currentArtistId, accessToken, browserTokenHash)
+      // An account signed in past the limit cannot be saved; switching away signs it out
+      // instead of trapping the browser in it.
+      await this.rememberCurrent(tx, currentArtistId, accessToken, browserTokenHash, 'signOut')
       const nonce = randomUUID()
       const access = await this.token.generateAccessToken(
         artistId,
@@ -132,6 +136,24 @@ export class ArtistAccountsService {
     })
   }
 
+  /** Signs this browser out of every saved account and forgets the switcher credential. */
+  async forgetBrowser(raw: string | undefined) {
+    const hash = this.hash(raw)
+    if (!hash) return
+    await this.prisma.$transaction(async (tx) => {
+      await this.lock(tx, hash)
+      const links = await tx.artistAccountLink.findMany({
+        where: { browserTokenHash: hash },
+        select: { sessionId: true, artistId: true },
+      })
+      // Deleting the sessions cascades to their links.
+      if (links.length)
+        await tx.artistSession.deleteMany({
+          where: { OR: links.map(({ sessionId, artistId }) => ({ id: sessionId, artistId })) },
+        })
+    })
+  }
+
   private async lock(tx: Prisma.TransactionClient, hash: string) {
     await tx.$executeRaw(Prisma.sql`SELECT pg_advisory_xact_lock(hashtextextended(${hash}, 0))`)
     await tx.artistAccountLink.deleteMany({
@@ -150,6 +172,7 @@ export class ArtistAccountsService {
     artistId: string,
     accessToken: string,
     browserTokenHash: string,
+    whenFull: SavedAccountOverflow = 'reject',
   ) {
     const session = await tx.artistSession.findFirst({
       where: { artistId, access_token: this.token.hashToken(accessToken), ...liveSession() },
@@ -161,8 +184,11 @@ export class ArtistAccountsService {
     if (
       !existing &&
       (await tx.artistAccountLink.count({ where: { browserTokenHash } })) >= SAVED_ACCOUNT_LIMIT
-    )
-      throw new ConflictException(ARTIST_AUTH_ERRORS.ACCOUNT_LIMIT)
+    ) {
+      if (whenFull === 'reject') throw new ConflictException(ARTIST_AUTH_ERRORS.ACCOUNT_LIMIT)
+      await tx.artistSession.deleteMany({ where: { id: session.id, artistId } })
+      return
+    }
     await tx.artistAccountLink.upsert({
       where,
       create: { browserTokenHash, artistId, sessionId: session.id },
