@@ -80,30 +80,7 @@ WORKDIR /app/apps/mobile
 # Экспорт статического веб-приложения
 RUN pnpm run export
 
-# Stage 6: Production Web Server (nginx для веб-версии)
-FROM nginx:1.31-alpine AS production-web
-# The nginx base is rebuilt upstream only every few weeks, while Alpine ships fixes for its
-# packages (curl, brotli, ...) in between; upgrading here keeps the scan clean without
-# waiting for a new tag.
-RUN apk upgrade --no-cache
-
-# Копируем статические файлы
-COPY --from=build /app/apps/mobile/dist /usr/share/nginx/html
-
-# Кастомная nginx конфигурация для SPA
-RUN echo 'server { \
-    listen 80; \
-    location / { \
-        root /usr/share/nginx/html; \
-        index index.html; \
-        try_files $uri $uri/ /index.html; \
-    } \
-}' > /etc/nginx/conf.d/default.conf
-
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
-
-# Stage 7: CI/CD Build (для Android/iOS сборки в облаке)
+# Stage 6: CI/CD Build (для Android/iOS сборки в облаке)
 FROM base AS ci-build
 
 # Установка зависимостей для Android SDK (опционально)
@@ -122,3 +99,22 @@ WORKDIR /app/apps/mobile
 
 # Для сборки через EAS Build
 CMD ["eas", "build", "--platform", "all"]
+
+# Stage 7: Production Web Server (nginx для веб-версии)
+# Last stage on purpose: it is the image that ships, so it is the one image scanners judge.
+FROM nginx:1.31-alpine AS production-web
+# The nginx base is rebuilt upstream only every few weeks, while Alpine ships fixes for its
+# packages (curl, brotli, ...) in between; upgrading here keeps the scan clean without
+# waiting for a new tag.
+RUN apk upgrade --no-cache
+
+# Shared static-site config: unprivileged `nginx` user on port 8080, SPA fallback to index.html.
+COPY --from=build --chown=nginx:nginx /app/apps/mobile/dist /usr/share/nginx/html
+COPY infra/nginx/static-site.conf /etc/nginx/nginx.conf
+
+USER nginx
+EXPOSE 8080
+HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
+  # 127.0.0.1, not localhost: wget tries ::1 first and `listen 8080` binds IPv4 only.
+  CMD wget --quiet --tries=1 --spider http://127.0.0.1:8080/ || exit 1
+CMD ["nginx", "-g", "daemon off;"]
