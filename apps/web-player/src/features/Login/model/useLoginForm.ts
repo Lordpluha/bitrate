@@ -24,15 +24,19 @@ export const useLoginForm = () => {
     meta: { suppressErrorToast: true },
   })
   const form = useForm<LoginFormData>({
-    defaultValues: { email: '', password: '' },
+    defaultValues: { acceptLegal: false, email: '', password: '' },
     mode: 'onChange',
     resolver: zodResolver(loginSchema),
     shouldFocusError: true,
   })
 
-  const onSubmit: SubmitHandler<LoginFormData> = async (body) => {
+  /** Runs only once the schema passed, consent included; the consent stays out of the body. */
+  const onSubmit: SubmitHandler<LoginFormData> = async ({
+    email,
+    password,
+  }) => {
     try {
-      await mutation.mutateAsync({ body })
+      await mutation.mutateAsync({ body: { email, password } })
     } catch {
       /** The failure is shown in the form's alert; keep React Hook Form from seeing a rejection. */
     }

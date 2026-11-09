@@ -6,10 +6,27 @@ describe('auth schemas', () => {
   it('accepts existing credentials without applying registration strength rules', () => {
     expect(
       loginSchema.safeParse({
+        acceptLegal: true,
         email: 'listener@example.com',
         password: 'legacy',
       }).success,
     ).toBe(true)
+  })
+
+  it.each([
+    ['unchecked', false],
+    ['missing', undefined],
+  ])('rejects a sign-in when acceptance is %s', (_label, acceptLegal) => {
+    const result = loginSchema.safeParse({
+      acceptLegal,
+      email: 'listener@example.com',
+      password: 'legacy',
+    })
+
+    expect(result.success).toBe(false)
+    expect(result.error?.issues.map((issue) => issue.path.join('.'))).toEqual([
+      'acceptLegal',
+    ])
   })
 
   it('continues to enforce strong passwords for registration', () => {

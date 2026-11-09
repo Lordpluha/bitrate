@@ -26,11 +26,12 @@ export const useLoginModalForm = (onSuccess: () => void) => {
   const form = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
     mode: 'onChange',
-    defaultValues: { email: '', password: '' },
+    defaultValues: { acceptLegal: false, email: '', password: '' },
     shouldFocusError: true,
   })
-  const onSubmit: SubmitHandler<LoginFormData> = (body) => {
-    login.mutate({ body })
+  /** Runs only once the schema passed, consent included; the consent stays out of the body. */
+  const onSubmit: SubmitHandler<LoginFormData> = ({ email, password }) => {
+    login.mutate({ body: { email, password } })
   }
 
   return { form, isLoading: login.isPending, onSubmit }

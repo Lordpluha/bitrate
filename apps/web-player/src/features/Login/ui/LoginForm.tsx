@@ -9,6 +9,7 @@ import {
   AuthFooterLink,
   AuthHeading,
   AuthOrDivider,
+  LegalAcceptanceField,
   OAuthButtons,
   useAuthenticatedRedirect,
 } from '@features/Auth'
@@ -83,6 +84,8 @@ export const LoginForm = () => {
             </Link>
           </div>
 
+          <LegalAcceptanceField control={form.control} id="accept-legal" />
+
           <Button
             className={AUTH_BUTTON_CLASS}
             disabled={isSubmitting}
@@ -95,7 +98,7 @@ export const LoginForm = () => {
       </Form>
 
       <AuthOrDivider />
-      <OAuthButtons />
+      <OAuthButtons accepted={form.watch('acceptLegal')} />
       <AuthFooterLink
         href={ROUTES.auth.registration}
         lead={t('auth.login.noAccount')}
