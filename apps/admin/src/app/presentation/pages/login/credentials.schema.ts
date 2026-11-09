@@ -13,6 +13,8 @@ import type { Credentials } from '@domain/staff'
 export const credentialsSchema = z.object({
   email: z
     .string()
+    .trim()
+    .toLowerCase()
     .min(1, 'login.invalid.emailRequired')
     .pipe(z.email('login.invalid.emailFormat')),
   password: z.string().min(1, 'login.invalid.passwordRequired'),
