@@ -166,8 +166,8 @@ export class AdminStaffService {
   }
 
   private async assertEmailAvailable(email: string): Promise<void> {
-    const existing = await this.prisma.staff.findUnique({
-      where: { email },
+    const existing = await this.prisma.staff.findFirst({
+      where: { email: { equals: email, mode: 'insensitive' } },
       select: { id: true },
     })
     if (existing) throw new ConflictException(`Email "${email}" is already in use`)
