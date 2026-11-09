@@ -1,3 +1,4 @@
+import { EmailSchema } from '@common/email'
 import { PERMISSIONS } from '@modules/admin-auth'
 import { createZodDto } from 'nestjs-zod'
 import { z } from 'zod'
@@ -6,7 +7,7 @@ import { z } from 'zod'
 const MIN_PASSWORD_LENGTH = 12
 
 export const CreateStaffSchema = z.object({
-  email: z.email(),
+  email: EmailSchema,
   username: z.string().min(1).max(100),
   password: z.string().min(MIN_PASSWORD_LENGTH),
   roleId: z.uuid(),

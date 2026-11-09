@@ -28,7 +28,9 @@ export class AdminAuthService {
 
   /** Runs the login staff operation. There is no self-registration — accounts are provisioned manually. */
   async loginStaff(email: Staff['email'], password: string): Promise<StaffTokenPair> {
-    const staff = await this.prisma.staff.findFirst({ where: { email, deletedAt: null } })
+    const staff = await this.prisma.staff.findFirst({
+      where: { email: { equals: email, mode: 'insensitive' }, deletedAt: null },
+    })
     if (staff?.lockedUntil && staff.lockedUntil > new Date()) {
       throw new HttpException('Account is temporarily locked', HttpStatus.TOO_MANY_REQUESTS)
     }
