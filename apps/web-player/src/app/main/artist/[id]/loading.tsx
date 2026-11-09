@@ -1,4 +1,4 @@
-import { ArtistPageState } from '@views/Artist/ui/ArtistPageState'
+import { ArtistPageState } from '@views/Artist'
 
 export default function Loading() {
   return <ArtistPageState variant="loading" />

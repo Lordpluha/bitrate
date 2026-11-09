@@ -13,10 +13,11 @@ import {
   StateMessage,
 } from '@shared/ui'
 import { getPlaylistCoverUrl, getUserAvatarUrl } from '@shared/utils/mediaUrl'
-import { ListMusic, UserRound } from 'lucide-react'
+import { ListMusic } from 'lucide-react'
 import { usePlayCollection } from '@/features/PlayCollection'
 import { ProfileFollowsSection } from '@/views/Profile/ui/ProfileFollowsSection'
 import { ProfileHeader } from '@/views/Profile/ui/ProfileHeader'
+import { ProfileNotFound } from '@/views/Profile/ui/ProfileNotFound'
 
 type PublicProfilePageProps = {
   userId: string
@@ -67,18 +68,7 @@ export const PublicProfilePage = ({ userId }: PublicProfilePageProps) => {
     )
   }
 
-  if (userQuery.isError || !userQuery.data) {
-    return (
-      <div className="flex h-full flex-col px-4 md:px-8">
-        <StateMessage
-          description={t('profile.notFoundDescription')}
-          icon={UserRound}
-          primary={{ href: ROUTES.main, label: t('common.backToHome') }}
-          title={t('profile.notFound')}
-        />
-      </div>
-    )
-  }
+  if (userQuery.isError || !userQuery.data) return <ProfileNotFound />
 
   const user = userQuery.data
 

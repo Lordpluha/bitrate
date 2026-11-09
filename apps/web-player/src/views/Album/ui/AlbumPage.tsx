@@ -4,15 +4,14 @@ import { useAlbum } from '@entities/Album'
 import type { TrackEntity } from '@entities/Track'
 import { getApiErrorStatus } from '@shared/api/errors'
 import { useI18n } from '@shared/i18n'
-import { ROUTES } from '@shared/routes'
-import { ErrorState, StateMessage } from '@shared/ui'
+import { ErrorState } from '@shared/ui'
 import {
   CollectionPanel,
   CollectionSkeleton,
 } from '@shared/ui/CollectionHeader'
 import { getAlbumCoverUrl } from '@shared/utils/mediaUrl'
-import { Disc3 } from 'lucide-react'
 import { AlbumHero } from './AlbumHero'
+import { AlbumNotFound } from './AlbumNotFound'
 import { AlbumTrackSection } from './AlbumTrackSection'
 
 const getAlbumDuration = (tracks: TrackEntity[]) =>
@@ -46,18 +45,7 @@ export const AlbumPage = ({ albumId }: { albumId: string }) => {
     )
   }
 
-  if (isError || !album) {
-    return (
-      <CollectionPanel>
-        <StateMessage
-          description={t('album.notFoundDescription')}
-          icon={Disc3}
-          primary={{ href: ROUTES.main, label: t('common.backToHome') }}
-          title={t('album.notFound')}
-        />
-      </CollectionPanel>
-    )
-  }
+  if (isError || !album) return <AlbumNotFound />
 
   return (
     <CollectionPanel>

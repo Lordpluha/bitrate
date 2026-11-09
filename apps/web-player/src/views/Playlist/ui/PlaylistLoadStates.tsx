@@ -1,3 +1,5 @@
+'use client'
+
 import { ROUTES } from '@shared/routes'
 import { CollectionSkeleton, StateMessage } from '@shared/ui'
 import { Music, TriangleAlert } from 'lucide-react'

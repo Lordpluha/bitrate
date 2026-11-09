@@ -268,6 +268,17 @@ export const pl = {
   'error.title': 'Coś poszło nie tak',
   'error.tryAgainShort':
     'Coś poszło nie tak po naszej stronie. Spróbuj ponownie.',
+  'main.loading': 'Wczytujemy stronę główną',
+  'main.pageNotFound': 'Nie znaleziono strony',
+  'main.pageNotFoundDescription':
+    'Ta strona nie istnieje lub link jest nieprawidłowy.',
+  'lyrics.loading': 'Wczytujemy tekst piosenki',
+  'lyrics.loadFailed': 'Nie udało się wczytać tekstu piosenki',
+  'queue.loading': 'Wczytujemy kolejkę',
+  'queue.loadFailed': 'Nie udało się wczytać kolejki',
+  'search.unavailable': 'Wyszukiwanie jest niedostępne',
+  'settings.loading': 'Wczytujemy ustawienia',
+  'settings.loadFailed': 'Nie udało się wczytać ustawień',
   'friends.accept': 'Akceptuj',
   'friends.add': 'Dodaj',
   'friends.addFriend': 'Dodaj do znajomych',
