@@ -21,7 +21,7 @@ export type DemoMutationEffect = (input: {
 }) => void
 
 /** Thrown instead of a request: a demo block never reaches the network. */
-export class DemoOfflineError extends Error {
+class DemoOfflineError extends Error {
   constructor(what: string) {
     super(`Landing demo: ${what} stays local`)
     this.name = 'DemoOfflineError'

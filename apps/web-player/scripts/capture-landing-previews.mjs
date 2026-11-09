@@ -10,7 +10,7 @@
  * starts them):
  *   MOCK_API_PORT=3999 node tests/screenshot/mock-api.mjs
  *   API_URL=http://localhost:3999 NEXT_PUBLIC_API_URL=http://localhost:3999 pnpm dev
- *   node scripts/capture-landing-previews.mjs
+ *   pnpm capture:landing-previews
  *
  * Writes `public/images/landing/player-<device>-<screen>-<theme>.webp` and
  * `src/views/LandingView/model/playerScreens.generated.ts`.

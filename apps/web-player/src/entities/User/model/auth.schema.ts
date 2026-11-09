@@ -10,7 +10,7 @@ const loginPasswordSchema = z
  * The "I am 16+ and accept the Terms, Community Guidelines and Privacy Policy" box. Every form
  * that sends credentials requires it; the form keeps it out of the request body.
  */
-export const legalAcceptanceSchema = z
+const legalAcceptanceSchema = z
   .boolean({ error: 'validation.legal.required' })
   .refine((accepted) => accepted, 'validation.legal.required')
 
