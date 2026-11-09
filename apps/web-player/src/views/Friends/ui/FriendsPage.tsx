@@ -27,6 +27,13 @@ import { RemoveFriendMenu } from '@/features/RemoveFriend'
 
 type FriendsTab = 'all' | 'online'
 
+type TabLabelInput = {
+  count: number
+  /** Whether the count has loaded; an unknown count is left off the label. */
+  isKnown: boolean
+  label: string
+}
+
 /** Friends shown in the Online now strip. */
 const STRIP_SIZE = 8
 
@@ -68,6 +75,9 @@ export const FriendsPage = () => {
   const requestCount = incoming.data?.length ?? 0
   const all = friends.data ?? []
   const { offline, online } = partitionByPresence({ friends: all })
+  /** Counts only once they are known: a failed or loading list shows the plain labels. */
+  const tabLabel = ({ count, isKnown, label }: TabLabelInput) =>
+    isKnown ? t('friends.countLabel', { count, label }) : label
 
   const findFriends = (
     <Button
@@ -93,15 +103,17 @@ export const FriendsPage = () => {
           tabs={[
             {
               id: 'all',
-              label: t('friends.countLabel', {
+              label: tabLabel({
                 count: all.length,
+                isKnown: friends.isSuccess,
                 label: t('friends.all'),
               }),
             },
             {
               id: 'online',
-              label: t('friends.countLabel', {
+              label: tabLabel({
                 count: online.length,
+                isKnown: friends.isSuccess,
                 label: t('friends.online'),
               }),
             },
@@ -112,12 +124,11 @@ export const FriendsPage = () => {
           className={segmentedTabClassName({ isActive: false })}
           href={ROUTES.friendRequests}
         >
-          {requestCount
-            ? t('friends.countLabel', {
-                count: requestCount,
-                label: t('friends.requests'),
-              })
-            : t('friends.requests')}
+          {tabLabel({
+            count: requestCount,
+            isKnown: incoming.isSuccess,
+            label: t('friends.requests'),
+          })}
         </Link>
       </div>
 

@@ -145,6 +145,9 @@ export const en = {
   'playlist.noTracksFound': 'No tracks found.',
   'playlist.search': 'Search for songs',
   'search.browseAll': 'Browse all',
+  'search.browseEmptyDescription':
+    'Genres and moods will show up here soon. Until then, search for a track, artist or album above.',
+  'search.browseEmptyTitle': 'Nothing to browse yet',
   'search.genre': 'Genre',
   'search.placeholder': 'What do you want to play?',
   'search.recent': 'Recent searches',
@@ -341,6 +344,8 @@ export const en = {
   'charts.topSongs': 'Top songs',
   'charts.unavailable': 'Charts are unavailable',
   'common.back': 'Back',
+  'common.forward': 'Forward',
+  'common.history': 'History',
   'common.backToHome': 'Back to home',
   'common.durationHours': '{hours} hr {minutes} min',
   'common.durationMinutes': '{minutes} min',

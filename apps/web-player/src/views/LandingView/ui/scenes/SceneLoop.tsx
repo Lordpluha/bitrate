@@ -62,7 +62,6 @@ export const SceneLoop = () => {
               coverUrl="/images/liked-songs.svg"
               meta={[t('common.songs.other', { count: likedCount })]}
               owner={DEMO_ME.username}
-              showBack={false}
               title={t('library.likedSongs')}
               type={t('common.playlist')}
             />

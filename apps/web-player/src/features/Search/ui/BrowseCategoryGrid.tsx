@@ -1,6 +1,7 @@
 'use client'
 
-import { Skeleton } from '@shared/ui'
+import { Skeleton, StateMessage } from '@shared/ui'
+import { Compass } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useBrowseCategories } from '@/entities/Discovery'
 import { useI18n } from '@/shared/i18n'
@@ -51,6 +52,16 @@ export const BrowseCategoryGrid = () => {
   }
 
   const categories = data.data
+
+  if (categories.length === 0) {
+    return (
+      <StateMessage
+        description={t('search.browseEmptyDescription')}
+        icon={Compass}
+        title={t('search.browseEmptyTitle')}
+      />
+    )
+  }
 
   return (
     <>

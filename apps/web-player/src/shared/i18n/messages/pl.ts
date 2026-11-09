@@ -146,6 +146,9 @@ export const pl = {
   'playlist.noTracksFound': 'Nie znaleziono utworów.',
   'playlist.search': 'Szukaj utworów',
   'search.browseAll': 'Przeglądaj wszystko',
+  'search.browseEmptyDescription':
+    'Gatunki i nastroje wkrótce pojawią się tutaj. Do tego czasu wyszukaj utwór, artystę lub album powyżej.',
+  'search.browseEmptyTitle': 'Na razie nie ma czego przeglądać',
   'search.genre': 'Gatunek',
   'search.placeholder': 'Czego chcesz posłuchać?',
   'search.recent': 'Ostatnie wyszukiwania',
@@ -353,6 +356,8 @@ export const pl = {
   'charts.topSongs': 'Najpopularniejsze utwory',
   'charts.unavailable': 'Listy przebojów są niedostępne',
   'common.back': 'Wstecz',
+  'common.forward': 'Dalej',
+  'common.history': 'Historia',
   'common.backToHome': 'Wróć na stronę główną',
   'common.durationHours': '{hours} godz. {minutes} min',
   'common.durationMinutes': '{minutes} min',

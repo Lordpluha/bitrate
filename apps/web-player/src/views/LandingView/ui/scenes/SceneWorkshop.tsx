@@ -120,7 +120,6 @@ export const SceneWorkshop = () => {
               description={playlist?.description}
               meta={[t('common.songs.other', { count: tracks.length })]}
               owner={DEMO_ME.username}
-              showBack={false}
               title={playlist?.title ?? ''}
               type={t('common.playlist')}
             />
