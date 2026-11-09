@@ -1,7 +1,0 @@
----
-'@bitrate/web-player': minor
-'@bitrate/api': minor
-'@bitrate/web-artists': patch
----
-
-Reworked the landing to lead visitors into the player: the header now has a GitHub link, a language switch and an always-visible "Start listening" / "Open player" button, and the brand idles in motion until hovered. The hero shows real captures of the player on a laptop and a phone in every theme, live platform totals from the new public `GET /api/v1/platform/stats` endpoint and a free · no install · open source line; the footer carries the Bitrate mark, a GitHub link and separate health for the API, the web player and the artist portal (via the new `/api/health` route). The team block became a jar of bubbles that can be opened, shaken or emptied into the footer, with up-to-date team and stack content, and the final scene's Newton's cradle can be pulled and released. Scrolling back no longer snaps the background shape. The auth screens are now fully translated (EN/UK/PL) with a guest language switch and default to the browser language; email/password sign-in now requires the legal acceptance box like sign-up, the auth panels fill the desktop height, and the mobile menu's log-out clears the player island. Artist and user pages are addressed by username, with old id links redirecting, and unknown usernames answer 404 in the API. The artist portal now sends the acceptances the artist actually ticked instead of always `true`.
