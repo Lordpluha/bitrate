@@ -36,12 +36,16 @@ function show() {
   const client = new QueryClient({
     defaultOptions: { queries: { retry: false, gcTime: 0 } },
   })
-  render(
+  const view = (data: ArtistAnalytics) => (
     <QueryClientProvider client={client}>
-      <TopTracks artistId="artist-1" data={overview} />
-    </QueryClientProvider>,
+      <TopTracks artistId="artist-1" data={data} />
+    </QueryClientProvider>
   )
-  return userEvent.setup()
+  const { rerender } = render(view(overview))
+  return Object.assign(userEvent.setup(), {
+    showPeriod: (days: number) =>
+      rerender(view({ ...overview, period: { ...overview.period, days } })),
+  })
 }
 
 describe('Top tracks pagination', () => {
@@ -128,6 +132,19 @@ describe('Top tracks pagination', () => {
     await user.click(screen.getByRole('button', { name: 'Try again' }))
     await waitFor(() =>
       expect(screen.getByText('Track 1', { exact: true })).toBeVisible(),
+    )
+  })
+
+  it('starts another period at its first page', async () => {
+    const user = show()
+    await screen.findByText('Track 1', { exact: true })
+    await user.click(screen.getByRole('button', { name: 'Page 3' }))
+    await screen.findByText('Track 12', { exact: true })
+    user.showPeriod(7)
+    await screen.findByText('Track 1', { exact: true })
+    expect(get).toHaveBeenLastCalledWith(
+      '/api/v1/artists/me/analytics/top-tracks',
+      expect.objectContaining({ params: { query: { days: 7, page: 1 } } }),
     )
   })
 })

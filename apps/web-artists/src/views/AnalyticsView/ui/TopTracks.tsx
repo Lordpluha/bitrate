@@ -18,8 +18,12 @@ export function TopTracks({
 }) {
   const { t, tMessage } = useI18n()
   const format = useFormats()
-  const [page, setPage] = useState(1)
-  const tracks = useTopTracks(artistId, data.period.days, page)
+  const days = data.period.days
+  // The page belongs to the period it was picked in; another period starts again at its first.
+  const [paging, setPaging] = useState({ days, page: 1 })
+  const page = paging.days === days ? paging.page : 1
+  const setPage = (next: number) => setPaging({ days, page: next })
+  const tracks = useTopTracks(artistId, days, page)
   const result = tracks.data
   const most = Math.max(1, result?.maxPlays ?? 0)
   const pages = Math.max(
