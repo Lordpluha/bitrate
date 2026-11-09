@@ -84,7 +84,7 @@ jobs:
       - name: Test Web Build
         if: ${{ inputs.run-mobile-web-test }}
         run: |
-          docker run -d -p 8080:8080 --name ${{ inputs.mobile-web-test-container }} ${{ inputs.mobile-web-test-image }}
+          docker run -d -p 8080:80 --name ${{ inputs.mobile-web-test-container }} ${{ inputs.mobile-web-test-image }}
           sleep 5
           curl -f http://localhost:8080 || exit 1
 

@@ -76,17 +76,9 @@ FROM nginx:1.31-alpine AS production
 # waiting for a new tag.
 RUN apk upgrade --no-cache
 
-# Run as the image's unprivileged `nginx` user. Port 3005 is already above 1024; the pid file and
-# temp/cache paths default to root-only locations, so the pid moves to /tmp and the cache dir is
-# handed to nginx. The `user` directive only applies to a root master and is dropped.
-RUN sed -i -e '/^user /d' -e 's|^pid .*|pid /tmp/nginx.pid;|' /etc/nginx/nginx.conf \
-  && chown -R nginx:nginx /var/cache/nginx
-
-COPY --from=build --chown=nginx:nginx /app/apps/admin/dist/admin/browser /usr/share/nginx/html
+COPY --from=build /app/apps/admin/dist/admin/browser /usr/share/nginx/html
 COPY apps/admin/nginx.conf /etc/nginx/conf.d/default.conf
 
-USER nginx
 EXPOSE 3005
 HEALTHCHECK --interval=30s --timeout=3s --start-period=20s --retries=3 \
-  # 127.0.0.1, not localhost: wget tries ::1 first and `listen 3005` binds IPv4 only.
-  CMD wget --quiet --tries=1 --spider http://127.0.0.1:3005/ || exit 1
+  CMD wget --quiet --tries=1 --spider http://localhost:3005/ || exit 1

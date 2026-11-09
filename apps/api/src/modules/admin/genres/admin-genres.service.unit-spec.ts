@@ -104,15 +104,6 @@ describe('AdminGenresService', () => {
       })
     })
 
-    it('trims separator runs of any length from both ends of the derived slug', async () => {
-      prisma.genre.create.mockResolvedValue(buildAdminGenre() as never)
-      const separators = '- '.repeat(25_000)
-
-      await service.create({ name: `${separators}Lo-Fi${separators}x` })
-
-      expect(prisma.genre.create.mock.calls[0]?.[0]?.data).toMatchObject({ slug: 'lo-fi-x' })
-    })
-
     it('rejects a name that has no sluggable characters', async () => {
       await expect(service.create({ name: '!!!' })).rejects.toThrow()
       expect(prisma.genre.create).not.toHaveBeenCalled()

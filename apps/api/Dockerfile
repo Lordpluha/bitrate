@@ -119,10 +119,6 @@ RUN DATABASE_URL="$PRISMA_GENERATE_ONLY_URL" pnpm --filter @bitrate/api run db:g
 # Stage 6: Production
 FROM base AS production
 ENV NODE_ENV=production
-# node:26-alpine is rebuilt upstream only every few weeks, while Alpine ships fixes for its
-# packages (zlib, musl, ...) in between; upgrading here keeps the scan clean without waiting
-# for a new tag.
-RUN apk upgrade --no-cache
 
 # Created first so the `COPY --chown=` instructions below can resolve the name. Ownership then
 # rides along on each copy instead of being applied afterwards by a `chown -R /app`: a recursive

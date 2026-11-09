@@ -22,16 +22,12 @@ type SelectedGenre = Prisma.GenreGetPayload<{ select: typeof ADMIN_GENRE_SELECT 
 
 /** Lowercases, strips diacritics and collapses everything but letters/digits into single hyphens. */
 function slugifyGenreName(name: string): string {
-  const hyphenated = name
+  return name
     .normalize('NFKD')
     .replace(/[̀-ͯ]/g, '')
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
-  // Runs are already collapsed, so at most one hyphen sits at each end. Slicing avoids the
-  // backtracking a `-+$` regex does on long input (CodeQL js/polynomial-redos).
-  const start = hyphenated.startsWith('-') ? 1 : 0
-  const end = hyphenated.endsWith('-') ? hyphenated.length - 1 : hyphenated.length
-  return hyphenated.slice(start, end)
+    .replace(/^-+|-+$/g, '')
 }
 
 /** Handles operator-facing genre management. */
