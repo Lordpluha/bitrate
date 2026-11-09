@@ -11,7 +11,8 @@ import {
 } from './enter'
 
 /** Panels that scroll on their own and the physics fields keep their native gestures. */
-const OWN_GESTURES = '.ai-panel, .hpanel, .drag-zone, input, textarea'
+const OWN_GESTURES =
+  '.ai-panel, .hpanel, .drag-zone, .loose-ball, input, textarea'
 const GLITCH_EVERY_MS = 3200
 /** Lock after a scene change so one trackpad swipe moves one scene. */
 const SETTLE_S = 0.7
@@ -36,6 +37,8 @@ export const mountScenes = (ctx: EngineContext, deps: SceneDeps) => {
   const rail = root.querySelector('[data-scene-rail]')
   const sweep = root.querySelector('.sweep')
   const loops: gsap.core.Animation[] = []
+  /** The entrance still playing; a scene change cuts it so it cannot fight the exit. */
+  let entering: gsap.core.Timeline | null = null
   const stopLoops = () => {
     while (loops.length) loops.pop()?.kill()
   }
@@ -108,6 +111,7 @@ export const mountScenes = (ctx: EngineContext, deps: SceneDeps) => {
       undefined,
       1.25,
     )
+    entering = tl
     return tl
   }
   const leave = (s: HTMLElement, dir: number) =>
@@ -143,6 +147,8 @@ export const mountScenes = (ctx: EngineContext, deps: SceneDeps) => {
     state.animating = true
     const dir = target > state.index ? 1 : -1
     stopLoops()
+    entering?.kill()
+    entering = null
     deps.stage?.go(target)
     if (sweep)
       gsap.fromTo(

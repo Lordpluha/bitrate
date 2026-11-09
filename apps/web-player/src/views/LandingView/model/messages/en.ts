@@ -306,7 +306,7 @@ export const en = {
   'team.small_team': 'Small team.',
   'team.loud_signal': 'Loud signal.',
   'team.two_people_build_bitrate_the_player_the':
-    'Two people build Bitrate — the player, the artist portal, the API and everything in between. Hover a bubble to meet us, drag it to play.',
+    'Three people build Bitrate — the player, the artist portal, the API and everything in between. Open the jar, hover a bubble to meet us, throw it out and find it again in the footer.',
   'team.people': 'people',
   'team.workspaces': 'workspaces',
   'team.palette': 'palette',
@@ -396,7 +396,7 @@ export const en = {
   'team.tech_api': 'API',
   'team.tech_data_layer': 'Data layer',
   'team.tech_database': 'Database',
-  'team.tech_cache': 'Cache · queues',
+  'team.tech_cache': 'Cache',
   'team.tech_player_engine': 'Player engine',
   'team.tech_admin': 'Admin panel',
   'team.tech_desktop': 'Desktop app',
@@ -435,6 +435,23 @@ export const en = {
   'hero.stat_tracks': 'Tracks',
   'hero.stat_artists': 'Artists',
   'hero.stat_listeners': 'Listeners',
+  'team.bio_artist_portal':
+    'Worked on the artist portal: sign-up, password reset and its loading states.',
+  'team.tech_queues': 'Background jobs',
+  'team.tech_storage': 'Audio storage (S3)',
+  'team.tech_motion': 'Landing motion',
+  'team.tech_3d': 'Landing 3D stage',
+  'team.tech_components': 'Component library',
+  'team.tech_docs': 'Documentation site',
+  'team.tech_lint': 'Lint and format',
+  'team.tech_tests': 'Unit tests',
+  'team.jar_open': 'Open the jar',
+  'team.jar_close': 'Close the jar',
+  'team.jar_shake': 'Shake it out',
+  'team.jar_collect': 'Collect them back',
+  'team.jar_lid': 'Jar lid',
+  'team.jar_in_footer': '{count} out of the jar · they land in the footer',
+  'cta.pull_and_release': 'Pull a ball and let go',
 } as const
 
 export type LandingKey = keyof typeof en

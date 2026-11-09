@@ -65,7 +65,7 @@ export const mountLanding = ({
   const canvases = createCanvases(ctx)
   mountPointer(ctx)
   mountCursor(ctx)
-  const resetTeam = mountTeam(ctx)
+  const team = mountTeam(ctx)
   const canvas = root.querySelector<HTMLCanvasElement>('#stage')
   const webgl = Boolean(canvas) && hasWebGL()
   const resetPartners = webgl ? null : mountPartners2d(ctx)
@@ -80,7 +80,8 @@ export const mountLanding = ({
     glitch: headings.glitch,
     onEnter: {
       workshop: mountWorkshopShuffle(ctx),
-      team: resetTeam,
+      team: team.team,
+      cta: team.cta,
       ...(resetPartners && { partners: resetPartners }),
     },
   })

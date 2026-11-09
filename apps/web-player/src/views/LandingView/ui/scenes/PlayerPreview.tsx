@@ -31,6 +31,8 @@ const Screen = ({ device, alt }: ScreenProps) => {
           className={lc(`pv pv-${theme}`)}
           height={height}
           key={theme}
+          /* dark is the default theme and the hero's largest paint */
+          loading={theme === 'dark' ? 'eager' : 'lazy'}
           sizes={sizes}
           src={`/images/landing/player-${device}-${theme}.webp`}
           width={width}

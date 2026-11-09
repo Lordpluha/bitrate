@@ -73,7 +73,11 @@ export const SceneStart = ({ signedIn }: SceneProps) => {
         w={400}
         x={520}
         y={470}
-      />
+      >
+        <span className={lc('cradle-hint d-only')}>
+          {c('cta.pull_and_release')}
+        </span>
+      </Abs>
       <p
         className={lc('abs mono', 'text-center')}
         data-a="up"

@@ -1,13 +1,15 @@
 import { lc } from '../../lib/styles/lc'
+import { CONTRIBUTING_URL, GITHUB_REPO_URL } from '../../model/links'
+import { TEAM_STATS } from '../../model/team'
 import { useLandingCopy } from '../../model/useLandingCopy'
 import { Abs, SceneFootnote, SceneShell } from './parts'
 
-/** Scene "Team" — ported from the motion prototype; the landing engine animates it after mount. */
+/** Scene "Team": the team and its stack as bubbles in a jar the visitor can open and empty. */
 export const SceneTeam = () => {
   const c = useLandingCopy()
   return (
     <SceneShell id="team" labelKey="team.about_our_team">
-      <Abs w={420} x={60} y={170}>
+      <Abs w={420} x={60} y={150}>
         <div className={lc('eyebrow', 'mb-[18px]')} data-a="up">
           {c('team.about_our_team')}
         </div>
@@ -24,22 +26,54 @@ export const SceneTeam = () => {
         </p>
         <div className={lc('stats')} data-a="up">
           <span>
-            <b data-v="2">{'2'}</b>
+            <b data-v={TEAM_STATS.people}>{TEAM_STATS.people}</b>
             <span className={lc('t-meta')}>{c('team.people')}</span>
           </span>
           <span>
-            <b data-v="9">{'9'}</b>
+            <b data-v={TEAM_STATS.workspaces}>{TEAM_STATS.workspaces}</b>
             <span className={lc('t-meta')}>{c('team.workspaces')}</span>
           </span>
           <span>
-            <b data-v="1">{'1'}</b>
+            <b data-v={TEAM_STATS.palette}>{TEAM_STATS.palette}</b>
             <span className={lc('t-meta')}>{c('team.palette')}</span>
           </span>
+        </div>
+        <div className={lc('jar-controls')} data-a="up">
+          <button
+            className={lc('btn btn-ghost btn-sm')}
+            data-jar="toggle"
+            type="button"
+          >
+            {c('team.jar_open')}
+          </button>
+          <button
+            className={lc('btn btn-ghost btn-sm')}
+            data-jar="shake"
+            type="button"
+          >
+            {c('team.jar_shake')}
+          </button>
+          <button
+            className={lc('btn btn-ghost btn-sm')}
+            data-jar="collect"
+            hidden
+            type="button"
+          >
+            {c('team.jar_collect')}
+          </button>
+          <a
+            className={lc('jar-footer mono')}
+            data-jar="footer"
+            hidden
+            href="#cta"
+          >
+            {c('team.jar_in_footer', { count: 0 })}
+          </a>
         </div>
         <div className={lc('ctas', 'mt-[26px]')} data-a="up">
           <a
             className={lc('btn btn-primary magnetic')}
-            href="https://github.com/Lordpluha/bitrate"
+            href={GITHUB_REPO_URL}
             rel="noopener noreferrer"
             target="_blank"
           >
@@ -50,7 +84,7 @@ export const SceneTeam = () => {
           </a>
           <a
             className={lc('btn btn-ghost magnetic')}
-            href="https://github.com/Lordpluha/bitrate/blob/develop/apps/docs/docs/guides/contributing.md"
+            href={CONTRIBUTING_URL}
             rel="noopener noreferrer"
             target="_blank"
           >
@@ -59,6 +93,17 @@ export const SceneTeam = () => {
         </div>
       </Abs>
       <Abs h={780} id="pit" markers="pit drag-zone" w={880} x={520} y={70}>
+        <div aria-hidden="true" className={lc('jar')} id="jar">
+          <i className={lc('jar-shine')} />
+        </div>
+        <button
+          aria-label={c('team.jar_lid')}
+          aria-pressed="false"
+          className={lc('jar-lid')}
+          data-jar="toggle"
+          id="jarLid"
+          type="button"
+        />
         <div className={lc('hc')} id="hc" role="tooltip"></div>
       </Abs>
       <SceneFootnote
