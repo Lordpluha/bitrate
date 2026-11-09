@@ -1,5 +1,33 @@
 # @bitrate/web-player
 
+## 1.6.0
+
+### Minor Changes
+
+- 3225a00: Reworked the landing to lead visitors into the player: the header now has a GitHub link, a language switch and an always-visible "Start listening" / "Open player" button, and the brand idles in motion until hovered. The hero shows real captures of the player on a laptop and a phone in every theme, live platform totals from the new public `GET /api/v1/platform/stats` endpoint and a free · no install · open source line; the footer carries the Bitrate mark, a GitHub link and separate health for the API, the web player and the artist portal (via the new `/api/health` route). The team block became a jar of bubbles that can be opened, shaken or emptied into the footer, with up-to-date team and stack content, and the final scene's Newton's cradle can be pulled and released. Scrolling back no longer snaps the background shape. The auth screens are now fully translated (EN/UK/PL) with a guest language switch and default to the browser language; email/password sign-in now requires the legal acceptance box like sign-up, the auth panels fill the desktop height, and the mobile menu's log-out clears the player island. Artist and user pages are addressed by username, with old id links redirecting, and unknown usernames answer 404 in the API. The artist portal now sends the acceptances the artist actually ticked instead of always `true`.
+
+### Patch Changes
+
+- 6ffaab1: Activity, Notifications and Friends span the main panel like the other pages, so their title
+  stays at the left edge while empty and error states centre in the panel instead of hugging the
+  left side and the top. Liked Songs centres its empty state below the header, and the
+  collection Back button sits above the cover instead of on its corner. Search shows an empty
+  state when there are no categories to browse instead of a lone "Browse all" heading.
+- 197d126: Below the desktop breakpoint, Liked Songs, playlists, albums and genre pages show Back in the
+  mobile header like the other nested pages, and their hero no longer carries its own arrow.
+  Friends tabs count friends and requests only once they have loaded, zero included, and the
+  playlist finder shows larger covers on wider screens.
+- cb697b9: Adding songs to your own playlist works again. The playlist page used to keep showing the
+  browser's cached copy for up to 30 seconds after a track was added, so the new song did not
+  appear, stayed on offer with its Add button and could be added twice; the page now
+  revalidates the playlist on every refetch. The "find something for your playlist" search
+  matches artists as well as titles, shows the artist's name instead of an id and no longer
+  repeats the title in a second column.
+- f52d145: The desktop top bar has Back and Forward buttons left of the search field, so playlists,
+  albums, Liked Songs and genre pages no longer carry their own Back arrow on desktop. Below the
+  desktop breakpoint the hero keeps its Back button, which now shows its round background.
+- 7dbf820: Fixed the sign-in and registration forms rejecting an autofilled address with a stray space as "Invalid email address"; the address is now trimmed and lower-cased before it is checked and sent.
+
 ## 1.5.1
 
 ### Patch Changes

@@ -1,4 +1,5 @@
 import { lc } from '../../lib/styles/lc'
+import { PARTNER_URL } from '../../model/links'
 import { useLandingCopy } from '../../model/useLandingCopy'
 import { Abs, SceneFootnote, SceneShell } from './parts'
 
@@ -32,10 +33,13 @@ export const ScenePartners = () => {
           {c('partners.drag_throw_squeeze')}
         </div>
         <div className={lc('ctas', 'mt-[24px]')} data-a="up">
+          {/* partnership talks start as a repository issue: there is no partner form yet */}
           <a
-            className={lc('btn btn-primary magnetic')}
+            className={lc('btn btn-ghost magnetic')}
             data-cursor="hover"
-            href="#partners"
+            href={PARTNER_URL}
+            rel="noopener noreferrer"
+            target="_blank"
           >
             {c('partners.become_a_partner')}{' '}
             <svg aria-hidden="true" className={lc('i')}>

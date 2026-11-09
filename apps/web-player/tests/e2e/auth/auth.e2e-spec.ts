@@ -35,6 +35,11 @@ test.describe('authentication pages', () => {
     await expect(
       page.getByText('Password must be at least 6 characters'),
     ).toBeVisible()
+    await expect(
+      page.getByText(
+        'You must accept the Terms of Use and Community Guidelines',
+      ),
+    ).toBeVisible()
   })
 
   test('links login, registration, and password recovery flows', async ({

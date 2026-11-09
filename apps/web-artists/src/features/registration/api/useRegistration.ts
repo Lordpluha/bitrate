@@ -39,14 +39,23 @@ export const useRegistration = (
 
   return useMutation({
     mutationFn: async (data: RegistrationFormData) => {
+      // Forward what the artist actually ticked: asserting `true` here would let a caller
+      // skip the form's checks and still record consent the artist never gave.
+      if (!data.acceptLegal) {
+        throw new Error(messageKey('auth.validation.acceptLegal'))
+      }
+      if (!data.acceptArtistAgreement) {
+        throw new Error(messageKey('auth.validation.acceptArtistAgreement'))
+      }
+
       const generatedUsername = data.email.split('@')[0]
 
       const response = await clientFetchClient.POST(
         '/api/v1/artists/auth/registration',
         {
           body: {
-            acceptArtistAgreement: true,
-            acceptLegal: true,
+            acceptArtistAgreement: data.acceptArtistAgreement,
+            acceptLegal: data.acceptLegal,
             email: data.email,
             password: data.password,
             username: generatedUsername,

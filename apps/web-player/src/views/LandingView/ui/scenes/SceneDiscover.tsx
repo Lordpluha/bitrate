@@ -1,50 +1,28 @@
-import { lc } from '../../lib/styles/lc'
-import { DEMO_TRACKS } from '../../model/demoTracks'
-import { useLandingCopy } from '../../model/useLandingCopy'
-import { Abs, SceneFootnote, SceneShell } from './parts'
+'use client'
 
-/** Scene "Discover" — ported from the motion prototype; the landing engine animates it after mount. */
+import { FollowArtistButton } from '@entities/Artist'
+import { SearchPage } from '@features/Search'
+import { useI18n } from '@shared/i18n'
+import { MusicCardLg, SectionHeader } from '@shared/ui'
+import { Suspense } from 'react'
+import { lc } from '../../lib/styles/lc'
+import { DEMO_ARTISTS } from '../../model/demo/demoData'
+import { useLandingCopy } from '../../model/useLandingCopy'
+import { DemoFrame } from '../demo/DemoFrame'
+import { Abs, SceneShell } from './parts'
+
+/** How many related artists the side column shows. */
+const RELATED_ARTISTS = 4
+
+/** Scene "Discover": Search's browse grid and the artists fans also like, with Follow. */
 export const SceneDiscover = () => {
   const c = useLandingCopy()
+  const { t } = useI18n()
   return (
     <SceneShell id="discover" labelKey="discover.follow_the_sound">
-      <Abs data-a="win" h={600} markers="card d-only" w={82} x={24} y={112}>
-        <div className={lc('rail-nav')}>
-          <span>
-            <svg aria-hidden="true" className={lc('i')}>
-              <use href="#i-home" />
-            </svg>
-            {c('discover.home')}
-          </span>
-          <span className={lc('on')}>
-            <svg aria-hidden="true" className={lc('i', 'text-accent')}>
-              <use href="#i-compass" />
-            </svg>
-            {c('discover.discover')}
-          </span>
-          <span>
-            <svg aria-hidden="true" className={lc('i')}>
-              <use href="#i-lib" />
-            </svg>
-            {c('discover.library')}
-          </span>
-          <span>
-            <svg aria-hidden="true" className={lc('i')}>
-              <use href="#i-layers" />
-            </svg>
-            {c('discover.playlists')}
-          </span>
-          <span>
-            <svg aria-hidden="true" className={lc('i')}>
-              <use href="#i-user" />
-            </svg>
-            {c('discover.profile')}
-          </span>
-        </div>
-      </Abs>
-      <Abs w={640} x={144} y={98}>
+      <Abs w={640} x={48} y={98}>
         <div className={lc('eyebrow', 'mb-[14px]')} data-a="up">
-          {c('discover.discover_the_connections')}
+          {c('discover.browse_then_go_deeper')}
         </div>
         <h2 className={lc('h h54')}>
           <span className={lc('line')}>
@@ -55,295 +33,44 @@ export const SceneDiscover = () => {
           </span>
         </h2>
         <p className={lc('lede s', 'mt-[12px]')} data-a="up">
-          {c('discover.explore_the_artists_influences_and_scene')}
+          {c('discover.lede')}
         </p>
       </Abs>
-      <Abs data-a="up" markers="legend d-only" w={420} x={666} y={228}>
-        <span>
-          <i className="bg-accent! bg-none!"></i>
-          {c('discover.influenced_by')}
-        </span>
-        <span>
-          <i className="bg-magenta-500! bg-none!"></i>
-          {c('discover.similar_sound')}
-        </span>
-        <span>
-          <i className="bg-info! bg-none!"></i>
-          {c('discover.shared_scene')}
-        </span>
-      </Abs>
-      <Abs h={447} markers="graph d-only" w={932} x={132} y={262}>
-        <svg
-          aria-hidden="true"
-          className="absolute inset-0!"
-          height="447"
-          viewBox="0 0 932 447"
-          width="932"
+      <Abs data-a="win" h={430} markers="win" w={900} x={48} y={300}>
+        <DemoFrame
+          className="h-full max-[820px]:max-h-[56vh]"
+          label={t('search.browseAll')}
         >
-          <path
-            className={lc('p-inf')}
-            d="M540 261 C 470 160, 400 90, 336 38"
-          />
-          <path
-            className={lc('p-scn')}
-            d="M540 261 C 650 170, 760 90, 798 38"
-          />
-          <path
-            className={lc('p-sim')}
-            d="M540 261 C 400 230, 250 200, 113 182"
-          />
-          <path
-            className={lc('p-sim')}
-            d="M540 261 C 420 300, 260 340, 127 353"
-          />
-          <path
-            className={lc('p-sim')}
-            d="M540 261 C 660 220, 760 160, 828 142"
-          />
-          <path
-            className={lc('p-scn')}
-            d="M540 261 C 650 280, 760 300, 829 305"
-          />
-          <path
-            className={lc('p-scn')}
-            d="M540 261 C 530 320, 500 380, 486 408"
-          />
-          <path
-            className={lc('p-sim')}
-            d="M540 261 C 640 330, 760 390, 822 407"
-          />
-        </svg>
-        <span className={lc('node', 'left-[216px] top-0')}>
-          <span
-            className={lc(
-              'av',
-              'bg-[image:linear-gradient(135deg,var(--color-purple-500),var(--color-blue-500))]',
-            )}
-          >
-            {c('discover.ms')}
-          </span>
-          <span>
-            <b>{c('discover.mira_sol')}</b>
-            <small>{c('discover.influence_dream_pop')}</small>
-          </span>
-        </span>
-        <span className={lc('node', 'left-[668px] top-0')}>
-          <span
-            className={lc(
-              'av',
-              'bg-[image:linear-gradient(135deg,var(--color-blue-500),var(--color-blue-400))]',
-            )}
-          >
-            {c('discover.np')}
-          </span>
-          <span>
-            <b>{c('discover.night_pulse_collective')}</b>
-            <small>{c('discover.shared_scene')}</small>
-          </span>
-        </span>
-        <span className={lc('node', 'left-0 top-[144px]')}>
-          <span
-            className={lc(
-              'av',
-              'bg-[image:linear-gradient(135deg,var(--color-magenta-500),var(--color-purple-500))]',
-            )}
-          >
-            {c('discover.sb')}
-          </span>
-          <span>
-            <b>{c('discover.static_bloom')}</b>
-            <small>{c('discover.similar_sound')}</small>
-          </span>
-        </span>
-        <span className={lc('node', 'left-[14px] top-[315px]')}>
-          <span
-            className={lc(
-              'av',
-              'bg-[image:linear-gradient(135deg,var(--color-magenta-500),var(--color-amber-500))]',
-            )}
-          >
-            {c('discover.as')}
-          </span>
-          <span>
-            <b>{c('discover.auren_sky')}</b>
-            <small>{c('discover.similar_sound')}</small>
-          </span>
-        </span>
-        <span className={lc('node', 'left-[724px] top-[104px]')}>
-          <span
-            className={lc(
-              'av',
-              'bg-[image:linear-gradient(135deg,var(--color-magenta-500),var(--color-purple-800))]',
-            )}
-          >
-            {c('discover.vc')}
-          </span>
-          <span>
-            <b>{c('discover.velvet_coast')}</b>
-            <small>{c('discover.similar_sound')}</small>
-          </span>
-        </span>
-        <span className={lc('node', 'left-[726px] top-[267px]')}>
-          <span
-            className={lc(
-              'av',
-              'bg-[image:linear-gradient(135deg,var(--color-blue-400),var(--color-purple-900))]',
-            )}
-          >
-            {c('discover.kh')}
-          </span>
-          <span>
-            <b>{c('discover.kite_halo')}</b>
-            <small>{c('discover.shared_scene')}</small>
-          </span>
-        </span>
-        <span className={lc('node', 'left-[357px] top-[370px]')}>
-          <span
-            className={lc(
-              'av',
-              'bg-[image:linear-gradient(135deg,var(--color-blue-700),var(--color-purple-500))]',
-            )}
-          >
-            {c('discover.ad')}
-          </span>
-          <span>
-            <b>{c('discover.afterhours_district')}</b>
-            <small>{c('discover.shared_scene')}</small>
-          </span>
-        </span>
-        <span className={lc('node', 'left-[712px] top-[369px]')}>
-          <span
-            className={lc(
-              'av',
-              'bg-[image:linear-gradient(135deg,var(--color-purple-600),var(--color-magenta-500))]',
-            )}
-          >
-            {c('discover.gh')}
-          </span>
-          <span>
-            <b>{c('discover.glass_harbour')}</b>
-            <small>{c('discover.similar_sound')}</small>
-          </span>
-        </span>
-        <span
-          className={lc(
-            'node focus',
-            'left-[468px] top-[174px] w-[144px] h-[174px] box-border',
-          )}
-        >
-          <span
-            className={lc(
-              'av',
-              'bg-[image:linear-gradient(135deg,var(--color-purple-400),var(--color-magenta-500))]',
-            )}
-          >
-            {c('discover.lv')}
-          </span>
-          <b>{c('discover.luma_vale')}</b>
-          <small>{c('discover.you_are_here')}</small>
-        </span>
-        <span className={lc('tag', 'left-[344px] top-[100px]')}>
-          {c('discover.influenced_by')}
-        </span>
-        <span className={lc('tag', 'left-[248px] top-[210px]')}>
-          {c('discover.similar_sound')}
-        </span>
-        <span className={lc('tag', 'left-[619px] top-[313px]')}>
-          {c('discover.shared_scene')}
-        </span>
-        <span className={lc('tag', 'left-[599px] top-[147px]')}>
-          {c('discover.similar_sound')}
-        </span>
+          {/* Search reads the URL's query; the landing has none, so it shows Browse all */}
+          <Suspense>
+            <SearchPage />
+          </Suspense>
+        </DemoFrame>
       </Abs>
-      <Abs data-a="win" markers="card" w={318} x={1090} y={104}>
-        <div className={lc('col', 'p-[20px] gap-[12px]')}>
-          <div className={lc('art d-only', 'h-[170px]')}></div>
-          <p
-            className={lc(
-              't-title',
-              'font-[700] [font-size:29px] leading-[1] font-[family-name:var(--font-display)]',
-            )}
-          >
-            {c('discover.luma_vale')}
-          </p>
-          <div className={lc('row', 'gap-[8px]')}>
-            <span className={lc('chip')}>{c('discover.electronic')}</span>
-            <span className={lc('chip')}>{c('discover.dream_pop')}</span>
-            <span className={lc('chip')}>{c('discover.night')}</span>
+      <Abs data-a="win" h={656} markers="win d-only" w={420} x={972} y={118}>
+        <DemoFrame className="h-full p-6" label={t('artist.fansAlsoLike')}>
+          <SectionHeader title={t('artist.fansAlsoLike')} />
+          <div className="grid grid-cols-2 gap-4">
+            {DEMO_ARTISTS.slice(2, 2 + RELATED_ARTISTS).map((artist) => (
+              <div className="flex min-w-0 flex-col gap-2" key={artist.id}>
+                <MusicCardLg
+                  description={t('common.artist')}
+                  id={artist.id}
+                  imageUrl={artist.avatar ?? undefined}
+                  isArtist
+                  name={artist.username}
+                />
+                <FollowArtistButton
+                  artistId={artist.id}
+                  artistName={artist.username}
+                  className="w-full"
+                  size="sm"
+                />
+              </div>
+            ))}
           </div>
-          <p className={lc('mono', 'text-accent')}>
-            {c('discover.illustrative_connection')}
-          </p>
-          <p className={lc('t-title')}>{c('discover.why_this_connection')}</p>
-          <p className={lc('t-meta', '[font-size:14px]')}>
-            {c('discover.dreamlike_synth_textures_spacious_vocals')}
-          </p>
-          <p className={lc('t-title d-only', 'mt-[6px]')}>
-            {c('discover.top_tracks')}
-          </p>
-          <div className={lc('qrow d-only', 'p-[6px_0]')}>
-            <span className={lc('cv s cv1')}></span>
-            <div className={lc('grow')}>
-              <p className={lc('t-title', '[font-size:12px]')}>
-                {DEMO_TRACKS.nightSignal}
-              </p>
-              <p className={lc('t-meta')}>{'3:56'}</p>
-            </div>
-          </div>
-          <div className={lc('qrow d-only', 'p-[6px_0]')}>
-            <span className={lc('cv s cv3')}></span>
-            <div className={lc('grow')}>
-              <p className={lc('t-title', '[font-size:12px]')}>
-                {c('discover.glass_horizon')}
-              </p>
-              <p className={lc('t-meta')}>{'4:28'}</p>
-            </div>
-          </div>
-          <a
-            className={lc('btn btn-primary btn-sm magnetic d-only')}
-            href="#discover"
-          >
-            {c('discover.explore_this_artist')}{' '}
-            <svg aria-hidden="true" className={lc('i')}>
-              <use href="#i-arrow" />
-            </svg>
-          </a>
-        </div>
+        </DemoFrame>
       </Abs>
-      <Abs
-        data-a="win"
-        h={75}
-        markers="card route d-only"
-        w={932}
-        x={132}
-        y={736}
-      >
-        <div>
-          <p className={lc('t-title')}>{c('discover.your_explored_route')}</p>
-          <p className={lc('t-meta')}>
-            {c('discover.3_steps_follow_the_journey')}
-          </p>
-        </div>
-        <span className={lc('grow')}></span>
-        <span className={lc('n')}>{'1'}</span>
-        <b>{c('discover.luma_vale')}</b>
-        <svg aria-hidden="true" className={lc('i', 'text-muted-foreground')}>
-          <use href="#i-arrow" />
-        </svg>
-        <span className={lc('n')}>{'2'}</span>
-        <b>{c('discover.mira_sol')}</b>
-        <svg aria-hidden="true" className={lc('i', 'text-muted-foreground')}>
-          <use href="#i-arrow" />
-        </svg>
-        <span className={lc('n')}>{'3'}</span>
-        <b>{c('discover.night_pulse_collective')}</b>
-      </Abs>
-      <SceneFootnote
-        noteKey="common.feature_concept_demo_content"
-        w={1360}
-        x={48}
-        y={854}
-      />
     </SceneShell>
   )
 }

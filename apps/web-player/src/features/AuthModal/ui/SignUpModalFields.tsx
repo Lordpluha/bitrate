@@ -3,13 +3,13 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormMessage,
   Input,
   InputProvider,
   PasswordInput,
 } from '@bitrate/ui-react'
 import type { RegistrationFormData } from '@entities/User'
 import type { Control } from 'react-hook-form'
+import { AuthModalFieldMessage } from './AuthModalFieldMessage'
 
 type SignUpModalFieldsProps = {
   control: Control<RegistrationFormData>
@@ -46,7 +46,7 @@ export const SignUpModalFields = ({ control }: SignUpModalFieldsProps) => (
                 </div>
               </InputProvider>
             </FormControl>
-            <FormMessage />
+            <AuthModalFieldMessage />
           </FormItem>
         )}
       />
@@ -75,7 +75,7 @@ export const SignUpModalFields = ({ control }: SignUpModalFieldsProps) => (
                 </div>
               </InputProvider>
             </FormControl>
-            <FormMessage />
+            <AuthModalFieldMessage />
           </FormItem>
         )}
       />

@@ -53,3 +53,8 @@ export const followingActivityResponseSchema = z.array(
     }),
   }),
 )
+
+/** One person's latest play in the Activity feed. */
+export type FollowingActivityEntry = z.infer<
+  typeof followingActivityResponseSchema
+>[number]

@@ -1,5 +1,6 @@
 'use client'
 
+import { SettingsRow, SettingsSwitch } from '@shared/ui'
 import {
   type MeSettings,
   useMeSettings,
@@ -7,11 +8,7 @@ import {
 } from '@/entities/Me'
 import { useAuth } from '@/shared/hooks'
 import { useI18n } from '@/shared/i18n'
-import {
-  SettingsRow,
-  SettingsSection,
-} from '@/views/Settings/ui/controls/SettingsSection'
-import { SettingsSwitch } from '@/views/Settings/ui/controls/SettingsSwitch'
+import { SettingsSection } from '@/views/Settings/ui/controls/SettingsSection'
 
 type PrivacyKey = keyof Pick<
   MeSettings,

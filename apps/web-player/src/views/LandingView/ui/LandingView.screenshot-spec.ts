@@ -5,9 +5,9 @@ test.use({ reducedMotion: 'reduce' })
 
 test('landing page default state', async ({ page }) => {
   await page.goto('/', { waitUntil: 'networkidle' })
-  await expect(page.getByRole('heading', { level: 1 })).toContainText(
-    'Your music',
-  )
+  await expect(
+    page.locator('#hero').getByRole('heading', { level: 1 }),
+  ).toContainText('Your music')
   await expect(page.locator('.landing')).toHaveClass(/(^|\s)is-static(\s|$)/)
   await page.evaluate(() => document.fonts.ready)
 

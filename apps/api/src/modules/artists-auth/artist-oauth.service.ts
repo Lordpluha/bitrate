@@ -104,7 +104,9 @@ export class ArtistOAuthService {
       return this.auth.signInVerified(existing.artist, client)
     }
 
-    const existingArtist = await this.prisma.artist.findUnique({ where: { email: profile.email } })
+    const existingArtist = await this.prisma.artist.findFirst({
+      where: { email: { equals: profile.email, mode: 'insensitive' } },
+    })
     if (existingArtist) {
       if (existingArtist.deletedAt) {
         throw new UnauthorizedException('Artist account is unavailable')

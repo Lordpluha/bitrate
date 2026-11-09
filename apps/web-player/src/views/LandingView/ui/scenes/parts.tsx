@@ -66,27 +66,6 @@ export const Abs = ({
   </div>
 )
 
-type TrackRowProps = {
-  /** Cover art variant, `cv1`…`cv6`. */
-  cover: string
-  title: string
-  artist: string
-  /** Trailing content: duration, like, … */
-  children?: ReactNode
-}
-
-/** A compact queue/list row: cover, title and artist. */
-export const TrackRow = ({ cover, title, artist, children }: TrackRowProps) => (
-  <div className={lc('qrow')}>
-    <span className={lc(`cv s ${cover}`)}></span>
-    <div className={lc('grow')}>
-      <p className={lc('t-title')}>{title}</p>
-      <p className={lc('t-meta')}>{artist}</p>
-    </div>
-    {children}
-  </div>
-)
-
 type SceneFootnoteProps = {
   x: number
   y: number

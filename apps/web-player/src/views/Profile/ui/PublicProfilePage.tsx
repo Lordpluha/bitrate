@@ -1,7 +1,11 @@
 'use client'
 
 import { useUserPlaylists } from '@entities/Playlist'
-import { FollowUserButton, useUserById } from '@entities/User'
+import {
+  FollowUserButton,
+  type SafeUser,
+  useUserByUsername,
+} from '@entities/User'
 import { getApiErrorStatus } from '@shared/api/errors'
 import { useI18n } from '@shared/i18n'
 import { ROUTES } from '@shared/routes'
@@ -19,7 +23,7 @@ import { ProfileFollowsSection } from '@/views/Profile/ui/ProfileFollowsSection'
 import { ProfileHeader } from '@/views/Profile/ui/ProfileHeader'
 
 type PublicProfilePageProps = {
-  userId: string
+  username: string
 }
 
 /** The design's grid skeleton while a profile's playlists load. */
@@ -28,12 +32,10 @@ const PLAYLIST_SKELETON_KEYS = Array.from(
   (_, card) => `playlist-card-${card}`,
 )
 
-export const PublicProfilePage = ({ userId }: PublicProfilePageProps) => {
+/** A listener's public profile, addressed by username. */
+export const PublicProfilePage = ({ username }: PublicProfilePageProps) => {
   const { t } = useI18n()
-  const userQuery = useUserById(userId)
-  const playlistsQuery = useUserPlaylists(userId)
-  const playCollection = usePlayCollection()
-  const playlists = playlistsQuery.data ?? []
+  const userQuery = useUserByUsername(username)
 
   if (userQuery.isPending) {
     return (
@@ -80,7 +82,18 @@ export const PublicProfilePage = ({ userId }: PublicProfilePageProps) => {
     )
   }
 
-  const user = userQuery.data
+  return <PublicProfileContent user={userQuery.data} />
+}
+
+type PublicProfileContentProps = {
+  user: SafeUser
+}
+
+const PublicProfileContent = ({ user }: PublicProfileContentProps) => {
+  const { t } = useI18n()
+  const playlistsQuery = useUserPlaylists(user.id)
+  const playCollection = usePlayCollection()
+  const playlists = playlistsQuery.data ?? []
 
   return (
     <div className="h-full overflow-y-auto custom-scrollbar">

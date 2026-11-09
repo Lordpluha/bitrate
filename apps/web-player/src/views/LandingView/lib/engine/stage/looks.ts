@@ -1,4 +1,3 @@
-import { LUMA } from '../layouts'
 import type { PaletteToken } from '../palette'
 
 /** How the signal looks in one scene. */
@@ -30,9 +29,9 @@ export const LOOK: readonly Look[] = [
   },
   {
     shape: 2,
-    x: 1180,
-    y: 150,
-    size: 330,
+    x: 1200,
+    y: 130,
+    size: 220,
     rx: 0.5,
     amp: 0.08,
     twist: 0,
@@ -71,9 +70,9 @@ export const LOOK: readonly Look[] = [
   },
   {
     shape: 5,
-    x: LUMA[0],
-    y: LUMA[1] - 18,
-    size: 260,
+    x: 830,
+    y: 190,
+    size: 110,
     rx: 0.3,
     amp: 0.1,
     twist: 0,
@@ -81,9 +80,9 @@ export const LOOK: readonly Look[] = [
   },
   {
     shape: 1,
-    x: 170,
-    y: 780,
-    size: 300,
+    x: 150,
+    y: 800,
+    size: 240,
     rx: 1.0,
     amp: 0.2,
     twist: 2.4,
@@ -91,9 +90,9 @@ export const LOOK: readonly Look[] = [
   },
   {
     shape: 0,
-    x: 900,
-    y: 470,
-    size: 620,
+    x: 220,
+    y: 790,
+    size: 220,
     rx: 0,
     amp: 0.42,
     twist: 0.8,
@@ -112,9 +111,9 @@ export const LOOK: readonly Look[] = [
   },
   {
     shape: 0,
-    x: 380,
-    y: 96,
-    size: 100,
+    x: 1300,
+    y: 150,
+    size: 120,
     rx: 0,
     amp: 0.35,
     twist: 0,

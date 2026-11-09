@@ -144,7 +144,7 @@ describe('OAuthService', () => {
       )
 
       expect(prisma.user.findFirst).toHaveBeenCalledWith({
-        where: { email: 'user@example.com', deletedAt: null },
+        where: { email: { equals: 'user@example.com', mode: 'insensitive' }, deletedAt: null },
       })
     })
 

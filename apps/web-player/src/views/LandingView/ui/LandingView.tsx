@@ -3,9 +3,11 @@
 import { useI18n } from '@shared/i18n'
 import { useEffect, useRef } from 'react'
 import { formatSceneNumber } from '../lib/engine/navigation'
+import type { PlatformStats } from '../model/platformStats'
 import { LANDING_SCENES } from '../model/scenes'
 import { useLandingCopy } from '../model/useLandingCopy'
 import { AssistantPanel } from './AssistantPanel'
+import { LandingDemoProvider } from './demo/LandingDemoProvider'
 import { LandingHeader } from './LandingHeader'
 import { LandingIcons } from './LandingIcons'
 import { SceneDevices } from './scenes/SceneDevices'
@@ -25,19 +27,21 @@ import { lc } from '../lib/styles/lc'
 export type LandingViewProps = {
   /** The visitor has a session: hide "Create account" and "Log in". */
   signedIn: boolean
+  /** Public platform totals for the hero; `null` hides them. */
+  stats: PlatformStats | null
 }
 
 /**
  * The Bitrate landing: eleven fullscreen scenes rendered on the server. The motion engine (GSAP,
  * Three.js) loads after first paint and only on the client; without it the page is still complete.
  */
-export const LandingView = ({ signedIn }: LandingViewProps) => {
+export const LandingView = ({ signedIn, stats }: LandingViewProps) => {
   const { locale } = useI18n()
   /* the engine splits headings into letters, so a language switch remounts the scenes fresh */
-  return <LandingContent key={locale} signedIn={signedIn} />
+  return <LandingContent key={locale} signedIn={signedIn} stats={stats} />
 }
 
-const LandingContent = ({ signedIn }: LandingViewProps) => {
+const LandingContent = ({ signedIn, stats }: LandingViewProps) => {
   const c = useLandingCopy()
   const root = useRef<HTMLDivElement>(null)
 
@@ -68,7 +72,7 @@ const LandingContent = ({ signedIn }: LandingViewProps) => {
         <b>Bitrate</b>
         <span className={lc('mono')}>{c('chrome.tuning_in')}</span>
       </div>
-      <LandingHeader />
+      <LandingHeader signedIn={signedIn} />
       <nav aria-label={c('chrome.scenes')} className={lc('dots')}>
         {LANDING_SCENES.map(({ id, label }, i) => (
           <button
@@ -93,14 +97,16 @@ const LandingContent = ({ signedIn }: LandingViewProps) => {
       </div>
       <AssistantPanel />
       <main>
-        <SceneSignal signedIn={signedIn} />
-        <SceneLoop />
-        <SceneWorkshop />
-        <SceneRules />
-        <SceneLibrary />
-        <SceneDiscover />
-        <SceneDevices />
-        <SceneSocial />
+        <SceneSignal signedIn={signedIn} stats={stats} />
+        <LandingDemoProvider>
+          <SceneLoop />
+          <SceneWorkshop />
+          <SceneRules />
+          <SceneLibrary />
+          <SceneDiscover />
+          <SceneDevices />
+          <SceneSocial />
+        </LandingDemoProvider>
         <ScenePartners />
         <SceneTeam />
         <SceneStart signedIn={signedIn} />

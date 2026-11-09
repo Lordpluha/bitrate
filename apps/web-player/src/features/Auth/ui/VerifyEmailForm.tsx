@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation'
 import { type FormEvent, useState } from 'react'
 import { useMutation } from '@/shared/api/client'
 import { showApiErrorToast, showApiSuccessToast } from '@/shared/api/feedback'
+import { useI18n } from '@/shared/i18n'
 import { ROUTES } from '@/shared/routes'
 import { AuthHeading } from './AuthHeading'
 import { AuthTextInput } from './AuthTextInput'
@@ -12,6 +13,7 @@ import { AuthTextLink } from './AuthTextLink'
 import { AUTH_BUTTON_CLASS } from './authStyles'
 
 export const VerifyEmailForm = () => {
+  const { t } = useI18n()
   const searchParams = useSearchParams()
   const token = searchParams.get('token')?.trim() ?? ''
   const [email, setEmail] = useState(searchParams.get('email')?.trim() ?? '')
@@ -29,9 +31,9 @@ export const VerifyEmailForm = () => {
 
     try {
       await verifyEmail.mutateAsync({ body: { token } })
-      showApiSuccessToast('Your email has been verified. You can now log in.')
+      showApiSuccessToast(t('auth.verify.success'))
     } catch (error) {
-      showApiErrorToast(error, 'This verification link is invalid or expired.')
+      showApiErrorToast(error, t('auth.verify.failed'))
     }
   }
 
@@ -40,11 +42,9 @@ export const VerifyEmailForm = () => {
 
     try {
       await resendVerification.mutateAsync({ body: { email: email.trim() } })
-      showApiSuccessToast(
-        'If the account needs verification, a new email has been sent.',
-      )
+      showApiSuccessToast(t('auth.verify.resent'))
     } catch (error) {
-      showApiErrorToast(error, 'Could not resend the verification email.')
+      showApiErrorToast(error, t('auth.verify.resendFailed'))
     }
   }
 
@@ -53,10 +53,10 @@ export const VerifyEmailForm = () => {
       <AuthHeading
         description={
           token
-            ? 'Confirm the email address connected to your account.'
-            : 'Check your inbox or request a new verification link.'
+            ? t('auth.verify.descriptionToken')
+            : t('auth.verify.description')
         }
-        title="Verify your email"
+        title={t('auth.verify.title')}
       />
 
       {token ? (
@@ -67,7 +67,9 @@ export const VerifyEmailForm = () => {
           type="button"
           variant="primary"
         >
-          {verifyEmail.isPending ? 'Verifying...' : 'Verify email'}
+          {verifyEmail.isPending
+            ? t('auth.verifying')
+            : t('auth.verify.submit')}
         </Button>
       ) : null}
 
@@ -75,7 +77,7 @@ export const VerifyEmailForm = () => {
         <AuthTextInput
           autoComplete="email"
           id="verification-email"
-          label="Email address"
+          label={t('auth.forgot.email')}
           onChange={(event) => setEmail(event.target.value)}
           placeholder="you@example.com"
           required
@@ -88,11 +90,13 @@ export const VerifyEmailForm = () => {
           type="submit"
           variant="secondary"
         >
-          Resend verification email
+          {t('auth.verify.resend')}
         </Button>
       </form>
 
-      <AuthTextLink href={ROUTES.auth.login}>Back to login</AuthTextLink>
+      <AuthTextLink href={ROUTES.auth.login}>
+        {t('auth.backToLogin')}
+      </AuthTextLink>
     </>
   )
 }

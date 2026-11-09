@@ -3,6 +3,7 @@
 import { Button } from '@bitrate/ui-react'
 import { useMutation } from '@shared/api/client'
 import { showApiErrorToast } from '@shared/api/feedback'
+import { type TranslationKey, useI18n } from '@shared/i18n'
 import { ROUTES } from '@shared/routes'
 import Link from 'next/link'
 import { type FormEvent, useState } from 'react'
@@ -16,8 +17,9 @@ import { AUTH_BUTTON_CLASS } from './authStyles'
 const emailSchema = z.email()
 
 export const ForgotPasswordForm = () => {
+  const { t } = useI18n()
   const [email, setEmail] = useState('')
-  const [emailError, setEmailError] = useState<string | null>(null)
+  const [emailError, setEmailError] = useState<TranslationKey | null>(null)
   const [isSent, setIsSent] = useState(false)
   const forgotPassword = useMutation('post', '/api/v1/auth/forgot-password', {
     meta: { suppressErrorToast: true },
@@ -27,7 +29,7 @@ export const ForgotPasswordForm = () => {
     event.preventDefault()
     const nextEmail = email.trim()
     if (!emailSchema.safeParse(nextEmail).success) {
-      setEmailError('Enter a valid email address')
+      setEmailError('validation.email.required')
       return
     }
 
@@ -35,27 +37,23 @@ export const ForgotPasswordForm = () => {
       await forgotPassword.mutateAsync({ body: { email: nextEmail } })
       setIsSent(true)
     } catch (error) {
-      showApiErrorToast(error, 'Unable to request a password reset.')
+      showApiErrorToast(error, t('auth.forgot.failed'))
     }
   }
 
   return (
     <>
       <AuthHeading
-        description={
-          emailError
-            ? undefined
-            : 'Enter the email associated with your account.'
-        }
-        title="Reset your password"
+        description={emailError ? undefined : t('auth.forgot.description')}
+        title={t('auth.forgot.title')}
       />
       {isSent ? (
         <>
-          <AuthAlert title="Check your inbox">
-            If an account exists for this email, a reset link has been sent.
+          <AuthAlert title={t('auth.forgot.sentTitle')}>
+            {t('auth.forgot.sent')}
           </AuthAlert>
           <Button asChild className={AUTH_BUTTON_CLASS} variant="outline">
-            <Link href={ROUTES.auth.login}>Back to login</Link>
+            <Link href={ROUTES.auth.login}>{t('auth.backToLogin')}</Link>
           </Button>
         </>
       ) : (
@@ -68,9 +66,9 @@ export const ForgotPasswordForm = () => {
           >
             <AuthTextInput
               autoComplete="email"
-              error={emailError}
+              error={emailError && t(emailError)}
               id="recovery-email"
-              label="Email address"
+              label={t('auth.forgot.email')}
               onChange={(event) => {
                 setEmail(event.target.value)
                 setEmailError(null)
@@ -85,11 +83,15 @@ export const ForgotPasswordForm = () => {
               type="submit"
               variant="primary"
             >
-              {forgotPassword.isPending ? 'Sending...' : 'Send reset link'}
+              {forgotPassword.isPending
+                ? t('auth.forgot.submitting')
+                : t('auth.forgot.submit')}
             </Button>
           </form>
           {emailError ? null : (
-            <AuthTextLink href={ROUTES.auth.login}>Back to login</AuthTextLink>
+            <AuthTextLink href={ROUTES.auth.login}>
+              {t('auth.backToLogin')}
+            </AuthTextLink>
           )}
         </>
       )}

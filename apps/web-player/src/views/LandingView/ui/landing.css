@@ -101,3 +101,34 @@ html.has-cursor * {
       color-mix(in srgb, var(--color-success) 0%, transparent);
   }
 }
+/* header brand: the mark breathes and the name shimmers until the pointer rests on them */
+@keyframes landing-brand-mark {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 0 transparent);
+    transform: rotate(0deg) scale(1);
+  }
+  50% {
+    filter: drop-shadow(
+      0 0 10px color-mix(in srgb, var(--color-purple-500) 70%, transparent)
+    );
+    transform: rotate(-8deg) scale(1.08);
+  }
+}
+@keyframes landing-brand-shimmer {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: -100% 0;
+  }
+}
+/* hero previews: a new real screen fades in */
+@keyframes landing-pv-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

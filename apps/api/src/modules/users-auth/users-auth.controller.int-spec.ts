@@ -16,6 +16,8 @@ const makeAuthServiceMock = () =>
   ({
     loginUser: jest.fn(),
     registerUser: jest.fn(),
+    forgotPassword: jest.fn(),
+    resendEmailVerification: jest.fn(),
     logout: jest.fn(),
     refresh: jest.fn(),
   }) as unknown as jest.Mocked<UserAuthService>
@@ -121,6 +123,70 @@ describe('UsersAuthController (int)', () => {
 
     expect(res.status).toBe(201)
     expect(authService.loginUser).toHaveBeenCalledWith('user@example.com', 'hashed-password')
+  })
+
+  /**
+   * Autofill and mobile keyboards add capitals and stray spaces. Without normalising, a trailing
+   * space read as "Invalid email format" and "User@…" missed the stored account.
+   */
+  it('signs in with the address trimmed and lower-cased', async () => {
+    authService.loginUser.mockResolvedValue({ access_token: 'at', refresh_token: 'rt' } as never)
+
+    await request(app.getHttpServer())
+      .post('/auth/login')
+      .send({ email: '  User@EXAMPLE.com ', password: 'password123' })
+      .expect(201)
+
+    expect(authService.loginUser).toHaveBeenCalledWith('user@example.com', 'password123')
+  })
+
+  it('registers the address trimmed and lower-cased', async () => {
+    authService.registerUser.mockResolvedValue(undefined as never)
+
+    await request(app.getHttpServer())
+      .post('/auth/registration')
+      .send({
+        email: ' New@Example.COM',
+        password: 'password123',
+        username: 'newuser',
+        acceptLegal: true,
+      })
+      .expect(201)
+
+    expect(authService.registerUser).toHaveBeenCalledWith(
+      expect.objectContaining({ email: 'new@example.com' }),
+    )
+  })
+
+  it('requests a password reset for the address trimmed and lower-cased', async () => {
+    authService.forgotPassword.mockResolvedValue(undefined as never)
+
+    await request(app.getHttpServer())
+      .post('/auth/forgot-password')
+      .send({ email: 'User@EXAMPLE.com ' })
+      .expect((res) => expect(res.status).toBeLessThan(300))
+
+    expect(authService.forgotPassword).toHaveBeenCalledWith('user@example.com')
+  })
+
+  it('resends the verification email to the address trimmed and lower-cased', async () => {
+    authService.resendEmailVerification.mockResolvedValue(undefined as never)
+
+    await request(app.getHttpServer())
+      .post('/auth/verify-email/resend')
+      .send({ email: ' User@Example.com' })
+      .expect((res) => expect(res.status).toBeLessThan(300))
+
+    expect(authService.resendEmailVerification).toHaveBeenCalledWith('user@example.com')
+  })
+
+  it('still rejects a malformed address on sign-in', async () => {
+    await request(app.getHttpServer())
+      .post('/auth/login')
+      .send({ email: 'not-an-email', password: 'password123' })
+      .expect(400)
+
+    expect(authService.loginUser).not.toHaveBeenCalled()
   })
 
   it('POST /auth/logout should return 201', async () => {

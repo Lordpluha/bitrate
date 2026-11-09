@@ -3,7 +3,13 @@ import { isMobile, type PointerStore } from '../context'
 import type { PaletteToken } from '../palette'
 import { SKIN_FRAG, SURFACE_FRAG, SURFACE_VERT } from '../shaders'
 import { type Look, MOBILE_LOOK } from './looks'
+import { planMorph } from './morphPlan'
 import type { StageKit } from './types'
+
+/** Shortest leg of a reversed or resumed morph, so it never looks like a cut. */
+const MIN_LEG = 0.35
+/** How long an unfinished morph takes to settle before the next one starts. */
+const CHAIN_S = 0.4
 
 /** The morphing signal: one parametric surface and its point skin, in a group the scenes move. */
 export const createSignal = ({
@@ -62,6 +68,9 @@ export const createSignal = ({
 
   /** Moves the signal to a scene's spot on the board (a corner of the screen on phones). */
   const place = (L: Look, dur: number) => {
+    /* a move that interrupts another keeps its speed instead of stopping dead and starting over */
+    const moving = gsap.isTweening(signalGroup.position)
+    const ease = moving ? 'power3.out' : 'expo.inOut'
     const w = window.innerWidth
     const h = window.innerHeight
     const mob = isMobile()
@@ -73,34 +82,85 @@ export const createSignal = ({
       x: (sx - w / 2) * PX.k,
       y: -(sy - h / 2) * PX.k,
       duration: dur,
-      ease: 'expo.inOut',
+      ease,
+      overwrite: 'auto',
     })
+    /* a big shape crossing the screen covers the content: shrink before travelling, grow after */
+    const shrinking = sc < signalGroup.scale.x
     gsap.to(signalGroup.scale, {
       x: sc,
       y: sc,
       z: sc,
-      duration: dur,
-      ease: 'expo.inOut',
+      duration: shrinking ? dur * 0.55 : dur,
+      ease: shrinking ? 'power3.out' : 'power3.in',
+      overwrite: 'auto',
     })
     gsap.to(signalGroup.rotation, {
       x: L.rx,
       z: L.rz ?? 0,
       duration: dur,
-      ease: 'power3.inOut',
+      ease: moving ? 'power3.out' : 'power3.inOut',
+      overwrite: 'auto',
     })
   }
 
   /** Morphs shape, twist, noise and palette towards a scene's look. */
   const morphTo = (L: Look, dur: number) => {
-    if (U.uMix.value > 0.5) U.uA.value = U.uB.value
-    U.uB.value = L.shape
-    U.uMix.value = 0
-    gsap.to(U.uMix, { value: 1, duration: dur * 1.15, ease: 'power2.inOut' })
-    gsap.to(U.uTwist, { value: L.twist, duration: dur })
-    gsap.to(tw, { amp: L.amp, duration: dur })
-    gsap.to(U.uCa.value, { ...rgb(L.c[0]), duration: dur })
-    gsap.to(U.uCb.value, { ...rgb(L.c[1]), duration: dur })
-    gsap.to(U.uCc.value, { ...rgb(L.c[2]), duration: dur })
+    const full = dur * 1.15
+    const mix = U.uMix.value
+    const start = () => {
+      U.uA.value = U.uB.value
+      U.uB.value = L.shape
+      U.uMix.value = 0
+      gsap.to(U.uMix, {
+        value: 1,
+        duration: full,
+        ease: 'power2.inOut',
+        overwrite: true,
+      })
+    }
+    switch (planMorph({ a: U.uA.value, b: U.uB.value, mix }, L.shape)) {
+      case 'reverse':
+        /* back to where it came from: the same morph, played backwards from where it is */
+        gsap.to(U.uMix, {
+          value: 0,
+          duration: Math.max(MIN_LEG, full * mix),
+          ease: 'power2.inOut',
+          overwrite: true,
+          onComplete: () => {
+            U.uB.value = U.uA.value
+            U.uMix.value = 1
+          },
+        })
+        break
+      case 'continue':
+        if (mix < 1)
+          gsap.to(U.uMix, {
+            value: 1,
+            duration: Math.max(MIN_LEG, full * (1 - mix)),
+            ease: 'power2.out',
+            overwrite: true,
+          })
+        break
+      case 'chain':
+        /* settle the current morph first, so the new one starts from a real shape */
+        gsap.to(U.uMix, {
+          value: 1,
+          duration: CHAIN_S * (1 - mix),
+          ease: 'power1.out',
+          overwrite: true,
+          onComplete: start,
+        })
+        break
+      case 'start':
+        start()
+    }
+    const soft = { duration: dur, overwrite: 'auto' } as const
+    gsap.to(U.uTwist, { value: L.twist, ...soft })
+    gsap.to(tw, { amp: L.amp, ...soft })
+    gsap.to(U.uCa.value, { ...rgb(L.c[0]), ...soft })
+    gsap.to(U.uCb.value, { ...rgb(L.c[1]), ...soft })
+    gsap.to(U.uCc.value, { ...rgb(L.c[2]), ...soft })
   }
 
   return {

@@ -1,3 +1,4 @@
+import { isTranslationKey } from '@shared/i18n'
 import { describe, expect, it } from 'vitest'
 import { loginSchema, registrationSchema } from './auth.schema'
 
@@ -5,10 +6,27 @@ describe('auth schemas', () => {
   it('accepts existing credentials without applying registration strength rules', () => {
     expect(
       loginSchema.safeParse({
+        acceptLegal: true,
         email: 'listener@example.com',
         password: 'legacy',
       }).success,
     ).toBe(true)
+  })
+
+  it.each([
+    ['unchecked', false],
+    ['missing', undefined],
+  ])('rejects a sign-in when acceptance is %s', (_label, acceptLegal) => {
+    const result = loginSchema.safeParse({
+      acceptLegal,
+      email: 'listener@example.com',
+      password: 'legacy',
+    })
+
+    expect(result.success).toBe(false)
+    expect(result.error?.issues.map((issue) => issue.path.join('.'))).toEqual([
+      'acceptLegal',
+    ])
   })
 
   it('continues to enforce strong passwords for registration', () => {
@@ -21,6 +39,25 @@ describe('auth schemas', () => {
         password: 'legacy',
       }).success,
     ).toBe(false)
+  })
+
+  it('reports every problem as an i18n catalog key, so forms can translate it', () => {
+    const issues = [
+      ...(loginSchema.safeParse({ email: 'nope', password: 'x' }).error
+        ?.issues ?? []),
+      ...(registrationSchema.safeParse({
+        acceptLegal: false,
+        confirmPassword: 'other',
+        email: 'nope',
+        fullName: 'X1',
+        password: 'short',
+      }).error?.issues ?? []),
+    ]
+
+    expect(issues.length).toBeGreaterThan(0)
+    for (const issue of issues) {
+      expect(isTranslationKey(issue.message), issue.message).toBe(true)
+    }
   })
 
   describe('legal acceptance', () => {

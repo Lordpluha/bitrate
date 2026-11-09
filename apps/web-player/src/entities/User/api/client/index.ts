@@ -1,2 +1,5 @@
 export * from './hooks'
-export type { FollowedUser } from './userResponse.schema'
+export type {
+  FollowedUser,
+  FollowingActivityEntry,
+} from './userResponse.schema'

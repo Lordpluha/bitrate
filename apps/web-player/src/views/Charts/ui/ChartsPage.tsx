@@ -154,7 +154,7 @@ const ArtistsChart = () => {
     <ol className="flex flex-col">
       {chart.data.data.map((artist, index) => (
         <li key={artist.id}>
-          <Link className={rowClassName} href={ROUTES.artist(artist.id)}>
+          <Link className={rowClassName} href={ROUTES.artist(artist.username)}>
             <Rank place={index + 1} />
             <MediaImage
               alt=""

@@ -8,6 +8,19 @@
 /* Touch-device variant — replaces JS useIsTouchDevice */
 @custom-variant touch (@media (hover: none) and (pointer: coarse));
 
+/*
+ * Track rows (title and artist over like and length) instead of the track table: below 1024px,
+ * or inside a list that asks for rows because it is narrow (`data-track-rows`).
+ */
+@custom-variant track-rows {
+  @media (width < 1024px) {
+    @slot;
+  }
+  &:where([data-track-rows] *) {
+    @slot;
+  }
+}
+
 @theme {
   /*
    * Breakpoints — these SHADOW the set in @bitrate/tailwind's layout.css, and three of the

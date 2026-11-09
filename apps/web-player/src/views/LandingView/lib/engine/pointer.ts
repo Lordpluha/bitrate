@@ -52,8 +52,8 @@ export const mountPointer = (ctx: EngineContext) => {
     )
       return
     gsap.to(heroWin, {
-      rotateY: -14 + pointer.nx * 10,
-      rotateX: 6 - pointer.ny * 8,
+      rotateY: -5 + pointer.nx * 6,
+      rotateX: 3 - pointer.ny * 5,
       duration: 0.8,
       overwrite: 'auto',
     })

@@ -1,6 +1,6 @@
 'use client'
 
-import { useArtist } from '@entities/Artist'
+import { useArtist, useArtistByUsername } from '@entities/Artist'
 import { useLikedTracks } from '@entities/Track'
 import { useImageColor } from '@shared/hooks/useImageColor'
 import { getArtistBackgroundUrl } from '@shared/utils/mediaUrl'
@@ -14,10 +14,33 @@ import { ArtistHero } from '@/views/Artist/ui/ArtistHero'
 import { ArtistPageState } from '@/views/Artist/ui/ArtistPageState'
 
 export type ArtistPageProps = {
+  username: string
+}
+
+/** An artist's page, addressed by username: resolves the artist, then shows their catalogue. */
+export const ArtistPage = ({ username }: ArtistPageProps) => {
+  const { data, error, isError, isPending, refetch } =
+    useArtistByUsername(username)
+
+  if (isPending) return <ArtistPageState variant="loading" />
+  if (isError) {
+    return (
+      <ArtistPageState
+        error={error}
+        onRetry={() => void refetch()}
+        variant="error"
+      />
+    )
+  }
+
+  return <ArtistPageContent artistId={data.id} />
+}
+
+type ArtistPageContentProps = {
   artistId: string
 }
 
-export const ArtistPage = ({ artistId }: ArtistPageProps) => {
+const ArtistPageContent = ({ artistId }: ArtistPageContentProps) => {
   const { t, tp } = useI18n()
   const {
     data: artist,

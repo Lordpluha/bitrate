@@ -1,7 +1,7 @@
 'use client'
 
 import type { TrackEntity } from '@entities/Track/models/schema/Track.entity'
-import { clientFetchClient, useQuery } from '@shared/api/client'
+import { clientFetchClient } from '@shared/api/client'
 import { ensureOkResponse } from '@shared/api/errors'
 import { apiQueryKeys } from '@shared/api/queryKeys'
 import { useQuery as useTanStackQuery } from '@tanstack/react-query'
@@ -12,8 +12,6 @@ import {
   normalizeTrackResponse,
   normalizeTracksResponse,
   type UseLikedTracksOptions,
-  type UseTracksOptions,
-  type UseTracksParams,
   withPlayableUrl,
 } from './trackQuery'
 
@@ -26,30 +24,6 @@ export const getTrackById = async (trackId: string) => {
   ensureOkResponse(response, 'Failed to fetch track')
   return withPlayableUrl(normalizeTrackResponse(data))
 }
-
-export const useTracks = (
-  { artistId, limit = 100, page = 1, title }: UseTracksParams = {},
-  options: UseTracksOptions = {},
-) =>
-  useQuery(
-    'get',
-    '/api/v1/tracks',
-    {
-      params: {
-        query: {
-          ...(artistId ? { artistId } : {}),
-          limit,
-          page,
-          ...(title ? { title } : {}),
-        },
-      },
-    },
-    {
-      enabled: options.enabled ?? true,
-      select: (data: unknown) =>
-        normalizeTracksResponse(data).map(withPlayableUrl),
-    },
-  )
 
 const ARTIST_TRACKS_PAGE_SIZE = 100
 

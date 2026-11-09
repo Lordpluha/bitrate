@@ -42,6 +42,32 @@ export const useArtist = (artistId?: string) =>
     staleTime: ARTIST_STALE_TIME,
   })
 
+/**
+ * The artist behind a username, for pages addressed by username. The result also fills
+ * the by-id cache, so links and widgets that look the artist up by id reuse it.
+ */
+export const useArtistByUsername = (username: string) => {
+  const queryClient = useQueryClient()
+
+  return useQuery({
+    queryKey: apiQueryKeys.artists.byUsername(username),
+    queryFn: async () => {
+      const { data, response } = await clientFetchClient.GET(
+        '/api/v1/artists/username/{username}',
+        { params: { path: { username } } },
+      )
+
+      ensureOkResponse(response, 'Failed to fetch artist')
+
+      const artist = artistResponseSchema.parse(data)
+      queryClient.setQueryData(apiQueryKeys.artists.detail(artist.id), artist)
+      return artist
+    },
+    enabled: username.length > 0,
+    staleTime: ARTIST_STALE_TIME,
+  })
+}
+
 export const useRelatedArtists = (artistId?: string) =>
   useQuery({
     queryKey: apiQueryKeys.artists.related(artistId ?? ''),

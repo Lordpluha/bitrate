@@ -12,7 +12,7 @@ type Spec = {
 /** Canvas backing store relative to its CSS size (crisp without a full devicePixelRatio cost). */
 const RES = 1.5
 
-/** Spectrum bars and waveforms drawn into the small canvases inside scenes. */
+/** Spectrum bars drawn into the small canvases inside scenes, and the rules scene's bands. */
 export const createCanvases = ({ root }: EngineContext) => {
   const specs: Spec[] = all({
     root,
@@ -36,8 +36,6 @@ export const createCanvases = ({ root }: EngineContext) => {
     tall: tokenSolid('purple-400'),
     bar: tokenAlpha({ name: 'purple-400', alpha: 0.9 }),
     beat: tokenAlpha({ name: 'magenta-500', alpha: 0.95 }),
-    played: tokenAlpha({ name: 'purple-400', alpha: 1 }),
-    rest: tokenAlpha({ name: 'neutral-400', alpha: 0.45 }),
   }
 
   /** Redraws the spectra of the scene on screen. */
@@ -74,37 +72,10 @@ export const createCanvases = ({ root }: EngineContext) => {
     }
   }
 
-  /** Static waveforms (timed comments); drawn when their scene becomes visible. */
-  const drawWaves = () => {
-    for (const c of all({
-      root,
-      selector: 'canvas.wave',
-      type: HTMLCanvasElement,
-    })) {
-      const w = Math.round(c.clientWidth * RES)
-      const h = Math.round(c.clientHeight * RES)
-      const ctx = c.getContext('2d')
-      if (!w || !ctx) continue
-      c.width = w
-      c.height = h
-      const seed = Number(c.dataset.seed) || 1
-      const n = Math.floor(w / 6)
-      for (let i = 0; i < n; i++) {
-        const v = Math.abs(
-          Math.sin(i * 0.21 * seed + seed) * 0.6 +
-            Math.sin(i * 0.05 + seed * 2) * 0.4,
-        )
-        const bh = Math.max(2, v * h * 0.9)
-        ctx.fillStyle = i / n < 0.42 ? ink.played : ink.rest
-        ctx.fillRect(i * 6, (h - bh) / 2, 3, bh)
-      }
-    }
-  }
-
   /* audio bands for "your rules" */
   const bands = root.querySelector('#bands')
   if (bands && !bands.childElementCount)
     for (let i = 0; i < 18; i++) bands.appendChild(document.createElement('i'))
 
-  return { drawSpecs, drawWaves }
+  return { drawSpecs }
 }

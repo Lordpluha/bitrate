@@ -1,3 +1,4 @@
+import { EmailSchema } from '@common/email'
 import { createZodDto } from 'nestjs-zod'
 import { z } from 'zod'
 
@@ -8,7 +9,7 @@ export const VerifyEmailSchema = z.object({
 export class VerifyEmailDto extends createZodDto(VerifyEmailSchema) {}
 
 export const ResendEmailVerificationSchema = z.object({
-  email: z.email(),
+  email: EmailSchema,
 })
 
 export class ResendEmailVerificationDto extends createZodDto(ResendEmailVerificationSchema) {}
