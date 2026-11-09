@@ -7,12 +7,14 @@ import {
 } from '@entities/User'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@shared/api/client'
+import { useI18n } from '@shared/i18n'
 import { useRouter, useSearchParams } from 'next/navigation'
 import type { SubmitHandler } from 'react-hook-form'
 import { useForm } from 'react-hook-form'
 import { getSignInFailure } from './signInFailure'
 
 export const useLoginForm = () => {
+  const { t } = useI18n()
   const router = useRouter()
   const searchParams = useSearchParams()
   const mutation = useMutation('post', '/api/v1/auth/login', {
@@ -40,6 +42,7 @@ export const useLoginForm = () => {
     failure: getSignInFailure({
       oauthError: searchParams.get('error'),
       submitError: mutation.error,
+      t,
     }),
     form,
     isSubmitting: mutation.isPending,

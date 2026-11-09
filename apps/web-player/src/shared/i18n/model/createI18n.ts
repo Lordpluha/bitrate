@@ -70,3 +70,19 @@ export const createI18n = ({ locale }: CreateI18nInput): I18n => {
     },
   }
 }
+
+/** Whether a runtime string (a Zod message, say) names an entry in the catalogs. */
+export const isTranslationKey = (value: string): value is TranslationKey =>
+  Object.hasOwn(en, value)
+
+type TranslateMessageInput = {
+  message: string
+  t: Translate
+}
+
+/**
+ * Translates a message that is either a catalog key (the auth schemas store keys) or text
+ * that is already readable (an API reason): keys are looked up, anything else is kept.
+ */
+export const translateMessage = ({ message, t }: TranslateMessageInput) =>
+  isTranslationKey(message) ? t(message) : message

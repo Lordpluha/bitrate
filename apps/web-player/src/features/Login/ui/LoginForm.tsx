@@ -12,19 +12,21 @@ import {
   OAuthButtons,
   useAuthenticatedRedirect,
 } from '@features/Auth'
+import { useI18n } from '@shared/i18n'
 import { ROUTES } from '@shared/routes'
 import Link from 'next/link'
 import { useLoginForm } from '../model/useLoginForm'
 
 export const LoginForm = () => {
+  const { t } = useI18n()
   useAuthenticatedRedirect()
   const { failure, form, isSubmitting, onSubmit } = useLoginForm()
 
   return (
     <>
       <AuthHeading
-        description="Welcome back! Please sign in to continue."
-        title="Login to your account"
+        description={t('auth.login.description')}
+        title={t('auth.login.title')}
       />
 
       {failure ? (
@@ -44,7 +46,7 @@ export const LoginForm = () => {
               name="email"
               render={({ field }) => (
                 <FormItem className="space-y-0">
-                  <AuthField label="Email Address">
+                  <AuthField label={t('auth.field.email')}>
                     <Input
                       autoComplete="email"
                       className={AUTH_INPUT_CLASS}
@@ -61,7 +63,7 @@ export const LoginForm = () => {
               name="password"
               render={({ field }) => (
                 <FormItem className="space-y-0">
-                  <AuthField label="Password">
+                  <AuthField label={t('auth.field.password')}>
                     <Input
                       autoComplete="current-password"
                       className={AUTH_INPUT_CLASS}
@@ -77,7 +79,7 @@ export const LoginForm = () => {
               className="self-end text-[13px] leading-[1.25] font-semibold text-primary hover:opacity-80"
               href={ROUTES.auth.forgotPassword}
             >
-              Forgot password?
+              {t('auth.login.forgotPassword')}
             </Link>
           </div>
 
@@ -87,7 +89,7 @@ export const LoginForm = () => {
             type="submit"
             variant="primary"
           >
-            {isSubmitting ? 'Logging in...' : 'Log in'}
+            {isSubmitting ? t('auth.login.submitting') : t('auth.logIn')}
           </Button>
         </form>
       </Form>
@@ -96,8 +98,8 @@ export const LoginForm = () => {
       <OAuthButtons />
       <AuthFooterLink
         href={ROUTES.auth.registration}
-        lead="Don't have an account?"
-        link="Sign up"
+        lead={t('auth.login.noAccount')}
+        link={t('auth.signUp')}
       />
     </>
   )

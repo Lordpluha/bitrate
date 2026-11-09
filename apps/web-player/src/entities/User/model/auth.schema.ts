@@ -3,8 +3,8 @@ import z from 'zod'
 
 const loginPasswordSchema = z
   .string()
-  .min(6, 'Password must be at least 6 characters')
-  .max(32, 'Password must not exceed 32 characters')
+  .min(6, 'validation.loginPassword.min')
+  .max(32, 'validation.loginPassword.max')
 
 export const loginSchema = z.object({
   email: emailSchema,
@@ -21,13 +21,10 @@ export const registrationSchema = z
     confirmPassword: passwordSchema,
     acceptLegal: z
       .boolean()
-      .refine(
-        (accepted) => accepted,
-        'You must accept the Terms of Use and Community Guidelines',
-      ),
+      .refine((accepted) => accepted, 'validation.legal.required'),
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords don't match",
+    message: 'validation.password.mismatch',
     path: ['confirmPassword'],
   })
 

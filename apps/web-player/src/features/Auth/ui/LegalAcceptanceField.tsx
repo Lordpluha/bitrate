@@ -1,5 +1,8 @@
+'use client'
+
 import { Checkbox, FormField, FormItem } from '@bitrate/ui-react'
 import type { RegistrationFormData } from '@entities/User'
+import { translateMessage, useI18n } from '@shared/i18n'
 import type { Control } from 'react-hook-form'
 import { AuthFieldError } from './AuthFieldError'
 import { LegalConsentLabel } from './LegalConsentLabel'
@@ -19,27 +22,33 @@ export const LegalAcceptanceField = ({
   control,
   hideError = false,
   id,
-}: LegalAcceptanceFieldProps) => (
-  <FormField
-    control={control}
-    name="acceptLegal"
-    render={({ field, fieldState }) => (
-      <FormItem className="space-y-1.5">
-        <div className="flex items-start gap-2.5">
-          <Checkbox
-            aria-invalid={fieldState.invalid}
-            checked={field.value}
-            className="mt-0.5 size-4 rounded border-input bg-transparent"
-            id={id}
-            onBlur={field.onBlur}
-            onCheckedChange={field.onChange}
-          />
-          <LegalConsentLabel id={id} />
-        </div>
-        {!hideError && fieldState.error?.message ? (
-          <AuthFieldError>{fieldState.error.message}</AuthFieldError>
-        ) : null}
-      </FormItem>
-    )}
-  />
-)
+}: LegalAcceptanceFieldProps) => {
+  const { t } = useI18n()
+
+  return (
+    <FormField
+      control={control}
+      name="acceptLegal"
+      render={({ field, fieldState }) => (
+        <FormItem className="space-y-1.5">
+          <div className="flex items-start gap-2.5">
+            <Checkbox
+              aria-invalid={fieldState.invalid}
+              checked={field.value}
+              className="mt-0.5 size-4 rounded border-input bg-transparent"
+              id={id}
+              onBlur={field.onBlur}
+              onCheckedChange={field.onChange}
+            />
+            <LegalConsentLabel id={id} />
+          </div>
+          {!hideError && fieldState.error?.message ? (
+            <AuthFieldError>
+              {translateMessage({ message: fieldState.error.message, t })}
+            </AuthFieldError>
+          ) : null}
+        </FormItem>
+      )}
+    />
+  )
+}

@@ -1,3 +1,4 @@
+import { isTranslationKey } from '@shared/i18n'
 import { describe, expect, it } from 'vitest'
 import { loginSchema, registrationSchema } from './auth.schema'
 
@@ -21,6 +22,25 @@ describe('auth schemas', () => {
         password: 'legacy',
       }).success,
     ).toBe(false)
+  })
+
+  it('reports every problem as an i18n catalog key, so forms can translate it', () => {
+    const issues = [
+      ...(loginSchema.safeParse({ email: 'nope', password: 'x' }).error
+        ?.issues ?? []),
+      ...(registrationSchema.safeParse({
+        acceptLegal: false,
+        confirmPassword: 'other',
+        email: 'nope',
+        fullName: 'X1',
+        password: 'short',
+      }).error?.issues ?? []),
+    ]
+
+    expect(issues.length).toBeGreaterThan(0)
+    for (const issue of issues) {
+      expect(isTranslationKey(issue.message), issue.message).toBe(true)
+    }
   })
 
   describe('legal acceptance', () => {

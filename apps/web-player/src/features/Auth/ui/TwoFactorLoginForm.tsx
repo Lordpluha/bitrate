@@ -3,6 +3,7 @@
 import { Button } from '@bitrate/ui-react'
 import { clientFetchClient } from '@shared/api/client'
 import { ensureOkResponse } from '@shared/api/errors'
+import { type TranslationKey, useI18n } from '@shared/i18n'
 import { ROUTES } from '@shared/routes'
 import { useRouter } from 'next/navigation'
 import { type FormEvent, useState } from 'react'
@@ -20,11 +21,12 @@ const HTTP_ONLY_PENDING_TOKEN_PLACEHOLDER =
 type VerifyStatus = 'idle' | 'verifying' | 'error' | 'success'
 
 const HINTS = {
-  error: 'Invalid or expired 2FA code',
-  success: 'Code verified — signing you in…',
-} as const
+  error: 'auth.twoFactor.invalid',
+  success: 'auth.twoFactor.success',
+} as const satisfies Record<'error' | 'success', TranslationKey>
 
 export const TwoFactorLoginForm = () => {
+  const { t } = useI18n()
   const router = useRouter()
   const [code, setCode] = useState('')
   const [status, setStatus] = useState<VerifyStatus>('idle')
@@ -47,7 +49,7 @@ export const TwoFactorLoginForm = () => {
           },
         },
       )
-      ensureOkResponse(response, HINTS.error)
+      ensureOkResponse(response, t(HINTS.error))
       setStatus('success')
       router.push(ROUTES.main)
     } catch {
@@ -60,8 +62,8 @@ export const TwoFactorLoginForm = () => {
   return (
     <>
       <AuthHeading
-        description="Use the 6-digit code from your authenticator app."
-        title="Enter your 2FA code"
+        description={t('auth.twoFactor.description')}
+        title={t('auth.twoFactor.title')}
       />
       <form
         aria-busy={isBusy}
@@ -72,11 +74,11 @@ export const TwoFactorLoginForm = () => {
         <OtpCodeField
           hint={
             status === 'error' || status === 'success'
-              ? HINTS[status]
+              ? t(HINTS[status])
               : undefined
           }
           id="two-factor-code"
-          label="Authentication code"
+          label={t('auth.twoFactor.code')}
           onChange={(next) => {
             setCode(next)
             if (status === 'error') setStatus('idle')
@@ -90,7 +92,7 @@ export const TwoFactorLoginForm = () => {
           type="submit"
           variant="primary"
         >
-          {isBusy ? 'Verifying...' : 'Verify'}
+          {isBusy ? t('auth.verifying') : t('auth.twoFactor.submit')}
         </Button>
       </form>
     </>
