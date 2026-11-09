@@ -141,6 +141,38 @@ describe('UserAuthService', () => {
       )
     })
 
+    it('starts a fresh attempt window once the lock has expired', async () => {
+      const user = buildUser({
+        id: 'user-1',
+        password: 'hash',
+        failedLoginAttempts: 5,
+        lockedUntil: new Date(Date.now() - 1_000),
+      })
+      usersPrivate.getByEmail.mockResolvedValue(user)
+      token.verifyPassword.mockResolvedValue(false)
+      mockAttemptResult({ failedLoginAttempts: 1, lockedUntil: null })
+
+      await expect(service.loginUser('user@example.com', 'typo')).rejects.toThrow(
+        'Invalid credentials',
+      )
+      expect(prisma.user.update).toHaveBeenCalledWith({
+        where: { id: 'user-1' },
+        data: { failedLoginAttempts: 0, lockedUntil: null },
+      })
+      expect(writtenLockedUntil()).toBeNull()
+    })
+
+    it('still rejects with 429 while the lock is active', async () => {
+      usersPrivate.getByEmail.mockResolvedValue(
+        buildUser({ password: 'hash', lockedUntil: new Date(Date.now() + 60_000) }),
+      )
+
+      await expect(service.loginUser('user@example.com', 'any')).rejects.toThrow(
+        'Account is temporarily locked',
+      )
+      expect(token.verifyPassword).not.toHaveBeenCalled()
+    })
+
     it('should reject when password is invalid', async () => {
       usersPrivate.getByEmail.mockResolvedValue(buildUser({ password: 'hash' }))
       token.verifyPassword.mockResolvedValue(false)
