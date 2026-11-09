@@ -13,6 +13,7 @@ import {
 import { useAuthContext } from '@shared/hooks/AuthContext'
 import { useI18n } from '@shared/i18n'
 import { ROUTES } from '@shared/routes/routes'
+import { PageSkeleton } from '@shared/ui'
 import { useNavigate } from '@tanstack/react-router'
 import { Upload } from 'lucide-react'
 import { useState } from 'react'
@@ -148,14 +149,16 @@ export function MusicCatalogue({ search }: { search: CatalogueSearch }) {
               <span>{tp({ count: data.total, key: 'common.tracks' })}</span>
             </div>
           )}
-          {catalogue.isPending ? (
-            <p className="px-6 py-16 text-text-secondary" role="status">
-              {t(
+          {catalogue.isPending || catalogue.isPlaceholderData ? (
+            <PageSkeleton
+              className="p-4"
+              label={t(
                 tab === 'tracks'
                   ? 'music.loading.tracks'
                   : 'music.loading.releases',
               )}
-            </p>
+              variant="table"
+            />
           ) : catalogue.isError ? (
             <div className="space-y-4 px-6 py-12">
               <p role="alert">{tMessage(catalogue.error.message)}</p>

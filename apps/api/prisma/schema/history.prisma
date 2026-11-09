@@ -8,7 +8,9 @@ model ListeningHistory {
   track Track @relation(fields: [trackId], references: [id], onDelete: Cascade)
 
   @@index([userId, listenedAt(sort: Desc)])
-  @@index([trackId])
+  // Artist analytics read one track's plays in a period and count distinct listeners; this
+  // order answers it from the index alone. Its trackId prefix also serves plain track lookups.
+  @@index([trackId, listenedAt, userId])
   @@index([listenedAt])
 }
 

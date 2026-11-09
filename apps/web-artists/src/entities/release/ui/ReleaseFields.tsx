@@ -1,12 +1,10 @@
 import { Input } from '@bitrate/ui-react'
 import { useI18n } from '@shared/i18n'
-import { NativeSelect } from '@shared/ui'
 import { useId } from 'react'
 import type { UseFormReturn } from 'react-hook-form'
 import {
   type CreateReleaseValues,
   releaseTypeLabels,
-  releaseTypes,
 } from '../model/release.schema'
 
 export function ReleaseFields({
@@ -21,6 +19,7 @@ export function ReleaseFields({
   const id = useId()
   const { t, tMessage } = useI18n()
   const errors = form.formState.errors
+  const type = form.watch('type')
   return (
     <>
       <div className="space-y-2">
@@ -49,32 +48,15 @@ export function ReleaseFields({
         )}
       </div>
       <div className="space-y-2">
-        <label className="block text-sm font-medium" htmlFor={`${id}-type`}>
-          {t('music.fields.type')}
-        </label>
-        <NativeSelect
-          aria-describedby={errors.type ? `${id}-type-error` : undefined}
-          aria-invalid={Boolean(errors.type)}
-          className="h-11 rounded-md border border-input bg-secondary pl-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-          disabled={busy}
-          id={`${id}-type`}
-          {...form.register('type', { onChange })}
-        >
-          {releaseTypes.map((type) => (
-            <option key={type} value={type}>
-              {t(releaseTypeLabels[type])}
-            </option>
-          ))}
-        </NativeSelect>
-        {errors.type && (
-          <p
-            className="text-sm text-destructive"
-            id={`${id}-type-error`}
-            role="alert"
-          >
-            {tMessage(errors.type.message)}
-          </p>
-        )}
+        <p className="text-sm font-medium">{t('music.fields.type')}</p>
+        <p>{t(releaseTypeLabels[type])}</p>
+        <p className="text-sm text-text-secondary">
+          {t(
+            type === 'COMPILATION'
+              ? 'compilation.formatHint'
+              : 'music.fields.typeAutomatic',
+          )}
+        </p>
       </div>
     </>
   )

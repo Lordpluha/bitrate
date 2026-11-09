@@ -24,6 +24,7 @@ import { ApiExtraModels, ApiTags } from '@nestjs/swagger'
 import { Throttle } from '@nestjs/throttler'
 import type { Request, Response } from 'express'
 import { ZodValidationPipe } from 'nestjs-zod'
+import { ArtistAccountsService } from './artist-accounts.service'
 import { ArtistTwoFactorService } from './artist-two-factor.service'
 import { ArtistAuth } from './artists-auth.guard'
 import { ArtistsAuthService } from './artists-auth.service'
@@ -78,6 +79,7 @@ export class AuthController {
     private artistService: ArtistsService,
     private tokenService: TokenService,
     private twoFactorService: ArtistTwoFactorService,
+    private accounts: ArtistAccountsService,
   ) {}
 
   @AuthLoginSwagger()
@@ -130,8 +132,13 @@ export class AuthController {
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ) {
-    await this.artistAuthService.logout(artist.id, readAccessToken(req, 'artist'))
+    const accessToken = readAccessToken(req, 'artist')
+    // Signing out also signs this browser out of every saved account, so the next person at a
+    // shared computer cannot switch into them without a password.
+    await this.accounts.forgetBrowser(this.tokenService.readArtistAccountsCookie(req))
+    await this.artistAuthService.logout(artist.id, accessToken)
     this.tokenService.clearAuthCookies(res, 'artist')
+    this.tokenService.clearArtistAccountsCookie(res)
   }
 
   @AuthRefreshSwagger()

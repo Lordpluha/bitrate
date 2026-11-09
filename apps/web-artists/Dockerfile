@@ -97,6 +97,10 @@ RUN --mount=type=secret,id=turbo_token,env=TURBO_TOKEN \
 # needs — so there is no prod-dependencies stage and no node_modules to copy.
 FROM base AS production
 ENV NODE_ENV=production
+# node:26-alpine is rebuilt upstream only every few weeks, while Alpine ships fixes for its
+# packages (zlib, musl, ...) in between; upgrading here keeps the scan clean without waiting
+# for a new tag.
+RUN apk upgrade --no-cache
 
 # The user is created BEFORE anything is copied, because `COPY --chown=` resolves a named
 # owner against the image's /etc/passwd as it runs. Ownership then rides along on the copy

@@ -1,5 +1,6 @@
 import { cn } from '@bitrate/ui-react'
 import { type TranslationKey, useI18n } from '@shared/i18n'
+import { transitionPreference } from '@shared/lib/preferenceTransition'
 import { useWorkspaceTheme } from '@shared/theme/WorkspaceThemeProvider'
 import { Eclipse, type LucideIcon, Moon, Sun } from 'lucide-react'
 import { useId } from 'react'
@@ -107,7 +108,10 @@ export function AppearancePreferences() {
         choices={themeChoices}
         hint="settings.theme.hint"
         label="settings.theme"
-        onChange={setTheme}
+        onChange={(next) => {
+          if (next !== theme)
+            transitionPreference('theme', () => setTheme(next))
+        }}
         value={theme}
       />
       <PreferenceRow

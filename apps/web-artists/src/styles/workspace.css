@@ -1,0 +1,20 @@
+/*
+ * Workspace slice styles, linked by the /dashboard layout and by the landing, whose studio
+ * replica reuses the workspace markup. Loaded after global.css, in cascade order; the
+ * @reference below brings the theme (custom breakpoints for @variant) without emitting it again.
+ */
+@import "../features/now-playing/ui/NowPlaying.css";
+@import "../features/workspace-layout/ui/WorkspaceLayout.css";
+@import "../widgets/ArtistDashboard/ui/ArtistDashboard.css";
+@import "../widgets/ArtistDashboard/ui/DashboardNotifications.css";
+@import "../views/DashboardView/ui/DashboardView.css";
+@import "../views/AnalyticsView/ui/AnalyticsView.css";
+@import "../views/DistributionView/ui/DistributionView.css";
+@import "../views/ProfileView/ui/ProfileView.css";
+@import "../widgets/ReleaseWorkspace/ui/ReleaseWorkspace.css";
+@import "../widgets/DashboardOverview/ui/DashboardOverview.css";
+@import "../widgets/MusicCatalogue/ui/MusicCatalogue.css";
+@import "../features/submit-release/ui/SubmitPreviewDialog.css";
+
+/* After the imports, as CSS requires; Tailwind resolves it for the whole sheet. */
+@reference "../global.css";

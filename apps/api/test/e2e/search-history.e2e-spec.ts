@@ -34,6 +34,8 @@ describe('Search and listening history (e2e)', () => {
         audioUrl: 'storage/test.opus',
         artistId: artist.id,
         processingStatus: 'READY',
+        // Listeners see a track only once it is published.
+        publishedAt: new Date(Date.now() - 60_000),
       },
     })
 
@@ -78,6 +80,8 @@ describe('Search and listening history (e2e)', () => {
         audioUrl: 'storage/history.opus',
         artistId: artist.id,
         processingStatus: 'READY',
+        // Listeners see a track only once it is published.
+        publishedAt: new Date(Date.now() - 60_000),
       },
     })
 

@@ -1,8 +1,9 @@
 import { PrismaService } from '@infra/prisma/prisma.service'
 import { STORAGE_SERVICE } from '@infra/storage/storage.constants'
 import type { StorageService } from '@infra/storage/storage.types'
-import { deleteObjectQuietly } from '@modules/tracks/storage-cleanup'
+import { deleteObjectQuietly } from '@modules/tracks/shared'
 import {
+  ConflictException,
   Inject,
   Injectable,
   Logger,
@@ -10,6 +11,7 @@ import {
   UnprocessableEntityException,
 } from '@nestjs/common'
 import { Prisma } from '@prisma/client'
+import { compilationSourceWhere } from './compilation-source'
 import type {
   ReleaseDraftVersionDto,
   ReorderReleaseTracksDto,
@@ -19,6 +21,8 @@ import { RELEASE_ERRORS } from './errors'
 import { TRACK_DRAFT_SELECT } from './orm'
 import { lockOwnedDraft } from './release-draft-lock'
 import { masterColumns, type StoredMaster, storeReleaseMaster } from './release-master'
+import { assertUniqueReleaseMaster, legacyDuplicateMasterKeys } from './release-master-duplicates'
+import { refreshReleaseType } from './release-type'
 
 /** The release summary returned by {@link lockOwnedDraft}. */
 type LockedDraft = Awaited<ReturnType<typeof lockOwnedDraft>>
@@ -56,11 +60,26 @@ export class ReleaseMediaService {
     input: UploadReleaseTrackDto,
   ) {
     const master = await storeReleaseMaster(this.storage, ownerArtistId, file)
-    return await this.discardMasterOnFailure(master, () =>
-      this.prisma.$transaction(async (tx) => {
+    return await this.discardMasterOnFailure(master, async () => {
+      const recordings = { ownerArtistId, releaseId: id }
+      const legacyDuplicates = await legacyDuplicateMasterKeys(
+        this.prisma,
+        this.storage,
+        recordings,
+        master,
+        this.logger,
+      )
+      return this.prisma.$transaction(async (tx) => {
         const release = await lockOwnedDraft(tx, ownerArtistId, id, input.expectedUpdatedAt, {
           accuracyConfirmedAt: null,
         })
+        // An emptied compilation is an ordinary empty draft again; refreshReleaseType re-detects it.
+        if (
+          release.type === 'COMPILATION' &&
+          (await tx.artistTrackDraft.count({ where: { releaseId: id, deletedAt: null } })) > 0
+        )
+          throw new ConflictException(RELEASE_ERRORS.COMPILATION_ONLY_CATALOGUE)
+        await assertUniqueReleaseMaster(tx, recordings, master, legacyDuplicates)
         const track = await tx.artistTrackDraft.create({
           data: {
             ownerArtistId,
@@ -71,9 +90,12 @@ export class ReleaseMediaService {
           },
           select: TRACK_DRAFT_SELECT,
         })
-        return { release, track: { ...track, hasAudio: true } }
-      }),
-    )
+        return {
+          release: await refreshReleaseType(tx, release),
+          track: { ...track, hasAudio: true },
+        }
+      })
+    })
   }
 
   /**
@@ -117,9 +139,21 @@ export class ReleaseMediaService {
     input: ReleaseDraftVersionDto,
   ) {
     const master = await storeReleaseMaster(this.storage, ownerArtistId, file)
-    const { previousKey, release, track } = await this.discardMasterOnFailure(master, () =>
-      this.attachMaster({ ownerArtistId, id, trackId }, master, input.expectedUpdatedAt),
-    )
+    const { previousKey, release, track } = await this.discardMasterOnFailure(master, async () => {
+      const legacyDuplicates = await legacyDuplicateMasterKeys(
+        this.prisma,
+        this.storage,
+        { ownerArtistId, releaseId: id, excludingId: trackId },
+        master,
+        this.logger,
+      )
+      return this.attachMaster(
+        { ownerArtistId, id, trackId },
+        master,
+        input.expectedUpdatedAt,
+        legacyDuplicates,
+      )
+    })
     if (previousKey) await deleteObjectQuietly(this.storage, previousKey, this.logger)
     return { release, track: { ...track, hasAudio: true } }
   }
@@ -149,10 +183,11 @@ export class ReleaseMediaService {
           audioFileName: null,
           audioContentType: null,
           audioSizeBytes: null,
+          audioSha256: null,
           waveform: [],
         },
       })
-      return { release: locked, previousKey: previous }
+      return { release: await refreshReleaseType(tx, locked), previousKey: previous }
     })
     if (previousKey) await deleteObjectQuietly(this.storage, previousKey, this.logger)
     return { release, trackId }
@@ -168,16 +203,39 @@ export class ReleaseMediaService {
         deletedAt: null,
         release: { deletedAt: null },
       },
-      select: { audioKey: true, audioContentType: true },
+      select: { audioKey: true, audioContentType: true, sourceTrackId: true },
     })
-    if (!draft?.audioKey) throw new NotFoundException(RELEASE_ERRORS.AUDIO_NOT_FOUND)
+    let master = draft
+    if (draft?.sourceTrackId) {
+      const source = await this.prisma.track.findFirst({
+        where: { ...compilationSourceWhere(ownerArtistId), id: draft.sourceTrackId },
+        select: { id: true },
+      })
+      if (!source) throw new NotFoundException(RELEASE_ERRORS.AUDIO_NOT_FOUND)
+      // The original master is the live draft the source's first release published it from.
+      const origin = await this.prisma.releaseTrack.findFirst({
+        where: { trackId: source.id, reused: false, release: { ownerArtistId } },
+        select: {
+          draft: {
+            select: {
+              audioKey: true,
+              audioContentType: true,
+              sourceTrackId: true,
+              deletedAt: true,
+            },
+          },
+        },
+      })
+      master = origin?.draft && !origin.draft.deletedAt ? origin.draft : null
+    }
+    if (!master?.audioKey) throw new NotFoundException(RELEASE_ERRORS.AUDIO_NOT_FOUND)
     let object: Awaited<ReturnType<StorageService['getObjectStream']>>
     try {
-      object = await this.storage.getObjectStream(draft.audioKey, range)
+      object = await this.storage.getObjectStream(master.audioKey, range)
     } catch {
       throw new NotFoundException(RELEASE_ERRORS.AUDIO_NOT_FOUND)
     }
-    return { ...object, contentType: draft.audioContentType ?? object.contentType }
+    return { ...object, contentType: master.audioContentType ?? object.contentType }
   }
 
   /** Points an existing recording at a stored master under the draft lock. */
@@ -185,13 +243,22 @@ export class ReleaseMediaService {
     recording: OwnedRecording,
     master: StoredMaster,
     expectedUpdatedAt: string,
+    legacyDuplicates: string[],
   ): Promise<ReplacedAudio> {
     const { ownerArtistId, id, trackId } = recording
     return this.prisma.$transaction(async (tx) => {
       const release = await lockOwnedDraft(tx, ownerArtistId, id, expectedUpdatedAt, {
         accuracyConfirmedAt: null,
       })
+      if (release.type === 'COMPILATION')
+        throw new ConflictException(RELEASE_ERRORS.COMPILATION_TRACK_LOCKED)
       const previousKey = await this.currentAudioKey(tx, recording)
+      await assertUniqueReleaseMaster(
+        tx,
+        { ownerArtistId, releaseId: id, excludingId: trackId },
+        master,
+        legacyDuplicates,
+      )
       // The draft lock holds the release row, so the recording cannot vanish before this write.
       const track = await tx.artistTrackDraft.update({
         where: { id: trackId },

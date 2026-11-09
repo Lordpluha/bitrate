@@ -115,6 +115,10 @@ RUN --mount=type=secret,id=turbo_token,env=TURBO_TOKEN \
 # v1.1.0 image, then duplicated by the chown that came after it.
 FROM base AS production
 ENV NODE_ENV=production
+# node:26-alpine is rebuilt upstream only every few weeks, while Alpine ships fixes for its
+# packages (zlib, musl, ...) in between; upgrading here keeps the scan clean without waiting
+# for a new tag.
+RUN apk upgrade --no-cache
 # server.js reads both. `pnpm start --port 3001` used to supply the port, and it also kept a
 # pnpm wrapper process alive for the lifetime of the container purely to spawn next — two of
 # them, at ~105 MB RSS each, were visible on the production host.

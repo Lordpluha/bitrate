@@ -11,7 +11,7 @@ import {
   type TakeDownActor,
   type TakeDownDirection,
 } from '@modules/admin/shared'
-import { PlaybackSessionService } from '@modules/tracks/playback-session.service'
+import { PlaybackSessionService } from '@modules/tracks/playback'
 import { Injectable } from '@nestjs/common'
 import type { Prisma } from '@prisma/client'
 import type { ADMIN_USERS_SORT_FIELDS } from './dtos'

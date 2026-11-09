@@ -836,6 +836,24 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/api/v1/tracks/{id}/like': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /** Like a track */
+    post: operations['TracksController_likeTrack_v1']
+    /** Unlike a track */
+    delete: operations['TracksController_unlikeTrack_v1']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/api/v1/tracks/{id}/play-sessions': {
     parameters: {
       query?: never
@@ -849,7 +867,7 @@ export interface paths {
      * Open a playback session for a track
      * @description Returns the byte-range manifest and a signed token. Every rendition request must carry it as `?t=`; it lasts the track plus 15 minutes and is revoked on logout and password reset. See ADR-0067.
      */
-    post: operations['TracksController_openPlaySession_v1']
+    post: operations['TrackPlaybackController_openPlaySession_v1']
     delete?: never
     options?: never
     head?: never
@@ -867,28 +885,10 @@ export interface paths {
      * Authorised by the session token alone (D9): a native `<audio>` cannot refresh a cookie.
      * @description Serves bytes for a playback session (`?t=` from `POST /tracks/:id/play-sessions`). A `Range` of at most the largest fragment (~10 s) is served exactly; a missing or longer range gets one response to the end of the file, released no faster than the session budget: real time since it opened plus 60 s of audio. See ADR-0067.
      */
-    get: operations['TracksController_streamRendition_v1']
+    get: operations['TrackPlaybackController_streamRendition_v1']
     put?: never
     post?: never
     delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/api/v1/tracks/{id}/like': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get?: never
-    put?: never
-    /** Like a track */
-    post: operations['TracksController_likeTrack_v1']
-    /** Unlike a track */
-    delete: operations['TracksController_unlikeTrack_v1']
     options?: never
     head?: never
     patch?: never
@@ -1501,6 +1501,74 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/api/v1/artists/auth/accounts': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** List accounts previously authenticated in this browser */
+    get: operations['ArtistAccountsController_list_v1']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/artists/auth/accounts/current': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /** Remember the authenticated account before adding another */
+    post: operations['ArtistAccountsController_remember_v1']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/artists/auth/accounts/{artistId}/switch': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /** Switch to an already authenticated account without exposing session tokens */
+    post: operations['ArtistAccountsController_switchAccount_v1']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/artists/auth/accounts/{artistId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    post?: never
+    /** Remove a saved account and revoke its session in this browser */
+    delete: operations['ArtistAccountsController_remove_v1']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/api/v1/search': {
     parameters: {
       query?: never
@@ -2064,15 +2132,15 @@ export interface paths {
     put?: never
     post?: never
     /**
-     * Delete an owned release draft
-     * @description Removes a DRAFT release and its recordings from the workspace; its UPC and ISRCs become available again. Submitted, approved or rejected releases cannot be deleted. Requires the previously read updatedAt version; concurrent changes return 409.
+     * Delete an owned release
+     * @description Removes an owned release in any lifecycle state, its recording associations and published album. Shared recordings used by other releases stay available; identifiers of unshared recordings become available again. Scheduled and in-flight publishing jobs cannot restore deleted releases. Requires the previously read updatedAt version; concurrent changes return 409.
      */
     delete: operations['ReleasesController_deleteDraft_v1']
     options?: never
     head?: never
     /**
      * Edit an owned release draft
-     * @description Updates title, type, UPC and/or the release timing. Title, type and UPC change only in DRAFT; a request changing only the timing (scheduledAt) is also accepted after approval (READY). Requires the previously read updatedAt version; concurrent changes return 409. Saving a timing does not submit or deliver a release.
+     * @description Updates title, UPC and/or the release timing. Type is detected automatically from active recordings (0–4 SINGLE, 5–6 EP, 7+ ALBUM); a supplied type is ignored. Title and UPC change only in DRAFT; a request changing only the timing (scheduledAt) is also accepted after approval (READY). Requires the previously read updatedAt version; concurrent changes return 409. Saving a timing does not submit or deliver a release.
      */
     patch: operations['ReleasesController_updateDraft_v1']
     trace?: never
@@ -2280,6 +2348,43 @@ export interface paths {
      * @description REJECTED -> DRAFT. Saved data and the review are kept; editing clears confirmations as for any draft.
      */
     post: operations['ReleasesController_revise_v1']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/artists/me/releases/{id}/catalogue-tracks': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** List the artist's published recordings available for a compilation */
+    get: operations['ReleaseCompilationController_catalogue_v1']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/artists/me/releases/{id}/compilation-tracks': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Add approved catalogue recordings to a draft compilation
+     * @description Only owned, currently published recordings are eligible. The first addition turns an empty draft into a compilation. Audio and catalogue identities are reused; publication still requires release review.
+     */
+    post: operations['ReleaseCompilationController_add_v1']
     delete?: never
     options?: never
     head?: never
@@ -2642,6 +2747,26 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/api/v1/artists/me/analytics/top-tracks': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Paginated top tracks for the signed-in artist
+     * @description Tracks with plays in the selected UTC period, ordered by plays descending and track ID. Five per page; ranking and bar scale stay consistent across pages.
+     */
+    get: operations['ArtistAnalyticsController_topTracks_v1']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/api/v1/artists/me/analytics': {
     parameters: {
       query?: never
@@ -2815,7 +2940,7 @@ export interface paths {
     get: operations['ArtistWorkspaceController_layout_v1']
     /**
      * Replace the artist's tile layout for a workspace page
-     * @description The list is the whole layout: order, size and visibility of every tile.
+     * @description The list is the whole layout: order, width (1–12 columns), optional height (1–12 rows) and visibility of every tile. Legacy S/M/L layouts remain supported; explicit columns takes precedence.
      */
     put: operations['ArtistWorkspaceController_saveLayout_v1']
     post?: never
@@ -3809,6 +3934,17 @@ export interface components {
     RevokedArtistSessionsEntity: {
       revoked: number
     }
+    ArtistSavedAccountEntity: {
+      /** Format: uuid */
+      id: string
+      username: string
+      avatar: string | null
+      current: boolean
+    }
+    ArtistSavedAccountsEntity: {
+      accounts: components['schemas']['ArtistSavedAccountEntity'][]
+      limit: number
+    }
     SearchResultEntity: {
       /** @description The id value. */
       id: string
@@ -4040,7 +4176,7 @@ export interface components {
     CreateReleaseDto: {
       title: string
       /**
-       * @description Defaults to SINGLE when omitted
+       * @description Use COMPILATION for a catalogue compilation. Other formats are detected from recording count; ordinary empty drafts start as SINGLE.
        * @enum {string}
        */
       type?: 'ALBUM' | 'SINGLE' | 'EP' | 'COMPILATION'
@@ -4058,6 +4194,11 @@ export interface components {
     WorkspaceTrackDraftEntity: {
       /** Format: uuid */
       id: string
+      /**
+       * Format: uuid
+       * @description Canonical catalogue recording reused by a compilation
+       */
+      sourceTrackId?: string | null
       title: string
       version: components['schemas']['ArtistTrackVersion']
       status: components['schemas']['ArtistTrackStatus']
@@ -4170,7 +4311,10 @@ export interface components {
     }
     UpdateReleaseDto: {
       title?: string
-      /** @enum {string} */
+      /**
+       * @description Detected automatically from recording count; supplied values are ignored
+       * @enum {string}
+       */
       type?: 'ALBUM' | 'SINGLE' | 'EP' | 'COMPILATION'
       /** @description Planned instant, ISO 8601 with milliseconds and timezone; null clears the plan. Does not submit delivery. */
       scheduledAt?: string | null
@@ -4316,6 +4460,32 @@ export interface components {
        * @description Release version read before submitting
        */
       expectedUpdatedAt: string
+    }
+    CompilationRecordingEntity: {
+      /** Format: uuid */
+      id: string
+      title: string
+      duration: number | null
+      isrc: string | null
+      cover: string | null
+    }
+    CompilationCatalogueEntity: {
+      data: components['schemas']['CompilationRecordingEntity'][]
+      total: number
+      page: number
+      limit: number
+    }
+    AddCompilationTracksDto: {
+      /**
+       * Format: date-time
+       * @description Release version read before editing
+       */
+      expectedUpdatedAt: string
+      trackIds: string[]
+    }
+    CompilationTracksAddedEntity: {
+      release: components['schemas']['ReleaseEntity']
+      trackIds: string[]
     }
     ReleaseCoverUpdatedEntity: {
       release: components['schemas']['ReleaseEntity']
@@ -4755,6 +4925,26 @@ export interface components {
       /** @description Categories left out of the in-app notification center */
       mutedInApp: ('TASKS' | 'REVIEW' | 'DELIVERY')[]
     }
+    AnalyticsTopTrackEntity: {
+      /** Format: uuid */
+      trackId: string
+      title: string
+      cover: string | null
+      plays: number
+      listeners: number
+    }
+    ArtistTopTracksEntity: {
+      data: components['schemas']['AnalyticsTopTrackEntity'][]
+      total: number
+      /** @description Clamped to the available pages */
+      page: number
+      /** @enum {number} */
+      limit: 5
+      /** @enum {number} */
+      days: 7 | 28 | 90
+      /** @description Plays of the leading track across all pages */
+      maxPlays: number
+    }
     /**
      * @description NO_DATA_YET means nothing was ever played, which is not an observed zero
      * @enum {string}
@@ -4783,14 +4973,6 @@ export interface components {
       date: string
       /** @description An observed zero when no one played that day */
       plays: number
-    }
-    AnalyticsTopTrackEntity: {
-      /** Format: uuid */
-      trackId: string
-      title: string
-      cover: string | null
-      plays: number
-      listeners: number
     }
     AnalyticsExternalSourceEntity: {
       /** @enum {string} */
@@ -4898,6 +5080,10 @@ export interface components {
       /** @description Tile identifier the web app defines for the page */
       id: string
       size: components['schemas']['WorkspaceTileSize']
+      /** @description Width in a 12-column grid; overrides the legacy size preset */
+      columns?: number
+      /** @description Height in grid rows; omitted means fit the content automatically */
+      rows?: number
       hidden: boolean
     }
     WorkspaceLayoutEntity: {
@@ -4913,10 +5099,14 @@ export interface components {
         /** @description Tile identifier the web app defines for the page */
         id: string
         /**
-         * @description S, M or L; the web app clamps it to what the tile allows
+         * @description Legacy preset used when columns is absent; explicit columns takes precedence
          * @enum {string}
          */
         size: 'S' | 'M' | 'L'
+        /** @description Width in a 12-column grid; omitted for legacy S/M/L layouts */
+        columns?: number
+        /** @description Height in grid rows; omitted means fit the content automatically */
+        rows?: number
         /** @description Hidden tiles stay in the layout so they can be shown again */
         hidden: boolean
       }[]
@@ -11361,300 +11551,6 @@ export interface operations {
       }
     }
   }
-  TracksController_openPlaySession_v1: {
-    parameters: {
-      query?: never
-      header?: never
-      path: {
-        /** @description Track ID */
-        id: string
-      }
-      cookie?: never
-    }
-    requestBody?: {
-      content: {
-        'application/json': components['schemas']['OpenPlaySessionDto']
-      }
-    }
-    responses: {
-      201: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['PlaySessionEntity']
-        }
-      }
-      /**
-       * @description Unauthorized
-       *
-       *     Not signed in
-       */
-      401: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': {
-            /** @example 401 */
-            statusCode?: number
-            /**
-             * @example errors.auth.invalid_or_expired_token
-             * @enum {string}
-             */
-            message?:
-              | 'errors.auth.access_token_required'
-              | 'errors.auth.refresh_token_required'
-              | 'errors.auth.invalid_token_requirement'
-              | 'errors.auth.invalid_or_expired_token'
-              | 'errors.auth.user_not_found'
-              | 'errors.auth.session_not_found'
-            /** @example Unauthorized */
-            error?: string
-            /**
-             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
-             * @example errors.auth.invalid_or_expired_token
-             * @enum {string}
-             */
-            code?:
-              | 'errors.auth.access_token_required'
-              | 'errors.auth.refresh_token_required'
-              | 'errors.auth.invalid_token_requirement'
-              | 'errors.auth.invalid_or_expired_token'
-              | 'errors.auth.user_not_found'
-              | 'errors.auth.session_not_found'
-          }
-        }
-      }
-      /** @description Track not found or has no CMAF renditions */
-      404: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Method not allowed */
-      405: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Request timeout */
-      408: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Too many sessions opened */
-      429: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Internal server error */
-      500: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Not implemented */
-      501: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Bad gateway */
-      502: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Service unavailable */
-      503: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Gateway timeout */
-      504: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description HTTP version not supported */
-      505: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Insufficient storage */
-      507: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Loop detected */
-      508: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      default: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': Record<string, never>
-        }
-      }
-    }
-  }
-  TracksController_streamRendition_v1: {
-    parameters: {
-      query: {
-        /** @description Playback session token */
-        t: unknown
-      }
-      header?: {
-        /** @description Inclusive byte window, e.g. `bytes=929-100915` */
-        Range?: string
-      }
-      path: {
-        /** @description Rendition kbps */
-        bitrate: number
-        /** @description Track ID */
-        id: string
-      }
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      /** @description The requested fragment, or the rest of the file at real-time pace */
-      206: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'audio/mp4': string
-        }
-      }
-      /** @description Missing, forged, expired, revoked or other-track session token */
-      403: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Rendition not found */
-      404: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Method not allowed */
-      405: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Request timeout */
-      408: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Range outside the file */
-      416: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description The session is ahead of real time; retry after `Retry-After` seconds */
-      429: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Internal server error */
-      500: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Not implemented */
-      501: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Bad gateway */
-      502: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Service unavailable */
-      503: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Gateway timeout */
-      504: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description HTTP version not supported */
-      505: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Insufficient storage */
-      507: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Loop detected */
-      508: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      default: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-    }
-  }
   TracksController_likeTrack_v1: {
     parameters: {
       query?: never
@@ -11886,6 +11782,300 @@ export interface operations {
         content?: never
       }
       /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  TrackPlaybackController_openPlaySession_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /** @description Track ID */
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: {
+      content: {
+        'application/json': components['schemas']['OpenPlaySessionDto']
+      }
+    }
+    responses: {
+      201: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PlaySessionEntity']
+        }
+      }
+      /**
+       * @description Unauthorized
+       *
+       *     Not signed in
+       */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            message?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
+            /** @example Unauthorized */
+            error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
+          }
+        }
+      }
+      /** @description Track not found or has no CMAF renditions */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many sessions opened */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': Record<string, never>
+        }
+      }
+    }
+  }
+  TrackPlaybackController_streamRendition_v1: {
+    parameters: {
+      query: {
+        /** @description Playback session token */
+        t: unknown
+      }
+      header?: {
+        /** @description Inclusive byte window, e.g. `bytes=929-100915` */
+        Range?: string
+      }
+      path: {
+        /** @description Rendition kbps */
+        bitrate: number
+        /** @description Track ID */
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description The requested fragment, or the rest of the file at real-time pace */
+      206: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'audio/mp4': string
+        }
+      }
+      /** @description Missing, forged, expired, revoked or other-track session token */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Rendition not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Range outside the file */
+      416: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description The session is ahead of real time; retry after `Retry-After` seconds */
       429: {
         headers: {
           [name: string]: unknown
@@ -17116,6 +17306,539 @@ export interface operations {
       }
     }
   }
+  ArtistAccountsController_list_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ArtistSavedAccountsEntity']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            message?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
+            /** @example Unauthorized */
+            error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
+          }
+        }
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  ArtistAccountsController_remember_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ArtistSavedAccountsEntity']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            message?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
+            /** @example Unauthorized */
+            error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
+          }
+        }
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  ArtistAccountsController_switchAccount_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        artistId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Active session replaced; reload the workspace */
+      204: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            message?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
+            /** @example Unauthorized */
+            error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
+          }
+        }
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  ArtistAccountsController_remove_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        artistId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      204: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            message?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
+            /** @example Unauthorized */
+            error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
+          }
+        }
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
   SearchController_search_v1: {
     parameters: {
       query: {
@@ -21741,7 +22464,7 @@ export interface operations {
       }
     }
     responses: {
-      /** @description Draft deleted */
+      /** @description Release deleted */
       204: {
         headers: {
           [name: string]: unknown
@@ -21813,7 +22536,7 @@ export interface operations {
         }
         content?: never
       }
-      /** @description Release changed since it was read or is no longer a draft */
+      /** @description Release changed since it was read */
       409: {
         headers: {
           [name: string]: unknown
@@ -24182,6 +24905,283 @@ export interface operations {
         content?: never
       }
       default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  ReleaseCompilationController_catalogue_v1: {
+    parameters: {
+      query?: {
+        page?: number
+        search?: string
+      }
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['CompilationCatalogueEntity']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            message?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
+            /** @example Unauthorized */
+            error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
+          }
+        }
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  ReleaseCompilationController_add_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['AddCompilationTracksDto']
+      }
+    }
+    responses: {
+      201: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['CompilationTracksAddedEntity']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            message?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
+            /** @example Unauthorized */
+            error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
+          }
+        }
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
         headers: {
           [name: string]: unknown
         }
@@ -27730,6 +28730,142 @@ export interface operations {
         content?: never
       }
       default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  ArtistAnalyticsController_topTracks_v1: {
+    parameters: {
+      query?: {
+        page?: number
+        days?: 7 | 28 | 90
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ArtistTopTracksEntity']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            message?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
+            /** @example Unauthorized */
+            error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
+          }
+        }
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
         headers: {
           [name: string]: unknown
         }

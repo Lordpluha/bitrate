@@ -8,6 +8,7 @@
     "session_not_found": "Nie znaleziono sesji"
   },
   "track": {
+    "release_workflow_required": "Przesyłaj i edytuj nagrania w szkicu wydania, a następnie prześlij go do weryfikacji.",
     "not_found": "Nie znaleziono utworu {id}",
     "playback_session_required": "Wymagana jest ważna sesja odtwarzania",
     "playback_session_ended": "Sesja odtwarzania wygasła",
@@ -27,10 +28,14 @@
     "invalid_verification_code": "Nieprawidłowy lub wygasły kod weryfikacyjny",
     "verification_code_cooldown": "Odczekaj chwilę przed poproszeniem o kolejny kod",
     "session_not_found": "Nie znaleziono sesji",
-    "session_is_current": "Aby zakończyć bieżącą sesję, użyj wylogowania"
+    "session_is_current": "Aby zakończyć bieżącą sesję, użyj wylogowania",
+    "account_not_saved": "To konto nie jest już zapisane w tej przeglądarce. Zaloguj się ponownie.",
+    "account_limit": "Możesz zapisać do 5 kont w tej przeglądarce. Usuń jedno przed dodaniem kolejnego.",
+    "account_changed": "Aktywne konto uległo zmianie. Odśwież panel."
   },
   "release": {
     "not_found": "Nie znaleziono wydania",
+    "changed": "Wydanie zmieniło się od odczytu; odśwież je i spróbuj ponownie",
     "changed_or_not_draft": "Wydanie zostało zmienione lub nie jest już szkicem",
     "changed_or_not_submitted": "Wydanie zostało zmienione lub nie oczekuje na weryfikację",
     "changed_or_not_rejected": "Wydanie zostało zmienione lub nie poproszono o zmiany",
@@ -44,6 +49,7 @@
     "audio_file_required": "Wybierz plik audio do przesłania",
     "audio_type_invalid": "Plik audio musi mieć format WAV, FLAC, MP3 lub OGG",
     "audio_not_found": "Dla tego nagrania nie przesłano audio",
+    "audio_duplicate": "Ten plik audio jest już w tym wydaniu",
     "task_not_found": "Nie znaleziono zadania w tym wydaniu",
     "track_order_mismatch": "Kolejność utworów musi zawierać każde nagranie wydania dokładnie raz",
     "task_changed": "Zadanie zmieniło się od odczytu; odśwież je i spróbuj ponownie",
@@ -52,7 +58,13 @@
     "not_publish_failed": "Wydanie zostało zmienione lub jego publikacja nie zakończyła się błędem",
     "changed_or_not_scheduled": "Wydanie zostało zmienione lub nie ma zaplanowanej premiery",
     "changed_or_not_live": "Wydanie zostało zmienione lub nie jest opublikowane w Bitrate",
-    "changed_or_not_unpublished": "Wydanie zostało zmienione lub nie można go ponownie opublikować"
+    "changed_or_not_unpublished": "Wydanie zostało zmienione lub nie można go ponownie opublikować",
+    "compilation_source_unavailable": "Wybrane nagranie nie jest już dostępne dla tej kompilacji",
+    "compilation_only_catalogue": "Kompilacje mogą zawierać tylko nagrania z opublikowanego katalogu",
+    "compilation_track_locked": "Nagrania katalogu nie można zmieniać przez kompilację",
+    "compilation_duplicate": "To nagranie jest już dodane do kompilacji",
+    "compilation_limit": "Kompilacja może zawierać najwyżej 50 nagrań",
+    "used_in_compilation": "Nagrania z tego wydania są użyte w szkicu kompilacji. Najpierw usuń je z kompilacji"
   },
   "artist": {
     "not_found": "Nie znaleziono artysty"

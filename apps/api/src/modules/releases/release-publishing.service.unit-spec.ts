@@ -5,8 +5,9 @@ import type { NotificationsProducer } from '@modules/notifications'
 import type {
   AttachReleaseTrack,
   PendingReleaseTrack,
-  TrackUploadService,
-} from '@modules/tracks/track-upload.service'
+  ReleaseTrackService,
+  TrackIngestService,
+} from '@modules/tracks/ingest'
 import { ConflictException, NotFoundException } from '@nestjs/common'
 import type { Prisma } from '@prisma/client'
 import { type PrismaMock, prismaMock, resetPrismaMock } from '@test/mocks'
@@ -45,7 +46,8 @@ const completionRecord = (statuses: Array<'PROCESSING' | 'READY' | 'FAILED'>) =>
 describe('ReleasePublishingService', () => {
   let prisma: PrismaMock
   let tx: DeepMockProxy<Prisma.TransactionClient>
-  let tracks: DeepMockProxy<TrackUploadService>
+  let tracks: DeepMockProxy<ReleaseTrackService>
+  let trackIngest: DeepMockProxy<TrackIngestService>
   let albums: DeepMockProxy<AlbumsService>
   let notifications: DeepMockProxy<NotificationsProducer>
   let queue: DeepMockProxy<Queue>
@@ -56,14 +58,23 @@ describe('ReleasePublishingService', () => {
     resetPrismaMock()
     prisma = prismaMock
     tx = mockDeep<Prisma.TransactionClient>()
+    tx.release.updateMany.mockResolvedValue({ count: 1 })
     prisma.$transaction.mockImplementation(async (callback: unknown) =>
       (callback as (client: Prisma.TransactionClient) => unknown)(tx),
     )
-    tracks = mockDeep<TrackUploadService>()
+    tracks = mockDeep<ReleaseTrackService>()
+    trackIngest = mockDeep<TrackIngestService>()
     albums = mockDeep<AlbumsService>()
     notifications = mockDeep<NotificationsProducer>()
     queue = mockDeep<Queue>()
-    service = new ReleasePublishingService(prisma, tracks, albums, notifications, queue)
+    service = new ReleasePublishingService(
+      prisma,
+      tracks,
+      trackIngest,
+      albums,
+      notifications,
+      queue,
+    )
   })
 
   afterEach(() => {
@@ -160,6 +171,7 @@ describe('ReleasePublishingService', () => {
           cover: null,
           trackDrafts: [
             {
+              id: 'draft-One',
               title: 'One',
               duration: 60,
               isrc: null,
@@ -167,6 +179,7 @@ describe('ReleasePublishingService', () => {
               audioContentType: 'audio/wav',
             },
             {
+              id: 'draft-Two',
               title: 'Two',
               duration: 70,
               isrc: 'USX9P2600012',
@@ -207,8 +220,36 @@ describe('ReleasePublishingService', () => {
         expect.any(Function),
       )
       expect(tx.releaseTrack.create).toHaveBeenCalledWith({
-        data: { releaseId: RELEASE, trackId: 'track-Two', position: 2 },
+        data: { releaseId: RELEASE, trackId: 'track-Two', position: 2, draftId: 'draft-Two' },
       })
+    })
+
+    it('does not attach a new catalogue track when deletion won the release lock', async () => {
+      prisma.release.findFirst.mockResolvedValueOnce({
+        ownerArtistId: OWNER,
+        cover: null,
+        trackDrafts: [
+          {
+            title: 'One',
+            duration: 60,
+            isrc: null,
+            audioKey: 'm/1.wav',
+            audioContentType: 'audio/wav',
+          },
+        ],
+        contributors: [],
+        tracks: [],
+      } as never)
+      tx.release.updateMany.mockResolvedValue({ count: 0 })
+      tracks.createReleaseTrack.mockImplementation(
+        async (_artist, _cover, _recording, attach: AttachReleaseTrack) => {
+          await attach(tx, 'track-1')
+          throw new Error('An attachment rejected after deletion must not reach conversion')
+        },
+      )
+      await expect(service.materialize(RELEASE)).rejects.toThrow('is no longer publishing')
+      expect(tx.releaseTrack.create).not.toHaveBeenCalled()
+      expect(tracks.startReleaseConversion).not.toHaveBeenCalled()
     })
 
     it('reuses linked tracks and converts again the ones that are not ready', async () => {
@@ -243,8 +284,8 @@ describe('ReleasePublishingService', () => {
       await service.materialize(RELEASE)
 
       expect(tracks.createReleaseTrack).not.toHaveBeenCalled()
-      expect(tracks.reprocess).toHaveBeenCalledTimes(1)
-      expect(tracks.reprocess).toHaveBeenCalledWith('failed-track')
+      expect(trackIngest.reprocess).toHaveBeenCalledTimes(1)
+      expect(trackIngest.reprocess).toHaveBeenCalledWith('failed-track')
     })
 
     it('starts a premiere whose time has come before reading the release', async () => {
@@ -259,7 +300,7 @@ describe('ReleasePublishingService', () => {
 
   describe('trackSettled', () => {
     beforeEach(() => {
-      prisma.releaseTrack.findFirst.mockResolvedValue({ releaseId: RELEASE } as never)
+      prisma.releaseTrack.findMany.mockResolvedValue([{ releaseId: RELEASE }] as never)
     })
 
     it('waits while a track is still converting', async () => {
@@ -339,7 +380,7 @@ describe('ReleasePublishingService', () => {
     })
 
     it('ignores a track that belongs to no release', async () => {
-      prisma.releaseTrack.findFirst.mockResolvedValue(null)
+      prisma.releaseTrack.findMany.mockResolvedValue([])
       await service.trackSettled('standalone-track')
       expect(prisma.release.findFirst).not.toHaveBeenCalled()
     })
@@ -347,6 +388,7 @@ describe('ReleasePublishingService', () => {
 
   describe('going offline and back', () => {
     beforeEach(() => {
+      tracks.publishReleaseTracks.mockResolvedValue(1)
       tx.release.findUniqueOrThrow.mockResolvedValue({
         albumId: 'album-1',
         tracks: [{ trackId: 'track-0' }],
@@ -413,6 +455,7 @@ describe('ReleasePublishingService', () => {
         }),
       )
       expect(tracks.hideReleaseTracks).toHaveBeenCalledWith(tx, ['track-0'])
+      expect(tracks.blockReleaseTracks).toHaveBeenCalledWith(tx, ['track-0'])
     })
   })
 

@@ -7,7 +7,11 @@ import {
 } from '@infra/queues/release-publishing.queue'
 import { AlbumsService } from '@modules/albums/albums.service'
 import { NotificationsProducer } from '@modules/notifications'
-import { type PendingReleaseTrack, TrackUploadService } from '@modules/tracks/track-upload.service'
+import {
+  type PendingReleaseTrack,
+  ReleaseTrackService,
+  TrackIngestService,
+} from '@modules/tracks/ingest'
 import { InjectQueue } from '@nestjs/bullmq'
 import {
   ConflictException,
@@ -18,6 +22,7 @@ import {
 } from '@nestjs/common'
 import { type Prisma, ReleaseStatus, ReleaseUnpublishedBy } from '@prisma/client'
 import type { Queue } from 'bullmq'
+import { lockCompilationSources } from './compilation-source'
 import type { ReleaseDraftVersionDto } from './dtos/release-media.dto'
 import { RELEASE_ERRORS } from './errors'
 import { PUBLISH_SOURCE_SELECT, RELEASE_SUMMARY_SELECT } from './orm'
@@ -58,7 +63,8 @@ export class ReleasePublishingService implements OnApplicationBootstrap {
 
   constructor(
     private readonly prisma: PrismaService,
-    private readonly tracks: TrackUploadService,
+    private readonly tracks: ReleaseTrackService,
+    private readonly trackIngest: TrackIngestService,
     private readonly albums: AlbumsService,
     private readonly notifications: NotificationsProducer,
     @InjectQueue(RELEASE_PUBLISHING_QUEUE) private readonly queue: Queue<ReleasePublishJob>,
@@ -157,7 +163,7 @@ export class ReleasePublishingService implements OnApplicationBootstrap {
         select: RELEASE_SUMMARY_SELECT,
       })
       if (!claimed) throw new ConflictException(RELEASE_ERRORS.CHANGED_OR_NOT_LIVE)
-      await this.setVisibility(tx, id, null)
+      await this.setVisibility(tx, id, null, true)
       return claimed
     })
     await this.dropCatalogueCaches()
@@ -201,7 +207,27 @@ export class ReleasePublishingService implements OnApplicationBootstrap {
     for (const [position, draft] of release.trackDrafts.entries()) {
       const track = existing.get(position)
       if (track) {
-        if (track.processingStatus !== 'READY') restart.push(track.id)
+        if (!draft.sourceTrackId && track.processingStatus !== 'READY') restart.push(track.id)
+        continue
+      }
+      if (draft.sourceTrackId) {
+        await this.prisma.$transaction(async (tx) => {
+          const active = await tx.release.updateMany({
+            where: { id: releaseId, deletedAt: null, status: ReleaseStatus.PUBLISHING },
+            data: { status: ReleaseStatus.PUBLISHING },
+          })
+          if (active.count !== 1) throw new Error(`Release ${releaseId} is no longer publishing`)
+          await lockCompilationSources(tx, release.ownerArtistId, [draft.sourceTrackId!])
+          await tx.releaseTrack.create({
+            data: {
+              releaseId,
+              trackId: draft.sourceTrackId!,
+              position: position + 1,
+              reused: true,
+              draftId: draft.id,
+            },
+          })
+        })
         continue
       }
       // Submission requires audio on every recording; a missing master is a data error.
@@ -220,23 +246,32 @@ export class ReleasePublishingService implements OnApplicationBootstrap {
             contentType: draft.audioContentType,
             featuredArtistIds,
           },
-          (tx, trackId) =>
-            tx.releaseTrack.create({ data: { releaseId, trackId, position: position + 1 } }),
+          async (tx, trackId) => {
+            // Serialize a late materialization with deletion before attaching a catalogue copy.
+            const active = await tx.release.updateMany({
+              where: { id: releaseId, deletedAt: null, status: ReleaseStatus.PUBLISHING },
+              data: { status: ReleaseStatus.PUBLISHING },
+            })
+            if (active.count !== 1) throw new Error(`Release ${releaseId} is no longer publishing`)
+            return tx.releaseTrack.create({
+              data: { releaseId, trackId, position: position + 1, draftId: draft.id },
+            })
+          },
         ),
       )
     }
     for (const { conversion } of created) await this.tracks.startReleaseConversion(conversion)
-    for (const trackId of restart) await this.tracks.reprocess(trackId)
+    for (const trackId of restart) await this.trackIngest.reprocess(trackId)
     await this.complete(releaseId)
   }
 
   /** A conversion finished; re-checks the release that owns the track, if any. */
   async trackSettled(trackId: string) {
-    const link = await this.prisma.releaseTrack.findFirst({
-      where: { trackId },
+    const links = await this.prisma.releaseTrack.findMany({
+      where: { trackId, release: { status: ReleaseStatus.PUBLISHING, deletedAt: null } },
       select: { releaseId: true },
     })
-    if (link) await this.complete(link.releaseId)
+    for (const link of links) await this.complete(link.releaseId)
   }
 
   /** Marks a publishing release failed after its job gave up; a no-op once it moved on. */
@@ -263,7 +298,7 @@ export class ReleasePublishingService implements OnApplicationBootstrap {
         _count: { select: { trackDrafts: { where: { deletedAt: null } } } },
         tracks: {
           orderBy: { position: 'asc' },
-          select: { trackId: true, track: { select: { processingStatus: true } } },
+          select: { trackId: true, reused: true, track: { select: { processingStatus: true } } },
         },
       },
     })
@@ -282,9 +317,16 @@ export class ReleasePublishingService implements OnApplicationBootstrap {
         data: { status: ReleaseStatus.RELEASED, publishedAt, unpublishedBy: null },
       })
       if (claimed.count !== 1) return null
-      const published = await this.tracks.publishReleaseTracks(tx, trackIds, publishedAt)
+      const reusedIds = release.tracks.filter((track) => track.reused).map((track) => track.trackId)
+      await lockCompilationSources(tx, release.ownerArtistId, reusedIds)
+      const nativeIds = release.tracks
+        .filter((track) => !track.reused)
+        .map((track) => track.trackId)
+      const published = nativeIds.length
+        ? await this.tracks.publishReleaseTracks(tx, nativeIds, publishedAt)
+        : 0
       // A track deleted or reconverted meanwhile rolls everything back; the next event retries.
-      if (published !== trackIds.length)
+      if (published !== nativeIds.length)
         throw new Error(`Release ${releaseId} changed while publishing`)
       const album = await this.albums.createForRelease(tx, {
         artistId: release.ownerArtistId,
@@ -399,14 +441,41 @@ export class ReleasePublishingService implements OnApplicationBootstrap {
   }
 
   /** Shows (`at`) or hides (null) a live release's tracks and album for listeners. */
-  private async setVisibility(tx: Prisma.TransactionClient, releaseId: string, at: Date | null) {
+  private async setVisibility(
+    tx: Prisma.TransactionClient,
+    releaseId: string,
+    at: Date | null,
+    administrative = false,
+  ) {
     const release = await tx.release.findUniqueOrThrow({
       where: { id: releaseId },
-      select: { albumId: true, tracks: { select: { trackId: true } } },
+      select: {
+        ownerArtistId: true,
+        albumId: true,
+        tracks: { select: { trackId: true, reused: true } },
+      },
     })
     const trackIds = release.tracks.map(({ trackId }) => trackId)
-    if (at) await this.tracks.publishReleaseTracks(tx, trackIds, at)
-    else await this.tracks.hideReleaseTracks(tx, trackIds)
+    if (at) {
+      const reusedIds = release.tracks.filter((track) => track.reused).map((track) => track.trackId)
+      await lockCompilationSources(tx, release.ownerArtistId, reusedIds, false)
+      await this.tracks.restoreSharedReleaseTracks(tx, reusedIds, at)
+      const nativeIds = release.tracks
+        .filter((track) => !track.reused)
+        .map((track) => track.trackId)
+      const restored = nativeIds.length
+        ? await this.tracks.publishReleaseTracks(tx, nativeIds, at)
+        : 0
+      if (restored !== nativeIds.length)
+        throw new ConflictException(RELEASE_ERRORS.COMPILATION_SOURCE_UNAVAILABLE)
+    } else {
+      if (administrative)
+        await this.tracks.blockReleaseTracks(
+          tx,
+          release.tracks.filter((track) => !track.reused).map((track) => track.trackId),
+        )
+      await this.tracks.hideReleaseTracks(tx, trackIds)
+    }
     if (release.albumId) await this.albums.setReleaseAlbumVisibility(tx, release.albumId, at)
   }
 

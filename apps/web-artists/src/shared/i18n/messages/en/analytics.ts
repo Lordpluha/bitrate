@@ -17,8 +17,9 @@ export const analytics = {
   'analytics.new': 'New this period',
   'analytics.change': '{change}% vs previous period',
   'analytics.chartLabel': 'Plays per day. Use the arrow keys to read each day.',
-  'analytics.perListener': 'Plays per listener',
-  'analytics.perListenerHint': 'How often each listener came back',
+  'analytics.perListener': 'Average plays per listener',
+  'analytics.perListenerHint':
+    'Total plays divided by unique listeners for the selected period.',
   'analytics.bestDay': 'Best day',
   'analytics.bestDayPlays.one': '{plays} play',
   'analytics.bestDayPlays.other': '{plays} plays',
@@ -30,6 +31,7 @@ export const analytics = {
   'analytics.tableCaption': 'Plays per UTC day',
   'analytics.dayUtc': 'Day (UTC)',
   'analytics.top': 'Top tracks',
+  'analytics.topPages': 'Top tracks pages',
   'analytics.noPlaysPeriod': 'No plays in this period.',
   'analytics.other': 'Other services',
   'analytics.noFigures':

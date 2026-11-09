@@ -1,4 +1,5 @@
 export const analytics = {
+  'analytics.topPages': 'Strony najpopularniejszych utworów',
   'analytics.subtitle': 'Odtworzenia i słuchacze w Bitrate według dni (UTC).',
   'analytics.period': 'Okres',
   'analytics.days.one': '{count} dzień',
@@ -20,8 +21,9 @@ export const analytics = {
   'analytics.change': '{change}% względem poprzedniego okresu',
   'analytics.chartLabel':
     'Odtworzenia dziennie. Strzałkami przejdziesz przez kolejne dni.',
-  'analytics.perListener': 'Odtworzenia na słuchacza',
-  'analytics.perListenerHint': 'Jak często każdy słuchacz wracał',
+  'analytics.perListener': 'Średnia liczba odtworzeń na słuchacza',
+  'analytics.perListenerHint':
+    'Liczba odtworzeń podzielona przez liczbę unikalnych słuchaczy w wybranym okresie.',
   'analytics.bestDay': 'Najlepszy dzień',
   'analytics.bestDayPlays.one': '{plays} odtworzenie',
   'analytics.bestDayPlays.few': '{plays} odtworzenia',

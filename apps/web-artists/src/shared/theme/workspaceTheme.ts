@@ -34,17 +34,23 @@ export function readStored<T extends string>(
   }
 }
 
-export function parseWorkspaceTheme(value: string | null): WorkspaceTheme {
-  return (
-    workspaceThemes.find((theme) => theme === value) ?? defaultWorkspaceTheme
-  )
+export function parseWorkspaceTheme(
+  value: string | null,
+  fallback = defaultWorkspaceTheme,
+): WorkspaceTheme {
+  return workspaceThemes.find((theme) => theme === value) ?? fallback
 }
 
-export function readWorkspaceTheme(): WorkspaceTheme {
+export function readWorkspaceTheme(
+  fallback = defaultWorkspaceTheme,
+): WorkspaceTheme {
   try {
-    return parseWorkspaceTheme(localStorage.getItem(workspaceThemeStorageKey))
+    return parseWorkspaceTheme(
+      localStorage.getItem(workspaceThemeStorageKey),
+      fallback,
+    )
   } catch {
-    return defaultWorkspaceTheme
+    return fallback
   }
 }
 
@@ -54,17 +60,18 @@ export const workspaceThemeScript = `(() => {
   const workspacePath = ${JSON.stringify(workspaceThemePath)};
   const path = location.pathname;
   const inWorkspace = path === workspacePath || path.startsWith(workspacePath + '/');
+  const inLanding = path === '/';
   const root = document.documentElement;
   let theme = 'dark';
   delete root.dataset.density;
   delete root.dataset.motion;
-  if (inWorkspace) {
-    theme = ${JSON.stringify(defaultWorkspaceTheme)};
+  if (inWorkspace || inLanding) {
+    theme = inWorkspace ? ${JSON.stringify(defaultWorkspaceTheme)} : 'dark';
     try {
       const stored = localStorage.getItem(${JSON.stringify(workspaceThemeStorageKey)});
       if (themes.includes(stored)) theme = stored;
-      if (localStorage.getItem(${JSON.stringify(workspaceDensityStorageKey)}) === 'compact') root.dataset.density = 'compact';
-      if (localStorage.getItem(${JSON.stringify(workspaceMotionStorageKey)}) === 'reduced') root.dataset.motion = 'reduced';
+      if (inWorkspace && localStorage.getItem(${JSON.stringify(workspaceDensityStorageKey)}) === 'compact') root.dataset.density = 'compact';
+      if (inWorkspace && localStorage.getItem(${JSON.stringify(workspaceMotionStorageKey)}) === 'reduced') root.dataset.motion = 'reduced';
     } catch {}
   }
   root.classList.remove(...themes);

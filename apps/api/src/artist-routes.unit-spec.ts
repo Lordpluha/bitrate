@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common/constants'
 import { AppModule } from './app.module'
 
-/** `TrackUploadService` pulls in `music-metadata`, which Jest cannot resolve. */
+/** `TrackIngestService` pulls in `music-metadata`, which Jest cannot resolve. */
 jest.mock('music-metadata', () => ({ parseFile: jest.fn() }), { virtual: true })
 
 type ModuleImport = Type | DynamicModule | ForwardReference

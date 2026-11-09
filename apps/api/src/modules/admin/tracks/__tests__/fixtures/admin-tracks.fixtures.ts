@@ -19,6 +19,7 @@ export const buildTrack = (overrides: Partial<Track> = {}): Track => ({
   discNumber: 1,
   language: null,
   deletedAt: null,
+  moderationBlockedAt: null,
   publishedAt: new Date('2026-01-01T00:00:00.000Z'),
   processingStatus: 'READY',
   processingError: null,

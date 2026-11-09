@@ -1,7 +1,7 @@
 import { MailModule } from '@infra/mail/mail.module'
 import { PrismaModule } from '@infra/prisma/prisma.module'
 import { TokensModule } from '@modules/tokens/tokens.module'
-import { PlaybackSessionsModule } from '@modules/tracks/playback-sessions.module'
+import { PlaybackSessionsModule } from '@modules/tracks/playback'
 import { forwardRef, Module } from '@nestjs/common'
 import { UsersModule } from '../users/users.module'
 import { OAuthService } from './oauth.service'

@@ -5,6 +5,8 @@ import { ArtistsModule } from '@modules/artists/artists.module'
 import { TokensModule } from '@modules/tokens/tokens.module'
 import { Module } from '@nestjs/common'
 import { UsersModule } from '../users/users.module'
+import { ArtistAccountsController } from './artist-accounts.controller'
+import { ArtistAccountsService } from './artist-accounts.service'
 import { ArtistEmailCodeService } from './artist-email-code.service'
 import { ArtistOAuthService } from './artist-oauth.service'
 import { ArtistSessionsController } from './artist-sessions.controller'
@@ -18,12 +20,18 @@ import { ArtistsOAuthController } from './artists-oauth.controller'
   imports: [PrismaModule, ArtistsModule, UsersModule, TokensModule, MailModule, CacheModule],
   providers: [
     ArtistsAuthService,
+    ArtistAccountsService,
     ArtistTwoFactorService,
     ArtistOAuthService,
     ArtistEmailCodeService,
     ArtistSessionsService,
   ],
-  controllers: [AuthController, ArtistsOAuthController, ArtistSessionsController],
+  controllers: [
+    AuthController,
+    ArtistsOAuthController,
+    ArtistSessionsController,
+    ArtistAccountsController,
+  ],
   exports: [ArtistsAuthService, TokensModule],
 })
 export class ArtistsAuthModule {}

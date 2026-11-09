@@ -1,4 +1,5 @@
 import { type ReleaseCreditRole, type ReleaseMasterOwner, ReleaseRightType } from '@prisma/client'
+import { sourceAvailable } from './compilation-source'
 import type { ReadinessRecord } from './orm'
 
 /** 10,000 basis points is 100%; each split right must be fully allocated before submission. */
@@ -79,7 +80,11 @@ export function readinessFromRecord(record: ReadinessRecord) {
   return {
     ...record,
     tracks: [
-      ...record.trackDrafts.map(({ id, isrc, audioKey }) => ({ id, isrc, hasAudio: !!audioKey })),
+      ...record.trackDrafts.map(({ id, isrc, audioKey, sourceTrackId, sourceTrack }) => ({
+        id,
+        isrc: sourceTrack?.isrc ?? isrc,
+        hasAudio: sourceTrackId ? sourceAvailable(sourceTrack) : !!audioKey,
+      })),
       ...record.tracks.map(({ track }) => ({ ...track, hasAudio: true })),
     ],
   }

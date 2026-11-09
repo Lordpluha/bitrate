@@ -79,15 +79,23 @@ jobs:
 
       - name: Pull image for smoke test
         if: ${{ inputs.run-mobile-web-test && inputs.mobile-web-test-pull }}
-        run: docker pull ${{ inputs.mobile-web-test-image }}
+        env:
+          TEST_IMAGE: ${{ inputs.mobile-web-test-image }}
+        run: docker pull "$TEST_IMAGE"
 
       - name: Test Web Build
         if: ${{ inputs.run-mobile-web-test }}
+        # Inputs reach the script as environment variables, never as expanded template text.
+        env:
+          TEST_IMAGE: ${{ inputs.mobile-web-test-image }}
+          TEST_CONTAINER: ${{ inputs.mobile-web-test-container }}
         run: |
-          docker run -d -p 8080:80 --name ${{ inputs.mobile-web-test-container }} ${{ inputs.mobile-web-test-image }}
+          docker run -d -p 8080:8080 --name "$TEST_CONTAINER" "$TEST_IMAGE"
           sleep 5
           curl -f http://localhost:8080 || exit 1
 
       - name: Cleanup
         if: ${{ always() && inputs.run-mobile-web-test }}
-        run: docker stop ${{ inputs.mobile-web-test-container }} && docker rm ${{ inputs.mobile-web-test-container }} || true
+        env:
+          TEST_CONTAINER: ${{ inputs.mobile-web-test-container }}
+        run: docker stop "$TEST_CONTAINER" && docker rm "$TEST_CONTAINER" || true
