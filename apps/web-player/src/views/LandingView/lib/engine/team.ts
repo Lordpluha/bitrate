@@ -2,9 +2,30 @@ import { gsap } from 'gsap'
 import { type TeamMember, teamMembers } from '../../model/team'
 import { lc } from '../styles/lc'
 import { type EngineContext, must } from './context'
+import {
+  containInJar,
+  containLoose,
+  hasLeftJar,
+  type JarBox,
+  jarBox,
+} from './jar'
+import { fitLabel } from './labelFit'
+import { LID, turnLid } from './lidThread'
 import { collideBalls, type PhysicsBall } from './physics'
 
-type Bubble = PhysicsBall & { d: TeamMember; el: HTMLDivElement }
+/**
+ * Where a bubble is: in the jar (pit pixels), loose over the landing (viewport pixels), or gone —
+ * fallen below the screen on its way down to the footer, where the final scene catches it.
+ */
+type Place = 'jar' | 'loose' | 'gone'
+
+type Bubble = PhysicsBall & {
+  d: TeamMember
+  el: HTMLDivElement
+  place: Place
+  /** Radius in the jar (pit pixels); `r` is the radius in the current place. */
+  rJar: number
+}
 
 /** Deterministic 0–1 per bubble so the drop looks the same on every visit. */
 const rndf = (i: number) => {
@@ -14,25 +35,55 @@ const rndf = (i: number) => {
 const GRAVITY = 2600
 const CARD_WIDTH = 290
 const HIDE_DELAY_MS = 140
+/** How hard the held bubble follows the pointer; the release keeps that speed, so it is a throw. */
+const GRAB_PULL = 16
+/** A bubble leaving the rim this fast upwards flies out instead of dropping back in. */
+const ESCAPE_SPEED = 200
+/** How far a hand can shove the jar from where it stands (jar pixels at full size). */
+const SHAKE_REACH = { x: 70, y: 46 } as const
+const AIR_DRAG = 0.996
+/** How far the lid rises per turn of thread (jar pixels at full size). */
+const THREAD_PITCH = 7
+/** How far the knurling slides past per turn, so the lid reads as spinning. */
+const KNURL_PER_TURN = 220
+/** A press that moves less than this is a tap, not a twist. */
+const TAP_PX = 4
+/** One arrow-key press turns the lid this much. */
+const KEY_TURN = 0.125
 
-/** Team pit: people and stack bubbles fall under gravity; hover shows a card, drag throws a bubble. */
+/**
+ * Team jar: people and stack bubbles in a jar with a lid. Hover a bubble for its card, drag to
+ * throw; with the lid off a bubble can be thrown or shaken out. Out of the jar it falls through
+ * the landing (the screen's sides are walls) and lands on the footer in the final scene.
+ */
 export const mountTeam = (ctx: EngineContext) => {
   const { root, state, signal } = ctx
   const pit = must({ root, selector: '#pit', type: HTMLElement })
   const hc = must({ root, selector: '#hc', type: HTMLElement })
+  const jarEl = must({ root, selector: '#jar', type: HTMLElement })
+  const lid = must({ root, selector: '#jarLid', type: HTMLButtonElement })
+
+  /* bubbles out of the jar live above every scene, in one fixed layer */
+  const loose = document.createElement('div')
+  loose.className = lc('loose')
+  loose.setAttribute('aria-hidden', 'true')
+  root.appendChild(loose)
+  ctx.onDispose(() => loose.remove())
+
   const bubbles: Bubble[] = teamMembers(ctx).map((d) => {
     const el = document.createElement('div')
     el.className = lc(`ball ${d.kind}`)
-    el.style.width = `${d.r * 2}px`
-    el.style.height = `${d.r * 2}px`
     el.style.background = d.bg
     el.textContent = d.label
     el.setAttribute('aria-label', d.name)
+    el.title = d.name
     pit.appendChild(el)
     return {
       d,
       el,
       r: d.r,
+      rJar: d.r,
+      place: 'jar',
       p: { x: 0, y: 0, z: 0 },
       v: { x: 0, y: 0, z: 0 },
     }
@@ -40,10 +91,14 @@ export const mountTeam = (ctx: EngineContext) => {
   ctx.onDispose(() => {
     for (const b of bubbles) b.el.remove()
   })
+
   const TP: {
     w: number
     h: number
+    jar: JarBox
+    open: boolean
     grab: Bubble | null
+    /** Pointer target of the held bubble, in its place's coordinates. */
     gx: number
     gy: number
     hover: Bubble | null
@@ -51,9 +106,22 @@ export const mountTeam = (ctx: EngineContext) => {
     cardH: number
     hideT: number
     run: boolean
+    /** How far the lid is unscrewed, 0 (tight) … LID.offTurns (off). */
+    turns: number
+    /** A twist in progress: where the pointer started and how far the lid was turned then. */
+    twist: { x: number; turns: number; moved: number } | null
+    /** The lid is moving on its own (popping off, going back on). */
+    lidBusy: boolean
+    /** Where a hand has shoved the jar, and how fast the glass is moving (pit pixels, px/s). */
+    shift: { x: number; y: number }
+    wallV: { x: number; y: number }
+    /** A hand on the glass: where the press started. */
+    hold: { x: number; y: number } | null
   } = {
     w: 880,
     h: 780,
+    jar: jarBox({ w: 880, h: 780 }),
+    open: false,
     grab: null,
     gx: 0,
     gy: 0,
@@ -61,23 +129,208 @@ export const mountTeam = (ctx: EngineContext) => {
     cardH: 0,
     hideT: 0,
     run: false,
+    turns: 0,
+    twist: null,
+    lidBusy: false,
+    shift: { x: 0, y: 0 },
+    wallV: { x: 0, y: 0 },
+    hold: null,
   }
-  const pitLocal = (e: PointerEvent): [number, number] => {
+
+  const sceneId = () => ctx.scenes[state.index]?.id
+  /** Pit pixels per viewport pixel (the board is scaled to the window). */
+  const pitScale = () => {
     const r = pit.getBoundingClientRect()
-    const k = pit.offsetWidth / (r.width || 1)
-    return [(e.clientX - r.left) * k, (e.clientY - r.top) * k]
+    return { rect: r, k: (r.width || 1) / (pit.offsetWidth || 1) }
   }
-  const reset = () => {
+  const footerTop = () => {
+    const footer = root.querySelector('#cta .footer')
+    const top = footer?.getBoundingClientRect().top ?? 0
+    return top > 0 ? top : window.innerHeight
+  }
+
+  const sizeBubble = (b: Bubble) => {
+    b.el.style.width = `${b.r * 2}px`
+    b.el.style.height = `${b.r * 2}px`
+    /* stack labels shrink to stay inside their bubble; people keep their big initials */
+    b.el.style.fontSize =
+      b.d.kind === 'tech'
+        ? `${fitLabel({ label: b.d.label, r: b.r, base: 12 * (b.r / b.d.r) })}px`
+        : ''
+  }
+
+  const layoutJar = () => {
     TP.w = pit.offsetWidth
     TP.h = pit.offsetHeight
+    TP.jar = jarBox({ w: TP.w, h: TP.h })
+    const { left, top, right, bottom, scale } = TP.jar
+    Object.assign(jarEl.style, {
+      left: `${left}px`,
+      top: `${top}px`,
+      width: `${right - left}px`,
+      height: `${bottom - top}px`,
+    })
+    Object.assign(lid.style, {
+      left: `${left - 12 * scale}px`,
+      top: `${top - 30 * scale}px`,
+      width: `${right - left + 24 * scale}px`,
+      height: `${34 * scale}px`,
+    })
+    if (hint)
+      Object.assign(hint.style, {
+        left: `${left}px`,
+        top: `${top - 62 * scale}px`,
+        width: `${right - left}px`,
+      })
+    if (!TP.open && !TP.lidBusy) renderLid()
+    for (const b of bubbles) {
+      b.rJar = b.d.r * scale
+      if (b.place === 'jar') {
+        b.r = b.rJar
+        sizeBubble(b)
+      }
+    }
+  }
+
+  /** Moves a bubble out of the jar into the landing layer, keeping its place on screen. */
+  const toLoose = (b: Bubble) => {
+    const { rect, k } = pitScale()
+    b.p.x = rect.left + b.p.x * k
+    b.p.y = rect.top + b.p.y * k
+    b.v.x *= k
+    b.v.y *= k
+    b.r = b.rJar * k
+    b.place = 'loose'
+    if (TP.grab === b) {
+      TP.gx = rect.left + TP.gx * k
+      TP.gy = rect.top + TP.gy * k
+    }
+    if (TP.hover === b) hideCard()
+    b.el.classList.add('loose-ball')
+    loose.appendChild(b.el)
+    sizeBubble(b)
+  }
+
+  /** Drops a loose bubble back into the jar when it falls through the open rim. */
+  const toJar = (b: Bubble) => {
+    const { rect, k } = pitScale()
+    b.p.x = (b.p.x - rect.left) / k
+    b.p.y = (b.p.y - rect.top) / k
+    b.v.x /= k
+    b.v.y /= k
+    b.r = b.rJar
+    b.place = 'jar'
+    b.el.classList.remove('loose-ball')
+    b.el.style.visibility = ''
+    pit.insertBefore(b.el, hc)
+    sizeBubble(b)
+  }
+
+  const hint = root.querySelector<HTMLElement>('#jarHint')
+  const syncToggles = () => {
+    lid.setAttribute('aria-pressed', String(TP.open))
+  }
+  /** Draws the lid at its place on the thread: higher and with the knurling slid round. */
+  const renderLid = () => {
+    const { scale } = TP.jar
+    lid.style.setProperty('--twist', `${TP.turns * KNURL_PER_TURN * scale}px`)
+    gsap.set(lid, {
+      x: TP.shift.x,
+      y: TP.shift.y - TP.turns * THREAD_PITCH * scale,
+      rotate: Math.sin(TP.turns * Math.PI * 2) * 0.6,
+      transformOrigin: '50% 50%',
+    })
+  }
+  /** Off the end of the thread: the lid hops free and comes to rest against the jar. */
+  const popLid = () => {
+    TP.open = true
+    TP.twist = null
+    TP.lidBusy = true
+    syncToggles()
+    if (hint) hint.hidden = true
+    navigator.vibrate?.(18)
+    const { scale } = TP.jar
+    gsap
+      .timeline({
+        onComplete: () => {
+          TP.lidBusy = false
+        },
+      })
+      .to(lid, {
+        y: `-=${26 * scale}`,
+        rotate: -6,
+        duration: ctx.reduce ? 0 : 0.16,
+        ease: 'power2.out',
+      })
+      /* off, the lid leans against the jar's right wall, pivoting on its right end */
+      .to(lid, {
+        transformOrigin: '100% 50%',
+        x: 18 * scale,
+        y: 70 * scale,
+        rotate: -90,
+        duration: ctx.reduce ? 0 : 0.6,
+        ease: 'back.out(1.4)',
+      })
+  }
+  /** Unscrews the lid by itself (the "Open the jar" button, Enter on the lid). */
+  const unscrew = () => {
+    if (TP.open || TP.lidBusy) return
+    TP.lidBusy = true
+    gsap.to(TP, {
+      turns: LID.offTurns,
+      duration: ctx.reduce ? 0 : 1.1 * (1 - TP.turns / LID.offTurns) + 0.2,
+      ease: 'power1.inOut',
+      onUpdate: renderLid,
+      onComplete: popLid,
+    })
+  }
+  /** Puts the lid back on the rim and screws it down tight. */
+  const screwOn = () => {
+    if (!TP.open || TP.lidBusy) return
+    TP.lidBusy = true
+    const { scale } = TP.jar
+    gsap
+      .timeline({
+        onComplete: () => {
+          TP.lidBusy = false
+        },
+      })
+      .to(lid, {
+        x: 0,
+        y: -LID.offTurns * THREAD_PITCH * scale,
+        rotate: 0,
+        duration: ctx.reduce ? 0 : 0.55,
+        ease: 'power3.inOut',
+        onComplete: () => {
+          /* seated: from here on the lid is a ceiling again */
+          TP.open = false
+          syncToggles()
+        },
+      })
+      .to(TP, {
+        turns: 0,
+        duration: ctx.reduce ? 0 : 0.9,
+        ease: 'power2.out',
+        onUpdate: renderLid,
+      })
+  }
+  const toggleLid = () => (TP.open ? screwOn() : unscrew())
+
+  /** Re-drops the bubbles still in the jar from above it (on every visit to the scene). */
+  const reset = () => {
+    layoutJar()
+    const { left, right, top } = TP.jar
     bubbles.forEach((b, i) => {
-      b.p.x = b.r + rndf(i) * (TP.w - b.r * 2)
-      b.p.y = -b.r - rndf(i + 9) * 600 - (b.d.kind === 'person' ? 700 : 0)
+      if (b.place !== 'jar') return
+      b.p.x = left + b.r + rndf(i) * Math.max(0, right - left - b.r * 2)
+      b.p.y = top - b.r - rndf(i + 9) * 420 - (b.d.kind === 'person' ? 360 : 0)
       b.v.x = (rndf(i + 3) - 0.5) * 200
       b.v.y = 0
     })
     TP.run = true
   }
+
+  /* cards */
   const renderCard = (d: TeamMember) => {
     const row = document.createElement('div')
     row.className = lc('row')
@@ -118,7 +371,7 @@ export const mountTeam = (ctx: EngineContext) => {
     hc.classList.add('open')
     TP.cardH = hc.offsetHeight
   }
-  const hideCard = () => {
+  function hideCard() {
     TP.hideT = window.setTimeout(() => {
       TP.hover = null
       hc.classList.remove('open')
@@ -126,11 +379,18 @@ export const mountTeam = (ctx: EngineContext) => {
     }, HIDE_DELAY_MS)
   }
   ctx.onDispose(() => window.clearTimeout(TP.hideT))
+
+  /* pointer: the drag follows the window, so a bubble can be carried out of the pit */
+  const target = (b: Bubble, e: PointerEvent): [number, number] => {
+    if (b.place !== 'jar') return [e.clientX, e.clientY]
+    const { rect, k } = pitScale()
+    return [(e.clientX - rect.left) / k, (e.clientY - rect.top) / k]
+  }
   for (const b of bubbles) {
     b.el.addEventListener(
       'pointerenter',
       () => {
-        if (!TP.grab) showCard(b)
+        if (!TP.grab && b.place === 'jar') showCard(b)
       },
       { signal },
     )
@@ -138,12 +398,10 @@ export const mountTeam = (ctx: EngineContext) => {
     b.el.addEventListener(
       'pointerdown',
       (e) => {
+        e.preventDefault()
         TP.grab = b
         state.dragging = true
-        pit.setPointerCapture(e.pointerId)
-        const [x, y] = pitLocal(e)
-        TP.gx = x
-        TP.gy = y
+        ;[TP.gx, TP.gy] = target(b, e)
         hc.classList.remove('open')
       },
       { signal },
@@ -153,13 +411,10 @@ export const mountTeam = (ctx: EngineContext) => {
     signal,
   })
   hc.addEventListener('pointerleave', hideCard, { signal })
-  pit.addEventListener(
+  window.addEventListener(
     'pointermove',
     (e) => {
-      if (!TP.grab) return
-      const [x, y] = pitLocal(e)
-      TP.gx = x
-      TP.gy = y
+      if (TP.grab) [TP.gx, TP.gy] = target(TP.grab, e)
     },
     { signal },
   )
@@ -167,65 +422,265 @@ export const mountTeam = (ctx: EngineContext) => {
     TP.grab = null
     state.dragging = false
   }
-  pit.addEventListener('pointerup', drop, { signal })
-  pit.addEventListener('pointercancel', drop, { signal })
-  const step = (dt: number) => {
-    for (const b of bubbles) {
-      if (TP.grab === b) {
-        b.v.x = (TP.gx - b.p.x) * 16
-        b.v.y = (TP.gy - b.p.y) * 16
-      } else b.v.y += GRAVITY * dt
-      b.v.x *= 0.996
-      b.p.x += b.v.x * dt
-      b.p.y += b.v.y * dt
-      if (b.p.x < b.r) {
-        b.p.x = b.r
-        b.v.x = Math.abs(b.v.x) * 0.4
-      }
-      if (b.p.x > TP.w - b.r) {
-        b.p.x = TP.w - b.r
-        b.v.x = -Math.abs(b.v.x) * 0.4
-      }
-      if (b.p.y > TP.h - b.r) {
-        b.p.y = TP.h - b.r
-        b.v.y = -Math.abs(b.v.y) * 0.32
-        b.v.x *= 0.94
-      }
+  window.addEventListener('pointerup', drop, { signal })
+  window.addEventListener('pointercancel', drop, { signal })
+
+  /* the jar itself: grab the glass and shake it; the walls throw the bubbles they hit */
+  jarEl.addEventListener(
+    'pointerdown',
+    (e) => {
+      if (TP.lidBusy) return
+      e.preventDefault()
+      jarEl.setPointerCapture(e.pointerId)
+      TP.hold = { x: e.clientX, y: e.clientY }
+      state.dragging = true
+      gsap.killTweensOf(TP.shift)
+    },
+    { signal },
+  )
+  jarEl.addEventListener(
+    'pointermove',
+    (e) => {
+      if (!TP.hold) return
+      const { k } = pitScale()
+      const { scale } = TP.jar
+      const reach = (max: number, d: number) =>
+        Math.max(-max * scale, Math.min(max * scale, d / k))
+      TP.shift.x = reach(SHAKE_REACH.x, e.clientX - TP.hold.x)
+      TP.shift.y = reach(SHAKE_REACH.y, e.clientY - TP.hold.y)
+    },
+    { signal },
+  )
+  const putDown = () => {
+    if (!TP.hold) return
+    TP.hold = null
+    state.dragging = false
+    /* the jar settles back where it stood */
+    gsap.to(TP.shift, {
+      x: 0,
+      y: 0,
+      duration: ctx.reduce ? 0 : 0.6,
+      ease: 'elastic.out(1, .45)',
+    })
+  }
+  jarEl.addEventListener('pointerup', putDown, { signal })
+  jarEl.addEventListener('pointercancel', putDown, { signal })
+
+  /* the lid itself: grab it and drag sideways to turn it along the thread, like a real jar */
+  lid.addEventListener(
+    'pointerdown',
+    (e) => {
+      if (TP.open || TP.lidBusy) return
+      e.preventDefault()
+      lid.setPointerCapture(e.pointerId)
+      TP.twist = { x: e.clientX, turns: TP.turns, moved: 0 }
+      state.dragging = true
+      lid.classList.add('twisting')
+    },
+    { signal },
+  )
+  lid.addEventListener(
+    'pointermove',
+    (e) => {
+      if (!TP.twist) return
+      const { k } = pitScale()
+      const dx = (e.clientX - TP.twist.x) / k
+      TP.twist.moved = Math.max(TP.twist.moved, Math.abs(dx))
+      /* a full turn is about one and a half lid widths of drag: several grips, as by hand */
+      const span = (TP.jar.right - TP.jar.left) * 1.5
+      TP.turns = turnLid({ turns: TP.twist.turns, dx, span })
+      renderLid()
+      if (TP.turns >= LID.offTurns) popLid()
+    },
+    { signal },
+  )
+  const letGo = () => {
+    if (!TP.twist) return
+    const tap = TP.twist.moved < TAP_PX
+    TP.twist = null
+    state.dragging = false
+    lid.classList.remove('twisting')
+    /* a tap does not open a jar: wiggle the lid and show how */
+    if (tap && !ctx.reduce) {
+      if (hint) hint.hidden = false
+      gsap.fromTo(
+        lid,
+        { rotate: -1.5 },
+        { rotate: 0, duration: 0.45, ease: 'elastic.out(1.4, .3)' },
+      )
+    }
+  }
+  lid.addEventListener('pointerup', letGo, { signal })
+  lid.addEventListener('pointercancel', letGo, { signal })
+  lid.addEventListener(
+    'click',
+    (e) => {
+      /* keyboard activation (no pointer): unscrew or screw on; a leaning lid goes back on with a tap */
+      if (e.detail === 0 || TP.open) toggleLid()
+    },
+    { signal },
+  )
+  lid.addEventListener(
+    'keydown',
+    (e) => {
+      if (TP.open || TP.lidBusy) return
+      const dir = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0
+      if (!dir) return
+      e.preventDefault()
+      const span = 1
+      TP.turns = turnLid({ turns: TP.turns, dx: dir * KEY_TURN, span })
+      renderLid()
+      if (TP.turns >= LID.offTurns) popLid()
+    },
+    { signal },
+  )
+
+  /* physics */
+  const follow = (b: Bubble, dt: number) => {
+    if (TP.grab === b) {
+      b.v.x = (TP.gx - b.p.x) * GRAB_PULL
+      b.v.y = (TP.gy - b.p.y) * GRAB_PULL
+    } else b.v.y += GRAVITY * (b.r / b.rJar) * dt
+    b.v.x *= AIR_DRAG
+    b.p.x += b.v.x * dt
+    b.p.y += b.v.y * dt
+  }
+  /** The jar where the hand holds it right now. */
+  const heldJar = (): JarBox => ({
+    ...TP.jar,
+    left: TP.jar.left + TP.shift.x,
+    right: TP.jar.right + TP.shift.x,
+    top: TP.jar.top + TP.shift.y,
+    bottom: TP.jar.bottom + TP.shift.y,
+  })
+  const stepJar = (dt: number) => {
+    const inJar = bubbles.filter((b) => b.place === 'jar')
+    const jar = heldJar()
+    for (const b of inJar) {
+      follow(b, dt)
+      containInJar({ ball: b, jar, open: TP.open, wall: TP.wallV })
     }
     for (let it = 0; it < 3; it++)
       collideBalls({
-        balls: bubbles,
+        balls: inJar,
         dims: 2,
         bounce: 1.3,
         /* the held bubble does not give way */
         inverseMass: (o) => (TP.grab === o ? 0 : 1 / o.r),
       })
+    /* collisions may shove a bubble into the glass: put it back inside */
+    for (const b of inJar)
+      containInJar({ ball: b, jar, open: TP.open, wall: TP.wallV })
+    if (!TP.open) return
+    const { left, right } = jar
+    for (const b of inJar)
+      if (
+        hasLeftJar({ ball: b, jar }) &&
+        (TP.grab === b ||
+          b.v.y < -ESCAPE_SPEED ||
+          b.p.x < left ||
+          b.p.x > right)
+      )
+        toLoose(b)
   }
+  const stepLoose = (dt: number) => {
+    const out = bubbles.filter((b) => b.place === 'loose')
+    if (!out.length) return
+    const floor = sceneId() === 'cta' ? footerTop() : null
+    const onTeam = sceneId() === 'team'
+    const { rect, k } = pitScale()
+    for (const b of out) {
+      follow(b, dt)
+      if (
+        containLoose({
+          ball: b,
+          width: window.innerWidth,
+          height: window.innerHeight,
+          floor,
+        }) &&
+        TP.grab !== b
+      ) {
+        b.place = 'gone'
+        b.el.style.visibility = 'hidden'
+        continue
+      }
+      /* falling back through the open rim puts it back in the jar */
+      if (onTeam && TP.open && b.v.y > 0 && TP.grab !== b) {
+        const x = (b.p.x - rect.left) / k
+        const y = (b.p.y - rect.top) / k
+        const { left, right, top } = TP.jar
+        if (
+          x > left + b.rJar &&
+          x < right - b.rJar &&
+          y > top &&
+          y < top + b.rJar
+        )
+          toJar(b)
+      }
+    }
+    collideBalls({
+      balls: out.filter((b) => b.place === 'loose'),
+      dims: 2,
+      bounce: 1.3,
+      inverseMass: (o) => (TP.grab === o ? 0 : 1 / o.r),
+    })
+  }
+
+  /** The footer scene catches what fell: everything gone drops in from above the screen. */
+  const catchInFooter = () => {
+    let n = 0
+    for (const b of bubbles) {
+      if (b.place !== 'gone') continue
+      b.place = 'loose'
+      b.p.x = b.r + rndf(n + 41) * (window.innerWidth - b.r * 2)
+      b.p.y = -b.r - n * 70
+      b.v.x = (rndf(n + 7) - 0.5) * 160
+      b.v.y = 0
+      b.el.style.visibility = ''
+      n++
+    }
+  }
+
   /** Writes the simulated positions to the DOM: once per frame, after all sub-steps. */
   const render = () => {
+    jarEl.style.transform = `translate(${TP.shift.x}px, ${TP.shift.y}px)`
+    if (!TP.open && !TP.lidBusy && !TP.twist) renderLid()
     for (const b of bubbles)
-      b.el.style.transform = `translate(${b.p.x - b.r}px, ${b.p.y - b.r}px)`
+      if (b.place !== 'gone')
+        b.el.style.transform = `translate(${b.p.x - b.r}px, ${b.p.y - b.r}px)`
     if (TP.hover) {
       const b = TP.hover
       const above = b.p.y - b.r - 14 > TP.cardH
       hc.style.transform = `translate(${Math.max(8, Math.min(TP.w - CARD_WIDTH - 8, b.p.x - CARD_WIDTH / 2))}px, ${above ? b.p.y - b.r - 12 - TP.cardH : b.p.y + b.r + 12}px)`
     }
   }
+  const lastShift = { x: 0, y: 0 }
   const tick = () => {
-    if (!TP.run || ctx.scenes[state.index]?.id !== 'team') return
+    const id = sceneId()
+    const looseLive = bubbles.some((b) => b.place === 'loose')
+    if (!TP.run || (id !== 'team' && !looseLive)) return
     const dt = Math.min(0.033, gsap.ticker.deltaRatio() / 60)
-    step(dt * 0.5)
-    step(dt * 0.5)
+    /* how fast the hand moved the glass since the last frame */
+    TP.wallV.x = (TP.shift.x - lastShift.x) / dt
+    TP.wallV.y = (TP.shift.y - lastShift.y) / dt
+    lastShift.x = TP.shift.x
+    lastShift.y = TP.shift.y
+    for (const h of [0.5, 0.5]) {
+      if (id === 'team') stepJar(dt * h)
+      stepLoose(dt * h)
+    }
     render()
   }
+  window.addEventListener('resize', layoutJar, { signal })
+
   if (ctx.reduce) {
-    /* static page: let the bubbles settle once instead of animating the fall */
+    /* static page: the bubbles settle once in the closed jar; the toy controls stay hidden */
     reset()
-    for (let i = 0; i < 360; i++) step(1 / 60)
+    for (let i = 0; i < 360; i++) stepJar(1 / 60)
     render()
-    return reset
+    return { team: reset, cta: () => {} }
   }
   gsap.ticker.add(tick)
   ctx.onDispose(() => gsap.ticker.remove(tick))
-  return reset
+  return { team: reset, cta: catchInFooter }
 }

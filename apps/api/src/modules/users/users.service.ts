@@ -8,9 +8,10 @@ import {
 } from '@infra/storage/public-images'
 import { STORAGE_SERVICE } from '@infra/storage/storage.constants'
 import type { StorageService } from '@infra/storage/storage.types'
-import { Inject, Injectable } from '@nestjs/common'
+import { Inject, Injectable, NotFoundException } from '@nestjs/common'
 import type { Prisma } from '@prisma/client'
 import type { UserEntity } from './entities'
+import { USER_ERRORS } from './errors/user.errors'
 import { PUBLIC_USER_SELECT, SELF_USER_SELECT } from './orm'
 
 /** Largest avatar accepted, in bytes. */
@@ -76,11 +77,14 @@ export class UsersService {
   }
 
   /** Runs the get by username operation. Filters `deletedAt` — see `findById`. */
+  /** The public profile behind a username; unknown and deleted accounts are not found. */
   async getByUsername(username: UserEntity['username']) {
-    return await this.prisma.user.findFirst({
+    const user = await this.prisma.user.findFirst({
       where: { username, deletedAt: null },
       select: PUBLIC_USER_SELECT,
     })
+    if (!user) throw new NotFoundException(USER_ERRORS.NOT_FOUND)
+    return user
   }
 
   async findAll({

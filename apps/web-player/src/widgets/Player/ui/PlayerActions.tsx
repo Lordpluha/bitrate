@@ -19,7 +19,12 @@ const iconButtonClassName =
   'flex size-8 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-surface hover:text-foreground'
 const ICON_SIZE = 17
 
+/** An action the bar can leave out where it is shown smaller (the landing's demo). */
+export type PlayerAction = 'lyrics' | 'queue' | 'connect' | 'floating'
+
 interface PlayerActionsProps {
+  /** Actions to leave out; the app's own bar shows them all. */
+  hide?: readonly PlayerAction[]
   volume: number
   onVolumeChange: (volume: number) => void
   onExpand?: () => void
@@ -31,6 +36,7 @@ interface PlayerActionsProps {
  * volume on an 86px rail and the full player.
  */
 export const PlayerActions = ({
+  hide = [],
   volume,
   onVolumeChange,
   onExpand,
@@ -47,32 +53,40 @@ export const PlayerActions = ({
 
   return (
     <div className="flex items-center justify-end gap-2">
-      <Link
-        aria-label={t('player.openLyrics')}
-        className={iconButtonClassName}
-        href={ROUTES.lyrics}
-      >
-        <Mic2 size={ICON_SIZE} />
-      </Link>
-      <Link
-        aria-label={t('player.openQueue')}
-        className={iconButtonClassName}
-        href={ROUTES.queue}
-      >
-        <ListMusic size={ICON_SIZE} />
-      </Link>
-      <ConnectDevicesPopover
-        iconSize={ICON_SIZE}
-        triggerClassName={iconButtonClassName}
-      />
-      <button
-        aria-label={t('player.openFloating')}
-        className={iconButtonClassName}
-        onClick={onPictureInPicture}
-        type="button"
-      >
-        <PictureInPicture2 size={ICON_SIZE} />
-      </button>
+      {!hide.includes('lyrics') && (
+        <Link
+          aria-label={t('player.openLyrics')}
+          className={iconButtonClassName}
+          href={ROUTES.lyrics}
+        >
+          <Mic2 size={ICON_SIZE} />
+        </Link>
+      )}
+      {!hide.includes('queue') && (
+        <Link
+          aria-label={t('player.openQueue')}
+          className={iconButtonClassName}
+          href={ROUTES.queue}
+        >
+          <ListMusic size={ICON_SIZE} />
+        </Link>
+      )}
+      {!hide.includes('connect') && (
+        <ConnectDevicesPopover
+          iconSize={ICON_SIZE}
+          triggerClassName={iconButtonClassName}
+        />
+      )}
+      {!hide.includes('floating') && (
+        <button
+          aria-label={t('player.openFloating')}
+          className={iconButtonClassName}
+          onClick={onPictureInPicture}
+          type="button"
+        >
+          <PictureInPicture2 size={ICON_SIZE} />
+        </button>
+      )}
       <button
         aria-label={volume === 0 ? t('player.unmute') : t('player.mute')}
         className={iconButtonClassName}

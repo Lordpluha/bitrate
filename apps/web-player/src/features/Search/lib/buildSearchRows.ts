@@ -43,7 +43,7 @@ export const buildSearchRows = ({
   })),
   Artists: artists.map((artist) => ({
     circularImage: true,
-    href: ROUTES.artist(artist.id),
+    href: ROUTES.artist(artist.username),
     id: artist.id,
     image: getArtistAvatarUrl(artist.avatar),
     kind: 'Artist' as const,
@@ -59,7 +59,7 @@ export const buildSearchRows = ({
     title: playlist.title,
   })),
   Profiles: users.map((user) => ({
-    href: ROUTES.user(user.id),
+    href: ROUTES.user(user.username),
     id: user.id,
     image: getUserAvatarUrl(user.avatar),
     kind: 'Profile' as const,

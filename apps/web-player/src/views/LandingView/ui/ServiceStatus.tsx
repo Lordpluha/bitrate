@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { useServiceStatus } from '../api/useServiceStatus'
+import { type ServiceRow, useServiceStatus } from '../api/useServiceStatus'
 import { lc } from '../lib/styles/lc'
 import type { LandingKey } from '../model/messages/en'
 import type { ServiceState } from '../model/serviceStatus'
@@ -19,6 +19,14 @@ const ROW: Record<ServiceState, LandingKey> = {
   degraded: 'status.state_degraded',
   unreachable: 'status.state_unreachable',
 }
+const SERVICE: Record<
+  ServiceRow['id'],
+  { name: LandingKey; scope: LandingKey }
+> = {
+  api: { name: 'status.api', scope: 'status.api_scope' },
+  web: { name: 'status.web', scope: 'status.web_scope' },
+  artists: { name: 'status.artists', scope: 'status.artists_scope' },
+}
 /* the gooey blob grows out of the pill; a click right after a hover-open keeps it open */
 const HOVER_GRACE_MS = 600
 const PANEL_OFFSET = 46
@@ -26,7 +34,7 @@ const PANEL_OFFSET = 46
 /** Footer status: a pill that blooms into a panel with the platform's real readiness. */
 export const ServiceStatus = () => {
   const c = useLandingCopy()
-  const { state, checkedAt } = useServiceStatus()
+  const { state, rows, checkedAt } = useServiceStatus()
   const [open, setOpen] = useState(false)
   const root = useRef<HTMLSpanElement>(null)
   const panel = useRef<HTMLSpanElement>(null)
@@ -141,13 +149,17 @@ export const ServiceStatus = () => {
             <small className={lc('t-meta')}>{checked}</small>
           </span>
         </span>
-        <span className={lc('hrow is-single')}>
-          <span>
-            <b>{c('status.row')}</b>
-            <small>{c('status.scope')}</small>
+        {rows.map((row) => (
+          <span className={lc('hrow is-single')} key={row.id}>
+            <span>
+              <b>{c(SERVICE[row.id].name)}</b>
+              <small>{c(SERVICE[row.id].scope)}</small>
+            </span>
+            <span className={lc(`hstate is-${row.state}`)}>
+              {c(ROW[row.state])}
+            </span>
           </span>
-          <span className={lc(`hstate is-${state}`)}>{c(ROW[state])}</span>
-        </span>
+        ))}
       </span>
       <button
         aria-controls="hpanel"

@@ -29,7 +29,7 @@ export const Credits = () => {
         <div className="min-w-0">
           <Link
             className="block truncate text-sm text-foreground hover:underline"
-            href={ROUTES.artist(artist.id)}
+            href={ROUTES.artist(artist.username)}
           >
             {artist.username}
           </Link>

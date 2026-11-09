@@ -1,6 +1,7 @@
 'use client'
 
 import { Button, Form } from '@bitrate/ui-react'
+import { LegalAcceptanceField } from '@features/Auth/ui/LegalAcceptanceField'
 import { useLoginModalForm } from '@features/AuthModal/model/useLoginModalForm'
 import { ROUTES } from '@shared/routes'
 import { SocialsAuthDivider } from '@shared/ui'
@@ -48,6 +49,10 @@ export const LoginModal = ({
             >
               Forgot password?
             </Link>
+            <LegalAcceptanceField
+              control={form.control}
+              id="login-accept-legal"
+            />
             <div className="mt-2 flex flex-col items-stretch gap-4">
               <Button
                 aria-busy={isLoading}
@@ -60,7 +65,7 @@ export const LoginModal = ({
                 {isLoading ? 'Logging in...' : 'Log in'}
               </Button>
               <SocialsAuthDivider />
-              <AuthModalGoogleButton />
+              <AuthModalGoogleButton accepted={form.watch('acceptLegal')} />
               <p className="text-center text-base text-text-contrast">
                 Don&apos;t have an account?{' '}
                 <button

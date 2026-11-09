@@ -4,7 +4,7 @@ import { expect, type Page, test } from '@playwright/test'
 const SCENES = [
   { id: 'hero', name: 'Your music, already where you are' },
   { id: 'loop', name: 'Play, save, return' },
-  { id: 'workshop', name: 'Start with a feeling, finish with your playlist' },
+  { id: 'workshop', name: 'Playlists in your order' },
   { id: 'rules', name: 'Your player, your rules' },
   { id: 'library', name: 'A library with a memory' },
   { id: 'discover', name: 'Follow the sound' },

@@ -14,10 +14,47 @@ export const CHROME: readonly LandingRule[] = [
     'flex gap-[10px] items-center font-[family-name:var(--font-display)] [font-size:20px] font-[600] text-foreground no-underline',
   ],
   ['mark', 'w-[30px] h-[30px]'],
+  /* idle brand motion: runs until the pointer or focus rests on the brand, never with reduced motion */
+  [
+    'mark',
+    '[.brand_&]:animate-[landing-brand-mark_3.6s_ease-in-out_infinite] [.brand:hover_&]:[animation-play-state:paused] [.brand:focus-visible_&]:[animation-play-state:paused] motion-reduce:[.brand_&]:animate-none',
+  ],
+  [
+    'brand-name',
+    'bg-[image:linear-gradient(100deg,var(--color-foreground)_40%,var(--color-purple-400)_50%,var(--color-magenta-500)_55%,var(--color-foreground)_65%)] bg-[length:200%_100%] bg-clip-text text-transparent animate-[landing-brand-shimmer_4.8s_linear_infinite]',
+  ],
+  [
+    'brand-name',
+    '[.brand:hover_&]:[animation-play-state:paused] [.brand:focus-visible_&]:[animation-play-state:paused] motion-reduce:animate-none motion-reduce:text-foreground',
+  ],
   ['nav', 'flex gap-[26px] [font-size:13px] text-muted-foreground'],
   ['nav', '[&_a]:text-inherit [&_a]:no-underline'],
   ['nav', '[&_a:hover]:text-foreground'],
   ['top-actions', 'flex gap-[10px] items-center'],
+  /* header: GitHub, language and the always-visible way into the player */
+  [
+    'top-icon',
+    'grid place-items-center w-[36px] h-[36px] text-muted-foreground [background:var(--glass)] border border-solid border-border rounded-[999px] [backdrop-filter:blur(8px)] [transition:color_0.2s,border-color_0.2s] [&:hover]:text-foreground [&:hover]:border-muted-foreground',
+  ],
+  ['top-icon', '[&_.i]:w-[17px] [&_.i]:h-[17px]'],
+  /* language: a pill like the theme switch that opens the app's own dropdown menu */
+  [
+    'top-lang',
+    'inline-flex gap-[6px] items-center h-[36px] p-[0_10px_0_11px] font-[600] [font-size:12px] leading-[1] font-[family-name:var(--font-body)] tracking-[0.04em] text-foreground [background:var(--glass)] border border-solid border-border rounded-[999px] [backdrop-filter:blur(8px)] [html:not(.has-cursor)_&]:cursor-pointer [transition:border-color_0.2s,background-color_0.2s]',
+  ],
+  [
+    'top-lang',
+    '[&:hover]:border-muted-foreground [&[data-popup-open]]:border-primary focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2',
+  ],
+  ['top-lang-globe', 'w-[15px] h-[15px] text-muted-foreground'],
+  [
+    'top-lang-chev',
+    'w-[13px] h-[13px] text-muted-foreground [transition:transform_0.2s] [[data-popup-open]_&]:[transform:rotate(180deg)]',
+  ],
+  [
+    'top-cta',
+    'h-[36px] p-[0_14px] rounded-[999px] [&_.i]:w-[15px] [&_.i]:h-[15px]',
+  ],
   [
     'themes',
     'flex min-w-0 p-[3px] m-0 [background:var(--glass)] border border-solid border-border rounded-[999px] [backdrop-filter:blur(8px)]',
@@ -93,13 +130,24 @@ export const CHROME: readonly LandingRule[] = [
   ],
   [
     'dots',
-    '[&_button:hover_span]:opacity-[1] [&_button[aria-current=true]_span]:opacity-[1]',
+    /* labels show on hover only: the real blocks reach the right edge, and the counter names the scene */
+    '[&_button:hover_span]:opacity-[1] [&_button:focus-visible_span]:opacity-[1]',
+  ],
+  /* the label sits over real blocks reaching the right edge: give it a glass backing */
+  [
+    'dots',
+    '[&_button_span]:p-[5px_8px] [&_button_span]:rounded-[6px] [&_button_span]:[background:var(--glass)] [&_button_span]:[backdrop-filter:blur(8px)] [&_button_span]:border [&_button_span]:border-solid [&_button_span]:border-border',
   ],
   [
     'counter',
     'fixed bottom-[calc(env(safe-area-inset-bottom,0px)_+_18px)] left-[clamp(16px,3.4vw,48px)] z-[40] flex gap-[12px] items-center font-[500] [font-size:11px] leading-[1] font-[family-name:var(--font-data)] text-muted-foreground tracking-[0.1em]',
   ],
   ['counter', '[&_b]:font-[500] [&_b]:text-foreground'],
+  /* the last scene ends in the footer: the counter would sit on it */
+  [
+    'counter',
+    '[transition:opacity_0.3s] [.landing[data-scene=cta]_&]:opacity-0 [.landing[data-scene=cta]_&]:pointer-events-none',
+  ],
   [
     'rail',
     '[.counter_&]:w-[110px] [.counter_&]:h-[2px] [.counter_&]:overflow-hidden [.counter_&]:bg-border [.counter_&]:bg-none [.counter_&]:rounded-[2px]',

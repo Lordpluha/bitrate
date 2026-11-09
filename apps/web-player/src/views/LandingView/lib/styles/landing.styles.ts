@@ -1,6 +1,7 @@
 import { ASSISTANT } from './rules/assistant'
 import { CHROME } from './rules/chrome'
 import { CURSOR } from './rules/cursor'
+import { DEVICES } from './rules/devices'
 import { FOOTER_LINKS } from './rules/footer'
 import { GLITCH } from './rules/glitch'
 import { HEALTH } from './rules/health'
@@ -27,6 +28,7 @@ export const LANDING_RULES: readonly LandingRule[] = [
   ...SCENES,
   ...GLITCH,
   ...PHYSICS,
+  ...DEVICES,
   ...ASSISTANT,
   ...INTRO,
   ...FOOTER_LINKS,

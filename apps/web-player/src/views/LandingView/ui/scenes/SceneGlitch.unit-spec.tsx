@@ -1,14 +1,34 @@
 import { I18nProvider, type Locale } from '@shared/i18n'
 import { render } from '@testing-library/react'
-import { describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { LandingDemoProvider } from '../demo/LandingDemoProvider'
 import { SceneDevices } from './SceneDevices'
 import { SceneSignal } from './SceneSignal'
+
+/** Outside the App Router the navigation hooks have no context; the landing sits at `/`. */
+vi.mock('next/navigation', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('next/navigation')>()),
+  usePathname: () => '/',
+  useSearchParams: () => new URLSearchParams(),
+}))
+
+/** A browser API jsdom lacks, as a constructor that observes nothing. */
+class Unobserved {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+  takeRecords() {
+    return []
+  }
+}
 
 const glitchTexts = (locale: Locale) => {
   const { container, unmount } = render(
     <I18nProvider locale={locale}>
-      <SceneSignal signedIn={false} />
-      <SceneDevices />
+      <SceneSignal signedIn={false} stats={null} />
+      <LandingDemoProvider>
+        <SceneDevices />
+      </LandingDemoProvider>
     </I18nProvider>,
   )
   const pairs = [
@@ -19,6 +39,21 @@ const glitchTexts = (locale: Locale) => {
 }
 
 describe('landing glitch labels', () => {
+  beforeEach(() => {
+    vi.stubGlobal('fetch', vi.fn())
+    vi.stubGlobal('IntersectionObserver', Unobserved)
+    vi.stubGlobal('ResizeObserver', Unobserved)
+    vi.stubGlobal('matchMedia', () => ({
+      addEventListener: () => undefined,
+      matches: false,
+      removeEventListener: () => undefined,
+    }))
+  })
+
+  afterEach(() => {
+    vi.unstubAllGlobals()
+  })
+
   it.each<Locale>(['en', 'uk', 'pl'])(
     'ghost the localised label in %s',
     (locale) => {

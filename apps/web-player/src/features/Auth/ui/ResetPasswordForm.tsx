@@ -3,6 +3,7 @@
 import { Button } from '@bitrate/ui-react'
 import { useMutation } from '@shared/api/client'
 import { showApiErrorToast, showApiSuccessToast } from '@shared/api/feedback'
+import { type TranslationKey, useI18n } from '@shared/i18n'
 import { ROUTES } from '@shared/routes'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
@@ -15,11 +16,12 @@ import { AUTH_BUTTON_CLASS } from './authStyles'
 const MIN_PASSWORD_LENGTH = 8
 
 type ResetErrors = {
-  confirm?: string
-  password?: string
+  confirm?: TranslationKey
+  password?: TranslationKey
 }
 
 export const ResetPasswordForm = () => {
+  const { t } = useI18n()
   const router = useRouter()
   const searchParams = useSearchParams()
   const token = searchParams.get('token')?.trim() ?? ''
@@ -34,10 +36,12 @@ export const ResetPasswordForm = () => {
     event.preventDefault()
     const nextErrors: ResetErrors = {
       confirm:
-        password !== confirmPassword ? "Passwords don't match" : undefined,
+        password !== confirmPassword
+          ? 'validation.password.mismatch'
+          : undefined,
       password:
         password.length < MIN_PASSWORD_LENGTH
-          ? `Password must be at least ${MIN_PASSWORD_LENGTH} characters`
+          ? 'validation.password.min'
           : undefined,
     }
     setErrors(nextErrors)
@@ -45,23 +49,24 @@ export const ResetPasswordForm = () => {
 
     try {
       await resetPassword.mutateAsync({ body: { password, token } })
-      showApiSuccessToast('Password updated. You can now log in.')
+      showApiSuccessToast(t('auth.reset.success'))
       router.replace(ROUTES.auth.login)
     } catch (error) {
-      showApiErrorToast(error, 'Unable to reset the password.')
+      showApiErrorToast(error, t('auth.reset.failed'))
     }
   }
 
   if (!token) {
     return (
       <>
-        <AuthHeading title="Create a new password" />
-        <AuthAlert title="Link incomplete">
-          This password reset link is missing its token. Request a new link and
-          try again.
+        <AuthHeading title={t('auth.reset.title')} />
+        <AuthAlert title={t('auth.reset.incompleteTitle')}>
+          {t('auth.reset.incomplete')}
         </AuthAlert>
         <Button asChild className={AUTH_BUTTON_CLASS} variant="outline">
-          <Link href={ROUTES.auth.forgotPassword}>Request another link</Link>
+          <Link href={ROUTES.auth.forgotPassword}>
+            {t('auth.reset.requestAnother')}
+          </Link>
         </Button>
       </>
     )
@@ -70,8 +75,8 @@ export const ResetPasswordForm = () => {
   return (
     <>
       <AuthHeading
-        description="Choose a new password for your account."
-        title="Create a new password"
+        description={t('auth.reset.description')}
+        title={t('auth.reset.title')}
       />
       <form
         aria-busy={resetPassword.isPending}
@@ -81,9 +86,9 @@ export const ResetPasswordForm = () => {
       >
         <AuthTextInput
           autoComplete="new-password"
-          error={errors.password}
+          error={errors.password && t(errors.password)}
           id="new-password"
-          label="New password"
+          label={t('auth.reset.newPassword')}
           onChange={(event) => setPassword(event.target.value)}
           placeholder="••••••••"
           secret
@@ -91,9 +96,9 @@ export const ResetPasswordForm = () => {
         />
         <AuthTextInput
           autoComplete="new-password"
-          error={errors.confirm}
+          error={errors.confirm && t(errors.confirm)}
           id="confirm-new-password"
-          label="Confirm new password"
+          label={t('auth.reset.confirmPassword')}
           onChange={(event) => setConfirmPassword(event.target.value)}
           placeholder="••••••••"
           secret
@@ -105,7 +110,9 @@ export const ResetPasswordForm = () => {
           type="submit"
           variant="primary"
         >
-          {resetPassword.isPending ? 'Updating...' : 'Update password'}
+          {resetPassword.isPending
+            ? t('auth.reset.submitting')
+            : t('auth.reset.submit')}
         </Button>
       </form>
     </>

@@ -98,7 +98,7 @@ describe('buildHeaderSuggestions', () => {
     expect(suggestions[1]).toMatchObject({
       title: 'Night Signal',
       subtitle: 'Song • Mira Sol',
-      href: '/main/artist/a1',
+      href: '/main/artist/Mira%20Sol',
     })
     expect(suggestions[2]).toMatchObject({
       title: 'Nightfall',

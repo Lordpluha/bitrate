@@ -4,6 +4,8 @@ import { ROUTES } from '@/shared/routes'
 /** The kinds a library row can be, across both card variants. */
 type LibraryHrefTarget = {
   id: string
+  /** For an artist, their username. */
+  title: string
   type: 'album' | 'artist' | 'playlist' | 'single'
 }
 
@@ -13,8 +15,8 @@ type LibraryHrefTarget = {
  * Shared by the list and the card so a followed artist cannot end up linking to
  * a playlist route that does not exist.
  */
-export const resolveLibraryHref = ({ id, type }: LibraryHrefTarget) => {
+export const resolveLibraryHref = ({ id, title, type }: LibraryHrefTarget) => {
   if (id === LIKED_SONGS_ID) return ROUTES.likedSongs
-  if (type === 'artist') return ROUTES.artist(id)
+  if (type === 'artist') return ROUTES.artist(title)
   return ROUTES.playlist(id)
 }

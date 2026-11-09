@@ -414,6 +414,13 @@ const SEARCH = {
 /** [method, path pattern, handler(match, url) => body | { status, body }]. */
 const ROUTES = [
   ['GET', /^\/api\/v1\/auth\/me$/, () => ME],
+  /* the landing's footer status and hero totals */
+  ['GET', /^\/api\/v1\/health\/ready$/, () => ({ status: 'ok' })],
+  [
+    'GET',
+    /^\/api\/v1\/platform\/stats$/,
+    () => ({ artists: 48, listeners: 12_400, tracks: 960 }),
+  ],
   [
     'GET',
     /^\/api\/v1\/auth\/sessions$/,
@@ -485,6 +492,17 @@ const ROUTES = [
   ],
   [
     'GET',
+    /^\/api\/v1\/users\/username\/([^/]+)$/,
+    ([, username]) =>
+      PEOPLE.find(
+        (person) => person.username === decodeURIComponent(username),
+      ) ?? {
+        status: 404,
+        body: { message: 'User not found' },
+      },
+  ],
+  [
+    'GET',
     /^\/api\/v1\/users\/([^/]+)\/(followers|following)$/,
     () => page(PEOPLE.slice(1, 4).map(followed)),
   ],
@@ -512,6 +530,18 @@ const ROUTES = [
     'GET',
     /^\/api\/v1\/users\/me\/following\/artists$/,
     () => page(ARTISTS.slice(0, 3).map(artist)),
+  ],
+  [
+    'GET',
+    /^\/api\/v1\/artists\/username\/([^/]+)$/,
+    ([, username]) => {
+      const index = ARTISTS.findIndex(
+        ([, name]) => name === decodeURIComponent(username),
+      )
+      return index === -1
+        ? { status: 404, body: { message: 'Artist not found' } }
+        : artist(ARTISTS[index], index)
+    },
   ],
   [
     'GET',

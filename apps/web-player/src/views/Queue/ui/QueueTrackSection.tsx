@@ -1,5 +1,5 @@
 import type { TrackEntity } from '@entities/Track'
-import { QueueTrackRow } from './QueueTrackRow'
+import { QueueTrackRow } from '@entities/Track'
 
 type QueueTrackEntry = {
   index?: number

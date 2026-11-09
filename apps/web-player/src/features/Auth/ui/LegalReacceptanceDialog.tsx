@@ -5,6 +5,7 @@ import { showApiErrorToast } from '@shared/api/feedback'
 import { Z_INDEX_CLASS } from '@shared/constants'
 import { useAuth } from '@shared/hooks'
 import { useOverlayFocus } from '@shared/hooks/useOverlayFocus'
+import { useI18n } from '@shared/i18n'
 import { useState } from 'react'
 import { useAcceptLegal } from '../api/useAcceptLegal'
 import { LegalConsentLabel } from './LegalConsentLabel'
@@ -19,6 +20,7 @@ const noop = () => undefined
  * legal documents: accounts that predate the records, and everyone after a new revision.
  */
 export const LegalReacceptanceDialog = () => {
+  const { t } = useI18n()
   const { user, logout, isLogoutPending } = useAuth()
   const acceptLegal = useAcceptLegal()
   const [accepted, setAccepted] = useState(false)
@@ -34,7 +36,7 @@ export const LegalReacceptanceDialog = () => {
     try {
       await acceptLegal.mutateAsync()
     } catch (error) {
-      showApiErrorToast(error, 'Could not record your acceptance')
+      showApiErrorToast(error, t('auth.legal.reaccept.failed'))
     }
   }
 
@@ -56,11 +58,10 @@ export const LegalReacceptanceDialog = () => {
           className="text-xl font-bold text-foreground"
           id="reaccept-legal-title"
         >
-          Our terms have been updated
+          {t('auth.legal.reaccept.title')}
         </h2>
         <p className="mt-2 text-sm text-muted-foreground">
-          To keep using Bitrate, please confirm that you accept the current
-          documents.
+          {t('auth.legal.reaccept.description')}
         </p>
         <div className="mt-5 flex items-start gap-3 text-sm">
           <Checkbox
@@ -77,14 +78,16 @@ export const LegalReacceptanceDialog = () => {
             type="button"
             variant="ghost"
           >
-            Sign out
+            {t('auth.legal.reaccept.signOut')}
           </Button>
           <Button
             disabled={!accepted || acceptLegal.isPending}
             onClick={submit}
             type="button"
           >
-            {acceptLegal.isPending ? 'Saving...' : 'Continue'}
+            {acceptLegal.isPending
+              ? t('auth.legal.reaccept.saving')
+              : t('auth.legal.reaccept.continue')}
           </Button>
         </div>
       </div>

@@ -16,6 +16,7 @@ import {
   GetCategoryPlaylistsSwagger,
   GetChartsSwagger,
   GetFeedSwagger,
+  GetPlatformStatsSwagger,
   GetRelatedArtistsSwagger,
   GetTopArtistsSwagger,
   GetTopTracksSwagger,
@@ -33,6 +34,7 @@ const chartScope = (scope: string, country: string | undefined): ChartScope => {
 import type { UserEntity } from '@modules/users/entities'
 import { CurrentUser } from '@modules/users-auth/decorators/current-user.decorator'
 import { PersonalTopService, type TimeRange } from './personal-top.service'
+import { PlatformStatsService } from './platform-stats.service'
 
 @ApiTags('Discovery')
 @Controller({ version: '1' })
@@ -40,7 +42,15 @@ export class DiscoveryController {
   constructor(
     private readonly discovery: DiscoveryService,
     private readonly personalTop: PersonalTopService,
+    private readonly platformStats: PlatformStatsService,
   ) {}
+
+  @GetPlatformStatsSwagger()
+  @HttpCacheable()
+  @Get('platform/stats')
+  stats() {
+    return this.platformStats.getStats()
+  }
 
   @GetCategoriesSwagger()
   @HttpCacheable()

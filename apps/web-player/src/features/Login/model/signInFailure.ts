@@ -1,10 +1,12 @@
 import { getApiErrorMessage } from '@shared/api/feedback'
+import type { Translate } from '@shared/i18n'
 
 type GetSignInFailureInput = {
   /** `?error=` the OAuth callback redirected back with. */
   oauthError: string | null
   /** Why the last email/password attempt was rejected. */
   submitError: unknown
+  t: Translate
 }
 
 type SignInFailure = {
@@ -12,28 +14,27 @@ type SignInFailure = {
   title: string
 }
 
-const TITLE = 'Sign-in failed'
-
 /** What the sign-in alert says, or null when nothing failed. The latest attempt wins. */
 export const getSignInFailure = ({
   oauthError,
   submitError,
+  t,
 }: GetSignInFailureInput): SignInFailure | null => {
   if (submitError) {
     return {
       message: getApiErrorMessage(
         submitError,
-        'Check your email and password and try again.',
+        t('auth.login.failed.credentials'),
       ),
-      title: TITLE,
+      title: t('auth.login.failed'),
     }
   }
   if (!oauthError) return null
   return {
     message:
       oauthError === 'oauth_state_mismatch'
-        ? 'Your sign-in session expired. Please try again.'
-        : 'Social sign-in did not finish. Please try again.',
-    title: TITLE,
+        ? t('auth.login.failed.oauthExpired')
+        : t('auth.login.failed.oauth'),
+    title: t('auth.login.failed'),
   }
 }

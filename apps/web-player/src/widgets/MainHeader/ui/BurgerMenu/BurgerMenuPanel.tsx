@@ -4,6 +4,7 @@ import { cn } from '@bitrate/ui-react'
 import { X } from 'lucide-react'
 import Link from 'next/link'
 import { ThemeSwitcher } from '@/features/SwitchTheme'
+import { MOBILE_ISLAND_CLEARANCE_CLASS } from '@/shared/constants'
 import { useOverlayFocus } from '@/shared/hooks/useOverlayFocus'
 import { useI18n } from '@/shared/i18n'
 import { MOBILE_MENU_NAV } from '@/shared/routes'
@@ -49,7 +50,14 @@ export const BurgerMenuPanel = ({
       role="dialog"
       tabIndex={-1}
     >
-      <div className="h-full overflow-y-auto p-6 custom-scrollbar">
+      {/* The island floats above the drawer: pad the end so Log out scrolls clear of it. */}
+      <div
+        className={cn(
+          'h-full overflow-y-auto p-6 custom-scrollbar',
+          MOBILE_ISLAND_CLEARANCE_CLASS,
+          'xl:pb-6',
+        )}
+      >
         <div className="mb-8 flex items-center justify-between">
           <div className="min-w-0">
             <h2 className="text-lg font-semibold text-foreground">

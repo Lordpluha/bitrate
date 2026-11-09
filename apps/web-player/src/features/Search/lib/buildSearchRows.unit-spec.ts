@@ -66,10 +66,16 @@ describe('buildSearchRows', () => {
 
     expect(artistRow).toMatchObject({
       circularImage: true,
-      href: '/main/artist/artist-1',
+      href: '/main/artist/Artist%20One',
       kind: 'Artist',
       title: 'Artist One',
     })
+  })
+
+  it('links profiles to their public page by username', () => {
+    const [profileRow] = buildSearchRows(input).Profiles ?? []
+
+    expect(profileRow?.href).toBe('/main/user/User%20One')
   })
 
   it('carries artistId on song rows so the subtitle can resolve a name', () => {

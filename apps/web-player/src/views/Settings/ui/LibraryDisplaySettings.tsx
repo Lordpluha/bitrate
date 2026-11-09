@@ -1,13 +1,10 @@
 'use client'
 
 import { useSettingsStore } from '@entities/Settings'
+import { SettingsRow, SettingsSwitch } from '@shared/ui'
 import { useUpdateMeSettings } from '@/entities/Me'
 import { useI18n } from '@/shared/i18n'
-import {
-  SettingsRow,
-  SettingsSection,
-} from '@/views/Settings/ui/controls/SettingsSection'
-import { SettingsSwitch } from '@/views/Settings/ui/controls/SettingsSwitch'
+import { SettingsSection } from '@/views/Settings/ui/controls/SettingsSection'
 
 export const LibraryDisplaySettings = () => {
   const { t } = useI18n()

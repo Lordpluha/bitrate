@@ -78,6 +78,8 @@ export const createStage = async ({
   const ballGeo = new THREE.SphereGeometry(1, 40, 28)
   const cradle = createCradle({
     kit,
+    ctx,
+    camera,
     ballGeo,
     slot: must({ root, selector: '#cradleSlot', type: HTMLElement }),
   })

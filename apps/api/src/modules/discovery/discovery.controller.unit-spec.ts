@@ -5,18 +5,29 @@ import { type DeepMockProxy, mockDeep, mockReset } from 'jest-mock-extended'
 import { DiscoveryController } from './discovery.controller'
 import type { DiscoveryService } from './discovery.service'
 import type { PersonalTopService } from './personal-top.service'
+import type { PlatformStatsService } from './platform-stats.service'
 
 describe('DiscoveryController', () => {
   let controller: DiscoveryController
   let discovery: DeepMockProxy<DiscoveryService>
   let personalTop: DeepMockProxy<PersonalTopService>
+  let platformStats: DeepMockProxy<PlatformStatsService>
 
   beforeEach(() => {
     discovery = mockDeep<DiscoveryService>()
     personalTop = mockDeep<PersonalTopService>()
     mockReset(discovery)
+    platformStats = mockDeep<PlatformStatsService>()
     mockReset(personalTop)
-    controller = new DiscoveryController(discovery, personalTop)
+    controller = new DiscoveryController(discovery, personalTop, platformStats)
+  })
+
+  describe('stats', () => {
+    it('answers with the public platform totals', async () => {
+      platformStats.getStats.mockResolvedValue({ artists: 3, listeners: 20, tracks: 140 })
+
+      await expect(controller.stats()).resolves.toEqual({ artists: 3, listeners: 20, tracks: 140 })
+    })
   })
 
   describe('charts', () => {

@@ -21,13 +21,25 @@ describe('toTopResultCard', () => {
     })
 
     expect(card).toMatchObject({
-      href: '/main/artist/ar1',
+      href: '/main/artist/Mira%20Sol',
       kind: 'Song',
       playKind: 'track',
       round: false,
       subtitle: 'Mira Sol',
       title: 'Night Signal',
     })
+  })
+
+  it('links a song without an artist name to its artist by id', () => {
+    const card = toTopResultCard({
+      ...base,
+      artistId: 'ar1',
+      id: 't1',
+      title: 'Night Signal',
+      type: 'tracks',
+    })
+
+    expect(card.href).toBe('/main/artist/ar1')
   })
 
   it('shows an artist round and without a play button', () => {
@@ -39,7 +51,7 @@ describe('toTopResultCard', () => {
     })
 
     expect(card).toMatchObject({
-      href: '/main/artist/ar1',
+      href: '/main/artist/Mira%20Sol',
       kind: 'Artist',
       playKind: undefined,
       round: true,

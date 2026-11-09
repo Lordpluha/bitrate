@@ -49,7 +49,7 @@ export const ArtistMoreMenu = ({
   const copyLink = async () => {
     try {
       await navigator.clipboard.writeText(
-        new URL(ROUTES.artist(artistId), window.location.origin).href,
+        new URL(ROUTES.artist(artistName), window.location.origin).href,
       )
       showApiSuccessToast(t('playlist.linkCopied'))
     } catch (error) {

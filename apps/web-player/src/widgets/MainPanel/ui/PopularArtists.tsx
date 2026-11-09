@@ -10,6 +10,7 @@ import {
   CustomPrevIcon,
 } from '@bitrate/ui-react'
 import { useArtistCharts } from '@entities/Discovery'
+import { ROUTES } from '@shared/routes'
 import { SectionHeader } from '@shared/ui'
 import { MusicCardLg } from '@shared/ui/MusicCardLg'
 import { useI18n } from '@/shared/i18n'
@@ -55,6 +56,7 @@ export const PopularArtists = () => {
                 >
                   <MusicCardLg
                     description={artist.description}
+                    href={ROUTES.artist(artist.name)}
                     id={artist.id}
                     imageUrl={artist.imageUrl}
                     isArtist={true}

@@ -46,7 +46,7 @@ export const ProfileArtistsSection = ({
             <li key={artist.id}>
               <Link
                 className="flex h-16 min-w-0 items-center gap-3 rounded-lg px-1 transition-colors hover:bg-surface"
-                href={ROUTES.artist(artist.id)}
+                href={ROUTES.artist(artist.username)}
               >
                 <MediaImage
                   alt=""
@@ -75,7 +75,7 @@ export const ProfileArtistsSection = ({
             <li className="min-w-0" key={artist.id}>
               <MusicCardLg
                 description={t('common.artist')}
-                href={ROUTES.artist(artist.id)}
+                href={ROUTES.artist(artist.username)}
                 id={artist.id}
                 imageUrl={getArtistAvatarUrl(artist.avatar)}
                 isArtist

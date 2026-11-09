@@ -3,12 +3,10 @@
 import type { InterfaceLanguage, StreamingQuality } from '@entities/Settings'
 import { toServerStreamingQuality, useSettingsStore } from '@entities/Settings'
 import { localeLabels, useI18n } from '@shared/i18n'
+import { SettingsRow } from '@shared/ui'
 import { type UpdateMeSettings, useUpdateMeSettings } from '@/entities/Me'
 import { useAuth } from '@/shared/hooks'
-import {
-  SettingsRow,
-  SettingsSection,
-} from '@/views/Settings/ui/controls/SettingsSection'
+import { SettingsSection } from '@/views/Settings/ui/controls/SettingsSection'
 import { SettingsSelect } from '@/views/Settings/ui/controls/SettingsSelect'
 
 /** Language and streaming quality: applied here at once and saved to the account when signed in. */

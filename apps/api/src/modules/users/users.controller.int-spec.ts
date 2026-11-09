@@ -1,9 +1,10 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it, jest } from '@jest/globals'
 import { OptionalUserAuthGuard, UserAuthGuard } from '@modules/users-auth/users-auth.guard'
-import type { INestApplication } from '@nestjs/common'
+import { type INestApplication, NotFoundException } from '@nestjs/common'
 import { Test, type TestingModule } from '@nestjs/testing'
 import request from 'supertest'
 import { buildUser } from './__tests__/fixtures/users.fixtures'
+import { USER_ERRORS } from './errors/user.errors'
 import { UserFollowsService } from './user-follows.service'
 import { UsersController } from './users.controller'
 import { UsersService } from './users.service'
@@ -85,6 +86,14 @@ describe('UsersController (int)', () => {
 
     expect(res.status).toBe(200)
     expect(service.getByUsername).toHaveBeenCalledWith('user')
+  })
+
+  it('GET /users/username/:username should return 404 for an unknown username', async () => {
+    service.getByUsername.mockRejectedValue(new NotFoundException(USER_ERRORS.NOT_FOUND))
+
+    const res = await request(app.getHttpServer()).get('/users/username/nobody')
+
+    expect(res.status).toBe(404)
   })
 
   it('GET /users/:id with valid UUID should return 200', async () => {

@@ -87,7 +87,7 @@ export const ActivityPopover = () => {
                   <Link
                     aria-label={user.username}
                     className="relative size-10 shrink-0 overflow-hidden rounded-full bg-surface"
-                    href={ROUTES.user(user.id)}
+                    href={ROUTES.user(user.username)}
                   >
                     <MediaImage
                       alt=""
@@ -103,7 +103,7 @@ export const ActivityPopover = () => {
                     <div className="flex items-baseline justify-between gap-2">
                       <Link
                         className="truncate text-sm font-bold hover:underline"
-                        href={ROUTES.user(user.id)}
+                        href={ROUTES.user(user.username)}
                       >
                         {user.username}
                       </Link>

@@ -25,7 +25,7 @@ describe('landing calls to action', () => {
     const { container } = render(
       withQuery(
         <>
-          <SceneSignal signedIn={false} />
+          <SceneSignal signedIn={false} stats={null} />
           <SceneStart signedIn={false} />
         </>,
       ),
@@ -40,7 +40,7 @@ describe('landing calls to action', () => {
     render(
       withQuery(
         <>
-          <SceneSignal signedIn={false} />
+          <SceneSignal signedIn={false} stats={null} />
           <SceneStart signedIn={false} />
         </>,
       ),
@@ -64,7 +64,7 @@ describe('landing calls to action', () => {
     render(
       withQuery(
         <>
-          <SceneSignal signedIn />
+          <SceneSignal signedIn stats={null} />
           <SceneStart signedIn />
         </>,
       ),
@@ -78,5 +78,29 @@ describe('landing calls to action', () => {
     expect(
       screen.queryByRole('link', { name: 'Log in' }),
     ).not.toBeInTheDocument()
+  })
+
+  it('shows the platform totals in the hero only when the API gave them', () => {
+    const { rerender } = render(
+      withQuery(<SceneSignal signedIn={false} stats={null} />),
+    )
+    expect(screen.queryByText('Listeners')).not.toBeInTheDocument()
+    rerender(
+      withQuery(
+        <SceneSignal
+          signedIn={false}
+          stats={{ artists: 48, listeners: 12_400, tracks: 960 }}
+        />,
+      ),
+    )
+    expect(screen.getByText('Tracks').nextElementSibling).toHaveTextContent(
+      '960',
+    )
+    expect(screen.getByText('Artists').nextElementSibling).toHaveTextContent(
+      '48',
+    )
+    expect(screen.getByText('Listeners').nextElementSibling).toHaveTextContent(
+      '12.4K',
+    )
   })
 })

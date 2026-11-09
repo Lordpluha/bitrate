@@ -4,6 +4,22 @@ import type { LandingRule } from './types'
 export const MOBILE: readonly LandingRule[] = [
   ['landing', 'max-[820px]:[font-size:13px]'],
   ['nav', 'max-[820px]:hidden'],
+  /* a phone header keeps the logo, language, theme and the way into the player */
+  ['top-actions', 'max-[820px]:gap-[6px]'],
+  ['brand-name', 'max-[560px]:sr-only'],
+  ['top-github', 'max-[560px]:hidden'],
+  ['top-lang', 'max-[820px]:p-[0_8px] max-[820px]:gap-[4px]'],
+  ['top-lang-globe', 'max-[560px]:hidden'],
+  ['top-cta', 'max-[820px]:p-[0_12px] max-[400px]:[&_.i]:hidden'],
+  /* narrow phones: the theme switch becomes three swatches, the label stays for screen readers */
+  [
+    'themes',
+    "max-[560px]:[&_button]:relative max-[560px]:[&_button]:w-[26px] max-[560px]:[&_button]:h-[26px] max-[560px]:[&_button]:p-0! max-[560px]:[&_button]:[font-size:0] max-[560px]:[&_button::before]:absolute max-[560px]:[&_button::before]:inset-[6px] max-[560px]:[&_button::before]:[content:''] max-[560px]:[&_button::before]:rounded-[50%] max-[560px]:[&_button::before]:border max-[560px]:[&_button::before]:border-solid max-[560px]:[&_button::before]:border-muted-foreground",
+  ],
+  [
+    'themes',
+    'max-[560px]:[&_button[data-theme=dark]::before]:bg-neutral-900 max-[560px]:[&_button[data-theme=light]::before]:bg-white max-[560px]:[&_button[data-theme=dim]::before]:bg-neutral-600',
+  ],
   ['dots', 'max-[820px]:hidden'],
   ['label', 'max-[820px]:[.top_.btn-ghost_&]:hidden'],
   ['themes', 'max-[820px]:[&_button]:p-[6px_8px]'],

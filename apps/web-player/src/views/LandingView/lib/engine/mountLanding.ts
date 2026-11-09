@@ -9,7 +9,6 @@ import { playIntro } from './intro'
 import { clearTokenCache } from './palette'
 import { mountPointer } from './pointer'
 import { mountScenes } from './scenes'
-import { mountWorkshopShuffle } from './scenes/enter'
 import { createStage, hasWebGL, type Stage } from './stage'
 import { mountTeam } from './team'
 
@@ -65,7 +64,7 @@ export const mountLanding = ({
   const canvases = createCanvases(ctx)
   mountPointer(ctx)
   mountCursor(ctx)
-  const resetTeam = mountTeam(ctx)
+  const team = mountTeam(ctx)
   const canvas = root.querySelector<HTMLCanvasElement>('#stage')
   const webgl = Boolean(canvas) && hasWebGL()
   const resetPartners = webgl ? null : mountPartners2d(ctx)
@@ -76,11 +75,10 @@ export const mountLanding = ({
     get stage() {
       return stage
     },
-    drawWaves: canvases.drawWaves,
     glitch: headings.glitch,
     onEnter: {
-      workshop: mountWorkshopShuffle(ctx),
-      team: resetTeam,
+      team: team.team,
+      cta: team.cta,
       ...(resetPartners && { partners: resetPartners }),
     },
   })

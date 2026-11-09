@@ -24,3 +24,18 @@ export const normalizeLocale = (value: unknown): Locale => {
 
   return legacyLocales[value] ?? 'en'
 }
+
+/**
+ * The first supported locale among the browser's preferred languages (`navigator.languages`),
+ * matched by the language subtag so `uk-UA` and `pl-PL` count. Null when none is supported.
+ */
+export const pickSupportedLocale = (
+  languages: ReadonlyArray<string>,
+): Locale | null => {
+  for (const language of languages) {
+    const base = language.toLowerCase().split('-')[0]
+    if (supportedLocales.includes(base as Locale)) return base as Locale
+  }
+
+  return null
+}

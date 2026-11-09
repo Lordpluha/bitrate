@@ -14,6 +14,7 @@ import {
   OAuthButtons,
   useAuthenticatedRedirect,
 } from '@features/Auth'
+import { type TranslationKey, translateMessage, useI18n } from '@shared/i18n'
 import { ROUTES } from '@shared/routes'
 import { collectRegistrationErrors } from '../model/registrationErrors'
 import { useRegistrationForm } from '../model/useRegistrationForm'
@@ -22,33 +23,33 @@ type TextFieldName = Exclude<keyof RegistrationFormData, 'acceptLegal'>
 
 const FIELDS: {
   autoComplete: string
-  label: string
+  labelKey: TranslationKey
   name: TextFieldName
   placeholder: string
   secret?: boolean
 }[] = [
   {
     autoComplete: 'name',
-    label: 'Full Name',
+    labelKey: 'auth.field.fullName',
     name: 'fullName',
     placeholder: 'Maya Rivers',
   },
   {
     autoComplete: 'email',
-    label: 'Email Address',
+    labelKey: 'auth.field.email',
     name: 'email',
     placeholder: 'you@example.com',
   },
   {
     autoComplete: 'new-password',
-    label: 'Password',
+    labelKey: 'auth.field.password',
     name: 'password',
     placeholder: '••••••••',
     secret: true,
   },
   {
     autoComplete: 'new-password',
-    label: 'Confirm Password',
+    labelKey: 'auth.field.confirmPassword',
     name: 'confirmPassword',
     placeholder: '••••••••',
     secret: true,
@@ -56,6 +57,7 @@ const FIELDS: {
 ]
 
 export const RegistrationForm = () => {
+  const { t } = useI18n()
   useAuthenticatedRedirect()
   const { form, isSubmitting, onSubmit } = useRegistrationForm()
   const errors = collectRegistrationErrors(form.formState.errors)
@@ -63,8 +65,8 @@ export const RegistrationForm = () => {
   return (
     <>
       <AuthHeading
-        description="Sign up with your email or continue with a social account."
-        title="Create your account for free and start listening"
+        description={t('auth.registration.description')}
+        title={t('auth.registration.title')}
       />
 
       <Form {...form}>
@@ -76,14 +78,14 @@ export const RegistrationForm = () => {
         >
           <div className="flex flex-col gap-3">
             {FIELDS.map(
-              ({ autoComplete, label, name, placeholder, secret }) => (
+              ({ autoComplete, labelKey, name, placeholder, secret }) => (
                 <FormField
                   control={form.control}
                   key={name}
                   name={name}
                   render={({ field }) => (
                     <FormItem className="space-y-0">
-                      <AuthField hideError label={label}>
+                      <AuthField hideError label={t(labelKey)}>
                         {secret ? (
                           <Input
                             autoComplete={autoComplete}
@@ -112,7 +114,9 @@ export const RegistrationForm = () => {
           {errors.length > 0 ? (
             <div className="flex flex-col gap-1.5">
               {errors.map((message) => (
-                <AuthFieldError key={message}>{message}</AuthFieldError>
+                <AuthFieldError key={message}>
+                  {translateMessage({ message, t })}
+                </AuthFieldError>
               ))}
             </div>
           ) : null}
@@ -129,7 +133,9 @@ export const RegistrationForm = () => {
             type="submit"
             variant="primary"
           >
-            {isSubmitting ? 'Registering...' : 'Register'}
+            {isSubmitting
+              ? t('auth.registration.submitting')
+              : t('auth.registration.submit')}
           </Button>
         </form>
       </Form>
@@ -138,8 +144,8 @@ export const RegistrationForm = () => {
       <OAuthButtons accepted={form.watch('acceptLegal')} />
       <AuthFooterLink
         href={ROUTES.auth.login}
-        lead="Already have an account?"
-        link="Log in"
+        lead={t('auth.registration.hasAccount')}
+        link={t('auth.logIn')}
       />
     </>
   )
