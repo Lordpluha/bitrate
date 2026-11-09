@@ -7,8 +7,10 @@ import {
   ArtistDashboard,
   DashboardSessionError,
 } from '@widgets/ArtistDashboard'
+import workspaceCss from '../styles/workspace.css?url'
 
 export const Route = createFileRoute('/dashboard')({
+  head: () => ({ links: [{ rel: 'stylesheet', href: workspaceCss }] }),
   beforeLoad: async ({ location }) => {
     const session = await artistSessionCheck.load()
     if (session.status === 'unauthenticated') {
