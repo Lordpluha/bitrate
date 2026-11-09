@@ -9,6 +9,7 @@ import {
   buildPlaylistWithTracks,
   buildPlaylistWithUser,
 } from './__tests__/fixtures/playlists.fixtures'
+import { PLAYLIST_ERRORS } from './errors/playlist.errors'
 import { PlaylistsService } from './playlists.service'
 
 const mockInteractiveTransaction = (prisma: PrismaMock) =>
@@ -400,7 +401,7 @@ describe('PlaylistsService', () => {
     })
 
     await expect(request).rejects.toThrow(ConflictException)
-    await expect(request).rejects.toThrow('Track is already in this playlist')
+    await expect(request).rejects.toThrow(PLAYLIST_ERRORS.TRACK_ALREADY_ADDED)
     expect(prisma.playlistTrack.createMany).not.toHaveBeenCalled()
     expect(prisma.playlist.update).not.toHaveBeenCalled()
     expect(cache.invalidate).not.toHaveBeenCalled()

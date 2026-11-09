@@ -16,6 +16,7 @@ import {
 import { Prisma } from '@prisma/client'
 import { AddTracksDto, CreatePlaylistDto, UpdatePlaylistDto } from './dtos'
 import { PlaylistEntity } from './entities'
+import { PLAYLIST_ERRORS } from './errors/playlist.errors'
 
 /** Leading tracks listed per owned playlist, enough for a cover mosaic; `_count` has the total. */
 const MINE_PREVIEW_TRACKS = 4
@@ -359,7 +360,7 @@ export class PlaylistsService {
         const presentIds = new Set(present.map(({ trackId }) => trackId))
         const trackIds = requestedTrackIds.filter((trackId) => !presentIds.has(trackId))
         if (trackIds.length === 0) {
-          throw new ConflictException('Track is already in this playlist')
+          throw new ConflictException(PLAYLIST_ERRORS.TRACK_ALREADY_ADDED)
         }
 
         const lastTrack = await tx.playlistTrack.findFirst({
