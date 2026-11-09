@@ -2,7 +2,7 @@ import type { TranslationKey } from '@shared/i18n'
 import { z } from 'zod'
 
 const tileSizes = ['S', 'M', 'L'] as const
-export type TileSize = (typeof tileSizes)[number]
+type TileSize = (typeof tileSizes)[number]
 
 /** Workspace pages whose tiles an artist can arrange; matches the API's page names. */
 export type LayoutPage = 'dashboard' | 'analytics' | 'release-draft'
