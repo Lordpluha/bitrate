@@ -6,17 +6,6 @@ import type { TrackEntity } from '@entities/Track/models/schema/Track.entity'
 import { queryOptions } from '@shared/api/client'
 import { getApiUrl } from '@shared/utils/mediaUrl'
 
-export type UseTracksParams = {
-  artistId?: string
-  limit?: number
-  page?: number
-  title?: string
-}
-
-export type UseTracksOptions = {
-  enabled?: boolean
-}
-
 export type UseLikedTracksOptions = {
   enabled?: boolean
   initialData?: TrackEntity[]
