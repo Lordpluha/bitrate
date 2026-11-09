@@ -40,7 +40,7 @@ export const AboutArtist = () => {
       <Link
         aria-label={t('sidebar.openArtist', { name: artist.username })}
         className="group block rounded-t-lg outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-text"
-        href={ROUTES.artist(artist.id)}
+        href={ROUTES.artist(artist.username)}
       >
         <div className="relative aspect-[3/2] w-full overflow-hidden">
           {hasPicture ? (
@@ -67,7 +67,7 @@ export const AboutArtist = () => {
       <div className="p-4">
         <Link
           className="group/name flex w-fit max-w-full items-center gap-1.5 rounded-sm outline-none focus-visible:ring-2 focus-visible:ring-text"
-          href={ROUTES.artist(artist.id)}
+          href={ROUTES.artist(artist.username)}
         >
           <span className="truncate text-sm font-bold text-foreground group-hover/name:underline">
             {artist.username || t('common.unknownArtist')}

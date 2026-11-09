@@ -17,7 +17,11 @@ test('profile desktop', async ({ page }) => {
 })
 
 test('public profile desktop', async ({ page }) => {
-  await openSignedIn({ page, path: '/main/user/f2', viewport: DESKTOP })
+  await openSignedIn({
+    page,
+    path: '/main/user/Jonah%20Pike',
+    viewport: DESKTOP,
+  })
   await snap({
     name: 'public-profile-desktop.png',
     page,

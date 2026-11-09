@@ -71,13 +71,13 @@ export const FriendRow = ({ actions, presence, user }: FriendRowProps) => {
 
   return (
     <div className="flex items-center gap-3 border-b border-border py-2.5 last:border-b-0">
-      <Link aria-label={user.username} href={ROUTES.user(user.id)}>
+      <Link aria-label={user.username} href={ROUTES.user(user.username)}>
         <PersonAvatar avatar={user.avatar} presence={presence} size={44} />
       </Link>
       <div className="flex min-w-0 flex-1 flex-col gap-0.75">
         <Link
           className="truncate text-sm font-semibold text-foreground hover:underline"
-          href={ROUTES.user(user.id)}
+          href={ROUTES.user(user.username)}
         >
           {user.username}
         </Link>
@@ -110,7 +110,7 @@ export const FriendTile = ({ presence, user }: FriendTileProps) => (
   <Link
     aria-label={user.username}
     className="flex w-18 shrink-0 flex-col items-center gap-1.5"
-    href={ROUTES.user(user.id)}
+    href={ROUTES.user(user.username)}
   >
     <PersonAvatar avatar={user.avatar} presence={presence} size={56} />
     <span className="w-full truncate text-center text-xs font-medium text-foreground">
@@ -128,13 +128,13 @@ type PersonRowProps = {
 /** The design's People Row: someone who is not (yet) a friend, so no presence. */
 export const PersonRow = ({ actions, meta, user }: PersonRowProps) => (
   <div className="flex items-center gap-3 border-b border-border py-2.5 last:border-b-0">
-    <Link aria-label={user.username} href={ROUTES.user(user.id)}>
+    <Link aria-label={user.username} href={ROUTES.user(user.username)}>
       <PersonAvatar avatar={user.avatar} size={44} />
     </Link>
     <div className="flex min-w-0 flex-1 flex-col gap-0.5">
       <Link
         className="truncate text-sm font-semibold text-foreground hover:underline"
-        href={ROUTES.user(user.id)}
+        href={ROUTES.user(user.username)}
       >
         {user.username}
       </Link>

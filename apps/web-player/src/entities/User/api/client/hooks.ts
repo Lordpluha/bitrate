@@ -54,23 +54,21 @@ export const useUsers = ({ username, page = 1, limit = 10 }: UseUsersParams) =>
     },
   )
 
-export const useUserById = (userId?: string) =>
+/** A listener's public profile by username, for pages addressed by username. */
+export const useUserByUsername = (username: string) =>
   useTanStackQuery({
-    queryKey: apiQueryKeys.users.byId(userId ?? ''),
-    /**
-     * Raw fetch: the generated contract declares no path params for
-     * `GET /users/{id}`, so the typed client cannot fill `{id}`.
-     */
+    queryKey: apiQueryKeys.users.byUsername(username),
     queryFn: async () => {
-      const response = await fetchWithAuthRefresh(
-        getApiUrl(`/api/v1/users/${encodeURIComponent(userId ?? '')}`),
+      const { data, response } = await clientFetchClient.GET(
+        '/api/v1/users/username/{username}',
+        { params: { path: { username } } },
       )
 
       ensureOkResponse(response, 'Failed to fetch user')
 
-      return publicUserResponseSchema.parse(await response.json())
+      return publicUserResponseSchema.parse(data)
     },
-    enabled: !!userId,
+    enabled: username.length > 0,
   })
 
 export const useFollowedUsers = (enabled = true) =>
@@ -144,8 +142,9 @@ export const useUnfollowUser = () => {
 }
 
 /**
- * Writes a saved profile into the signed-in user and refetches only that person's
- * public profile; follow lists and activity show other people, so they stay cached.
+ * Writes a saved profile into the signed-in user and refetches public profiles looked up
+ * by username (a rename changes which username finds this person); follow lists and
+ * activity show other people, so they stay cached.
  */
 const useApplyUserUpdate = () => {
   const queryClient = useQueryClient()
@@ -155,7 +154,7 @@ const useApplyUserUpdate = () => {
       mergePublicUserIntoAuthUser(current, user),
     )
     await queryClient.invalidateQueries({
-      queryKey: apiQueryKeys.users.byId(user.id),
+      queryKey: apiQueryKeys.users.allByUsername,
     })
   }
 }

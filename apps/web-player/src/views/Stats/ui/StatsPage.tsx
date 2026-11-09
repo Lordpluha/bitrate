@@ -185,7 +185,7 @@ const StatsContent = ({ range }: { range: DiscoveryRange }) => {
               <li key={artist.id}>
                 <Link
                   className="flex h-14 items-center gap-3 rounded-lg px-2 transition-colors hover:bg-surface"
-                  href={ROUTES.artist(artist.id)}
+                  href={ROUTES.artist(artist.username)}
                 >
                   <MediaImage
                     alt=""

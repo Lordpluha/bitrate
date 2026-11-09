@@ -27,7 +27,9 @@ export const ArtistLink = ({
   return (
     <Link
       className={cn('truncate hover:underline', className)}
-      href={ROUTES.artist(artistId)}
+      href={
+        artist ? ROUTES.artist(artist.username) : ROUTES.artistById(artistId)
+      }
       onClick={(event) => event.stopPropagation()}
     >
       {name}

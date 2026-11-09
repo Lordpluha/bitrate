@@ -71,7 +71,7 @@ export const RemoveFriendMenu = ({ friend }: RemoveFriendMenuProps) => {
           <MenuItem
             icon={<UserRound size={17} />}
             label={t('friends.viewProfile')}
-            onClick={() => router.push(ROUTES.user(friend.user.id))}
+            onClick={() => router.push(ROUTES.user(friend.user.username))}
           />
           <MenuItem
             icon={<UserMinus size={17} />}

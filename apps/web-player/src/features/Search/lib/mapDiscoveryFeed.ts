@@ -40,7 +40,11 @@ export const mapDiscoveryFeedItem = (
   /** There is no track page, so a track card points at its artist instead. */
   return {
     description: item.artist?.username ?? 'Track',
-    href: item.artistId ? ROUTES.artist(item.artistId) : undefined,
+    href: item.artist?.username
+      ? ROUTES.artist(item.artist.username)
+      : item.artistId
+        ? ROUTES.artistById(item.artistId)
+        : undefined,
     id: item.id,
     image: getTrackCoverUrl(item.cover),
     playKind: 'track',
@@ -61,7 +65,11 @@ export const mapDiscoveryPlaylist = (
 
 export const mapDiscoveryTrack = (track: DiscoveryTrack): MediaCardItem => ({
   description: track.artist?.username ?? 'Track',
-  href: track.artistId ? ROUTES.artist(track.artistId) : undefined,
+  href: track.artist?.username
+    ? ROUTES.artist(track.artist.username)
+    : track.artistId
+      ? ROUTES.artistById(track.artistId)
+      : undefined,
   id: track.id,
   image: getTrackCoverUrl(track.cover),
   playKind: 'track',

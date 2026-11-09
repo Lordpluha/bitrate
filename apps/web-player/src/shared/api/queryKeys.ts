@@ -14,6 +14,8 @@ export const apiQueryKeys = {
   artists: {
     all: ['artists'] as const,
     detail: (artistId: string) => ['artists', 'detail', artistId] as const,
+    byUsername: (username: string) =>
+      ['artists', 'by-username', username] as const,
     following: ['artists', 'following'] as const,
     list: (params: { page?: number; limit?: number }) =>
       ['artists', 'list', params] as const,
@@ -100,7 +102,10 @@ export const apiQueryKeys = {
   },
   users: {
     all: ['users'] as const,
-    byId: (userId: string) => ['users', 'by-id', userId] as const,
+    /** Every profile looked up by username; a rename moves a profile between keys. */
+    allByUsername: ['users', 'by-username'] as const,
+    byUsername: (username: string) =>
+      ['users', 'by-username', username] as const,
     following: ['users', 'following'] as const,
     followingActivity: ['users', 'following', 'activity'] as const,
     follows: (userId: string, kind: 'followers' | 'following', limit: number) =>
