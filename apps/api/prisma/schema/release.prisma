@@ -68,6 +68,7 @@ model ArtistTrackDraft {
 
   sourceTrack Track? @relation("CompilationRecording", fields: [sourceTrackId], references: [id], onDelete: Restrict)
   owner   Artist   @relation(fields: [ownerArtistId], references: [id], onDelete: Restrict)
+  publishedAs ReleaseTrack?
   release Release? @relation(fields: [releaseId, ownerArtistId], references: [id, ownerArtistId], onDelete: Restrict)
 
   @@index([ownerArtistId, deletedAt, updatedAt(sort: Desc)])
@@ -275,9 +276,13 @@ model ReleaseTrack {
   trackId   String @db.Uuid
   position  Int
   reused    Boolean @default(false)
+  // The recording draft this link was published from. Draft positions keep gaps after a removal,
+  // so the original master is found through this column, never by matching positions.
+  draftId   String? @unique @db.Uuid
 
-  release Release @relation(fields: [releaseId], references: [id], onDelete: Cascade)
-  track   Track   @relation(fields: [trackId], references: [id], onDelete: Restrict)
+  release Release           @relation(fields: [releaseId], references: [id], onDelete: Cascade)
+  track   Track             @relation(fields: [trackId], references: [id], onDelete: Restrict)
+  draft   ArtistTrackDraft? @relation(fields: [draftId], references: [id], onDelete: SetNull)
 
   @@id([releaseId, trackId])
   @@unique([releaseId, position])

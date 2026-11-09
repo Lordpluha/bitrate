@@ -63,6 +63,17 @@ export function compilationSourceWhere(
   }
 }
 
+/** Row-locks an artist's catalogue tracks in a stable order, so concurrent lockers cannot deadlock. */
+export async function lockCatalogueTracks(
+  tx: Prisma.TransactionClient,
+  artistId: string,
+  ids: readonly string[],
+) {
+  if (!ids.length) return
+  await tx.$queryRaw(Prisma.sql`SELECT id FROM "Track" WHERE "artistId" = ${artistId}::uuid
+    AND id IN (${Prisma.join(ids.map((id) => Prisma.sql`${id}::uuid`))}) ORDER BY id FOR UPDATE`)
+}
+
 /** Locks canonical recordings in a stable order, serializing publication with takedown/deletion. */
 export async function lockCompilationSources(
   tx: Prisma.TransactionClient,
@@ -71,8 +82,7 @@ export async function lockCompilationSources(
   requireVisible = true,
 ) {
   if (!ids.length) return
-  await tx.$queryRaw(Prisma.sql`SELECT id FROM "Track" WHERE "artistId" = ${artistId}::uuid
-    AND id IN (${Prisma.join(ids.map((id) => Prisma.sql`${id}::uuid`))}) ORDER BY id FOR UPDATE`)
+  await lockCatalogueTracks(tx, artistId, ids)
   const count = await tx.track.count({
     where: { ...compilationSourceWhere(artistId, requireVisible), id: { in: [...ids] } },
   })
@@ -86,35 +96,23 @@ export async function assertDistinctCompilationAudio(
   ownerArtistId: string,
   ids: string[],
 ) {
-  const originals = await tx.artistTrackDraft.findMany({
+  // Each canonical recording has one original link, which names the draft it was published from.
+  const originals = await tx.releaseTrack.findMany({
     where: {
-      ownerArtistId,
-      sourceTrackId: null,
-      audioSha256: { not: null },
-      release: { tracks: { some: { trackId: { in: ids }, reused: false } } },
+      trackId: { in: ids },
+      reused: false,
+      release: { ownerArtistId },
+      draft: { sourceTrackId: null, audioSha256: { not: null } },
     },
-    select: {
-      position: true,
-      audioSha256: true,
-      release: {
-        select: {
-          tracks: {
-            where: { trackId: { in: ids }, reused: false },
-            select: { trackId: true, position: true },
-          },
-        },
-      },
-    },
+    select: { trackId: true, draft: { select: { audioSha256: true } } },
   })
   const seen = new Map<string, string>()
-  for (const original of originals) {
-    const sourceId = original.release?.tracks.find(
-      (track) => track.position === original.position + 1,
-    )?.trackId
-    if (!(sourceId && original.audioSha256)) continue
-    const previous = seen.get(original.audioSha256)
-    if (previous && previous !== sourceId)
+  for (const { trackId, draft } of originals) {
+    const sha256 = draft?.audioSha256
+    if (!sha256) continue
+    const previous = seen.get(sha256)
+    if (previous && previous !== trackId)
       throw new ConflictException(RELEASE_ERRORS.AUDIO_DUPLICATE)
-    seen.set(original.audioSha256, sourceId)
+    seen.set(sha256, trackId)
   }
 }

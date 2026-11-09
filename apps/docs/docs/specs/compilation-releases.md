@@ -40,7 +40,9 @@ empty compilation draft directly. In its editor, **Add from catalogue** opens th
 Ordinary release drafts offer master uploads instead of starting compilations. The picker supports search,
 numbered pagination (20 recordings per page), selections across pages and up to 50 recordings
 per compilation. The profile entry explicitly creates COMPILATION mode. Removing every
-recording preserves compilation mode. Compilation masters cannot be uploaded or replaced.
+recording preserves compilation mode, but an emptied compilation accepts a master upload: the
+draft then becomes an ordinary release whose format follows its recording count. While a
+compilation holds catalogue recordings, masters cannot be uploaded or replaced.
 
 - `GET /api/v1/artists/me/releases/:id/catalogue-tracks?page=1&search=...`: eligible owned recordings,
   excluding those already attached to this draft. Private, authenticated and owner-scoped.
@@ -50,6 +52,9 @@ recording preserves compilation mode. Compilation masters cannot be uploaded or 
 - `ArtistTrackDraft.sourceTrackId` stores the canonical source; the private uploaded master is
   not copied. Source title, duration and ISRC are read from Track. The private preview resolves
   the original master and still checks ownership and source availability.
+- `ReleaseTrack.draftId` names the draft each catalogue link was published from. The preview and
+  the duplicate-audio check find a recording's original master through it, never by position:
+  draft positions keep gaps after a recording is removed.
 - `ReleaseTrack.reused` distinguishes reused recordings from native masters. Publication
   attaches existing recordings without new conversion, Track or ISRC records and preserves the
   publication dates of already-live tracks. The compilation still requires Bitrate review.
@@ -58,6 +63,8 @@ recording preserves compilation mode. Compilation masters cannot be uploaded or 
   approved compilation can restore its previously approved hidden recordings, never blocked ones.
 - Removing a release preserves shared recordings referenced by another release. A recording with
   no live release is hidden; it is deleted only when no undeleted release still references it.
+  A release whose recordings a live compilation draft still uses cannot be deleted
+  (`409 used_in_compilation`): the artist removes them from the compilation first.
 - `Track.moderationBlockedAt` records removal of a native recording by administration and blocks
   every compilation appearance. Taking down a compilation only removes that compilation.
 

@@ -1,18 +1,23 @@
 import type { PrismaService } from '@infra/prisma/prisma.service'
 import type { StorageService } from '@infra/storage/storage.types'
-import { UnprocessableEntityException } from '@nestjs/common'
+import { type Logger, UnprocessableEntityException } from '@nestjs/common'
 import type { Prisma } from '@prisma/client'
 import { RELEASE_ERRORS } from './errors'
 import { hashAudioStream, type StoredMaster } from './release-master'
 
 type ReleaseRecordings = { ownerArtistId: string; releaseId: string; excludingId?: string }
 
-/** Stream older masters outside the transaction, where storage cannot hold the release lock. */
+/**
+ * Stream older masters outside the transaction, where storage cannot hold the release lock.
+ * Each checksum is stored once computed, so an older master is downloaded at most once; one
+ * that vanished from storage cannot be compared and is skipped rather than failing the upload.
+ */
 export async function legacyDuplicateMasterKeys(
   prisma: PrismaService,
   storage: StorageService,
   { ownerArtistId, releaseId, excludingId }: ReleaseRecordings,
   master: StoredMaster,
+  logger: Pick<Logger, 'warn'>,
 ): Promise<string[]> {
   const candidates = await prisma.artistTrackDraft.findMany({
     where: {
@@ -29,9 +34,21 @@ export async function legacyDuplicateMasterKeys(
   })
   const matching: string[] = []
   for (const candidate of candidates) {
-    if (!candidate.audioKey) continue
-    const object = await storage.getObjectStream(candidate.audioKey)
-    if ((await hashAudioStream(object.stream)) === master.sha256) matching.push(candidate.audioKey)
+    const key = candidate.audioKey
+    if (!key) continue
+    let sha256: string
+    try {
+      sha256 = await hashAudioStream((await storage.getObjectStream(key)).stream)
+    } catch (error) {
+      logger.warn(`Skipped unreadable master ${key} in the duplicate check: ${String(error)}`)
+      continue
+    }
+    // Keyed by object, so a concurrent replacement of the recording's master is never mislabelled.
+    await prisma.artistTrackDraft.updateMany({
+      where: { audioKey: key, audioSha256: null },
+      data: { audioSha256: sha256 },
+    })
+    if (sha256 === master.sha256) matching.push(key)
   }
   return matching
 }

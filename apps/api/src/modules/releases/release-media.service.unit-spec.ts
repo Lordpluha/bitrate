@@ -156,4 +156,116 @@ describe('release recording writes', () => {
       }),
     )
   })
+
+  it('skips an older master that vanished from storage instead of failing the upload', async () => {
+    prisma.artistTrackDraft.findMany.mockResolvedValue([
+      { audioKey: 'legacy/missing.wav' },
+    ] as never)
+    storage.getObjectStream.mockRejectedValue(new Error('NoSuchKey'))
+    tx.release.update.mockResolvedValue(summary as never)
+    await expect(
+      service.addTrack('owner-1', summary.id, undefined, {
+        title: 'New recording',
+        expectedUpdatedAt: summary.updatedAt.toISOString(),
+      }),
+    ).resolves.toMatchObject({ track: { id: 'recording-1' } })
+    expect(tx.artistTrackDraft.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: expect.objectContaining({ OR: [{ audioSha256: storedMaster.sha256 }] }),
+      }),
+    )
+  })
+
+  it('stores the checksum of an older master so it is hashed only once', async () => {
+    const sha256 = 'ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad'
+    prisma.artistTrackDraft.findMany.mockResolvedValue([{ audioKey: 'legacy/abc.wav' }] as never)
+    storage.getObjectStream.mockResolvedValue({ stream: Readable.from([Buffer.from('abc')]) })
+    tx.release.update.mockResolvedValue(summary as never)
+    await service.addTrack('owner-1', summary.id, undefined, {
+      title: 'New recording',
+      expectedUpdatedAt: summary.updatedAt.toISOString(),
+    })
+    expect(prisma.artistTrackDraft.updateMany).toHaveBeenCalledWith({
+      where: { audioKey: 'legacy/abc.wav', audioSha256: null },
+      data: { audioSha256: sha256 },
+    })
+  })
+
+  it('accepts an upload into a compilation draft that has no recordings left', async () => {
+    tx.release.updateManyAndReturn.mockResolvedValue([{ ...summary, type: 'COMPILATION' }] as never)
+    // Recordings before the upload, live after it, catalogue ones after it.
+    tx.artistTrackDraft.count
+      .mockResolvedValueOnce(0)
+      .mockResolvedValueOnce(1)
+      .mockResolvedValueOnce(0)
+    tx.release.update.mockResolvedValue(summary as never)
+    await service.addTrack('owner-1', summary.id, undefined, {
+      title: 'Own recording',
+      expectedUpdatedAt: summary.updatedAt.toISOString(),
+    })
+    expect(tx.artistTrackDraft.create).toHaveBeenCalled()
+    expect(tx.release.update).toHaveBeenCalledWith(
+      expect.objectContaining({ data: expect.objectContaining({ type: 'SINGLE' }) }),
+    )
+  })
+
+  it('still keeps own uploads out of a compilation that holds catalogue recordings', async () => {
+    tx.release.updateManyAndReturn.mockResolvedValue([{ ...summary, type: 'COMPILATION' }] as never)
+    tx.artistTrackDraft.count.mockResolvedValue(2)
+    await expect(
+      service.addTrack('owner-1', summary.id, undefined, {
+        title: 'Own recording',
+        expectedUpdatedAt: summary.updatedAt.toISOString(),
+      }),
+    ).rejects.toMatchObject({ status: 409 })
+    expect(tx.artistTrackDraft.create).not.toHaveBeenCalled()
+  })
+
+  it('streams a reused recording from the draft its original release published', async () => {
+    prisma.artistTrackDraft.findFirst.mockResolvedValue({
+      audioKey: null,
+      audioContentType: null,
+      sourceTrackId: 'source-track',
+    } as never)
+    prisma.track.findFirst.mockResolvedValue({ id: 'source-track' } as never)
+    prisma.releaseTrack.findFirst.mockResolvedValue({
+      draft: {
+        audioKey: 'master/original.wav',
+        audioContentType: 'audio/wav',
+        sourceTrackId: null,
+        deletedAt: null,
+      },
+    } as never)
+    storage.getObjectStream.mockResolvedValue({ stream: Readable.from([]) })
+    await expect(
+      service.audioStream('owner-1', summary.id, 'compilation-recording'),
+    ).resolves.toMatchObject({ contentType: 'audio/wav' })
+    expect(storage.getObjectStream).toHaveBeenCalledWith('master/original.wav', undefined)
+    expect(prisma.releaseTrack.findFirst).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: expect.objectContaining({ trackId: 'source-track', reused: false }),
+      }),
+    )
+  })
+
+  it('does not stream a removed original recording', async () => {
+    prisma.artistTrackDraft.findFirst.mockResolvedValue({
+      audioKey: null,
+      audioContentType: null,
+      sourceTrackId: 'source-track',
+    } as never)
+    prisma.track.findFirst.mockResolvedValue({ id: 'source-track' } as never)
+    prisma.releaseTrack.findFirst.mockResolvedValue({
+      draft: {
+        audioKey: 'master/original.wav',
+        audioContentType: 'audio/wav',
+        sourceTrackId: null,
+        deletedAt: new Date(),
+      },
+    } as never)
+    await expect(
+      service.audioStream('owner-1', summary.id, 'compilation-recording'),
+    ).rejects.toMatchObject({ status: 404 })
+    expect(storage.getObjectStream).not.toHaveBeenCalled()
+  })
 })

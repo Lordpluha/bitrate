@@ -2,6 +2,7 @@ import { PrismaService } from '@infra/prisma/prisma.service'
 import { AlbumsService } from '@modules/albums/albums.service'
 import { ReleaseTrackDeletionService } from '@modules/tracks/release-track-deletion.service'
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common'
+import { lockCatalogueTracks } from './compilation-source'
 import type { ReleaseDraftVersionDto } from './dtos/release-media.dto'
 import { RELEASE_ERRORS } from './errors'
 
@@ -34,11 +35,25 @@ export class ReleaseDeletionService {
         where: { id },
         select: { albumId: true, tracks: { select: { trackId: true } } },
       })
+      const trackIds = release.tracks.map(({ trackId }) => trackId)
+      // Locked like a compilation add, so the check below sees every draft committed before it.
+      await lockCatalogueTracks(tx, ownerArtistId, trackIds)
+      const usedByCompilations = trackIds.length
+        ? await tx.artistTrackDraft.count({
+            where: {
+              sourceTrackId: { in: trackIds },
+              deletedAt: null,
+              releaseId: { not: id },
+              release: { deletedAt: null },
+            },
+          })
+        : 0
+      // Deleting would retire those recordings and strand the compilations that reuse them.
+      if (usedByCompilations) throw new ConflictException(RELEASE_ERRORS.USED_IN_COMPILATION)
       await tx.artistTrackDraft.updateMany({
         where: { releaseId: id, ownerArtistId, deletedAt: null },
         data: { deletedAt, isrc: null },
       })
-      const trackIds = release.tracks.map(({ trackId }) => trackId)
       if (trackIds.length) await this.tracks.remove(tx, trackIds, deletedAt)
       if (release.albumId) await this.albums.deleteReleaseAlbum(tx, release.albumId, deletedAt)
     })

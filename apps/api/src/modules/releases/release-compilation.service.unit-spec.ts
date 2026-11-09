@@ -80,20 +80,25 @@ describe('owned catalogue compilations', () => {
     expect(tx.track.create).not.toHaveBeenCalled()
   })
   it('rejects identical uploaded bytes even when catalogue recording IDs differ', async () => {
-    tx.artistTrackDraft.findMany.mockResolvedValue([
-      {
-        position: 0,
-        audioSha256: 'a'.repeat(64),
-        release: { tracks: [{ trackId: SOURCE, position: 1 }] },
-      },
-      {
-        position: 0,
-        audioSha256: 'a'.repeat(64),
-        release: { tracks: [{ trackId: ID, position: 1 }] },
-      },
+    tx.releaseTrack.findMany.mockResolvedValue([
+      { trackId: SOURCE, draft: { audioSha256: 'a'.repeat(64) } },
+      { trackId: ID, draft: { audioSha256: 'a'.repeat(64) } },
     ] as never)
     await expect(assertDistinctCompilationAudio(tx, OWNER, [SOURCE, ID])).rejects.toBeInstanceOf(
       ConflictException,
+    )
+  })
+
+  it('matches each recording to the draft it was published from, not to a running position', async () => {
+    tx.releaseTrack.findMany.mockResolvedValue([
+      { trackId: SOURCE, draft: { audioSha256: 'a'.repeat(64) } },
+      { trackId: ID, draft: { audioSha256: 'b'.repeat(64) } },
+    ] as never)
+    await expect(assertDistinctCompilationAudio(tx, OWNER, [SOURCE, ID])).resolves.toBeUndefined()
+    expect(tx.releaseTrack.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: expect.objectContaining({ trackId: { in: [SOURCE, ID] }, reused: false }),
+      }),
     )
   })
 })

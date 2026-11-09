@@ -8,21 +8,25 @@ export function releaseTypeForTrackCount(count: number): AlbumType {
   return AlbumType.SINGLE
 }
 
-/** The caller holds the release row lock while changing its recordings. */
+/**
+ * The caller holds the release row lock while changing its recordings. A compilation stays one
+ * while it holds only catalogue recordings (an emptied one included); an own upload turns it into
+ * an ordinary draft detected from its recording count.
+ */
 export async function refreshReleaseType(
   tx: Prisma.TransactionClient,
   release: { id: string; updatedAt: Date; type?: AlbumType },
 ) {
-  const count = await tx.artistTrackDraft.count({
-    where: { releaseId: release.id, deletedAt: null },
-  })
+  const live = { releaseId: release.id, deletedAt: null }
+  const count = await tx.artistTrackDraft.count({ where: live })
+  const compilation =
+    release.type === AlbumType.COMPILATION &&
+    count ===
+      (await tx.artistTrackDraft.count({ where: { ...live, sourceTrackId: { not: null } } }))
   return tx.release.update({
     where: { id: release.id },
     data: {
-      type:
-        release.type === AlbumType.COMPILATION
-          ? AlbumType.COMPILATION
-          : releaseTypeForTrackCount(count),
+      type: compilation ? AlbumType.COMPILATION : releaseTypeForTrackCount(count),
       updatedAt: release.updatedAt,
     },
     select: RELEASE_SUMMARY_SELECT,

@@ -67,12 +67,17 @@ export class ReleaseMediaService {
         this.storage,
         recordings,
         master,
+        this.logger,
       )
       return this.prisma.$transaction(async (tx) => {
         const release = await lockOwnedDraft(tx, ownerArtistId, id, input.expectedUpdatedAt, {
           accuracyConfirmedAt: null,
         })
-        if (release.type === 'COMPILATION')
+        // An emptied compilation is an ordinary empty draft again; refreshReleaseType re-detects it.
+        if (
+          release.type === 'COMPILATION' &&
+          (await tx.artistTrackDraft.count({ where: { releaseId: id, deletedAt: null } })) > 0
+        )
           throw new ConflictException(RELEASE_ERRORS.COMPILATION_ONLY_CATALOGUE)
         await assertUniqueReleaseMaster(tx, recordings, master, legacyDuplicates)
         const track = await tx.artistTrackDraft.create({
@@ -140,6 +145,7 @@ export class ReleaseMediaService {
         this.storage,
         { ownerArtistId, releaseId: id, excludingId: trackId },
         master,
+        this.logger,
       )
       return this.attachMaster(
         { ownerArtistId, id, trackId },
@@ -206,21 +212,21 @@ export class ReleaseMediaService {
         select: { id: true },
       })
       if (!source) throw new NotFoundException(RELEASE_ERRORS.AUDIO_NOT_FOUND)
+      // The original master is the live draft the source's first release published it from.
       const origin = await this.prisma.releaseTrack.findFirst({
         where: { trackId: source.id, reused: false, release: { ownerArtistId } },
-        select: { releaseId: true, position: true },
-      })
-      master = origin
-        ? await this.prisma.artistTrackDraft.findFirst({
-            where: {
-              releaseId: origin.releaseId,
-              ownerArtistId,
-              position: origin.position - 1,
-              sourceTrackId: null,
+        select: {
+          draft: {
+            select: {
+              audioKey: true,
+              audioContentType: true,
+              sourceTrackId: true,
+              deletedAt: true,
             },
-            select: { audioKey: true, audioContentType: true, sourceTrackId: true },
-          })
-        : null
+          },
+        },
+      })
+      master = origin?.draft && !origin.draft.deletedAt ? origin.draft : null
     }
     if (!master?.audioKey) throw new NotFoundException(RELEASE_ERRORS.AUDIO_NOT_FOUND)
     let object: Awaited<ReturnType<StorageService['getObjectStream']>>

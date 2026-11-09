@@ -171,6 +171,7 @@ describe('ReleasePublishingService', () => {
           cover: null,
           trackDrafts: [
             {
+              id: 'draft-One',
               title: 'One',
               duration: 60,
               isrc: null,
@@ -178,6 +179,7 @@ describe('ReleasePublishingService', () => {
               audioContentType: 'audio/wav',
             },
             {
+              id: 'draft-Two',
               title: 'Two',
               duration: 70,
               isrc: 'USX9P2600012',
@@ -218,7 +220,7 @@ describe('ReleasePublishingService', () => {
         expect.any(Function),
       )
       expect(tx.releaseTrack.create).toHaveBeenCalledWith({
-        data: { releaseId: RELEASE, trackId: 'track-Two', position: 2 },
+        data: { releaseId: RELEASE, trackId: 'track-Two', position: 2, draftId: 'draft-Two' },
       })
     })
 

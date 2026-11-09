@@ -5,6 +5,7 @@ export const RELEASE_ERRORS = {
   COMPILATION_TRACK_LOCKED: 'errors.release.compilation_track_locked',
   COMPILATION_DUPLICATE: 'errors.release.compilation_duplicate',
   COMPILATION_LIMIT: 'errors.release.compilation_limit',
+  USED_IN_COMPILATION: 'errors.release.used_in_compilation',
 
   NOT_FOUND: 'errors.release.not_found',
   CHANGED: 'errors.release.changed',

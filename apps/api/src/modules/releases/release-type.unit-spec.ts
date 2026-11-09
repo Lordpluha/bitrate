@@ -27,4 +27,16 @@ describe('release format from recording count', () => {
       expect.objectContaining({ data: expect.objectContaining({ type: AlbumType.COMPILATION }) }),
     )
   })
+  it('drops compilation mode once the draft holds an own recording', async () => {
+    const tx = mockDeep<Prisma.TransactionClient>()
+    tx.artistTrackDraft.count.mockResolvedValueOnce(1).mockResolvedValueOnce(0)
+    await refreshReleaseType(tx, {
+      id: 'release',
+      updatedAt: new Date(),
+      type: AlbumType.COMPILATION,
+    })
+    expect(tx.release.update).toHaveBeenCalledWith(
+      expect.objectContaining({ data: expect.objectContaining({ type: AlbumType.SINGLE }) }),
+    )
+  })
 })

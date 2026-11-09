@@ -224,6 +224,7 @@ export class ReleasePublishingService implements OnApplicationBootstrap {
               trackId: draft.sourceTrackId!,
               position: position + 1,
               reused: true,
+              draftId: draft.id,
             },
           })
         })
@@ -252,7 +253,9 @@ export class ReleasePublishingService implements OnApplicationBootstrap {
               data: { status: ReleaseStatus.PUBLISHING },
             })
             if (active.count !== 1) throw new Error(`Release ${releaseId} is no longer publishing`)
-            return tx.releaseTrack.create({ data: { releaseId, trackId, position: position + 1 } })
+            return tx.releaseTrack.create({
+              data: { releaseId, trackId, position: position + 1, draftId: draft.id },
+            })
           },
         ),
       )
