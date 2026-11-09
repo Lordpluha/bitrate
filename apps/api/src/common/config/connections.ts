@@ -40,6 +40,7 @@ const httpConfig = (surface: ApiSurface): CorsOptions => ({
     'Access-Control-Request-Method',
     'Access-Control-Request-Headers',
     'X-Request-ID',
+    'X-Artist-Account',
   ],
   exposedHeaders: [
     'Set-Cookie',

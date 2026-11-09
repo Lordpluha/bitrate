@@ -1,0 +1,610 @@
+@layer utilities {
+  .artist-landing-credits {
+    padding-block: 1rem;
+    scroll-margin-top: 7rem;
+  }
+  .artist-credits-heading {
+    display: flex;
+    gap: 2rem;
+    align-items: end;
+    justify-content: space-between;
+  }
+  .artist-credits-eyebrow {
+    margin-bottom: 1rem;
+    font-size: 0.875rem;
+    color: var(--color-purple-300);
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+  }
+  .artist-credits-heading h2 {
+    font-size: clamp(2rem, 4vw, 3.25rem);
+    font-weight: 500;
+    line-height: 1.1;
+    letter-spacing: -0.05em;
+  }
+  .artist-credits-heading :where(h2) > span {
+    color: var(--color-purple-300);
+  }
+  .artist-credits-heading > p {
+    max-width: 24rem;
+    font-size: 0.875rem;
+    line-height: 1.8;
+    color: var(--color-text-secondary);
+  }
+  .artist-credits-scene {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.8fr) minmax(0, 1fr);
+    gap: clamp(1.5rem, 3vw, 3rem);
+    align-items: center;
+    min-height: 24rem;
+    margin-top: 2rem;
+    isolation: isolate;
+  }
+  .artist-credits-scene {
+    --credit-color: var(--color-purple-300);
+    --credit-play-state: paused;
+  }
+  .artist-credits-scene[data-visible="true"] {
+    --credit-play-state: running;
+  }
+  .artist-credits-scene[data-selected="1"] {
+    --credit-color: var(--color-blue-300);
+  }
+  .artist-credits-connections {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    pointer-events: none;
+    fill: none;
+    stroke: var(--credit-color);
+  }
+  .artist-credits-connection-track {
+    opacity: 0.25;
+    stroke-width: 1;
+  }
+  .artist-credits-connection-light {
+    opacity: 0.9;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-dasharray: 90 1000;
+  }
+  .artist-credits-scene-light {
+    position: absolute;
+    inset: -15% 0;
+    z-index: -2;
+    pointer-events: none;
+    background: radial-gradient(
+      ellipse at 50% 45%,
+      color-mix(in oklab, var(--color-purple-500) 18%, transparent),
+      transparent 62%
+    );
+  }
+  .artist-credits-panel {
+    position: relative;
+    min-width: 0;
+    padding: 1.25rem;
+    background: linear-gradient(
+      145deg,
+      var(--color-artist-release-panel-start),
+      var(--color-artist-release-panel-end)
+    );
+    border: 1px solid
+      color-mix(in oklab, var(--color-purple-300) 18%, var(--color-border));
+    border-radius: 1rem;
+    box-shadow:
+      0 22px 50px -28px var(--color-black),
+      inset 0 1px 0 var(--color-white-alpha-8);
+  }
+  .artist-credits-panel > h3 {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    font-size: 0.875rem;
+    font-weight: 400;
+  }
+  .artist-credits-panel > :where(h3) svg {
+    width: 1rem;
+    height: 1rem;
+    color: var(--color-purple-300);
+  }
+  .artist-credits-people {
+    min-width: 0;
+    padding-block: 1rem;
+  }
+  .artist-credits-people > h3 {
+    display: flex;
+    gap: 0.625rem;
+    align-items: center;
+    font-size: 0.875rem;
+    font-weight: 400;
+  }
+  .artist-credits-people :where(h3) > svg {
+    flex: none;
+    width: 1.125rem;
+    height: 1.125rem;
+    color: var(--credit-color);
+  }
+  .artist-credits-people-count {
+    margin-left: auto;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-text-secondary);
+  }
+  .artist-credits-contributors {
+    display: grid;
+    gap: 1rem;
+    padding: 0.5rem;
+    margin: 1.25rem -0.5rem 0;
+  }
+  .artist-credits-contributors button {
+    position: relative;
+    display: grid;
+    grid-template-columns: 3rem minmax(0, 1fr) auto;
+    gap: 0.875rem;
+    align-items: center;
+    min-width: 0;
+    padding: 1.25rem;
+    text-align: left;
+    cursor: pointer;
+    background:
+      radial-gradient(
+        ellipse at 0 0,
+        color-mix(in oklab, var(--credit-color) 12%, transparent),
+        transparent 65%
+      ),
+      linear-gradient(
+        135deg,
+        var(--color-artist-release-panel-start),
+        var(--color-artist-canvas-middle)
+      );
+    border: 1px solid var(--color-border);
+    border-radius: 1rem;
+    box-shadow:
+      0 18px 35px -26px var(--color-black),
+      inset 0 1px 0 var(--color-white-alpha-8);
+    isolation: isolate;
+    transform: rotate(-1.5deg);
+    transition:
+      border-color 250ms,
+      box-shadow 250ms,
+      transform 250ms;
+  }
+  .artist-credits-contributors button + button {
+    transform: rotate(1.5deg);
+  }
+  .artist-credits-contributors button:hover,
+  .artist-credits-contributors button[aria-pressed="true"] {
+    border-color: color-mix(
+      in oklab,
+      var(--credit-color) 65%,
+      var(--color-border)
+    );
+    box-shadow:
+      0 20px 45px -28px var(--color-black),
+      0 0 32px -20px var(--credit-color),
+      inset 0 1px 0 var(--color-white-alpha-15);
+    transform: rotate(0deg) translateX(0.25rem);
+  }
+  .artist-credits-contributors button:focus-visible {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 4px;
+  }
+  .artist-credits-avatar {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    font-size: 0.875rem;
+    color: var(--credit-color);
+    background: color-mix(
+      in oklab,
+      var(--credit-color) 10%,
+      var(--color-artist-canvas-middle)
+    );
+    border: 1px solid color-mix(in oklab, var(--credit-color) 25%, transparent);
+    border-radius: 0.875rem;
+  }
+  .artist-credits-avatar-orbit {
+    position: absolute;
+    inset: -5px;
+    pointer-events: none;
+    border: 1px dashed color-mix(in oklab, var(--credit-color) 35%, transparent);
+    border-radius: 1.125rem;
+  }
+  .artist-credits-person-copy {
+    display: grid;
+    gap: 0.375rem;
+    min-width: 0;
+  }
+  .artist-credits-person-copy strong {
+    font-size: 1.0625rem;
+    font-weight: 500;
+  }
+  .artist-credits-person-copy > span,
+  .artist-credits-hint {
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: var(--color-text-secondary);
+  }
+  .artist-credits-person-instrument {
+    align-self: start;
+    color: var(--credit-color);
+    opacity: 0.65;
+  }
+  .artist-credits-person-instrument svg,
+  .artist-credits-person-share svg {
+    width: 1.125rem;
+    height: 1.125rem;
+  }
+  .artist-credits-person-signal {
+    display: flex;
+    grid-column: 1 / 3;
+    gap: 4px;
+    align-items: center;
+    height: 1.25rem;
+    padding-top: 0.25rem;
+  }
+  .artist-credits-person-signal i {
+    width: 3px;
+    height: var(--level);
+    background: var(--credit-color);
+    border-radius: 999px;
+    opacity: 0.35;
+    transform-origin: center;
+  }
+  .artist-credits-person-share {
+    display: flex;
+    gap: 0.375rem;
+    align-items: center;
+    justify-content: end;
+    font-size: 0.875rem;
+    font-variant-numeric: tabular-nums;
+    color: var(--credit-color);
+  }
+  .artist-credits-hint {
+    margin-top: 1.25rem;
+  }
+  .artist-credits-release-stage {
+    min-width: 0;
+    perspective: 900px;
+  }
+  .artist-credits-release {
+    transform: rotateX(calc(var(--tilt-x, 0deg) * 0.6))
+      rotateY(calc(var(--tilt-y, 0deg) * 0.6));
+    transition: transform 350ms;
+  }
+  .artist-credits-cover-surface > img {
+    display: block;
+    width: 100%;
+    max-width: 14rem;
+    aspect-ratio: 1;
+    margin-inline: auto;
+    object-fit: cover;
+    border: 1px solid var(--color-white-alpha-15);
+    border-radius: 1rem;
+    box-shadow: 0 20px 50px -15px var(--color-black);
+  }
+  .artist-credits-artwork {
+    position: relative;
+    width: 100%;
+    max-width: 14rem;
+    aspect-ratio: 1;
+    margin-inline: auto;
+    isolation: isolate;
+  }
+  .artist-credits-orbit {
+    position: absolute;
+    inset: -20%;
+    z-index: -1;
+    width: 140%;
+    height: 140%;
+    overflow: visible;
+    fill: none;
+    transform: rotate(-90deg);
+  }
+  .artist-credits-orbit-track {
+    stroke: var(--color-white-alpha-10);
+    stroke-width: 1;
+  }
+  .artist-credits-orbit-share {
+    stroke: var(--credit-color);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-dasharray: 0 100;
+    transition:
+      stroke-dasharray 1100ms cubic-bezier(0.3333, 1, 0.6667, 1),
+      stroke 400ms;
+  }
+  .artist-credits-scene[data-entered="true"] .artist-credits-orbit-share {
+    stroke-dasharray: var(--credit-share) 100;
+  }
+  .artist-credits-orbit-guide {
+    opacity: 0.2;
+    stroke: var(--credit-color);
+    stroke-width: 0.75;
+    stroke-dasharray: 2 9;
+  }
+  .artist-credits-orbit-person {
+    position: absolute;
+    inset: -20%;
+    z-index: 2;
+    pointer-events: none;
+    transform: rotate(calc(var(--credit-share) * 3.6deg));
+    transition: transform 1100ms cubic-bezier(0.3333, 1, 0.6667, 1);
+  }
+  .artist-credits-orbit-person > span {
+    position: absolute;
+    top: 5.3125%;
+    left: 50%;
+    display: grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    font-size: 0.875rem;
+    color: var(--credit-color);
+    background: var(--color-artist-canvas-middle);
+    border: 1px solid var(--credit-color);
+    border-radius: 50%;
+    box-shadow: 0 0 20px
+      color-mix(in oklab, var(--credit-color) 25%, transparent);
+    transform: rotate(calc(var(--credit-share) * -3.6deg));
+    translate: -50% -50%;
+    transition:
+      transform 1100ms cubic-bezier(0.3333, 1, 0.6667, 1),
+      color 400ms,
+      border-color 400ms;
+  }
+  .artist-credits-cover-surface {
+    position: relative;
+    border-radius: 1rem;
+    transform: rotate(-3deg);
+    transition: translate 350ms;
+  }
+  .artist-credits-cover-shine {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(
+      circle at var(--shine-x, 50%) var(--shine-y, 50%),
+      var(--color-white-alpha-15),
+      transparent 70%
+    );
+    border-radius: inherit;
+  }
+  .artist-credits-release-stage:hover .artist-credits-cover-surface {
+    translate: 0 -0.25rem;
+  }
+  .artist-credits-release figcaption {
+    margin-top: 3.5rem;
+    text-align: center;
+  }
+  .artist-credits-release h3 {
+    font-size: 1.25rem;
+    font-weight: 500;
+    letter-spacing: -0.035em;
+  }
+  .artist-credits-release :where(figcaption) p {
+    margin-top: 0.375rem;
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+  }
+  .artist-credits-selected > p {
+    margin-top: 1.5rem;
+    font-size: 0.875rem;
+    color: var(--credit-color);
+  }
+  .artist-credits-selected dl {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem;
+    margin-top: 1rem;
+  }
+  .artist-credits-selected dt {
+    display: flex;
+    gap: 0.375rem;
+    align-items: center;
+    min-height: 2.75rem;
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+  }
+  .artist-credits-selected :where(dt) > svg {
+    width: 1rem;
+    height: 1rem;
+  }
+  .artist-credits-selected dd {
+    margin-top: 0.5rem;
+    font-size: clamp(2rem, 3.5vw, 3rem);
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+    letter-spacing: -0.05em;
+  }
+  .artist-credits-percent {
+    margin-left: 0.125rem;
+    font-size: 0.625em;
+    color: var(--color-text-secondary);
+  }
+  .artist-credits-shares {
+    display: flex;
+    gap: 3px;
+    height: 3px;
+    margin-top: 1.5rem;
+    overflow: hidden;
+    border-radius: 999px;
+  }
+  .artist-credits-shares > span:first-child {
+    width: 75%;
+    background: var(--color-purple-400);
+  }
+  .artist-credits-shares > span:last-child {
+    width: 25%;
+    background: var(--color-blue-400);
+  }
+  .artist-credits-shares > span {
+    transition: opacity 200ms;
+  }
+  .artist-credits-shares[data-selected="0"] > span:last-child,
+  .artist-credits-shares[data-selected="1"] > span:first-child {
+    opacity: 0.3;
+  }
+  .artist-credits-complete {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    margin-top: 1rem;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: var(--color-emerald-300);
+  }
+  .artist-credits-complete svg {
+    flex: none;
+    width: 1rem;
+    height: 1rem;
+  }
+  .artist-credits-note {
+    font-size: 0.875rem;
+    line-height: 1.7;
+    color: var(--color-text-secondary);
+    text-align: center;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .artist-credits-contributors
+      button[aria-pressed="true"]
+      .artist-credits-person-signal
+      i {
+      animation: credit-level 1500ms ease-in-out infinite alternate;
+      animation-delay: calc(var(--bar) * -170ms);
+      animation-play-state: var(--credit-play-state);
+    }
+    .artist-credits-selected > p {
+      animation: credits-selection 250ms ease-out;
+    }
+    .artist-credits-connection-light {
+      animation: credit-signal 1800ms linear infinite;
+      animation-play-state: var(--credit-play-state);
+    }
+  }
+  @media (min-width: 901px) and (max-width: 1100px) {
+    .artist-credits-artwork {
+      max-width: 12rem;
+    }
+  }
+  @media (max-width: 900px) {
+    .artist-credits-heading {
+      align-items: start;
+    }
+    .artist-credits-heading > p {
+      max-width: 19rem;
+    }
+    .artist-credits-scene {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+    .artist-credits-release-stage {
+      grid-area: 1 / 2 / 3 / 3;
+      align-self: center;
+    }
+    .artist-credits-splits {
+      grid-area: 2 / 1;
+    }
+    .artist-credits-note {
+      margin-top: 1.5rem;
+    }
+  }
+  @media (max-width: 650px) {
+    .artist-credits-heading {
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .artist-credits-heading > p {
+      max-width: 30rem;
+    }
+    .artist-credits-scene {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .artist-credits-release-stage {
+      grid-area: 1 / 1;
+    }
+    .artist-credits-artwork {
+      max-width: 10rem;
+      margin-block: 1.75rem;
+    }
+    .artist-credits-people {
+      grid-row: 2;
+    }
+    .artist-credits-splits {
+      grid-area: 3 / 1;
+    }
+    .artist-credits-panel {
+      padding: 1rem;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .artist-landing-credits .artist-credits-scene * {
+      transition: none;
+    }
+    .artist-credits-cover-surface {
+      translate: none;
+      transition: none;
+    }
+    .artist-credits-orbit-share,
+    .artist-credits-orbit-person,
+    .artist-credits-orbit-person > span {
+      transition: none;
+    }
+    .artist-credits-connection-light {
+      opacity: 0.4;
+      stroke-dasharray: none;
+    }
+    .artist-credits-contributors button,
+    .artist-credits-release {
+      transform: none;
+      translate: none;
+      transition: none;
+    }
+  }
+  :root[data-motion="reduced"]
+    :is(.artist-credits-person-signal i, .artist-credits-connection-light) {
+    animation: none;
+  }
+  :root[data-motion="reduced"] .artist-credits-release {
+    transform: none;
+  }
+  :root[data-motion="reduced"] .artist-credits-cover-surface {
+    translate: none;
+  }
+}
+@keyframes credits-selection {
+  from {
+    opacity: 0.5;
+    translate: 0 0.25rem;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+@keyframes credit-signal {
+  from {
+    stroke-dashoffset: 1090;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes credit-level {
+  from {
+    opacity: 0.4;
+    transform: scaleY(0.5);
+  }
+  to {
+    opacity: 1;
+    transform: scaleY(1.15);
+  }
+}

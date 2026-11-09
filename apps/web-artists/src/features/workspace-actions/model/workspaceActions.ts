@@ -3,7 +3,6 @@ import { createContext, useContext } from 'react'
 
 export type WorkspaceAction =
   | 'search'
-  | 'notifications'
   | 'create-release'
   | 'promotion'
   | 'support'
@@ -12,6 +11,7 @@ export type WorkspaceAction =
 
 export const WorkspaceActionsContext = createContext<{
   openAction: (action: WorkspaceAction) => void
+  creatingRelease: boolean
 } | null>(null)
 
 export function useWorkspaceActions() {
@@ -25,10 +25,6 @@ export const workspaceNotices = {
   'upload-track': {
     title: 'music.uploadTrack',
     description: 'music.actions.uploadTrack',
-  },
-  notifications: {
-    title: 'shell.notifications',
-    description: 'music.actions.notifications',
   },
   promotion: {
     title: 'shell.nav.promotion',

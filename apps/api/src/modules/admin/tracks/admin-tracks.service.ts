@@ -7,7 +7,7 @@ import {
   type TakeDownActor,
   type TakeDownDirection,
 } from '@modules/admin/shared'
-import { TrackUploadService } from '@modules/tracks'
+import { TrackIngestService } from '@modules/tracks'
 import { Injectable } from '@nestjs/common'
 import { type AdminTrackDetail, type AdminTrackRow, toAdminTrackRow } from './admin-tracks.types'
 import {
@@ -25,7 +25,7 @@ import { DELETED_AT_SELECT, DETAIL_INCLUDE, TRACK_ROW_SELECT, type TrackWithDeta
 export class AdminTracksService {
   constructor(
     private readonly prisma: PrismaService,
-    private readonly trackUpload: TrackUploadService,
+    private readonly trackUpload: TrackIngestService,
   ) {}
 
   /** Flattens a track with the full detail include into the detail response shape. */
@@ -94,7 +94,7 @@ export class AdminTracksService {
    * Re-queues a track's stored source file for transcoding.
    *
    * Reuses the existing audio-processing producer
-   * (`TrackUploadService.reprocess`) instead of a second queue.
+   * (`TrackIngestService.reprocess`) instead of a second queue.
    */
   async reprocess(id: string) {
     const existing = await this.prisma.track.findFirst({ where: { id }, select: DELETED_AT_SELECT })

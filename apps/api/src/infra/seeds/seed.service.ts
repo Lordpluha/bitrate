@@ -5,7 +5,7 @@ import type { FakerService } from './faker.service'
 import { CatalogSeeder } from './seeders/catalog.seeder'
 import { LibrarySeeder } from './seeders/library.seeder'
 import { NcsImportSeeder } from './seeders/ncs-import.seeder'
-import type { IPasswordHasher, ITrackUploadService, NcsImportStats } from './seeders/seed.types'
+import type { IPasswordHasher, ITrackIngestService, NcsImportStats } from './seeders/seed.types'
 
 const BANNER = '═══════════════════════════════════════'
 
@@ -25,7 +25,7 @@ export class SeedService {
     private readonly prisma: PrismaClient,
     downloadService: DownloadResourcesService,
     fakerService: FakerService,
-    trackUploadService: ITrackUploadService,
+    trackUploadService: ITrackIngestService,
     passwordHasher: IPasswordHasher,
   ) {
     this.ncsImport = new NcsImportSeeder(prisma, downloadService, trackUploadService)

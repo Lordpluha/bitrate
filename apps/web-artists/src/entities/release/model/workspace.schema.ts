@@ -43,6 +43,7 @@ export const releaseWorkspaceSchema = releaseSummarySchema
       .array(
         z.object({
           id: z.uuid(),
+          sourceTrackId: z.uuid().nullable().default(null),
           title: z.string(),
           duration,
           isDemo: z.boolean(),

@@ -116,4 +116,10 @@ export const music = {
   'music.search.searching': 'Searching…',
   'music.search.empty': 'Nothing matches your search.',
   'music.search.unavailable': 'Search is unavailable right now.',
+  'music.create.untitled': 'Untitled release',
+  'music.create.openFailed':
+    'Your draft was saved. Open it to continue; no second draft will be created.',
+  'music.item.deleteRelease': 'Delete release',
+  'music.fields.typeAutomatic':
+    'Detected automatically: 1–4 tracks — Single, 5–6 — EP, 7 or more — Album.',
 } as const

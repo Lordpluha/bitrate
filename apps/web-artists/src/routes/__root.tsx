@@ -4,6 +4,7 @@ import { AuthProvider } from '@shared/hooks'
 import { getRequestLocale, I18nProvider } from '@shared/i18n'
 import { WorkspaceThemeProvider } from '@shared/theme/WorkspaceThemeProvider'
 import { WorkspaceThemeScript } from '@shared/theme/WorkspaceThemeScript'
+import { RouteProgress } from '@shared/ui/Loading'
 import {
   createRootRoute,
   HeadContent,
@@ -29,13 +30,19 @@ export const Route = createRootRoute({
       { property: 'og:title', content: SITE_NAME },
       { property: 'og:description', content: SITE_DESCRIPTION },
       { property: 'og:image', content: '/opengraph-image.png' },
-      { property: 'og:image:alt', content: 'Bitrate' },
+      {
+        property: 'og:image:alt',
+        content: 'Bitrate Artists Portal — Create. Release. Grow.',
+      },
       { property: 'og:type', content: 'website' },
       { name: 'twitter:card', content: 'summary_large_image' },
       { name: 'twitter:title', content: SITE_NAME },
       { name: 'twitter:description', content: SITE_DESCRIPTION },
       { name: 'twitter:image', content: '/twitter-image.png' },
-      { name: 'twitter:image:alt', content: 'Bitrate' },
+      {
+        name: 'twitter:image:alt',
+        content: 'Bitrate Artists Portal — Create. Release. Grow.',
+      },
     ],
     links: [
       { rel: 'stylesheet', href: appCss },
@@ -83,7 +90,10 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
         <I18nProvider initialLocale={locale}>
           <QueryClientProvider>
             <AuthProvider>
-              <WorkspaceThemeProvider>{children}</WorkspaceThemeProvider>
+              <WorkspaceThemeProvider>
+                <RouteProgress />
+                {children}
+              </WorkspaceThemeProvider>
             </AuthProvider>
           </QueryClientProvider>
         </I18nProvider>

@@ -2,9 +2,10 @@ import { CacheModule } from '@infra/cache/cache.module'
 import { PrismaModule } from '@infra/prisma/prisma.module'
 import { StorageCoreModule } from '@infra/storage/storage-core.module'
 import { Module } from '@nestjs/common'
-import { AudioProcessingQueueModule } from './audio-processing-queue.module'
-import { TrackUploadService } from './track-upload.service'
-import { TracksService } from './tracks.service'
+import { TracksService } from './catalog/tracks.service'
+import { ReleaseTrackService } from './ingest/release-track.service'
+import { TrackIngestService } from './ingest/track-ingest.service'
+import { AudioProcessingQueueModule } from './processing/audio-processing-queue.module'
 
 /**
  * The tracks services without controllers, auth or the conversion consumer, so the operator
@@ -13,7 +14,7 @@ import { TracksService } from './tracks.service'
  */
 @Module({
   imports: [PrismaModule, CacheModule, StorageCoreModule, AudioProcessingQueueModule],
-  providers: [TracksService, TrackUploadService],
-  exports: [TracksService, TrackUploadService],
+  providers: [TracksService, TrackIngestService, ReleaseTrackService],
+  exports: [TracksService, TrackIngestService, ReleaseTrackService],
 })
 export class TracksCoreModule {}

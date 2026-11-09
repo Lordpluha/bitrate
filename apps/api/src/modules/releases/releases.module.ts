@@ -1,6 +1,8 @@
 import { PrismaModule } from '@infra/prisma/prisma.module'
 import { StorageCoreModule } from '@infra/storage/storage-core.module'
+import { AlbumsCoreModule } from '@modules/albums/albums-core.module'
 import { TokensModule } from '@modules/tokens/tokens.module'
+import { ReleaseTrackDeletionModule } from '@modules/tracks/release-track-deletion.module'
 import { Module } from '@nestjs/common'
 import { ArtistAnalyticsController } from './artist-analytics.controller'
 import { ArtistAnalyticsService } from './artist-analytics.service'
@@ -16,8 +18,11 @@ import {
   DISTRIBUTION_ADAPTER,
   NotConnectedDistributionAdapter,
 } from './distribution/distribution-adapter'
+import { ReleaseCompilationController } from './release-compilation.controller'
+import { ReleaseCompilationService } from './release-compilation.service'
 import { ReleaseCoverService } from './release-cover.service'
 import { ReleaseCreditsService } from './release-credits.service'
+import { ReleaseDeletionService } from './release-deletion.service'
 import { DistributionController, ReleaseDeliveryController } from './release-delivery.controller'
 import { ReleaseDeliveryService } from './release-delivery.service'
 import { ReleaseMediaController } from './release-media.controller'
@@ -28,9 +33,16 @@ import { ReleasesController } from './releases.controller'
 import { ReleasesService } from './releases.service'
 
 @Module({
-  imports: [PrismaModule, StorageCoreModule, TokensModule],
+  imports: [
+    PrismaModule,
+    StorageCoreModule,
+    TokensModule,
+    AlbumsCoreModule,
+    ReleaseTrackDeletionModule,
+  ],
   controllers: [
     ReleasesController,
+    ReleaseCompilationController,
     ReleaseMediaController,
     ReleaseTasksController,
     ArtistTasksController,
@@ -44,6 +56,8 @@ import { ReleasesService } from './releases.service'
   ],
   providers: [
     ReleasesService,
+    ReleaseCompilationService,
+    ReleaseDeletionService,
     ReleaseCreditsService,
     ReleaseMediaService,
     ReleaseCoverService,

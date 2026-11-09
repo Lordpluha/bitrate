@@ -2,7 +2,17 @@ export const layout = {
   'layout.customize': 'Customize',
   'layout.customizeHint': 'Reorder, resize and hide the blocks on this page',
   'layout.editingHint':
-    'Drag a block by its name to move it, pick a size, or hide what you do not need. Done saves the layout to your account.',
+    'Drag the name to move a block. Resize its edges or corner on the 12 × 12 grid, or choose width and height above. Auto fits the content. Done saves your layout.',
+  'layout.rows': 'Height of {tile}',
+  'layout.auto': 'Auto',
+  'layout.resizeHeight': 'Resize height of {tile}',
+  'layout.resizeBoth': 'Resize width and height of {tile}',
+  'layout.rowCount': '{rows} of 12 rows',
+  'layout.columns': 'Width of {tile}',
+  'layout.resize': 'Resize {tile}',
+  'layout.columnCount': '{columns} of 12 columns',
+  'layout.mobileHint':
+    'Blocks fit the screen here. Custom widths and heights apply on wider screens.',
   'layout.instructions':
     'To pick up a block, press Space or Enter. Use the arrow keys to move it, Space or Enter to drop it, and Escape to cancel.',
   'layout.reset': 'Reset to default',

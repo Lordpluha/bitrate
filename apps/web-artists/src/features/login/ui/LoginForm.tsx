@@ -8,11 +8,13 @@ import {
   Typography,
 } from '@bitrate/ui-react'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { notifyArtistSessionChange } from '@shared/auth/accountSelection'
+import { artistSessionCheck } from '@shared/auth/artistSessionCheck'
 import { messageKey, useI18n } from '@shared/i18n'
 import { getLoginDestination } from '@shared/routes/authRedirect'
 import { ROUTES } from '@shared/routes/routes'
 import { SocialAuthButtons } from '@shared/ui'
-import { Link, useRouter, useSearch } from '@tanstack/react-router'
+import { Link, useSearch } from '@tanstack/react-router'
 import { useState } from 'react'
 import { type SubmitHandler, useForm } from 'react-hook-form'
 import { useLogin } from '../api/useLogin'
@@ -20,16 +22,13 @@ import { type LoginFormData, loginSchema } from '../validation'
 import { TwoFactorLoginForm } from './TwoFactorLoginForm'
 
 export const LoginForm = () => {
-  const router = useRouter()
   const { t, tMessage } = useI18n()
   const search = useSearch({ from: '/login' })
   const [requiresTwoFactor, setRequiresTwoFactor] = useState(false)
-  const completeLogin = async () => {
-    await router.navigate({
-      href: getLoginDestination(search.next),
-      replace: true,
-    })
-    await router.invalidate()
+  const completeLogin = () => {
+    artistSessionCheck.clear()
+    notifyArtistSessionChange('changed')
+    window.location.replace(getLoginDestination(search.next))
   }
   const { mutate: login, isPending } = useLogin({
     onSuccess: async (data) => {
@@ -78,10 +77,15 @@ export const LoginForm = () => {
       <div className="flex flex-col items-center">
         <LogoIcon height={64} width={64} />
         <Typography as="h1" className="mt-2 text-center" size={'heading2'}>
-          {t('auth.login.title')}
+          {t(search.addAccount ? 'account.switcher.add' : 'auth.login.title')}
         </Typography>
       </div>
 
+      {search.addAccount && (
+        <p className="text-center text-sm text-text-secondary">
+          {t('account.switcher.addDescription')}
+        </p>
+      )}
       <form
         className="flex flex-col gap-2"
         onSubmit={form.handleSubmit(onSubmit)}
@@ -162,6 +166,14 @@ export const LoginForm = () => {
           </p>
         </div>
       </form>
+      {search.addAccount && (
+        <a
+          className="text-center text-sm underline underline-offset-4"
+          href="/dashboard"
+        >
+          {t('account.switcher.back')}
+        </a>
+      )}
     </div>
   )
 }

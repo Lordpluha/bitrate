@@ -8,6 +8,7 @@
     "session_not_found": "Session not found"
   },
   "track": {
+    "release_workflow_required": "Upload and edit recordings through a release draft and submit it for review.",
     "not_found": "Track {id} not found",
     "playback_session_required": "A valid playback session is required",
     "playback_session_ended": "The playback session has ended",
@@ -27,10 +28,14 @@
     "invalid_verification_code": "Invalid or expired verification code",
     "verification_code_cooldown": "Please wait before requesting another code",
     "session_not_found": "Session not found",
-    "session_is_current": "Use sign out to end the session you are using"
+    "session_is_current": "Use sign out to end the session you are using",
+    "account_not_saved": "This account is no longer saved in this browser. Sign in again.",
+    "account_limit": "You can save up to 5 accounts in this browser. Remove one before adding another.",
+    "account_changed": "The active account changed. Reload the workspace."
   },
   "release": {
     "not_found": "Release not found",
+    "changed": "Release changed since it was read; reload it and try again",
     "changed_or_not_draft": "Release changed or is no longer a draft",
     "changed_or_not_submitted": "Release changed or is not awaiting review",
     "changed_or_not_rejected": "Release changed or no changes were requested",
@@ -44,6 +49,7 @@
     "audio_file_required": "Choose an audio file to upload",
     "audio_type_invalid": "The audio must be a WAV, FLAC, MP3 or OGG file",
     "audio_not_found": "No uploaded audio for this recording",
+    "audio_duplicate": "This audio file is already in this release",
     "task_not_found": "Task not found on this release",
     "track_order_mismatch": "The track order must list every recording on the release exactly once",
     "task_changed": "This task changed since it was read; reload it and try again",
@@ -52,7 +58,13 @@
     "not_publish_failed": "Release changed or its publishing has not failed",
     "changed_or_not_scheduled": "Release changed or has no scheduled premiere",
     "changed_or_not_live": "Release changed or is not live on Bitrate",
-    "changed_or_not_unpublished": "Release changed or cannot be published again"
+    "changed_or_not_unpublished": "Release changed or cannot be published again",
+    "compilation_source_unavailable": "A selected recording is no longer available for this compilation",
+    "compilation_only_catalogue": "Compilations can only contain recordings from your published catalogue",
+    "compilation_track_locked": "A catalogue recording cannot be changed through a compilation",
+    "compilation_duplicate": "This recording is already included in the compilation",
+    "compilation_limit": "A compilation can contain at most 50 recordings",
+    "used_in_compilation": "This release's recordings are used in a compilation draft. Remove them from the compilation first"
   },
   "artist": {
     "not_found": "Artist not found"

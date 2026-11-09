@@ -210,7 +210,7 @@ describe('batch audit trail (int)', () => {
       providers: [
         AdminTracksService,
         { provide: PrismaService, useValue: prisma },
-        { provide: 'TrackUploadService', useValue: {} },
+        { provide: 'TrackIngestService', useValue: {} },
         { provide: AdminTrackAudioService, useValue: {} },
         { provide: APP_INTERCEPTOR, useClass: AuditInterceptor },
       ],

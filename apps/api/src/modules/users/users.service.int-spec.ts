@@ -59,7 +59,7 @@ describe('UsersService (int)', () => {
     const result = await service.getByEmail('user@example.com')
 
     expect(prismaMock.user.findFirst).toHaveBeenCalledWith({
-      where: { email: 'user@example.com', deletedAt: null },
+      where: { email: { equals: 'user@example.com', mode: 'insensitive' }, deletedAt: null },
       select: { id: true },
     })
     expect(result).toEqual(user)

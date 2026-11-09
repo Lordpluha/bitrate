@@ -11,6 +11,7 @@ import { formatDateTimeUtc } from '@shared/lib/date'
 import { Countdown } from '@shared/ui'
 import { Link } from '@tanstack/react-router'
 import { ArrowRight } from 'lucide-react'
+import type { ReactNode } from 'react'
 import { nextAction, statusIcons } from '../lib/nextAction'
 import { useCelebration } from '../lib/useCelebration'
 import type { WorkspaceActionHandler } from '../model/workspaceAction'
@@ -20,10 +21,15 @@ interface ReleaseHeaderProps {
   release: ReleaseWorkspace
   /** Opens the artwork dialog; without it the cover is display-only. */
   onAction?: WorkspaceActionHandler
+  titleEditor?: ReactNode
 }
 
 /** Identity, status and the single next action; shared by every stage. */
-export function ReleaseHeader({ release, onAction }: ReleaseHeaderProps) {
+export function ReleaseHeader({
+  release,
+  onAction,
+  titleEditor,
+}: ReleaseHeaderProps) {
   const { t, tp, locale } = useI18n()
   const action = nextAction(release, t, tp)
   const StatusIcon = statusIcons[release.status]
@@ -50,7 +56,7 @@ export function ReleaseHeader({ release, onAction }: ReleaseHeaderProps) {
       <div className="artist-release-header-identity">
         <HeaderCover onAction={onAction} release={release} />
         <div className="min-w-0">
-          <h1>{release.title}</h1>
+          {titleEditor ?? <h1>{release.title}</h1>}
           <p>
             {release.artistName} · {t(releaseTypeLabels[release.type])} ·{' '}
             {tp({ count: tracks, key: 'common.tracks' })}

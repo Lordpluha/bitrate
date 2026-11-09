@@ -70,7 +70,7 @@ export class UsersService {
   /** Runs the get by email operation. Filters `deletedAt` — see `findById`. */
   async getByEmail(email: UserEntity['email']) {
     return await this.prisma.user.findFirst({
-      where: { email, deletedAt: null },
+      where: { email: { equals: email, mode: 'insensitive' }, deletedAt: null },
       select: { id: true },
     })
   }

@@ -33,7 +33,6 @@ model Staff {
   auditLogs AuditLog[]
   releaseReviews ReleaseReview[]
 
-  @@index([email])
   @@index([deletedAt])
   @@index([roleId])
 }
@@ -50,6 +49,4 @@ model StaffSession {
   staff Staff @relation(fields: [staffId], references: [id], onDelete: Cascade)
 
   @@index([staffId])
-  @@index([access_token])
-  @@index([refresh_token])
 }

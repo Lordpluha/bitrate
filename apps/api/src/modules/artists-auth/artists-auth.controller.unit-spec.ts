@@ -3,7 +3,7 @@ import { buildArtist } from '@modules/artists/__tests__/fixtures/artists.fixture
 import type { ArtistsService } from '@modules/artists/artists.service'
 import type { TokenService } from '@modules/tokens/token.service'
 import type { Response } from 'express'
-
+import type { ArtistAccountsService } from './artist-accounts.service'
 import type { ArtistTwoFactorService } from './artist-two-factor.service'
 import { AuthController } from './artists-auth.controller'
 import type { ArtistsAuthService } from './artists-auth.service'
@@ -25,6 +25,8 @@ const makeTokenServiceMock = () =>
   ({
     setAuthCookies: jest.fn(),
     clearAuthCookies: jest.fn(),
+    clearArtistAccountsCookie: jest.fn(),
+    readArtistAccountsCookie: jest.fn(),
   }) as unknown as jest.Mocked<TokenService>
 
 const makeTwoFactorServiceMock = () =>
@@ -47,16 +49,19 @@ describe('AuthController (artists)', () => {
   let authService: jest.Mocked<ArtistsAuthService>
   let artistsService: jest.Mocked<ArtistsService>
   let tokenService: jest.Mocked<TokenService>
+  let accounts: jest.Mocked<ArtistAccountsService>
 
   beforeEach(() => {
     authService = makeAuthServiceMock()
     artistsService = makeArtistsServiceMock()
     tokenService = makeTokenServiceMock()
+    accounts = { forgetBrowser: jest.fn() } as unknown as jest.Mocked<ArtistAccountsService>
     controller = new AuthController(
       authService,
       artistsService,
       tokenService,
       makeTwoFactorServiceMock(),
+      accounts,
     )
   })
 
@@ -106,6 +111,20 @@ describe('AuthController (artists)', () => {
 
     expect(authService.logout).toHaveBeenCalledWith('artist-1', 'at')
     expect(tokenService.clearAuthCookies).toHaveBeenCalledWith(res, 'artist')
+  })
+
+  it('logout signs the browser out of every saved account and drops the switcher cookie', async () => {
+    tokenService.readArtistAccountsCookie.mockReturnValue('b'.repeat(64))
+    const res = makeResponse()
+
+    await controller.logout(
+      buildArtist({ id: 'artist-1' }),
+      { artist_access_token: 'at' } as never,
+      res,
+    )
+
+    expect(accounts.forgetBrowser).toHaveBeenCalledWith('b'.repeat(64))
+    expect(tokenService.clearArtistAccountsCookie).toHaveBeenCalledWith(res)
   })
 
   it('refresh should call service.refresh and setAuthCookies', async () => {

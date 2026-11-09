@@ -1,4 +1,37 @@
 export const workspace = {
+  'compilation.emptyDraft':
+    'Wybierz opublikowane nagrania z katalogu, aby rozpocząć kompilację.',
+  'compilation.formatHint':
+    'Format kompilacji pozostaje bez zmian przy dodawaniu i usuwaniu nagrań.',
+
+  'compilation.removeConfirm':
+    'Usunąć {title} z tej kompilacji? Oryginalne nagranie, jego ISRC i historia odsłuchań pozostaną w katalogu.',
+  'compilation.title': 'Utwórz kompilację',
+  'compilation.intro':
+    'Wybierz własne opublikowane nagrania. Zachowają audio, ISRC, polubienia i historię odsłuchań. Kompilacja otrzyma własną okładkę i przejdzie weryfikację.',
+  'compilation.searchAction': 'Szukaj',
+  'compilation.search': 'Znajdź nagranie',
+  'compilation.loading': 'Ładowanie opublikowanych nagrań',
+  'compilation.loadError': 'Nie udało się wczytać katalogu. Spróbuj ponownie.',
+  'compilation.saveError':
+    'Nie potwierdzono dodania nagrań. Odśwież wydanie przed ponowną próbą.',
+  'compilation.conflict':
+    'Wydanie lub wybrane nagranie uległo zmianie. Zamknij wybór i odśwież wydanie, aby sprawdzić dostępne nagrania.',
+  'compilation.noResults':
+    'Brak opublikowanych nagrań pasujących do wyszukiwania.',
+  'compilation.empty':
+    'Brak kolejnych dostępnych nagrań. Najpierw opublikuj własne wydanie; usunięte nagrania są niedostępne.',
+  'compilation.pages': 'Strony nagrań katalogu',
+  'compilation.selected': 'Wybrano: {count}. Możesz dodać do {limit} nagrań.',
+  'compilation.adding': 'Dodawanie…',
+  'compilation.add': 'Dodaj nagrania ({count})',
+  'compilation.pick': 'Dodaj z katalogu',
+  'compilation.description':
+    'Istniejące nagrania w kolejności odtwarzania. Audio i identyfikatory należą do oryginalnego nagrania.',
+  'compilation.reused': 'Połączone z opublikowanym katalogiem',
+  'compilation.unavailable':
+    'Oryginalne nagranie jest niedostępne. Usuń je lub wybierz inne.',
+
   'workspace.loading': 'Wczytywanie obszaru roboczego wydania…',
   'workspace.unavailable': 'Obszar roboczy wydania jest niedostępny',
   'workspace.returnToMusic': 'Wróć do Muzyki',
@@ -186,4 +219,8 @@ export const workspace = {
   'workspace.launch.copyFailed':
     'Nie udało się skopiować linku. Skopiuj go ręcznie: {url}',
   'workspace.launch.openInPlayer': 'Otwórz w odtwarzaczu',
+  'workspace.title.edit': 'Edytuj tytuł wydania',
+  'workspace.danger.title': 'Strefa niebezpieczna',
+  'workspace.danger.description':
+    'Usuń wydanie z panelu i odtwarzacza. Nagrania używane w innym wydaniu pozostaną dostępne. Tej operacji nie można cofnąć.',
 } as const

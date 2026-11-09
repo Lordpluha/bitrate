@@ -54,20 +54,21 @@ export function WorkspaceThemeProvider({ children }: PropsWithChildren) {
   const [motion, setMotionState] = useState<WorkspaceMotion>(
     workspaceMotions[0],
   )
-  const isWorkspace = useLocation({
-    select: ({ pathname }) =>
-      pathname === workspaceThemePath ||
-      pathname.startsWith(`${workspaceThemePath}/`),
-  })
+  const pathname = useLocation({ select: ({ pathname }) => pathname })
+  const isWorkspace =
+    pathname === workspaceThemePath ||
+    pathname.startsWith(`${workspaceThemePath}/`)
+  const isLanding = pathname === '/'
 
   useLayoutEffect(() => {
-    setThemeState(readWorkspaceTheme())
+    const fallback = isLanding ? 'dark' : defaultWorkspaceTheme
+    setThemeState(readWorkspaceTheme(fallback))
     setDensityState(readStored(workspaceDensities, workspaceDensityStorageKey))
     setMotionState(readStored(workspaceMotions, workspaceMotionStorageKey))
     const sync = (event: StorageEvent) => {
       const all = event.key === null
       if (all || event.key === workspaceThemeStorageKey)
-        setThemeState(parseWorkspaceTheme(event.newValue))
+        setThemeState(parseWorkspaceTheme(event.newValue, fallback))
       if (all || event.key === workspaceDensityStorageKey)
         setDensityState(parseStored(workspaceDensities, event.newValue))
       if (all || event.key === workspaceMotionStorageKey)
@@ -75,18 +76,18 @@ export function WorkspaceThemeProvider({ children }: PropsWithChildren) {
     }
     window.addEventListener('storage', sync)
     return () => window.removeEventListener('storage', sync)
-  }, [])
+  }, [isLanding])
 
   useLayoutEffect(() => {
     const root = document.documentElement
     root.classList.remove(...workspaceThemes)
-    root.classList.add(isWorkspace ? theme : 'dark')
-    // Marketing and auth pages keep their own layout and motion.
+    root.classList.add(isWorkspace || isLanding ? theme : 'dark')
+    // Public pages share the theme; workspace density and motion stay scoped.
     if (isWorkspace && density === 'compact') root.dataset.density = density
     else delete root.dataset.density
     if (isWorkspace && motion === 'reduced') root.dataset.motion = motion
     else delete root.dataset.motion
-  }, [isWorkspace, theme, density, motion])
+  }, [isWorkspace, isLanding, theme, density, motion])
 
   const value: WorkspaceThemeContextValue = {
     theme,

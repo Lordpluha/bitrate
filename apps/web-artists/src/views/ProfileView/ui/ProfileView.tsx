@@ -16,8 +16,10 @@ import {
 import { countryName } from '@shared/constants/countries'
 import { useI18n } from '@shared/i18n'
 import { useArtworkAmbience } from '@shared/lib/artworkAmbience'
+import { PageSkeleton } from '@shared/ui'
 import { BadgeCheck, MapPin, UserRound } from 'lucide-react'
 import { useState } from 'react'
+import { ProfileCompilations } from './ProfileCompilations'
 
 interface ProfileViewProps {
   artistId: string
@@ -38,7 +40,7 @@ export function ProfileView({ artistId }: ProfileViewProps) {
         </p>
       </div>
       {profile.isPending ? (
-        <p role="status">{t('profile.loading')}</p>
+        <PageSkeleton label={t('profile.loading')} />
       ) : profile.isError ? (
         <div className="space-y-3">
           <p role="alert">{tMessage(profile.error.message)}</p>
@@ -76,6 +78,7 @@ function ProfileEditor({
         onValuesChange={setDraft}
         profile={profile}
       />
+      <ProfileCompilations artistId={artistId} />
     </div>
   )
 }

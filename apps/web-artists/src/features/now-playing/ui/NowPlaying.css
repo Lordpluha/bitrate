@@ -75,6 +75,33 @@
     color: var(--color-text-secondary);
   }
 
+  @container artist-tile (max-width: 25rem) {
+    .artist-track-player {
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      min-width: 0;
+      padding: 0.5rem;
+    }
+    .artist-track-player-time {
+      flex-basis: 100%;
+    }
+  }
+  @container artist-tile (max-width: 7rem) {
+    .artist-track-player {
+      padding: 0.125rem;
+    }
+    .artist-track-player-toggle {
+      max-width: 100%;
+    }
+    .artist-track-player-wave {
+      flex-basis: 100%;
+    }
+    .artist-track-player-time {
+      min-width: 0;
+      overflow-wrap: anywhere;
+    }
+  }
+
   .artist-now-playing {
     position: fixed;
     bottom: calc(1rem + env(safe-area-inset-bottom, 0px));

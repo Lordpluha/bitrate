@@ -2,6 +2,7 @@ import type { ReleaseWorkspace } from '@entities/release'
 import {
   AddContributorDialog,
   CreditSelfDialog,
+  DeleteReleaseDialog,
   EditContributorDialog,
   EditReleaseDialog,
   IsrcDialog,
@@ -13,6 +14,7 @@ import {
 } from '@features/edit-release'
 import {
   AddTrackDialog,
+  CompilationPickerDialog,
   CoverDialog,
   RemoveTrackDialog,
   RenameTrackDialog,
@@ -62,6 +64,20 @@ export function WorkspaceDialogs({
   if (!release) return null
   const props = { ...own, release }
   switch (dialog.kind) {
+    case 'delete':
+      return (
+        <DeleteReleaseDialog
+          artistId={artistId}
+          onClose={onClose}
+          onDeleted={() => {
+            void navigate({
+              to: '/dashboard/music',
+              search: { tab: 'releases', page: 1 },
+            })
+          }}
+          release={release}
+        />
+      )
     case 'rights':
       return <RightsDialog {...props} />
     case 'splits':
@@ -88,6 +104,8 @@ export function WorkspaceDialogs({
           release={release}
         />
       )
+    case 'compilation-add':
+      return <CompilationPickerDialog {...props} />
     case 'track-add':
       return <AddTrackDialog {...props} />
     case 'track-audio':

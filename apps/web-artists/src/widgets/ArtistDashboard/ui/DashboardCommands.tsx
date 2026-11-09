@@ -1,5 +1,4 @@
 import { Button } from '@bitrate/ui-react'
-import { useNotifications } from '@entities/notification'
 import {
   CreateReleaseButton,
   useWorkspaceActions,
@@ -7,16 +6,14 @@ import {
 import { useI18n } from '@shared/i18n'
 import { ROUTES } from '@shared/routes/routes'
 import { Link, useLocation } from '@tanstack/react-router'
-import { Bell, Search } from 'lucide-react'
+import { Search } from 'lucide-react'
+import { DashboardNotificationsPopover } from './DashboardNotificationsPopover'
 
 export function DashboardCommands({ artistId }: { artistId: string }) {
   const { openAction } = useWorkspaceActions()
   const { t } = useI18n()
-  const unread = useNotifications(artistId).data?.unread ?? 0
-  const releaseWorkspace = useLocation({
-    select: (location) =>
-      location.pathname.startsWith(`${ROUTES.dashboard.music}/`),
-  })
+  const pathname = useLocation({ select: (location) => location.pathname })
+  const releaseWorkspace = pathname.startsWith(`${ROUTES.dashboard.music}/`)
   return (
     <div className="artist-workspace-commands flex items-center">
       <Button
@@ -33,25 +30,7 @@ export function DashboardCommands({ artistId }: { artistId: string }) {
           Ctrl K
         </kbd>
       </Button>
-      <Button
-        aria-label={
-          unread > 0
-            ? t('shell.notifications.label', { count: unread })
-            : t('shell.notifications')
-        }
-        className="artist-workspace-bell relative size-11 shrink-0 rounded-lg bg-secondary text-text-secondary"
-        onClick={() => openAction('notifications')}
-        size="icon"
-        variant="ghost"
-      >
-        <Bell aria-hidden="true" className="size-5" />
-        {unread > 0 && (
-          <span
-            aria-hidden="true"
-            className="absolute right-2 top-2 size-2 rounded-full bg-accent"
-          />
-        )}
-      </Button>
+      <DashboardNotificationsPopover artistId={artistId} key={pathname} />
       {releaseWorkspace ? (
         <Button
           asChild

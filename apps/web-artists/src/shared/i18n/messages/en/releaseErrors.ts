@@ -1,5 +1,7 @@
 /** Messages `entities/release` reports from API calls and its own validation. */
 export const releaseErrors = {
+  'release.error.audioDuplicate':
+    'This audio file is already in this release. Choose a different file.',
   'release.error.stale':
     'This release changed or is no longer a draft. Your entries are kept here; close and reopen the form to review the latest version.',
   'release.error.gone': 'This release is no longer available.',
@@ -13,9 +15,9 @@ export const releaseErrors = {
     'Could not confirm your changes were saved. Close this form and check Music before trying again.',
   'release.error.updateInvalid': 'Check the release details, then try again.',
   'release.error.deleteUnconfirmed':
-    'Could not confirm the draft was deleted. Check Music before trying again.',
+    'Could not confirm the release was deleted. Check Music before trying again.',
   'release.error.deleteStale':
-    'This release changed or is no longer a draft. Reload Music to see its latest status.',
+    'This release changed. Reload its workspace to review the latest version before deleting.',
   'release.error.createUnconfirmed':
     'Could not confirm your draft was saved. Check Music before trying again.',
   'release.error.createInvalid':

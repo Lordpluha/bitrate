@@ -8,7 +8,7 @@ import {
 } from '@infra/queues/audio-processing.queue'
 import { STORAGE_SERVICE } from '@infra/storage/storage.constants'
 import type { StorageService } from '@infra/storage/storage.types'
-import { AudioProcessingConsumer } from '@modules/tracks/audio-processing.consumer'
+import { AudioProcessingConsumer } from '@modules/tracks/processing'
 import { InjectQueue } from '@nestjs/bullmq'
 import {
   Inject,

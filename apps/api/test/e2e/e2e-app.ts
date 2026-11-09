@@ -1,3 +1,4 @@
+import { randomBytes } from 'node:crypto'
 import { appConfigs } from '@common/config'
 import { CacheModule } from '@infra/cache/cache.module'
 import { ObservabilityModule } from '@infra/observability/observability.module'
@@ -84,7 +85,7 @@ export const getResponseCookies = (value: unknown): string[] => {
 }
 
 /** Short random suffix that keeps e2e emails and usernames unique across runs. */
-export const makeRunId = () => Math.random().toString(36).slice(2, 8)
+export const makeRunId = () => randomBytes(3).toString('hex')
 
 /** Registers a listener or artist with unique credentials, verifies its email and logs it in. */
 export const registerAndLogin = async (
