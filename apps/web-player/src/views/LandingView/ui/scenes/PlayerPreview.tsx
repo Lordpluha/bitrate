@@ -8,7 +8,7 @@ import { useLandingCopy } from '../../model/useLandingCopy'
  * Sizes are the captured pixels: 1440×900 on a desktop, 390×844 at 2× on a phone.
  */
 const SHOTS = {
-  desktop: { width: 1440, height: 900, sizes: '740px' },
+  desktop: { width: 1440, height: 900, sizes: '600px' },
   mobile: { width: 780, height: 1688, sizes: '(max-width: 820px) 40vw, 190px' },
 } as const
 

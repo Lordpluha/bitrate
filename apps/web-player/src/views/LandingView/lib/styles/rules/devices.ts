@@ -3,7 +3,7 @@ import type { LandingRule } from './types'
 /** Hero device previews: the real player on a laptop and a phone, one screenshot per theme. */
 export const DEVICES: readonly LandingRule[] = [
   ['devices', 'relative w-full h-full [transform-style:preserve-3d]'],
-  ['laptop', 'absolute top-[20px] left-[90px] w-[660px]'],
+  ['laptop', 'absolute top-[30px] left-[80px] w-[600px]'],
   [
     'laptop-screen',
     'relative w-full aspect-[1440/900] overflow-hidden bg-neutral-900 bg-none border-[10px] border-solid border-neutral-900 rounded-[18px] [box-shadow:0_0_0_1px_color-mix(in_srgb,var(--color-white)_10%,transparent),0_50px_90px_-40px_var(--shadow)]',
@@ -31,7 +31,7 @@ export const DEVICES: readonly LandingRule[] = [
   ['pv-dim', 'hidden [html.dim_&]:block'],
   [
     'devices-note',
-    'absolute top-[470px] right-[70px] font-[500] [font-size:11px] leading-[1] font-[family-name:var(--font-data)] text-muted-foreground tracking-[0.08em] uppercase',
+    'absolute top-[450px] right-[130px] font-[500] [font-size:11px] leading-[1] font-[family-name:var(--font-data)] text-muted-foreground tracking-[0.08em] uppercase',
   ],
   /* phones: only the handset, centred under the call to action */
   [
