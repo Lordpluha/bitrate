@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger'
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 import { WORKSPACE_LAYOUT_PAGES, workspaceTileSizes } from '../dtos/workspace-layout.dto'
 
 export class WorkspaceTileEntity {
@@ -7,6 +7,22 @@ export class WorkspaceTileEntity {
 
   @ApiProperty({ enum: workspaceTileSizes, enumName: 'WorkspaceTileSize' })
   size: string
+
+  @ApiPropertyOptional({
+    type: Number,
+    minimum: 1,
+    maximum: 12,
+    description: 'Width in a 12-column grid; overrides the legacy size preset',
+  })
+  columns?: number
+
+  @ApiPropertyOptional({
+    type: Number,
+    minimum: 1,
+    maximum: 12,
+    description: 'Height in grid rows; omitted means fit the content automatically',
+  })
+  rows?: number
 
   @ApiProperty()
   hidden: boolean

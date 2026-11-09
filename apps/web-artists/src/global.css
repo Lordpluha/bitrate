@@ -2,22 +2,16 @@
 @import "@bitrate/tailwind/themes.css";
 
 /*
- * Slice styles, in cascade order. They stay in the utilities layer on purpose: many of these
- * classes override ui-react variant utilities on the same element, which @layer components
- * could not do.
+ * Styles every page needs, in cascade order. Slice styles stay in the utilities layer on purpose:
+ * many of these classes override ui-react variant utilities on the same element, which
+ * @layer components could not do. The workspace and the landing link their own sheets
+ * (styles/workspace.css, styles/landing.css) from their routes, so sign-in pages and the
+ * workspace do not download the other's CSS.
  */
 @import "./shared/styles/workspace.css";
-@import "./features/now-playing/ui/NowPlaying.css";
-@import "./features/workspace-layout/ui/WorkspaceLayout.css";
-@import "./widgets/ArtistDashboard/ui/ArtistDashboard.css";
-@import "./views/DashboardView/ui/DashboardView.css";
-@import "./views/AnalyticsView/ui/AnalyticsView.css";
-@import "./views/DistributionView/ui/DistributionView.css";
-@import "./views/ProfileView/ui/ProfileView.css";
-@import "./widgets/ReleaseWorkspace/ui/ReleaseWorkspace.css";
-@import "./widgets/DashboardOverview/ui/DashboardOverview.css";
-@import "./widgets/MusicCatalogue/ui/MusicCatalogue.css";
-@import "./features/submit-release/ui/SubmitPreviewDialog.css";
+@import "./shared/styles/preference-transition.css";
+@import "./shared/ui/WorkspaceModal/WorkspaceModal.css";
+@import "./shared/ui/Loading/Loading.css";
 
 @source "./";
 @source "../node_modules/@bitrate/ui-react/src";

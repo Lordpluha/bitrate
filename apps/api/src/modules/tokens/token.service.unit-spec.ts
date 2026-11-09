@@ -147,6 +147,18 @@ describe('TokenService', () => {
   const hostOnly = { httpOnly: true, sameSite: 'lax' as const, secure: true, path: '/' }
   const parentDomain = { ...hostOnly, domain: '.bitrate.me' }
 
+  it('keeps the saved-account credential HttpOnly and host-only on a shared domain', () => {
+    const res = createResponse()
+    withCookieDomain(() => service.setArtistAccountsCookie(res, 'opaque-credential'))
+    expect(res.cookie).toHaveBeenCalledWith('__Host-artist_accounts', 'opaque-credential', {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'strict',
+      path: '/',
+      expires: expect.any(Date),
+    })
+  })
+
   it('clearAuthCookies should repeat the cookie domain, or a scoped session survives logout', () => {
     const res = createResponse()
 

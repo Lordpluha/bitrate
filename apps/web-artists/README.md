@@ -90,8 +90,8 @@ to their shared parent domain. Both session cookies and the short-lived pending 
 must reach the portal server. Keep it unset for localhost; use HTTPS in production.
 
 **Create release** opens a title/type form and saves an artist-owned draft through
-`POST /api/v1/releases`. It opens the **Music / Releases** tab. Music reads private
-counts, tracks and releases through `GET /api/v1/artist-music/{counts,tracks,releases}`.
+`POST /api/v1/artists/me/releases`. It opens the **Music / Releases** tab. Music reads private
+counts, tracks and releases through `GET /api/v1/artists/me/music/{counts,tracks,releases}`.
 Tabs, search, combined status/type filters, sorting and pagination persist in the URL.
 Rows open details; available audio previews play without leaving the page. Responses
 are validated; catalogue query caches are scoped to the artist, invalidated after
@@ -99,7 +99,7 @@ creation/editing and cleared at logout. Loading, error, empty and confirmed-save
 explicit. Light, Dark and Dim share the same responsive form and catalogue markup.
 
 **Music → Releases → draft details/actions → Edit draft** loads the latest owned
-summary through `GET /api/v1/releases/:id`, then saves title/type with PATCH and its
+summary through `GET /api/v1/artists/me/releases/:id`, then saves title/type with PATCH and its
 `updatedAt` version. Only drafts can be edited. Concurrent updates return a conflict
 without overwriting either the newer record or the user's entered text; close and
 reopen the form to review the latest version. Pending saves lock dismissal and repeat

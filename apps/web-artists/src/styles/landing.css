@@ -1,0 +1,18 @@
+/*
+ * Landing-only styles, linked by the / route after styles/workspace.css so the studio replica
+ * can adjust workspace panels. No other page uses these classes.
+ */
+@import "../views/ArtistView/ui/ArtistView.css";
+@import "../views/ArtistView/ui/LandingHeader.css";
+@import "../views/ArtistView/ui/LandingPreferences.css";
+@import "../views/ArtistView/ui/LandingCredits.css";
+@import "../views/ArtistView/ui/LandingThemes.css";
+@import "../views/ArtistView/ui/LandingSignal.css";
+@import "../views/ArtistView/ui/ReleaseJourney.css";
+@import "../views/ArtistView/ui/ReleaseJourneyEffects.css";
+@import "../views/ArtistView/ui/ListeningResponse.css";
+@import "../views/ArtistView/ui/LandingFinale.css";
+@import "../views/ArtistView/ui/StudioPreview.css";
+
+/* After the imports, as CSS requires; Tailwind resolves it for the whole sheet. */
+@reference "../global.css";

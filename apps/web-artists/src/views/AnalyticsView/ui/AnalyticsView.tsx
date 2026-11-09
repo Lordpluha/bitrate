@@ -15,7 +15,7 @@ import {
 import { useI18n } from '@shared/i18n'
 import { formatDateTimeUtc } from '@shared/lib/date'
 import { ROUTES } from '@shared/routes/routes'
-import { CountUp, PanelIcon } from '@shared/ui'
+import { CountUp, PageSkeleton, PanelIcon } from '@shared/ui'
 import { Link } from '@tanstack/react-router'
 import { BarChart3, Flame, Headphones, Repeat, Users } from 'lucide-react'
 import type { ReactNode } from 'react'
@@ -100,12 +100,8 @@ export function AnalyticsView({ artistId, days }: AnalyticsViewProps) {
           </nav>
         </div>
       </div>
-      {analytics.isPending ? (
-        <div className="artist-analytics-grid" role="status">
-          <span className="sr-only">{t('analytics.loading')}</span>
-          <div className="artist-release-workspace-panel h-80 animate-pulse" />
-          <div className="artist-release-workspace-panel h-80 animate-pulse" />
-        </div>
+      {analytics.isPending || analytics.isPlaceholderData ? (
+        <PageSkeleton label={t('analytics.loading')} />
       ) : analytics.isError ? (
         <div className="space-y-3">
           <p role="alert">{tMessage(analytics.error.message)}</p>
@@ -119,16 +115,22 @@ export function AnalyticsView({ artistId, days }: AnalyticsViewProps) {
           </Button>
         </div>
       ) : (
-        <AnalyticsBody data={analytics.data} layout={layout} />
+        <AnalyticsBody
+          artistId={artistId}
+          data={analytics.data}
+          layout={layout}
+        />
       )}
     </section>
   )
 }
 
 function AnalyticsBody({
+  artistId,
   data,
   layout,
 }: {
+  artistId: string
   data: ArtistAnalytics
   layout: CustomizableLayout
 }) {
@@ -219,7 +221,13 @@ function AnalyticsBody({
         </StatTile>
       </div>
     ),
-    'top-tracks': <TopTracks data={data} />,
+    'top-tracks': (
+      <TopTracks
+        artistId={artistId}
+        data={data}
+        key={`${artistId}:${data.period.days}`}
+      />
+    ),
     sources: <ExternalSources data={data} />,
   }
   return (

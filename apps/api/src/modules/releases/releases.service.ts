@@ -8,9 +8,9 @@ import {
   UnprocessableEntityException,
 } from '@nestjs/common'
 import { AlbumType, type Prisma, ReleaseMasterOwner, ReleaseStatus } from '@prisma/client'
+import { lockCompilationSources, sourceAvailable } from './compilation-source'
 import type { CreateReleaseDto } from './dtos/create-release.dto'
 import type { ListReleasesDto } from './dtos/list-releases.dto'
-import type { ReleaseDraftVersionDto } from './dtos/release-media.dto'
 import type {
   ReviseReleaseDto,
   SubmitReleaseDto,
@@ -29,6 +29,7 @@ import {
 import { lockOwnedDraft } from './release-draft-lock'
 import { readinessFromRecord, releaseReadiness } from './release-readiness'
 import { type CreditedArtist, creditArtistAlone } from './release-solo-credit'
+import { refreshReleaseType } from './release-type'
 
 /** Statuses whose release timing (`scheduledAt`) can still change. */
 const TIMING_STATUSES = [ReleaseStatus.DRAFT, ReleaseStatus.READY]
@@ -44,7 +45,7 @@ export class ReleasesService {
         data: {
           ownerArtistId: owner.id,
           title: input.title,
-          type: input.type ?? AlbumType.SINGLE,
+          type: input.type === AlbumType.COMPILATION ? AlbumType.COMPILATION : AlbumType.SINGLE,
           status: ReleaseStatus.DRAFT,
           // Most artists own their recording; another owner is a choice in the rights step.
           masterOwnerType: ReleaseMasterOwner.ARTIST,
@@ -81,55 +82,36 @@ export class ReleasesService {
     return release
   }
 
-  async updateDraft(ownerArtistId: string, id: string, input: UpdateReleaseDto) {
-    // The release timing alone stays editable after approval, until publishing starts.
+  updateDraft(ownerArtistId: string, id: string, input: UpdateReleaseDto) {
     const timingOnly =
       input.title === undefined && input.type === undefined && input.upc === undefined
-    // Ownership, lifecycle and version are checked atomically with the write.
-    const [updated] = await this.uniqueIdentifier(
-      'This UPC is already used by another release',
-      () =>
-        this.prisma.release.updateManyAndReturn({
-          where: {
-            id,
-            ownerArtistId,
-            deletedAt: null,
-            status: timingOnly ? { in: TIMING_STATUSES } : ReleaseStatus.DRAFT,
-            updatedAt: new Date(input.expectedUpdatedAt),
-          },
-          data: {
-            ...(input.title === undefined ? {} : { title: input.title }),
-            ...(input.type === undefined ? {} : { type: input.type }),
-            ...(input.scheduledAt === undefined
-              ? {}
-              : {
-                  scheduledAt: input.scheduledAt === null ? null : new Date(input.scheduledAt),
-                }),
-            ...(input.upc === undefined ? {} : { upc: input.upc }),
-          },
-          select: RELEASE_SUMMARY_SELECT,
-        }),
-    )
-    if (updated) return updated
-    await this.findOne(ownerArtistId, id)
-    throw new ConflictException(RELEASE_ERRORS.CHANGED_OR_NOT_DRAFT)
-  }
-
-  /**
-   * Soft-deletes an owned draft with its recordings; their UPC and ISRCs are released for reuse.
-   * Stored masters and the cover stay referenced by the deleted rows.
-   */
-  deleteDraft(ownerArtistId: string, id: string, input: ReleaseDraftVersionDto): Promise<void> {
     return this.prisma.$transaction(async (tx) => {
-      const deletedAt = new Date()
-      await lockOwnedDraft(tx, ownerArtistId, id, input.expectedUpdatedAt, {
-        deletedAt,
-        upc: null,
-      })
-      await tx.artistTrackDraft.updateMany({
-        where: { releaseId: id, ownerArtistId, deletedAt: null },
-        data: { deletedAt, isrc: null },
-      })
+      const release = await lockOwnedDraft(
+        tx,
+        ownerArtistId,
+        id,
+        input.expectedUpdatedAt,
+        {},
+        timingOnly ? TIMING_STATUSES : [ReleaseStatus.DRAFT],
+      )
+      const updated = await this.uniqueIdentifier(
+        'This UPC is already used by another release',
+        () =>
+          tx.release.update({
+            where: { id },
+            data: {
+              ...(input.title === undefined ? {} : { title: input.title }),
+              ...(input.scheduledAt === undefined
+                ? {}
+                : { scheduledAt: input.scheduledAt === null ? null : new Date(input.scheduledAt) }),
+              ...(input.upc === undefined ? {} : { upc: input.upc }),
+              updatedAt: release.updatedAt,
+            },
+            select: RELEASE_SUMMARY_SELECT,
+          }),
+      )
+      // Legacy clients may still send `type`; the format is always recording-derived.
+      return release.status === ReleaseStatus.DRAFT ? refreshReleaseType(tx, updated) : updated
     })
   }
 
@@ -168,6 +150,17 @@ export class ReleasesService {
         select: RELEASE_SUMMARY_SELECT,
       })
       if (!submitted) throw new ConflictException(RELEASE_ERRORS.CHANGED_OR_NOT_DRAFT)
+      if (submitted.type === AlbumType.COMPILATION) {
+        const sources = await tx.artistTrackDraft.findMany({
+          where: { releaseId: id, deletedAt: null, sourceTrackId: { not: null } },
+          select: { sourceTrackId: true },
+        })
+        await lockCompilationSources(
+          tx,
+          ownerArtistId,
+          sources.flatMap((track) => (track.sourceTrackId ? [track.sourceTrackId] : [])),
+        )
+      }
       return submitted
     })
   }
@@ -197,6 +190,12 @@ export class ReleasesService {
   updateTrack(ownerArtistId: string, id: string, trackId: string, input: UpdateReleaseTrackDto) {
     return this.prisma.$transaction(async (tx) => {
       const release = await lockOwnedDraft(tx, ownerArtistId, id, input.expectedUpdatedAt)
+      const recording = await tx.artistTrackDraft.findFirst({
+        where: { id: trackId, releaseId: id, ownerArtistId, deletedAt: null },
+        select: { sourceTrackId: true },
+      })
+      if (recording?.sourceTrackId)
+        throw new ConflictException(RELEASE_ERRORS.COMPILATION_TRACK_LOCKED)
       const [track] = await this.uniqueIdentifier(
         'This ISRC is already used by another recording',
         () =>
@@ -274,9 +273,12 @@ function toWorkspaceView(release: ReleaseWorkspaceRecord, readinessRecord: Readi
     artistName: owner.username,
     latestReview: reviews[0] ?? null,
     // The storage key stays server-side; the artist plays audio through the owned route.
-    trackDrafts: trackDrafts.map(({ audioKey, ...draft }) => ({
+    trackDrafts: trackDrafts.map(({ audioKey, sourceTrack, ...draft }) => ({
       ...draft,
-      hasAudio: !!audioKey,
+      ...(sourceTrack
+        ? { title: sourceTrack.title, duration: sourceTrack.duration, isrc: sourceTrack.isrc }
+        : {}),
+      hasAudio: draft.sourceTrackId ? sourceAvailable(sourceTrack) : !!audioKey,
     })),
     tracks: tracks.map(({ position, track }) => ({ ...track, position })),
     participants: contributors,

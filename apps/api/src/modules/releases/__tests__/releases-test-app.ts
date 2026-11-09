@@ -1,3 +1,4 @@
+import { CacheService } from '@infra/cache/cache.service'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import { STORAGE_SERVICE } from '@infra/storage/storage.constants'
 import type { StorageService } from '@infra/storage/storage.types'
@@ -70,6 +71,8 @@ export async function createReleasesTestApp(): Promise<INestApplication> {
     .overrideProvider(PrismaService)
     .useValue(prismaMock)
     // Uploads never reach S3 in HTTP tests.
+    .overrideProvider(CacheService)
+    .useValue(mockDeep<CacheService>())
     .overrideProvider(STORAGE_SERVICE)
     .useValue(mockDeep<StorageService>())
     .overrideGuard(ArtistAuthGuard)

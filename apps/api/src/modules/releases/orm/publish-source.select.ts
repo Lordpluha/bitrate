@@ -8,6 +8,8 @@ export const PUBLISH_SOURCE_SELECT = {
     where: { deletedAt: null },
     orderBy: [{ position: 'asc' }, { createdAt: 'asc' }, { id: 'asc' }],
     select: {
+      id: true,
+      sourceTrackId: true,
       title: true,
       duration: true,
       isrc: true,

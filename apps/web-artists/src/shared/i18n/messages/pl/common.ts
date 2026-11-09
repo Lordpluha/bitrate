@@ -1,4 +1,5 @@
 export const common = {
+  'common.loadingPage': 'Ładowanie strony',
   'common.cancel': 'Anuluj',
   'common.saving': 'Zapisywanie…',
   'common.continue': 'Kontynuuj',
@@ -7,9 +8,13 @@ export const common = {
   'common.verifying': 'Weryfikacja…',
   'common.sending': 'Wysyłanie…',
   'common.pageOf': 'Strona {page} z {total}',
+  'common.pageNumber': 'Strona {page}',
+  'common.previousPage': 'Poprzednia',
+  'common.nextPage': 'Następna',
   'common.tracks.one': '{count} utwór',
   'common.tracks.few': '{count} utwory',
   'common.tracks.many': '{count} utworów',
   'common.tracks.other': '{count} utworu',
   'common.closeDialog': 'Zamknij okno',
+  'common.dismissNotice': 'Zamknij komunikat',
 } as const

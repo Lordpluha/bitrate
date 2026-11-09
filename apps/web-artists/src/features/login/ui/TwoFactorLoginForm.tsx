@@ -11,7 +11,7 @@ import {
 } from '../validation/TwoFactorForm.validation'
 
 interface TwoFactorLoginFormProps {
-  onVerified: () => Promise<void>
+  onVerified: () => void | Promise<void>
   onBack: () => void
 }
 

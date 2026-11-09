@@ -13,19 +13,42 @@ import { expect, type Page } from '@playwright/test'
  */
 export async function gotoHydrated(page: Page, path: string) {
   const response = await page.goto(path)
+  await waitForHydration(page)
+  return response
+}
 
+/** A reload starts from server skeletons while Vite loads the route's browser modules again. */
+export async function reloadHydrated(page: Page) {
+  const response = await page.reload()
+  await waitForHydration(page)
+  await expect(page.locator('[data-skeleton="page"]')).toHaveCount(0, {
+    timeout: 15_000,
+  })
+  return response
+}
+
+async function waitForHydration(page: Page) {
   await expect
     .poll(
-      () =>
-        page.evaluate(() =>
-          [...document.querySelectorAll('body *')].some((element) =>
-            Object.keys(element).some((key) => key.startsWith('__react')),
-          ),
-        ),
+      async () => {
+        try {
+          return await page.evaluate(() =>
+            [...document.querySelectorAll('body *')].some((element) =>
+              Object.keys(element).some((key) => key.startsWith('__react')),
+            ),
+          )
+        } catch (error) {
+          // A redirect can replace the document between goto() and this hydration check.
+          if (
+            error instanceof Error &&
+            error.message.includes('Execution context was destroyed')
+          )
+            return false
+          throw error
+        }
+      },
       // Cold, code-split dashboard bundles can take over five seconds on CI's four workers.
       { timeout: 15_000 },
     )
     .toBe(true)
-
-  return response
 }

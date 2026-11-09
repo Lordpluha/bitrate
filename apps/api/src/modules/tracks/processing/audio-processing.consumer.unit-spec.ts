@@ -149,6 +149,10 @@ describe('AudioProcessingConsumer', () => {
     const job = buildJob('convert-audio', jobData)
 
     await consumer.process(job)
+    // Conversion cannot grant or restore catalogue visibility, including after a takedown.
+    for (const [write] of prisma.track.updateMany.mock.calls) {
+      expect(write.data).not.toHaveProperty('publishedAt')
+    }
 
     expect(convertAudioToCmafMock).toHaveBeenCalledTimes(1)
     const uploadedKeys = storage.upload.mock.calls.map(([key]) => key)

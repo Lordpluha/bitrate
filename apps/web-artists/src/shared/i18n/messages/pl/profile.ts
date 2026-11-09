@@ -1,4 +1,12 @@
 export const profile = {
+  'profile.compilations.title': 'Kompilacje',
+  'profile.compilations.description':
+    'Połącz wydane utwory w nową kolekcję — od Best Of po wybór ulubionych nagrań.',
+  'profile.compilations.note':
+    'Oryginalne nagrania, historia odsłuchań i polubienia pozostają bez zmian.',
+  'profile.compilations.create': 'Utwórz kompilację',
+  'profile.compilations.untitled': 'Nowa kompilacja',
+
   'profile.validation.https': 'Wpisz pełny link https://.',
   'profile.validation.min': 'Użyj co najmniej 3 znaków.',
   'profile.validation.max': 'Użyj maksymalnie 50 znaków.',

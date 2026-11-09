@@ -1,13 +1,16 @@
 import { artistSessionCheck } from '@shared/auth/artistSessionCheck'
 import { useI18n } from '@shared/i18n'
 import { ROUTES } from '@shared/routes/routes'
+import { PageSkeleton } from '@shared/ui'
 import { createFileRoute, Outlet, redirect } from '@tanstack/react-router'
 import {
   ArtistDashboard,
   DashboardSessionError,
 } from '@widgets/ArtistDashboard'
+import workspaceCss from '../styles/workspace.css?url'
 
 export const Route = createFileRoute('/dashboard')({
+  head: () => ({ links: [{ rel: 'stylesheet', href: workspaceCss }] }),
   beforeLoad: async ({ location }) => {
     const session = await artistSessionCheck.load()
     if (session.status === 'unauthenticated') {
@@ -28,9 +31,11 @@ export const Route = createFileRoute('/dashboard')({
 function DashboardPending() {
   const { t } = useI18n()
   return (
-    <p className="bg-background p-6 text-foreground" role="status">
-      {t('shell.checkingSession')}
-    </p>
+    <PageSkeleton
+      className="bg-background p-6 text-foreground"
+      heading
+      label={t('shell.checkingSession')}
+    />
   )
 }
 

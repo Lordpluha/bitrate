@@ -3,7 +3,17 @@ export const layout = {
   'layout.customizeHint':
     'Zmień kolejność, rozmiar i widoczność bloków na tej stronie',
   'layout.editingHint':
-    'Przeciągnij blok za nazwę, aby go przenieść, wybierz rozmiar albo ukryj zbędne. „Gotowe” zapisze układ na Twoim koncie.',
+    'Przeciągnij nazwę, aby przenieść blok. Zmień rozmiar za krawędzie lub róg w siatce 12 × 12 albo wybierz szerokość i wysokość powyżej. Auto dopasowuje wysokość. Gotowe zapisuje układ.',
+  'layout.rows': 'Wysokość „{tile}”',
+  'layout.auto': 'Auto',
+  'layout.resizeHeight': 'Zmień wysokość „{tile}”',
+  'layout.resizeBoth': 'Zmień szerokość i wysokość „{tile}”',
+  'layout.rowCount': '{rows} z 12 wierszy',
+  'layout.columns': 'Szerokość „{tile}”',
+  'layout.resize': 'Zmień szerokość „{tile}”',
+  'layout.columnCount': '{columns} z 12 kolumn',
+  'layout.mobileHint':
+    'Tutaj bloki dopasowują się do ekranu. Wybrana szerokość i wysokość obowiązują na szerszych ekranach.',
   'layout.instructions':
     'Aby podnieść blok, naciśnij Spację lub Enter. Przesuwaj strzałkami, upuść Spacją lub Enterem, Escape anuluje.',
   'layout.reset': 'Przywróć domyślny',

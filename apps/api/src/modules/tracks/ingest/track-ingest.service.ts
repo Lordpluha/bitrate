@@ -125,7 +125,7 @@ export class TrackIngestService {
     if (masterStored && audioFile) await this.discardStoredMaster(audioFile.filename)
   }
 
-  /** Stores a new upload and queues its conversion. */
+  /** Trusted server-side imports only; artist publication uses the reviewed release workflow. */
   async create(
     artistId: ArtistEntity['id'],
     createTrackDto: CreateTrackDto,
@@ -152,6 +152,7 @@ export class TrackIngestService {
           cover: coverName,
           duration: metadata.duration,
           ...rightsConfirmationRecord(),
+          publishedAt: new Date(),
           processingStatus: 'PROCESSING',
           processingError: null,
           processingAttempts: 0,
