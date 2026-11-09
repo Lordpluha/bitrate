@@ -85,12 +85,14 @@ export const createSignal = ({
       ease,
       overwrite: 'auto',
     })
+    /* a big shape crossing the screen covers the content: shrink before travelling, grow after */
+    const shrinking = sc < signalGroup.scale.x
     gsap.to(signalGroup.scale, {
       x: sc,
       y: sc,
       z: sc,
-      duration: dur,
-      ease,
+      duration: shrinking ? dur * 0.55 : dur,
+      ease: shrinking ? 'power3.out' : 'power3.in',
       overwrite: 'auto',
     })
     gsap.to(signalGroup.rotation, {

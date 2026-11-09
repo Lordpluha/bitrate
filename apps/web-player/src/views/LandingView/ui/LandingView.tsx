@@ -7,6 +7,7 @@ import type { PlatformStats } from '../model/platformStats'
 import { LANDING_SCENES } from '../model/scenes'
 import { useLandingCopy } from '../model/useLandingCopy'
 import { AssistantPanel } from './AssistantPanel'
+import { LandingDemoProvider } from './demo/LandingDemoProvider'
 import { LandingHeader } from './LandingHeader'
 import { LandingIcons } from './LandingIcons'
 import { SceneDevices } from './scenes/SceneDevices'
@@ -97,13 +98,15 @@ const LandingContent = ({ signedIn, stats }: LandingViewProps) => {
       <AssistantPanel />
       <main>
         <SceneSignal signedIn={signedIn} stats={stats} />
-        <SceneLoop />
-        <SceneWorkshop />
-        <SceneRules />
-        <SceneLibrary />
-        <SceneDiscover />
-        <SceneDevices />
-        <SceneSocial />
+        <LandingDemoProvider>
+          <SceneLoop />
+          <SceneWorkshop />
+          <SceneRules />
+          <SceneLibrary />
+          <SceneDiscover />
+          <SceneDevices />
+          <SceneSocial />
+        </LandingDemoProvider>
         <ScenePartners />
         <SceneTeam />
         <SceneStart signedIn={signedIn} />

@@ -66,7 +66,7 @@ export const PHYSICS: readonly LandingRule[] = [
   ],
   [
     'ball',
-    '[&.tech]:box-border [&.tech]:p-[6px] [&.tech]:font-[600] [&.tech]:[font-size:12px] [&.tech]:leading-[1.1] [&.tech]:font-[family-name:var(--font-body)]',
+    '[&.tech]:overflow-hidden [&.tech]:[overflow-wrap:normal] [&.tech]:box-border [&.tech]:p-[4px] [&.tech]:font-[600] [&.tech]:[font-size:12px] [&.tech]:leading-[1.1] [&.tech]:font-[family-name:var(--font-body)]',
   ],
   [
     'ball',
@@ -94,6 +94,6 @@ export const PHYSICS: readonly LandingRule[] = [
   ['#cradleSlot', 'pointer-events-none'],
   [
     'cradle-hint',
-    'absolute top-[-26px] left-0 right-0 text-center pointer-events-none font-[500] [font-size:10px] leading-[1] font-[family-name:var(--font-data)] text-muted-foreground tracking-[0.14em] uppercase motion-reduce:hidden',
+    'absolute top-[-58px] left-0 right-0 text-center pointer-events-none font-[500] [font-size:10px] leading-[1] font-[family-name:var(--font-data)] text-muted-foreground tracking-[0.14em] uppercase motion-reduce:hidden',
   ],
 ]

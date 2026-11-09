@@ -2,7 +2,7 @@
 
 import { cn } from '@bitrate/ui-react'
 import { ArtistName } from '@entities/Artist'
-import type { TrackEntity } from '@entities/Track'
+import type { TrackEntity } from '@entities/Track/models/schema/Track.entity'
 import { MediaImage } from '@shared/ui/MediaImage'
 import { formatDuration } from '@shared/utils/apiHelpers'
 import { getTrackCoverUrl } from '@shared/utils/mediaUrl'

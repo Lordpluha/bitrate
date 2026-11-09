@@ -1,11 +1,31 @@
-import { lc } from '../../lib/styles/lc'
-import { DEMO_TRACKS } from '../../model/demoTracks'
-import { useLandingCopy } from '../../model/useLandingCopy'
-import { Abs, SceneFootnote, SceneShell, TrackRow } from './parts'
+'use client'
 
-/** Scene "Loop" — ported from the motion prototype; the landing engine animates it after mount. */
+import { HistoryEntryRow } from '@entities/History'
+import { usePlayerStore } from '@entities/Player'
+import { TracksList, useLikedTracksCount } from '@entities/Track'
+import { useI18n } from '@shared/i18n'
+import { CollectionHeader, SectionHeader } from '@shared/ui'
+import { useState } from 'react'
+import { lc } from '../../lib/styles/lc'
+import {
+  DEMO_HISTORY,
+  DEMO_ME,
+  DEMO_TRACK_LIST,
+} from '../../model/demo/demoData'
+import { DEMO_TRACK_SETS } from '../../model/demo/demoSeeds'
+import { useLandingCopy } from '../../model/useLandingCopy'
+import { DemoFrame } from '../demo/DemoFrame'
+import { DemoPlayerBar } from '../demo/DemoPlayerBar'
+import { Abs, SceneShell } from './parts'
+
+/** Scene "Loop": the player bar, Liked Songs and Recents — the web player's own blocks. */
 export const SceneLoop = () => {
   const c = useLandingCopy()
+  const { t } = useI18n()
+  const play = usePlayerStore((state) => state.play)
+  const [history, setHistory] = useState(DEMO_HISTORY)
+  const { data: likedCount = 0 } = useLikedTracksCount()
+
   return (
     <SceneShell id="loop" labelKey="loop.play_save_return">
       <Abs w={900} x={60} y={64}>
@@ -26,245 +46,64 @@ export const SceneLoop = () => {
         data-a="up"
         extra="text-right"
         markers="label d-only"
-        w={200}
-        x={1196}
+        w={260}
+        x={1120}
         y={72}
       >
         {c('loop.interface_preview')}
       </Abs>
-      <Abs data-a="win" h={542} markers="card tiltable" w={424} x={60} y={254}>
-        <div className={lc('col', 'p-[24px] gap-[18px] h-full! box-border')}>
-          <div className={lc('row', 'items-start')}>
-            <span className={lc('medal')}>
-              <svg aria-hidden="true" className={lc('i')}>
-                <use href="#i-play" />
-              </svg>
-            </span>
-            <div>
-              <span className={lc('num')}>{'01'}</span>
-              <p
-                className={lc(
-                  't-title',
-                  'font-[600] [font-size:20px] leading-[1.2] font-[family-name:var(--font-display)] mt-[6px]',
-                )}
-              >
-                {c('loop.play_without_losing_focus')}
-              </p>
-              <p className={lc('t-meta')}>
-                {c('loop.the_controls_you_need_within_reach')}
-              </p>
-            </div>
+      <Abs data-a="win" h={552} markers="win" w={880} x={60} y={212}>
+        <DemoFrame
+          className="h-full p-4 max-[820px]:max-h-[52vh]"
+          label={t('library.likedSongs')}
+        >
+          <div className="flex flex-col gap-5">
+            <CollectionHeader
+              coverUrl="/images/liked-songs.svg"
+              meta={[t('common.songs.other', { count: likedCount })]}
+              owner={DEMO_ME.username}
+              showBack={false}
+              title={t('library.likedSongs')}
+              type={t('common.playlist')}
+            />
+            <TracksList
+              onPlayTrack={(track) => play(track)}
+              showDateAdded={false}
+              tracks={[...DEMO_TRACK_SETS.liked]}
+            />
           </div>
-          <div className={lc('soft col grow', 'p-[16px] gap-[14px]')}>
-            <div className={lc('row')}>
-              <span
-                className={lc(
-                  'art',
-                  'w-[76px] h-[76px] rounded-[10px] flex-[none]',
-                )}
-              ></span>
-              <div className={lc('grow')}>
-                <p className={lc('t-title')}>{DEMO_TRACKS.nightSignal}</p>
-                <p className={lc('t-meta')}>{c('common.demo_artist')}</p>
-              </div>
-              <svg aria-hidden="true" className={lc('i', 'text-accent')}>
-                <use href="#i-heart" />
-              </svg>
-            </div>
-            <div>
-              <div className={lc('prog')}>
-                <i className={lc('anim-prog')}></i>
-              </div>
-              <div className={lc('times')}>
-                <span>{'1:38'}</span>
-                <span>{'3:56'}</span>
-              </div>
-            </div>
-            <div className={lc('transport', 'gap-[22px]')}>
-              <svg aria-hidden="true" className={lc('i')}>
-                <use href="#i-prev" />
-              </svg>
-              <span className={lc('playbtn', 'w-[44px] h-[44px]')}>
-                <svg aria-hidden="true" className={lc('i')}>
-                  <use href="#i-pause" />
-                </svg>
-              </span>
-              <svg aria-hidden="true" className={lc('i')}>
-                <use href="#i-next" />
-              </svg>
-            </div>
-            <span className={lc('grow')}></span>
-            <div className={lc('row', 'gap-[18px]')}>
-              <div>
-                <span className={lc('label')}>{c('loop.bitrate')}</span>
-                <br />
-                <b className={lc('mono', 'text-foreground')}>{'320 KBPS'}</b>
-              </div>
-              <div className={lc('grow', 'h-[28px]')}>
-                <canvas className={lc('spec')} data-bars="26"></canvas>
-              </div>
-            </div>
-          </div>
-        </div>
+        </DemoFrame>
       </Abs>
-      <Abs
-        data-a="win"
-        h={542}
-        markers="card tiltable d-only"
-        w={424}
-        x={508}
-        y={254}
-      >
-        <div className={lc('col', 'p-[24px] gap-[18px] h-full! box-border')}>
-          <div className={lc('row', 'items-start')}>
-            <span className={lc('medal')}>
-              <svg aria-hidden="true" className={lc('i')}>
-                <use href="#i-heart" />
-              </svg>
-            </span>
-            <div>
-              <span className={lc('num')}>{'02'}</span>
-              <p
-                className={lc(
-                  't-title',
-                  'font-[600] [font-size:20px] leading-[1.2] font-[family-name:var(--font-display)] mt-[6px]',
-                )}
-              >
-                {c('loop.save_what_matters')}
-              </p>
-              <p className={lc('t-meta')}>
-                {c('loop.build_a_library_that_sounds_more_like_yo')}
-              </p>
-            </div>
-          </div>
-          <div className={lc('soft col grow', 'p-[16px] gap-[10px]')}>
-            <div className={lc('row')}>
-              <span
-                className={lc(
-                  'cv',
-                  'bg-[image:linear-gradient(135deg,var(--color-purple-500),var(--color-magenta-500))] grid place-items-center text-white',
-                )}
-              >
-                <svg aria-hidden="true" className={lc('i')}>
-                  <use href="#i-heart" />
-                </svg>
-              </span>
-              <div className={lc('grow')}>
-                <p className={lc('t-title')}>{c('loop.liked_songs')}</p>
-                <p className={lc('t-meta')}>
-                  {c('loop.ready_for_your_next_visit_128')}
-                </p>
-              </div>
-            </div>
-            <TrackRow
-              artist={c('common.demo_artist')}
-              cover="cv1"
-              title={DEMO_TRACKS.nightSignal}
-            >
-              <svg
-                aria-hidden="true"
-                className={lc('i like-pop', 'text-magenta-500')}
-              >
-                <use href="#i-heart" />
-              </svg>
-            </TrackRow>
-            <TrackRow
-              artist={c('loop.kite_harbor')}
-              cover="cv3"
-              title={DEMO_TRACKS.staticLines}
-            >
-              <svg
-                aria-hidden="true"
-                className={lc('i like-pop', 'text-magenta-500')}
-              >
-                <use href="#i-heart" />
-              </svg>
-            </TrackRow>
-            <TrackRow
-              artist={c('loop.luma_vale')}
-              cover="cv5"
-              title={c('loop.low_orbit')}
-            >
-              <svg
-                aria-hidden="true"
-                className={lc('i like-pop', 'text-magenta-500')}
-              >
-                <use href="#i-heart" />
-              </svg>
-            </TrackRow>
-          </div>
-        </div>
+      <Abs data-a="win" h={552} markers="win d-only" w={416} x={964} y={212}>
+        <DemoFrame className="h-full p-5" label={t('recents.title')}>
+          <SectionHeader title={t('recents.title')} />
+          <ul className="flex flex-col">
+            {history.map((entry) => (
+              <HistoryEntryRow
+                entry={entry}
+                isRemoving={false}
+                key={entry.id}
+                onPlay={(trackId) => {
+                  const track = DEMO_TRACK_LIST.find(
+                    (item) => item.id === trackId,
+                  )
+                  if (track) play(track)
+                }}
+                onRemove={(trackId) =>
+                  setHistory((list) =>
+                    list.filter((item) => item.track.id !== trackId),
+                  )
+                }
+              />
+            ))}
+          </ul>
+        </DemoFrame>
       </Abs>
-      <Abs
-        data-a="win"
-        h={542}
-        markers="card tiltable d-only"
-        w={424}
-        x={956}
-        y={254}
-      >
-        <div className={lc('col', 'p-[24px] gap-[18px] h-full! box-border')}>
-          <div className={lc('row', 'items-start')}>
-            <span className={lc('medal')}>
-              <svg aria-hidden="true" className={lc('i')}>
-                <use href="#i-history" />
-              </svg>
-            </span>
-            <div>
-              <span className={lc('num')}>{'03'}</span>
-              <p
-                className={lc(
-                  't-title',
-                  'font-[600] [font-size:20px] leading-[1.2] font-[family-name:var(--font-display)] mt-[6px]',
-                )}
-              >
-                {c('loop.find_your_way_back')}
-              </p>
-              <p className={lc('t-meta')}>
-                {c('loop.your_returns_together_in_recents')}
-              </p>
-            </div>
-          </div>
-          <div className={lc('soft col grow', 'p-[16px] gap-[6px]')}>
-            <div className={lc('row label', 'justify-between')}>
-              <span>{c('loop.recents')}</span>
-              <span className="tracking-[.04em]">{c('loop.see_all')}</span>
-            </div>
-            <span className={lc('mono', 'mt-[8px]')}>{c('loop.today')}</span>
-            <TrackRow
-              artist={c('loop.played_3')}
-              cover="cv1"
-              title={DEMO_TRACKS.nightSignal}
-            >
-              <span className={lc('mono')}>{'21:40'}</span>
-            </TrackRow>
-            <TrackRow
-              artist={c('loop.from_night_drive')}
-              cover="cv4"
-              title={DEMO_TRACKS.driftControl}
-            >
-              <span className={lc('mono')}>{'20:12'}</span>
-            </TrackRow>
-            <span className={lc('mono', 'mt-[8px]')}>
-              {c('loop.yesterday')}
-            </span>
-            <TrackRow
-              artist={c('loop.album')}
-              cover="cv2"
-              title={DEMO_TRACKS.echoesInMotion}
-            >
-              <span className={lc('mono')}>{'23:05'}</span>
-            </TrackRow>
-          </div>
-        </div>
+      <Abs data-a="win" h={88} markers="d-only" w={1270} x={60} y={776}>
+        <DemoFrame className="rounded-2xl" label={t('queue.nowPlaying')}>
+          <DemoPlayerBar />
+        </DemoFrame>
       </Abs>
-      <SceneFootnote
-        noteKey="loop.product_preview_demonstration_library"
-        signFirst={false}
-        w={1320}
-        x={60}
-        y={830}
-      />
     </SceneShell>
   )
 }

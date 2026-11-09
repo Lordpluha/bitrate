@@ -1,4 +1,4 @@
-import type { ListeningHistoryEntry } from '@entities/History'
+import type { ListeningHistoryEntry } from '@entities/History/api/client/historyResponse.schema'
 import { MediaImage } from '@shared/ui/MediaImage'
 import { getTrackCoverUrl } from '@shared/utils/mediaUrl'
 import { Trash2 } from 'lucide-react'

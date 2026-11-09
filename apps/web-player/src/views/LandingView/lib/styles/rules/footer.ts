@@ -49,6 +49,8 @@ export const FOOTER_LINKS: readonly LandingRule[] = [
     'flex gap-[10px] items-center text-foreground no-underline font-[600] [font-size:20px] leading-[1] font-[family-name:var(--font-display)]',
   ],
   ['f-brand', '[&_svg]:w-[26px] [&_svg]:h-[26px]'],
+  /* beats the footer's own `a { color: inherit }` */
+  ['f-brand', '[.footer_&]:text-foreground'],
   [
     'f-gh',
     'inline-flex gap-[6px] items-center [&_.i]:w-[15px] [&_.i]:h-[15px]',

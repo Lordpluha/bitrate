@@ -8,7 +8,8 @@ export const MOBILE: readonly LandingRule[] = [
   ['top-actions', 'max-[820px]:gap-[6px]'],
   ['brand-name', 'max-[560px]:sr-only'],
   ['top-github', 'max-[560px]:hidden'],
-  ['top-lang', 'max-[820px]:[&_select]:p-[0_9px]'],
+  ['top-lang', 'max-[820px]:p-[0_8px] max-[820px]:gap-[4px]'],
+  ['top-lang-globe', 'max-[560px]:hidden'],
   ['top-cta', 'max-[820px]:p-[0_12px] max-[400px]:[&_.i]:hidden'],
   /* narrow phones: the theme switch becomes three swatches, the label stays for screen readers */
   [

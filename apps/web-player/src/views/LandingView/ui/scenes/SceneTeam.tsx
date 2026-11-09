@@ -38,16 +38,6 @@ export const SceneTeam = () => {
             <span className={lc('t-meta')}>{c('team.palette')}</span>
           </span>
         </div>
-        <div className={lc('jar-controls')} data-a="up">
-          <a
-            className={lc('jar-footer mono')}
-            data-jar="footer"
-            hidden
-            href="#cta"
-          >
-            {c('team.jar_in_footer', { count: 0 })}
-          </a>
-        </div>
         <div className={lc('ctas', 'mt-[26px]')} data-a="up">
           <a
             className={lc('btn btn-primary magnetic')}

@@ -9,7 +9,6 @@ import { playIntro } from './intro'
 import { clearTokenCache } from './palette'
 import { mountPointer } from './pointer'
 import { mountScenes } from './scenes'
-import { mountWorkshopShuffle } from './scenes/enter'
 import { createStage, hasWebGL, type Stage } from './stage'
 import { mountTeam } from './team'
 
@@ -76,10 +75,8 @@ export const mountLanding = ({
     get stage() {
       return stage
     },
-    drawWaves: canvases.drawWaves,
     glitch: headings.glitch,
     onEnter: {
-      workshop: mountWorkshopShuffle(ctx),
       team: team.team,
       cta: team.cta,
       ...(resetPartners && { partners: resetPartners }),

@@ -22,11 +22,17 @@ interface TracksListProps {
   /** Albums leave out the Date added column. */
   showDateAdded?: boolean
   viewMode?: 'compact' | 'list'
+  /**
+   * `table` (default) shows the track table from 1024px up; `rows` always shows track rows
+   * (title and artist over like and length), for a list too narrow for the table.
+   */
+  layout?: 'rows' | 'table'
 }
 
 export const TracksList = ({
   activeTrackId,
   isPlaybackContextActive = true,
+  layout = 'table',
   onPlayTrack,
   onRemoveTrack,
   removable = false,
@@ -44,10 +50,13 @@ export const TracksList = ({
   )[viewMode]
 
   return (
-    <div className="flex flex-col">
+    <div
+      className="flex flex-col"
+      data-track-rows={layout === 'rows' ? '' : undefined}
+    >
       <div
         className={cn(
-          'grid h-9 items-center border-b border-border px-2 text-xs text-muted-foreground max-[1024px]:hidden',
+          'grid h-9 items-center border-b border-border px-2 text-xs text-muted-foreground track-rows:hidden',
           columns,
         )}
       >

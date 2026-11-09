@@ -1,11 +1,15 @@
 'use client'
 
+import { cn, Popover, PopoverContent, PopoverTrigger } from '@bitrate/ui-react'
 import { useSettingsStore } from '@entities/Settings'
-import { Theme, Themes } from '@shared/constants'
+import { Theme, Themes, Z_INDEX_CLASS } from '@shared/constants'
 import { useTheme } from '@shared/contexts'
-import { localeLabels, normalizeLocale, useI18n } from '@shared/i18n'
+import { localeLabels, useI18n } from '@shared/i18n'
 import { ROUTES } from '@shared/routes'
+import { menuItemClassName, menuPanelClassName } from '@shared/ui'
+import { Check, ChevronDown, Globe } from 'lucide-react'
 import Link from 'next/link'
+import { useState } from 'react'
 import { lc } from '../lib/styles/lc'
 import { GITHUB_REPO_URL } from '../model/links'
 import type { LandingKey } from '../model/messages/en'
@@ -34,6 +38,9 @@ export const LandingHeader = ({ signedIn }: LandingHeaderProps) => {
   const { locale } = useI18n()
   const setSetting = useSettingsStore((s) => s.setSetting)
   const { theme, setTheme } = useTheme()
+  const [langOpen, setLangOpen] = useState(false)
+  const currentLabel =
+    localeLabels.find(({ value }) => value === locale)?.label ?? locale
   return (
     <header className={lc('top')}>
       <a
@@ -69,21 +76,54 @@ export const LandingHeader = ({ signedIn }: LandingHeaderProps) => {
           </svg>
           <span className="sr-only">{c('chrome.github_aria')}</span>
         </a>
-        <label className={lc('top-lang')}>
-          <span className="sr-only">{c('chrome.language')}</span>
-          <select
-            onChange={(e) =>
-              setSetting('language', normalizeLocale(e.target.value))
-            }
-            value={locale}
+        <Popover onOpenChange={setLangOpen} open={langOpen}>
+          <PopoverTrigger
+            aria-label={c('chrome.language_current', {
+              language: currentLabel,
+            })}
+            className={lc('top-lang')}
           >
-            {localeLabels.map(({ label, value }) => (
-              <option key={value} title={label} value={value}>
-                {value.toUpperCase()}
-              </option>
-            ))}
-          </select>
-        </label>
+            <Globe aria-hidden="true" className={lc('top-lang-globe')} />
+            <span>{locale.toUpperCase()}</span>
+            <ChevronDown aria-hidden="true" className={lc('top-lang-chev')} />
+          </PopoverTrigger>
+          <PopoverContent
+            align="end"
+            className={cn(Z_INDEX_CLASS.popover, 'w-48', menuPanelClassName)}
+            positionerClassName={Z_INDEX_CLASS.popover}
+            sideOffset={8}
+          >
+            <div aria-label={c('chrome.language')} role="menu">
+              {localeLabels.map(({ label, value }) => (
+                <button
+                  aria-checked={value === locale}
+                  className={cn(
+                    menuItemClassName,
+                    'justify-between',
+                    value === locale && 'text-accent [&_svg]:text-accent',
+                  )}
+                  key={value}
+                  lang={value}
+                  onClick={() => {
+                    setSetting('language', value)
+                    setLangOpen(false)
+                  }}
+                  role="menuitemradio"
+                  type="button"
+                >
+                  {label}
+                  {value === locale ? (
+                    <Check aria-hidden="true" size={16} />
+                  ) : (
+                    <span className="text-xs text-muted-foreground">
+                      {value.toUpperCase()}
+                    </span>
+                  )}
+                </button>
+              ))}
+            </div>
+          </PopoverContent>
+        </Popover>
         <fieldset aria-label={c('chrome.theme')} className={lc('themes')}>
           {Themes.map((t) => (
             <button

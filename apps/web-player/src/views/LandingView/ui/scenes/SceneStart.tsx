@@ -25,18 +25,8 @@ export const SceneStart = ({ signedIn }: SceneProps) => {
       <Abs h={227} markers="d-only" w={1030} x={205} y={555}>
         <div className={lc('dome', 'h-full')}></div>
       </Abs>
-      <Abs extra="text-center" w={1120} x={160} y={64}>
-        <div className="flex justify-center" data-a="up">
-          <span
-            className={lc(
-              'pill',
-              'p-[11px_16px] [font-size:12px] tracking-[.14em] font-[family-name:var(--font-data)]',
-            )}
-          >
-            {c('cta.ready_when_you_are')}
-          </span>
-        </div>
-        <h2 className={lc('h h80', 'mt-[26px]')}>
+      <Abs extra="text-center" w={1120} x={160} y={92}>
+        <h2 className={lc('h h80')}>
           <span className={lc('line')}>
             <span>{c('cta.pick_up_where_the')}</span>
           </span>
@@ -78,13 +68,6 @@ export const SceneStart = ({ signedIn }: SceneProps) => {
           {c('cta.pull_and_release')}
         </span>
       </Abs>
-      <p
-        className={lc('abs mono', 'text-center')}
-        data-a="up"
-        style={{ '--x': '420', '--y': '738', '--w': '600' }}
-      >
-        {c('cta.energy_carries_on_so_does_your_queue')}
-      </p>
       <Abs data-a="up" h={118} w={1440} x={0} y={782}>
         <div className={lc('footer')}>
           <span className={lc('row')}>

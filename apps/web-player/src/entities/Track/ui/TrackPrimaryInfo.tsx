@@ -21,15 +21,15 @@ export const TrackPrimaryInfo = ({
   viewMode,
 }: TrackPrimaryInfoProps) => (
   <button
-    className="flex min-w-0 items-center gap-3 pr-4 text-left max-[1024px]:pr-0"
+    className="flex min-w-0 items-center gap-3 pr-4 text-left track-rows:pr-0"
     onClick={onClick}
     onKeyDown={onKeyDown}
     type="button"
   >
     <div
       className={cn(
-        'relative size-11.5 shrink-0 overflow-hidden rounded-md max-[1024px]:size-12',
-        viewMode === 'list' ? 'block' : 'hidden max-[1024px]:block',
+        'relative size-11.5 shrink-0 overflow-hidden rounded-md track-rows:size-12',
+        viewMode === 'list' ? 'block' : 'hidden track-rows:block',
       )}
     >
       <MediaImage

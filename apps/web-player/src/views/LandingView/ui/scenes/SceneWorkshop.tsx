@@ -1,272 +1,143 @@
+'use client'
+
+import { selectMusicPlayer, usePlayerStore } from '@entities/Player'
+import { QueueTrackRow, TracksList } from '@entities/Track'
+import { useI18n } from '@shared/i18n'
+import { CollectionHeader, SectionHeader } from '@shared/ui'
+import { useState } from 'react'
 import { lc } from '../../lib/styles/lc'
-import { DEMO_TRACKS } from '../../model/demoTracks'
+import { DEMO_ME, DEMO_PLAYLISTS } from '../../model/demo/demoData'
+import { DEMO_TRACK_SETS } from '../../model/demo/demoSeeds'
+import type { LandingKey } from '../../model/messages/en'
 import { useLandingCopy } from '../../model/useLandingCopy'
+import { DemoFrame } from '../demo/DemoFrame'
 import { Abs, SceneShell } from './parts'
 
-/** Scene "Workshop" — ported from the motion prototype; the landing engine animates it after mount. */
+/** How many upcoming tracks the queue column lists. */
+const QUEUE_ROWS = 4
+
+/** The scene's three points: icon id, title and line. */
+const POINTS: readonly (readonly [string, LandingKey, LandingKey])[] = [
+  ['#i-layers', 'workshop.build_playlists', 'workshop.build_playlists_meta'],
+  ['#i-sliders', 'workshop.line_up_next', 'workshop.line_up_next_meta'],
+  ['#i-play', 'workshop.play_any_row', 'workshop.play_any_row_meta'],
+]
+
+/** Queue column: what plays now and what comes after it in the player store. */
+const DemoQueue = () => {
+  const { t } = useI18n()
+  const { currentTrack, currentTrackIndex, playlist, playPlaylist } =
+    usePlayerStore(selectMusicPlayer)
+  const [hidden, setHidden] = useState<readonly string[]>([])
+  const upNext = playlist
+    .map((track, position) => ({ position, track }))
+    .slice(currentTrackIndex + 1)
+    .filter(({ track }) => !hidden.includes(track.id))
+    .slice(0, QUEUE_ROWS)
+
+  return (
+    <div className="flex min-w-0 flex-col gap-2">
+      <SectionHeader title={t('queue.title')} />
+      <p className="px-2 text-xs font-semibold text-muted-foreground uppercase">
+        {t('queue.nowPlaying')}
+      </p>
+      {currentTrack ? (
+        <ul>
+          <QueueTrackRow isActive track={currentTrack} />
+        </ul>
+      ) : null}
+      <p className="mt-2 px-2 text-xs font-semibold text-muted-foreground uppercase">
+        {t('queue.next')}
+      </p>
+      <ul>
+        {upNext.map(({ position, track }, index) => (
+          <QueueTrackRow
+            index={index + 1}
+            key={track.id}
+            onPlay={() =>
+              playPlaylist({
+                currentPlaylistId: 'demo-p1',
+                currentPlaylistName: 'Night Drive',
+                startTrack: track,
+                startTrackIndex: position,
+                tracks: playlist,
+              })
+            }
+            onRemove={() => setHidden((ids) => [...ids, track.id])}
+            track={track}
+          />
+        ))}
+      </ul>
+    </div>
+  )
+}
+
+/** Scene "Workshop": a real playlist page (header and track rows) beside the real queue. */
 export const SceneWorkshop = () => {
   const c = useLandingCopy()
+  const { t } = useI18n()
+  const [tracks, setTracks] = useState(() => [...DEMO_TRACK_SETS.playlist])
+  const playlist = DEMO_PLAYLISTS[0]
+
   return (
-    <SceneShell
-      id="workshop"
-      labelKey="workshop.start_with_a_feeling_finish_with_your_pl"
-    >
-      <Abs
-        data-a="up"
-        extra="[border-bottom:1px_solid_var(--border)] pb-[14px]"
-        markers="row d-only"
-        w={1320}
-        x={60}
-        y={96}
-      >
-        <span className={lc('mono', 'text-foreground')}>
-          {c('workshop.bitrate')}
-        </span>
-        <span className={lc('t-meta grow')}>
-          {c('workshop.more_music_more_you')}
-        </span>
-        <span className={lc('label')}>
-          {c('workshop.playlist_builder_concept')}
-        </span>
-      </Abs>
-      <Abs w={380} x={60} y={186}>
+    <SceneShell id="workshop" labelKey="workshop.playlists_your_order">
+      <Abs w={360} x={60} y={150}>
         <h2 className={lc('h h48')}>
           <span className={lc('line')}>
-            <span>{c('workshop.start_with_a')}</span>
+            <span>{c('workshop.playlists_in')}</span>
           </span>
           <span className={lc('line')}>
-            <span>{c('workshop.feeling_finish')}</span>
-          </span>
-          <span className={lc('line')}>
-            <span className={lc('hl')}>{c('workshop.with_your_playlist')}</span>
+            <span className={lc('hl')}>{c('workshop.your_order')}</span>
           </span>
         </h2>
         <p className={lc('lede s', 'mt-[22px]')} data-a="up">
-          {c('workshop.describe_the_session_compare_a_few_track')}
+          {c('workshop.lede')}
         </p>
         <div className={lc('col d-only', 'mt-[34px] gap-[20px]')}>
-          <div className={lc('row', 'items-start')} data-a="up">
-            <span className={lc('medal', 'w-[44px] h-[44px] rounded-[12px]')}>
-              <svg aria-hidden="true" className={lc('i')}>
-                <use href="#i-zap" />
-              </svg>
-            </span>
-            <div>
-              <p className={lc('t-title')}>
-                {c('workshop.turn_intent_into_music')}
-              </p>
-              <p className={lc('t-meta')}>
-                {c('workshop.describe_the_mood_the_activity_or_the_mo')}
-              </p>
-            </div>
-          </div>
-          <div className={lc('row', 'items-start')} data-a="up">
-            <span className={lc('medal', 'w-[44px] h-[44px] rounded-[12px]')}>
-              <svg aria-hidden="true" className={lc('i')}>
-                <use href="#i-layers" />
-              </svg>
-            </span>
-            <div>
-              <p className={lc('t-title')}>
-                {c('workshop.compare_and_refine')}
-              </p>
-              <p className={lc('t-meta')}>
-                {c('workshop.rank_a_few_tracks_swap_the_ones_that_do')}
-              </p>
-            </div>
-          </div>
-          <div className={lc('row', 'items-start')} data-a="up">
-            <span className={lc('medal', 'w-[44px] h-[44px] rounded-[12px]')}>
-              <svg aria-hidden="true" className={lc('i')}>
-                <use href="#i-sliders" />
-              </svg>
-            </span>
-            <div>
-              <p className={lc('t-title')}>
-                {c('workshop.you_stay_in_control')}
-              </p>
-              <p className={lc('t-meta')}>
-                {c('workshop.approve_reorder_or_replace_nothing_is_fi')}
-              </p>
-            </div>
-          </div>
-        </div>
-      </Abs>
-      <Abs markers="persp" w={934} x={466} y={166}>
-        <div className={lc('win')} data-a="win">
-          <div className={lc('wbar d-only', 'h-[62px]')}>
-            <span className={lc('dots3')}>
-              <i></i>
-              <i></i>
-              <i></i>
-            </span>
-            <span
-              className={lc(
-                'grow',
-                'text-foreground tracking-[.04em] [font-size:12px]',
-              )}
-            >
-              {c('workshop.workshop_untitled_session')}
-            </span>
-            <span className={lc('pill')}>{c('workshop.draft')}</span>
-          </div>
-          <div
-            className={lc(
-              'd-only',
-              'p-[18px_60px] [border-bottom:1px_solid_var(--border)]',
-            )}
-          >
-            <div className={lc('steps', 'grid-cols-[repeat(4,1fr)]')}>
-              <span className={lc('track')}></span>
-              <span
-                className={lc('fill', '[transform:scaleX(.66)]!')}
-                id="wsFill"
-              ></span>
-              <div className={lc('step done')}>
-                <b>{'\u2713'}</b>
-                {c('workshop.describe')}
-              </div>
-              <div className={lc('step done')}>
-                <b>{'\u2713'}</b>
-                {c('workshop.shape')}
-              </div>
-              <div className={lc('step now')}>
-                <b>{'3'}</b>
-                {c('workshop.compare')}
-              </div>
-              <div className={lc('step')}>
-                <b>{'4'}</b>
-                {c('workshop.approve')}
-              </div>
-            </div>
-          </div>
-          <div className={lc('row', 'items-stretch gap-[18px] p-[20px]')}>
-            <div className={lc('col d-only', 'w-[300px] gap-[12px]')}>
-              <span className={lc('label')}>{c('workshop.your_session')}</span>
-              <div
-                className={lc('soft', 'p-[14px] [font-size:14px] min-h-[96px]')}
-              >
-                <span id="typed">{c('workshop.prompt')}</span>
-                <span className="text-accent">{'\u258d'}</span>
-              </div>
-              <div className={lc('row', 'flex-wrap gap-[8px]')}>
-                <span className={lc('chip on')}>{c('workshop.calm')}</span>
-                <span className={lc('chip')}>{c('workshop.late_night')}</span>
-                <span className={lc('chip on')}>{'45 min'}</span>
-                <span className={lc('chip')}>
-                  {c('workshop.from_liked_songs')}
-                </span>
-              </div>
-              <span className={lc('label', 'mt-[6px]')}>
-                {c('workshop.signals')}
+          {POINTS.map(([icon, title, meta]) => (
+            <div className={lc('row', 'items-start')} data-a="up" key={title}>
+              <span className={lc('medal', 'w-[44px] h-[44px] rounded-[12px]')}>
+                <svg aria-hidden="true" className={lc('i')}>
+                  <use href={icon} />
+                </svg>
               </span>
-              <div className={lc('meter')}>
-                <div className={lc('row t-meta', 'justify-between')}>
-                  <span>{c('workshop.energy')}</span>
-                  <span>{c('workshop.low')}</span>
-                </div>
-                <div className={lc('prog')}>
-                  <i className="[transform:scaleX(.28)]!"></i>
-                </div>
-              </div>
-              <div className={lc('meter')}>
-                <div className={lc('row t-meta', 'justify-between')}>
-                  <span>{c('workshop.tempo')}</span>
-                  <span>{'88 BPM'}</span>
-                </div>
-                <div className={lc('prog')}>
-                  <i className="[transform:scaleX(.46)]!"></i>
-                </div>
-              </div>
-              <div className={lc('meter')}>
-                <div className={lc('row t-meta', 'justify-between')}>
-                  <span>{c('workshop.mood')}</span>
-                  <span>{c('workshop.warm')}</span>
-                </div>
-                <div className={lc('prog')}>
-                  <i className="[transform:scaleX(.72)]!"></i>
-                </div>
+              <div>
+                <p className={lc('t-title')}>{c(title)}</p>
+                <p className={lc('t-meta')}>{c(meta)}</p>
               </div>
             </div>
-            <div className={lc('col grow', 'gap-[10px]')}>
-              <div className={lc('row label', 'justify-between')}>
-                <span>{c('workshop.candidates')}</span>
-                <span>{c('workshop.ranked_by_fit')}</span>
-              </div>
-              <div className={lc('col', 'gap-[8px]')} id="stack">
-                <div className={lc('cand')}>
-                  <span className={lc('r')}>{'#1'}</span>
-                  <span className={lc('cv s cv1')}></span>
-                  <div className={lc('grow')}>
-                    <p className={lc('t-title')}>{DEMO_TRACKS.afterglow}</p>
-                    <p className={lc('t-meta')}>
-                      {c('workshop.nova_the_static_3_42')}
-                    </p>
-                  </div>
-                  <span className={lc('pill ok')}>{'96% fit'}</span>
-                </div>
-                <div className={lc('cand')}>
-                  <span className={lc('r')}>{'#2'}</span>
-                  <span className={lc('cv s cv2')}></span>
-                  <div className={lc('grow')}>
-                    <p className={lc('t-title')}>{DEMO_TRACKS.nightSignal}</p>
-                    <p className={lc('t-meta')}>
-                      {c('workshop.mira_sol_3_56')}
-                    </p>
-                  </div>
-                  <span className={lc('pill')}>{'91% fit'}</span>
-                </div>
-                <div className={lc('cand')}>
-                  <span className={lc('r')}>{'#3'}</span>
-                  <span className={lc('cv s cv3')}></span>
-                  <div className={lc('grow')}>
-                    <p className={lc('t-title')}>{DEMO_TRACKS.staticLines}</p>
-                    <p className={lc('t-meta')}>
-                      {c('workshop.kite_harbor_3_47')}
-                    </p>
-                  </div>
-                  <span className={lc('pill')}>{'88% fit'}</span>
-                </div>
-                <div className={lc('cand')}>
-                  <span className={lc('r')}>{'#4'}</span>
-                  <span className={lc('cv s cv4')}></span>
-                  <div className={lc('grow')}>
-                    <p className={lc('t-title')}>
-                      {DEMO_TRACKS.echoesInMotion}
-                    </p>
-                    <p className={lc('t-meta')}>
-                      {c('workshop.lumen_choir_4_21')}
-                    </p>
-                  </div>
-                  <span className={lc('pill')}>{'84% fit'}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
-            className={lc(
-              'row d-only',
-              'h-[56px] p-[0_20px] [border-top:1px_solid_var(--border)] gap-[10px]',
-            )}
-          >
-            <span className={lc('mono')}>{c('workshop.12_tracks_44_min')}</span>
-            <span className={lc('grow')}></span>
-            <a className={lc('btn btn-ghost btn-xs')} href="#workshop">
-              {c('workshop.swap_two')}
-            </a>
-            <a className={lc('btn btn-primary btn-xs')} href="#workshop">
-              {c('workshop.approve_playlist')}
-            </a>
-          </div>
+          ))}
         </div>
       </Abs>
-      <Abs extra="justify-between" markers="row d-only" w={1320} x={60} y={846}>
-        <span className={lc('disc')}>
-          {c('workshop.playlist_workshop_concept_demonstration')}
-        </span>
-        <span className="font-[500] [font-size:16px] leading-[1] font-[family-name:var(--font-display)] text-muted-foreground">
-          {c('workshop.your_mood_your_order_your_playlist')}
-        </span>
+      <Abs data-a="win" h={720} markers="win" w={964} x={436} y={110}>
+        <DemoFrame
+          className="flex h-full gap-5 p-5 max-[820px]:max-h-[52vh] max-[820px]:p-4"
+          label={playlist?.title ?? t('common.playlist')}
+        >
+          <div className="flex min-w-0 flex-1 flex-col gap-5">
+            <CollectionHeader
+              coverUrl={playlist?.cover}
+              description={playlist?.description}
+              meta={[t('common.songs.other', { count: tracks.length })]}
+              owner={DEMO_ME.username}
+              showBack={false}
+              title={playlist?.title ?? ''}
+              type={t('common.playlist')}
+            />
+            <TracksList
+              layout="rows"
+              onRemoveTrack={(trackId) =>
+                setTracks((list) => list.filter(({ id }) => id !== trackId))
+              }
+              removable
+              showDateAdded={false}
+              tracks={tracks}
+            />
+          </div>
+          <div className="w-80 shrink-0 border-l border-border pl-4 max-[820px]:hidden">
+            <DemoQueue />
+          </div>
+        </DemoFrame>
       </Abs>
     </SceneShell>
   )

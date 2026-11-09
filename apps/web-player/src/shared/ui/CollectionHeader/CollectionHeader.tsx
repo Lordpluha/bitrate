@@ -21,6 +21,8 @@ type CollectionHeaderProps = {
   washColor?: string
   /** Facts after the owner, joined as "· 24 songs, 1 h 32 min". */
   meta: string[]
+  /** The back arrow; a header shown outside the player's pages (the landing) leaves it out. */
+  showBack?: boolean
 }
 
 /** How much of the cover colour the wash starts from; the design's #4C1D95 over a violet cover. */
@@ -37,6 +39,7 @@ export const CollectionHeader = ({
   description,
   meta,
   owner,
+  showBack = true,
   title,
   type,
   washColor,
@@ -55,9 +58,11 @@ export const CollectionHeader = ({
       )}
       style={wash}
     >
-      <BackButton className="absolute top-0 left-0 flex size-8 items-center justify-center rounded-full bg-black/40 transition-colors hover:bg-black/60 md:top-7 md:left-7">
-        <ArrowLeft aria-hidden="true" className="text-white" size={20} />
-      </BackButton>
+      {showBack ? (
+        <BackButton className="absolute top-0 left-0 flex size-8 items-center justify-center rounded-full bg-black/40 transition-colors hover:bg-black/60 md:top-7 md:left-7">
+          <ArrowLeft aria-hidden="true" className="text-white" size={20} />
+        </BackButton>
+      ) : null}
 
       {coverUrl ? (
         <div className="flex justify-center">

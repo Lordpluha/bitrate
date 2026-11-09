@@ -12,16 +12,17 @@ import {
 
 /** Panels that scroll on their own and the physics fields keep their native gestures. */
 const OWN_GESTURES =
-  '.ai-panel, .hpanel, .drag-zone, .loose-ball, input, textarea'
+  '.ai-panel, .hpanel, .drag-zone, .loose-ball, .custom-scrollbar, input, textarea'
 const GLITCH_EVERY_MS = 3200
+/** How long the outgoing scene takes to clear. */
+const LEAVE_S = 0.32
 /** Lock after a scene change so one trackpad swipe moves one scene. */
 const SETTLE_S = 0.7
 
 type SceneDeps = {
   stage: Stage | null
-  drawWaves: () => void
   glitch: (el: Element) => void
-  /** Entrance hooks other engine modules own (physics resets, the workshop re-rank). */
+  /** Entrance hooks other engine modules own (physics resets). */
   onEnter: SceneEnterRegistry
 }
 
@@ -58,6 +59,12 @@ export const mountScenes = (ctx: EngineContext, deps: SceneDeps) => {
         ease: 'expo.out',
         stagger: 0.012,
       },
+      0.1,
+    )
+    tl.fromTo(
+      q('.drag-zone'),
+      { opacity: 0 },
+      { opacity: 1, duration: 0.5, ease: 'power2.out' },
       0.1,
     )
     tl.fromTo(
@@ -114,16 +121,32 @@ export const mountScenes = (ctx: EngineContext, deps: SceneDeps) => {
     entering = tl
     return tl
   }
+  /**
+   * Clears the scene the visitor leaves: quick and eased from the start, so nothing seems to
+   * linger; the interactive fields (the team jar, the partner spheres) fade with the copy.
+   */
   const leave = (s: HTMLElement, dir: number) =>
-    gsap.to(s.querySelectorAll('.char, [data-a]'), {
-      y: -60 * dir,
-      opacity: 0,
-      duration: 0.5,
-      ease: 'power3.in',
-      stagger: 0.004,
-    })
+    gsap
+      .timeline()
+      .to(
+        s.querySelectorAll('.char, [data-a]'),
+        {
+          y: -40 * dir,
+          opacity: 0,
+          duration: LEAVE_S,
+          ease: 'power2.in',
+          stagger: 0.002,
+        },
+        0,
+      )
+      .to(
+        s.querySelectorAll('.drag-zone'),
+        { opacity: 0, duration: LEAVE_S * 0.8, ease: 'power1.in' },
+        0,
+      )
 
   const mark = (i: number, duration: number) => {
+    root.dataset.scene = scenes[i]?.id ?? ''
     for (const [k, b] of dots.entries())
       b.setAttribute('aria-current', String(k === i))
     if (num) num.textContent = formatSceneNumber(i + 1)
@@ -163,7 +186,6 @@ export const mountScenes = (ctx: EngineContext, deps: SceneDeps) => {
     void leave(cur, dir).then(() => {
       cur.classList.remove('is-active')
       nxt.classList.add('is-active')
-      if (nxt.id === 'social') deps.drawWaves()
       enter(nxt, dir)
       gsap.delayedCall(SETTLE_S, () => {
         state.animating = false
@@ -201,7 +223,6 @@ export const mountScenes = (ctx: EngineContext, deps: SceneDeps) => {
   const start = (intro: Promise<void>) => {
     const ids = scenes.map((s) => s.id)
     const first = sceneFromHash({ hash: location.hash, ids })
-    deps.drawWaves()
     if (ctx.reduce) {
       root.classList.add('is-static')
       for (const s of scenes) s.classList.add('is-active')
@@ -262,7 +283,9 @@ export const mountScenes = (ctx: EngineContext, deps: SceneDeps) => {
       (e) => {
         if (
           e.target instanceof Element &&
-          e.target.closest('input, textarea, .ai-panel, [role="dialog"]')
+          e.target.closest(
+            'input, textarea, .ai-panel, [role="dialog"], [role="menu"]',
+          )
         )
           return
         if (e.metaKey || e.ctrlKey || e.altKey) return

@@ -9,6 +9,7 @@ import {
   type JarBox,
   jarBox,
 } from './jar'
+import { fitLabel } from './labelFit'
 import { LID, turnLid } from './lidThread'
 import { collideBalls, type PhysicsBall } from './physics'
 
@@ -61,9 +62,6 @@ export const mountTeam = (ctx: EngineContext) => {
   const hc = must({ root, selector: '#hc', type: HTMLElement })
   const jarEl = must({ root, selector: '#jar', type: HTMLElement })
   const lid = must({ root, selector: '#jarLid', type: HTMLButtonElement })
-  const footerLink = root.querySelector<HTMLAnchorElement>(
-    '[data-jar="footer"]',
-  )
 
   /* bubbles out of the jar live above every scene, in one fixed layer */
   const loose = document.createElement('div')
@@ -154,7 +152,11 @@ export const mountTeam = (ctx: EngineContext) => {
   const sizeBubble = (b: Bubble) => {
     b.el.style.width = `${b.r * 2}px`
     b.el.style.height = `${b.r * 2}px`
-    b.el.style.fontSize = b.d.kind === 'tech' ? `${12 * (b.r / b.d.r)}px` : ''
+    /* stack labels shrink to stay inside their bubble; people keep their big initials */
+    b.el.style.fontSize =
+      b.d.kind === 'tech'
+        ? `${fitLabel({ label: b.d.label, r: b.r, base: 12 * (b.r / b.d.r) })}px`
+        : ''
   }
 
   const layoutJar = () => {
@@ -207,7 +209,6 @@ export const mountTeam = (ctx: EngineContext) => {
     b.el.classList.add('loose-ball')
     loose.appendChild(b.el)
     sizeBubble(b)
-    syncControls()
   }
 
   /** Drops a loose bubble back into the jar when it falls through the open rim. */
@@ -223,7 +224,6 @@ export const mountTeam = (ctx: EngineContext) => {
     b.el.style.visibility = ''
     pit.insertBefore(b.el, hc)
     sizeBubble(b)
-    syncControls()
   }
 
   const hint = root.querySelector<HTMLElement>('#jarHint')
@@ -315,14 +315,6 @@ export const mountTeam = (ctx: EngineContext) => {
       })
   }
   const toggleLid = () => (TP.open ? screwOn() : unscrew())
-
-  const syncControls = () => {
-    const out = bubbles.filter((b) => b.place !== 'jar').length
-    if (footerLink) {
-      footerLink.hidden = out === 0
-      footerLink.textContent = `${ctx.copy('team.jar_in_footer', { count: out })} ↓`
-    }
-  }
 
   /** Re-drops the bubbles still in the jar from above it (on every visit to the scene). */
   const reset = () => {
@@ -688,7 +680,6 @@ export const mountTeam = (ctx: EngineContext) => {
     render()
     return { team: reset, cta: () => {} }
   }
-  syncControls()
   gsap.ticker.add(tick)
   ctx.onDispose(() => gsap.ticker.remove(tick))
   return { team: reset, cta: catchInFooter }

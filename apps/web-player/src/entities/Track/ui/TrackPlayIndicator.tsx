@@ -17,7 +17,7 @@ export const TrackPlayIndicator = ({
 }: TrackPlayIndicatorProps) => (
   <button
     aria-label={`${isCurrent && isPlaying ? 'Pause' : 'Play'} ${title}`}
-    className="relative flex items-center justify-center text-[13px] font-semibold max-[1024px]:hidden"
+    className="relative flex items-center justify-center text-[13px] font-semibold track-rows:hidden"
     onClick={onClick}
     type="button"
   >

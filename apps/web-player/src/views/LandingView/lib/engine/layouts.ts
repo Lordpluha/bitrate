@@ -81,19 +81,6 @@ const rect = ({
   return [x, y + h - d]
 }
 
-/** Discovery graph nodes and its centre (Luma Vale), in board pixels. */
-const NODES: readonly (readonly [number, number])[] = [
-  [468, 311],
-  [930, 311],
-  [245, 455],
-  [259, 626],
-  [960, 415],
-  [961, 578],
-  [618, 681],
-  [954, 680],
-]
-export const LUMA = [672, 534] as const
-
 const TAU = Math.PI * 2
 
 /** One particle layout per scene (same order as LANDING_SCENES), in board pixels (x, y, depth). */
@@ -111,7 +98,7 @@ export const createLayouts = (): Float32Array[] => [
           tilt: f < 0.81 ? 0.9 : -0.6,
         }),
   ),
-  /* 02 a 72-band spectrum along the floor + a signal line over the cards */
+  /* 02 a 72-band spectrum along the floor + a signal line over the player blocks */
   make((i, f) => {
     if (f < 0.7) {
       const bar = i % 72
@@ -124,7 +111,7 @@ export const createLayouts = (): Float32Array[] => [
     const x = rnd(i, 3) * BOARD.width
     return [x, 230 + Math.sin(x * 0.02) * 12, (rnd(i, 4) - 0.5) * 60]
   }),
-  /* 03 four concentric orbits — one per workshop step */
+  /* 03 four concentric orbits around the playlist and its queue */
   make((i) => {
     const ring = i % 4
     return ellipse({
@@ -143,7 +130,7 @@ export const createLayouts = (): Float32Array[] => [
     const col = i % cols
     return [col * (BOARD.width / (cols - 1)), 650 + row * 5, -900 + row * 26]
   }),
-  /* 05 three stacked version rings */
+  /* 05 three stacked rings behind the library grid */
   make((i) => {
     const k = i % 3
     return ellipse({
@@ -155,43 +142,41 @@ export const createLayouts = (): Float32Array[] => [
       tilt: 1.15,
     })
   }),
-  /* 06 the discovery graph: links from Luma Vale + clusters on every node */
-  make((i) => {
-    const a = NODES[i % 8] ?? LUMA
-    if (i % 3 === 0) {
-      const t = rnd(i, 12)
-      return [LUMA[0] + (a[0] - LUMA[0]) * t, LUMA[1] + (a[1] - LUMA[1]) * t, 0]
+  /* 06 outlines of the browse grid and the artists column, with a loose cloud between them */
+  make((i, f) => {
+    if (f < 0.5) {
+      const [x, y] = rect({ x: 48, y: 300, w: 900, h: 430, t: rnd(i, 12) })
+      return [x, y, (rnd(i, 13) - 0.5) * 30]
     }
-    const c = i % 9 === 0 ? LUMA : a
-    const r = 30 + rnd(i, 13) * 46
-    const t = rnd(i, 14) * TAU
-    return [
-      c[0] + Math.cos(t) * r,
-      c[1] - 11 + Math.sin(t) * r * 0.6,
-      (rnd(i, 15) - 0.5) * 40,
-    ]
+    if (f < 0.8) {
+      const [x, y] = rect({ x: 972, y: 130, w: 420, h: 600, t: rnd(i, 14) })
+      return [x, y, (rnd(i, 15) - 0.5) * 30]
+    }
+    const r = 40 + rnd(i, 22) * 120
+    const t = rnd(i, 27) * TAU
+    return [830 + Math.cos(t) * r, 160 + Math.sin(t) * r * 0.6, 0]
   }),
   /* 07 outlines of the desktop window and the phone, joined by an arc */
   make((i, f) => {
     if (f < 0.45) {
-      const [x, y] = rect({ x: 553, y: 116, w: 855, h: 716, t: rnd(i, 16) })
+      const [x, y] = rect({ x: 560, y: 116, w: 848, h: 716, t: rnd(i, 16) })
       return [x, y, 0]
     }
     if (f < 0.75) {
-      const [x, y] = rect({ x: 379, y: 196, w: 245, h: 595, t: rnd(i, 17) })
+      const [x, y] = rect({ x: 352, y: 196, w: 300, h: 600, t: rnd(i, 17) })
       return [x, y, 20]
     }
     const t = rnd(i, 18)
-    return [568 + 114 * t + Math.sin(t * 3.1) * 30, 728 - 150 * t * t, 10]
+    return [502 + 200 * t + Math.sin(t * 3.1) * 30, 790 - 150 * t * t, 10]
   }),
-  /* 08 conversation ripples from Maya's card */
+  /* 08 conversation ripples from the Online now card */
   make((i) => {
     const ring = i % 9
     const t = (rnd(i, 19) - 0.5) * Math.PI * 1.2
     const r = 70 + ring * 70
     return [
-      200 + Math.cos(t) * r,
-      590 + Math.sin(t) * r,
+      213 + Math.cos(t) * r,
+      558 + Math.sin(t) * r,
       (rnd(i, 20) - 0.5) * 20,
     ]
   }),
