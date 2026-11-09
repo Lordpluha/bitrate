@@ -130,7 +130,8 @@ export const CHROME: readonly LandingRule[] = [
   ],
   [
     'dots',
-    '[&_button:hover_span]:opacity-[1] [&_button[aria-current=true]_span]:opacity-[1]',
+    /* labels show on hover only: the real blocks reach the right edge, and the counter names the scene */
+    '[&_button:hover_span]:opacity-[1] [&_button:focus-visible_span]:opacity-[1]',
   ],
   /* the label sits over real blocks reaching the right edge: give it a glass backing */
   [

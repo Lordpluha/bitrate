@@ -16,6 +16,11 @@ import { Pause, Play } from 'lucide-react'
 
 type DemoPlayerBarProps = {
   className?: string
+  /**
+   * For a narrow window: a narrower track column, tighter gaps, and no time labels or volume
+   * slider (mute stays), so the controls keep their room.
+   */
+  compact?: boolean
 }
 
 /**
@@ -24,7 +29,10 @@ type DemoPlayerBarProps = {
  * `<bitrate-player>` element, which the landing never mounts (it would stream audio), so the
  * centre is a Play toggle on the same store and the paused position.
  */
-export const DemoPlayerBar = ({ className }: DemoPlayerBarProps) => {
+export const DemoPlayerBar = ({
+  className,
+  compact = false,
+}: DemoPlayerBarProps) => {
   const { t } = useI18n()
   const {
     changeTrack,
@@ -49,10 +57,11 @@ export const DemoPlayerBar = ({ className }: DemoPlayerBarProps) => {
     <div
       className={cn(
         'flex h-22 items-center gap-6 rounded-2xl border border-border bg-card px-5.5 shadow-2xl',
+        compact && 'gap-4 px-4',
         className,
       )}
     >
-      <div className="w-64 min-w-0 shrink-0">
+      <div className={cn('w-64 min-w-0 shrink-0', compact && 'w-52')}>
         <TrackInfo
           artist={artist?.username ?? ''}
           coverUrl={getTrackCoverUrl(currentTrack.cover)}
@@ -97,7 +106,7 @@ export const DemoPlayerBar = ({ className }: DemoPlayerBarProps) => {
           />
         </div>
         <div className="flex w-full max-w-120 items-center gap-2 text-[11px] text-muted-foreground tabular-nums">
-          <span className="min-w-7 text-right">
+          <span className={cn('min-w-7 text-right', compact && 'hidden')}>
             {formatDuration(currentTime)}
           </span>
           <span className="relative h-0.75 flex-1 rounded-full bg-progress-track">
@@ -106,11 +115,19 @@ export const DemoPlayerBar = ({ className }: DemoPlayerBarProps) => {
               style={{ width: `${progress}%` }}
             />
           </span>
-          <span className="min-w-7">{formatDuration(duration)}</span>
+          <span className={cn('min-w-7', compact && 'hidden')}>
+            {formatDuration(duration)}
+          </span>
         </div>
       </div>
 
-      <div className="flex shrink-0 justify-end">
+      <div
+        className={cn(
+          'flex shrink-0 justify-end',
+          /* the volume slider is the widest action; mute still works */
+          compact && '[&_input[type=range]]:hidden [&_.group]:hidden',
+        )}
+      >
         <PlayerActions onVolumeChange={setVolume} volume={volume} />
       </div>
     </div>

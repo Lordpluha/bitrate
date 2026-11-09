@@ -149,7 +149,7 @@ export const createLayouts = (): Float32Array[] => [
       return [x, y, (rnd(i, 13) - 0.5) * 30]
     }
     if (f < 0.8) {
-      const [x, y] = rect({ x: 972, y: 130, w: 420, h: 600, t: rnd(i, 14) })
+      const [x, y] = rect({ x: 972, y: 118, w: 420, h: 656, t: rnd(i, 14) })
       return [x, y, (rnd(i, 15) - 0.5) * 30]
     }
     const r = 40 + rnd(i, 22) * 120
@@ -159,7 +159,7 @@ export const createLayouts = (): Float32Array[] => [
   /* 07 outlines of the desktop window and the phone, joined by an arc */
   make((i, f) => {
     if (f < 0.45) {
-      const [x, y] = rect({ x: 560, y: 116, w: 848, h: 716, t: rnd(i, 16) })
+      const [x, y] = rect({ x: 676, y: 116, w: 732, h: 716, t: rnd(i, 16) })
       return [x, y, 0]
     }
     if (f < 0.75) {

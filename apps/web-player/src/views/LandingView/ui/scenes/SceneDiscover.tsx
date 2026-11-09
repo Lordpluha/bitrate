@@ -47,7 +47,7 @@ export const SceneDiscover = () => {
           </Suspense>
         </DemoFrame>
       </Abs>
-      <Abs data-a="win" h={600} markers="win d-only" w={420} x={972} y={130}>
+      <Abs data-a="win" h={656} markers="win d-only" w={420} x={972} y={118}>
         <DemoFrame className="h-full p-6" label={t('artist.fansAlsoLike')}>
           <SectionHeader title={t('artist.fansAlsoLike')} />
           <div className="grid grid-cols-2 gap-4">

@@ -12,6 +12,7 @@ import type { LandingKey } from '../../model/messages/en'
 import { useLandingCopy } from '../../model/useLandingCopy'
 import { DemoFrame } from '../demo/DemoFrame'
 import { DemoPlayerBar } from '../demo/DemoPlayerBar'
+import { DeviceScreen } from '../demo/DeviceScreen'
 import { Abs, SceneShell } from './parts'
 
 /** The scene's two points: icon id, title and line. */
@@ -19,6 +20,9 @@ const POINTS: readonly (readonly [string, LandingKey, LandingKey])[] = [
   ['#i-layers', 'devices.now_playing_panel', 'devices.now_playing_panel_meta'],
   ['#i-phone', 'devices.mobile_island', 'devices.mobile_island_meta'],
 ]
+
+/** The phone the island and sidebar are designed for (CSS pixels). */
+const PHONE_WIDTH = 390
 
 /** Scene "Devices": the desktop player with its Now Playing panel, and the phone's island. */
 export const SceneDevices = () => {
@@ -64,8 +68,8 @@ export const SceneDevices = () => {
         data-a="up"
         extra="justify-end"
         markers="row d-only"
-        w={848}
-        x={560}
+        w={732}
+        x={676}
         y={78}
       >
         <span className={lc('live')}>
@@ -78,13 +82,13 @@ export const SceneDevices = () => {
           </span>
         </span>
       </Abs>
-      <Abs data-a="win" h={716} markers="win d-only" w={848} x={560} y={116}>
+      <Abs data-a="win" h={716} markers="win d-only" w={732} x={676} y={116}>
         <DemoFrame
           className="flex h-full flex-col gap-4 p-4"
           label={t('queue.nowPlaying')}
         >
           <div className="flex min-h-0 flex-1 gap-4">
-            <div className="flex min-w-0 flex-1 flex-col overflow-hidden pt-2 pl-[136px]">
+            <div className="flex min-w-0 flex-1 flex-col overflow-hidden pt-2">
               <SectionHeader title={playlist?.title ?? t('common.playlist')} />
               <TracksList
                 layout="rows"
@@ -96,7 +100,7 @@ export const SceneDevices = () => {
               <RightSidebar />
             </div>
           </div>
-          <DemoPlayerBar className="ml-[96px] shrink-0 shadow-none" />
+          <DemoPlayerBar className="shrink-0 shadow-none" compact />
         </DemoFrame>
       </Abs>
       <Abs
@@ -112,13 +116,16 @@ export const SceneDevices = () => {
           className="h-full rounded-[24px] max-[820px]:mx-auto max-[820px]:h-[56vh] max-[820px]:max-w-[300px]"
           label={t('nav.main')}
         >
-          <div className="h-full overflow-hidden pb-20">
-            <RightSidebar />
-          </div>
-          <MobileIsland
-            className="absolute inset-x-2 bottom-2 z-10"
-            onExpand={() => undefined}
-          />
+          {/* laid out at a real phone's width, then scaled into the frame */}
+          <DeviceScreen width={PHONE_WIDTH}>
+            <div className="h-full overflow-hidden pb-24">
+              <RightSidebar />
+            </div>
+            <MobileIsland
+              className="absolute inset-x-4 bottom-4 z-10"
+              onExpand={() => undefined}
+            />
+          </DeviceScreen>
         </DemoFrame>
       </Abs>
     </SceneShell>
