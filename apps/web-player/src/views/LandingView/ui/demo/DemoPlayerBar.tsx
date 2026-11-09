@@ -8,17 +8,21 @@ import { useI18n } from '@shared/i18n'
 import { formatDuration } from '@shared/utils/apiHelpers'
 import { getTrackCoverUrl } from '@shared/utils/mediaUrl'
 import {
+  type PlayerAction,
   PlayerActions,
   TrackInfo,
   TrackNavigationButton,
 } from '@widgets/Player'
 import { Pause, Play } from 'lucide-react'
 
+/** What the compact bar leaves out: the bar stays about playing, not managing. */
+const COMPACT_HIDDEN: readonly PlayerAction[] = ['queue', 'floating']
+
 type DemoPlayerBarProps = {
   className?: string
   /**
-   * For a narrow window: a narrower track column, tighter gaps, and no time labels or volume
-   * slider (mute stays), so the controls keep their room.
+   * For a narrow window: a narrower track column, tighter gaps, no time labels, and no queue
+   * or floating mini player among the actions, so the controls keep their room.
    */
   compact?: boolean
 }
@@ -121,14 +125,12 @@ export const DemoPlayerBar = ({
         </div>
       </div>
 
-      <div
-        className={cn(
-          'flex shrink-0 justify-end',
-          /* the volume slider is the widest action; mute still works */
-          compact && '[&_input[type=range]]:hidden [&_.group]:hidden',
-        )}
-      >
-        <PlayerActions onVolumeChange={setVolume} volume={volume} />
+      <div className="flex shrink-0 justify-end">
+        <PlayerActions
+          hide={compact ? COMPACT_HIDDEN : undefined}
+          onVolumeChange={setVolume}
+          volume={volume}
+        />
       </div>
     </div>
   )

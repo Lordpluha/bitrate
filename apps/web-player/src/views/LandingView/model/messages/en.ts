@@ -238,7 +238,7 @@ export const en = {
     'On a wide screen Now Playing sits beside your music. On a phone the island keeps the player one tap away.',
   'devices.now_playing_panel': 'Now Playing panel',
   'devices.now_playing_panel_meta':
-    'Cover, up next and the artist, next to your library.',
+    'The cover, the track and its artist, next to your library.',
   'devices.mobile_island': 'Mobile island',
   'devices.mobile_island_meta':
     'Home, Search, Library and the playing track in one bar.',

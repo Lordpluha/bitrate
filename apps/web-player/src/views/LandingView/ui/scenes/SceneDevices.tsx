@@ -97,7 +97,7 @@ export const SceneDevices = () => {
               />
             </div>
             <div className="w-70 shrink-0 overflow-hidden rounded-[14px] bg-card">
-              <RightSidebar />
+              <RightSidebar showQueue={false} />
             </div>
           </div>
           <DemoPlayerBar className="shrink-0 shadow-none" compact />
@@ -113,7 +113,7 @@ export const SceneDevices = () => {
         y={196}
       >
         <DemoFrame
-          className="h-full rounded-[24px] max-[820px]:mx-auto max-[820px]:h-[56vh] max-[820px]:max-w-[300px]"
+          className="h-full rounded-[24px] max-[820px]:mx-auto max-[820px]:h-[min(56vh,calc(100svh-360px))] max-[820px]:min-h-[260px] max-[820px]:max-w-[300px]"
           label={t('nav.main')}
         >
           {/* laid out at a real phone's width, then scaled into the frame */}

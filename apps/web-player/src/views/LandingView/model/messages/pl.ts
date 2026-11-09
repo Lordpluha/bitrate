@@ -237,7 +237,7 @@ export const pl: LandingCatalog = {
     'Na szerokim ekranie „Teraz gra” jest obok twojej muzyki. Na telefonie wyspa trzyma odtwarzacz na jedno dotknięcie.',
   'devices.now_playing_panel': 'Panel „Teraz gra”',
   'devices.now_playing_panel_meta':
-    'Okładka, co dalej i artysta — obok biblioteki.',
+    'Okładka, utwór i jego artysta — obok twojej biblioteki.',
   'devices.mobile_island': 'Wyspa mobilna',
   'devices.mobile_island_meta':
     'Start, Szukaj, Biblioteka i grający utwór na jednym pasku.',
