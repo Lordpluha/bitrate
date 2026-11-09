@@ -414,6 +414,13 @@ const SEARCH = {
 /** [method, path pattern, handler(match, url) => body | { status, body }]. */
 const ROUTES = [
   ['GET', /^\/api\/v1\/auth\/me$/, () => ME],
+  /* the landing's footer status and hero totals */
+  ['GET', /^\/api\/v1\/health\/ready$/, () => ({ status: 'ok' })],
+  [
+    'GET',
+    /^\/api\/v1\/platform\/stats$/,
+    () => ({ artists: 48, listeners: 12_400, tracks: 960 }),
+  ],
   [
     'GET',
     /^\/api\/v1\/auth\/sessions$/,
