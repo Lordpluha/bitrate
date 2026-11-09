@@ -6,6 +6,11 @@ name: "[monitoring] Health Reusable"
 
 on:
   workflow_call:
+    secrets:
+      CF_ACCESS_CLIENT_ID:
+        required: false
+      CF_ACCESS_CLIENT_SECRET:
+        required: false
 
 permissions:
   contents: read
