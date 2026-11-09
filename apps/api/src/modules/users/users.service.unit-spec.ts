@@ -1,6 +1,7 @@
 import { LEGAL_VERSION } from '@common/legal'
 import type { StorageService } from '@infra/storage/storage.types'
 import { beforeEach, describe, expect, it, jest } from '@jest/globals'
+import { NotFoundException } from '@nestjs/common'
 import { type PrismaMock, prismaMock, resetPrismaMock } from '@test/mocks'
 import { buildUser } from './__tests__/fixtures/users.fixtures'
 import { PUBLIC_USER_SELECT, SELF_USER_SELECT } from './orm'
@@ -120,6 +121,12 @@ describe('UsersService', () => {
       select: PUBLIC_USER_SELECT,
     })
     expect(result).toBe(user)
+  })
+
+  it('getByUsername should throw NotFoundException for an unknown or deleted username', async () => {
+    prisma.user.findFirst.mockResolvedValue(null)
+
+    await expect(service.getByUsername('nobody')).rejects.toBeInstanceOf(NotFoundException)
   })
 
   it('findAll should use pagination', async () => {

@@ -81,7 +81,13 @@ export const buildHeaderSuggestions = ({
   const media: HeaderSuggestion[] = results
     ? [
         ...results.tracks.slice(0, 3).map((track) => ({
-          ...(track.artistId ? { href: ROUTES.artist(track.artistId) } : {}),
+          ...(track.artistId
+            ? {
+                href: track.artistName
+                  ? ROUTES.artist(track.artistName)
+                  : ROUTES.artistById(track.artistId),
+              }
+            : {}),
           image: getTrackCoverUrl(track.cover),
           subtitle: `${labels.song} • ${track.artistName || labels.unknown}`,
           title: track.title,

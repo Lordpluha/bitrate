@@ -32,7 +32,7 @@ export const toTopResultCard = (result: SearchResult): TopResultCard => {
     case 'artists':
       return {
         ...common,
-        href: ROUTES.artist(result.id),
+        href: ROUTES.artist(result.title),
         image: getArtistAvatarUrl(result.image),
         kind: 'Artist',
         playKind: undefined,
@@ -60,7 +60,11 @@ export const toTopResultCard = (result: SearchResult): TopResultCard => {
       /* There is no track page, so a song points at its artist. */
       return {
         ...common,
-        href: result.artistId ? ROUTES.artist(result.artistId) : undefined,
+        href: result.subtitle
+          ? ROUTES.artist(result.subtitle)
+          : result.artistId
+            ? ROUTES.artistById(result.artistId)
+            : undefined,
         image: getTrackCoverUrl(result.image),
         kind: 'Song',
         playKind: 'track',

@@ -66,7 +66,7 @@ export const ActivityPage = () => {
               <Link
                 aria-label={user.username}
                 className="relative size-11 shrink-0 overflow-hidden rounded-full bg-secondary"
-                href={ROUTES.user(user.id)}
+                href={ROUTES.user(user.username)}
               >
                 <MediaImage
                   alt=""
@@ -82,7 +82,7 @@ export const ActivityPage = () => {
                 <p className="truncate text-muted-foreground">
                   <Link
                     className="font-semibold text-foreground hover:underline"
-                    href={ROUTES.user(user.id)}
+                    href={ROUTES.user(user.username)}
                   >
                     {user.username}
                   </Link>{' '}
@@ -94,7 +94,11 @@ export const ActivityPage = () => {
                     {' · '}
                     <Link
                       className="hover:text-foreground hover:underline"
-                      href={ROUTES.artist(track.artistId)}
+                      href={
+                        track.artist?.username
+                          ? ROUTES.artist(track.artist.username)
+                          : ROUTES.artistById(track.artistId)
+                      }
                     >
                       {track.artist?.username ?? (
                         <ArtistName artistId={track.artistId} />

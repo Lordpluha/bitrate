@@ -34,7 +34,7 @@ export const ProfileFollowingUsersSection = ({
             <li key={user.id}>
               <Link
                 className="flex w-16 flex-col items-center gap-1.5 rounded-md outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                href={ROUTES.user(user.id)}
+                href={ROUTES.user(user.username)}
               >
                 <MediaImage
                   alt=""

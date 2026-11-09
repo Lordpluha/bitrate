@@ -75,7 +75,11 @@ export const CurrentPlaylist = ({ onCollapse }: CurrentPlaylistProps) => {
           </p>
           <Link
             className="truncate text-[13px] text-muted-foreground transition-colors hover:text-foreground hover:underline focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            href={ROUTES.artist(currentTrack.artistId)}
+            href={
+              artist
+                ? ROUTES.artist(artist.username)
+                : ROUTES.artistById(currentTrack.artistId)
+            }
           >
             {artistName}
           </Link>
