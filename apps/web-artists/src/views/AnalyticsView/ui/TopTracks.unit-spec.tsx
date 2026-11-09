@@ -43,7 +43,7 @@ function show() {
   )
   const { rerender } = render(view(overview))
   return Object.assign(userEvent.setup(), {
-    showPeriod: (days: number) =>
+    showPeriod: (days: ArtistAnalytics['period']['days']) =>
       rerender(view({ ...overview, period: { ...overview.period, days } })),
   })
 }
