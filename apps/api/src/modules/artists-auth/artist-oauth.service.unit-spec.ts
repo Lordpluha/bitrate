@@ -146,7 +146,26 @@ describe('ArtistOAuthService', () => {
 
     beforeEach(() => {
       prisma.artistOAuthAccount.findUnique.mockResolvedValue(null)
-      prisma.artist.findUnique.mockResolvedValue(null)
+      prisma.artist.findFirst.mockResolvedValue(null)
+    })
+
+    it('refuses to auto-link an existing account whose address differs only in case', async () => {
+      prisma.artist.findFirst.mockResolvedValue({ id: 'artist-1', deletedAt: null } as never)
+
+      await expect(
+        findOrCreate(
+          'google',
+          { ...profile, email: 'New@Example.com' },
+          {
+            acceptLegal: true,
+            acceptArtistAgreement: true,
+          },
+        ),
+      ).rejects.toThrow('already exists')
+      expect(prisma.artist.findFirst).toHaveBeenCalledWith({
+        where: { email: { equals: 'New@Example.com', mode: 'insensitive' } },
+      })
+      expect(prisma.artist.create).not.toHaveBeenCalled()
     })
 
     it.each([
