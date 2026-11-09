@@ -16,6 +16,7 @@ import {
 import { Prisma } from '@prisma/client'
 import { AddTracksDto, CreatePlaylistDto, UpdatePlaylistDto } from './dtos'
 import { PlaylistEntity } from './entities'
+import { PLAYLIST_ERRORS } from './errors/playlist.errors'
 
 /** Leading tracks listed per owned playlist, enough for a cover mosaic; `_count` has the total. */
 const MINE_PREVIEW_TRACKS = 4
@@ -255,7 +256,10 @@ export class PlaylistsService {
     return { data, total, page: pagination.page, limit: pagination.limit }
   }
 
-  /** Appends ready tracks to the user's own playlist. */
+  /**
+   * Appends ready tracks to the user's own playlist, skipping the ones it already has; a batch
+   * with nothing new is a 409 so the client can say the track is already there.
+   */
   async addTracks(userId: UserEntity['id'], id: PlaylistEntity['id'], dto: AddTracksDto) {
     await this.requireOwned(userId, id, 'hide')
     const uniqueTrackIds = [...new Set(dto.trackIds)]
@@ -327,8 +331,8 @@ export class PlaylistsService {
         await this.append(userId, id, trackIds)
         return
       } catch (error: unknown) {
-        // A track may sit in a playlist more than once, so a unique conflict here is always a
-        // concurrent append taking the same positions; like a serialization failure, retry it.
+        // Tracks are not unique per playlist in the schema, so a unique conflict here is always
+        // a concurrent append taking the same positions; like a serialization failure, retry it.
         if (!(isPrismaP2002(error) || isPrismaP2034(error))) throw error
         if (attempt === ADD_TRACKS_ATTEMPTS) {
           throw new ConflictException('Playlist was changed concurrently, please retry')
@@ -337,14 +341,28 @@ export class PlaylistsService {
     }
   }
 
-  /** Writes the tracks after the current last position in one serializable transaction. */
+  /**
+   * Writes the tracks the playlist does not have yet after the current last position, in one
+   * serializable transaction: a playlist holds each track once, and two concurrent adds of the
+   * same track fail serialization and retry into the check instead of both landing.
+   */
   private async append(
     userId: UserEntity['id'],
     id: PlaylistEntity['id'],
-    trackIds: string[],
+    requestedTrackIds: string[],
   ): Promise<void> {
     await this.prisma.$transaction(
       async (tx) => {
+        const present = await tx.playlistTrack.findMany({
+          where: { playlistId: id, trackId: { in: requestedTrackIds } },
+          select: { trackId: true },
+        })
+        const presentIds = new Set(present.map(({ trackId }) => trackId))
+        const trackIds = requestedTrackIds.filter((trackId) => !presentIds.has(trackId))
+        if (trackIds.length === 0) {
+          throw new ConflictException(PLAYLIST_ERRORS.TRACK_ALREADY_ADDED)
+        }
+
         const lastTrack = await tx.playlistTrack.findFirst({
           where: { playlistId: id },
           orderBy: { position: 'desc' },
