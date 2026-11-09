@@ -51,6 +51,26 @@ describe('containInJar', () => {
   })
 })
 
+describe('containInJar while the jar is shaken', () => {
+  const jar = jarBox({ w: 880, h: 780 })
+
+  it('throws the bubbles with the walls and floor that hit them', () => {
+    const sideways = ball(jar.left + 30, 500, 0, 0)
+    containInJar({ ball: sideways, jar, open: false, wall: { x: 900, y: 0 } })
+    expect(sideways.v.x).toBeGreaterThan(900)
+
+    const lifted = ball(440, jar.bottom - 30, 0, 0)
+    containInJar({ ball: lifted, jar, open: true, wall: { x: 0, y: -1400 } })
+    expect(lifted.v.y).toBeLessThan(-1400)
+  })
+
+  it('does not pull a bubble along with a wall moving away from it', () => {
+    const b = ball(jar.left + 30, 500, 0, 0)
+    containInJar({ ball: b, jar, open: false, wall: { x: -900, y: 0 } })
+    expect(b.v.x).toBe(0)
+  })
+})
+
 describe('hasLeftJar', () => {
   const jar = jarBox({ w: 880, h: 780 })
 

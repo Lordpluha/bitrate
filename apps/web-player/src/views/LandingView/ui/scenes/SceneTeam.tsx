@@ -39,28 +39,6 @@ export const SceneTeam = () => {
           </span>
         </div>
         <div className={lc('jar-controls')} data-a="up">
-          <button
-            className={lc('btn btn-ghost btn-sm')}
-            data-jar="toggle"
-            type="button"
-          >
-            {c('team.jar_open')}
-          </button>
-          <button
-            className={lc('btn btn-ghost btn-sm')}
-            data-jar="shake"
-            type="button"
-          >
-            {c('team.jar_shake')}
-          </button>
-          <button
-            className={lc('btn btn-ghost btn-sm')}
-            data-jar="collect"
-            hidden
-            type="button"
-          >
-            {c('team.jar_collect')}
-          </button>
           <a
             className={lc('jar-footer mono')}
             data-jar="footer"

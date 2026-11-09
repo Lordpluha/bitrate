@@ -14,7 +14,7 @@ export const PHYSICS: readonly LandingRule[] = [
   /* the jar: glass walls, a rounded base and a lip at the rim */
   [
     'jar',
-    'absolute box-border pointer-events-none border-[3px] border-t-0 border-solid border-[color:color-mix(in_srgb,var(--color-foreground)_24%,transparent)] rounded-[0_0_64px_64px] bg-[image:linear-gradient(90deg,color-mix(in_srgb,var(--color-foreground)_7%,transparent),transparent_22%,transparent_78%,color-mix(in_srgb,var(--color-foreground)_9%,transparent))] [box-shadow:inset_0_-30px_60px_-30px_color-mix(in_srgb,var(--color-primary)_30%,transparent),0_30px_60px_-40px_var(--shadow)]',
+    'absolute box-border touch-none [html:not(.has-cursor)_&]:cursor-grab [html:not(.has-cursor)_&:active]:cursor-grabbing border-[3px] border-t-0 border-solid border-[color:color-mix(in_srgb,var(--color-foreground)_24%,transparent)] rounded-[0_0_64px_64px] bg-[image:linear-gradient(90deg,color-mix(in_srgb,var(--color-foreground)_7%,transparent),transparent_22%,transparent_78%,color-mix(in_srgb,var(--color-foreground)_9%,transparent))] [box-shadow:inset_0_-30px_60px_-30px_color-mix(in_srgb,var(--color-primary)_30%,transparent),0_30px_60px_-40px_var(--shadow)]',
   ],
   [
     'jar',

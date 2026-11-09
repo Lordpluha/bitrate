@@ -17,6 +17,9 @@ const MIN_SCALE = 0.42
 const WALL_BOUNCE = 0.4
 const FLOOR_BOUNCE = 0.32
 const FLOOR_FRICTION = 0.94
+/** A shaken wall hands a bubble a bit more than its own speed, as glass flicks a ball. */
+const WALL_PUSH = 1.25
+const STILL = { x: 0, y: 0 } as const
 
 /** Where the jar sits in a pit of this size: centred, standing on the pit floor. */
 export const jarBox = ({ w, h }: { w: number; h: number }): JarBox => {
@@ -39,30 +42,34 @@ export const containInJar = ({
   ball,
   jar,
   open,
+  wall = STILL,
 }: {
   ball: PhysicsBall
   jar: JarBox
   open: boolean
+  /** How fast the jar itself is moving (a hand shaking it), in jar pixels per second. */
+  wall?: { x: number; y: number }
 }) => {
   const { p, v, r } = ball
   /* above the rim of an open jar there are no walls: the ball is on its way out */
   if (open && p.y < jar.top) return
+  /* a wall moving into a bubble throws it a little faster than the wall itself */
   if (p.x < jar.left + r) {
     p.x = jar.left + r
-    v.x = Math.abs(v.x) * WALL_BOUNCE
+    v.x = Math.max(Math.abs(v.x) * WALL_BOUNCE, wall.x * WALL_PUSH)
   }
   if (p.x > jar.right - r) {
     p.x = jar.right - r
-    v.x = -Math.abs(v.x) * WALL_BOUNCE
+    v.x = Math.min(-Math.abs(v.x) * WALL_BOUNCE, wall.x * WALL_PUSH)
   }
   if (p.y > jar.bottom - r) {
     p.y = jar.bottom - r
-    v.y = -Math.abs(v.y) * FLOOR_BOUNCE
+    v.y = Math.min(-Math.abs(v.y) * FLOOR_BOUNCE, wall.y * WALL_PUSH)
     v.x *= FLOOR_FRICTION
   }
   if (!open && p.y < jar.top + r) {
     p.y = jar.top + r
-    v.y = Math.abs(v.y) * WALL_BOUNCE
+    v.y = Math.max(Math.abs(v.y) * WALL_BOUNCE, wall.y * WALL_PUSH)
   }
 }
 
