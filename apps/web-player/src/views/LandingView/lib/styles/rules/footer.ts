@@ -55,4 +55,9 @@ export const FOOTER_LINKS: readonly LandingRule[] = [
     'f-gh',
     'inline-flex gap-[6px] items-center [&_.i]:w-[15px] [&_.i]:h-[15px]',
   ],
+  /* a scene's secondary call to action: a quiet link with room for a thumb */
+  [
+    'try-link',
+    'inline-flex gap-[8px] items-center min-h-[44px] font-[600] [font-size:14px] leading-[1] font-[family-name:var(--font-body)] text-accent no-underline [&_.i]:w-[16px] [&_.i]:h-[16px] [&_.i]:[transition:transform_0.2s] [&:hover_.i]:[transform:translateX(3px)] [&:hover]:underline [&:hover]:underline-offset-4',
+  ],
 ]

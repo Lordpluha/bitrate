@@ -34,9 +34,6 @@ export const en = {
   'library.artists': 'Artists',
   'library.title': 'TITLE',
   'library.luma_vale': 'Luma Vale',
-  'discover.follow_the_sound': 'Follow the sound',
-  'discover.follow_the': 'Follow the',
-  'discover.sound': 'sound.',
   'devices.same_queue_new_scene': 'Same queue, new scene',
   'devices.same_queue': 'Same queue.',
   'devices.new_scene': 'New scene.',
@@ -86,7 +83,6 @@ export const en = {
   'chrome.nav': 'Primary',
   'chrome.web_player': 'Web player',
   'chrome.your_library': 'Your library',
-  'chrome.discover': 'Discover',
   'chrome.features': 'Features',
   'chrome.theme': 'Theme',
   'chrome.dark': 'Dark',
@@ -159,10 +155,8 @@ export const en = {
   'chrome.cursor_seek': 'Seek',
   'scene.hero': 'Signal',
   'scene.loop': 'Loop',
-  'scene.workshop': 'Workshop',
   'scene.rules': 'Your rules',
   'scene.library': 'Library',
-  'scene.discover': 'Discover',
   'scene.devices': 'Devices',
   'scene.social': 'Social',
   'scene.partners': 'Partners',
@@ -210,29 +204,12 @@ export const en = {
   'hero.screen_queue': 'Queue',
   'hero.screen_now': 'Now playing',
   'hero.screen_library': 'Library',
-  'workshop.playlists_your_order': 'Playlists in your order',
-  'workshop.playlists_in': 'Playlists in',
-  'workshop.your_order': 'your order.',
-  'workshop.lede':
-    'Collect tracks into playlists, line up what plays next and change your mind at any time.',
-  'workshop.build_playlists': 'Build playlists',
-  'workshop.build_playlists_meta':
-    'Keep the tracks that fit, remove the ones that no longer do.',
-  'workshop.line_up_next': 'Line up what comes next',
-  'workshop.line_up_next_meta':
-    'The queue shows what is playing and what follows it.',
-  'workshop.play_any_row': 'Play from any row',
-  'workshop.play_any_row_meta':
-    'Start a track in the playlist or jump ahead in the queue.',
   'rules.lede_settings':
     'Switch the theme and language, make the library compact, keep Now Playing beside the music. Try it here.',
   'rules.appearance': 'Appearance',
   'rules.theme': 'Theme',
   'library.lede':
-    'Your playlists, liked songs and artists in one list. Filter it, sort it, open anything.',
-  'discover.browse_then_go_deeper': 'Browse, then go deeper',
-  'discover.lede':
-    'Browse genres, open an artist and follow the ones you want to hear more from.',
+    'Your playlists, liked songs and artists in one list — and genres and artists to find what comes next.',
   'devices.desktop_and_phone': 'Desktop and phone',
   'devices.lede':
     'On a wide screen Now Playing sits beside your music. On a phone the island keeps the player one tap away.',
@@ -245,6 +222,10 @@ export const en = {
   'social.lede':
     'See who is online and what your friends played, then press play on it yourself.',
   'devices.now_playing_live': 'NOW PLAYING',
+  'loop.lede':
+    'Save what you love, line up what plays next and come back through Recents — one listening loop.',
+  'chrome.try_in_player': 'Try it in the player',
+  'chrome.open_in_player': 'Open it in the player',
 } as const
 
 export type LandingKey = keyof typeof en

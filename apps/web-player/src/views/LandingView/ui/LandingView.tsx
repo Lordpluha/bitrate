@@ -10,8 +10,8 @@ import { AssistantPanel } from './AssistantPanel'
 import { LandingDemoProvider } from './demo/LandingDemoProvider'
 import { LandingHeader } from './LandingHeader'
 import { LandingIcons } from './LandingIcons'
+import { VisitorContext } from './scenes/parts'
 import { SceneDevices } from './scenes/SceneDevices'
-import { SceneDiscover } from './scenes/SceneDiscover'
 import { SceneLibrary } from './scenes/SceneLibrary'
 import { SceneLoop } from './scenes/SceneLoop'
 import { ScenePartners } from './scenes/ScenePartners'
@@ -20,7 +20,6 @@ import { SceneSignal } from './scenes/SceneSignal'
 import { SceneSocial } from './scenes/SceneSocial'
 import { SceneStart } from './scenes/SceneStart'
 import { SceneTeam } from './scenes/SceneTeam'
-import { SceneWorkshop } from './scenes/SceneWorkshop'
 import './landing.css'
 import { lc } from '../lib/styles/lc'
 
@@ -32,7 +31,7 @@ export type LandingViewProps = {
 }
 
 /**
- * The Bitrate landing: eleven fullscreen scenes rendered on the server. The motion engine (GSAP,
+ * The Bitrate landing: nine fullscreen scenes rendered on the server. The motion engine (GSAP,
  * Three.js) loads after first paint and only on the client; without it the page is still complete.
  */
 export const LandingView = ({ signedIn, stats }: LandingViewProps) => {
@@ -97,19 +96,19 @@ const LandingContent = ({ signedIn, stats }: LandingViewProps) => {
       </div>
       <AssistantPanel />
       <main>
-        <SceneSignal signedIn={signedIn} stats={stats} />
-        <LandingDemoProvider>
-          <SceneLoop />
-          <SceneWorkshop />
-          <SceneRules />
-          <SceneLibrary />
-          <SceneDiscover />
-          <SceneDevices />
-          <SceneSocial />
-        </LandingDemoProvider>
-        <ScenePartners />
-        <SceneTeam />
-        <SceneStart signedIn={signedIn} />
+        <VisitorContext value={{ signedIn }}>
+          <SceneSignal signedIn={signedIn} stats={stats} />
+          <LandingDemoProvider>
+            <SceneLoop />
+            <SceneRules />
+            <SceneLibrary />
+            <SceneDevices />
+            <SceneSocial />
+          </LandingDemoProvider>
+          <ScenePartners />
+          <SceneTeam />
+          <SceneStart signedIn={signedIn} />
+        </VisitorContext>
       </main>
     </div>
   )

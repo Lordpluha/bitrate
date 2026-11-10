@@ -4,10 +4,8 @@ import { expect, type Page, test } from '@playwright/test'
 const SCENES = [
   { id: 'hero', name: 'Your music, already where you are' },
   { id: 'loop', name: 'Play, save, return' },
-  { id: 'workshop', name: 'Playlists in your order' },
   { id: 'rules', name: 'Your player, your rules' },
   { id: 'library', name: 'A library with a memory' },
-  { id: 'discover', name: 'Follow the sound' },
   { id: 'devices', name: 'Same queue, new scene' },
   { id: 'social', name: 'Beyond the play button' },
   { id: 'partners', name: 'Our partners' },
@@ -27,7 +25,7 @@ const engineReady = (page: Page) =>
   expect(page.locator('html')).toHaveClass(/(^|\s)landing-lock(\s|$)/)
 
 test.describe('landing page', () => {
-  test('renders the eleven scenes and none of the old landing', async ({
+  test('renders the nine scenes and none of the old landing', async ({
     page,
   }) => {
     await page.goto('/')
@@ -58,7 +56,7 @@ test.describe('landing page', () => {
       '/auth/login',
     )
     const start = page.getByRole('region', {
-      name: SCENES[10].name,
+      name: 'Pick up where the last track left off',
       includeHidden: true,
     })
     await expect(
@@ -135,7 +133,7 @@ test.describe('landing navigation on desktop', () => {
     await page.mouse.move(400, 400)
     await expect(async () => {
       await page.mouse.wheel(0, 240)
-      await expect(activeScene(page)).toHaveId('discover', { timeout: 1500 })
+      await expect(activeScene(page)).toHaveId('devices', { timeout: 1500 })
     }).toPass({ timeout: 8000 })
 
     await expect(async () => {

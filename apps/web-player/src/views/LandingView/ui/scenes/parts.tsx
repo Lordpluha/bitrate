@@ -1,4 +1,11 @@
-import type { HTMLAttributes, ReactNode } from 'react'
+import { ROUTES } from '@shared/routes'
+import Link from 'next/link'
+import {
+  createContext,
+  type HTMLAttributes,
+  type ReactNode,
+  useContext,
+} from 'react'
 import { lc } from '../../lib/styles/lc'
 import type { LandingKey } from '../../model/messages/en'
 import type { SceneId } from '../../model/scenes'
@@ -92,5 +99,28 @@ export const SceneFootnote = ({
       {signFirst ? sign : note}
       {signFirst ? note : sign}
     </Abs>
+  )
+}
+
+/** Who is looking at the landing: guests are offered an account, signed-in visitors the player. */
+export const VisitorContext = createContext({ signedIn: false })
+
+/**
+ * A scene's secondary call to action under a live demo: the same thing, for real, one tap away.
+ * Guests go to sign-up (the player needs an account), signed-in visitors straight to the player.
+ */
+export const TryInPlayer = () => {
+  const c = useLandingCopy()
+  const { signedIn } = useContext(VisitorContext)
+  return (
+    <Link
+      className={lc('try-link magnetic')}
+      href={signedIn ? ROUTES.main : ROUTES.auth.registration}
+    >
+      {c(signedIn ? 'chrome.open_in_player' : 'chrome.try_in_player')}
+      <svg aria-hidden="true" className={lc('i')}>
+        <use href="#i-arrow" />
+      </svg>
+    </Link>
   )
 }

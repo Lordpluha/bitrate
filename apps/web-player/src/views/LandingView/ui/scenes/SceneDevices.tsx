@@ -13,7 +13,7 @@ import { useLandingCopy } from '../../model/useLandingCopy'
 import { DemoFrame } from '../demo/DemoFrame'
 import { DemoPlayerBar } from '../demo/DemoPlayerBar'
 import { DeviceScreen } from '../demo/DeviceScreen'
-import { Abs, SceneShell } from './parts'
+import { Abs, SceneShell, TryInPlayer } from './parts'
 
 /** The scene's two points: icon id, title and line. */
 const POINTS: readonly (readonly [string, LandingKey, LandingKey])[] = [
@@ -50,6 +50,9 @@ export const SceneDevices = () => {
         <p className={lc('lede s', 'mt-[22px]')} data-a="up">
           {c('devices.lede')}
         </p>
+        <div className="mt-[14px]" data-a="up">
+          <TryInPlayer />
+        </div>
         <div className={lc('col d-only', 'mt-[34px] gap-[20px]')}>
           {POINTS.map(([icon, title, meta]) => (
             <div className={lc('row', 'items-start')} data-a="up" key={title}>

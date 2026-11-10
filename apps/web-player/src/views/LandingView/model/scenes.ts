@@ -4,10 +4,8 @@ import type { LandingKey } from './messages/en'
 export const LANDING_SCENES = [
   { id: 'hero', label: 'scene.hero' },
   { id: 'loop', label: 'scene.loop' },
-  { id: 'workshop', label: 'scene.workshop' },
   { id: 'rules', label: 'scene.rules' },
   { id: 'library', label: 'scene.library' },
-  { id: 'discover', label: 'scene.discover' },
   { id: 'devices', label: 'scene.devices' },
   { id: 'social', label: 'scene.social' },
   { id: 'partners', label: 'scene.partners' },

@@ -13,7 +13,7 @@ import { lc } from '../../lib/styles/lc'
 import { DEMO_TRACK_SETS } from '../../model/demo/demoSeeds'
 import { useLandingCopy } from '../../model/useLandingCopy'
 import { DemoFrame } from '../demo/DemoFrame'
-import { Abs, SceneShell } from './parts'
+import { Abs, SceneShell, TryInPlayer } from './parts'
 
 /**
  * The player's own Settings controls, writing the same settings store the app reads: the
@@ -110,6 +110,9 @@ export const SceneRules = () => {
         <p className={lc('lede s', 'mt-[14px]')} data-a="up">
           {c('rules.lede_settings')}
         </p>
+        <div className="mt-[14px]" data-a="up">
+          <TryInPlayer />
+        </div>
       </Abs>
       <span
         className={lc('abs sig d-only')}

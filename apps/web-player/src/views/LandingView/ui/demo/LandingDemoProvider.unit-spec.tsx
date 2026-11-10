@@ -3,12 +3,10 @@ import { I18nProvider } from '@shared/i18n'
 import { act, fireEvent, render, screen, within } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { SceneDevices } from '../scenes/SceneDevices'
-import { SceneDiscover } from '../scenes/SceneDiscover'
 import { SceneLibrary } from '../scenes/SceneLibrary'
 import { SceneLoop } from '../scenes/SceneLoop'
 import { SceneRules } from '../scenes/SceneRules'
 import { SceneSocial } from '../scenes/SceneSocial'
-import { SceneWorkshop } from '../scenes/SceneWorkshop'
 import { LandingDemoProvider } from './LandingDemoProvider'
 
 /** Outside the App Router the navigation hooks have no context; the landing sits at `/`. */
@@ -33,10 +31,8 @@ const renderScenes = () =>
     <I18nProvider locale="en">
       <LandingDemoProvider>
         <SceneLoop />
-        <SceneWorkshop />
         <SceneRules />
         <SceneLibrary />
-        <SceneDiscover />
         <SceneDevices />
         <SceneSocial />
       </LandingDemoProvider>
