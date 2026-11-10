@@ -22,17 +22,12 @@ export const loginSchema = z.object({
 
 export type LoginFormData = z.infer<typeof loginSchema>
 
-export const registrationSchema = z
-  .object({
-    fullName: fullNameSchema,
-    email: emailSchema,
-    password: passwordSchema,
-    confirmPassword: passwordSchema,
-    acceptLegal: legalAcceptanceSchema,
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: 'validation.password.mismatch',
-    path: ['confirmPassword'],
-  })
+/** Sign-up asks for one password: the field has show/hide, so a typo is visible, not hidden. */
+export const registrationSchema = z.object({
+  fullName: fullNameSchema,
+  email: emailSchema,
+  password: passwordSchema,
+  acceptLegal: legalAcceptanceSchema,
+})
 
 export type RegistrationFormData = z.infer<typeof registrationSchema>

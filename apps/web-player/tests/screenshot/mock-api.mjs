@@ -419,7 +419,7 @@ const ROUTES = [
   [
     'GET',
     /^\/api\/v1\/platform\/stats$/,
-    () => ({ artists: 48, listeners: 12_400, tracks: 960 }),
+    () => ({ artists: 320, listeners: 48_200, tracks: 12_400 }),
   ],
   [
     'GET',

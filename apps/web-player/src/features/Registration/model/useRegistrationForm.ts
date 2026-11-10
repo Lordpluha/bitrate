@@ -19,7 +19,6 @@ export const useRegistrationForm = () => {
   const form = useForm<RegistrationFormData>({
     defaultValues: {
       acceptLegal: false,
-      confirmPassword: '',
       email: '',
       fullName: '',
       password: '',

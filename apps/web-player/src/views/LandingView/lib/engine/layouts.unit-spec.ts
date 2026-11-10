@@ -5,7 +5,8 @@ import { LOOK } from './stage/looks'
 
 describe('landing stage per-scene tables', () => {
   it('has exactly one particle layout and one look per scene', () => {
-    expect(createLayouts()).toHaveLength(LANDING_SCENES.length)
-    expect(LOOK).toHaveLength(LANDING_SCENES.length)
+    const ids = LANDING_SCENES.map(({ id }) => id).sort()
+    expect(Object.keys(createLayouts()).sort()).toEqual(ids)
+    expect(Object.keys(LOOK).sort()).toEqual(ids)
   })
 })

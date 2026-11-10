@@ -76,6 +76,45 @@
     outline-offset: 2px;
   }
 
+  /*
+   * Everything clickable shows the hand. Tailwind v4's preflight no longer gives buttons
+   * `cursor: pointer`, so without this every bare <button> showed the arrow. `:where` keeps the
+   * rule at zero specificity: any cursor utility on an element (grab, not-allowed, the landing's
+   * own ring) still wins, and disabled controls keep the default arrow. Labels of text fields are
+   * left alone: they focus a field rather than act; labels of checkboxes and radios act.
+   */
+  :where(
+    a[href],
+    button,
+    summary,
+    select,
+    input[type="checkbox"],
+    input[type="radio"],
+    input[type="range"],
+    input[type="file"],
+    input[type="color"],
+    input[type="submit"],
+    input[type="button"],
+    input[type="reset"],
+    [role="button"],
+    [role="link"],
+    [role="tab"],
+    [role="menuitem"],
+    [role="menuitemradio"],
+    [role="menuitemcheckbox"],
+    [role="option"],
+    [role="switch"],
+    [role="checkbox"],
+    [role="radio"],
+    [role="slider"],
+    label:has(input[type="checkbox"], input[type="radio"]),
+    [role="checkbox"] ~ label,
+    [role="radio"] ~ label,
+    [role="switch"] ~ label
+  ):not(:disabled, [aria-disabled="true"], [data-disabled]) {
+    cursor: pointer;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     *,
     *::before,

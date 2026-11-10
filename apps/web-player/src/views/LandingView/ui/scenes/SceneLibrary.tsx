@@ -1,69 +1,30 @@
 'use client'
 
+import { FollowArtistButton } from '@entities/Artist'
+import { SearchPage } from '@features/Search'
 import { useI18n } from '@shared/i18n'
-import { FilterChips, MusicCardLg } from '@shared/ui'
+import { MusicCardLg, SectionHeader } from '@shared/ui'
 import { LeftSidebar } from '@widgets/LeftSidebar'
-import { useState } from 'react'
+import { Suspense } from 'react'
 import { lc } from '../../lib/styles/lc'
-import { DEMO_ARTISTS, DEMO_PLAYLISTS } from '../../model/demo/demoData'
+import { DEMO_ARTISTS } from '../../model/demo/demoData'
 import { useLandingCopy } from '../../model/useLandingCopy'
 import { DemoFrame } from '../demo/DemoFrame'
-import { Abs, SceneShell } from './parts'
+import { Abs, SceneShell, TryInPlayer } from './parts'
 
-type LibraryFilter = 'artists' | 'playlists'
+/** How many related artists the side column shows. */
+const RELATED_ARTISTS = 4
 
-/** The library grid: the player's filter chips over its cards. */
-const DemoLibraryGrid = () => {
-  const c = useLandingCopy()
-  const { t } = useI18n()
-  const [filter, setFilter] = useState<LibraryFilter>('playlists')
-  const cards =
-    filter === 'playlists'
-      ? DEMO_PLAYLISTS.map(({ cover, id, title, _count }) => ({
-          description: t('common.songs.other', { count: _count.tracks }),
-          id,
-          imageUrl: cover,
-          isArtist: false,
-          name: title,
-        }))
-      : DEMO_ARTISTS.slice(0, 4).map(({ avatar, id, username }) => ({
-          description: t('common.artist'),
-          id,
-          imageUrl: avatar ?? undefined,
-          isArtist: true,
-          name: username,
-        }))
-
-  return (
-    <div className="flex min-w-0 flex-1 flex-col gap-6 p-6">
-      <h1 className="text-[32px] leading-[1.1] font-bold">
-        {t('library.title')}
-      </h1>
-      <FilterChips
-        ariaLabel={t('library.filter')}
-        chips={[
-          { id: 'playlists', label: t('library.playlists') },
-          { id: 'artists', label: c('library.artists') },
-        ]}
-        onChange={setFilter}
-        value={filter}
-      />
-      <div className="grid grid-cols-4 gap-4">
-        {cards.map((card) => (
-          <MusicCardLg key={card.id} {...card} />
-        ))}
-      </div>
-    </div>
-  )
-}
-
-/** Scene "Library": the player's library sidebar and its library page. */
+/**
+ * Scene "Library": what you keep and what you find next — the player's library sidebar, Search's
+ * Browse all, and the artists fans also like, with Follow.
+ */
 export const SceneLibrary = () => {
   const c = useLandingCopy()
   const { t } = useI18n()
   return (
     <SceneShell id="library" labelKey="library.a_library_with_a_memory">
-      <Abs w={760} x={48} y={80}>
+      <Abs w={900} x={48} y={80}>
         <div className={lc('eyebrow', 'mb-[14px]')} data-a="up">
           {c('library.your_collection_connected')}
         </div>
@@ -75,20 +36,58 @@ export const SceneLibrary = () => {
             </span>
           </span>
         </h2>
-        <p className={lc('lede', 'mt-[12px]')} data-a="up">
+        <p className={lc('lede s', 'mt-[12px]')} data-a="up">
           {c('library.lede')}
         </p>
       </Abs>
-      <Abs data-a="win" h={632} markers="win" w={1376} x={32} y={218}>
+      <Abs data-a="up" extra="text-right" w={300} x={1080} y={160}>
+        <TryInPlayer />
+      </Abs>
+      <Abs data-a="win" h={600} markers="win d-only" w={360} x={48} y={230}>
+        <DemoFrame className="h-full" label={t('library.title')}>
+          <LeftSidebar />
+        </DemoFrame>
+      </Abs>
+      <Abs
+        data-a="win"
+        h={600}
+        markers="win scene-block"
+        w={600}
+        x={424}
+        y={230}
+      >
         <DemoFrame
-          className="flex h-full max-[820px]:max-h-[56vh]"
-          label={t('library.title')}
+          /* the genre grid picks its columns from the window's width; in this frame three fit */
+          className="custom-scrollbar h-full overflow-y-auto [&_.grid]:grid-cols-3! max-[820px]:[&_.grid]:grid-cols-2!"
+          label={t('search.browseAll')}
         >
-          <div className="w-80 shrink-0 border-r border-border max-[820px]:w-full max-[820px]:border-0">
-            <LeftSidebar />
-          </div>
-          <div className="contents max-[820px]:hidden">
-            <DemoLibraryGrid />
+          {/* Search reads the URL's query; the landing has none, so it shows Browse all */}
+          <Suspense>
+            <SearchPage />
+          </Suspense>
+        </DemoFrame>
+      </Abs>
+      <Abs data-a="win" h={600} markers="win d-only" w={352} x={1040} y={230}>
+        <DemoFrame className="h-full p-5" label={t('artist.fansAlsoLike')}>
+          <SectionHeader title={t('artist.fansAlsoLike')} />
+          <div className="grid grid-cols-2 gap-3">
+            {DEMO_ARTISTS.slice(2, 2 + RELATED_ARTISTS).map((artist) => (
+              <div className="flex min-w-0 flex-col gap-2" key={artist.id}>
+                <MusicCardLg
+                  description={t('common.artist')}
+                  id={artist.id}
+                  imageUrl={artist.avatar ?? undefined}
+                  isArtist
+                  name={artist.username}
+                />
+                <FollowArtistButton
+                  artistId={artist.id}
+                  artistName={artist.username}
+                  className="w-full"
+                  size="sm"
+                />
+              </div>
+            ))}
           </div>
         </DemoFrame>
       </Abs>

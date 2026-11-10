@@ -52,7 +52,7 @@ export const SignUpModalFields = ({ control }: SignUpModalFieldsProps) => (
       />
     ))}
 
-    {(['password', 'confirmPassword'] as const).map((name) => (
+    {(['password'] as const).map((name) => (
       <FormField
         control={control}
         key={name}

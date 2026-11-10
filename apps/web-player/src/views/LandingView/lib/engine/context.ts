@@ -27,6 +27,11 @@ export type EngineContext = {
   scenes: HTMLElement[]
   copy: LandingCopy
   reduce: boolean
+  /**
+   * The window is too short for one scene per screen: scenes are fitted to the width and stacked,
+   * and the page scrolls through them (see `fitLanding`).
+   */
+  tall: boolean
   state: EngineState
   pointer: PointerStore
   /** Aborted on unmount; pass it to every addEventListener. */
@@ -64,7 +69,7 @@ export const createPointerStore = ({
 /** The archived composition every scene board is laid out on. */
 export const BOARD = { width: 1440, height: 900 } as const
 /** Below this width scenes become a single column and the 3D stage steps back. */
-const MOBILE_MAX_WIDTH = 820
+export const MOBILE_MAX_WIDTH = 820
 
 export const isMobile = () => window.innerWidth <= MOBILE_MAX_WIDTH
 

@@ -1,3 +1,4 @@
+import type { SceneId } from '../../../model/scenes'
 import type { PaletteToken } from '../palette'
 
 /** How the signal looks in one scene. */
@@ -16,8 +17,8 @@ export type Look = {
 }
 
 /** Per scene: shape, board position (px), size (px), tilt, twist, noise and palette. */
-export const LOOK: readonly Look[] = [
-  {
+export const LOOK: Readonly<Record<SceneId, Look>> = {
+  hero: {
     shape: 0,
     x: 1000,
     y: 455,
@@ -27,58 +28,38 @@ export const LOOK: readonly Look[] = [
     twist: 0,
     c: ['purple-500', 'magenta-500', 'blue-500'],
   },
-  {
+  loop: {
     shape: 2,
-    x: 1200,
-    y: 130,
-    size: 220,
+    x: 1010,
+    y: 120,
+    size: 140,
     rx: 0.5,
     amp: 0.08,
     twist: 0,
     c: ['purple-500', 'purple-400', 'magenta-500'],
   },
-  {
-    shape: 4,
-    x: 250,
-    y: 790,
-    size: 300,
-    rx: 0.4,
-    amp: 0.1,
-    twist: 0,
-    c: ['magenta-500', 'purple-500', 'blue-500'],
-  },
-  {
+  rules: {
     shape: 3,
-    x: 180,
-    y: 760,
-    size: 360,
+    x: 230,
+    y: 830,
+    size: 240,
     rx: 1.15,
     amp: 0.03,
     twist: 0,
     c: ['purple-500', 'magenta-500', 'purple-400'],
   },
-  {
+  library: {
     shape: 6,
-    x: 1000,
-    y: 150,
-    size: 200,
+    x: 990,
+    y: 120,
+    size: 140,
     rx: 0,
     rz: 1.5708,
     amp: 0.06,
     twist: 0,
     c: ['purple-400', 'blue-500', 'magenta-500'],
   },
-  {
-    shape: 5,
-    x: 830,
-    y: 190,
-    size: 110,
-    rx: 0.3,
-    amp: 0.1,
-    twist: 0,
-    c: ['purple-400', 'magenta-500', 'blue-500'],
-  },
-  {
+  devices: {
     shape: 1,
     x: 150,
     y: 800,
@@ -88,7 +69,7 @@ export const LOOK: readonly Look[] = [
     twist: 2.4,
     c: ['purple-500', 'green-500', 'blue-500'],
   },
-  {
+  social: {
     shape: 0,
     x: 220,
     y: 790,
@@ -98,7 +79,7 @@ export const LOOK: readonly Look[] = [
     twist: 0.8,
     c: ['magenta-500', 'purple-500', 'blue-500'],
   },
-  {
+  partners: {
     shape: 5,
     x: 330,
     y: 110,
@@ -109,7 +90,7 @@ export const LOOK: readonly Look[] = [
     c: ['magenta-500', 'purple-500', 'blue-500'],
     partners: true,
   },
-  {
+  team: {
     shape: 0,
     x: 1300,
     y: 150,
@@ -119,7 +100,17 @@ export const LOOK: readonly Look[] = [
     twist: 0,
     c: ['purple-400', 'blue-500', 'magenta-500'],
   },
-  {
+  faq: {
+    shape: 3,
+    x: 270,
+    y: 640,
+    size: 220,
+    rx: 0.6,
+    amp: 0.08,
+    twist: 0,
+    c: ['purple-400', 'blue-500', 'magenta-500'],
+  },
+  cta: {
     shape: 7,
     x: 720,
     y: 1020,
@@ -130,6 +121,6 @@ export const LOOK: readonly Look[] = [
     c: ['purple-500', 'magenta-500', 'blue-500'],
     cradle: true,
   },
-]
+}
 /** On phones the signal sits in the top-right corner, as a share of the viewport. */
 export const MOBILE_LOOK = { x: 0.8, y: 0.14, size: 0.42 }

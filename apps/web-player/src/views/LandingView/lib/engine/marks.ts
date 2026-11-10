@@ -1,6 +1,10 @@
 import type { PaletteToken } from './palette'
 
-/** A placeholder partner mark: background, ink and label (demo marks, not real partners). */
+/**
+ * A partner sphere: background, ink and label. The labels name the kinds of partners Bitrate is
+ * looking for (labels, studios, sync, radio…), not partner brands, so nothing claims a partner
+ * that does not exist.
+ */
 export type PartnerMark = { bg: PaletteToken; fg: PaletteToken; label: string }
 
 export const PARTNER_MARKS: readonly PartnerMark[] = [
