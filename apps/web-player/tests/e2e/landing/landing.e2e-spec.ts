@@ -105,8 +105,12 @@ test.describe('landing without JavaScript', () => {
   })
 })
 
+/** A window tall enough for one scene per screen (short laptops scroll; see the tall test). */
+const SCENE_WINDOW = { width: 1440, height: 900 } as const
+
 test.describe('landing navigation on desktop', () => {
   test.skip(({ isMobile }) => isMobile, 'desktop gestures')
+  test.use({ viewport: SCENE_WINDOW })
 
   test('keys, dots and wheel move between scenes and the hash follows', async ({
     page,
@@ -230,6 +234,8 @@ test.describe('landing on touch screens', () => {
 })
 
 test.describe('landing without WebGL', () => {
+  test.use({ viewport: SCENE_WINDOW })
+
   test('the 2D fallbacks render and nothing throws', async ({ page }) => {
     const errors: string[] = []
     page.on('pageerror', (e) => errors.push(e.message))
@@ -252,6 +258,36 @@ test.describe('landing without WebGL', () => {
     expect(
       errors.filter((e) => !/health\/ready|Failed to load resource/.test(e)),
     ).toEqual([])
+  })
+})
+
+test.describe('landing on a short laptop', () => {
+  test.skip(({ isMobile }) => isMobile, 'desktop layout')
+  test.use({ viewport: { width: 1280, height: 720 } })
+
+  test('scrolls through scenes fitted to the width, and the hash follows', async ({
+    page,
+  }) => {
+    await skipIntro(page)
+    await page.goto('/')
+    await expect(page.locator('.landing')).toHaveClass(/(^|\s)is-tall(\s|$)/)
+    await expect(page.locator('html')).not.toHaveClass(
+      /(^|\s)landing-lock(\s|$)/,
+    )
+    /* fitted to the width, so a scene is taller than the window */
+    const sceneHeight = await page
+      .locator('#hero')
+      .evaluate((el) => el.getBoundingClientRect().height)
+    expect(sceneHeight).toBeGreaterThan(720)
+    await expect(async () => {
+      await page.keyboard.press('ArrowDown')
+      await expect(page).toHaveURL(/#loop$/, { timeout: 1500 })
+    }).toPass({ timeout: 8000 })
+    await page.mouse.move(640, 400)
+    await expect(async () => {
+      await page.mouse.wheel(0, 900)
+      await expect(page).toHaveURL(/#rules$/, { timeout: 1500 })
+    }).toPass({ timeout: 8000 })
   })
 })
 

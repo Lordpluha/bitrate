@@ -120,7 +120,14 @@ export const SceneRules = () => {
       >
         {c('common.music_lives_on')}
       </span>
-      <Abs data-a="win" h={690} markers="win" w={1008} x={392} y={126}>
+      <Abs
+        data-a="win"
+        h={690}
+        markers="win scene-block"
+        w={1008}
+        x={392}
+        y={126}
+      >
         <DemoFrame
           className="flex h-full flex-col gap-4 p-5 max-[820px]:max-h-[52vh] max-[820px]:p-4"
           label={t('settings.title')}

@@ -85,7 +85,13 @@ export const SceneSignal = ({ signedIn, stats }: HeroSceneProps) => {
           </div>
         </div>
       </Abs>
-      <Abs h={640} markers="persp hero-devices" w={800} x={580} y={140}>
+      <Abs
+        h={640}
+        markers="persp hero-devices scene-fill"
+        w={800}
+        x={580}
+        y={140}
+      >
         <PlayerPreview />
       </Abs>
     </SceneShell>

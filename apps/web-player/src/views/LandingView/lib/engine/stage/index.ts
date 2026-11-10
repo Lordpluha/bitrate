@@ -1,5 +1,6 @@
 import { gsap } from 'gsap'
 import { BOARD, type EngineContext, must } from '../context'
+import { fitLanding } from '../fit'
 import { createLayouts, FIELD_COUNT } from '../layouts'
 import { isLightTheme, type PaletteToken, token } from '../palette'
 import { createCradle } from './cradle'
@@ -12,6 +13,8 @@ import type { BoardFit, StageKit } from './types'
 /** The fixed WebGL backdrop: one morphing signal surface, a particle field and two scene props. */
 export type Stage = {
   go: (index: number, duration?: number) => void
+  /** Re-reads where the scene props' slots are (a tall landing moves them as it scrolls). */
+  relayout: () => void
   retheme: () => void
   start: () => void
   still: () => void
@@ -148,7 +151,7 @@ export const createStage = async ({
     renderer.setSize(w, h, false)
     camera.aspect = w / h
     camera.updateProjectionMatrix()
-    const s = Math.min(w / BOARD.width, h / BOARD.height)
+    const { scale: s } = fitLanding({ width: w, height: h })
     PX.s = s
     PX.ox = (w - BOARD.width * s) / 2
     PX.oy = (h - BOARD.height * s) / 2
@@ -166,6 +169,7 @@ export const createStage = async ({
 
   return {
     go,
+    relayout: measure,
     retheme,
     start: () => {
       looping = true

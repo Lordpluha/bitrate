@@ -2,6 +2,7 @@ import { gsap } from 'gsap'
 import { Observer } from 'gsap/Observer'
 import { isSceneId } from '../../../model/scenes'
 import { all, type EngineContext, isMobile } from '../context'
+import { edgeSwipe } from '../edgeSwipe'
 import { formatSceneNumber, sceneFromHash, targetScene } from '../navigation'
 import type { Stage } from '../stage'
 import {
@@ -14,6 +15,9 @@ import {
 const OWN_GESTURES =
   '.ai-panel, .hpanel, .drag-zone, .loose-ball, .custom-scrollbar, input, textarea'
 const GLITCH_EVERY_MS = 3200
+/** On a phone, each scene's main block scrolls natively; a swipe past its edge changes the scene. */
+const PHONE_SCROLLERS = '.scene-block'
+
 /** How long the outgoing scene takes to clear. */
 const LEAVE_S = 0.32
 /** Lock after a scene change so one trackpad swipe moves one scene. */
@@ -43,6 +47,21 @@ export const mountScenes = (ctx: EngineContext, deps: SceneDeps) => {
   const stopLoops = () => {
     while (loops.length) loops.pop()?.kill()
   }
+
+  /** What a scene's entrance hooks get: its timeline, a query into it and the loop registry. */
+  const enterEnv = (
+    s: HTMLElement,
+    tl: gsap.core.Timeline = gsap.timeline(),
+  ): SceneEnterEnv => ({
+    tl,
+    scene: s,
+    q: (sel: string) => s.querySelectorAll(sel),
+    mob: isMobile(),
+    copy: ctx.copy,
+    loop: (animation) => {
+      loops.push(animation)
+    },
+  })
 
   const enter = (s: HTMLElement, dir: number) => {
     const tl = gsap.timeline()
@@ -98,16 +117,7 @@ export const mountScenes = (ctx: EngineContext, deps: SceneDeps) => {
     )
     const id = s.id
     if (isSceneId(id)) {
-      const env: SceneEnterEnv = {
-        tl,
-        scene: s,
-        q,
-        mob,
-        copy: ctx.copy,
-        loop: (animation) => {
-          loops.push(animation)
-        },
-      }
+      const env = enterEnv(s, tl)
       SCENE_ENTER[id]?.(env)
       deps.onEnter[id]?.(env)
     }
@@ -159,6 +169,13 @@ export const mountScenes = (ctx: EngineContext, deps: SceneDeps) => {
   }
 
   const go = (next: number) => {
+    if (ctx.tall) {
+      const target = Math.max(0, Math.min(scenes.length - 1, next))
+      scenes[target]?.scrollIntoView({
+        behavior: ctx.reduce ? 'auto' : 'smooth',
+      })
+      return
+    }
     if (ctx.reduce) {
       scenes[next]?.scrollIntoView({ behavior: 'auto' })
       return
@@ -198,6 +215,13 @@ export const mountScenes = (ctx: EngineContext, deps: SceneDeps) => {
 
   for (const [i, b] of dots.entries())
     b.addEventListener('click', () => go(i), { signal })
+  /* the phone's bottom bar: one tap to the next scene, for visitors who do not swipe */
+  for (const next of all({
+    root,
+    selector: '[data-scene-next]',
+    type: HTMLElement,
+  }))
+    next.addEventListener('click', () => go(state.index + 1), { signal })
   /* in-page links (header nav, CTAs to #scene) flip scenes instead of jumping */
   root.addEventListener(
     'click',
@@ -219,10 +243,91 @@ export const mountScenes = (ctx: EngineContext, deps: SceneDeps) => {
     { signal },
   )
 
+  /**
+   * A tall landing: every scene is on the page and the visitor scrolls. The scene filling most of
+   * the window is the current one — the backdrop, the counter and the hash follow it — and each
+   * scene plays its entrance the first time it comes into view.
+   */
+  const startTall = (first: number, intro: Promise<void>) => {
+    const entered = new Set<HTMLElement>()
+    for (const s of scenes) {
+      s.classList.add('is-active')
+      gsap.set(s.querySelectorAll('.char, [data-a]'), { opacity: 0 })
+    }
+    const settle = (i: number) => {
+      const s = scenes[i]
+      if (!s || (i === state.index && entered.has(s))) return
+      state.index = i
+      mark(i, 0.6)
+      deps.stage?.go(i)
+      history.replaceState(null, '', `#${s.id}`)
+      if (!entered.has(s)) {
+        entered.add(s)
+        enter(s, 1)
+      } else if (isSceneId(s.id)) deps.onEnter[s.id]?.(enterEnv(s))
+    }
+    let ready = false
+    const watch = new IntersectionObserver(
+      (entries) => {
+        if (!ready) return
+        for (const e of entries)
+          if (e.isIntersecting && e.target instanceof HTMLElement)
+            settle(scenes.indexOf(e.target))
+      },
+      /* a scene counts once it covers the middle of the window */
+      { rootMargin: '-45% 0px -45% 0px' },
+    )
+    for (const s of scenes) watch.observe(s)
+    ctx.onDispose(() => watch.disconnect())
+    void intro.then(() => {
+      if (signal.aborted) return
+      ready = true
+      scenes[first]?.scrollIntoView({ behavior: 'auto' })
+      settle(first)
+    })
+    /* the 3D props hang over DOM slots that move as the page scrolls */
+    let frame = 0
+    window.addEventListener(
+      'scroll',
+      () => {
+        cancelAnimationFrame(frame)
+        frame = requestAnimationFrame(() => deps.stage?.relayout())
+      },
+      { signal, passive: true },
+    )
+    ctx.onDispose(() => cancelAnimationFrame(frame))
+    window.addEventListener(
+      'keydown',
+      (e) => {
+        if (
+          e.target instanceof Element &&
+          e.target.closest(
+            'input, textarea, .ai-panel, [role="dialog"], [role="menu"]',
+          )
+        )
+          return
+        if (e.metaKey || e.ctrlKey || e.altKey) return
+        const t = targetScene({
+          key: e.key,
+          index: state.index,
+          count: scenes.length,
+        })
+        if (t === null) return
+        e.preventDefault()
+        go(t)
+      },
+      { signal },
+    )
+  }
+
   /** Boots the scene shown by the URL hash; the intro promise gates its first entrance. */
   const start = (intro: Promise<void>) => {
     const ids = scenes.map((s) => s.id)
     const first = sceneFromHash({ hash: location.hash, ids })
+    if (ctx.tall) {
+      startTall(first, intro)
+      return
+    }
     if (ctx.reduce) {
       root.classList.add('is-static')
       for (const s of scenes) s.classList.add('is-active')
@@ -245,15 +350,18 @@ export const mountScenes = (ctx: EngineContext, deps: SceneDeps) => {
       enter(firstScene, 1)
     })
     gsap.registerPlugin(Observer)
+    const gestures = isMobile()
+      ? `${OWN_GESTURES}, ${PHONE_SCROLLERS}`
+      : OWN_GESTURES
     const ownGesture = (t: EventTarget | null | undefined) =>
-      t instanceof Element && Boolean(t.closest(OWN_GESTURES))
+      t instanceof Element && Boolean(t.closest(gestures))
     const obs = Observer.create({
       target: window,
       type: 'wheel,touch',
       wheelSpeed: -1,
       tolerance: 12,
       preventDefault: true,
-      ignore: OWN_GESTURES,
+      ignore: gestures,
       onUp: (self) => {
         if (!state.dragging && !ownGesture(self.event?.target))
           go(state.index + 1)
@@ -264,6 +372,40 @@ export const mountScenes = (ctx: EngineContext, deps: SceneDeps) => {
       },
     })
     ctx.onDispose(() => obs.kill())
+    /* a swipe that carries on past the end (or top) of a phone scene's list moves the scene */
+    let swipe: { y: number; top: number; list: HTMLElement } | null = null
+    const listOf = (t: EventTarget | null) =>
+      t instanceof Element
+        ? t.closest<HTMLElement>(`${PHONE_SCROLLERS} section`)
+        : null
+    root.addEventListener(
+      'touchstart',
+      (e) => {
+        const list = isMobile() ? listOf(e.target) : null
+        const touch = e.touches[0]
+        swipe =
+          list && touch ? { y: touch.clientY, top: list.scrollTop, list } : null
+      },
+      { signal, passive: true },
+    )
+    root.addEventListener(
+      'touchend',
+      (e) => {
+        const touch = e.changedTouches[0]
+        if (!swipe || !touch || state.dragging) return
+        const { list, top, y } = swipe
+        swipe = null
+        const dir = edgeSwipe({
+          dy: y - touch.clientY,
+          scrollTop: list.scrollTop,
+          startTop: top,
+          scrollHeight: list.scrollHeight,
+          clientHeight: list.clientHeight,
+        })
+        if (dir) go(state.index + dir)
+      },
+      { signal, passive: true },
+    )
     /* a hash typed into the address bar (or a same-page link from outside the landing) flips to its scene;
        go() itself writes the hash with replaceState, which fires no hashchange */
     window.addEventListener(

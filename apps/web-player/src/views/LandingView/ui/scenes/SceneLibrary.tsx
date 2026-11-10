@@ -58,7 +58,7 @@ export const SceneLibrary = () => {
       >
         <DemoFrame
           /* the genre grid picks its columns from the window's width; in this frame three fit */
-          className="custom-scrollbar h-full overflow-y-auto [&_.grid]:grid-cols-3!"
+          className="custom-scrollbar h-full overflow-y-auto [&_.grid]:grid-cols-3! max-[820px]:[&_.grid]:grid-cols-2!"
           label={t('search.browseAll')}
         >
           {/* Search reads the URL's query; the landing has none, so it shows Browse all */}

@@ -9,6 +9,11 @@ export const CHROME: readonly LandingRule[] = [
     'fixed inset-[0_0_auto_0] z-[40] flex gap-[16px] items-center justify-between p-[calc(env(safe-area-inset-top,0px)_+_18px)_clamp(16px,3.4vw,48px)_14px] pointer-events-none',
   ],
   ['top', '[&_>_*]:pointer-events-auto'],
+  /* a tall landing scrolls under the header: give it a glass backing */
+  [
+    'top',
+    '[.is-tall_&]:pb-[12px] [.is-tall_&]:[background:color-mix(in_srgb,var(--color-background)_78%,transparent)] [.is-tall_&]:[backdrop-filter:blur(14px)] [.is-tall_&]:[border-bottom:1px_solid_var(--border)]',
+  ],
   [
     'brand',
     'flex gap-[10px] items-center font-[family-name:var(--font-display)] [font-size:20px] font-[600] text-foreground no-underline',

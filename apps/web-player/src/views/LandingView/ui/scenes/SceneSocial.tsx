@@ -57,7 +57,14 @@ export const SceneSocial = () => {
           </div>
         </DemoFrame>
       </Abs>
-      <Abs data-a="win" h={580} markers="win" w={980} x={420} y={130}>
+      <Abs
+        data-a="win"
+        h={580}
+        markers="win scene-block"
+        w={980}
+        x={420}
+        y={130}
+      >
         <DemoFrame
           className="grid h-full grid-cols-2 gap-8 p-6 max-[820px]:max-h-[52vh] max-[820px]:grid-cols-1 max-[820px]:p-4"
           label={t('friends.title')}

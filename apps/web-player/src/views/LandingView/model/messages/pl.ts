@@ -226,4 +226,6 @@ export const pl: LandingCatalog = {
     'Zapisuj to, co kochasz, ustawiaj, co zagra dalej, i wracaj przez „Ostatnie” — jedna pętla słuchania.',
   'chrome.try_in_player': 'Wypróbuj w odtwarzaczu',
   'chrome.open_in_player': 'Otwórz w odtwarzaczu',
+  'chrome.start_listening_free': 'Zacznij słuchać — za darmo',
+  'chrome.next_scene': 'Następna scena',
 }

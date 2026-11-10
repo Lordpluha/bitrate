@@ -224,4 +224,6 @@ export const uk: LandingCatalog = {
     'Зберігайте улюблене, вишиковуйте, що грає далі, і повертайтеся через «Нещодавнє» — один цикл слухання.',
   'chrome.try_in_player': 'Спробувати в плеєрі',
   'chrome.open_in_player': 'Відкрити в плеєрі',
+  'chrome.start_listening_free': 'Почати слухати — безкоштовно',
+  'chrome.next_scene': 'Наступна сцена',
 }

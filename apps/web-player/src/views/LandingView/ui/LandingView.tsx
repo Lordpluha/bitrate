@@ -1,7 +1,9 @@
 'use client'
 
 import { useI18n } from '@shared/i18n'
-import { useEffect, useRef } from 'react'
+import { ROUTES } from '@shared/routes'
+import Link from 'next/link'
+import { useEffect, useRef, useState } from 'react'
 import { formatSceneNumber } from '../lib/engine/navigation'
 import type { PlatformStats } from '../model/platformStats'
 import { LANDING_SCENES } from '../model/scenes'
@@ -36,13 +38,34 @@ export type LandingViewProps = {
  */
 export const LandingView = ({ signedIn, stats }: LandingViewProps) => {
   const { locale } = useI18n()
-  /* the engine splits headings into letters, so a language switch remounts the scenes fresh */
-  return <LandingContent key={locale} signedIn={signedIn} stats={stats} />
+  /* the engine splits headings into letters and lays scenes out per window shape, so a language
+     switch or a resize into another layout mode remounts the scenes fresh */
+  const [layout, setLayout] = useState(0)
+  return (
+    <LandingContent
+      key={`${locale}-${layout}`}
+      onModeChange={() => setLayout((n) => n + 1)}
+      signedIn={signedIn}
+      stats={stats}
+    />
+  )
 }
 
-const LandingContent = ({ signedIn, stats }: LandingViewProps) => {
+type LandingContentProps = LandingViewProps & {
+  /** The window crossed into another layout mode (scenes, tall, phone). */
+  onModeChange: () => void
+}
+
+const LandingContent = ({
+  signedIn,
+  stats,
+  onModeChange,
+}: LandingContentProps) => {
   const c = useLandingCopy()
   const root = useRef<HTMLDivElement>(null)
+  /* the latest callback without remounting the engine when the parent re-renders */
+  const modeChange = useRef(onModeChange)
+  modeChange.current = onModeChange
 
   useEffect(() => {
     const el = root.current
@@ -51,7 +74,11 @@ const LandingContent = ({ signedIn, stats }: LandingViewProps) => {
     let cancelled = false
     void import('../lib/engine/mountLanding').then(({ mountLanding }) => {
       if (cancelled) return
-      stop = mountLanding({ root: el, copy: c })
+      stop = mountLanding({
+        root: el,
+        copy: c,
+        onModeChange: () => modeChange.current(),
+      })
     })
     return () => {
       cancelled = true
@@ -93,6 +120,28 @@ const LandingContent = ({ signedIn, stats }: LandingViewProps) => {
           <i data-scene-rail="" />
         </span>
         <span>{formatSceneNumber(LANDING_SCENES.length)}</span>
+      </div>
+      {/* phones: the way into the player and to the next scene, where the thumb rests */}
+      <div className={lc('m-bar')}>
+        <Link
+          className={lc('btn btn-primary m-bar-cta')}
+          href={signedIn ? ROUTES.main : ROUTES.auth.registration}
+        >
+          {c(signedIn ? 'chrome.open_player' : 'chrome.start_listening_free')}
+          <svg aria-hidden="true" className={lc('i')}>
+            <use href="#i-arrow" />
+          </svg>
+        </Link>
+        <button
+          aria-label={c('chrome.next_scene')}
+          className={lc('m-bar-next')}
+          data-scene-next=""
+          type="button"
+        >
+          <svg aria-hidden="true" className={lc('i')}>
+            <use href="#i-arrow" />
+          </svg>
+        </button>
       </div>
       <AssistantPanel />
       <main>

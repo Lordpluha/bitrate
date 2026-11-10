@@ -110,13 +110,13 @@ export const SceneDevices = () => {
         data-a="win"
         extra="z-[2]"
         h={600}
-        markers="phone"
+        markers="phone scene-fill"
         w={300}
         x={352}
         y={196}
       >
         <DemoFrame
-          className="h-full rounded-[24px] max-[820px]:mx-auto max-[820px]:h-[min(56vh,calc(100svh-360px))] max-[820px]:min-h-[260px] max-[820px]:max-w-[300px]"
+          className="h-full rounded-[24px] max-[820px]:mx-auto max-[820px]:aspect-[300/600] max-[820px]:w-auto max-[820px]:max-w-full"
           label={t('nav.main')}
         >
           {/* laid out at a real phone's width, then scaled into the frame */}

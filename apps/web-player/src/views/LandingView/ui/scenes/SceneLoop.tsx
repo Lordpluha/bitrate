@@ -109,14 +109,19 @@ export const SceneLoop = () => {
         y={212}
       >
         <DemoFrame className="h-full p-4" label={t('library.likedSongs')}>
-          <div className="flex flex-col gap-5">
-            <CollectionHeader
-              coverUrl="/images/liked-songs.svg"
-              meta={[t('common.songs.other', { count: likedCount })]}
-              owner={DEMO_ME.username}
-              title={t('library.likedSongs')}
-              type={t('common.playlist')}
-            />
+          <div className="flex flex-col gap-5 max-[820px]:gap-2">
+            <div className="hidden max-[820px]:block">
+              <SectionHeader title={t('library.likedSongs')} />
+            </div>
+            <div className="contents max-[820px]:hidden">
+              <CollectionHeader
+                coverUrl="/images/liked-songs.svg"
+                meta={[t('common.songs.other', { count: likedCount })]}
+                owner={DEMO_ME.username}
+                title={t('library.likedSongs')}
+                type={t('common.playlist')}
+              />
+            </div>
             <TracksList
               layout="rows"
               onPlayTrack={(track) => play(track)}

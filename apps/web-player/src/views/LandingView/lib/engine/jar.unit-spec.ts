@@ -20,7 +20,14 @@ describe('jarBox', () => {
 
   it('shrinks the jar (and so the balls) in a phone-sized pit, but not below a floor', () => {
     expect(jarBox({ w: 358, h: 320 }).scale).toBeCloseTo(0.444, 2)
-    expect(jarBox({ w: 100, h: 100 }).scale).toBe(0.42)
+    expect(jarBox({ w: 100, h: 100 }).scale).toBe(0.34)
+  })
+
+  it('leaves room above the rim for the lid in a short pit, so it never pokes out', () => {
+    const jar = jarBox({ w: 358, h: 260 })
+    /* the lid stands 30 jar pixels (at full size) above the rim */
+    expect(jar.top - 30 * jar.scale).toBeGreaterThanOrEqual(0)
+    expect(jar.bottom).toBeLessThanOrEqual(260)
   })
 })
 

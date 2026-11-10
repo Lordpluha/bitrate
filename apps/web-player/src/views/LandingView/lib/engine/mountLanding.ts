@@ -1,9 +1,10 @@
 import { gsap } from 'gsap'
 import type { LandingCopy } from '../../model/copy'
 import { createCanvases } from './canvases'
-import { all, BOARD, createPointerStore, type EngineContext } from './context'
+import { all, createPointerStore, type EngineContext } from './context'
 import { mountCursor } from './cursor'
 import { mountParticles2d, mountPartners2d } from './fallback2d'
+import { fitLanding } from './fit'
 import { mountHeadings } from './headings'
 import { playIntro } from './intro'
 import { clearTokenCache } from './palette'
@@ -22,10 +23,18 @@ const LOCK_CLASS = 'landing-lock'
 export const mountLanding = ({
   root,
   copy,
+  onModeChange,
 }: {
   root: HTMLElement
   copy: LandingCopy
+  /** The window crossed into another layout mode: the landing has to mount again. */
+  onModeChange: () => void
 }) => {
+  const viewport = () => ({
+    width: window.innerWidth,
+    height: window.innerHeight,
+  })
+  const mode = fitLanding(viewport()).mode
   const controller = new AbortController()
   const disposers: (() => void)[] = []
   const ctx: EngineContext = {
@@ -33,6 +42,9 @@ export const mountLanding = ({
     scenes: all({ root, selector: '.scene', type: HTMLElement }),
     copy,
     reduce: matchMedia('(prefers-reduced-motion: reduce)').matches,
+    tall:
+      mode === 'tall' &&
+      !matchMedia('(prefers-reduced-motion: reduce)').matches,
     state: { index: 0, animating: false, dragging: false, intro: false },
     pointer: createPointerStore({ signal: controller.signal }),
     signal: controller.signal,
@@ -41,22 +53,19 @@ export const mountLanding = ({
     },
   }
   const html = document.documentElement
-  if (!ctx.reduce) {
+  /* a tall landing scrolls the page itself; one scene per screen locks it */
+  if (!ctx.reduce && !ctx.tall) {
     html.classList.add(LOCK_CLASS)
     ctx.onDispose(() => html.classList.remove(LOCK_CLASS))
   }
 
   /* board scale: the 1440x900 composition fitted to any viewport */
-  const fitBoard = () =>
-    root.style.setProperty(
-      '--s',
-      String(
-        Math.min(
-          window.innerWidth / BOARD.width,
-          window.innerHeight / BOARD.height,
-        ),
-      ),
-    )
+  root.classList.toggle('is-tall', ctx.tall)
+  const fitBoard = () => {
+    const fit = fitLanding(viewport())
+    if (fit.mode !== mode) onModeChange()
+    else root.style.setProperty('--s', String(fit.scale))
+  }
   fitBoard()
   window.addEventListener('resize', fitBoard, { signal: ctx.signal })
 

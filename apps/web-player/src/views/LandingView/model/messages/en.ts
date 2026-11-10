@@ -226,6 +226,8 @@ export const en = {
     'Save what you love, line up what plays next and come back through Recents — one listening loop.',
   'chrome.try_in_player': 'Try it in the player',
   'chrome.open_in_player': 'Open it in the player',
+  'chrome.start_listening_free': "Start listening — it's free",
+  'chrome.next_scene': 'Next scene',
 } as const
 
 export type LandingKey = keyof typeof en
