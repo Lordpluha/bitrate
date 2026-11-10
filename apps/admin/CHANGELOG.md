@@ -1,5 +1,11 @@
 # @bitrate/admin
 
+## 0.6.2
+
+### Patch Changes
+
+- 7afe4c3: Fixed the staff sign-in form rejecting an autofilled address with a stray space or capitals; the address is now trimmed and lower-cased before it is checked and sent.
+
 ## 0.6.1
 
 ### Patch Changes

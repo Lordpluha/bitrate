@@ -1,5 +1,19 @@
 # @bitrate/api
 
+## 3.1.0
+
+### Minor Changes
+
+- 3225a00: Reworked the landing to lead visitors into the player: the header now has a GitHub link, a language switch and an always-visible "Start listening" / "Open player" button, and the brand idles in motion until hovered. The hero shows real captures of the player on a laptop and a phone in every theme, live platform totals from the new public `GET /api/v1/platform/stats` endpoint and a free · no install · open source line; the footer carries the Bitrate mark, a GitHub link and separate health for the API, the web player and the artist portal (via the new `/api/health` route). The team block became a jar of bubbles that can be opened, shaken or emptied into the footer, with up-to-date team and stack content, and the final scene's Newton's cradle can be pulled and released. Scrolling back no longer snaps the background shape. The auth screens are now fully translated (EN/UK/PL) with a guest language switch and default to the browser language; email/password sign-in now requires the legal acceptance box like sign-up, the auth panels fill the desktop height, and the mobile menu's log-out clears the player island. Artist and user pages are addressed by username, with old id links redirecting, and unknown usernames answer 404 in the API. The artist portal now sends the acceptances the artist actually ticked instead of always `true`.
+
+### Patch Changes
+
+- 3c272ec: Fixed listeners and staff being answered "Invalid email format" or "Invalid credentials" when the sign-in form sent their address with a capital letter or a stray space (autofill, mobile keyboards) — the artist-only fix now covers every audience. Listener sign-in, registration, password reset and verification resend, artist verification codes, staff sign-in and staff creation trim and lower-case the address; account lookups (including OAuth linking) ignore letter case, so accounts stored in mixed case are still found. A malformed address is now answered with the translated "Enter a valid email address".
+- 893bb85: A playlist now holds each track once. Adding tracks skips the ones the playlist already has,
+  and a request where every track is already there answers 409 "Track is already in this
+  playlist" instead of appending a second copy. Duplicates added before this change stay until
+  removed.
+
 ## 3.0.0
 
 ### Major Changes
