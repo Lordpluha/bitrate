@@ -1,6 +1,8 @@
 export const auth = {
   'auth.emailAddress': 'Adres e-mail',
   'auth.password': 'Hasło',
+  'auth.password.show': 'Pokaż hasło',
+  'auth.password.hide': 'Ukryj hasło',
   'auth.verifyEmail': 'Potwierdź e-mail',
   'auth.legal.terms': 'Warunki korzystania',
   'auth.legal.community': 'Zasady społeczności',
