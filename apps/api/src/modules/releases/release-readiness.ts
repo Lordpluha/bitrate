@@ -17,7 +17,8 @@ export interface ReleaseReadinessInput {
   upc: string | null
   cover: string | null
   masterOwnerType: ReleaseMasterOwner | null
-  tracks: { id: string; isrc: string | null; hasAudio: boolean }[]
+  /** `hasGenres` is true for catalogue tracks, which keep the genres they already have. */
+  tracks: { id: string; isrc: string | null; hasAudio: boolean; hasGenres: boolean }[]
   contributors: { id: string; roles: ReleaseCreditRole[] }[]
   splits: { rightType: ReleaseRightType; shareBasisPoints: number }[]
 }
@@ -26,6 +27,7 @@ type ReleaseBlocker =
   | { code: 'NO_TRACKS' }
   | { code: 'COVER_MISSING' }
   | { code: 'TRACK_AUDIO_MISSING'; trackId: string }
+  | { code: 'TRACK_GENRES_MISSING'; trackId: string }
   | { code: 'MASTER_OWNER_MISSING' }
   | { code: 'CONTRIBUTOR_ROLES_MISSING'; contributorId: string }
   | { code: 'SPLITS_INCOMPLETE'; rightType: ReleaseRightType; totalBasisPoints: number }
@@ -48,6 +50,7 @@ export function releaseReadiness(input: ReleaseReadinessInput): ReleaseReadiness
   if (!input.cover) blockers.push({ code: 'COVER_MISSING' })
   for (const track of input.tracks) {
     if (!track.hasAudio) blockers.push({ code: 'TRACK_AUDIO_MISSING', trackId: track.id })
+    if (!track.hasGenres) blockers.push({ code: 'TRACK_GENRES_MISSING', trackId: track.id })
   }
   if (!input.masterOwnerType) blockers.push({ code: 'MASTER_OWNER_MISSING' })
   for (const contributor of input.contributors) {
@@ -75,17 +78,21 @@ function splitTotal(splits: ReleaseReadinessInput['splits'], rightType: ReleaseR
     .reduce((total, split) => total + split.shareBasisPoints, 0)
 }
 
-/** Published catalogue tracks already have processed audio; drafts need an uploaded master. */
+/**
+ * Published catalogue tracks already have processed audio and genres; drafts need an uploaded
+ * master and at least one genre.
+ */
 export function readinessFromRecord(record: ReadinessRecord) {
   return {
     ...record,
     tracks: [
-      ...record.trackDrafts.map(({ id, isrc, audioKey, sourceTrackId, sourceTrack }) => ({
+      ...record.trackDrafts.map(({ id, isrc, audioKey, sourceTrackId, sourceTrack, _count }) => ({
         id,
         isrc: sourceTrack?.isrc ?? isrc,
         hasAudio: sourceTrackId ? sourceAvailable(sourceTrack) : !!audioKey,
+        hasGenres: !!sourceTrackId || _count.genres > 0,
       })),
-      ...record.tracks.map(({ track }) => ({ ...track, hasAudio: true })),
+      ...record.tracks.map(({ track }) => ({ ...track, hasAudio: true, hasGenres: true })),
     ],
   }
 }

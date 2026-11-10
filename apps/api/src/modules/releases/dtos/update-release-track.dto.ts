@@ -10,6 +10,9 @@ const IsrcSchema = z.string().transform((value, context) => {
   return z.NEVER
 })
 
+/** Artists tag each recording with a few catalogue genres; more would dilute genre browse. */
+export const MAX_RECORDING_GENRES = 3
+
 export const UpdateReleaseTrackSchema = z
   .strictObject({
     title: z
@@ -24,12 +27,23 @@ export const UpdateReleaseTrackSchema = z
       .describe(
         'ISO 3901 code, with or without hyphens; stored without them. null clears it. Optional for submission.',
       ),
+    genreIds: z
+      .array(z.uuid())
+      .min(1)
+      .max(MAX_RECORDING_GENRES)
+      .refine((ids) => new Set(ids).size === ids.length, RELEASE_VALIDATION.DUPLICATE_ITEMS)
+      .optional()
+      .describe('Catalogue genre IDs; replaces the recording genres. Required for submission.'),
     expectedUpdatedAt: z.iso
       .datetime({ offset: true })
       .describe('Release version read before editing'),
   })
-  .refine((input) => input.title !== undefined || input.isrc !== undefined, {
-    error: RELEASE_VALIDATION.UPDATE_EMPTY,
-  })
+  .refine(
+    (input) =>
+      input.title !== undefined || input.isrc !== undefined || input.genreIds !== undefined,
+    {
+      error: RELEASE_VALIDATION.UPDATE_EMPTY,
+    },
+  )
 
 export class UpdateReleaseTrackDto extends createZodDto(UpdateReleaseTrackSchema) {}

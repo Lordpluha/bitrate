@@ -8,6 +8,8 @@ import { ArtistAnalyticsController } from './artist-analytics.controller'
 import { ArtistAnalyticsService } from './artist-analytics.service'
 import { ArtistDashboardController } from './artist-dashboard.controller'
 import { ArtistDashboardService } from './artist-dashboard.service'
+import { ArtistGenresController } from './artist-genres.controller'
+import { ArtistGenresService } from './artist-genres.service'
 import { ArtistMusicController } from './artist-music.controller'
 import { ArtistMusicService } from './artist-music.service'
 import { ArtistNotificationsController } from './artist-notifications.controller'
@@ -48,6 +50,7 @@ import { ReleasesService } from './releases.service'
     ArtistTasksController,
     ArtistMusicController,
     ArtistDashboardController,
+    ArtistGenresController,
     ReleaseDeliveryController,
     DistributionController,
     ArtistSearchController,
@@ -64,6 +67,7 @@ import { ReleasesService } from './releases.service'
     ReleaseTasksService,
     ArtistMusicService,
     ArtistDashboardService,
+    ArtistGenresService,
     ReleaseDeliveryService,
     ArtistSearchService,
     ArtistNotificationsService,

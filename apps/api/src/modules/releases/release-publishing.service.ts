@@ -253,6 +253,9 @@ export class ReleasePublishingService implements OnApplicationBootstrap {
               data: { status: ReleaseStatus.PUBLISHING },
             })
             if (active.count !== 1) throw new Error(`Release ${releaseId} is no longer publishing`)
+            await tx.trackGenre.createMany({
+              data: draft.genres.map(({ genreId }) => ({ trackId, genreId })),
+            })
             return tx.releaseTrack.create({
               data: { releaseId, trackId, position: position + 1, draftId: draft.id },
             })
@@ -328,6 +331,12 @@ export class ReleasePublishingService implements OnApplicationBootstrap {
       // A track deleted or reconverted meanwhile rolls everything back; the next event retries.
       if (published !== nativeIds.length)
         throw new Error(`Release ${releaseId} changed while publishing`)
+      const trackGenres = await tx.trackGenre.findMany({
+        where: { trackId: { in: trackIds } },
+        select: { genreId: true },
+        distinct: ['genreId'],
+        orderBy: { genreId: 'asc' },
+      })
       const album = await this.albums.createForRelease(tx, {
         artistId: release.ownerArtistId,
         title: release.title,
@@ -335,6 +344,7 @@ export class ReleasePublishingService implements OnApplicationBootstrap {
         cover: release.cover,
         publishedAt,
         trackIds,
+        genreIds: trackGenres.map(({ genreId }) => genreId),
       })
       await tx.release.update({ where: { id: releaseId }, data: { albumId: album } })
       return album

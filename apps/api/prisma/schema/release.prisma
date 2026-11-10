@@ -66,10 +66,11 @@ model ArtistTrackDraft {
   createdAt        DateTime           @default(now())
   updatedAt        DateTime           @default(now()) @updatedAt
 
-  sourceTrack Track? @relation("CompilationRecording", fields: [sourceTrackId], references: [id], onDelete: Restrict)
-  owner   Artist   @relation(fields: [ownerArtistId], references: [id], onDelete: Restrict)
+  sourceTrack Track?                  @relation("CompilationRecording", fields: [sourceTrackId], references: [id], onDelete: Restrict)
+  owner       Artist                  @relation(fields: [ownerArtistId], references: [id], onDelete: Restrict)
   publishedAs ReleaseTrack?
-  release Release? @relation(fields: [releaseId, ownerArtistId], references: [id, ownerArtistId], onDelete: Restrict)
+  genres      ArtistTrackDraftGenre[]
+  release     Release?                @relation(fields: [releaseId, ownerArtistId], references: [id, ownerArtistId], onDelete: Restrict)
 
   @@index([ownerArtistId, deletedAt, updatedAt(sort: Desc)])
   @@index([releaseId])
@@ -108,6 +109,17 @@ enum DeliveryState {
   LIVE
   FAILED
   TAKEN_DOWN
+}
+
+/// Genres the artist chose for a recording; copied to the catalogue track when it goes live.
+model ArtistTrackDraftGenre {
+  draftId String           @db.Uuid
+  genreId String           @db.Uuid
+  draft   ArtistTrackDraft @relation(fields: [draftId], references: [id], onDelete: Cascade)
+  genre   Genre            @relation(fields: [genreId], references: [id], onDelete: Cascade)
+
+  @@id([draftId, genreId])
+  @@index([genreId])
 }
 
 // The artist's plan: which stores to deliver to. Territories reuse ReleaseTerritory, where no

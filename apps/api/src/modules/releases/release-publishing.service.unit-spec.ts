@@ -177,6 +177,7 @@ describe('ReleasePublishingService', () => {
               isrc: null,
               audioKey: 'm/1.wav',
               audioContentType: 'audio/wav',
+              genres: [{ genreId: 'genre-house' }],
             },
             {
               id: 'draft-Two',
@@ -185,6 +186,7 @@ describe('ReleasePublishingService', () => {
               isrc: 'USX9P2600012',
               audioKey: 'm/2.wav',
               audioContentType: 'audio/wav',
+              genres: [{ genreId: 'genre-house' }, { genreId: 'genre-techno' }],
             },
           ],
           contributors: [{ artistId: OWNER }, { artistId: 'featured-artist' }, { artistId: null }],
@@ -221,6 +223,13 @@ describe('ReleasePublishingService', () => {
       )
       expect(tx.releaseTrack.create).toHaveBeenCalledWith({
         data: { releaseId: RELEASE, trackId: 'track-Two', position: 2, draftId: 'draft-Two' },
+      })
+      // Each catalogue copy carries the genres the artist chose for its recording.
+      expect(tx.trackGenre.createMany).toHaveBeenCalledWith({
+        data: [
+          { trackId: 'track-Two', genreId: 'genre-house' },
+          { trackId: 'track-Two', genreId: 'genre-techno' },
+        ],
       })
     })
 
@@ -324,6 +333,10 @@ describe('ReleasePublishingService', () => {
       tx.release.updateMany.mockResolvedValue({ count: 1 })
       tracks.publishReleaseTracks.mockResolvedValue(2)
       albums.createForRelease.mockResolvedValue('album-1')
+      tx.trackGenre.findMany.mockResolvedValue([
+        { genreId: 'genre-house' },
+        { genreId: 'genre-techno' },
+      ] as never)
 
       await service.trackSettled('track-1')
 
@@ -338,6 +351,8 @@ describe('ReleasePublishingService', () => {
           artistId: OWNER,
           trackIds: ['track-0', 'track-1'],
           publishedAt: NOW,
+          // The album is listed under every genre of its tracks.
+          genreIds: ['genre-house', 'genre-techno'],
         }),
       )
       expect(tx.release.update).toHaveBeenCalledWith({
