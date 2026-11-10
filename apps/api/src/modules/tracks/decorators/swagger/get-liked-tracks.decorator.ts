@@ -34,7 +34,6 @@ export function TracksGetLikedSwagger() {
               albumId: 'album123',
               artistId: 'artist123',
               cover: 'https://example.com/cover.jpg',
-              audioUrl: '',
               userId: '',
               createdAt: new Date('2026-01-01T00:00:00.000Z'),
               updatedAt: new Date('2026-01-01T00:00:00.000Z'),
