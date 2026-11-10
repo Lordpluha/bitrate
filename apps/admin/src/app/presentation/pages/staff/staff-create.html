@@ -63,17 +63,22 @@
       </div>
       <div class="flex flex-col gap-1.5">
         <label hlmLabel for="staff-password">{{ 'operator.field.password' | transloco }}</label>
-        <input
-          hlmInput
-          id="staff-password"
-          type="password"
-          autocomplete="new-password"
-          formControlName="password"
-          [attr.aria-invalid]="errorFor('password') !== null"
-          [attr.aria-describedby]="
-            errorFor('password') ? 'staff-password-error' : 'staff-password-hint'
-          "
-        />
+        <div class="relative">
+          <input
+            #passwordField
+            hlmInput
+            class="w-full pr-10"
+            id="staff-password"
+            type="password"
+            autocomplete="new-password"
+            formControlName="password"
+            [attr.aria-invalid]="errorFor('password') !== null"
+            [attr.aria-describedby]="
+              errorFor('password') ? 'staff-password-error' : 'staff-password-hint'
+            "
+          />
+          <app-password-toggle [target]="passwordField" />
+        </div>
         @if (errorFor('password'); as key) {
           <p class="text-xs text-error-text" id="staff-password-error" role="alert">
             {{ key | transloco: { min: minPassword } }}

@@ -5,6 +5,7 @@ import { SignInUseCase } from '@application/session'
 import { TranslocoPipe } from '@jsverse/transloco'
 import { NgIcon, provideIcons } from '@ng-icons/core'
 import { lucideArrowRight, lucideCircleAlert, lucideLoader2 } from '@ng-icons/lucide'
+import { PasswordToggle } from '@presentation/components'
 import { zodErrorMessage, zodValidator } from '@presentation/forms'
 import { HlmButtonImports } from '@spartan-ng/helm/button'
 import { HlmInputImports } from '@spartan-ng/helm/input'
@@ -18,6 +19,7 @@ import { credentialsSchema } from './credentials.schema'
     HlmInputImports,
     HlmLabelImports,
     NgIcon,
+    PasswordToggle,
     ReactiveFormsModule,
     TranslocoPipe,
   ],
