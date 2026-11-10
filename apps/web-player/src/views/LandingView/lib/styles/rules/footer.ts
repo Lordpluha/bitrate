@@ -65,4 +65,30 @@ export const FOOTER_LINKS: readonly LandingRule[] = [
     'quick-in',
     'w-[360px] max-w-full text-left [font-size:13px] leading-[1.4] max-[820px]:w-full',
   ],
+  /* FAQ: native disclosure rows in a glass card; the arrow turns when a row opens */
+  [
+    'faq-list',
+    'flex flex-col h-full box-border p-[8px_24px] overflow-y-auto [background:var(--glass)] [backdrop-filter:blur(10px)] border border-solid border-border rounded-[20px] max-[820px]:p-[4px_16px]',
+  ],
+  [
+    'faq-item',
+    '[border-bottom:1px_solid_var(--border)] [&:last-child]:border-b-0',
+  ],
+  [
+    'faq-item',
+    '[&>summary]:flex [&>summary]:gap-[16px] [&>summary]:items-center [&>summary]:justify-between [&>summary]:min-h-[64px] [&>summary]:font-[600] [&>summary]:[font-size:17px] [&>summary]:leading-[1.3] [&>summary]:text-foreground [&>summary]:list-none [&>summary::-webkit-details-marker]:hidden max-[820px]:[&>summary]:min-h-[52px] max-[820px]:[&>summary]:[font-size:15px]',
+  ],
+  [
+    'faq-item',
+    '[&>summary]:rounded-[8px] [&>summary:focus-visible]:outline-2 [&>summary:focus-visible]:outline-ring [&>summary:focus-visible]:outline-offset-2',
+  ],
+  [
+    'faq-item',
+    '[&>p]:m-0 [&>p]:pb-[18px] [&>p]:pr-[36px] [&>p]:[font-size:15px] [&>p]:leading-[1.55] [&>p]:text-muted-foreground max-[820px]:[&>p]:[font-size:14px] max-[820px]:[&>p]:pr-0',
+  ],
+  [
+    'faq-chev',
+    'shrink-0 w-[18px]! h-[18px]! text-muted-foreground [transform:rotate(90deg)] [transition:transform_0.25s] [details[open]_&]:[transform:rotate(-90deg)]',
+  ],
+  ['faq-link', 'text-accent'],
 ]

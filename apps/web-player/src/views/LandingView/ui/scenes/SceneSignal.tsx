@@ -51,6 +51,7 @@ export const SceneSignal = ({ signedIn, stats }: HeroSceneProps) => {
             {/* the player needs an account: guests are offered one instead of a login redirect */}
             <Link
               className={lc('btn btn-primary magnetic')}
+              data-funnel="hero"
               href={signedIn ? ROUTES.main : ROUTES.auth.registration}
             >
               {c(
@@ -63,6 +64,7 @@ export const SceneSignal = ({ signedIn, stats }: HeroSceneProps) => {
             {!signedIn && (
               <Link
                 className={lc('btn btn-ghost magnetic')}
+                data-funnel="hero_login"
                 href={ROUTES.auth.login}
               >
                 {c('hero.log_in')}
@@ -72,7 +74,7 @@ export const SceneSignal = ({ signedIn, stats }: HeroSceneProps) => {
           {/* one step in: Google creates the account and signs in, behind the same consent box */}
           {!signedIn && (
             <div className={lc('quick-in')} data-a="up">
-              <QuickGoogleSignIn />
+              <QuickGoogleSignIn funnel="hero_google" />
             </div>
           )}
           {stats && (

@@ -12,6 +12,9 @@ vi.mock('@shared/api/client', () => ({
   useMutation: () => ({ error: null, isPending: false, mutateAsync }),
 }))
 vi.mock('@shared/api/feedback', () => ({ showApiErrorToast: vi.fn() }))
+const { trackFunnel } = vi.hoisted(() => ({ trackFunnel: vi.fn() }))
+vi.mock('@shared/analytics', () => ({ trackFunnel }))
+const steps = () => trackFunnel.mock.calls.map(([event]) => event.step)
 vi.mock('next/navigation', () => ({
   useRouter: () => ({ push: vi.fn(), replace: vi.fn() }),
   useSearchParams: () => new URLSearchParams(),
@@ -35,6 +38,7 @@ const consentBox = () =>
 describe('RegistrationForm consent', () => {
   beforeEach(() => {
     mutateAsync.mockReset()
+    trackFunnel.mockReset()
     mutateAsync.mockResolvedValue({})
   })
 
@@ -75,5 +79,41 @@ describe('RegistrationForm consent', () => {
         },
       }),
     )
+  })
+
+  describe('funnel', () => {
+    it('counts the form being shown', () => {
+      render(<RegistrationForm />)
+      expect(trackFunnel).toHaveBeenCalledWith({
+        step: 'signup.view',
+        attributes: { surface: 'page' },
+      })
+    })
+
+    it('counts nothing more while the consent box stops the submit', async () => {
+      const user = userEvent.setup()
+      render(<RegistrationForm />)
+      await fillAccount(user)
+      await user.click(screen.getByRole('button', { name: 'Register' }))
+      await waitFor(() =>
+        expect(consentBox()).toHaveAttribute('aria-invalid', 'true'),
+      )
+      expect(steps()).toEqual(['signup.view'])
+    })
+
+    it('counts the submit and the account being created', async () => {
+      const user = userEvent.setup()
+      render(<RegistrationForm />)
+      await fillAccount(user)
+      await user.click(consentBox())
+      await user.click(screen.getByRole('button', { name: 'Register' }))
+      await waitFor(() =>
+        expect(steps()).toEqual([
+          'signup.view',
+          'signup.submit',
+          'signup.success',
+        ]),
+      )
+    })
   })
 })

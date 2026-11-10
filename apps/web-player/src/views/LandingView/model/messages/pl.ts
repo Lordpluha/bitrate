@@ -228,4 +228,30 @@ export const pl: LandingCatalog = {
   'chrome.next_scene': 'Następna scena',
   'hero.start_listening_free': 'Zacznij słuchać za darmo',
   'cta.start_listening_free': 'Zacznij słuchać za darmo',
+  'scene.faq': 'Pytania',
+  'faq.before_you_press_play': 'Zanim naciśniesz play',
+  'faq.eyebrow': 'Odpowiedzi na pytania',
+  'faq.before_you': 'Zanim',
+  'faq.press_play': 'włączysz.',
+  'faq.lede': 'O co zwykle pytają przed rejestracją — prosto i uczciwie.',
+  'faq.q_free': 'Czy Bitrate jest naprawdę darmowy?',
+  'faq.a_free':
+    'Tak. Słuchanie jest darmowe — bez okresu próbnego i bez karty. Bitrate ma też otwarty kod na licencji MIT.',
+  'faq.source_on_github': 'Kod na GitHubie',
+  'faq.q_music': 'Jaka muzyka jest na Bitrate?',
+  'faq.a_music':
+    'Utwory, które niezależni artyści sami publikują na Bitrate. Katalog rośnie z każdym wydaniem.',
+  'faq.q_devices': 'Czy muszę coś instalować?',
+  'faq.a_devices':
+    'Nie. Bitrate działa w każdej nowoczesnej przeglądarce, na komputerze i telefonie, a twoja biblioteka jest z tobą na obu. Aplikacje na telefony i komputery są w planach.',
+  'faq.q_quality': 'Jaka jest jakość dźwięku?',
+  'faq.a_quality':
+    'Do 320 kb/s. W ustawieniach możesz ograniczyć jakość, by oszczędzać dane komórkowe.',
+  'faq.q_signin': 'Jak się zarejestrować?',
+  'faq.a_signin':
+    'Przez Google lub Facebook w jednym kroku albo e-mailem i hasłem.',
+  'faq.q_data': 'Co dzieje się z moimi danymi?',
+  'faq.a_data':
+    'Na Bitrate nie ma reklam. Ustawienia prywatności decydują, co znajomi widzą z twojego słuchania, a Polityka prywatności wyjaśnia, co jest przechowywane i po co.',
+  'faq.privacy_policy': 'Polityka prywatności',
 }

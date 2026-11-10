@@ -2,11 +2,13 @@
 
 import { type RegistrationFormData, registrationSchema } from '@entities/User'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { trackFunnel } from '@shared/analytics'
 import { useMutation } from '@shared/api/client'
 import { showApiErrorToast } from '@shared/api/feedback'
 import { useI18n } from '@shared/i18n'
 import { ROUTES } from '@shared/routes'
 import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 
 export const useRegistrationForm = () => {
@@ -29,7 +31,13 @@ export const useRegistrationForm = () => {
     shouldFocusError: true,
   })
 
+  /* the sign-up funnel: the form shown, sent (only once valid, consent included) and done */
+  useEffect(() => {
+    trackFunnel({ step: 'signup.view', attributes: { surface: 'page' } })
+  }, [])
+
   const onSubmit = async (data: RegistrationFormData) => {
+    trackFunnel({ step: 'signup.submit', attributes: { surface: 'page' } })
     try {
       await mutation.mutateAsync({
         body: {
@@ -39,6 +47,7 @@ export const useRegistrationForm = () => {
           username: data.fullName,
         },
       })
+      trackFunnel({ step: 'signup.success', attributes: { surface: 'page' } })
       router.push(ROUTES.auth.verifyEmail(data.email))
     } catch {
       /**

@@ -1,9 +1,10 @@
 'use client'
 
+import { trackFunnel } from '@shared/analytics'
 import { useI18n } from '@shared/i18n'
 import { ROUTES } from '@shared/routes'
 import Link from 'next/link'
-import { useEffect, useRef, useState } from 'react'
+import { type RefObject, useEffect, useRef, useState } from 'react'
 import { formatSceneNumber } from '../lib/engine/navigation'
 import type { PlatformStats } from '../model/platformStats'
 import { LANDING_SCENES } from '../model/scenes'
@@ -14,6 +15,7 @@ import { LandingHeader } from './LandingHeader'
 import { LandingIcons } from './LandingIcons'
 import { VisitorContext } from './scenes/parts'
 import { SceneDevices } from './scenes/SceneDevices'
+import { SceneFaq } from './scenes/SceneFaq'
 import { SceneLibrary } from './scenes/SceneLibrary'
 import { SceneLoop } from './scenes/SceneLoop'
 import { ScenePartners } from './scenes/ScenePartners'
@@ -51,6 +53,60 @@ export const LandingView = ({ signedIn, stats }: LandingViewProps) => {
   )
 }
 
+/**
+ * Counts the landing's part of the sign-up funnel: the visit, each scene reached (once) and every
+ * click on a way into the player, by its `data-funnel` placement. Nothing personal is sent.
+ */
+const useLandingFunnel = ({
+  root,
+  signedIn,
+}: {
+  root: RefObject<HTMLDivElement | null>
+  signedIn: boolean
+}) => {
+  useEffect(() => {
+    const el = root.current
+    if (!el) return
+    trackFunnel({
+      step: 'landing.view',
+      attributes: {
+        signed_in: signedIn,
+        layout: window.innerWidth <= PHONE_MAX_WIDTH ? 'phone' : 'desktop',
+      },
+    })
+    const reached = new Set<string>()
+    const noteScene = () => {
+      const scene = el.dataset.scene
+      if (!scene || reached.has(scene)) return
+      reached.add(scene)
+      trackFunnel({ step: 'landing.scene', attributes: { scene } })
+    }
+    /* the engine names the current scene on the root; it arrives after the engine mounts */
+    const watch = new MutationObserver(noteScene)
+    watch.observe(el, { attributes: true, attributeFilter: ['data-scene'] })
+    const onClick = (e: MouseEvent) => {
+      if (!(e.target instanceof Element)) return
+      const link = e.target.closest<HTMLElement>('[data-funnel]')
+      if (!link || !el.contains(link)) return
+      trackFunnel({
+        step: 'landing.cta',
+        attributes: {
+          placement: link.dataset.funnel ?? 'unknown',
+          scene: el.dataset.scene ?? 'hero',
+        },
+      })
+    }
+    el.addEventListener('click', onClick, { capture: true })
+    return () => {
+      watch.disconnect()
+      el.removeEventListener('click', onClick, { capture: true })
+    }
+  }, [root, signedIn])
+}
+
+/** Same breakpoint as the landing's phone layout. */
+const PHONE_MAX_WIDTH = 820
+
 type LandingContentProps = LandingViewProps & {
   /** The window crossed into another layout mode (scenes, tall, phone). */
   onModeChange: () => void
@@ -63,6 +119,7 @@ const LandingContent = ({
 }: LandingContentProps) => {
   const c = useLandingCopy()
   const root = useRef<HTMLDivElement>(null)
+  useLandingFunnel({ root, signedIn })
   /* the latest callback without remounting the engine when the parent re-renders */
   const modeChange = useRef(onModeChange)
   modeChange.current = onModeChange
@@ -125,6 +182,7 @@ const LandingContent = ({
       <div className={lc('m-bar')}>
         <Link
           className={lc('btn btn-primary m-bar-cta')}
+          data-funnel="bar"
           href={signedIn ? ROUTES.main : ROUTES.auth.registration}
         >
           {c(signedIn ? 'chrome.open_player' : 'chrome.start_listening_free')}
@@ -149,13 +207,14 @@ const LandingContent = ({
           <SceneSignal signedIn={signedIn} stats={stats} />
           <LandingDemoProvider>
             <SceneLoop />
-            <SceneRules />
-            <SceneLibrary />
             <SceneDevices />
+            <SceneLibrary />
             <SceneSocial />
+            <SceneRules />
           </LandingDemoProvider>
-          <ScenePartners />
           <SceneTeam />
+          <ScenePartners />
+          <SceneFaq />
           <SceneStart signedIn={signedIn} />
         </VisitorContext>
       </main>

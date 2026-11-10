@@ -1,7 +1,8 @@
 import { gsap } from 'gsap'
+import { isSceneId } from '../../../model/scenes'
 import { BOARD, type EngineContext, must } from '../context'
 import { fitLanding } from '../fit'
-import { createLayouts, FIELD_COUNT } from '../layouts'
+import { createLayouts } from '../layouts'
 import { isLightTheme, type PaletteToken, token } from '../palette'
 import { createCradle } from './cradle'
 import { createField } from './field'
@@ -73,7 +74,7 @@ export const createStage = async ({
   const LAYOUTS = createLayouts()
   const field = createField({
     kit,
-    first: LAYOUTS[0] ?? new Float32Array(FIELD_COUNT * 3),
+    first: LAYOUTS.hero,
     pixelRatio: renderer.getPixelRatio(),
     time: signal.time,
   })
@@ -128,10 +129,16 @@ export const createStage = async ({
     cradle.measure()
     partners.measure()
   }
+  /** The scene at a position on the page: the backdrop is keyed by scene, not by order. */
+  const sceneAt = (i: number) => {
+    const id = ctx.scenes[i]?.id
+    return id && isSceneId(id) ? id : null
+  }
   const go = (i: number, dur = 1.6) => {
-    const L = LOOK[i]
-    const layout = LAYOUTS[i]
-    if (!L || !layout) return
+    const id = sceneAt(i)
+    if (!id) return
+    const L = LOOK[id]
+    const layout = LAYOUTS[id]
     current = i
     measure()
     signal.place(L, dur)
@@ -159,8 +166,8 @@ export const createStage = async ({
     field.fit(PX, w, h)
     measure()
     /* without the loop, setSize() leaves a blank canvas: place instantly and redraw */
-    const L = LOOK[current]
-    if (L) signal.place(L, looping ? 0.01 : 0)
+    const id = sceneAt(current)
+    if (id) signal.place(LOOK[id], looping ? 0.01 : 0)
     if (!looping) still()
   }
   window.addEventListener('resize', resize, { signal: abort })

@@ -228,6 +228,32 @@ export const en = {
   'chrome.next_scene': 'Next scene',
   'hero.start_listening_free': 'Start listening free',
   'cta.start_listening_free': 'Start listening free',
+  'scene.faq': 'FAQ',
+  'faq.before_you_press_play': 'Before you press play',
+  'faq.eyebrow': 'Questions, answered',
+  'faq.before_you': 'Before you',
+  'faq.press_play': 'press play.',
+  'faq.lede': 'What people usually ask before they sign up — answered plainly.',
+  'faq.q_free': 'Is Bitrate really free?',
+  'faq.a_free':
+    'Yes. Listening is free — no trial and no card. Bitrate is also open source under the MIT licence.',
+  'faq.source_on_github': 'Source on GitHub',
+  'faq.q_music': 'What music is on Bitrate?',
+  'faq.a_music':
+    'Tracks that independent artists publish on Bitrate themselves. The catalogue grows with every release.',
+  'faq.q_devices': 'Do I need to install anything?',
+  'faq.a_devices':
+    'No. Bitrate runs in any modern browser, on a computer or a phone, and your library follows you between them. Apps for phones and desktops are on the roadmap.',
+  'faq.q_quality': 'How good is the sound?',
+  'faq.a_quality':
+    'Up to 320 kbps. You can cap the quality in settings to save data on a mobile connection.',
+  'faq.q_signin': 'How do I sign up?',
+  'faq.a_signin':
+    'With Google or Facebook in one step, or with an email and a password.',
+  'faq.q_data': 'What happens to my data?',
+  'faq.a_data':
+    'There are no ads on Bitrate. Your privacy settings decide what friends see of your listening, and the Privacy Policy explains what is stored and why.',
+  'faq.privacy_policy': 'Privacy Policy',
 } as const
 
 export type LandingKey = keyof typeof en

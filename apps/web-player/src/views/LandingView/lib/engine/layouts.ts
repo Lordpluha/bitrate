@@ -1,3 +1,4 @@
+import type { SceneId } from '../../model/scenes'
 import { BOARD, rnd } from './context'
 
 /** Particles in the structured field. */
@@ -83,10 +84,10 @@ const rect = ({
 
 const TAU = Math.PI * 2
 
-/** One particle layout per scene (same order as LANDING_SCENES), in board pixels (x, y, depth). */
-export const createLayouts = (): Float32Array[] => [
+/** One particle layout per scene, keyed by scene id, in board pixels (x, y, depth). */
+export const createLayouts = (): Record<SceneId, Float32Array> => ({
   /* 01 fibonacci shell around the signal + two tilted orbits */
-  make((i, f) =>
+  hero: make((i, f) =>
     f < 0.62
       ? fib({ i, n: Math.floor(FIELD_COUNT * 0.62), r: 430, cx: 1000, cy: 455 })
       : ellipse({
@@ -99,7 +100,7 @@ export const createLayouts = (): Float32Array[] => [
         }),
   ),
   /* 02 a 72-band spectrum along the floor + a signal line over the player blocks */
-  make((i, f) => {
+  loop: make((i, f) => {
     if (f < 0.7) {
       const bar = i % 72
       const h =
@@ -112,14 +113,14 @@ export const createLayouts = (): Float32Array[] => [
     return [x, 230 + Math.sin(x * 0.02) * 12, (rnd(i, 4) - 0.5) * 60]
   }),
   /* 03 a perspective floor grid running to the horizon */
-  make((i) => {
+  rules: make((i) => {
     const cols = 64
     const row = Math.floor(i / cols) % 50
     const col = i % cols
     return [col * (BOARD.width / (cols - 1)), 650 + row * 5, -900 + row * 26]
   }),
   /* 04 library: outlines of the sidebar, the browse grid and the artists column */
-  make((i, f) => {
+  library: make((i, f) => {
     const frame =
       f < 0.3
         ? { x: 48, y: 230, w: 360, h: 600 }
@@ -130,7 +131,7 @@ export const createLayouts = (): Float32Array[] => [
     return [x, y, (rnd(i, 13) - 0.5) * 30]
   }),
   /* 05 outlines of the desktop window and the phone, joined by an arc */
-  make((i, f) => {
+  devices: make((i, f) => {
     if (f < 0.45) {
       const [x, y] = rect({ x: 676, y: 116, w: 732, h: 716, t: rnd(i, 16) })
       return [x, y, 0]
@@ -143,7 +144,7 @@ export const createLayouts = (): Float32Array[] => [
     return [502 + 200 * t + Math.sin(t * 3.1) * 30, 790 - 150 * t * t, 10]
   }),
   /* 06 conversation ripples from the Online now card */
-  make((i) => {
+  social: make((i) => {
     const ring = i % 9
     const t = (rnd(i, 19) - 0.5) * Math.PI * 1.2
     const r = 70 + ring * 70
@@ -154,9 +155,9 @@ export const createLayouts = (): Float32Array[] => [
     ]
   }),
   /* 07 a loose shell around the partner spheres */
-  make((i) => fib({ i, n: FIELD_COUNT, r: 470, cx: 970, cy: 460 })),
+  partners: make((i) => fib({ i, n: FIELD_COUNT, r: 470, cx: 970, cy: 460 })),
   /* 08 gravity rain over the team pit + its floor line */
-  make((i, f) =>
+  team: make((i, f) =>
     f < 0.75
       ? [
           520 + Math.floor(rnd(i, 23) * 44) * 20,
@@ -166,7 +167,7 @@ export const createLayouts = (): Float32Array[] => [
       : [520 + rnd(i, 26) * 880, 849, 0],
   ),
   /* 09 a dome lattice rising from the footer + a wide halo */
-  make((i, f) =>
+  cta: make((i, f) =>
     f < 0.7
       ? fib({
           i,
@@ -185,4 +186,13 @@ export const createLayouts = (): Float32Array[] => [
           tilt: 1.2,
         }),
   ),
-]
+  /* faq: six answer rows, as rules of light behind the questions */
+  faq: make((i) => {
+    const row = i % 6
+    return [
+      600 + rnd(i, 30) * 780,
+      236 + row * 92 + (rnd(i, 31) - 0.5) * 6,
+      (rnd(i, 32) - 0.5) * 30,
+    ]
+  }),
+})
