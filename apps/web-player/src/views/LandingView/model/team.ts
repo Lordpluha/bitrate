@@ -1,7 +1,6 @@
 import type { LandingCopy } from './copy'
+import { GITHUB_REPO_URL as REPO } from './links'
 import type { LandingKey } from './messages/en'
-
-const REPO = 'https://github.com/Lordpluha/bitrate'
 
 /** One bubble in the team pit: a person or a piece of the stack, with its hover card. */
 export type TeamMember = {
@@ -81,7 +80,65 @@ const TECH: readonly TechRow[] = [
     path: 'turbo.json',
     bg: 'purple-500',
   },
+  {
+    label: 'BullMQ',
+    role: 'team.tech_queues',
+    path: 'apps/api',
+    bg: 'red-500',
+  },
+  {
+    label: 'SeaweedFS',
+    role: 'team.tech_storage',
+    path: 'infra',
+    bg: 'green-600',
+  },
+  {
+    label: 'GSAP',
+    role: 'team.tech_motion',
+    path: 'apps/web-player/src/views/LandingView',
+    bg: 'green-500',
+  },
+  {
+    label: 'Three.js',
+    role: 'team.tech_3d',
+    path: 'apps/web-player/src/views/LandingView',
+    bg: 'neutral-900',
+  },
+  {
+    label: 'Storybook',
+    role: 'team.tech_components',
+    path: 'packages/ui-react',
+    bg: 'magenta-500',
+  },
+  {
+    label: 'Docusaurus',
+    role: 'team.tech_docs',
+    path: 'apps/docs',
+    bg: 'green-700',
+  },
+  {
+    label: 'Biome',
+    role: 'team.tech_lint',
+    path: 'biome.json',
+    bg: 'blue-700',
+  },
+  {
+    label: 'Vitest',
+    role: 'team.tech_tests',
+    path: 'apps/web-player/tests',
+    bg: 'amber-500',
+  },
 ]
+
+/** Workspaces in the monorepo: seven apps and eight packages (`pnpm-workspace.yaml`). */
+const WORKSPACES = 15
+
+/** The team block's counters. */
+export const TEAM_STATS = {
+  people: 3,
+  workspaces: WORKSPACES,
+  palette: 1,
+} as const
 
 /** The team pit's bubbles in the landing's language: the two people first, then the stack. */
 export const teamMembers = ({ copy }: { copy: LandingCopy }): TeamMember[] => [
@@ -96,12 +153,12 @@ export const teamMembers = ({ copy }: { copy: LandingCopy }): TeamMember[] => [
       { text: copy('team.repository'), href: REPO },
     ],
     bg: 'linear-gradient(135deg, var(--color-purple-500), var(--color-magenta-500))',
-    r: 92,
+    r: 84,
   },
   {
     kind: 'person',
     label: 'AK',
-    name: 'Andrey Kalashnikov',
+    name: 'Andrii Kalashnikov',
     meta: `@andreo-kalashnello · ${copy('team.role_contributor')}`,
     bio: copy('team.bio_contributor'),
     links: [
@@ -112,7 +169,20 @@ export const teamMembers = ({ copy }: { copy: LandingCopy }): TeamMember[] => [
       { text: copy('team.repository'), href: REPO },
     ],
     bg: 'linear-gradient(135deg, var(--color-blue-500), var(--color-purple-500))',
-    r: 92,
+    r: 84,
+  },
+  {
+    kind: 'person',
+    label: 'LA',
+    name: 'lavanios',
+    meta: `@lavanios · ${copy('team.role_contributor')}`,
+    bio: copy('team.bio_artist_portal'),
+    links: [
+      { text: copy('team.github'), href: 'https://github.com/lavanios' },
+      { text: copy('team.repository'), href: REPO },
+    ],
+    bg: 'linear-gradient(135deg, var(--color-magenta-500), var(--color-amber-500))',
+    r: 72,
   },
   ...TECH.map(
     ({ label, role, path, bg }, i): TeamMember => ({
@@ -128,7 +198,7 @@ export const teamMembers = ({ copy }: { copy: LandingCopy }): TeamMember[] => [
         },
       ],
       bg: `var(--color-${bg})`,
-      r: 40 + (i % 4) * 5,
+      r: 33 + (i % 4) * 4,
     }),
   ),
 ]

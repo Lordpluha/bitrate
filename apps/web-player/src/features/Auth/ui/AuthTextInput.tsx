@@ -1,4 +1,5 @@
-import { Input } from '@bitrate/ui-react'
+import { Input, PasswordInput } from '@bitrate/ui-react'
+import { useI18n } from '@shared/i18n'
 import type { ComponentProps } from 'react'
 import { AuthFieldError } from './AuthFieldError'
 import { AUTH_INPUT_CLASS } from './authStyles'
@@ -21,6 +22,7 @@ export const AuthTextInput = ({
   secret = false,
   ...props
 }: AuthTextInputProps) => {
+  const { t } = useI18n()
   const errorId = `${id}-error`
   const inputProps = {
     'aria-describedby': error ? errorId : undefined,
@@ -35,11 +37,16 @@ export const AuthTextInput = ({
         <label className="text-sm font-medium text-foreground" htmlFor={id}>
           {label}
         </label>
-        <Input
-          className={AUTH_INPUT_CLASS}
-          type={secret ? 'password' : props.type}
-          {...inputProps}
-        />
+        {secret ? (
+          <PasswordInput
+            className={AUTH_INPUT_CLASS}
+            hideLabel={t('auth.password.hide')}
+            showLabel={t('auth.password.show')}
+            {...inputProps}
+          />
+        ) : (
+          <Input className={AUTH_INPUT_CLASS} {...inputProps} />
+        )}
       </div>
       {error ? <AuthFieldError id={errorId}>{error}</AuthFieldError> : null}
     </>

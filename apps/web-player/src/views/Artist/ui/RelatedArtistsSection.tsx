@@ -1,6 +1,7 @@
 'use client'
 
 import { useRelatedArtists } from '@entities/Artist'
+import { ROUTES } from '@shared/routes'
 import { MusicCardLg } from '@shared/ui/MusicCardLg'
 import { getArtistAvatarUrl } from '@shared/utils/mediaUrl'
 import { useI18n } from '@/shared/i18n'
@@ -27,6 +28,7 @@ export const RelatedArtistsSection = ({
         {artists.map((artist) => (
           <MusicCardLg
             description={t('common.artist')}
+            href={ROUTES.artist(artist.username)}
             id={artist.id}
             imageUrl={getArtistAvatarUrl(artist.avatar)}
             isArtist

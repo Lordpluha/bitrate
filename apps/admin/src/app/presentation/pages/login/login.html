@@ -51,16 +51,21 @@
 
     <div class="flex flex-col gap-1.5">
       <label hlmLabel for="password">{{ 'login.password' | transloco }}</label>
-      <input
-        hlmInput
-        id="password"
-        type="password"
-        autocomplete="current-password"
-        formControlName="password"
-        [placeholder]="'login.passwordPlaceholder' | transloco"
-        [attr.aria-invalid]="errorFor('password') !== null"
-        [attr.aria-describedby]="errorFor('password') ? 'password-error' : null"
-      />
+      <div class="relative">
+        <input
+          #passwordField
+          hlmInput
+          class="w-full pr-10"
+          id="password"
+          type="password"
+          autocomplete="current-password"
+          formControlName="password"
+          [placeholder]="'login.passwordPlaceholder' | transloco"
+          [attr.aria-invalid]="errorFor('password') !== null"
+          [attr.aria-describedby]="errorFor('password') ? 'password-error' : null"
+        />
+        <app-password-toggle [target]="passwordField" />
+      </div>
       @if (errorFor('password'); as key) {
         <p class="text-xs text-error-text" id="password-error" role="alert">
           {{ key | transloco }}

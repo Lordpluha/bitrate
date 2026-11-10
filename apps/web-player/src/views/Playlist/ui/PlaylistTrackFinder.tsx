@@ -2,14 +2,17 @@
 
 import { Search, X } from 'lucide-react'
 import { useDeferredValue, useMemo, useState } from 'react'
-import { type TrackEntity, useTracks } from '@/entities/Track'
+import { useSearch } from '@/features/Search'
 import { useI18n } from '@/shared/i18n'
 import { PlaylistTrackSearchResult } from './PlaylistTrackSearchResult'
+
+/** Search results the finder offers at once. */
+const SUGGESTION_LIMIT = 8
 
 type PlaylistTrackFinderProps = {
   addingTrackId: string | null
   existingTrackIds: Set<string>
-  onAddTrack: (track: TrackEntity) => void
+  onAddTrack: (track: { id: string }) => void
   playlistTitle: string
 }
 
@@ -25,14 +28,16 @@ export const PlaylistTrackFinder = ({
   const deferredQuery = useDeferredValue(query)
   const normalizedQuery = deferredQuery.trim()
   const shouldSearch = normalizedQuery.length > 1
-  const { data: tracks = [], isFetching } = useTracks(
-    { limit: 5, title: normalizedQuery },
-    { enabled: shouldSearch },
-  )
-  const normalizedTracks = Array.isArray(tracks) ? tracks : []
+  /** The catalogue search matches artists as well as titles; `useSearch` idles on ''. */
+  const { data, isFetching } = useSearch({
+    limit: SUGGESTION_LIMIT,
+    query: shouldSearch ? normalizedQuery : '',
+    types: ['tracks'],
+  })
   const suggestedTracks = useMemo(
-    () => normalizedTracks.filter((track) => !existingTrackIds.has(track.id)),
-    [existingTrackIds, normalizedTracks],
+    () =>
+      (data?.tracks ?? []).filter((track) => !existingTrackIds.has(track.id)),
+    [data, existingTrackIds],
   )
 
   if (!isVisible) return null

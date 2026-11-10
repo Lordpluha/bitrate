@@ -7,6 +7,7 @@ import { Logo } from '@shared/ui'
 import { ActivityPopover } from './ActivityPopover'
 import { AuthButtons } from './AuthButtons'
 import { HeaderSearch } from './HeaderSearch'
+import { HistoryNav } from './HistoryNav'
 import { MobileMainHeader } from './MobileMainHeader'
 import { NotificationsPopover } from './NotificationsPopover'
 import { ProfileButton } from './ProfileButton'
@@ -21,7 +22,11 @@ export const MainHeader = () => {
         <div className="hidden w-full items-center justify-between gap-6 xl:grid xl:grid-cols-[1fr_auto_1fr]">
           <Logo href={ROUTES.main} wordmark />
 
-          <HeaderSearch />
+          {/* Back and Forward hang off the search's left edge so the field stays centred. */}
+          <div className="relative">
+            <HistoryNav className="absolute top-1/2 right-full mr-3 -translate-y-1/2" />
+            <HeaderSearch />
+          </div>
 
           <div className="flex items-center justify-end gap-4">
             {isLoading ? (

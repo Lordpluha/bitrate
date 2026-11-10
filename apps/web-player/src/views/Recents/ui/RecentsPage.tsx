@@ -2,6 +2,7 @@
 
 import { Button } from '@bitrate/ui-react'
 import {
+  HistoryEntryRow,
   useClearListeningHistory,
   useListeningHistory,
   useRemoveListeningHistoryTrack,
@@ -21,7 +22,6 @@ import { useMemo } from 'react'
 import { useI18n } from '@/shared/i18n'
 import { groupListeningHistory } from '@/views/Recents/model/groupListeningHistory'
 import { EarlierHistoryLink } from '@/views/Recents/ui/EarlierHistoryLink'
-import { HistoryEntryRow } from '@/views/Recents/ui/HistoryEntryRow'
 
 /** Rows standing in for the history while it loads. */
 const SKELETON_KEYS = Array.from(

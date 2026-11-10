@@ -1,6 +1,13 @@
 'use client'
 
-import { Button, Form, FormField, FormItem, Input } from '@bitrate/ui-react'
+import {
+  Button,
+  Form,
+  FormField,
+  FormItem,
+  Input,
+  PasswordInput,
+} from '@bitrate/ui-react'
 import {
   AUTH_BUTTON_CLASS,
   AUTH_INPUT_CLASS,
@@ -9,22 +16,25 @@ import {
   AuthFooterLink,
   AuthHeading,
   AuthOrDivider,
+  LegalAcceptanceField,
   OAuthButtons,
   useAuthenticatedRedirect,
 } from '@features/Auth'
+import { useI18n } from '@shared/i18n'
 import { ROUTES } from '@shared/routes'
 import Link from 'next/link'
 import { useLoginForm } from '../model/useLoginForm'
 
 export const LoginForm = () => {
+  const { t } = useI18n()
   useAuthenticatedRedirect()
   const { failure, form, isSubmitting, onSubmit } = useLoginForm()
 
   return (
     <>
       <AuthHeading
-        description="Welcome back! Please sign in to continue."
-        title="Login to your account"
+        description={t('auth.login.description')}
+        title={t('auth.login.title')}
       />
 
       {failure ? (
@@ -44,7 +54,7 @@ export const LoginForm = () => {
               name="email"
               render={({ field }) => (
                 <FormItem className="space-y-0">
-                  <AuthField label="Email Address">
+                  <AuthField label={t('auth.field.email')}>
                     <Input
                       autoComplete="email"
                       className={AUTH_INPUT_CLASS}
@@ -61,12 +71,13 @@ export const LoginForm = () => {
               name="password"
               render={({ field }) => (
                 <FormItem className="space-y-0">
-                  <AuthField label="Password">
-                    <Input
+                  <AuthField label={t('auth.field.password')}>
+                    <PasswordInput
                       autoComplete="current-password"
                       className={AUTH_INPUT_CLASS}
+                      hideLabel={t('auth.password.hide')}
                       placeholder="••••••••"
-                      type="password"
+                      showLabel={t('auth.password.show')}
                       {...field}
                     />
                   </AuthField>
@@ -77,9 +88,11 @@ export const LoginForm = () => {
               className="self-end text-[13px] leading-[1.25] font-semibold text-primary hover:opacity-80"
               href={ROUTES.auth.forgotPassword}
             >
-              Forgot password?
+              {t('auth.login.forgotPassword')}
             </Link>
           </div>
+
+          <LegalAcceptanceField control={form.control} id="accept-legal" />
 
           <Button
             className={AUTH_BUTTON_CLASS}
@@ -87,17 +100,17 @@ export const LoginForm = () => {
             type="submit"
             variant="primary"
           >
-            {isSubmitting ? 'Logging in...' : 'Log in'}
+            {isSubmitting ? t('auth.login.submitting') : t('auth.logIn')}
           </Button>
         </form>
       </Form>
 
       <AuthOrDivider />
-      <OAuthButtons />
+      <OAuthButtons accepted={form.watch('acceptLegal')} />
       <AuthFooterLink
         href={ROUTES.auth.registration}
-        lead="Don't have an account?"
-        link="Sign up"
+        lead={t('auth.login.noAccount')}
+        link={t('auth.signUp')}
       />
     </>
   )

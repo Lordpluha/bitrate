@@ -269,6 +269,7 @@ services:
       NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:3000}
       NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-http://localhost:3001}
       API_URL: ${API_URL:-http://api:3000}
+      WEB_ARTISTS_URL: ${WEB_ARTISTS_URL:-http://web-artists:3002}
       PORT: 3001
     ports:
       - "${WEB_PORT:-3001}:3001"

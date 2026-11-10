@@ -85,7 +85,7 @@ export const TrackCard = ({
     >
       <div
         className={cn(
-          'grid min-h-17 items-center px-2 py-1.5 text-left max-[1024px]:min-h-16 max-[1024px]:grid-cols-[minmax(0,1fr)_auto] max-[1024px]:gap-3 max-[1024px]:px-0 max-[1024px]:py-2',
+          'grid min-h-17 items-center px-2 py-1.5 text-left track-rows:min-h-16 track-rows:grid-cols-[minmax(0,1fr)_auto] track-rows:gap-3 track-rows:px-0 track-rows:py-2',
           (showDateAdded
             ? TRACK_TABLE_COLUMNS
             : TRACK_TABLE_COLUMNS_WITHOUT_DATE)[viewMode],
@@ -108,11 +108,11 @@ export const TrackCard = ({
         />
 
         {viewMode === 'compact' && (
-          <div className="truncate pr-4 text-[13px] text-muted-foreground max-[1024px]:hidden">
+          <div className="truncate pr-4 text-[13px] text-muted-foreground track-rows:hidden">
             <ArtistLink artistId={track.artistId} />
           </div>
         )}
-        <div className="truncate pr-4 text-[13px] text-muted-foreground max-[1024px]:hidden">
+        <div className="truncate pr-4 text-[13px] text-muted-foreground track-rows:hidden">
           {album ? (
             <Link
               className="hover:text-foreground hover:underline"
@@ -123,7 +123,7 @@ export const TrackCard = ({
           ) : null}
         </div>
         {showDateAdded ? (
-          <div className="truncate text-xs text-muted-foreground max-[1024px]:hidden">
+          <div className="truncate text-xs text-muted-foreground track-rows:hidden">
             {track.createdAt
               ? formatDate({ date: track.createdAt, locale })
               : t('common.unknown')}

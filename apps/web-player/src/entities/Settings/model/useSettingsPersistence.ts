@@ -9,17 +9,28 @@ import {
   initialSettings,
   useSettingsStore,
 } from '@/entities/Settings/model/settingsStore'
-import { normalizeLocale } from '@/shared/i18n'
+import { normalizeLocale, pickSupportedLocale } from '@/shared/i18n'
 
 const STORAGE_KEY = 'bitrate-settings'
+
+/**
+ * The language for a visitor who never chose one: the browser's preferred language when the
+ * app speaks it. Read after mount only, so the server render and hydration stay in English.
+ */
+const readBrowserLocale = () =>
+  pickSupportedLocale(
+    navigator.languages?.length ? navigator.languages : [navigator.language],
+  ) ?? initialSettings.language
 
 const readStoredSettings = (): Partial<SettingsSnapshot> => {
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
-    if (!raw) return {}
+    if (!raw) return { language: readBrowserLocale() }
 
     const parsed: unknown = JSON.parse(raw)
-    if (typeof parsed !== 'object' || parsed === null) return {}
+    if (typeof parsed !== 'object' || parsed === null) {
+      return { language: readBrowserLocale() }
+    }
 
     const stored = parsed as Record<string, unknown>
     const snapshot = Object.fromEntries(
@@ -33,7 +44,10 @@ const readStoredSettings = (): Partial<SettingsSnapshot> => {
     )
     return {
       ...snapshot,
-      language: normalizeLocale(stored.language),
+      language:
+        'language' in stored
+          ? normalizeLocale(stored.language)
+          : readBrowserLocale(),
       streamingQuality: streamingQuality ?? initialSettings.streamingQuality,
     }
   } catch {

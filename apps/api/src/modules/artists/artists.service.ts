@@ -76,13 +76,20 @@ export class ArtistsService {
     )
   }
 
+  /** The public artist behind a username; unknown and deleted artists are not found. */
   async findByUsername(username: ArtistEntity['username']) {
-    return await this.cache.wrap(NS.ARTISTS, `public:v2:username:${username}`, TTL.LONG, () =>
-      this.prisma.artist.findFirst({
-        where: { username, deletedAt: null },
-        select: PUBLIC_ARTIST_SELECT,
-      }),
+    const artist = await this.cache.wrap(
+      NS.ARTISTS,
+      `public:v2:username:${username}`,
+      TTL.LONG,
+      () =>
+        this.prisma.artist.findFirst({
+          where: { username, deletedAt: null },
+          select: PUBLIC_ARTIST_SELECT,
+        }),
     )
+    if (!artist) throw new NotFoundException(ARTIST_ERRORS.NOT_FOUND)
+    return artist
   }
 
   /** Soft-deletes the artist and revokes every session they hold. */

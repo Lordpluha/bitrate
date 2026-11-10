@@ -80,7 +80,12 @@ export const createField = ({
     toAttr.copyArray(layout)
     toAttr.needsUpdate = true
     fieldU.uT.value = 0
-    gsap.to(fieldU.uT, { value: 1, duration: dur * 1.25, ease: 'power2.inOut' })
+    gsap.to(fieldU.uT, {
+      value: 1,
+      duration: dur * 1.25,
+      ease: 'power2.inOut',
+      overwrite: true,
+    })
   }
 
   return {

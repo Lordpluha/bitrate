@@ -17,6 +17,21 @@ type Mode =
 const MAGNET_MAX = { width: 260, height: 120 }
 const MAGNET_PULL = 0.25
 
+/**
+ * The box the ring is pulled towards. A `display: contents` element (the real app's whole-row
+ * buttons) has no box of its own and reports 0×0 at the page corner, which would yank the ring
+ * there; it takes the box of the nearest ancestor that has one.
+ */
+const boxOf = (el: Element) => {
+  let node: Element | null = el
+  while (node) {
+    const r = node.getBoundingClientRect()
+    if (r.width > 0 || r.height > 0) return r
+    node = node.parentElement
+  }
+  return el.getBoundingClientRect()
+}
+
 const modeOf = (el: EventTarget | null): [Mode, Element | null] => {
   if (!(el instanceof Element)) return ['default', null]
   const tagged = el.closest<HTMLElement>('[data-cursor]')
@@ -96,7 +111,7 @@ export const mountCursor = (ctx: EngineContext) => {
     let x = e.clientX
     let y = e.clientY
     if (m === 'hover' && el) {
-      const r = el.getBoundingClientRect()
+      const r = boxOf(el)
       if (r.width < MAGNET_MAX.width && r.height < MAGNET_MAX.height) {
         x += (r.left + r.width / 2 - x) * MAGNET_PULL
         y += (r.top + r.height / 2 - y) * MAGNET_PULL

@@ -51,9 +51,13 @@ export const playlistDetailQuery = (playlistId: string) =>
     gcTime: 10 * 60_000,
     meta: { suppressErrorToast: true },
     queryFn: async () => {
+      /**
+       * The API lets browsers keep a playlist for 30s; `no-cache` revalidates it by ETag, so a
+       * refetch after adding or removing a track shows the change instead of the stale copy.
+       */
       const { data, response } = await clientFetchClient.GET(
         '/api/v1/playlists/{id}',
-        { params: { path: { id: playlistId } } },
+        { cache: 'no-cache', params: { path: { id: playlistId } } },
       )
 
       ensureOkResponse(response, 'Failed to load playlist')

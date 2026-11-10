@@ -1,6 +1,6 @@
 'use client'
 
-import { Button, Input, Typography, toast } from '@bitrate/ui-react'
+import { Button, PasswordInput, Typography, toast } from '@bitrate/ui-react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { apiBaseUrl } from '@shared/api'
 import { clientLocale, messageKey, useI18n } from '@shared/i18n'
@@ -84,9 +84,11 @@ export const ResetPasswordForm = () => {
       <label className="text-base mb-2 block" htmlFor="password">
         {t('auth.reset.newPassword')}
       </label>
-      <Input
+      <PasswordInput
+        autoComplete="new-password"
+        hideLabel={t('auth.password.hide')}
         id="password"
-        type="password"
+        showLabel={t('auth.password.show')}
         variant="black"
         {...form.register('password')}
       />
@@ -99,9 +101,11 @@ export const ResetPasswordForm = () => {
       <label className="text-base mb-2 block mt-4" htmlFor="confirm">
         {t('auth.reset.confirm')}
       </label>
-      <Input
+      <PasswordInput
+        autoComplete="new-password"
+        hideLabel={t('auth.password.hide')}
         id="confirm"
-        type="password"
+        showLabel={t('auth.password.show')}
         variant="black"
         {...form.register('confirm')}
       />

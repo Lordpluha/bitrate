@@ -1,25 +1,17 @@
-import { gsap } from 'gsap'
 import type { SceneEnter } from './types'
 
-/** Signal: the player window settles into its tilt; the progress bar loops (desktop only). */
-export const enterHero: SceneEnter = ({ tl, q, mob, loop }) => {
+/** Signal: the laptop and phone settle into a gentle tilt towards the headline (desktop only). */
+export const enterHero: SceneEnter = ({ tl, q, mob }) => {
   if (mob) return
   tl.to(
     q('#heroWin'),
     {
-      rotateY: -14,
-      rotateX: 6,
-      rotateZ: -1,
+      rotateY: -5,
+      rotateX: 3,
+      rotateZ: -0.5,
       duration: 1.4,
       ease: 'expo.out',
     },
     0.9,
-  )
-  loop(
-    gsap.fromTo(
-      q('#heroProg'),
-      { scaleX: 0.3 },
-      { scaleX: 0.62, duration: 9, ease: 'none', repeat: -1 },
-    ),
   )
 }

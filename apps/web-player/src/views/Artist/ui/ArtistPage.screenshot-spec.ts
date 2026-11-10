@@ -7,7 +7,11 @@ import {
 } from '../../../../tests/screenshot/screenshot'
 
 test('artist desktop', async ({ page }) => {
-  await openSignedIn({ page, path: '/main/artist/ar1', viewport: DESKTOP })
+  await openSignedIn({
+    page,
+    path: '/main/artist/Luma%20Vale',
+    viewport: DESKTOP,
+  })
   await snap({
     name: 'artist-desktop.png',
     page,
@@ -16,7 +20,11 @@ test('artist desktop', async ({ page }) => {
 })
 
 test('artist mobile', async ({ page }) => {
-  await openSignedIn({ page, path: '/main/artist/ar1', viewport: MOBILE })
+  await openSignedIn({
+    page,
+    path: '/main/artist/Luma%20Vale',
+    viewport: MOBILE,
+  })
   await snap({
     name: 'artist-mobile.png',
     page,

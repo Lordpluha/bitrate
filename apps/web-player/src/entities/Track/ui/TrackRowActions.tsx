@@ -16,7 +16,7 @@ export const TrackRowActions = ({
   track,
 }: TrackRowActionsProps) => (
   <>
-    <div className="flex items-center justify-end gap-2.5 text-[13px] text-muted-foreground tabular-nums max-[1024px]:hidden">
+    <div className="flex items-center justify-end gap-2.5 text-[13px] text-muted-foreground tabular-nums track-rows:hidden">
       <AddToQueueButton
         className="opacity-0 transition-opacity group-hover:opacity-100 focus-visible:opacity-100"
         track={track}
@@ -37,7 +37,7 @@ export const TrackRowActions = ({
       </span>
     </div>
 
-    <div className="hidden shrink-0 grid-cols-[24px_auto] items-center justify-end gap-2 text-[13px] text-muted-foreground tabular-nums max-[1024px]:grid">
+    <div className="hidden shrink-0 grid-cols-[24px_auto] items-center justify-end gap-2 text-[13px] text-muted-foreground tabular-nums track-rows:grid">
       <LikeTrackButton trackId={track.id} trackTitle={track.title} />
       {removable ? (
         <button

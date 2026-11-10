@@ -185,7 +185,7 @@ const StatsContent = ({ range }: { range: DiscoveryRange }) => {
               <li key={artist.id}>
                 <Link
                   className="flex h-14 items-center gap-3 rounded-lg px-2 transition-colors hover:bg-surface"
-                  href={ROUTES.artist(artist.id)}
+                  href={ROUTES.artist(artist.username)}
                 >
                   <MediaImage
                     alt=""
@@ -221,7 +221,7 @@ export const StatsPage = () => {
   const [range, setRange] = useState<DiscoveryRange>('short')
 
   return (
-    <PageShell width="full">
+    <PageShell>
       <div className="flex flex-col gap-1.5">
         <PageTitle title={t('stats.title')} />
         <p className="text-sm text-muted-foreground">{t('stats.onlyYou')}</p>

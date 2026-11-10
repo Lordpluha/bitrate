@@ -53,7 +53,7 @@ export const usePlaylistActions = ({
       { onSuccess: () => showApiSuccessToast(t('playlist.trackRemoved')) },
     )
 
-  const addTrack = (track: TrackEntity) => {
+  const addTrack = (track: Pick<TrackEntity, 'id'>) => {
     if (existingTrackIds.has(track.id)) return
 
     setAddingTrackId(track.id)

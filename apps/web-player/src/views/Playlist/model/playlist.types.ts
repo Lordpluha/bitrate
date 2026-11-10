@@ -17,6 +17,7 @@ export type PlaylistActions = {
   addingTrackId: string | null
   deletePlaylist: () => void
   existingTrackIds: Set<string>
-  addTrack: (track: TrackEntity) => void
+  /** Adding needs only the id, so a search result can be added without the full track. */
+  addTrack: (track: Pick<TrackEntity, 'id'>) => void
   removeTrack: (trackId: string) => void
 }

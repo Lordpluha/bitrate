@@ -1,6 +1,7 @@
 'use client'
 
 import { cn } from '@bitrate/ui-react'
+import { useI18n } from '@shared/i18n'
 import { CircleAlert, CircleCheck } from 'lucide-react'
 import { useState } from 'react'
 
@@ -10,7 +11,7 @@ export const OTP_LENGTH = 6
 const CELL_KEYS = ['d1', 'd2', 'd3', 'd4', 'd5', 'd6'] as const
 
 type OtpCodeFieldProps = {
-  /** "error" and "success" colour the cells and the hint under them. */
+  /** "error" and "success" colour the cells and the hint under them; defaults to the paste tip. */
   hint?: string
   id: string
   label: string
@@ -24,13 +25,14 @@ type OtpCodeFieldProps = {
  * three and three.
  */
 export const OtpCodeField = ({
-  hint = 'Paste works too — all six digits at once.',
+  hint,
   id,
   label,
   onChange,
   status = 'idle',
   value,
 }: OtpCodeFieldProps) => {
+  const { t } = useI18n()
   const [isFocused, setIsFocused] = useState(false)
   const activeIndex = Math.min(value.length, OTP_LENGTH - 1)
   const hintId = `${id}-hint`
@@ -113,7 +115,7 @@ export const OtpCodeField = ({
         {status === 'success' ? (
           <CircleCheck aria-hidden="true" className="size-3.5" />
         ) : null}
-        {hint}
+        {hint ?? t('auth.twoFactor.hint')}
       </p>
     </div>
   )

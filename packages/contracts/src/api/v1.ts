@@ -1768,6 +1768,23 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/api/v1/platform/stats': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** Get public platform totals */
+    get: operations['DiscoveryController_stats_v1']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/api/v1/browse/categories': {
     parameters: {
       query?: never
@@ -4109,6 +4126,23 @@ export interface components {
       /** @enum {string} */
       status: 'pending' | 'accepted'
       request?: components['schemas']['SentFriendRequestEntity']
+    }
+    PlatformStatsEntity: {
+      /**
+       * @description Artist accounts that are not deleted.
+       * @example 42
+       */
+      artists: number
+      /**
+       * @description Listener accounts that are not deleted.
+       * @example 1280
+       */
+      listeners: number
+      /**
+       * @description Tracks a listener can find and play right now.
+       * @example 5600
+       */
+      tracks: number
     }
     UpdateSettingsDto: {
       language?: string
@@ -8930,9 +8964,7 @@ export interface operations {
         headers: {
           [name: string]: unknown
         }
-        content: {
-          'application/json': Record<string, never>
-        }
+        content?: never
       }
     }
   }
@@ -10515,6 +10547,21 @@ export interface operations {
     }
     requestBody?: never
     responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['SafeArtistEntity']
+        }
+      }
+      /** @description Artist not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
       /** @description Method not allowed */
       405: {
         headers: {
@@ -10596,9 +10643,7 @@ export interface operations {
         headers: {
           [name: string]: unknown
         }
-        content: {
-          'application/json': Record<string, never>
-        }
+        content?: never
       }
     }
   }
@@ -19661,6 +19706,111 @@ export interface operations {
           [name: string]: unknown
         }
         content?: never
+      }
+    }
+  }
+  DiscoveryController_stats_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Live artist and listener accounts and playable tracks */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PlatformStatsEntity']
+        }
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': Record<string, never>
+        }
       }
     }
   }

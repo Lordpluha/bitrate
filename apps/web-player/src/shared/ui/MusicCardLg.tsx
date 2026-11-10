@@ -34,7 +34,8 @@ export const MusicCardLg = ({
   onPlay,
 }: MusicCardLgProps) => {
   const { t } = useI18n()
-  const href = hrefProp ?? (isArtist ? ROUTES.artist(id) : ROUTES.playlist(id))
+  const href =
+    hrefProp ?? (isArtist ? ROUTES.artistById(id) : ROUTES.playlist(id))
   const imageSrc = resolveMusicCardImage(imageUrl, isArtist)
 
   return (

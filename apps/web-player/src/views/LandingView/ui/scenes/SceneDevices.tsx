@@ -1,19 +1,43 @@
-import { lc } from '../../lib/styles/lc'
-import { DEMO_TRACKS } from '../../model/demoTracks'
-import { useLandingCopy } from '../../model/useLandingCopy'
-import { Abs, SceneFootnote, SceneShell, TrackRow } from './parts'
+'use client'
 
-/** Scene "Devices" — ported from the motion prototype; the landing engine animates it after mount. */
+import { TracksList } from '@entities/Track'
+import { useI18n } from '@shared/i18n'
+import { SectionHeader } from '@shared/ui'
+import { MobileIsland } from '@widgets/MobileIsland'
+import { RightSidebar } from '@widgets/RightSidebar'
+import { lc } from '../../lib/styles/lc'
+import { DEMO_PLAYLISTS } from '../../model/demo/demoData'
+import { DEMO_TRACK_SETS } from '../../model/demo/demoSeeds'
+import type { LandingKey } from '../../model/messages/en'
+import { useLandingCopy } from '../../model/useLandingCopy'
+import { DemoFrame } from '../demo/DemoFrame'
+import { DemoPlayerBar } from '../demo/DemoPlayerBar'
+import { DeviceScreen } from '../demo/DeviceScreen'
+import { Abs, SceneShell } from './parts'
+
+/** The scene's two points: icon id, title and line. */
+const POINTS: readonly (readonly [string, LandingKey, LandingKey])[] = [
+  ['#i-layers', 'devices.now_playing_panel', 'devices.now_playing_panel_meta'],
+  ['#i-phone', 'devices.mobile_island', 'devices.mobile_island_meta'],
+]
+
+/** The phone the island and sidebar are designed for (CSS pixels). */
+const PHONE_WIDTH = 390
+
+/** Scene "Devices": the desktop player with its Now Playing panel, and the phone's island. */
 export const SceneDevices = () => {
   const c = useLandingCopy()
+  const { t } = useI18n()
+  const playlist = DEMO_PLAYLISTS[0]
+
   return (
     <SceneShell id="devices" labelKey="devices.same_queue_new_scene">
       <Abs h={274} markers="d-only" w={380} x={0} y={626}>
         <div className={lc('horizon', 'h-full')}></div>
       </Abs>
-      <Abs w={380} x={48} y={120}>
+      <Abs w={280} x={48} y={120}>
         <div className={lc('eyebrow', 'mb-[18px]')} data-a="up">
-          {c('devices.keep_the_session_going')}
+          {c('devices.desktop_and_phone')}
         </div>
         <h2 className={lc('h h54')}>
           <span className={lc('line')}>
@@ -24,272 +48,86 @@ export const SceneDevices = () => {
           </span>
         </h2>
         <p className={lc('lede s', 'mt-[22px]')} data-a="up">
-          {c('devices.move_playback_between_devices_with_bitra')}
+          {c('devices.lede')}
         </p>
         <div className={lc('col d-only', 'mt-[34px] gap-[20px]')}>
-          <div className={lc('row')} data-a="up">
-            <svg aria-hidden="true" className={lc('i', 'text-accent')}>
-              <use href="#i-phone" />
-            </svg>
-            <div>
-              <p className={lc('t-title')}>{c('devices.bitrate_connect')}</p>
-              <p className={lc('t-meta')}>
-                {c('devices.move_playback_to_any_device')}
-              </p>
-            </div>
-          </div>
-          <div className={lc('row')} data-a="up">
-            <svg aria-hidden="true" className={lc('i', 'text-accent')}>
-              <use href="#i-users" />
-            </svg>
-            <div>
-              <p className={lc('t-title')}>{c('devices.jam')}</p>
-              <p className={lc('t-meta')}>{c('devices.listen_together')}</p>
-            </div>
-          </div>
-        </div>
-      </Abs>
-      <Abs markers="persp d-only" w={855} x={553} y={116}>
-        <div className={lc('win', 'h-[716px]')} data-a="win">
-          <div className={lc('wbar')}>
-            <span className={lc('dots3')}>
-              <i></i>
-              <i></i>
-              <i></i>
-            </span>
-            <span className={lc('grow')}></span>
-            <span className={lc('live')}>
-              <i></i>
-              <span
-                className={lc('glitch glitch-auto')}
-                data-text={c('devices.jam_live')}
-              >
-                {c('devices.jam_live')}
-              </span>
-            </span>
-          </div>
-          <div
-            className={lc(
-              'row',
-              'items-stretch gap-[18px] p-[0_18px_18px] h-[648px]! box-border',
-            )}
-          >
-            <div
-              className={lc(
-                'col',
-                'w-[126px] gap-[16px] pt-[18px] [font-size:12px] text-muted-foreground',
-              )}
-            >
-              <span className={lc('row', 'gap-[8px] text-foreground')}>
-                <svg aria-hidden="true" className={lc('i')}>
-                  <use href="#i-home" />
-                </svg>
-                {c('devices.home')}
-              </span>
-              <span className={lc('row', 'gap-[8px]')}>
-                <svg aria-hidden="true" className={lc('i')}>
-                  <use href="#i-lib" />
-                </svg>
-                {c('devices.library')}
-              </span>
-              <span className={lc('row', 'gap-[8px]')}>
-                <svg aria-hidden="true" className={lc('i')}>
-                  <use href="#i-users" />
-                </svg>
-                {c('devices.jam')}
-              </span>
-            </div>
-            <div className={lc('col grow', 'pt-[18px] gap-[14px] pl-[120px]')}>
-              <div className={lc('row')}>
-                <div className={lc('grow')}>
-                  <span className={lc('label', 'text-accent')}>
-                    {c('devices.jam_2')}
-                  </span>
-                  <p
-                    className={lc(
-                      't-title',
-                      'font-[700] [font-size:30px] leading-[1.1] font-[family-name:var(--font-display)] mt-[6px]',
-                    )}
-                  >
-                    {c('devices.jam_after_hours')}
-                  </p>
-                </div>
-                <div className={lc('avs listeners')}>
-                  <span className={lc('av', 'bg-purple-500 bg-none')}>
-                    {c('devices.mr')}
-                  </span>
-                  <span className={lc('av', 'bg-magenta-500 bg-none')}>
-                    {c('devices.jp')}
-                  </span>
-                  <span className={lc('av', 'bg-blue-400 bg-none')}>
-                    {c('devices.as')}
-                  </span>
-                  <span className={lc('av', 'bg-neutral-700 bg-none')}>
-                    {'+2'}
-                  </span>
-                </div>
-              </div>
-              <div className={lc('row', 'gap-[18px] items-stretch')}>
-                <div
-                  className={lc('art', 'w-[200px] h-[200px] flex-[none]')}
-                ></div>
-                <div className={lc('col grow', 'gap-[10px]')}>
-                  <span className={lc('label')}>
-                    {c('devices.now_playing_in_sync')}
-                  </span>
-                  <p
-                    className={lc(
-                      't-title',
-                      'font-[600] [font-size:24px] leading-[1.1] font-[family-name:var(--font-display)]',
-                    )}
-                  >
-                    {DEMO_TRACKS.nightSignal}
-                  </p>
-                  <p className={lc('t-meta')}>{c('common.demo_artist')}</p>
-                  <span className={lc('grow')}></span>
-                  <div className={lc('prog')}>
-                    <i className={lc('sync-bar')}></i>
-                  </div>
-                  <div className={lc('times')}>
-                    <span>{'1:38'}</span>
-                    <span>{'3:56'}</span>
-                  </div>
-                </div>
-              </div>
-              <span className={lc('label')}>
-                {c('devices.up_next_shared_queue')}
-              </span>
-              <TrackRow
-                artist={c('devices.added_by_maya')}
-                cover="cv2"
-                title={DEMO_TRACKS.echoesInMotion}
-              >
-                <span className={lc('mono')}>{'4:21'}</span>
-              </TrackRow>
-              <TrackRow
-                artist={c('devices.added_by_jonah')}
-                cover="cv3"
-                title={DEMO_TRACKS.staticLines}
-              >
-                <span className={lc('mono')}>{'3:47'}</span>
-              </TrackRow>
-            </div>
-          </div>
-        </div>
-      </Abs>
-      <svg
-        aria-hidden="true"
-        className={lc('abs d-only', 'overflow-visible')}
-        height="160"
-        style={{ '--x': '560', '--y': '578', '--w': '130' }}
-        viewBox="0 0 130 160"
-        width="130"
-      >
-        <path
-          d="M8 150 C 40 140, 70 90, 122 6"
-          fill="none"
-          id="devLink"
-          stroke="var(--accent)"
-          strokeDasharray="4 6"
-          strokeWidth="2"
-        />
-      </svg>
-      <Abs markers="persp d-only" w={245} x={379} y={196}>
-        <div className={lc('phone', 'h-[595px] box-border')} data-a="win">
-          <div className={lc('row mono', 'justify-between')}>
-            <span className="text-foreground">{'9:41'}</span>
-            <span>{'\u25cf\u25cf\u25cf'}</span>
-          </div>
-          <div className={lc('row', 'mt-[22px] gap-[8px]')}>
-            <b className="font-[600] [font-size:14px] leading-[1] font-[family-name:var(--font-display)]">
-              {c('devices.bitrate')}
-            </b>
-          </div>
-          <span className={lc('pill', 'inline-block mt-[14px]')}>
-            {c('devices.jam_after_hours')}
-          </span>
-          <div className={lc('art', 'h-[190px] mt-[16px]')}></div>
-          <p
-            className={lc(
-              't-title',
-              'font-[600] [font-size:18px] leading-[1.1] font-[family-name:var(--font-display)] mt-[16px]',
-            )}
-          >
-            {DEMO_TRACKS.nightSignal}
-          </p>
-          <p className={lc('t-meta')}>{c('common.demo_artist')}</p>
-          <div className={lc('prog', 'mt-[16px]')}>
-            <i className={lc('sync-bar')}></i>
-          </div>
-          <div className={lc('times')}>
-            <span>{'1:38'}</span>
-            <span>{'3:56'}</span>
-          </div>
-          <div className={lc('transport', 'mt-[16px] gap-[20px]')}>
-            <svg aria-hidden="true" className={lc('i')}>
-              <use href="#i-prev" />
-            </svg>
-            <span className={lc('playbtn', 'w-[46px] h-[46px]')}>
-              <svg aria-hidden="true" className={lc('i')}>
-                <use href="#i-pause" />
+          {POINTS.map(([icon, title, meta]) => (
+            <div className={lc('row', 'items-start')} data-a="up" key={title}>
+              <svg aria-hidden="true" className={lc('i', 'text-accent')}>
+                <use href={icon} />
               </svg>
-            </span>
-            <svg aria-hidden="true" className={lc('i')}>
-              <use href="#i-next" />
-            </svg>
-          </div>
+              <div>
+                <p className={lc('t-title')}>{c(title)}</p>
+                <p className={lc('t-meta')}>{c(meta)}</p>
+              </div>
+            </div>
+          ))}
         </div>
       </Abs>
-      <Abs data-a="win" markers="card" w={272} x={365} y={682}>
-        <div className={lc('col', 'p-[16px] gap-[10px]')}>
-          <p
-            className={lc(
-              't-title',
-              'font-[600] [font-size:16px] leading-[1] font-[family-name:var(--font-display)]',
-            )}
+      <Abs
+        data-a="up"
+        extra="justify-end"
+        markers="row d-only"
+        w={732}
+        x={676}
+        y={78}
+      >
+        <span className={lc('live')}>
+          <i></i>
+          <span
+            className={lc('glitch glitch-auto label')}
+            data-text={c('devices.now_playing_live')}
           >
-            {c('devices.bitrate_connect')}
-          </p>
-          <div className={lc('row')}>
-            <svg aria-hidden="true" className={lc('i', 'text-accent')}>
-              <use href="#i-phone" />
-            </svg>
-            <div className={lc('grow')}>
-              <p className={lc('t-title', '[font-size:12px]')}>
-                {c('devices.this_phone')}
-              </p>
-              <p className={lc('t-meta', '[font-size:10px]')}>
-                {c('devices.ready_to_play')}
-              </p>
-            </div>
-          </div>
-          <div className={lc('row')}>
-            <svg
-              aria-hidden="true"
-              className={lc('i', 'text-muted-foreground')}
-            >
-              <use href="#i-laptop" />
-            </svg>
-            <div className={lc('grow')}>
-              <p className={lc('t-title', '[font-size:12px]')}>
-                {c('devices.desktop_playing')}
-              </p>
-            </div>
-            <span className={lc('live ok')}>
-              <i></i>
-            </span>
-          </div>
-          <a className={lc('btn btn-primary btn-sm magnetic')} href="#devices">
-            {c('devices.move_playback_to_this_phone')}
-          </a>
-        </div>
+            {c('devices.now_playing_live')}
+          </span>
+        </span>
       </Abs>
-      <SceneFootnote
-        noteKey="common.feature_concept_demo_content"
-        w={1360}
-        x={48}
-        y={854}
-      />
+      <Abs data-a="win" h={716} markers="win d-only" w={732} x={676} y={116}>
+        <DemoFrame
+          className="flex h-full flex-col gap-4 p-4"
+          label={t('queue.nowPlaying')}
+        >
+          <div className="flex min-h-0 flex-1 gap-4">
+            <div className="flex min-w-0 flex-1 flex-col overflow-hidden pt-2">
+              <SectionHeader title={playlist?.title ?? t('common.playlist')} />
+              <TracksList
+                layout="rows"
+                showDateAdded={false}
+                tracks={[...DEMO_TRACK_SETS.preview]}
+              />
+            </div>
+            <div className="w-70 shrink-0 overflow-hidden rounded-[14px] bg-card">
+              <RightSidebar showQueue={false} />
+            </div>
+          </div>
+          <DemoPlayerBar className="shrink-0 shadow-none" compact />
+        </DemoFrame>
+      </Abs>
+      <Abs
+        data-a="win"
+        extra="z-[2]"
+        h={600}
+        markers="phone"
+        w={300}
+        x={352}
+        y={196}
+      >
+        <DemoFrame
+          className="h-full rounded-[24px] max-[820px]:mx-auto max-[820px]:h-[min(56vh,calc(100svh-360px))] max-[820px]:min-h-[260px] max-[820px]:max-w-[300px]"
+          label={t('nav.main')}
+        >
+          {/* laid out at a real phone's width, then scaled into the frame */}
+          <DeviceScreen width={PHONE_WIDTH}>
+            <div className="h-full overflow-hidden pb-24">
+              <RightSidebar />
+            </div>
+            <MobileIsland
+              className="absolute inset-x-4 bottom-4 z-10"
+              onExpand={() => undefined}
+            />
+          </DeviceScreen>
+        </DemoFrame>
+      </Abs>
     </SceneShell>
   )
 }

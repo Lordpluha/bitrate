@@ -1,6 +1,7 @@
 'use client'
 
 import { FormControl, FormLabel, useFormField } from '@bitrate/ui-react'
+import { translateMessage, useI18n } from '@shared/i18n'
 import type { ReactElement } from 'react'
 import { AuthFieldError } from './AuthFieldError'
 
@@ -17,6 +18,7 @@ export const AuthField = ({
   hideError = false,
   label,
 }: AuthFieldProps) => {
+  const { t } = useI18n()
   const { error, formMessageId } = useFormField()
 
   return (
@@ -27,7 +29,7 @@ export const AuthField = ({
       <FormControl>{children}</FormControl>
       {!hideError && error?.message ? (
         <AuthFieldError id={formMessageId}>
-          {String(error.message)}
+          {translateMessage({ message: String(error.message), t })}
         </AuthFieldError>
       ) : null}
     </div>
