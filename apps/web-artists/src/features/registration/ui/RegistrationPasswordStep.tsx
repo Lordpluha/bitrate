@@ -78,9 +78,12 @@ export const RegistrationPasswordStep = ({
           {t('auth.password')}
         </label>
         <PasswordInput
+          autoComplete="new-password"
           className="text-xl! hover:border-white py-2"
+          hideLabel={t('auth.password.hide')}
           id="registration-password"
           placeholder={t('auth.password')}
+          showLabel={t('auth.password.show')}
           variant="black"
           {...form.register('password')}
         />

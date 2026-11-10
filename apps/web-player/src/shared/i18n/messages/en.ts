@@ -227,6 +227,8 @@ export const en = {
   'auth.field.email': 'Email Address',
   'auth.field.fullName': 'Full Name',
   'auth.field.password': 'Password',
+  'auth.password.show': 'Show password',
+  'auth.password.hide': 'Hide password',
   'auth.forgot.description': 'Enter the email associated with your account.',
   'auth.forgot.email': 'Email address',
   'auth.forgot.failed': 'Unable to request a password reset.',

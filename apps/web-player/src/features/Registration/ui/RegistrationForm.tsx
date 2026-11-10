@@ -1,6 +1,13 @@
 'use client'
 
-import { Button, Form, FormField, FormItem, Input } from '@bitrate/ui-react'
+import {
+  Button,
+  Form,
+  FormField,
+  FormItem,
+  Input,
+  PasswordInput,
+} from '@bitrate/ui-react'
 import type { RegistrationFormData } from '@entities/User'
 import {
   AUTH_BUTTON_CLASS,
@@ -87,11 +94,12 @@ export const RegistrationForm = () => {
                     <FormItem className="space-y-0">
                       <AuthField hideError label={t(labelKey)}>
                         {secret ? (
-                          <Input
+                          <PasswordInput
                             autoComplete={autoComplete}
                             className={AUTH_INPUT_CLASS}
+                            hideLabel={t('auth.password.hide')}
                             placeholder={placeholder}
-                            type="password"
+                            showLabel={t('auth.password.show')}
                             {...field}
                           />
                         ) : (
