@@ -83,7 +83,11 @@ export class ArtistAuthStore implements AccountAuthStore<Artist, SessionClient> 
 
   applyPasswordReset(artistId: string, token: string, password: string) {
     return this.prisma.$transaction([
-      this.prisma.artist.update({ where: { id: artistId }, data: { password } }),
+      /** A new password proves ownership, so it also lifts any lockout. */
+      this.prisma.artist.update({
+        where: { id: artistId },
+        data: { password, failedLoginAttempts: 0, lockedUntil: null },
+      }),
       this.prisma.artistPasswordReset.delete({ where: { token } }),
       this.prisma.artistSession.deleteMany({ where: { artistId } }),
     ])

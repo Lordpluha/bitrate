@@ -43,10 +43,18 @@ export class AccountAuthCore<Account extends AuthCredentials, Client> {
 
   /** Checks the password, applies lockout, and issues a session or a two-factor challenge. */
   async login(email: string, password: string, client: Client): Promise<LoginResult> {
-    const account = await this.store.findByEmail(email)
-    if (account?.lockedUntil && account.lockedUntil > new Date()) {
+    const found = await this.store.findByEmail(email)
+    if (found?.lockedUntil && found.lockedUntil > new Date()) {
       throw new HttpException('Account is temporarily locked', HttpStatus.TOO_MANY_REQUESTS)
     }
+    /**
+     * An expired lock starts a fresh window. Keeping the old count meant a single typo after the
+     * lock re-locked the account for another 15 minutes, so sign-in kept answering 429.
+     */
+    if (found?.lockedUntil) await this.store.resetFailedLogins(found.id)
+    const account = found?.lockedUntil
+      ? { ...found, failedLoginAttempts: 0, lockedUntil: null }
+      : found
 
     const passwordValid =
       account?.password && (await this.token.verifyPassword(password, account.password))
