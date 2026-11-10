@@ -1,3 +1,4 @@
+import { QuickGoogleSignIn } from '@features/Auth'
 import { useI18n } from '@shared/i18n'
 import { ROUTES } from '@shared/routes'
 import Link from 'next/link'
@@ -25,7 +26,7 @@ export const SceneSignal = ({ signedIn, stats }: HeroSceneProps) => {
       id="hero"
       labelKey="hero.your_music_already_where_you_are"
     >
-      <Abs w={540} x={54} y={stats ? 222 : 262}>
+      <Abs w={540} x={54} y={stats ? 150 : 200}>
         <div className={lc('col', 'gap-[26px]')}>
           <div className={lc('eyebrow')} data-a="up">
             {c('hero.web_player')}
@@ -52,7 +53,9 @@ export const SceneSignal = ({ signedIn, stats }: HeroSceneProps) => {
               className={lc('btn btn-primary magnetic')}
               href={signedIn ? ROUTES.main : ROUTES.auth.registration}
             >
-              {c(signedIn ? 'hero.open_web_player' : 'hero.create_account')}{' '}
+              {c(
+                signedIn ? 'hero.open_web_player' : 'hero.start_listening_free',
+              )}{' '}
               <svg aria-hidden="true" className={lc('i')}>
                 <use href="#i-arrow" />
               </svg>
@@ -66,6 +69,12 @@ export const SceneSignal = ({ signedIn, stats }: HeroSceneProps) => {
               </Link>
             )}
           </div>
+          {/* one step in: Google creates the account and signs in, behind the same consent box */}
+          {!signedIn && (
+            <div className={lc('quick-in')} data-a="up">
+              <QuickGoogleSignIn />
+            </div>
+          )}
           {stats && (
             <dl className={lc('hstats')} data-a="up">
               {STAT_ROWS.map(({ key, label }) => (

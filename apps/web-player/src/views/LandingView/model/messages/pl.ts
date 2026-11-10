@@ -47,11 +47,9 @@ export const pl: LandingCatalog = {
   'partners.the': '',
   'partners.signal_on_air': 'sygnał jest na antenie.',
   'partners.labels_studios_and_services_we_build_wit':
-    'Wytwórnie, studia i serwisy, z którymi pracujemy. Złap jeden i rzuć — odbije się.',
+    'Szukamy wytwórni, studiów i serwisów, z którymi zbudujemy Bitrate. Złap kulę i rzuć — odbije się.',
   'partners.drag_throw_squeeze': 'PRZECIĄGAJ · RZUCAJ · ŚCISKAJ',
   'partners.become_a_partner': 'Zostań partnerem',
-  'partners.placeholder_marks_replace_with_real_part':
-    'Tymczasowe znaki — zastąp prawdziwymi logo partnerów',
   'team.about_our_team': 'O naszym zespole',
   'team.small_team': 'Mały zespół.',
   'team.loud_signal': 'Głośny sygnał.',
@@ -228,4 +226,6 @@ export const pl: LandingCatalog = {
   'chrome.open_in_player': 'Otwórz w odtwarzaczu',
   'chrome.start_listening_free': 'Zacznij słuchać — za darmo',
   'chrome.next_scene': 'Następna scena',
+  'hero.start_listening_free': 'Zacznij słuchać za darmo',
+  'cta.start_listening_free': 'Zacznij słuchać za darmo',
 }

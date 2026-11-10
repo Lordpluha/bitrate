@@ -46,11 +46,9 @@ export const en = {
   'partners.the': 'the',
   'partners.signal_on_air': 'signal on air.',
   'partners.labels_studios_and_services_we_build_wit':
-    'Labels, studios and services we build with. Grab one and throw it — they bounce back.',
+    "We're looking for labels, studios and services to build Bitrate with. Grab a sphere and throw it — they bounce back.",
   'partners.drag_throw_squeeze': 'DRAG · THROW · SQUEEZE',
   'partners.become_a_partner': 'Become a partner',
-  'partners.placeholder_marks_replace_with_real_part':
-    'Placeholder marks — replace with real partner logos',
   'team.about_our_team': 'About our team',
   'team.small_team': 'Small team.',
   'team.loud_signal': 'Loud signal.',
@@ -228,6 +226,8 @@ export const en = {
   'chrome.open_in_player': 'Open it in the player',
   'chrome.start_listening_free': "Start listening — it's free",
   'chrome.next_scene': 'Next scene',
+  'hero.start_listening_free': 'Start listening free',
+  'cta.start_listening_free': 'Start listening free',
 } as const
 
 export type LandingKey = keyof typeof en

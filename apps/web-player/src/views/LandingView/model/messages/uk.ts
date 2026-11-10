@@ -46,11 +46,9 @@ export const uk: LandingCatalog = {
   'partners.the': '',
   'partners.signal_on_air': 'сигнал в ефірі.',
   'partners.labels_studios_and_services_we_build_wit':
-    'Лейбли, студії й сервіси, з якими ми працюємо. Схопіть будь-який і киньте — він відскочить.',
+    'Шукаємо лейбли, студії та сервіси, з якими будувати Bitrate. Схопіть кульку й киньте — вона відскочить.',
   'partners.drag_throw_squeeze': 'ТЯГНІТЬ · КИДАЙТЕ · СТИСКАЙТЕ',
   'partners.become_a_partner': 'Стати партнером',
-  'partners.placeholder_marks_replace_with_real_part':
-    'Тимчасові знаки — замініть на справжні логотипи партнерів',
   'team.about_our_team': 'Про нашу команду',
   'team.small_team': 'Маленька команда.',
   'team.loud_signal': 'Гучний сигнал.',
@@ -226,4 +224,6 @@ export const uk: LandingCatalog = {
   'chrome.open_in_player': 'Відкрити в плеєрі',
   'chrome.start_listening_free': 'Почати слухати — безкоштовно',
   'chrome.next_scene': 'Наступна сцена',
+  'hero.start_listening_free': 'Почати слухати безкоштовно',
+  'cta.start_listening_free': 'Почати слухати безкоштовно',
 }

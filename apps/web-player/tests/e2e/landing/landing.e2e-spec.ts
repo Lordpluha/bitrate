@@ -49,7 +49,7 @@ test.describe('landing page', () => {
     await expect(page.locator('.landing a[href^="/main"]')).toHaveCount(0)
     const hero = page.getByRole('region', { name: SCENES[0].name })
     await expect(
-      hero.getByRole('link', { name: /Create account/ }),
+      hero.getByRole('link', { name: /Start listening free/ }),
     ).toHaveAttribute('href', '/auth/registration')
     await expect(hero.getByRole('link', { name: 'Log in' })).toHaveAttribute(
       'href',
@@ -100,7 +100,7 @@ test.describe('landing without JavaScript', () => {
       'Your music',
     )
     await expect(
-      page.getByRole('link', { name: /Create account/ }).first(),
+      page.getByRole('link', { name: /Start listening free/ }).first(),
     ).toHaveAttribute('href', '/auth/registration')
   })
 })

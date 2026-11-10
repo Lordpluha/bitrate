@@ -60,4 +60,9 @@ export const FOOTER_LINKS: readonly LandingRule[] = [
     'try-link',
     'inline-flex gap-[8px] items-center min-h-[44px] font-[600] [font-size:14px] leading-[1] font-[family-name:var(--font-body)] text-accent no-underline [&_.i]:w-[16px] [&_.i]:h-[16px] [&_.i]:[transition:transform_0.2s] [&:hover_.i]:[transform:translateX(3px)] [&:hover]:underline [&:hover]:underline-offset-4',
   ],
+  /* the hero's one-step Google sign-in: the app's own button and consent box, kept narrow */
+  [
+    'quick-in',
+    'w-[360px] max-w-full text-left [font-size:13px] leading-[1.4] max-[820px]:w-full',
+  ],
 ]

@@ -1,7 +1,7 @@
 import { lc } from '../../lib/styles/lc'
 import { PARTNER_URL } from '../../model/links'
 import { useLandingCopy } from '../../model/useLandingCopy'
-import { Abs, SceneFootnote, SceneShell } from './parts'
+import { Abs, SceneShell } from './parts'
 
 /** Scene "Partners" — ported from the motion prototype; the landing engine animates it after mount. */
 export const ScenePartners = () => {
@@ -56,12 +56,6 @@ export const ScenePartners = () => {
         w={900}
         x={520}
         y={70}
-      />
-      <SceneFootnote
-        noteKey="partners.placeholder_marks_replace_with_real_part"
-        w={1320}
-        x={60}
-        y={854}
       />
     </SceneShell>
   )
