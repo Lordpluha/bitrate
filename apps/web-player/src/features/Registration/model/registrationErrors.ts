@@ -6,7 +6,6 @@ const FIELD_ORDER = [
   'fullName',
   'email',
   'password',
-  'confirmPassword',
   'acceptLegal',
 ] as const satisfies readonly (keyof RegistrationFormData)[]
 

@@ -30,7 +30,6 @@ export const useSignUpModalForm = (onSuccess?: () => void) => {
       fullName: '',
       email: '',
       password: '',
-      confirmPassword: '',
     },
     shouldFocusError: true,
   })
