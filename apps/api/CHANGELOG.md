@@ -1,5 +1,17 @@
 # @bitrate/api
 
+## 3.2.0
+
+### Minor Changes
+
+- 27ebcf6: Added genres to release recordings: artists list the genre catalogue, tag each draft recording with one to three genres, and cannot submit while a recording has none. Publishing copies the genres to the catalogue track and gives the album the union of its tracks' genres. A migration seeds a starter catalogue of common streaming genres.
+
+### Patch Changes
+
+- c7c068f: An expired login lock now resets the failed-attempt counter. Before, the counter stayed at the threshold after the 15-minute lock ran out, so one more wrong password locked the account again and sign-in kept answering 429.
+
+  The listener password-reset email now links to `/auth/reset-password`, the page the web player serves. It used to link to `/reset-password`, which redirected away and dropped the token. A password reset also lifts a login lockout now.
+
 ## 3.1.0
 
 ### Minor Changes

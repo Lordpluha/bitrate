@@ -1,5 +1,17 @@
 # @bitrate/web-artists
 
+## 1.7.0
+
+### Minor Changes
+
+- 3de403d: Artists can choose one to three genres for each recording in the release workspace; the readiness checklist and roadmap name recordings that still need one. The contracts include the genre catalogue endpoint and recording genres, and the admin review screen names the new missing-genre blocker.
+- 3049aca: Both reset-password fields got the eye button that shows or hides the password, as sign-in and registration already had. The button now has a translated name (English, Ukrainian, Polish) on every password field, and the new-password fields ask the browser for `new-password` autofill.
+
+### Patch Changes
+
+- Updated dependencies [4817090]
+  - @bitrate/ui-react@1.3.0
+
 ## 1.6.1
 
 ### Patch Changes
