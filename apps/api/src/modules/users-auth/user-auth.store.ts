@@ -77,7 +77,11 @@ export class UserAuthStore implements AccountAuthStore<User, UserSessionClient> 
 
   applyPasswordReset(userId: string, token: string, password: string) {
     return this.prisma.$transaction([
-      this.prisma.user.update({ where: { id: userId }, data: { password } }),
+      /** A new password proves ownership, so it also lifts any lockout. */
+      this.prisma.user.update({
+        where: { id: userId },
+        data: { password, failedLoginAttempts: 0, lockedUntil: null },
+      }),
       this.prisma.userPasswordReset.delete({ where: { token } }),
       this.prisma.userSession.deleteMany({ where: { userId } }),
     ])

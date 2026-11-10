@@ -90,6 +90,28 @@ describe('AdminAuthService', () => {
       await expect(service.loginStaff(staff.email, 'password')).rejects.toThrow(HttpException)
     })
 
+    it('starts a fresh attempt window once the lock has expired', async () => {
+      const staff = buildStaff({
+        failedLoginAttempts: 5,
+        lockedUntil: new Date(Date.now() - 1_000),
+      })
+      prisma.staff.findFirst.mockResolvedValue(staff as never)
+      prisma.staff.update.mockResolvedValue({
+        ...staff,
+        failedLoginAttempts: 0,
+        lockedUntil: null,
+      } as never)
+      token.verifyPassword.mockResolvedValue(false as never)
+      mockAttemptResult({ failedLoginAttempts: 1, lockedUntil: null })
+
+      await expect(service.loginStaff(staff.email, 'typo')).rejects.toThrow(UnauthorizedException)
+      expect(prisma.staff.update).toHaveBeenCalledWith({
+        where: { id: staff.id },
+        data: { failedLoginAttempts: 0, lockedUntil: null },
+      })
+      expect(writtenLockedUntil()).toBeNull()
+    })
+
     it('issues a token pair and creates a session on success', async () => {
       const staff = buildStaff()
       prisma.staff.findFirst.mockResolvedValue(staff as never)
