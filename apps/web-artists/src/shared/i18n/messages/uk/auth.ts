@@ -1,6 +1,8 @@
 export const auth = {
   'auth.emailAddress': 'Електронна пошта',
   'auth.password': 'Пароль',
+  'auth.password.show': 'Показати пароль',
+  'auth.password.hide': 'Сховати пароль',
   'auth.verifyEmail': 'Підтвердити пошту',
   'auth.legal.terms': 'Умови використання',
   'auth.legal.community': 'Правила спільноти',
