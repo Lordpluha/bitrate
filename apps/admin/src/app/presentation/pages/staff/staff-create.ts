@@ -8,7 +8,14 @@ import type { Role } from '@domain/role'
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco'
 import { NgIcon, provideIcons } from '@ng-icons/core'
 import { lucideCheck, lucideKeyRound, lucideShieldCheck, lucideUser } from '@ng-icons/lucide'
-import { PageHeader, PermissionGrid, StateMessage, Tile, TileGrid } from '@presentation/components'
+import {
+  PageHeader,
+  PasswordToggle,
+  PermissionGrid,
+  StateMessage,
+  Tile,
+  TileGrid,
+} from '@presentation/components'
 import { zodErrorMessage, zodValidator } from '@presentation/forms'
 import { LocaleStore } from '@presentation/navigation'
 import type { Notice } from '@presentation/pages/shared/resource-write-error.message'
@@ -28,6 +35,7 @@ type StaffCreateField = 'email' | 'username' | 'password' | 'roleId'
     HlmLabelImports,
     NgIcon,
     PageHeader,
+    PasswordToggle,
     PermissionGrid,
     ReactiveFormsModule,
     StateMessage,
