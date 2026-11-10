@@ -4,7 +4,8 @@ Status: Accepted
 
 Date: 2026-11-10
 
-Specification: [Recommendation system](../specs/recommendations.md).
+Tracked in [#518](https://github.com/Lordpluha/bitrate/issues/518). Specification:
+[Recommendation system](../specs/recommendations.md).
 
 ## Context
 

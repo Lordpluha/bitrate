@@ -1,6 +1,7 @@
 # Recommendation system: behavior and implementation
 
-Canonical specification. The GitHub issue links here and carries no second copy.
+Canonical specification. Tracked in [#518](https://github.com/Lordpluha/bitrate/issues/518),
+which links here and carries no second copy.
 
 ## Goal and boundaries
 
