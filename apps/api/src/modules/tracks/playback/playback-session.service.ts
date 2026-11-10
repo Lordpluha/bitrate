@@ -14,6 +14,13 @@ import {
   listenerRetryAfterSeconds,
 } from './listener-bucket'
 import { LocalPlaybackPacer } from './local-playback-pacer'
+import {
+  ABUSE_WINDOW_MS,
+  BLOCKED_DISTINCT_TRACKS,
+  PlaybackAbuseError,
+  recentTracksKey,
+  SUSPICIOUS_DISTINCT_TRACKS,
+} from './playback-abuse'
 import { PACING_ALLOWANCE_MS, PlaybackPacingError } from './playback-pacing'
 import { createPlaybackToken, verifyPlaybackToken } from './playback-token'
 
@@ -81,6 +88,7 @@ export class PlaybackSessionService {
     deviceId,
     durationMs,
   }: OpenPlaybackSessionInput): Promise<OpenedPlaybackSession> {
+    await this.recordActivity(userId, trackId)
     const sessionId = randomUUID()
     const ttlSeconds = Math.ceil(durationMs / 1000) + SESSION_GRACE_SECONDS
     const key = sessionKey(sessionId)
@@ -105,6 +113,40 @@ export class PlaybackSessionService {
       this.secret,
     )
     return { token, expiresAt: Math.floor(Date.now() / 1000) + ttlSeconds }
+  }
+
+  /**
+   * Counts the distinct tracks the listener opened within {@link ABUSE_WINDOW_MS} (#522 D5).
+   * Crossing {@link SUSPICIOUS_DISTINCT_TRACKS} is reported once; a new track at
+   * {@link BLOCKED_DISTINCT_TRACKS} is refused and not recorded. Reopening a track in the window
+   * is never new activity. Not atomic: parallel opens may pass a threshold by the number in flight,
+   * which is acceptable for a signal; the listener bucket bounds the audio regardless.
+   * @throws PlaybackAbuseError with the seconds until the oldest track leaves the window.
+   */
+  private async recordActivity(userId: string, trackId: string): Promise<void> {
+    const key = recentTracksKey(userId)
+    const now = Date.now()
+    await this.redis.zremrangebyscore(key, '-inf', now - ABUSE_WINDOW_MS)
+    const isNew = (await this.redis.zscore(key, trackId)) === null
+    const count = await this.redis.zcard(key)
+
+    if (isNew && count >= BLOCKED_DISTINCT_TRACKS) {
+      const [oldest] = await this.redis.zrange(key, '0', '0')
+      const oldestScore = oldest === undefined ? null : await this.redis.zscore(key, oldest)
+      const leavesAtMs = Number(oldestScore ?? now) + ABUSE_WINDOW_MS
+      this.metrics.recordPlaybackAbuse('blocked')
+      this.logger.warn(`Listener ${userId} blocked: ${count} distinct tracks in the abuse window`)
+      throw new PlaybackAbuseError(Math.max(1, Math.ceil((leavesAtMs - now) / 1000)))
+    }
+
+    await this.redis.zadd(key, now, trackId)
+    await this.redis.expire(key, Math.ceil(ABUSE_WINDOW_MS / 1000))
+    if (isNew && count + 1 === SUSPICIOUS_DISTINCT_TRACKS + 1) {
+      this.metrics.recordPlaybackAbuse('suspicious')
+      this.logger.warn(
+        `Listener ${userId} flagged: ${count + 1} distinct tracks in the abuse window`,
+      )
+    }
   }
 
   /** @throws ForbiddenException for a missing, forged, expired, other-track or revoked token. */

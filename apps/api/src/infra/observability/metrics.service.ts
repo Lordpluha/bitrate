@@ -32,6 +32,7 @@ export class MetricsService {
   private readonly httpRequestsTotal: Counter<keyof RouteLabels>
   private readonly httpRequestDurationSeconds: Histogram<keyof RouteLabels>
   private readonly playbackSessionDegradedTotal: Counter<'step'>
+  private readonly playbackAbuseTotal: Counter<'level'>
 
   constructor() {
     collectDefaultMetrics({ register: this.registry })
@@ -56,6 +57,17 @@ export class MetricsService {
       labelNames: ['step'],
       registers: [this.registry],
     })
+    this.playbackAbuseTotal = new Counter({
+      name: 'bitrate_api_playback_abuse_total',
+      help: 'Listeners who started too many different tracks in the abuse window: flagged or blocked.',
+      labelNames: ['level'],
+      registers: [this.registry],
+    })
+  }
+
+  /** Counts a listener crossing a suspicious-activity threshold on opening play sessions. */
+  recordPlaybackAbuse(level: 'suspicious' | 'blocked'): void {
+    this.playbackAbuseTotal.inc({ level })
   }
 
   /** Counts a playback session check served on the token alone while Redis was down. */
