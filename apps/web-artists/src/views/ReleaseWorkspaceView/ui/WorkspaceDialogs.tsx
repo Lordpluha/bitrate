@@ -19,6 +19,7 @@ import {
   RemoveTrackDialog,
   RenameTrackDialog,
   ReplaceAudioDialog,
+  TrackGenresDialog,
 } from '@features/release-media'
 import { SubmitPreviewDialog } from '@features/submit-release'
 import { useNavigate } from '@tanstack/react-router'
@@ -112,6 +113,8 @@ export function WorkspaceDialogs({
       return <ReplaceAudioDialog {...props} trackId={dialog.trackId} />
     case 'track-rename':
       return <RenameTrackDialog {...props} trackId={dialog.trackId} />
+    case 'track-genres':
+      return <TrackGenresDialog {...props} trackId={dialog.trackId} />
     case 'track-remove':
       return <RemoveTrackDialog {...props} trackId={dialog.trackId} />
     case 'contributor-remove':

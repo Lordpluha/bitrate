@@ -111,6 +111,10 @@ export const releaseErrors = {
   'release.error.titleInvalid': 'Enter a title of up to 255 characters.',
   'release.error.titleUnconfirmed':
     'Could not confirm the title was saved. Close this window and check the tracks before trying again.',
+  'release.error.genresInvalid':
+    'Choose between one and three genres from the list.',
+  'release.error.genresUnconfirmed':
+    'We could not confirm the genres were saved. Reopen the release to check.',
   'release.error.reorderInvalid':
     'Could not save the new order. Please try again.',
   'release.error.reorderUnconfirmed':

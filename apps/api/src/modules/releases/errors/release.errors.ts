@@ -20,6 +20,7 @@ export const RELEASE_ERRORS = {
   CREDIT_NOT_FOUND: 'errors.release.credit_not_found',
   CREDITS_NOT_EMPTY: 'errors.release.credits_not_empty',
   RECORDING_NOT_FOUND: 'errors.release.recording_not_found',
+  GENRE_UNKNOWN: 'errors.release.genre_unknown',
   BLOCKERS_UNRESOLVED: 'errors.release.blockers_unresolved',
   SHARE_CONTRIBUTOR_MISMATCH: 'errors.release.share_contributor_mismatch',
   COVER_FILE_REQUIRED: 'errors.release.cover_file_required',
