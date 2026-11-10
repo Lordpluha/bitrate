@@ -3,7 +3,6 @@ import { fallbackTrackCover } from '@/shared/constants'
 
 export const trackResponseSchema = z.object({
   artistId: z.string(),
-  audioUrl: z.string(),
   cover: z
     .string()
     .nullable()
