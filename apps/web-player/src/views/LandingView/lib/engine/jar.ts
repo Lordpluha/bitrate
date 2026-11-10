@@ -12,7 +12,7 @@ export type JarBox = {
 
 /** The jar's size on the 1440×900 board; smaller pits shrink it (and the balls) proportionally. */
 const JAR = { width: 520, height: 600, floorGap: 16 } as const
-const MIN_SCALE = 0.42
+const MIN_SCALE = 0.34
 /** Share of the wall speed kept after a bounce. */
 const WALL_BOUNCE = 0.4
 const FLOOR_BOUNCE = 0.32

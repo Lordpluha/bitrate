@@ -29,3 +29,9 @@ export function audioLabel(track: TrackDraft, t: Translate) {
       : ` · ${formatBytes(track.audioSizeBytes)}`
   return `${track.audioFileName ?? t('workspace.track.audioUploaded')}${size}`
 }
+
+/** The recording's genres, or a reminder that submission needs one. */
+export const genresLabel = (track: TrackDraft, t: Translate) =>
+  track.genres.length > 0
+    ? track.genres.map((genre) => genre.name).join(', ')
+    : t('workspace.track.noGenres')

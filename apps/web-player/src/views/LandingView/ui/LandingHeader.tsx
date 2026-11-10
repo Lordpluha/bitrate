@@ -18,7 +18,6 @@ import { useLandingCopy } from '../model/useLandingCopy'
 const NAV: readonly { scene: string; label: LandingKey }[] = [
   { scene: 'hero', label: 'chrome.web_player' },
   { scene: 'library', label: 'chrome.your_library' },
-  { scene: 'discover', label: 'chrome.discover' },
   { scene: 'rules', label: 'chrome.features' },
 ]
 const THEME_LABEL: Record<Theme, LandingKey> = {

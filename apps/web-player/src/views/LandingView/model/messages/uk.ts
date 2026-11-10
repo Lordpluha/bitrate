@@ -34,9 +34,6 @@ export const uk: LandingCatalog = {
   'library.playlists': 'Плейлисти',
   'library.artists': 'Артисти',
   'library.title': 'НАЗВА',
-  'discover.follow_the_sound': 'Ідіть за звуком',
-  'discover.follow_the': 'Ідіть за',
-  'discover.sound': 'звуком.',
   'devices.same_queue_new_scene': 'Та сама черга, нова сцена',
   'devices.same_queue': 'Та сама черга.',
   'devices.new_scene': 'Нова сцена.',
@@ -49,11 +46,9 @@ export const uk: LandingCatalog = {
   'partners.the': '',
   'partners.signal_on_air': 'сигнал в ефірі.',
   'partners.labels_studios_and_services_we_build_wit':
-    'Лейбли, студії й сервіси, з якими ми працюємо. Схопіть будь-який і киньте — він відскочить.',
+    'Шукаємо лейбли, студії та сервіси, з якими будувати Bitrate. Схопіть кульку й киньте — вона відскочить.',
   'partners.drag_throw_squeeze': 'ТЯГНІТЬ · КИДАЙТЕ · СТИСКАЙТЕ',
   'partners.become_a_partner': 'Стати партнером',
-  'partners.placeholder_marks_replace_with_real_part':
-    'Тимчасові знаки — замініть на справжні логотипи партнерів',
   'team.about_our_team': 'Про нашу команду',
   'team.small_team': 'Маленька команда.',
   'team.loud_signal': 'Гучний сигнал.',
@@ -85,7 +80,6 @@ export const uk: LandingCatalog = {
   'chrome.nav': 'Основна',
   'chrome.web_player': 'Вебплеєр',
   'chrome.your_library': 'Ваша бібліотека',
-  'chrome.discover': 'Відкриття',
   'chrome.features': 'Можливості',
   'chrome.theme': 'Тема',
   'chrome.dark': 'Темна',
@@ -158,10 +152,8 @@ export const uk: LandingCatalog = {
   'chrome.cursor_seek': 'Перемотати',
   'scene.hero': 'Сигнал',
   'scene.loop': 'Цикл',
-  'scene.workshop': 'Майстерня',
   'scene.rules': 'Ваші правила',
   'scene.library': 'Бібліотека',
-  'scene.discover': 'Відкриття',
   'scene.devices': 'Пристрої',
   'scene.social': 'Спільнота',
   'scene.partners': 'Партнери',
@@ -208,28 +200,12 @@ export const uk: LandingCatalog = {
   'hero.screen_queue': 'Черга',
   'hero.screen_now': 'Зараз грає',
   'hero.screen_library': 'Бібліотека',
-  'workshop.playlists_your_order': 'Плейлисти у вашому порядку',
-  'workshop.playlists_in': 'Плейлисти',
-  'workshop.your_order': 'у вашому порядку.',
-  'workshop.lede':
-    'Збирайте треки в плейлисти, вибудовуйте, що грає далі, і передумуйте будь-коли.',
-  'workshop.build_playlists': 'Складайте плейлисти',
-  'workshop.build_playlists_meta':
-    'Залишайте треки, що пасують, і прибирайте ті, що вже ні.',
-  'workshop.line_up_next': 'Вибудовуйте, що далі',
-  'workshop.line_up_next_meta': 'Черга показує, що грає зараз і що за ним.',
-  'workshop.play_any_row': 'Вмикайте з будь-якого рядка',
-  'workshop.play_any_row_meta':
-    'Запустіть трек у плейлисті або перескочіть уперед у черзі.',
   'rules.lede_settings':
     'Змініть тему й мову, зробіть бібліотеку компактною, тримайте «Зараз грає» поруч із музикою. Спробуйте тут.',
   'rules.appearance': 'Вигляд',
   'rules.theme': 'Тема',
   'library.lede':
-    'Плейлисти, вподобані треки й артисти в одному списку. Фільтруйте, сортуйте, відкривайте.',
-  'discover.browse_then_go_deeper': 'Переглядайте й ідіть глибше',
-  'discover.lede':
-    'Переглядайте жанри, відкривайте артистів і стежте за тими, кого хочеться слухати більше.',
+    'Ваші плейлисти, вподобані пісні й артисти в одному списку — а жанри й артисти підкажуть, що слухати далі.',
   'devices.desktop_and_phone': 'Компʼютер і телефон',
   'devices.lede':
     'На широкому екрані «Зараз грає» поруч із вашою музикою. На телефоні острівець тримає плеєр за один дотик.',
@@ -242,4 +218,38 @@ export const uk: LandingCatalog = {
   'social.lede':
     'Дивіться, хто онлайн і що слухали друзі, — і вмикайте це самі.',
   'devices.now_playing_live': 'ЗАРАЗ ГРАЄ',
+  'loop.lede':
+    'Зберігайте улюблене, вишиковуйте, що грає далі, і повертайтеся через «Нещодавнє» — один цикл слухання.',
+  'chrome.try_in_player': 'Спробувати в плеєрі',
+  'chrome.open_in_player': 'Відкрити в плеєрі',
+  'chrome.start_listening_free': 'Почати слухати — безкоштовно',
+  'chrome.next_scene': 'Наступна сцена',
+  'hero.start_listening_free': 'Почати слухати безкоштовно',
+  'cta.start_listening_free': 'Почати слухати безкоштовно',
+  'scene.faq': 'Питання',
+  'faq.before_you_press_play': 'Перш ніж натиснути «грати»',
+  'faq.eyebrow': 'Відповіді на питання',
+  'faq.before_you': 'Перш ніж',
+  'faq.press_play': 'увімкнути.',
+  'faq.lede': 'Що зазвичай питають перед реєстрацією — просто й чесно.',
+  'faq.q_free': 'Bitrate справді безкоштовний?',
+  'faq.a_free':
+    'Так. Слухати безкоштовно — без пробного періоду й без картки. А ще Bitrate має відкритий код під ліцензією MIT.',
+  'faq.source_on_github': 'Код на GitHub',
+  'faq.q_music': 'Яка музика є на Bitrate?',
+  'faq.a_music':
+    'Треки, які незалежні артисти самі публікують на Bitrate. Каталог росте з кожним релізом.',
+  'faq.q_devices': 'Чи потрібно щось встановлювати?',
+  'faq.a_devices':
+    "Ні. Bitrate працює в будь-якому сучасному браузері — на комп'ютері чи телефоні, і ваша бібліотека переходить між ними. Застосунки для телефонів і комп'ютерів — у планах.",
+  'faq.q_quality': 'Яка якість звуку?',
+  'faq.a_quality':
+    'До 320 кбіт/с. У налаштуваннях можна обмежити якість, щоб заощадити мобільний трафік.',
+  'faq.q_signin': 'Як зареєструватися?',
+  'faq.a_signin':
+    'Через Google або Facebook в один крок — або з поштою й паролем.',
+  'faq.q_data': 'Що відбувається з моїми даними?',
+  'faq.a_data':
+    'На Bitrate немає реклами. Налаштування приватності вирішують, що друзі бачать із вашого прослуховування, а Політика конфіденційності пояснює, що зберігається і навіщо.',
+  'faq.privacy_policy': 'Політика конфіденційності',
 }

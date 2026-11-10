@@ -111,6 +111,10 @@ export const releaseErrors = {
   'release.error.titleInvalid': 'Wpisz tytuł o długości do 255 znaków.',
   'release.error.titleUnconfirmed':
     'Nie udało się potwierdzić zapisania tytułu. Zamknij okno i sprawdź utwory przed ponowną próbą.',
+  'release.error.genresInvalid':
+    'Wybierz od jednego do trzech gatunków z listy.',
+  'release.error.genresUnconfirmed':
+    'Nie udało się potwierdzić zapisu gatunków. Otwórz wydanie ponownie, aby to sprawdzić.',
   'release.error.reorderInvalid':
     'Nie udało się zapisać nowej kolejności. Spróbuj ponownie.',
   'release.error.reorderUnconfirmed':

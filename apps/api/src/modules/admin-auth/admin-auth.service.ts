@@ -28,12 +28,19 @@ export class AdminAuthService {
 
   /** Runs the login staff operation. There is no self-registration — accounts are provisioned manually. */
   async loginStaff(email: Staff['email'], password: string): Promise<StaffTokenPair> {
-    const staff = await this.prisma.staff.findFirst({
+    const found = await this.prisma.staff.findFirst({
       where: { email: { equals: email, mode: 'insensitive' }, deletedAt: null },
     })
-    if (staff?.lockedUntil && staff.lockedUntil > new Date()) {
+    if (found?.lockedUntil && found.lockedUntil > new Date()) {
       throw new HttpException('Account is temporarily locked', HttpStatus.TOO_MANY_REQUESTS)
     }
+    /** An expired lock starts a fresh window, otherwise one more typo re-locks at once. */
+    const staff = found?.lockedUntil
+      ? await this.prisma.staff.update({
+          where: { id: found.id },
+          data: { failedLoginAttempts: 0, lockedUntil: null },
+        })
+      : found
 
     const passwordValid = staff && (await this.token.verifyPassword(password, staff.password))
     if (!passwordValid) {

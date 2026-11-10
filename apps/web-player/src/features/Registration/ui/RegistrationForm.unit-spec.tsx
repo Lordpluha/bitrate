@@ -27,7 +27,6 @@ const fillAccount = async (user: ReturnType<typeof userEvent.setup>) => {
     'listener@example.com',
   )
   await user.type(screen.getByLabelText('Password'), 'Str0ng!Passw0rd')
-  await user.type(screen.getByLabelText('Confirm Password'), 'Str0ng!Passw0rd')
 }
 
 const consentBox = () =>

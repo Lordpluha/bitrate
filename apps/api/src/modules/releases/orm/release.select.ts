@@ -1,5 +1,6 @@
 import type { Prisma } from '@prisma/client'
 import { SOURCE_AVAILABILITY_SELECT } from '../compilation-source'
+import { GENRE_OPTION_SELECT, RECORDING_GENRES_SELECT } from './genre.select'
 
 export const RELEASE_SUMMARY_SELECT = {
   id: true,
@@ -34,6 +35,7 @@ export const releaseReadinessSelect = (ownerArtistId: string) =>
         audioKey: true,
         sourceTrackId: true,
         sourceTrack: { select: { ...SOURCE_AVAILABILITY_SELECT, isrc: true } },
+        _count: { select: { genres: true } },
       },
     },
     tracks: {
@@ -84,8 +86,18 @@ export const releaseWorkspaceSelect = (ownerArtistId: string) => {
         audioKey: true,
         sourceTrackId: true,
         sourceTrack: {
-          select: { ...SOURCE_AVAILABILITY_SELECT, title: true, duration: true, isrc: true },
+          select: {
+            ...SOURCE_AVAILABILITY_SELECT,
+            title: true,
+            duration: true,
+            isrc: true,
+            genres: {
+              select: { genre: { select: GENRE_OPTION_SELECT } },
+              orderBy: { genre: { name: 'asc' } },
+            },
+          },
         },
+        genres: RECORDING_GENRES_SELECT,
         audioFileName: true,
         audioSizeBytes: true,
         waveform: true,

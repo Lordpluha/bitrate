@@ -76,7 +76,8 @@ export const createSignal = ({
     const mob = isMobile()
     const sx = mob ? w * MOBILE_LOOK.x : PX.ox + L.x * PX.s
     const sy = mob ? h * MOBILE_LOOK.y : PX.oy + L.y * PX.s
-    const size = mob ? w * MOBILE_LOOK.size : L.size * PX.s
+    /* on a phone the copy fills the width: the shape steps out instead of sitting under it */
+    const size = mob ? 0 : L.size * PX.s
     const sc = (size / 2) * PX.k
     gsap.to(signalGroup.position, {
       x: (sx - w / 2) * PX.k,

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { formatStat, parsePlatformStats } from './platformStats'
+import { formatStat, parsePlatformStats, worthShowing } from './platformStats'
 
 describe('parsePlatformStats', () => {
   it('accepts the API totals', () => {
@@ -25,5 +25,22 @@ describe('formatStat', () => {
     expect(formatStat({ value: 940, locale: 'en' })).toBe('940')
     expect(formatStat({ value: 12_400, locale: 'en' })).toBe('12.4K')
     expect(formatStat({ value: 12_400, locale: 'uk' })).toBe('12,4\u00a0тис.')
+  })
+})
+
+describe('worthShowing', () => {
+  it('shows totals that already read as a real catalogue', () => {
+    expect(
+      worthShowing({ artists: 320, listeners: 48_200, tracks: 12_400 }),
+    ).toBe(true)
+  })
+
+  it('hides small totals, which would argue against signing up', () => {
+    expect(worthShowing({ artists: 48, listeners: 12_400, tracks: 960 })).toBe(
+      false,
+    )
+    expect(worthShowing({ artists: 320, listeners: 40, tracks: 12_400 })).toBe(
+      false,
+    )
   })
 })

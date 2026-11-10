@@ -29,11 +29,22 @@ describe('auth schemas', () => {
     ])
   })
 
+  it('registers with a name, an email and one password — no confirmation field', () => {
+    const result = registrationSchema.safeParse({
+      acceptLegal: true,
+      email: 'listener@example.com',
+      fullName: 'Listener',
+      password: 'Str0ng!Passw0rd',
+    })
+
+    expect(result.success).toBe(true)
+    expect(result.data).not.toHaveProperty('confirmPassword')
+  })
+
   it('continues to enforce strong passwords for registration', () => {
     expect(
       registrationSchema.safeParse({
         acceptLegal: true,
-        confirmPassword: 'legacy',
         email: 'listener@example.com',
         fullName: 'Listener',
         password: 'legacy',
@@ -47,7 +58,6 @@ describe('auth schemas', () => {
         ?.issues ?? []),
       ...(registrationSchema.safeParse({
         acceptLegal: false,
-        confirmPassword: 'other',
         email: 'nope',
         fullName: 'X1',
         password: 'short',
@@ -62,7 +72,6 @@ describe('auth schemas', () => {
 
   describe('legal acceptance', () => {
     const validRegistration = {
-      confirmPassword: 'Str0ng!Passw0rd',
       email: 'listener@example.com',
       fullName: 'Listener',
       password: 'Str0ng!Passw0rd',

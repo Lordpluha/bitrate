@@ -1,6 +1,6 @@
 import { gsap } from 'gsap'
 import type * as Three from 'three'
-import type { EngineContext } from '../context'
+import { type EngineContext, isMobile } from '../context'
 import {
   angleFor,
   CRADLE,
@@ -14,6 +14,8 @@ import type { StageKit } from './types'
 
 /** The swing the cradle starts with: the left ball lifted, ready to click. */
 const LIFT = -0.6
+/** How much smaller the cradle is drawn on a phone. */
+const MOBILE_SCALE = 0.62
 /** Rig yaw: the row is seen at an angle. */
 const YAW = -0.42
 /** Physics sub-steps per frame keep fast clicks from tunnelling. */
@@ -122,7 +124,9 @@ export const createCradle = ({
   }
   const place = () => {
     const r = rect
-    const unit = r.width / (CR.gap * 4 + 2.4)
+    /* a phone's slot is narrow and the row is seen in perspective: keep it inside the screen */
+    const unit =
+      (r.width / (CR.gap * 4 + 2.4)) * (isMobile() ? MOBILE_SCALE : 1)
     const [x, y] = toWorld(r.left + r.width / 2, r.top + 8)
     cradle.position.set(x, y, 1.2)
     cradle.scale.setScalar(unit * PX.k * CR.appear)
@@ -216,6 +220,8 @@ export const createCradle = ({
     },
     /** Springs the cradle in on its scene, shrinks it away on every other. */
     show: (on: boolean) => {
+      /* a quick scroll past the scene must not let an old hide finish after a new show */
+      gsap.killTweensOf(CR)
       if (on) {
         cradle.visible = true
         /* every visit starts with a lifted ball, so the first click happens on its own */

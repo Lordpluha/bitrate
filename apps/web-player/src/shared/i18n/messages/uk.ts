@@ -234,6 +234,8 @@ export const uk = {
   'auth.field.email': 'Електронна пошта',
   'auth.field.fullName': 'Повне імʼя',
   'auth.field.password': 'Пароль',
+  'auth.password.show': 'Показати пароль',
+  'auth.password.hide': 'Сховати пароль',
   'auth.forgot.description':
     'Введіть електронну пошту, повʼязану з вашим обліковим записом.',
   'auth.forgot.email': 'Електронна пошта',

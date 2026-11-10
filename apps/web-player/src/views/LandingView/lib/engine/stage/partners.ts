@@ -225,6 +225,8 @@ export const createPartners = ({
     },
     /** Throws the spheres in from the edges on their scene, shrinks them away on every other. */
     show: (on: boolean) => {
+      /* a quick scroll past the scene must not let an old hide finish after a new show */
+      gsap.killTweensOf(PZ)
       if (on) {
         partners.visible = true
         scatterPartners()

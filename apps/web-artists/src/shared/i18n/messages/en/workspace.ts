@@ -128,6 +128,9 @@ export const workspace = {
   'workspace.track.isrcFor': 'Edit ISRC for {title}',
   'workspace.track.remove': 'Remove',
   'workspace.track.removeFor': 'Remove {title}',
+  'workspace.track.genres': 'Genres',
+  'workspace.track.genresFor': 'Choose genres for {title}',
+  'workspace.track.noGenres': 'No genre yet',
   'workspace.credits.title': 'Credits & splits',
   'workspace.credits.editSplits': 'Edit splits',
   'workspace.credits.description':

@@ -34,6 +34,18 @@ export const media = {
   'media.saveArtwork': 'Save artwork',
   'media.renameTitle': 'Rename track',
   'media.saveTitle': 'Save title',
+  'media.genres.title': 'Track genres',
+  'media.genres.intro':
+    'Choose up to {max} genres. Listeners find the track under them once it is live.',
+  'media.genres.search': 'Find a genre',
+  'media.genres.chosen': 'Chosen genres',
+  'media.genres.remove': 'Remove {genre}',
+  'media.genres.none': 'No genre chosen yet.',
+  'media.genres.noMatch': 'No genre matches “{query}”.',
+  'media.genres.loading': 'Loading genres…',
+  'media.genres.loadFailed':
+    'Genres could not be loaded. Close this window and try again.',
+  'media.genres.save': 'Save genres',
   'media.removeTitle': 'Remove track',
   'media.removeConfirm':
     'Remove {title} from the release? Its uploaded audio is deleted and its ISRC is freed. This cannot be undone.',

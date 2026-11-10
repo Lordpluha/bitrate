@@ -35,6 +35,7 @@ export const releaseBlockerSchema = z.discriminatedUnion('code', [
   z.object({ code: z.literal('NO_TRACKS') }),
   z.object({ code: z.literal('COVER_MISSING') }),
   z.object({ code: z.literal('TRACK_AUDIO_MISSING'), trackId: z.uuid() }),
+  z.object({ code: z.literal('TRACK_GENRES_MISSING'), trackId: z.uuid() }),
   z.object({ code: z.literal('MASTER_OWNER_MISSING') }),
   z.object({ code: z.literal('WRITERS_NOT_CONFIRMED') }),
   z.object({
@@ -116,6 +117,11 @@ export function describeBlocker(
       return t('release.blocker.coverMissing')
     case 'TRACK_AUDIO_MISSING':
       return t('release.blocker.audioMissing', {
+        track:
+          names.tracks?.[blocker.trackId] ?? t('release.blocker.aRecording'),
+      })
+    case 'TRACK_GENRES_MISSING':
+      return t('release.blocker.genresMissing', {
         track:
           names.tracks?.[blocker.trackId] ?? t('release.blocker.aRecording'),
       })

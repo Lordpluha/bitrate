@@ -34,3 +34,15 @@ export const formatStat = ({
       ? undefined
       : { notation: 'compact', maximumFractionDigits: 1 },
   ).format(value)
+
+/**
+ * The smallest totals the landing shows. Below them the numbers read as an empty catalogue and
+ * argue against signing up, so the hero leaves them out until the platform has grown into them.
+ */
+const SHOW_FROM = { tracks: 1000, artists: 100, listeners: 1000 } as const
+
+/** Whether the totals are large enough to help, not hurt, the hero. */
+export const worthShowing = (stats: PlatformStats) =>
+  stats.tracks >= SHOW_FROM.tracks &&
+  stats.artists >= SHOW_FROM.artists &&
+  stats.listeners >= SHOW_FROM.listeners

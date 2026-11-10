@@ -18,6 +18,8 @@ export type ReleaseAlbumInput = {
   publishedAt: Date
   /** Published tracks in running order. */
   trackIds: string[]
+  /** Genres the album is listed under; for a release, every genre of its tracks. */
+  genreIds: string[]
 }
 
 /** An `AlbumTrack` join row with its track loaded. */
@@ -173,6 +175,7 @@ export class AlbumsService {
         tracks: {
           create: input.trackIds.map((trackId, index) => ({ trackId, trackNumber: index + 1 })),
         },
+        genres: { create: input.genreIds.map((genreId) => ({ genreId })) },
       },
       select: { id: true },
     })

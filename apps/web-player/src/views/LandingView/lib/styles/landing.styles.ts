@@ -9,6 +9,7 @@ import { HEALTH_STATES } from './rules/healthStates'
 import { INTRO } from './rules/intro'
 import { LATE } from './rules/late'
 import { MOBILE } from './rules/mobile'
+import { PHONE } from './rules/phone'
 import { PHYSICS } from './rules/physics'
 import { PRIMITIVES } from './rules/primitives'
 import { SCENES } from './rules/scenes'
@@ -34,6 +35,7 @@ export const LANDING_RULES: readonly LandingRule[] = [
   ...FOOTER_LINKS,
   ...HEALTH,
   ...MOBILE,
+  ...PHONE,
   ...CURSOR,
   ...HEALTH_STATES,
   ...LATE,

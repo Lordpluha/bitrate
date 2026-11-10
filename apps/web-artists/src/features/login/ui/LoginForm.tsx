@@ -114,8 +114,10 @@ export const LoginForm = () => {
         <PasswordInput
           autoComplete="current-password"
           className="text-xl! hover:border-white py-2 focus-visible:ring-ring"
+          hideLabel={t('auth.password.hide')}
           id="password"
           placeholder={t('auth.password')}
+          showLabel={t('auth.password.show')}
           variant="black"
           {...form.register('password')}
         />

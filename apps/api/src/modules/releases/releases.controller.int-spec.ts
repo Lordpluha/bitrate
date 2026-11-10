@@ -59,6 +59,7 @@ const draft = {
 }
 
 /** The credit every new draft starts with; its shape is covered in release-credits.int-spec. */
+const house = { id: '0199aee0-0000-7000-8000-0000000000e1', slug: 'house', name: 'House' }
 const soloCredit = {
   id: '0199aee0-0000-7000-8000-0000000000c1',
   releaseId: draft.id,
@@ -419,6 +420,8 @@ describe('Release drafts (HTTP)', () => {
           status: 'DRAFT',
           duration: 180,
           isDemo: false,
+          genres: [{ genre: house }],
+          _count: { genres: 1 },
         },
       ],
       tracks: [
@@ -437,6 +440,7 @@ describe('Release drafts (HTTP)', () => {
     expect(response.body).toMatchObject({
       artistName: 'Owner',
       scheduledAt: '2026-11-01T12:00:00.000Z',
+      trackDrafts: [{ id: draft.id, genres: [house] }],
       // A published track is the catalogue copy of a draft, so it is not counted again.
       trackCount: 1,
       tracks: [{ id: otherOwnerId, title: 'Linked recording', position: 1 }],
