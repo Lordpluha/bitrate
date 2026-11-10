@@ -73,6 +73,7 @@ how to apply it day to day.
 | [0069](./0069-gsap-web-animation-standard.md) | GSAP is the only JavaScript animation library on web surfaces; CSS keeps hover, press and Base UI enter or exit |
 | [0070](./0070-artist-workspace-routes.md) | Every artist-only API route is under `/artists/`: the workspace under `/artists/me`, sign-in under `/artists/auth` |
 | [0072](./0072-listener-wide-playback-pacing.md) | A listener-wide bucket of two real-time streams across tracks, per-user session throttling, and pacing in memory while Redis is down |
+| [0073](./0073-rendition-caching-and-abuse-signals.md) | Rendition bytes are `no-store`; distinct tracks per listener in 10 minutes are reported at 40 and refused at 120 |
 
 Create new records from [`template.md`](./template.md). Accepted decisions are changed by
 a superseding ADR rather than silently rewriting history.
