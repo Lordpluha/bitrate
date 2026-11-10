@@ -233,6 +233,8 @@ export const pl = {
   'auth.field.email': 'Adres e-mail',
   'auth.field.fullName': 'Imię i nazwisko',
   'auth.field.password': 'Hasło',
+  'auth.password.show': 'Pokaż hasło',
+  'auth.password.hide': 'Ukryj hasło',
   'auth.forgot.description': 'Podaj adres e-mail powiązany z Twoim kontem.',
   'auth.forgot.email': 'Adres e-mail',
   'auth.forgot.failed': 'Nie udało się poprosić o reset hasła.',
