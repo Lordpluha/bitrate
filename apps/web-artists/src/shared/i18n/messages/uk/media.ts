@@ -34,6 +34,18 @@ export const media = {
   'media.saveArtwork': 'Зберегти обкладинку',
   'media.renameTitle': 'Перейменувати трек',
   'media.saveTitle': 'Зберегти назву',
+  'media.genres.title': 'Жанри треку',
+  'media.genres.intro':
+    'Оберіть до {max} жанрів. Після публікації слухачі знайдуть трек у цих жанрах.',
+  'media.genres.search': 'Знайти жанр',
+  'media.genres.chosen': 'Обрані жанри',
+  'media.genres.remove': 'Прибрати {genre}',
+  'media.genres.none': 'Жанр ще не обрано.',
+  'media.genres.noMatch': 'Жоден жанр не відповідає «{query}».',
+  'media.genres.loading': 'Завантаження жанрів…',
+  'media.genres.loadFailed':
+    'Не вдалося завантажити жанри. Закрийте вікно й спробуйте ще раз.',
+  'media.genres.save': 'Зберегти жанри',
   'media.removeTitle': 'Вилучити трек',
   'media.removeConfirm':
     'Вилучити {title} з релізу? Завантажене аудіо буде видалено, а ISRC звільниться. Цю дію не можна скасувати.',

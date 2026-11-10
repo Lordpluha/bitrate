@@ -42,6 +42,9 @@ export function releaseRoadmap(
   const missingAudio = blockers.filter(
     (blocker) => blocker.code === 'TRACK_AUDIO_MISSING',
   ).length
+  const missingGenres = blockers.filter(
+    (blocker) => blocker.code === 'TRACK_GENRES_MISSING',
+  ).length
   const submitted = release.status !== 'DRAFT'
   const reviewed = AFTER_REVIEW.has(release.status)
 
@@ -76,7 +79,12 @@ export function releaseRoadmap(
           ? t('release.roadmap.audioFirst')
           : missingAudio > 0
             ? tp({ count: missingAudio, key: 'release.roadmap.audioMissing' })
-            : tp({ count: trackTotal, key: 'release.roadmap.audioDone' }),
+            : missingGenres > 0
+              ? tp({
+                  count: missingGenres,
+                  key: 'release.roadmap.genresMissing',
+                })
+              : tp({ count: trackTotal, key: 'release.roadmap.audioDone' }),
       anchor: 'release-tracks-heading',
     },
     {
@@ -102,7 +110,7 @@ export function releaseRoadmap(
     // Right away is a valid choice, so timing never blocks preparation.
     timing: true,
     artwork: !has('COVER_MISSING'),
-    audio: !has('NO_TRACKS') && missingAudio === 0,
+    audio: !has('NO_TRACKS') && missingAudio === 0 && missingGenres === 0,
     credits: !has('CONTRIBUTOR_ROLES_MISSING') && !has('SPLITS_INCOMPLETE'),
     rights: !has('MASTER_OWNER_MISSING'),
   }

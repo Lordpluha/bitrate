@@ -34,6 +34,18 @@ export const media = {
   'media.saveArtwork': 'Zapisz okładkę',
   'media.renameTitle': 'Zmień nazwę utworu',
   'media.saveTitle': 'Zapisz tytuł',
+  'media.genres.title': 'Gatunki utworu',
+  'media.genres.intro':
+    'Wybierz maksymalnie {max} gatunki. Po publikacji słuchacze znajdą pod nimi ten utwór.',
+  'media.genres.search': 'Znajdź gatunek',
+  'media.genres.chosen': 'Wybrane gatunki',
+  'media.genres.remove': 'Usuń {genre}',
+  'media.genres.none': 'Nie wybrano jeszcze gatunku.',
+  'media.genres.noMatch': 'Żaden gatunek nie pasuje do „{query}”.',
+  'media.genres.loading': 'Wczytywanie gatunków…',
+  'media.genres.loadFailed':
+    'Nie udało się wczytać gatunków. Zamknij to okno i spróbuj ponownie.',
+  'media.genres.save': 'Zapisz gatunki',
   'media.removeTitle': 'Usuń utwór',
   'media.removeConfirm':
     'Usunąć {title} z wydania? Przesłane audio zostanie usunięte, a kod ISRC zwolniony. Tej operacji nie można cofnąć.',

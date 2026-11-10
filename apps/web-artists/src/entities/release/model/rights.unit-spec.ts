@@ -6,6 +6,7 @@ import {
   isValidUpc,
   normalizeIsrc,
   percentToBasisPoints,
+  releaseBlockerSchema,
 } from './rights'
 
 const { t } = createI18n({ locale: 'en' })
@@ -68,6 +69,24 @@ describe('release rights model', () => {
     ).toBe('Publishing splits total 60% of 100%')
     expect(describeBlocker({ code: 'NO_TRACKS' }, names, t)).toBe(
       'Add at least one track',
+    )
+  })
+
+  it('names the recording that still needs a genre', () => {
+    const trackId = '019a0000-0000-7000-8000-000000000301'
+    const blocker = releaseBlockerSchema.parse({
+      code: 'TRACK_GENRES_MISSING',
+      trackId,
+    })
+    expect(
+      describeBlocker(
+        blocker,
+        { contributors: {}, tracks: { [trackId]: 'Night drive' } },
+        t,
+      ),
+    ).toBe('Choose genres for Night drive')
+    expect(describeBlocker(blocker, { contributors: {} }, t)).toBe(
+      'Choose genres for a recording',
     )
   })
 
