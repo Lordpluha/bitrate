@@ -31,7 +31,7 @@ describe('MailService audience-specific links', () => {
     await service.sendArtistPasswordReset('artist@example.com', 'artist token', 'artist')
 
     expect(sendMail.mock.calls[0]?.[0].html).toContain(
-      'https://users.example.com/reset-password?token=user%20token',
+      'https://users.example.com/auth/reset-password?token=user%20token',
     )
     expect(sendMail.mock.calls[1]?.[0].html).toContain(
       'https://artists.example.com/reset-password?token=artist%20token',
