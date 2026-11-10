@@ -37,7 +37,9 @@ x-api-env: &api-env
 services:
   # PostgreSQL Database
   postgres:
-    image: postgres:16-alpine
+    # Postgres + pgvector, built from infra/postgres -- the same Dockerfile prod pulls from GHCR.
+    image: bitrate-postgres:16-pgvector0.8.7
+    build: ./postgres
     container_name: bitrate-postgres
     restart: unless-stopped
     environment:

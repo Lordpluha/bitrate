@@ -172,8 +172,8 @@ jobs:
       fail-fast: false
       matrix:
         # Keep in step with the non-ghcr.io `image:` lines in infra/docker-compose.prod.yaml.
+        # Postgres is ghcr.io now (infra/postgres); postgres_image.yml scans it when it builds.
         image:
-          - postgres:16-alpine
           - redis:7-alpine
           - nginx:alpine
           - chrislusf/seaweedfs:4.53
