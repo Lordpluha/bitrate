@@ -8,6 +8,11 @@ import { MAIL_TEMPLATES } from './templates/registry'
 export type ArtistVerificationDelivery = 'email' | 'development' | 'unavailable'
 
 /** Represents the mail service. */
+/** The web player keeps its auth screens under `/auth` (`ROUTES.auth.resetPassword`). */
+const USER_RESET_PASSWORD_PATH = '/auth/reset-password'
+/** The artists app serves the reset screen at its root (`routes/reset-password.tsx`). */
+const ARTIST_RESET_PASSWORD_PATH = '/reset-password'
+
 @Injectable()
 export class MailService {
   /** The logger value. */
@@ -52,7 +57,7 @@ export class MailService {
       to,
       token,
       username,
-      this.config.getOrThrow('web').userHost,
+      `${this.config.getOrThrow('web').userHost}${USER_RESET_PASSWORD_PATH}`,
       locale,
     )
   }
@@ -68,7 +73,7 @@ export class MailService {
       to,
       token,
       username,
-      this.config.getOrThrow('web').artistHost,
+      `${this.config.getOrThrow('web').artistHost}${ARTIST_RESET_PASSWORD_PATH}`,
       locale,
     )
   }
@@ -77,10 +82,10 @@ export class MailService {
     to: string,
     token: string,
     username: string,
-    webHost: string,
+    resetPageUrl: string,
     locale: MailLocale,
   ) {
-    const resetUrl = `${webHost}/reset-password?token=${encodeURIComponent(token)}`
+    const resetUrl = `${resetPageUrl}?token=${encodeURIComponent(token)}`
 
     if (!this.transporter) {
       this.handleUndelivered('Password reset', to, resetUrl)

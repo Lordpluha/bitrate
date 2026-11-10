@@ -420,6 +420,26 @@ describe('UserAuthService', () => {
       expect(token.hashPassword).toHaveBeenCalledWith('newpass')
       expect(prisma.$transaction).toHaveBeenCalled()
     })
+
+    it('lifts a login lockout together with the new password', async () => {
+      token.hashToken.mockReturnValue('hashed-token')
+      token.hashPassword.mockResolvedValue('new-hashed')
+      prisma.userPasswordReset.findUnique.mockResolvedValue({
+        id: 'r-1',
+        userId: 'user-1',
+        token: 'hashed-token',
+        expiresAt: new Date(Date.now() + 60_000),
+        createdAt: new Date(),
+      })
+      prisma.$transaction.mockResolvedValue([{}, {}, {}] as never)
+
+      await service.resetPassword('raw-token', 'newpass')
+
+      expect(prisma.user.update).toHaveBeenCalledWith({
+        where: { id: 'user-1' },
+        data: { password: 'new-hashed', failedLoginAttempts: 0, lockedUntil: null },
+      })
+    })
   })
 
   describe('completeTwoFactorLogin', () => {
