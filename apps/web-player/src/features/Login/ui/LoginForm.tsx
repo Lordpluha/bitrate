@@ -1,6 +1,13 @@
 'use client'
 
-import { Button, Form, FormField, FormItem, Input } from '@bitrate/ui-react'
+import {
+  Button,
+  Form,
+  FormField,
+  FormItem,
+  Input,
+  PasswordInput,
+} from '@bitrate/ui-react'
 import {
   AUTH_BUTTON_CLASS,
   AUTH_INPUT_CLASS,
@@ -65,11 +72,12 @@ export const LoginForm = () => {
               render={({ field }) => (
                 <FormItem className="space-y-0">
                   <AuthField label={t('auth.field.password')}>
-                    <Input
+                    <PasswordInput
                       autoComplete="current-password"
                       className={AUTH_INPUT_CLASS}
+                      hideLabel={t('auth.password.hide')}
                       placeholder="••••••••"
-                      type="password"
+                      showLabel={t('auth.password.show')}
                       {...field}
                     />
                   </AuthField>
