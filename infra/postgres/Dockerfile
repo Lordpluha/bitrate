@@ -24,3 +24,13 @@ RUN set -eux; \
     make -C /tmp/pgvector OPTFLAGS="" with_llvm=no install; \
     rm -rf /tmp/pgvector /tmp/pgvector.tar.gz; \
     apk del --no-network .pgvector-build
+
+# The server never needs root. The base image's entrypoint supports a non-root start: PGDATA is
+# created world-writable (1777) for a fresh volume, and existing volumes are already owned by
+# `postgres` from the entrypoint's earlier chown.
+USER postgres
+
+# Over TCP on purpose: during first-run initialisation the entrypoint's temporary server listens
+# on the unix socket only, so a socket check would report ready before the real server is up.
+HEALTHCHECK --interval=10s --timeout=5s --start-period=30s --retries=5 \
+  CMD pg_isready -h 127.0.0.1 -q || exit 1

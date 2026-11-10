@@ -113,8 +113,15 @@ jobs:
           REF: ${{ steps.tag.outputs.ref }}
         run: |
           docker run -d --name pg -e POSTGRES_PASSWORD=smoke "$REF"
-          for _ in $(seq 1 30); do docker exec pg pg_isready -U postgres -q && break; sleep 1; done
-          docker exec pg psql -U postgres -v ON_ERROR_STOP=1 \
+          # TCP, not the socket: the entrypoint's temporary init server listens on the socket only
+          # and is restarted afterwards, so a socket check can pass too early.
+          ready=false
+          for _ in $(seq 1 60); do
+            if docker exec pg pg_isready -h 127.0.0.1 -q; then ready=true; break; fi
+            sleep 1
+          done
+          [ "$ready" = true ] || { docker logs pg; echo "::error::Postgres did not become ready"; exit 1; }
+          docker exec pg psql -h 127.0.0.1 -U postgres -v ON_ERROR_STOP=1 \
             -c "CREATE EXTENSION vector;" \
             -c "CREATE TABLE t (e vector(3)); INSERT INTO t VALUES ('[1,0,0]'), ('[0,1,0]');" \
             -c "CREATE INDEX ON t USING hnsw (e vector_cosine_ops);" \
