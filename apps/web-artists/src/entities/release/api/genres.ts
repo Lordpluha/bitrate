@@ -38,7 +38,7 @@ const savedGenresSchema = z.object({
   track: z.object({ id: z.uuid(), genres: z.array(genreOptionSchema) }),
 })
 
-export interface TrackGenresRequest {
+interface TrackGenresRequest {
   id: string
   trackId: string
   genreIds: string[]
@@ -46,7 +46,7 @@ export interface TrackGenresRequest {
 }
 
 /** Replaces a recording's genres; confirmed only when the API echoes exactly that set. */
-export function saveTrackGenres({
+function saveTrackGenres({
   id,
   trackId,
   genreIds,
