@@ -6,4 +6,4 @@ The landing works on phones and short laptops and leads more visitors into the p
 
 Registration asks for one password, and the landing's main button reads "Start listening free" with a one-step Google sign-in under it (behind the consent box). The hero shows platform totals only once they are large enough, and the partners scene no longer implies partners Bitrate does not have.
 
-A FAQ scene answers the usual questions before the last call to action, the scenes are reordered to lead with the listening loop and devices, and the sign-up funnel (landing visits, scenes reached, clicks into the player by placement, sign-up shown, sent and done) is counted in Sentry metrics with nothing personal sent.
+A FAQ scene answers the usual questions before the last call to action, and the scenes are reordered to lead with the listening loop and devices.

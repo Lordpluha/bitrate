@@ -9,8 +9,6 @@ import { SocialLegalConsent } from './SocialLegalConsent'
 
 type QuickGoogleSignInProps = {
   className?: string
-  /** Funnel placement for the Google link (see `trackFunnel`), when the host counts clicks. */
-  funnel?: string
 }
 
 /**
@@ -19,10 +17,7 @@ type QuickGoogleSignInProps = {
  * so the button stays locked until the Terms, Community Guidelines and Privacy Policy are
  * accepted, exactly as in the auth screens' full provider list.
  */
-export const QuickGoogleSignIn = ({
-  className,
-  funnel,
-}: QuickGoogleSignInProps) => {
+export const QuickGoogleSignIn = ({ className }: QuickGoogleSignInProps) => {
   const { t } = useI18n()
   const [accepted, setAccepted] = useState(false)
   const label = t('auth.oauth.continueWith', { provider: 'Google' })
@@ -35,12 +30,7 @@ export const QuickGoogleSignIn = ({
           className={cn(AUTH_BUTTON_CLASS, 'px-4')}
           variant="outline"
         >
-          <a
-            data-funnel={funnel}
-            href={getOAuthUrl('google', { acceptLegal: true })}
-          >
-            {label}
-          </a>
+          <a href={getOAuthUrl('google', { acceptLegal: true })}>{label}</a>
         </Button>
       ) : (
         <Button

@@ -46,7 +46,6 @@ export const SceneStart = ({ signedIn }: SceneProps) => {
               'btn btn-primary magnetic',
               'h-[60px]! p-[0_30px]! [font-size:16px]',
             )}
-            data-funnel="final"
             href={signedIn ? ROUTES.main : ROUTES.auth.registration}
           >
             {c(signedIn ? 'cta.open_web_player' : 'cta.start_listening_free')}{' '}
@@ -89,18 +88,13 @@ export const SceneStart = ({ signedIn }: SceneProps) => {
           <span className={lc('sig d-only')}>{c('common.music_lives_on')}</span>
           <span className={lc('row', 'gap-[24px]')}>
             {!signedIn && (
-              <Link
-                className={lc('ulink')}
-                data-funnel="footer_login"
-                href={ROUTES.auth.login}
-              >
+              <Link className={lc('ulink')} href={ROUTES.auth.login}>
                 {c('cta.log_in')}
               </Link>
             )}
             {!signedIn && (
               <Link
                 className={lc('ulink u-right')}
-                data-funnel="footer"
                 href={ROUTES.auth.registration}
               >
                 {c('cta.create_account')}

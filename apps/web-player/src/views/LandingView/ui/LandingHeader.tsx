@@ -138,7 +138,6 @@ export const LandingHeader = ({ signedIn }: LandingHeaderProps) => {
         </fieldset>
         <Link
           className={lc('btn btn-primary btn-sm top-cta')}
-          data-funnel="header"
           href={signedIn ? ROUTES.main : ROUTES.auth.registration}
         >
           {c(signedIn ? 'chrome.open_player' : 'chrome.start_listening')}

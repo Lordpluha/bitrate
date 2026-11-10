@@ -115,7 +115,6 @@ export const TryInPlayer = () => {
   return (
     <Link
       className={lc('try-link magnetic')}
-      data-funnel="scene"
       href={signedIn ? ROUTES.main : ROUTES.auth.registration}
     >
       {c(signedIn ? 'chrome.open_in_player' : 'chrome.try_in_player')}
