@@ -1,14 +1,14 @@
 'use client'
 
-import type { ApiSchemas } from '@bitrate/contracts'
 import { cn } from '@bitrate/ui-react'
 import { usePlayerStore } from '@entities/Player/model/playerStore'
 import { showApiSuccessToast } from '@shared/api/feedback'
+import type { ApiTrack } from '@shared/api/track'
 import { ListPlus } from 'lucide-react'
 
 export type AddToQueueButtonProps = {
   className?: string
-  track: ApiSchemas['TrackEntity']
+  track: ApiTrack
 }
 
 /** Appends a track to the user queue, played after the current one. */

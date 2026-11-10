@@ -12,7 +12,6 @@ import {
   normalizeTrackResponse,
   normalizeTracksResponse,
   type UseLikedTracksOptions,
-  withPlayableUrl,
 } from './trackQuery'
 
 export const getTrackById = async (trackId: string) => {
@@ -22,7 +21,7 @@ export const getTrackById = async (trackId: string) => {
   )
 
   ensureOkResponse(response, 'Failed to fetch track')
-  return withPlayableUrl(normalizeTrackResponse(data))
+  return normalizeTrackResponse(data)
 }
 
 const ARTIST_TRACKS_PAGE_SIZE = 100
@@ -38,10 +37,9 @@ const getArtistTracksPage = async (artistId: string, page: number) => {
 }
 
 export const getAllTracksByArtist = async (artistId: string) => {
-  const items = await fetchAllPages({
+  return fetchAllPages({
     fetchPage: (page) => getArtistTracksPage(artistId, page),
   })
-  return items.map(withPlayableUrl)
 }
 
 /** The artist's most played tracks (featured credits included), ranked by real listening. */
@@ -54,7 +52,7 @@ export const useArtistTopTracks = (artistId: string, limit = 10) =>
         { params: { path: { id: artistId }, query: { limit } } },
       )
       ensureOkResponse(response, 'Failed to fetch the artist top tracks')
-      return normalizeTracksResponse(data).map(withPlayableUrl)
+      return normalizeTracksResponse(data)
     },
     queryKey: apiQueryKeys.tracks.artistTop(artistId, limit),
     staleTime: 5 * 60_000,
@@ -80,10 +78,9 @@ const getLikedTracksPage = async (page: number) => {
 }
 
 export const getAllLikedTracks = async () => {
-  const items = await fetchAllPages({
+  return fetchAllPages({
     fetchPage: getLikedTracksPage,
   })
-  return items.map(withPlayableUrl)
 }
 
 export const useLikedTracks = (

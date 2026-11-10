@@ -4,7 +4,6 @@ import { fallbackTrackCover } from '@/shared/constants'
 
 const playlistTrackResponseSchema = z.object({
   artistId: z.string(),
-  audioUrl: z.string(),
   cover: z
     .string()
     .nullable()

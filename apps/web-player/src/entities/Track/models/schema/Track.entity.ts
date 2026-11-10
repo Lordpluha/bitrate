@@ -1,3 +1,3 @@
-import type { ApiSchemas } from '@bitrate/contracts'
+import type { ApiTrack } from '@shared/api/track'
 
-export type TrackEntity = ApiSchemas['TrackEntity']
+export type TrackEntity = ApiTrack
