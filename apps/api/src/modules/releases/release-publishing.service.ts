@@ -245,6 +245,7 @@ export class ReleasePublishingService implements OnApplicationBootstrap {
             sourceKey: draft.audioKey,
             contentType: draft.audioContentType,
             featuredArtistIds,
+            genreIds: draft.genres.map(({ genreId }) => genreId),
           },
           async (tx, trackId) => {
             // Serialize a late materialization with deletion before attaching a catalogue copy.
@@ -253,9 +254,6 @@ export class ReleasePublishingService implements OnApplicationBootstrap {
               data: { status: ReleaseStatus.PUBLISHING },
             })
             if (active.count !== 1) throw new Error(`Release ${releaseId} is no longer publishing`)
-            await tx.trackGenre.createMany({
-              data: draft.genres.map(({ genreId }) => ({ trackId, genreId })),
-            })
             return tx.releaseTrack.create({
               data: { releaseId, trackId, position: position + 1, draftId: draft.id },
             })

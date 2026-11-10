@@ -11,7 +11,7 @@ const IsrcSchema = z.string().transform((value, context) => {
 })
 
 /** Artists tag each recording with a few catalogue genres; more would dilute genre browse. */
-export const MAX_RECORDING_GENRES = 3
+const MAX_RECORDING_GENRES = 3
 
 export const UpdateReleaseTrackSchema = z
   .strictObject({

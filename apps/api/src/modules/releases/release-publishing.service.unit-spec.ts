@@ -225,12 +225,14 @@ describe('ReleasePublishingService', () => {
         data: { releaseId: RELEASE, trackId: 'track-Two', position: 2, draftId: 'draft-Two' },
       })
       // Each catalogue copy carries the genres the artist chose for its recording.
-      expect(tx.trackGenre.createMany).toHaveBeenCalledWith({
-        data: [
-          { trackId: 'track-Two', genreId: 'genre-house' },
-          { trackId: 'track-Two', genreId: 'genre-techno' },
-        ],
-      })
+      expect(tracks.createReleaseTrack).toHaveBeenCalledWith(
+        OWNER,
+        null,
+        expect.objectContaining({ title: 'Two', genreIds: ['genre-house', 'genre-techno'] }),
+        expect.any(Function),
+      )
+      // The tracks module owns TrackGenre; releases never writes it directly.
+      expect(tx.trackGenre.createMany).not.toHaveBeenCalled()
     })
 
     it('does not attach a new catalogue track when deletion won the release lock', async () => {
@@ -244,6 +246,7 @@ describe('ReleasePublishingService', () => {
             isrc: null,
             audioKey: 'm/1.wav',
             audioContentType: 'audio/wav',
+            genres: [],
           },
         ],
         contributors: [],
