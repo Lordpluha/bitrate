@@ -4,14 +4,13 @@ import { expect, type Page, test } from '@playwright/test'
 const SCENES = [
   { id: 'hero', name: 'Your music, already where you are' },
   { id: 'loop', name: 'Play, save, return' },
-  { id: 'workshop', name: 'Playlists in your order' },
-  { id: 'rules', name: 'Your player, your rules' },
-  { id: 'library', name: 'A library with a memory' },
-  { id: 'discover', name: 'Follow the sound' },
   { id: 'devices', name: 'Same queue, new scene' },
+  { id: 'library', name: 'A library with a memory' },
   { id: 'social', name: 'Beyond the play button' },
-  { id: 'partners', name: 'Our partners' },
+  { id: 'rules', name: 'Your player, your rules' },
   { id: 'team', name: 'About our team' },
+  { id: 'partners', name: 'Our partners' },
+  { id: 'faq', name: 'Before you press play' },
   { id: 'cta', name: 'Pick up where the last track left off' },
 ] as const
 
@@ -27,7 +26,7 @@ const engineReady = (page: Page) =>
   expect(page.locator('html')).toHaveClass(/(^|\s)landing-lock(\s|$)/)
 
 test.describe('landing page', () => {
-  test('renders the eleven scenes and none of the old landing', async ({
+  test('renders the ten scenes and none of the old landing', async ({
     page,
   }) => {
     await page.goto('/')
@@ -51,14 +50,14 @@ test.describe('landing page', () => {
     await expect(page.locator('.landing a[href^="/main"]')).toHaveCount(0)
     const hero = page.getByRole('region', { name: SCENES[0].name })
     await expect(
-      hero.getByRole('link', { name: /Create account/ }),
+      hero.getByRole('link', { name: /Start listening free/ }),
     ).toHaveAttribute('href', '/auth/registration')
     await expect(hero.getByRole('link', { name: 'Log in' })).toHaveAttribute(
       'href',
       '/auth/login',
     )
     const start = page.getByRole('region', {
-      name: SCENES[10].name,
+      name: 'Pick up where the last track left off',
       includeHidden: true,
     })
     await expect(
@@ -102,13 +101,17 @@ test.describe('landing without JavaScript', () => {
       'Your music',
     )
     await expect(
-      page.getByRole('link', { name: /Create account/ }).first(),
+      page.getByRole('link', { name: /Start listening free/ }).first(),
     ).toHaveAttribute('href', '/auth/registration')
   })
 })
 
+/** A window tall enough for one scene per screen (short laptops scroll; see the tall test). */
+const SCENE_WINDOW = { width: 1440, height: 900 } as const
+
 test.describe('landing navigation on desktop', () => {
   test.skip(({ isMobile }) => isMobile, 'desktop gestures')
+  test.use({ viewport: SCENE_WINDOW })
 
   test('keys, dots and wheel move between scenes and the hash follows', async ({
     page,
@@ -135,7 +138,7 @@ test.describe('landing navigation on desktop', () => {
     await page.mouse.move(400, 400)
     await expect(async () => {
       await page.mouse.wheel(0, 240)
-      await expect(activeScene(page)).toHaveId('discover', { timeout: 1500 })
+      await expect(activeScene(page)).toHaveId('social', { timeout: 1500 })
     }).toPass({ timeout: 8000 })
 
     await expect(async () => {
@@ -232,6 +235,8 @@ test.describe('landing on touch screens', () => {
 })
 
 test.describe('landing without WebGL', () => {
+  test.use({ viewport: SCENE_WINDOW })
+
   test('the 2D fallbacks render and nothing throws', async ({ page }) => {
     const errors: string[] = []
     page.on('pageerror', (e) => errors.push(e.message))
@@ -254,6 +259,36 @@ test.describe('landing without WebGL', () => {
     expect(
       errors.filter((e) => !/health\/ready|Failed to load resource/.test(e)),
     ).toEqual([])
+  })
+})
+
+test.describe('landing on a short laptop', () => {
+  test.skip(({ isMobile }) => isMobile, 'desktop layout')
+  test.use({ viewport: { width: 1280, height: 720 } })
+
+  test('scrolls through scenes fitted to the width, and the hash follows', async ({
+    page,
+  }) => {
+    await skipIntro(page)
+    await page.goto('/')
+    await expect(page.locator('.landing')).toHaveClass(/(^|\s)is-tall(\s|$)/)
+    await expect(page.locator('html')).not.toHaveClass(
+      /(^|\s)landing-lock(\s|$)/,
+    )
+    /* fitted to the width, so a scene is taller than the window */
+    const sceneHeight = await page
+      .locator('#hero')
+      .evaluate((el) => el.getBoundingClientRect().height)
+    expect(sceneHeight).toBeGreaterThan(720)
+    await expect(async () => {
+      await page.keyboard.press('ArrowDown')
+      await expect(page).toHaveURL(/#loop$/, { timeout: 1500 })
+    }).toPass({ timeout: 8000 })
+    await page.mouse.move(640, 400)
+    await expect(async () => {
+      await page.mouse.wheel(0, 900)
+      await expect(page).toHaveURL(/#devices$/, { timeout: 1500 })
+    }).toPass({ timeout: 8000 })
   })
 })
 

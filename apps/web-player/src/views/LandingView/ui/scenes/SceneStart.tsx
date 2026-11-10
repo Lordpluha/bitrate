@@ -48,7 +48,7 @@ export const SceneStart = ({ signedIn }: SceneProps) => {
             )}
             href={signedIn ? ROUTES.main : ROUTES.auth.registration}
           >
-            {c(signedIn ? 'cta.open_web_player' : 'cta.create_account')}{' '}
+            {c(signedIn ? 'cta.open_web_player' : 'cta.start_listening_free')}{' '}
             <svg aria-hidden="true" className={lc('i')}>
               <use href="#i-arrow" />
             </svg>

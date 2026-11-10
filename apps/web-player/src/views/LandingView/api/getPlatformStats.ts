@@ -1,6 +1,10 @@
 import 'server-only'
 
-import { type PlatformStats, parsePlatformStats } from '../model/platformStats'
+import {
+  type PlatformStats,
+  parsePlatformStats,
+  worthShowing,
+} from '../model/platformStats'
 
 /** The API recomputes the totals every five minutes; the landing re-asks on the same beat. */
 const REVALIDATE_S = 300
@@ -20,7 +24,9 @@ export const getPlatformStats = async (): Promise<PlatformStats | null> => {
       signal: AbortSignal.timeout(TIMEOUT_MS),
     })
     if (!res.ok) return null
-    return parsePlatformStats(await res.json())
+    const stats = parsePlatformStats(await res.json())
+    /* small totals would argue against signing up: leave them out until they grow */
+    return stats && worthShowing(stats) ? stats : null
   } catch {
     return null
   }

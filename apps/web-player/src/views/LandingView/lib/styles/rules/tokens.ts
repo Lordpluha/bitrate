@@ -15,7 +15,7 @@ export const TOKENS: readonly LandingRule[] = [
     'landing',
     '[.dim_&]:[--glow:color-mix(in_srgb,var(--color-accent)_24%,transparent)]',
   ],
-  /* Eleven fullscreen scenes after the archived "Original Edition" landing. Each scene is a 1440x900 board scaled to the viewport, with layered windows over one fixed WebGL stage. One gesture = one scene. */
+  /* Nine fullscreen scenes after the archived "Original Edition" landing. Each scene is a 1440x900 board scaled to the viewport, with layered windows over one fixed WebGL stage. One gesture = one scene. */
   ['landing', '[&.is-static]:overflow-auto'],
   [
     'i',

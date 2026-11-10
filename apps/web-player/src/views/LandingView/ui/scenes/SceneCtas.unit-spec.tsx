@@ -51,7 +51,7 @@ describe('landing calls to action', () => {
     ]) {
       const scene = within(screen.getByRole('region', { name }))
       expect(
-        scene.getAllByRole('link', { name: /Create account/ })[0],
+        scene.getAllByRole('link', { name: /Start listening free/ })[0],
       ).toHaveAttribute('href', '/auth/registration')
       expect(scene.getAllByRole('link', { name: /Log in/ })[0]).toHaveAttribute(
         'href',
@@ -74,6 +74,12 @@ describe('landing calls to action', () => {
     ).toHaveAttribute('href', '/main')
     expect(
       screen.queryByRole('link', { name: 'Create account' }),
+    ).not.toBeInTheDocument()
+    expect(
+      screen.queryByRole('link', { name: /Start listening free/ }),
+    ).not.toBeInTheDocument()
+    expect(
+      screen.queryByRole('button', { name: 'Continue with Google' }),
     ).not.toBeInTheDocument()
     expect(
       screen.queryByRole('link', { name: 'Log in' }),
@@ -102,5 +108,15 @@ describe('landing calls to action', () => {
     expect(screen.getByText('Listeners').nextElementSibling).toHaveTextContent(
       '12.4K',
     )
+  })
+
+  it('offers a guest one-step Google sign-up in the hero, behind the consent box', () => {
+    render(withQuery(<SceneSignal signedIn={false} stats={null} />))
+    expect(
+      screen.getByRole('button', { name: 'Continue with Google' }),
+    ).toBeDisabled()
+    expect(
+      screen.getByRole('checkbox', { name: /at least 16 years old/i }),
+    ).not.toBeChecked()
   })
 })

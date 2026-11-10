@@ -13,6 +13,11 @@ export const PRIMITIVES: readonly LandingRule[] = [
     'board',
     'absolute top-1/2 left-1/2 w-[1440px] h-[900px] [transform:translate(-50%,-50%)_scale(var(--s,1))] origin-[50%_50%]',
   ],
+  /* tall landing (short laptops): scenes sit in the page, each exactly as tall as its board */
+  [
+    'scene',
+    '[.is-tall_&]:relative [.is-tall_&]:visible [.is-tall_&]:inset-auto [.is-tall_&]:h-[calc(900px_*_var(--s,1))] [.is-tall_&]:overflow-visible',
+  ],
   [
     'abs',
     'absolute top-[calc(var(--y)_*_1px)] left-[calc(var(--x)_*_1px)] w-[calc(var(--w)_*_1px)]',

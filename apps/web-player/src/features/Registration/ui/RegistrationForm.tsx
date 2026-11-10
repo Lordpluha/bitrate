@@ -54,13 +54,6 @@ const FIELDS: {
     placeholder: '••••••••',
     secret: true,
   },
-  {
-    autoComplete: 'new-password',
-    labelKey: 'auth.field.confirmPassword',
-    name: 'confirmPassword',
-    placeholder: '••••••••',
-    secret: true,
-  },
 ]
 
 export const RegistrationForm = () => {

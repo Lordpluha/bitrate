@@ -13,7 +13,7 @@ import {
 } from '../../model/demo/demoData'
 import { useLandingCopy } from '../../model/useLandingCopy'
 import { DemoFrame } from '../demo/DemoFrame'
-import { Abs, SceneShell } from './parts'
+import { Abs, SceneShell, TryInPlayer } from './parts'
 
 /** Scene "Social": the player's Friends (presence, online now) and Activity feed. */
 export const SceneSocial = () => {
@@ -41,6 +41,9 @@ export const SceneSocial = () => {
         <p className={lc('lede s', 'mt-[20px]')} data-a="up">
           {c('social.lede')}
         </p>
+        <div className="mt-[14px]" data-a="up">
+          <TryInPlayer />
+        </div>
       </Abs>
       <Abs data-a="win" h={176} markers="win d-only" w={330} x={48} y={470}>
         <DemoFrame className="h-full p-5" label={t('friends.onlineNow')}>
@@ -54,7 +57,14 @@ export const SceneSocial = () => {
           </div>
         </DemoFrame>
       </Abs>
-      <Abs data-a="win" h={580} markers="win" w={980} x={420} y={130}>
+      <Abs
+        data-a="win"
+        h={580}
+        markers="win scene-block"
+        w={980}
+        x={420}
+        y={130}
+      >
         <DemoFrame
           className="grid h-full grid-cols-2 gap-8 p-6 max-[820px]:max-h-[52vh] max-[820px]:grid-cols-1 max-[820px]:p-4"
           label={t('friends.title')}

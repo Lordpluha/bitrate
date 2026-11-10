@@ -15,7 +15,6 @@ const Harness = ({ onValues, error }: HarnessProps) => {
   const form = useForm<RegistrationFormData>({
     defaultValues: {
       acceptLegal: false,
-      confirmPassword: '',
       email: '',
       fullName: '',
       password: '',

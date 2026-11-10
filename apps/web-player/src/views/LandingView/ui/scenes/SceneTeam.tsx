@@ -21,10 +21,10 @@ export const SceneTeam = () => {
             <span className={lc('hl')}>{c('team.loud_signal')}</span>
           </span>
         </h2>
-        <p className={lc('lede s', 'mt-[22px]')} data-a="up">
+        <p className={lc('lede s m-hide', 'mt-[22px]')} data-a="up">
           {c('team.two_people_build_bitrate_the_player_the')}
         </p>
-        <div className={lc('stats')} data-a="up">
+        <div className={lc('stats m-hide')} data-a="up">
           <span>
             <b data-v={TEAM_STATS.people}>{TEAM_STATS.people}</b>
             <span className={lc('t-meta')}>{c('team.people')}</span>
@@ -38,7 +38,7 @@ export const SceneTeam = () => {
             <span className={lc('t-meta')}>{c('team.palette')}</span>
           </span>
         </div>
-        <div className={lc('ctas', 'mt-[26px]')} data-a="up">
+        <div className={lc('ctas m-row', 'mt-[26px]')} data-a="up">
           <a
             className={lc('btn btn-primary magnetic')}
             href={GITHUB_REPO_URL}

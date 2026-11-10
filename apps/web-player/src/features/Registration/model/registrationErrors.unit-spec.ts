@@ -9,14 +9,6 @@ describe('collectRegistrationErrors', () => {
           message: 'You must accept the Terms of Use and Community Guidelines',
           type: 'custom',
         },
-        confirmPassword: {
-          message: "Passwords don't match",
-          type: 'custom',
-          types: {
-            custom: "Passwords don't match",
-            too_small: 'Password must be at least 8 characters',
-          },
-        },
         password: {
           message: 'Password must be at least 8 characters',
           type: 'too_small',
@@ -33,7 +25,6 @@ describe('collectRegistrationErrors', () => {
       'Password must be at least 8 characters',
       'Password must include at least one uppercase letter',
       'Password must include at least one number',
-      "Passwords don't match",
       'You must accept the Terms of Use and Community Guidelines',
     ])
   })

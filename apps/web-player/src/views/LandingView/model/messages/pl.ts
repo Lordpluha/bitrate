@@ -35,9 +35,6 @@ export const pl: LandingCatalog = {
   'library.playlists': 'Playlisty',
   'library.artists': 'Artyści',
   'library.title': 'TYTUŁ',
-  'discover.follow_the_sound': 'Podążaj za dźwiękiem',
-  'discover.follow_the': 'Podążaj za',
-  'discover.sound': 'dźwiękiem.',
   'devices.same_queue_new_scene': 'Ta sama kolejka, nowa scena',
   'devices.same_queue': 'Ta sama kolejka.',
   'devices.new_scene': 'Nowa scena.',
@@ -50,11 +47,9 @@ export const pl: LandingCatalog = {
   'partners.the': '',
   'partners.signal_on_air': 'sygnał jest na antenie.',
   'partners.labels_studios_and_services_we_build_wit':
-    'Wytwórnie, studia i serwisy, z którymi pracujemy. Złap jeden i rzuć — odbije się.',
+    'Szukamy wytwórni, studiów i serwisów, z którymi zbudujemy Bitrate. Złap kulę i rzuć — odbije się.',
   'partners.drag_throw_squeeze': 'PRZECIĄGAJ · RZUCAJ · ŚCISKAJ',
   'partners.become_a_partner': 'Zostań partnerem',
-  'partners.placeholder_marks_replace_with_real_part':
-    'Tymczasowe znaki — zastąp prawdziwymi logo partnerów',
   'team.about_our_team': 'O naszym zespole',
   'team.small_team': 'Mały zespół.',
   'team.loud_signal': 'Głośny sygnał.',
@@ -86,7 +81,6 @@ export const pl: LandingCatalog = {
   'chrome.nav': 'Główna',
   'chrome.web_player': 'Odtwarzacz w przeglądarce',
   'chrome.your_library': 'Twoja biblioteka',
-  'chrome.discover': 'Odkrywaj',
   'chrome.features': 'Funkcje',
   'chrome.theme': 'Motyw',
   'chrome.dark': 'Ciemny',
@@ -159,10 +153,8 @@ export const pl: LandingCatalog = {
   'chrome.cursor_seek': 'Przewiń',
   'scene.hero': 'Sygnał',
   'scene.loop': 'Pętla',
-  'scene.workshop': 'Warsztat',
   'scene.rules': 'Twoje zasady',
   'scene.library': 'Biblioteka',
-  'scene.discover': 'Odkrywaj',
   'scene.devices': 'Urządzenia',
   'scene.social': 'Społeczność',
   'scene.partners': 'Partnerzy',
@@ -210,28 +202,12 @@ export const pl: LandingCatalog = {
   'hero.screen_queue': 'Kolejka',
   'hero.screen_now': 'Teraz gra',
   'hero.screen_library': 'Biblioteka',
-  'workshop.playlists_your_order': 'Playlisty w twojej kolejności',
-  'workshop.playlists_in': 'Playlisty w twojej',
-  'workshop.your_order': 'kolejności.',
-  'workshop.lede':
-    'Zbieraj utwory w playlisty, ustawiaj, co zagra dalej, i zmieniaj zdanie, kiedy chcesz.',
-  'workshop.build_playlists': 'Twórz playlisty',
-  'workshop.build_playlists_meta':
-    'Zostaw utwory, które pasują, usuń te, które już nie.',
-  'workshop.line_up_next': 'Ustaw, co dalej',
-  'workshop.line_up_next_meta': 'Kolejka pokazuje, co gra teraz i co po nim.',
-  'workshop.play_any_row': 'Graj z dowolnego wiersza',
-  'workshop.play_any_row_meta':
-    'Włącz utwór z playlisty albo przeskocz do przodu w kolejce.',
   'rules.lede_settings':
     'Zmień motyw i język, ustaw kompaktową bibliotekę, trzymaj „Teraz gra” obok muzyki. Wypróbuj tutaj.',
   'rules.appearance': 'Wygląd',
   'rules.theme': 'Motyw',
   'library.lede':
-    'Playlisty, polubione utwory i artyści na jednej liście. Filtruj, sortuj, otwieraj.',
-  'discover.browse_then_go_deeper': 'Przeglądaj i idź głębiej',
-  'discover.lede':
-    'Przeglądaj gatunki, otwieraj artystów i obserwuj tych, których chcesz słuchać więcej.',
+    'Twoje playlisty, polubione utwory i artyści na jednej liście — a gatunki i artyści podpowiedzą, czego słuchać dalej.',
   'devices.desktop_and_phone': 'Komputer i telefon',
   'devices.lede':
     'Na szerokim ekranie „Teraz gra” jest obok twojej muzyki. Na telefonie wyspa trzyma odtwarzacz na jedno dotknięcie.',
@@ -244,4 +220,38 @@ export const pl: LandingCatalog = {
   'social.lede':
     'Zobacz, kto jest online i czego słuchali znajomi, a potem włącz to sam.',
   'devices.now_playing_live': 'TERAZ GRA',
+  'loop.lede':
+    'Zapisuj to, co kochasz, ustawiaj, co zagra dalej, i wracaj przez „Ostatnie” — jedna pętla słuchania.',
+  'chrome.try_in_player': 'Wypróbuj w odtwarzaczu',
+  'chrome.open_in_player': 'Otwórz w odtwarzaczu',
+  'chrome.start_listening_free': 'Zacznij słuchać — za darmo',
+  'chrome.next_scene': 'Następna scena',
+  'hero.start_listening_free': 'Zacznij słuchać za darmo',
+  'cta.start_listening_free': 'Zacznij słuchać za darmo',
+  'scene.faq': 'Pytania',
+  'faq.before_you_press_play': 'Zanim naciśniesz play',
+  'faq.eyebrow': 'Odpowiedzi na pytania',
+  'faq.before_you': 'Zanim',
+  'faq.press_play': 'włączysz.',
+  'faq.lede': 'O co zwykle pytają przed rejestracją — prosto i uczciwie.',
+  'faq.q_free': 'Czy Bitrate jest naprawdę darmowy?',
+  'faq.a_free':
+    'Tak. Słuchanie jest darmowe — bez okresu próbnego i bez karty. Bitrate ma też otwarty kod na licencji MIT.',
+  'faq.source_on_github': 'Kod na GitHubie',
+  'faq.q_music': 'Jaka muzyka jest na Bitrate?',
+  'faq.a_music':
+    'Utwory, które niezależni artyści sami publikują na Bitrate. Katalog rośnie z każdym wydaniem.',
+  'faq.q_devices': 'Czy muszę coś instalować?',
+  'faq.a_devices':
+    'Nie. Bitrate działa w każdej nowoczesnej przeglądarce, na komputerze i telefonie, a twoja biblioteka jest z tobą na obu. Aplikacje na telefony i komputery są w planach.',
+  'faq.q_quality': 'Jaka jest jakość dźwięku?',
+  'faq.a_quality':
+    'Do 320 kb/s. W ustawieniach możesz ograniczyć jakość, by oszczędzać dane komórkowe.',
+  'faq.q_signin': 'Jak się zarejestrować?',
+  'faq.a_signin':
+    'Przez Google lub Facebook w jednym kroku albo e-mailem i hasłem.',
+  'faq.q_data': 'Co dzieje się z moimi danymi?',
+  'faq.a_data':
+    'Na Bitrate nie ma reklam. Ustawienia prywatności decydują, co znajomi widzą z twojego słuchania, a Polityka prywatności wyjaśnia, co jest przechowywane i po co.',
+  'faq.privacy_policy': 'Polityka prywatności',
 }
