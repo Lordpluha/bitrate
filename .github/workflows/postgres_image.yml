@@ -1,0 +1,134 @@
+name: "[infra] Postgres Image"
+
+# Builds infra/postgres (postgres:16-alpine + pgvector) and publishes it to GHCR for
+# infra/docker-compose.prod.yaml. See ADR-0071.
+#
+# Unlike the app images this one is NOT part of release_images_reusable.yml and is not
+# published under ${IMAGE_TAG}: a rebuild per release would give the database a new digest
+# every time, and every deploy would restart it. Its tag is written once in the prod compose
+# file (`postgres:16-pgvector<version>`) and is immutable here: a develop push only publishes
+# a tag that does not exist yet. Re-publishing an existing tag (to pick up a patched base
+# image) is a deliberate hand-run with `republish`, and restarts the database on the next deploy.
+on:
+  push:
+    branches: [develop]
+    paths:
+      - 'infra/postgres/**'
+      - 'infra/docker-compose.prod.yaml'
+      - '.github/workflows/postgres_image.yml'
+  pull_request:
+    branches: [master, develop]
+    paths:
+      - 'infra/postgres/**'
+      - 'infra/docker-compose.prod.yaml'
+      - '.github/workflows/postgres_image.yml'
+  workflow_dispatch:
+    inputs:
+      republish:
+        description: >-
+          Overwrite the tag if it is already published. The next production deploy then
+          restarts the database on the new image.
+        required: false
+        default: false
+        type: boolean
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions: {}
+
+defaults:
+  run:
+    shell: bash --noprofile --norc -euo pipefail {0}
+
+jobs:
+  postgres-image:
+    name: Postgres Image
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      packages: write
+      # The image scan uploads its SARIF to code scanning.
+      security-events: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      # The prod compose file owns the tag; the Dockerfile owns the pgvector version. They must
+      # agree, or prod would pull a tag whose name lies about its contents.
+      - name: Resolve image tag
+        id: tag
+        run: |
+          ref="$(grep -oE 'ghcr\.io/lordpluha/bitrate/postgres:[^[:space:]]+' infra/docker-compose.prod.yaml)"
+          [ "$(printf '%s\n' "$ref" | wc -l)" -eq 1 ] || { echo "::error::expected one postgres image in docker-compose.prod.yaml"; exit 1; }
+          version="$(sed -nE 's/^ARG PGVECTOR_VERSION=(.+)$/\1/p' infra/postgres/Dockerfile)"
+          [ "${ref##*:}" = "16-pgvector${version}" ] || {
+            echo "::error::prod compose pulls ${ref##*:} but infra/postgres/Dockerfile builds pgvector ${version}"
+            exit 1
+          }
+          echo "ref=${ref}" >> "$GITHUB_OUTPUT"
+
+      - name: Setup Docker + registries
+        uses: $/.github/actions/setup-docker
+        with:
+          ghcr: "true"
+          ghcr-registry: ghcr.io
+          ghcr-username: ${{ github.actor }}
+          ghcr-password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Decide whether to publish
+        id: publish
+        env:
+          REF: ${{ steps.tag.outputs.ref }}
+          EVENT: ${{ github.event_name }}
+          REPUBLISH: ${{ inputs.republish || false }}
+        run: |
+          push=false
+          if [ "$EVENT" != "pull_request" ]; then
+            if docker manifest inspect "$REF" > /dev/null 2>&1 && [ "$REPUBLISH" != "true" ]; then
+              echo "::notice::$REF is already published; building to verify only. Use republish to overwrite."
+            else
+              push=true
+            fi
+          fi
+          echo "push=${push}" >> "$GITHUB_OUTPUT"
+
+      # Loaded, not pushed: the smoke test and scan below read this exact image, and it is
+      # pushed only after the smoke test passed.
+      - name: Build Postgres image
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
+        with:
+          context: infra/postgres
+          push: false
+          load: true
+          tags: ${{ steps.tag.outputs.ref }}
+
+      - name: Smoke test pgvector
+        env:
+          REF: ${{ steps.tag.outputs.ref }}
+        run: |
+          docker run -d --name pg -e POSTGRES_PASSWORD=smoke "$REF"
+          for _ in $(seq 1 30); do docker exec pg pg_isready -U postgres -q && break; sleep 1; done
+          docker exec pg psql -U postgres -v ON_ERROR_STOP=1 \
+            -c "CREATE EXTENSION vector;" \
+            -c "CREATE TABLE t (e vector(3)); INSERT INTO t VALUES ('[1,0,0]'), ('[0,1,0]');" \
+            -c "CREATE INDEX ON t USING hnsw (e vector_cosine_ops);" \
+            -c "SELECT e FROM t ORDER BY e <=> '[1,0.1,0]' LIMIT 1;"
+          docker rm -f pg
+
+      - name: Scan image
+        uses: $/.github/actions/scan-image
+        with:
+          image-ref: ${{ steps.tag.outputs.ref }}
+          service: postgres
+
+      - name: Push Postgres image
+        if: ${{ steps.publish.outputs.push == 'true' }}
+        env:
+          REF: ${{ steps.tag.outputs.ref }}
+        run: docker push "$REF"

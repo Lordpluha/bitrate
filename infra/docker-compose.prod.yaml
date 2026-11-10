@@ -85,7 +85,10 @@ x-api-env: &api-env
 services:
   postgres:
     logging: *default-logging
-    image: postgres:16-alpine
+    # Postgres + pgvector (infra/postgres), published by postgres_image.yml. Versioned on its own
+    # tag, not ${IMAGE_TAG}: a per-release rebuild would change the digest and restart the
+    # database on every deploy. Bump the tag together with the Dockerfile's PGVECTOR_VERSION.
+    image: ghcr.io/lordpluha/bitrate/postgres:16-pgvector0.8.7
     container_name: bitrate-postgres-prod
     restart: always
     environment:
