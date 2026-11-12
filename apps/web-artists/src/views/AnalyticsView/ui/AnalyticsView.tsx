@@ -28,19 +28,29 @@ import { TopTracks } from './TopTracks'
 
 /** Analytics tiles in their default order: the chart and its highlights, then detail. */
 const analyticsTiles: readonly TileDefinition[] = [
-  { id: 'plays', label: 'analytics.plays', sizes: ['M', 'L'], size: 'M' },
+  {
+    id: 'plays',
+    label: 'analytics.plays',
+    size: { w: 8, h: 6 },
+    minSize: { w: 4, h: 4 },
+  },
   {
     id: 'highlights',
     label: 'analytics.highlights',
-    sizes: ['S', 'M', 'L'],
-    size: 'S',
+    size: { w: 4, h: 6 },
+    minSize: { w: 3, h: 3 },
   },
-  { id: 'top-tracks', label: 'analytics.top', sizes: ['M', 'L'], size: 'M' },
+  {
+    id: 'top-tracks',
+    label: 'analytics.top',
+    size: { w: 8, h: 6 },
+    minSize: { w: 4, h: 3 },
+  },
   {
     id: 'sources',
     label: 'analytics.other',
-    sizes: ['S', 'M', 'L'],
-    size: 'S',
+    size: { w: 4, h: 6 },
+    minSize: { w: 3, h: 3 },
   },
 ]
 
@@ -232,11 +242,7 @@ function AnalyticsBody({
   }
   return (
     <>
-      <LayoutGrid
-        layout={layout}
-        renderTile={(id) => tiles[id] ?? null}
-        variant="thirds"
-      />
+      <LayoutGrid layout={layout} renderTile={(id) => tiles[id] ?? null} />
       <p className="text-xs text-text-secondary">
         {t('analytics.source', {
           date: formatDateTimeUtc(data.freshness, locale),

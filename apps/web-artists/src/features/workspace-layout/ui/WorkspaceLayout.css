@@ -1,15 +1,11 @@
-/* Arrangeable tile grids: Dashboard, Analytics and the release Draft stage. */
+/*
+ * Workspace tile layouts. Dashboard and Analytics place tiles on a free 12-column grid; the
+ * release Draft stage and the Studio previews still use the static preset grid.
+ */
 @layer utilities {
   .artist-layout {
     min-width: 0;
     container: artist-layout / inline-size;
-  }
-  .artist-layout-grid {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    grid-auto-rows: auto;
-    gap: 1rem;
-    align-items: stretch;
   }
   .artist-layout-tile {
     position: relative;
@@ -49,22 +45,19 @@
     --reveal-index: inherit;
   }
 
-  .artist-layout-ruler,
-  .artist-layout-toolbar .artist-layout-resize {
-    display: none;
-  }
-  .artist-layout-mobile-hint {
-    margin-bottom: 0.75rem;
-    font-size: 0.75rem;
-    color: var(--color-text-secondary);
+  /* Static preset grid: the Draft stage and the Studio previews. */
+  .artist-layout-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-auto-rows: auto;
+    gap: 1rem;
+    align-items: stretch;
   }
   @container artist-layout (min-width: 42rem) {
     .artist-layout-grid {
-      --layout-row-height: 64px;
       grid-template-columns: repeat(12, minmax(0, 1fr));
       gap: 1.25rem;
     }
-    /* Static draft tiles still use the legacy half-width presets. */
     .artist-layout-grid[data-variant="halves"] > [data-size="S"] {
       --layout-columns: 6;
     }
@@ -74,147 +67,259 @@
     .artist-layout-grid[data-variant="thirds"] > [data-size="M"] {
       --layout-columns: 8;
     }
-    .artist-layout-tile {
+    .artist-layout-grid > .artist-layout-tile {
       grid-column: span var(--layout-columns, 12);
     }
-    .artist-layout-ruler {
-      display: grid;
-      grid-template-columns: repeat(12, minmax(0, 1fr));
-      gap: 1.25rem;
-      margin-bottom: 0.5rem;
-      font-size: 0.625rem;
-      font-variant-numeric: tabular-nums;
-      color: var(--color-text-secondary);
-      text-align: center;
-    }
-    .artist-layout-ruler span {
-      padding-block: 0.25rem;
-      background: color-mix(
-        in oklab,
-        var(--color-artist-selection) 30%,
-        transparent
-      );
-      border-inline: 1px solid var(--color-artist-release-border);
-      border-radius: 0.25rem;
-    }
-    .artist-layout-grid[data-dimensional="true"] {
-      grid-auto-rows: 1px;
-      row-gap: 0;
-      align-items: stretch;
-    }
-    .artist-layout-grid[data-dimensional="true"] > .artist-layout-tile {
-      grid-row: span var(--layout-row-span, 316);
-      min-height: 0;
-      margin-bottom: 1.25rem;
-    }
-    .artist-layout-grid.artist-layout-measuring
-      > .artist-layout-tile
-      > .artist-layout-content,
-    .artist-layout-grid.artist-layout-measuring
-      > .artist-layout-tile
-      > .artist-layout-content
-      > * {
-      flex: none;
-      height: auto;
-    }
-    .artist-layout-grid[data-dimensional="true"]
-      > .artist-layout-tile:not([data-rows="auto"])
-      > .artist-layout-content {
-      min-height: 0;
-      overflow: auto;
-      scrollbar-color: var(--color-border) transparent;
-      scrollbar-width: thin;
-    }
-    .artist-layout-grid[data-editing="true"] {
-      margin-top: 0;
-      background-image:
-        repeating-linear-gradient(
-          to right,
-          color-mix(
-              in oklab,
-              var(--color-artist-selection-border) 8%,
-              transparent
-            )
-            0,
-          color-mix(
-              in oklab,
-              var(--color-artist-selection-border) 8%,
-              transparent
-            )
-            calc((100% + 1.25rem) / 12 - 1.25rem),
-          transparent calc((100% + 1.25rem) / 12 - 1.25rem),
-          transparent calc((100% + 1.25rem) / 12)
-        ),
-        linear-gradient(
-          to bottom,
-          color-mix(
-              in oklab,
-              var(--color-artist-selection-border) 12%,
-              transparent
-            )
-            1px,
-          transparent 1px
-        );
-      background-size:
-        auto,
-        100% 5.25rem;
-    }
-    .artist-layout-toolbar .artist-layout-resize {
-      position: absolute;
-      top: 50%;
-      right: -0.625rem;
-      z-index: 2;
-      display: grid;
-      gap: 0;
-      place-items: center;
-      width: 1.25rem;
-      height: 2.75rem;
-      padding: 0;
-      color: var(--color-artist-icon);
-      touch-action: none;
-      cursor: ew-resize;
-      background: var(--color-secondary);
-      border: 1px solid var(--color-artist-selection-border);
-      border-radius: 0.5rem;
-      translate: 0 -50%;
-    }
-    .artist-layout-toolbar .artist-layout-resize[data-axis="height"] {
-      top: auto;
-      right: 50%;
-      bottom: -0.625rem;
-      width: 2.75rem;
-      height: 1.25rem;
-      cursor: ns-resize;
-      translate: 50% 0;
-    }
-    .artist-layout-toolbar .artist-layout-resize[data-axis="both"] {
-      top: auto;
-      right: -0.625rem;
-      bottom: -0.625rem;
-      width: 1.75rem;
-      height: 1.75rem;
-      cursor: nwse-resize;
-      translate: 0 0;
-    }
-    .artist-layout-mobile-hint {
-      display: none;
-    }
   }
-  .artist-layout-resize:focus-visible,
-  .artist-layout-width:focus-visible {
+
+  /* Free grid: every tile sits at its cell; rows have a fixed height. */
+  .artist-free-grid {
+    --step-y: calc(var(--grid-row) + var(--grid-gap));
+    position: relative;
+    flex: 1;
+    min-width: 0;
+    height: calc(var(--grid-rows) * var(--step-y) - var(--grid-gap));
+    transition: height 0.2s ease-out;
+  }
+  .artist-free-grid[data-editing="true"] {
+    background-image:
+      linear-gradient(
+        color-mix(
+            in oklab,
+            var(--color-artist-selection-border) 14%,
+            transparent
+          )
+          1px,
+        transparent 1px
+      ),
+      linear-gradient(
+        90deg,
+        color-mix(
+            in oklab,
+            var(--color-artist-selection-border) 14%,
+            transparent
+          )
+          1px,
+        transparent 1px
+      );
+    background-size:
+      calc((100% + var(--grid-gap)) / 12) var(--step-y),
+      calc((100% + var(--grid-gap)) / 12) var(--step-y);
+    border-radius: var(--radius-artist-panel);
+  }
+  .artist-free-tile,
+  .artist-free-ghost {
+    position: absolute;
+    top: calc(var(--y) * var(--step-y));
+    left: calc(var(--x) * (100% + var(--grid-gap)) / 12);
+    width: calc(var(--w) * (100% + var(--grid-gap)) / 12 - var(--grid-gap));
+    height: calc(var(--h) * var(--step-y) - var(--grid-gap));
+  }
+  .artist-free-tile {
+    transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+    transition-duration: 0.18s;
+    transition-property: top, left, width, height;
+  }
+  .artist-free-tile > .artist-layout-content {
+    overflow: auto;
+    scrollbar-color: var(--color-border) transparent;
+    scrollbar-width: thin;
+  }
+  .artist-free-grid[data-editing="true"] > .artist-free-tile {
+    touch-action: none;
+    cursor: grab;
+    user-select: none;
+    outline: 1px dashed
+      color-mix(in oklab, var(--color-artist-selection-border) 60%, transparent);
+    outline-offset: 0.25rem;
+    border-radius: var(--radius-artist-panel);
+  }
+  .artist-free-grid[data-editing="true"]
+    > .artist-free-tile
+    > .artist-layout-content {
+    overflow: hidden;
+  }
+  .artist-free-tile[data-dragging] {
+    z-index: 3;
+    cursor: grabbing;
+    box-shadow: 0 24px 48px -16px
+      color-mix(in oklab, var(--color-black) 60%, transparent);
+    opacity: 0.92;
+    transition-property: width, height;
+  }
+  .artist-free-ghost {
+    z-index: 2;
+    display: grid;
+    place-items: start center;
+    padding-top: 0.5rem;
+    pointer-events: none;
+    background: color-mix(
+      in oklab,
+      var(--color-artist-selection) 40%,
+      transparent
+    );
+    border: 2px dashed var(--color-artist-selection-border);
+    border-radius: var(--radius-artist-panel);
+    transition-duration: 0.1s;
+    transition-property: top, left, width, height;
+  }
+  .artist-free-ghost > span {
+    padding: 0.125rem 0.5rem;
+    font-size: 0.75rem;
+    color: var(--color-foreground);
+    white-space: nowrap;
+    background: var(--color-secondary);
+    border: 1px solid var(--color-artist-selection-border);
+    border-radius: 999px;
+  }
+  .artist-free-handle {
+    position: absolute;
+    inset: 0;
+    cursor: inherit;
+    background: transparent;
+    border: 0;
+    border-radius: inherit;
+  }
+  .artist-free-handle:focus-visible {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 0.25rem;
+  }
+  .artist-free-remove {
+    position: absolute;
+    top: 0.375rem;
+    right: 0.375rem;
+    z-index: 2;
+    display: grid;
+    place-items: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    background: var(--color-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+  }
+  .artist-free-remove:hover {
+    color: var(--color-destructive);
+  }
+  .artist-free-remove:focus-visible {
     outline: 2px solid var(--color-ring);
     outline-offset: 2px;
   }
-  .artist-layout-tile[data-resizing="true"] {
-    z-index: 3;
-    border-color: var(--color-artist-icon);
+  .artist-free-remove:disabled {
+    cursor: wait;
+    opacity: 0.5;
+  }
+  /* Eight resize handles: strips along the edges, squares at the corners. */
+  .artist-free-resize {
+    --handle: 0.75rem;
+    position: absolute;
+    z-index: 1;
+    border-radius: 0.375rem;
+  }
+  .artist-free-resize:hover {
+    background: color-mix(
+      in oklab,
+      var(--color-artist-selection-border) 45%,
+      transparent
+    );
+  }
+  .artist-free-resize:is([data-resize="n"], [data-resize="s"]) {
+    right: var(--handle);
+    left: var(--handle);
+    height: var(--handle);
+    cursor: ns-resize;
+  }
+  .artist-free-resize:is([data-resize="e"], [data-resize="w"]) {
+    top: var(--handle);
+    bottom: var(--handle);
+    width: var(--handle);
+    cursor: ew-resize;
+  }
+  .artist-free-resize:is(
+    [data-resize="ne"],
+    [data-resize="nw"],
+    [data-resize="se"],
+    [data-resize="sw"]
+  ) {
+    width: calc(var(--handle) * 1.5);
+    height: calc(var(--handle) * 1.5);
+  }
+  .artist-free-resize:is([data-resize="nw"], [data-resize="se"]) {
+    cursor: nwse-resize;
+  }
+  .artist-free-resize:is([data-resize="ne"], [data-resize="sw"]) {
+    cursor: nesw-resize;
+  }
+  .artist-free-resize:is(
+    [data-resize="n"],
+    [data-resize="ne"],
+    [data-resize="nw"]
+  ) {
+    top: calc(var(--handle) / -2);
+  }
+  .artist-free-resize:is(
+    [data-resize="s"],
+    [data-resize="se"],
+    [data-resize="sw"]
+  ) {
+    bottom: calc(var(--handle) / -2);
+  }
+  .artist-free-resize:is(
+    [data-resize="e"],
+    [data-resize="ne"],
+    [data-resize="se"]
+  ) {
+    right: calc(var(--handle) / -2);
+  }
+  .artist-free-resize:is(
+    [data-resize="w"],
+    [data-resize="nw"],
+    [data-resize="sw"]
+  ) {
+    left: calc(var(--handle) / -2);
+  }
+  /* The bottom-right corner keeps a visible grip; the others show on hover. */
+  .artist-free-resize[data-resize="se"]::after {
+    position: absolute;
+    right: calc(var(--handle) / 2 + 0.25rem);
+    bottom: calc(var(--handle) / 2 + 0.25rem);
+    width: 0.875rem;
+    height: 0.875rem;
+    content: "";
+    border-right: 3px solid var(--color-artist-icon);
+    border-bottom: 3px solid var(--color-artist-icon);
+    border-bottom-right-radius: 0.375rem;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .artist-free-grid,
+    .artist-free-tile,
+    .artist-free-ghost {
+      transition: none;
+    }
+  }
+  :root[data-motion="reduced"]
+    :is(.artist-free-grid, .artist-free-tile, .artist-free-ghost) {
+    transition: none;
   }
 
-  /* Customize mode: dashed outlines, a toolbar per tile, hidden tiles faded. */
+  /* Phones and touch-only screens: one read-only column in reading order. */
+  .artist-free-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .artist-layout-mobile-hint {
+    margin-bottom: 0.75rem;
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+  }
+
+  /* Customize mode: controls and the tile drawer above the full-width canvas. */
   .artist-layout-editbar {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.75rem 1.5rem;
+    gap: 0.75rem 1rem;
     align-items: center;
     justify-content: space-between;
     margin-bottom: 0.75rem;
@@ -224,109 +329,36 @@
     font-size: 0.8125rem;
     color: var(--color-text-secondary);
   }
-  .artist-layout-tile[data-editing="true"] {
-    gap: 0.5rem;
-    padding: 0;
-    touch-action: manipulation;
-    outline: 1px dashed
-      color-mix(in oklab, var(--color-artist-selection-border) 60%, transparent);
-    outline-offset: 0.375rem;
-    border-radius: calc(var(--radius-artist-panel) + 0.5rem);
-  }
-  .artist-layout-tile[data-hidden="true"] .artist-layout-content {
-    opacity: 0.35;
-    filter: grayscale(0.6);
-  }
-  .artist-layout-dragging {
-    z-index: 1;
-    box-shadow: 0 24px 48px -16px
-      color-mix(in oklab, var(--color-black) 60%, transparent);
-  }
-  .artist-layout-toolbar {
+  .artist-free-drawer {
     display: flex;
-    flex: none;
     flex-wrap: wrap;
-    gap: 0.375rem;
+    gap: 0.75rem 1rem;
     align-items: center;
-  }
-  .artist-layout-toolbar button {
-    display: inline-flex;
-    gap: 0.375rem;
-    align-items: center;
-    justify-content: center;
-    min-height: 2rem;
-    padding-inline: 0.5rem;
-    font-size: 0.75rem;
-    color: var(--color-text-secondary);
+    padding: 1rem;
+    margin-bottom: 1rem;
     background: var(--color-secondary);
     border: 1px solid var(--color-border);
-    border-radius: 0.5rem;
+    border-radius: var(--radius-artist-panel);
   }
-  .artist-layout-toolbar button:hover {
-    color: var(--color-foreground);
+  .artist-free-drawer-title {
+    font-size: 0.9375rem;
   }
-  .artist-layout-toolbar button:focus-visible {
-    outline: 2px solid var(--color-ring);
-    outline-offset: 2px;
-  }
-  .artist-layout-handle {
+  .artist-free-drawer ul {
+    display: flex;
     flex: 1;
-    justify-content: flex-start;
-    min-width: 0;
-    touch-action: none;
-    cursor: grab;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
   }
-  .artist-layout-handle span {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+  .artist-free-drawer li {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.8125rem;
   }
-  .artist-layout-dragging .artist-layout-handle {
-    cursor: grabbing;
-  }
-  .artist-layout-width {
-    min-width: 0;
-    max-width: 100%;
-    min-height: 2rem;
-    padding-inline: 0.25rem;
-    font-size: 0.75rem;
-    font-variant-numeric: tabular-nums;
-    color: var(--color-foreground);
-    cursor: pointer;
-    color-scheme: dark;
-    background: var(--color-secondary);
-    border: 1px solid var(--color-border);
-    border-radius: 0.5rem;
-  }
-  .artist-layout-toolbar :disabled,
-  .artist-layout-resize:disabled {
-    cursor: wait;
-    opacity: 0.5;
-  }
-  @container artist-tile (max-width: 15rem) {
-    .artist-layout-handle {
-      flex-basis: 100%;
-    }
-    .artist-layout-width {
-      flex: 1;
-    }
-  }
-  @container artist-tile (max-width: 7rem) {
-    .artist-layout-toolbar {
-      gap: 0.25rem;
-    }
-    .artist-layout-handle span {
-      display: none;
-    }
-    .artist-layout-toolbar button {
-      padding-inline: 0.125rem;
-    }
-    .artist-layout-width {
-      flex-basis: 100%;
-    }
-  }
-  .artist-layout-visibility[aria-pressed="true"] {
-    color: var(--color-artist-status-warning);
+  .artist-free-drawer-empty {
+    font-size: 0.8125rem;
+    color: var(--color-text-secondary);
   }
 
   .artist-layout-customize {

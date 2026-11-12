@@ -1,16 +1,19 @@
 import { Button } from '@bitrate/ui-react'
 import { useI18n } from '@shared/i18n'
 import { Check, LayoutGrid, RotateCcw } from 'lucide-react'
+import { useCompactViewport } from '../model/useCompactViewport'
 import type { CustomizableLayout } from '../model/useCustomizableLayout'
 
 /**
  * Customize sits in the page heading, where it is seen but out of the way. In customize mode
- * the same spot holds Reset, Cancel and Done.
+ * the same spot holds Reset, Cancel and Done. Phones show the layout read-only, so they get
+ * no Customize button.
  */
 export function CustomizeControls({ layout }: { layout: CustomizableLayout }) {
   const { t, tMessage } = useI18n()
+  const compact = useCompactViewport()
   if (!layout.editing)
-    return (
+    return compact ? null : (
       <Button
         className="artist-layout-customize"
         disabled={layout.loading}

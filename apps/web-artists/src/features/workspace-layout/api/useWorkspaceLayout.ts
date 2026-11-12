@@ -5,8 +5,8 @@ import { messageKey } from '@shared/i18n'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import {
   type LayoutPage,
-  type LayoutTile,
-  sameLayout,
+  type StoredTile,
+  sameStoredLayout,
   storedLayoutSchema,
 } from '../model/layout'
 
@@ -36,7 +36,7 @@ export function useSaveWorkspaceLayout(artistId: string, page: LayoutPage) {
   const queryClient = useQueryClient()
   return useMutation({
     retry: false,
-    mutationFn: async (tiles: LayoutTile[] | null) => {
+    mutationFn: async (tiles: StoredTile[] | null) => {
       const options = {
         params: { path: { page } },
         signal: writeSignal(),
@@ -55,7 +55,7 @@ export function useSaveWorkspaceLayout(artistId: string, page: LayoutPage) {
       if (
         !result?.response.ok ||
         !parsed.success ||
-        !sameLayout(parsed.data.tiles, tiles ?? [])
+        !sameStoredLayout(parsed.data.tiles, tiles ?? [])
       )
         throw new Error(messageKey('layout.error.save'))
       return parsed.data.tiles
