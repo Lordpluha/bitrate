@@ -26,7 +26,8 @@
     "staff": "Staff",
     "expandSidebar": "Expand sidebar",
     "collapseSidebar": "Collapse sidebar",
-    "collapse": "Collapse"
+    "collapse": "Collapse",
+    "releaseChanges": "Release changes"
   },
   "locale": {
     "ariaLabel": "{{label}}. Activate to switch language."
@@ -607,6 +608,68 @@
       "COMPOSER": "Composer",
       "LYRICIST": "Lyricist",
       "OTHER": "Other"
+    }
+  },
+  "releaseChanges": {
+    "eyebrow": "Operations",
+    "title": "Release changes",
+    "subtitle": "Titles and covers artists want to change on published releases",
+    "kpi": {
+      "open": "Open requests",
+      "openSub": "with changes awaiting a decision"
+    },
+    "filter": "Status",
+    "status": {
+      "OPEN": "Open",
+      "CLOSED": "Closed"
+    },
+    "empty": "No change requests here",
+    "pending": "{{count}} pending",
+    "changes": "{{count}} changes",
+    "error": {
+      "load": "Could not load change requests"
+    }
+  },
+  "releaseChange": {
+    "eyebrow": "Release change",
+    "subtitle": "Requested by {{artist}}",
+    "openRelease": "Open release",
+    "changes": "Changes",
+    "field": {
+      "RELEASE_TITLE": "Release title",
+      "RELEASE_COVER": "Release cover",
+      "RECORDING_TITLE": "Recording title"
+    },
+    "status": {
+      "PENDING": "Pending",
+      "APPROVED": "Approved",
+      "REJECTED": "Rejected",
+      "WITHDRAWN": "Withdrawn",
+      "CANCELLED": "Cancelled"
+    },
+    "before": "Before",
+    "after": "After",
+    "coverGone": "Not kept",
+    "approve": "Approve",
+    "reject": "Reject",
+    "reason": "Why it was rejected (Markdown)",
+    "reasonPlaceholder": "Tell the artist what to fix",
+    "approveAll": "Approve all",
+    "rejectAll": "Reject all",
+    "decision": "Decision",
+    "commentLabel": "Comment to the artist (optional, Markdown)",
+    "comment": "Comment to the artist",
+    "send": "Send decisions",
+    "saving": "Saving…",
+    "decided": "{{count}} decisions saved",
+    "notFound": "Change request not found",
+    "error": {
+      "load": "Could not load the change request",
+      "stale": "Something changed in the meantime; the request was reloaded",
+      "gone": "The change request no longer exists",
+      "invalid": "The decision was refused; check the reasons",
+      "reasonMissing": "Give a reason for every rejected change",
+      "save": "Could not save the decision"
     }
   },
   "track": {

@@ -76,7 +76,7 @@ describe('AppSidebar', () => {
     expect(host.textContent).toContain('Operations')
     expect(host.textContent).toContain('Accounts')
     expect(host.textContent).toContain('System')
-    expect(host.querySelectorAll('nav a')).toHaveLength(12)
+    expect(host.querySelectorAll('nav a')).toHaveLength(13)
   })
 
   /**
