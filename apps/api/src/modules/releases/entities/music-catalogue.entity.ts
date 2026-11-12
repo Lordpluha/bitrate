@@ -43,6 +43,11 @@ export class MusicTrackEntity {
 
   @ApiProperty({ type: MusicTrackReleaseEntity, nullable: true })
   release: MusicTrackReleaseEntity | null
+  @ApiProperty({ description: 'Whether changes can be proposed now (published, not taken down)' })
+  acceptsChanges: boolean
+
+  @ApiProperty({ description: 'Whether a proposed change is awaiting review' })
+  hasPendingChanges: boolean
 }
 
 export class MusicReleaseEntity extends ReleaseEntity {
@@ -57,6 +62,11 @@ export class MusicReleaseEntity extends ReleaseEntity {
 
   @ApiProperty({ minimum: 0 })
   trackCount: number
+  @ApiProperty({ description: 'Whether changes can be proposed now (published, not taken down)' })
+  acceptsChanges: boolean
+
+  @ApiProperty({ description: 'Whether a proposed change is awaiting review' })
+  hasPendingChanges: boolean
 }
 
 export class MusicCountsEntity {

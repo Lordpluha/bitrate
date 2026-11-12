@@ -127,6 +127,7 @@ export const releaseWorkspaceSelect = (ownerArtistId: string) => {
         trackDrafts: { where: activeDrafts },
         tracks: { where: activeTracks },
         contributors: true,
+        changes: { where: { status: 'PENDING' } },
       },
     },
   } as const satisfies Prisma.ReleaseSelect

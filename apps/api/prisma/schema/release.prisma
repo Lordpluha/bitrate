@@ -70,6 +70,7 @@ model ArtistTrackDraft {
   owner       Artist                  @relation(fields: [ownerArtistId], references: [id], onDelete: Restrict)
   publishedAs ReleaseTrack?
   genres      ArtistTrackDraftGenre[]
+  changes     ReleaseChange[]
   release     Release?                @relation(fields: [releaseId, ownerArtistId], references: [id, ownerArtistId], onDelete: Restrict)
 
   @@index([ownerArtistId, deletedAt, updatedAt(sort: Desc)])
@@ -198,6 +199,69 @@ model ReleaseReview {
   @@index([staffId])
 }
 
+// What a post-publication change replaces on a live release.
+enum ReleaseChangeField {
+  RELEASE_TITLE
+  RELEASE_COVER
+  RECORDING_TITLE
+}
+
+enum ReleaseChangeStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  WITHDRAWN
+  CANCELLED
+}
+
+// Changes an artist proposed together for a live release. The release stays live with its
+// current data while staff decide each change; the request closes once none is pending.
+model ReleaseChangeRequest {
+  id        String    @id @default(uuid(7)) @db.Uuid
+  releaseId String    @db.Uuid
+  // Optional reviewer comment on the whole request, in Markdown.
+  message   String?
+  closedAt  DateTime? @db.Timestamptz(3)
+  createdAt DateTime  @default(now())
+
+  release Release         @relation(fields: [releaseId], references: [id], onDelete: Cascade)
+  changes ReleaseChange[]
+
+  @@index([releaseId, createdAt(sort: Desc)])
+  @@index([closedAt, createdAt])
+}
+
+// One proposed value. `pendingTarget` names what the change replaces while it is PENDING and is
+// cleared by any outcome, so the unique key allows one pending change per title, cover or recording.
+model ReleaseChange {
+  id            String              @id @default(uuid(7)) @db.Uuid
+  requestId     String              @db.Uuid
+  releaseId     String              @db.Uuid
+  field         ReleaseChangeField
+  // The recording draft a RECORDING_TITLE change renames.
+  draftId       String?             @db.Uuid
+  pendingTarget String?
+  previousValue String?
+  // A title; for a cover, the private storage key until approval and the public path after it.
+  proposedValue String
+  status        ReleaseChangeStatus @default(PENDING)
+  // Why staff rejected the change, in Markdown.
+  reason        String?
+  staffId       String?             @db.Uuid
+  decidedAt     DateTime?           @db.Timestamptz(3)
+  createdAt     DateTime            @default(now())
+
+  request ReleaseChangeRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  release Release              @relation(fields: [releaseId], references: [id], onDelete: Cascade)
+  draft   ArtistTrackDraft?    @relation(fields: [draftId], references: [id], onDelete: SetNull)
+  staff   Staff?               @relation(fields: [staffId], references: [id], onDelete: SetNull)
+
+  @@unique([releaseId, pendingTarget])
+  @@index([requestId])
+  @@index([draftId])
+  @@index([staffId])
+}
+
 enum ReleaseTaskStatus {
   TODO
   IN_PROGRESS
@@ -256,17 +320,19 @@ model Release {
   createdAt           DateTime              @default(now())
   updatedAt           DateTime              @default(now()) @updatedAt
 
-  owner        Artist               @relation("ReleaseOwner", fields: [ownerArtistId], references: [id], onDelete: Restrict)
-  album        Album?               @relation(fields: [albumId], references: [id], onDelete: Restrict)
-  tracks       ReleaseTrack[]
-  trackDrafts  ArtistTrackDraft[]
-  contributors ReleaseContributor[]
-  splits       ReleaseSplit[]
-  territories  ReleaseTerritory[]
-  tasks        ReleaseTask[]
-  destinations ReleaseDestination[]
-  deliveries   ReleaseDelivery[]
-  reviews      ReleaseReview[]
+  owner          Artist                 @relation("ReleaseOwner", fields: [ownerArtistId], references: [id], onDelete: Restrict)
+  album          Album?                 @relation(fields: [albumId], references: [id], onDelete: Restrict)
+  tracks         ReleaseTrack[]
+  trackDrafts    ArtistTrackDraft[]
+  contributors   ReleaseContributor[]
+  splits         ReleaseSplit[]
+  territories    ReleaseTerritory[]
+  tasks          ReleaseTask[]
+  destinations   ReleaseDestination[]
+  deliveries     ReleaseDelivery[]
+  reviews        ReleaseReview[]
+  changeRequests ReleaseChangeRequest[]
+  changes        ReleaseChange[]
 
   @@unique([id, ownerArtistId])
   @@index([ownerArtistId, deletedAt, createdAt(sort: Desc)])
@@ -284,8 +350,8 @@ model ReleaseTerritory {
 }
 
 model ReleaseTrack {
-  releaseId String @db.Uuid
-  trackId   String @db.Uuid
+  releaseId String  @db.Uuid
+  trackId   String  @db.Uuid
   position  Int
   reused    Boolean @default(false)
   // The recording draft this link was published from. Draft positions keep gaps after a removal,

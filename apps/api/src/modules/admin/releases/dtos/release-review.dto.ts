@@ -32,7 +32,7 @@ const REVIEW_MESSAGE_MAX_LENGTH = 5000
  * Review feedback is Markdown: bold, italics, lists, quotes, code and links. Clients render it
  * without raw HTML, so the text can only carry formatting.
  */
-const feedback = z.string().trim().min(1).max(REVIEW_MESSAGE_MAX_LENGTH)
+export const feedback = z.string().trim().min(1).max(REVIEW_MESSAGE_MAX_LENGTH)
 
 export const ApproveReleaseSchema = z.strictObject({
   message: feedback.optional().describe('Optional note to the artist, in Markdown'),

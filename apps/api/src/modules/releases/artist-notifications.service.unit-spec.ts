@@ -25,6 +25,7 @@ describe('ArtistNotificationsService.list', () => {
     prisma.releaseTask.findMany.mockResolvedValue([])
     prisma.release.findMany.mockResolvedValue([])
     prisma.releaseDelivery.findMany.mockResolvedValue([])
+    prisma.releaseChangeRequest.findMany.mockResolvedValue([])
     service = new ArtistNotificationsService(prisma)
   })
 
@@ -93,6 +94,7 @@ describe('ArtistNotificationsService.list task deadlines', () => {
     } as never)
     prisma.release.findMany.mockResolvedValue([])
     prisma.releaseDelivery.findMany.mockResolvedValue([])
+    prisma.releaseChangeRequest.findMany.mockResolvedValue([])
     service = new ArtistNotificationsService(prisma)
   })
 
@@ -127,5 +129,72 @@ describe('ArtistNotificationsService.list task deadlines', () => {
 
     expect(item.kind).toBe('TASK_DUE_SOON')
     expect(item.unread).toBe(false)
+  })
+})
+
+describe('ArtistNotificationsService.list change requests', () => {
+  let service: ArtistNotificationsService
+  let prisma: PrismaMock
+  const closedAt = new Date()
+
+  beforeEach(() => {
+    resetPrismaMock()
+    prisma = prismaMock
+    prisma.artist.findFirst.mockResolvedValue({
+      notificationState: null,
+      notificationPreference: null,
+    } as never)
+    prisma.releaseTask.findMany.mockResolvedValue([])
+    prisma.release.findMany.mockResolvedValue([])
+    prisma.releaseDelivery.findMany.mockResolvedValue([])
+    prisma.releaseChangeRequest.findMany.mockResolvedValue([])
+    service = new ArtistNotificationsService(prisma)
+  })
+
+  const decided = (...statuses: string[]) =>
+    prisma.releaseChangeRequest.findMany.mockResolvedValue([
+      {
+        id: 'request-1',
+        closedAt,
+        release: { id: 'release-1', title: 'Night Signals' },
+        changes: statuses.map((status) => ({ status })),
+      },
+    ] as never)
+
+  it('reports a closed request once, with how many changes were approved and rejected', async () => {
+    decided('APPROVED', 'APPROVED', 'REJECTED', 'WITHDRAWN')
+
+    const feed = await service.list('artist-1')
+
+    expect(feed.data).toEqual([
+      expect.objectContaining({
+        id: 'changes-request-1',
+        kind: 'RELEASE_CHANGES_DECIDED',
+        actionRequired: true,
+        releaseId: 'release-1',
+        approvedCount: 2,
+        rejectedCount: 1,
+        at: closedAt,
+      }),
+    ])
+  })
+
+  it('reads as an update when every change was approved', async () => {
+    decided('APPROVED')
+
+    const [item] = (await service.list('artist-1')).data
+
+    expect(item).toEqual(expect.objectContaining({ actionRequired: false, rejectedCount: 0 }))
+  })
+
+  it('is left out with review notifications muted', async () => {
+    prisma.artist.findFirst.mockResolvedValue({
+      notificationState: null,
+      notificationPreference: { mutedInApp: [ArtistNotificationCategory.REVIEW] },
+    } as never)
+
+    await service.list('artist-1')
+
+    expect(prisma.releaseChangeRequest.findMany).not.toHaveBeenCalled()
   })
 })

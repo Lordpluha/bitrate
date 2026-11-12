@@ -1,5 +1,7 @@
 import type { StorageService } from '@infra/storage/storage.types'
 import { beforeEach, describe, expect, it } from '@jest/globals'
+import type { ReleaseChangeReviewService } from '@modules/releases/release-change-review.service'
+import type { ReleaseChangesService } from '@modules/releases/release-changes.service'
 import type { ReleasePublishingService } from '@modules/releases/release-publishing.service'
 import { ConflictException, NotFoundException } from '@nestjs/common'
 import type { Prisma } from '@prisma/client'
@@ -68,8 +70,10 @@ describe('AdminReleasesService', () => {
   let service: AdminReleasesService
   let prisma: PrismaMock
   let transaction: DeepMockProxy<Prisma.TransactionClient>
+  let changes: DeepMockProxy<ReleaseChangesService>
 
   beforeEach(() => {
+    changes = mockDeep<ReleaseChangesService>()
     resetPrismaMock()
     prisma = prismaMock
     transaction = mockDeep<Prisma.TransactionClient>()
@@ -80,6 +84,8 @@ describe('AdminReleasesService', () => {
       prisma,
       mockDeep<StorageService>(),
       mockDeep<ReleasePublishingService>(),
+      mockDeep<ReleaseChangeReviewService>(),
+      changes,
     )
   })
 
@@ -188,6 +194,25 @@ describe('AdminReleasesService', () => {
           },
         }),
       })
+    })
+  })
+
+  describe('takeDown', () => {
+    it('cancels changes still waiting for review, since the artist cannot bring it back', async () => {
+      const publishing = mockDeep<ReleasePublishingService>()
+      service = new AdminReleasesService(
+        prisma,
+        mockDeep<StorageService>(),
+        publishing,
+        mockDeep<ReleaseChangeReviewService>(),
+        changes,
+      )
+      prisma.release.findFirst.mockResolvedValue({ status: 'RELEASED' } as never)
+      publishing.takeDown.mockResolvedValue({ id: RELEASE_ID } as never)
+
+      await service.takeDown(RELEASE_ID, STAFF_ID, AUDIT)
+
+      expect(changes.cancelPendingNow).toHaveBeenCalledWith(RELEASE_ID)
     })
   })
 })

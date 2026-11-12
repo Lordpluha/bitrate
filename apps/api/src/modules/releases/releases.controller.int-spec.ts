@@ -124,6 +124,8 @@ describe('Release drafts (HTTP)', () => {
     transactionMock.release.updateManyAndReturn.mockResolvedValue([draft])
     transactionMock.release.update.mockResolvedValue(draft)
     transactionMock.artistTrackDraft.count.mockResolvedValue(0)
+    // Deletion cancels changes awaiting review; a release without any returns no rows.
+    transactionMock.releaseChange.updateManyAndReturn.mockResolvedValue([])
     prismaMock.$transaction.mockImplementation(async (operation) => {
       if (typeof operation !== 'function') throw new Error('Expected an interactive transaction')
       return await operation(transactionMock)
@@ -933,6 +935,8 @@ describe('Release drafts (HTTP)', () => {
       updatedAt: new Date('2026-10-27T10:00:00.000Z'),
       owner: { username: 'artist' },
       release: { id: '019a0000-0000-7000-8000-000000000200', title: 'AI Phonk', ...release },
+      publishedAs: null,
+      changes: [],
     })
     prismaMock.artistTrackDraft.findMany.mockResolvedValue([
       recording('019a0000-0000-7000-8000-000000000001', null, {
@@ -959,6 +963,68 @@ describe('Release drafts (HTTP)', () => {
       'release.webp',
       'own.webp',
       null,
+    ])
+  })
+
+  it('tells which recordings can be renamed now and which already wait for review', async () => {
+    const recording = (id: string, release: object, track: object | null, pending: boolean) => ({
+      id,
+      title: 'Night drive',
+      version: 'ORIGINAL',
+      status: 'PUBLISHED',
+      duration: 60,
+      cover: null,
+      previewUrl: null,
+      isDemo: false,
+      updatedAt: new Date('2026-11-12T10:00:00.000Z'),
+      owner: { username: 'artist' },
+      release: {
+        id: '019a0000-0000-7000-8000-000000000200',
+        title: 'AI Phonk',
+        cover: null,
+        deletedAt: null,
+        status: 'RELEASED',
+        unpublishedBy: null,
+        isDemo: false,
+        ...release,
+      },
+      publishedAs: track ? { track } : null,
+      changes: pending ? [{ id: '019a0000-0000-7000-8000-0000000000c9' }] : [],
+    })
+    const visible = { deletedAt: null, moderationBlockedAt: null }
+    prismaMock.artistTrackDraft.findMany.mockResolvedValue([
+      recording('019a0000-0000-7000-8000-000000000001', {}, visible, true),
+      recording('019a0000-0000-7000-8000-000000000002', { status: 'READY' }, null, false),
+      recording(
+        '019a0000-0000-7000-8000-000000000003',
+        { status: 'UNPUBLISHED', unpublishedBy: 'ADMIN' },
+        visible,
+        false,
+      ),
+      recording(
+        '019a0000-0000-7000-8000-000000000004',
+        {},
+        { deletedAt: null, moderationBlockedAt: new Date('2026-11-01T00:00:00.000Z') },
+        false,
+      ),
+    ] as never)
+    prismaMock.artistTrackDraft.count.mockResolvedValue(4)
+
+    const response = await request(app.getHttpServer())
+      .get('/api/v1/artists/me/music/tracks')
+      .set('x-test-artist', ownerId)
+      .expect(200)
+
+    expect(
+      response.body.data.map((track: { acceptsChanges: boolean; hasPendingChanges: boolean }) => [
+        track.acceptsChanges,
+        track.hasPendingChanges,
+      ]),
+    ).toEqual([
+      [true, true],
+      [false, false],
+      [false, false],
+      [false, false],
     ])
   })
 
