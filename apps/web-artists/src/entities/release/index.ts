@@ -10,6 +10,11 @@ export {
   useSaveContributor,
 } from './api/useContributor'
 export {
+  useReleaseChanges,
+  useSubmitReleaseChanges,
+  useWithdrawReleaseChanges,
+} from './api/useReleaseChanges'
+export {
   useRemoveCover,
   useRemoveTrack,
   useRenameTrack,
@@ -37,6 +42,11 @@ export {
 } from './api/useReleases'
 export { useReleaseWorkspace } from './api/useReleaseWorkspace'
 export { playableAudioUrl } from './model/audioSource'
+export {
+  type ArtistReleaseChange,
+  releaseChangeFieldLabels,
+  releaseChangeStatusLabels,
+} from './model/changes.schema'
 export {
   type ContributorValues,
   contributorRoles,

@@ -6,6 +6,8 @@ export const notifications = {
   'notifications.kind.released': 'Опубліковано на Bitrate',
   'notifications.kind.publishFailed':
     'Помилка публікації — Bitrate отримав сповіщення',
+  'notifications.kind.changesDecided':
+    'Зміни перевірено: схвалено {approved}, відхилено {rejected}',
   'notifications.kind.deliveryLive': 'Доступно в {store}',
   'notifications.aStore': 'магазин',
   'notifications.justNow': 'щойно',
