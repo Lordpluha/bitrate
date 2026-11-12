@@ -1,35 +1,26 @@
 export const layout = {
   'layout.customize': 'Dostosuj',
   'layout.customizeHint':
-    'Zmień kolejność, rozmiar i widoczność bloków na tej stronie',
+    'Przenoś, zmieniaj rozmiar i usuwaj bloki na tej stronie',
   'layout.editingHint':
-    'Przeciągnij nazwę, aby przenieść blok. Zmień rozmiar za krawędzie lub róg w siatce 12 × 12 albo wybierz szerokość i wysokość powyżej. Auto dopasowuje wysokość. Gotowe zapisuje układ.',
-  'layout.rows': 'Wysokość „{tile}”',
-  'layout.auto': 'Auto',
-  'layout.resizeHeight': 'Zmień wysokość „{tile}”',
-  'layout.resizeBoth': 'Zmień szerokość i wysokość „{tile}”',
-  'layout.rowCount': '{rows} z 12 wierszy',
-  'layout.columns': 'Szerokość „{tile}”',
-  'layout.resize': 'Zmień szerokość „{tile}”',
-  'layout.columnCount': '{columns} z 12 kolumn',
-  'layout.mobileHint':
-    'Tutaj bloki dopasowują się do ekranu. Wybrana szerokość i wysokość obowiązują na szerszych ekranach.',
+    'Przeciągnij blok w dowolne miejsce. Pociągnij za dowolną krawędź lub róg, aby zmienić rozmiar. Gotowe zapisuje układ.',
   'layout.instructions':
-    'Aby podnieść blok, naciśnij Spację lub Enter. Przesuwaj strzałkami, upuść Spacją lub Enterem, Escape anuluje.',
+    'Strzałki przenoszą blok. Shift + strzałki zmieniają jego rozmiar.',
+  'layout.mobileHint':
+    'Tutaj bloki są w jednej kolumnie. Ułożysz je na szerszym ekranie.',
+  'layout.move': 'Przenieś „{tile}”',
+  'layout.pullUp': 'Podciągnij w górę',
+  'layout.remove': 'Usuń „{tile}”',
+  'layout.add': 'Dodaj „{tile}”',
+  'layout.drawer.title': 'Dodaj blok',
+  'layout.drawer.empty':
+    'Wszystkie bloki są na stronie. Usuń blok krzyżykiem, a pojawi się tutaj.',
+  'layout.willShrink': 'Zmniejszy się do wolnego miejsca',
+  'layout.announce.position':
+    '„{tile}”: kolumna {column}, wiersz {row}, rozmiar {columns} × {rows}.',
   'layout.reset': 'Przywróć domyślny',
   'layout.done': 'Gotowe',
   'layout.saving': 'Zapisujemy…',
-  'layout.move': 'Przenieś „{tile}”',
-  'layout.size': 'Rozmiar „{tile}”',
-  'layout.size.S': 'Mały',
-  'layout.size.M': 'Średni',
-  'layout.size.L': 'Duży',
-  'layout.hide': 'Ukryj „{tile}”',
-  'layout.show': 'Pokaż „{tile}”',
-  'layout.announce.picked': 'Podniesiono „{tile}”.',
-  'layout.announce.over': '„{tile}” jest na pozycji {position} z {total}.',
-  'layout.announce.dropped': 'Upuszczono „{tile}” na pozycji {position}.',
-  'layout.announce.cancelled': 'Anulowano przenoszenie „{tile}”.',
   'layout.error.load':
     'Nie udało się wczytać Twojego układu, więc pokazujemy domyślny.',
   'layout.error.save': 'Nie udało się zapisać układu. Spróbuj ponownie.',
