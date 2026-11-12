@@ -192,6 +192,19 @@ export class ReleaseTrackService {
     })
   }
 
+  /**
+   * Applies an approved title or cover change of a live release to its catalogue tracks inside
+   * the caller's transaction; every album and compilation showing a track sees the new value.
+   */
+  async updateReleaseTrackDetails(
+    tx: Prisma.TransactionClient,
+    trackIds: string[],
+    data: { title?: string; cover?: string },
+  ) {
+    if (trackIds.length === 0) return
+    await tx.track.updateMany({ where: { id: { in: trackIds } }, data })
+  }
+
   /** Drops track and search caches after a release changed what listeners can see. */
   async invalidateCatalogueCaches() {
     await invalidateTrackCaches(this.cache)

@@ -33,6 +33,13 @@ export const RELEASE_ERRORS = {
   TRACK_ORDER_MISMATCH: 'errors.release.track_order_mismatch',
   TASK_CHANGED: 'errors.release.task_changed',
   TASK_ASSIGNEE_INVALID: 'errors.release.task_assignee_invalid',
+  CHANGES_EMPTY: 'errors.release.changes_empty',
+  CHANGES_NOT_ALLOWED: 'errors.release.changes_not_allowed',
+  CHANGE_UNCHANGED: 'errors.release.change_unchanged',
+  CHANGE_ALREADY_PENDING: 'errors.release.change_already_pending',
+  CHANGE_NOT_PENDING: 'errors.release.change_not_pending',
+  CHANGE_REQUEST_NOT_FOUND: 'errors.release.change_request_not_found',
+  RECORDING_LOCKED: 'errors.release.recording_locked',
 } as const
 
 /** Zod issue keys of the release DTOs, translated per request like built-in issues. */

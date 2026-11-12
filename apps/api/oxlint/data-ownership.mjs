@@ -51,6 +51,9 @@ export const DATA_OWNERS = {
   artistTrackDraftGenre: ['releases'],
   artistNotificationPreference: ['releases'],
   artistNotificationState: ['releases'],
+  /** Artists propose and withdraw; staff decisions go through the releases review service. */
+  releaseChangeRequest: ['releases'],
+  releaseChange: ['releases'],
   /** Review decisions are made by staff; the artist side only reads them. */
   releaseReview: ['admin/releases'],
 

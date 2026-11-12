@@ -13,8 +13,8 @@ import { RELEASE_ERRORS } from './errors'
 import { lockOwnedDraft } from './release-draft-lock'
 import { MAX_RELEASE_COVER_BYTES } from './release-media.interceptors'
 
-const COVER_FOLDER: PublicImageFolder = 'releases/covers'
-const COVER_PATH_PREFIX = `/static/${COVER_FOLDER}/`
+export const COVER_FOLDER: PublicImageFolder = 'releases/covers'
+export const COVER_PATH_PREFIX = `/static/${COVER_FOLDER}/`
 
 /** The release summary returned by {@link lockOwnedDraft}. */
 type LockedDraft = Awaited<ReturnType<typeof lockOwnedDraft>>
@@ -23,7 +23,7 @@ type LockedDraft = Awaited<ReturnType<typeof lockOwnedDraft>>
 type CoverSwap = { previous: string | null; release: LockedDraft }
 
 /** The stored file name of a cover this module uploaded, or null for demo/external covers. */
-function coverName(cover: string | null): string | null {
+export function coverName(cover: string | null): string | null {
   return cover?.startsWith(COVER_PATH_PREFIX) ? cover.slice(COVER_PATH_PREFIX.length) : null
 }
 

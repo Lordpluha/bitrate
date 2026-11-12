@@ -5,6 +5,8 @@ import type { StorageService } from '@infra/storage/storage.types'
 import { type AuditContextValue, writeTakeDownAudit } from '@modules/admin/shared'
 import { RELEASE_ERRORS } from '@modules/releases/errors'
 import { releaseReadinessSelect } from '@modules/releases/orm'
+import { ReleaseChangeReviewService } from '@modules/releases/release-change-review.service'
+import { ReleaseChangesService } from '@modules/releases/release-changes.service'
 import { ReleasePublishingService } from '@modules/releases/release-publishing.service'
 import {
   type ReleaseReadiness,
@@ -13,6 +15,10 @@ import {
 } from '@modules/releases/release-readiness'
 import { ConflictException, Inject, Injectable, NotFoundException } from '@nestjs/common'
 import { type Prisma, ReleaseReviewDecision, ReleaseStatus } from '@prisma/client'
+import type {
+  DecideReleaseChangesDto,
+  ListReleaseChangeRequestsQueryDto,
+} from './dtos/release-change-review.dto'
 import {
   type ApproveReleaseDto,
   type ListAdminReleasesQueryDto,
@@ -47,6 +53,8 @@ export class AdminReleasesService {
     private readonly prisma: PrismaService,
     @Inject(STORAGE_SERVICE) private readonly storage: StorageService,
     private readonly publishing: ReleasePublishingService,
+    private readonly changeReview: ReleaseChangeReviewService,
+    private readonly changes: ReleaseChangesService,
   ) {}
 
   async list(query: ListAdminReleasesQueryDto) {
@@ -126,6 +134,8 @@ export class AdminReleasesService {
     })
     if (!current) throw new NotFoundException(RELEASE_ERRORS.NOT_FOUND)
     const release = await this.publishing.takeDown(id)
+    // A takedown is final for the artist, so changes waiting for review can never apply.
+    await this.changes.cancelPendingNow(id)
     await this.prisma.$transaction((tx) =>
       writeTakeDownAudit({
         tx,
@@ -159,6 +169,48 @@ export class AdminReleasesService {
       }),
     )
     return release
+  }
+
+  listChangeRequests(query: ListReleaseChangeRequestsQueryDto) {
+    return this.changeReview.list(query)
+  }
+
+  changeRequestStats() {
+    return this.changeReview.stats()
+  }
+
+  changeRequest(id: string) {
+    return this.changeReview.detail(id)
+  }
+
+  /** Decides pending changes of a published release and audits the outcome. */
+  async decideChanges(
+    id: string,
+    staffId: string,
+    input: DecideReleaseChangesDto,
+    audit: AuditContextValue,
+  ) {
+    await this.changeReview.decide(id, staffId, input)
+    const approved = input.decisions.filter((item) => item.decision === 'APPROVE')
+    const rejected = input.decisions.filter((item) => item.decision === 'REJECT')
+    await this.prisma.$transaction((tx) =>
+      writeTakeDownAudit({
+        tx,
+        entityType: 'release-change-request',
+        entityId: id,
+        action: 'release.changes.decide',
+        staffId,
+        reason: input.message,
+        before: { pending: input.decisions.map((item) => item.changeId) },
+        after: {
+          approved: approved.map((item) => item.changeId),
+          rejected: rejected.map((item) => item.changeId),
+        },
+        requestId: audit.requestId,
+        ipAddress: audit.ipAddress,
+      }),
+    )
+    return this.changeReview.detail(id)
   }
 
   /** Loads what the submission rules read and evaluates them for the reviewer. */

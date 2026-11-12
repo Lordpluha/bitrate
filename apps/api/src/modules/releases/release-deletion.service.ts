@@ -5,6 +5,7 @@ import { ConflictException, Injectable, NotFoundException } from '@nestjs/common
 import { lockCatalogueTracks } from './compilation-source'
 import type { ReleaseDraftVersionDto } from './dtos/release-media.dto'
 import { RELEASE_ERRORS } from './errors'
+import { ReleaseChangesService } from './release-changes.service'
 
 /** Removes an owned release and unshared catalogue copies; private source files stay. */
 @Injectable()
@@ -13,10 +14,11 @@ export class ReleaseDeletionService {
     private readonly prisma: PrismaService,
     private readonly tracks: ReleaseTrackDeletionService,
     private readonly albums: AlbumsService,
+    private readonly changes: ReleaseChangesService,
   ) {}
 
   async remove(ownerArtistId: string, id: string, input: ReleaseDraftVersionDto): Promise<void> {
-    await this.prisma.$transaction(async (tx) => {
+    const discarded = await this.prisma.$transaction(async (tx) => {
       const deletedAt = new Date()
       const claimed = await tx.release.updateMany({
         where: { id, ownerArtistId, deletedAt: null, updatedAt: new Date(input.expectedUpdatedAt) },
@@ -56,7 +58,9 @@ export class ReleaseDeletionService {
       })
       if (trackIds.length) await this.tracks.remove(tx, trackIds, deletedAt)
       if (release.albumId) await this.albums.deleteReleaseAlbum(tx, release.albumId, deletedAt)
+      return this.changes.cancelPending(tx, id)
     })
+    await this.changes.discardCovers(discarded)
     await Promise.all([this.tracks.invalidateCaches(), this.albums.invalidateCatalogueCaches()])
   }
 }

@@ -12,6 +12,11 @@ export { ArtistSearchSwagger } from './artist-search.swagger'
 export { CreateReleaseSwagger } from './create-release.swagger'
 export { ListReleasesSwagger } from './list-releases.swagger'
 export {
+  ListReleaseChangesSwagger,
+  SubmitReleaseChangesSwagger,
+  WithdrawReleaseChangesSwagger,
+} from './release-changes.swagger'
+export {
   CreditReleaseArtistSwagger,
   ReleaseContributorSwagger,
   RemoveReleaseContributorSwagger,

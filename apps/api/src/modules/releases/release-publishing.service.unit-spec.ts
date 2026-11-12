@@ -10,7 +10,7 @@ import type {
 } from '@modules/tracks/ingest'
 import { ConflictException, NotFoundException } from '@nestjs/common'
 import type { Prisma } from '@prisma/client'
-import { type PrismaMock, prismaMock, resetPrismaMock } from '@test/mocks'
+import { type PrismaMock, prismaMock, resetPrismaMock, untypedSpy } from '@test/mocks'
 import type { Queue } from 'bullmq'
 import { type DeepMockProxy, mockDeep } from 'jest-mock-extended'
 import { ReleasePublishingService } from './release-publishing.service'
@@ -347,8 +347,12 @@ describe('ReleasePublishingService', () => {
         where: { id: RELEASE, deletedAt: null, status: 'PUBLISHING' },
         data: { status: 'RELEASED', publishedAt: NOW, unpublishedBy: null },
       })
-      expect(tracks.publishReleaseTracks).toHaveBeenCalledWith(tx, ['track-0', 'track-1'], NOW)
-      expect(albums.createForRelease).toHaveBeenCalledWith(
+      expect(untypedSpy(tracks.publishReleaseTracks)).toHaveBeenCalledWith(
+        tx,
+        ['track-0', 'track-1'],
+        NOW,
+      )
+      expect(untypedSpy(albums.createForRelease)).toHaveBeenCalledWith(
         tx,
         expect.objectContaining({
           artistId: OWNER,
@@ -426,8 +430,8 @@ describe('ReleasePublishingService', () => {
           data: { status: 'UNPUBLISHED', unpublishedBy: 'ARTIST' },
         }),
       )
-      expect(tracks.hideReleaseTracks).toHaveBeenCalledWith(tx, ['track-0'])
-      expect(albums.setReleaseAlbumVisibility).toHaveBeenCalledWith(tx, 'album-1', null)
+      expect(untypedSpy(tracks.hideReleaseTracks)).toHaveBeenCalledWith(tx, ['track-0'])
+      expect(untypedSpy(albums.setReleaseAlbumVisibility)).toHaveBeenCalledWith(tx, 'album-1', null)
       expect(tracks.invalidateCatalogueCaches).toHaveBeenCalled()
     })
 
@@ -444,8 +448,8 @@ describe('ReleasePublishingService', () => {
           data: { status: 'RELEASED', unpublishedBy: null },
         }),
       )
-      expect(tracks.publishReleaseTracks).toHaveBeenCalledWith(tx, ['track-0'], NOW)
-      expect(albums.setReleaseAlbumVisibility).toHaveBeenCalledWith(tx, 'album-1', NOW)
+      expect(untypedSpy(tracks.publishReleaseTracks)).toHaveBeenCalledWith(tx, ['track-0'], NOW)
+      expect(untypedSpy(albums.setReleaseAlbumVisibility)).toHaveBeenCalledWith(tx, 'album-1', NOW)
       expect(notifications.releasePublished).not.toHaveBeenCalled()
     })
 
@@ -472,8 +476,8 @@ describe('ReleasePublishingService', () => {
           data: { status: 'UNPUBLISHED', unpublishedBy: 'ADMIN' },
         }),
       )
-      expect(tracks.hideReleaseTracks).toHaveBeenCalledWith(tx, ['track-0'])
-      expect(tracks.blockReleaseTracks).toHaveBeenCalledWith(tx, ['track-0'])
+      expect(untypedSpy(tracks.hideReleaseTracks)).toHaveBeenCalledWith(tx, ['track-0'])
+      expect(untypedSpy(tracks.blockReleaseTracks)).toHaveBeenCalledWith(tx, ['track-0'])
     })
   })
 

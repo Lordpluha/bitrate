@@ -153,6 +153,21 @@ browse, search and recommendations pick the release up. The catalogue itself is 
 the `recording_genres` migration and edited by admins. Spec:
 [release-genres](../../../../docs/docs/specs/release-genres.md).
 
+## Changes after publication
+
+`ReleaseChangesController` serves `GET|POST /artists/me/releases/:id/changes` and
+`POST /artists/me/releases/:id/changes/:requestId/withdraw`. A `RELEASED` release, or one the
+artist took offline, accepts a request with a new title, a new cover (multipart `cover`) and new
+titles for recordings first published in it (`recordings`, a JSON array of `{ id, title }`). The
+live release is untouched until staff approve each change through
+`ReleaseChangeReviewService` (operator routes under `/admin/release-changes`); approval updates
+the release, its album and its catalogue tracks through their owners, and a rejection carries a
+Markdown reason. One change per title, cover or recording may be pending (409,
+`errors.release.change_already_pending`). A proposed cover stays in `releases/pending-covers/`
+until approval. Deletion and a Bitrate takedown cancel pending changes. Decision:
+[ADR-0071](../../../../docs/docs/architecture/0071-reviewed-changes-to-published-releases.md);
+spec: [release-change-requests](../../../../docs/docs/specs/release-change-requests.md).
+
 ## Release tasks
 
 `ReleaseTasksController` manages preparation tasks of an owned release:
