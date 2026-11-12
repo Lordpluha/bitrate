@@ -1,0 +1,240 @@
+@if (!notFound() && request(); as r) {
+  <app-page-header
+    [back]="back()"
+    [eyebrow]="'releaseChange.eyebrow' | transloco"
+    [title]="r.release.title"
+    [subtitle]="
+      ('releaseChange.subtitle' | transloco: { artist: r.release.artistUsername }) +
+      ' · ' +
+      (r.createdAt | elapsed)
+    "
+  >
+    <ng-container ngProjectAs="[headerActions]">
+      <a hlmBtn variant="secondary" [routerLink]="['/releases', r.release.id]">
+        {{ 'releaseChange.openRelease' | transloco }}
+      </a>
+    </ng-container>
+  </app-page-header>
+
+  @if (noticeText(); as text) {
+    <p
+      class="flex items-center gap-3 rounded-tile border border-success/40 bg-glass p-4 text-sm shadow-glass backdrop-blur-[22px]"
+      role="status"
+    >
+      <ng-icon name="lucideCheck" aria-hidden="true" />
+      {{ text }}
+    </p>
+  }
+  @if (failureText(); as message) {
+    <app-state-message
+      class="rounded-tile border border-error/40 bg-glass p-4 shadow-glass backdrop-blur-[22px]"
+      kind="error"
+      [title]="message"
+      [compact]="true"
+    />
+  }
+  @if (!canReview() && pending().length > 0) {
+    <app-state-message
+      class="rounded-tile border border-glass-line bg-glass p-4 shadow-glass backdrop-blur-[22px]"
+      kind="locked"
+      [title]="'release.decision.needsPermission' | transloco"
+      [compact]="true"
+    />
+  }
+
+  <app-tile-grid>
+    <app-tile [title]="'releaseChange.changes' | transloco" [span]="4">
+      <ol class="flex flex-col gap-3">
+        @for (change of r.changes; track change.id) {
+          <li class="flex flex-col gap-3 rounded-2xl bg-foreground/5 p-3.5">
+            <p class="flex flex-wrap items-center gap-2 text-sm">
+              <span class="font-semibold">{{ fieldKeys[change.field] | transloco }}</span>
+              <span hlmBadge [variant]="statusBadges[change.status]">{{
+                statusKeys[change.status] | transloco
+              }}</span>
+              @if (change.decidedAt; as decided) {
+                <span class="text-xs text-muted-foreground">
+                  {{ decided | localizedDate: 'dd.MM.yyyy HH:mm' }}
+                  @if (change.reviewerUsername) {
+                    · {{ change.reviewerUsername }}
+                  }
+                </span>
+              }
+            </p>
+
+            @if (change.field === 'RELEASE_COVER') {
+              <div class="flex flex-wrap items-center gap-3">
+                <figure class="flex flex-col gap-1 text-xs text-muted-foreground">
+                  @if (change.previousValue) {
+                    <img
+                      class="size-32 rounded-xl object-cover"
+                      [src]="change.previousValue"
+                      alt=""
+                    />
+                  } @else {
+                    <span
+                      class="grid size-32 place-items-center rounded-xl bg-foreground/8"
+                      aria-hidden="true"
+                      ><ng-icon name="lucideDisc3"
+                    /></span>
+                  }
+                  <figcaption>{{ 'releaseChange.before' | transloco }}</figcaption>
+                </figure>
+                <ng-icon name="lucideArrowRight" aria-hidden="true" />
+                <figure class="flex flex-col gap-1 text-xs text-muted-foreground">
+                  @if (change.proposedValue) {
+                    <img
+                      class="size-32 rounded-xl object-cover"
+                      [src]="change.proposedValue"
+                      alt=""
+                    />
+                  } @else {
+                    <span class="grid size-32 place-items-center rounded-xl bg-foreground/8">{{
+                      'releaseChange.coverGone' | transloco
+                    }}</span>
+                  }
+                  <figcaption>{{ 'releaseChange.after' | transloco }}</figcaption>
+                </figure>
+              </div>
+            } @else {
+              <p class="flex flex-wrap items-center gap-2 text-sm">
+                <span class="text-muted-foreground line-through">{{ change.previousValue }}</span>
+                <ng-icon name="lucideArrowRight" aria-hidden="true" />
+                <span class="font-semibold">{{ change.proposedValue }}</span>
+              </p>
+            }
+
+            @if (change.reason) {
+              <div class="app-markdown text-sm" [innerHTML]="change.reason | markdown"></div>
+            }
+
+            @if (canReview() && change.status === 'PENDING') {
+              <div
+                class="flex flex-wrap gap-2"
+                role="group"
+                [attr.aria-label]="fieldKeys[change.field] | transloco"
+              >
+                <button
+                  hlmBtn
+                  type="button"
+                  size="sm"
+                  [variant]="choiceOf(change)?.decision === 'APPROVE' ? 'default' : 'outline'"
+                  [attr.aria-pressed]="choiceOf(change)?.decision === 'APPROVE'"
+                  [disabled]="working()"
+                  (click)="choose(change, 'APPROVE')"
+                >
+                  <ng-icon name="lucideCheck" aria-hidden="true" />
+                  {{ 'releaseChange.approve' | transloco }}
+                </button>
+                <button
+                  hlmBtn
+                  type="button"
+                  size="sm"
+                  [variant]="choiceOf(change)?.decision === 'REJECT' ? 'destructive' : 'outline'"
+                  [attr.aria-pressed]="choiceOf(change)?.decision === 'REJECT'"
+                  [disabled]="working()"
+                  (click)="choose(change, 'REJECT')"
+                >
+                  <ng-icon name="lucideX" aria-hidden="true" />
+                  {{ 'releaseChange.reject' | transloco }}
+                </button>
+              </div>
+              @if (choiceOf(change)?.decision === 'REJECT') {
+                <div class="space-y-1.5">
+                  <label hlmLabel [for]="'reason-' + change.id">{{
+                    'releaseChange.reason' | transloco
+                  }}</label>
+                  <app-markdown-editor
+                    [inputId]="'reason-' + change.id"
+                    [rows]="4"
+                    [maxLength]="limits.messageMaxLength"
+                    [required]="true"
+                    [placeholder]="'releaseChange.reasonPlaceholder' | transloco"
+                    [disabled]="working()"
+                    [value]="choiceOf(change)?.reason ?? ''"
+                    (valueChange)="setReason(change, $event)"
+                  />
+                </div>
+              }
+            }
+          </li>
+        }
+      </ol>
+    </app-tile>
+
+    @if (r.message) {
+      <app-tile [title]="'releaseChange.comment' | transloco" [span]="4">
+        <div class="app-markdown text-sm" [innerHTML]="r.message | markdown"></div>
+      </app-tile>
+    }
+
+    @if (canReview() && pending().length > 0) {
+      <app-tile [title]="'releaseChange.decision' | transloco" [span]="4">
+        <form
+          class="grid gap-4"
+          [attr.aria-busy]="working()"
+          (submit)="$event.preventDefault(); submit()"
+        >
+          <div class="flex flex-wrap gap-2">
+            <button
+              hlmBtn
+              type="button"
+              variant="secondary"
+              [disabled]="working()"
+              (click)="chooseAll('APPROVE')"
+            >
+              {{ 'releaseChange.approveAll' | transloco }}
+            </button>
+            <button
+              hlmBtn
+              type="button"
+              variant="secondary"
+              [disabled]="working()"
+              (click)="chooseAll('REJECT')"
+            >
+              {{ 'releaseChange.rejectAll' | transloco }}
+            </button>
+          </div>
+          <div class="space-y-1.5">
+            <label hlmLabel for="change-comment">{{
+              'releaseChange.commentLabel' | transloco
+            }}</label>
+            <app-markdown-editor
+              inputId="change-comment"
+              [rows]="3"
+              [maxLength]="limits.messageMaxLength"
+              [disabled]="working()"
+              [(value)]="message"
+            />
+          </div>
+          <div>
+            <button hlmBtn type="submit" [disabled]="working() || !ready()">
+              {{ (working() ? 'releaseChange.saving' : 'releaseChange.send') | transloco }}
+            </button>
+          </div>
+        </form>
+      </app-tile>
+    }
+  </app-tile-grid>
+} @else {
+  <app-page-header
+    [back]="back()"
+    [eyebrow]="'releaseChange.eyebrow' | transloco"
+    [title]="'ui.loading' | transloco"
+  />
+  @if (notFound()) {
+    <app-state-message
+      class="min-h-[340px] rounded-tile border border-glass-line bg-glass p-5 shadow-glass backdrop-blur-[22px]"
+      kind="error"
+      [title]="'releaseChange.notFound' | transloco"
+    />
+  } @else if (failureText(); as message) {
+    <app-state-message
+      class="min-h-[340px] rounded-tile border border-glass-line bg-glass p-5 shadow-glass backdrop-blur-[22px]"
+      kind="error"
+      [title]="message"
+      [actionLabel]="'ui.tryAgain' | transloco"
+      (action)="reload()"
+    />
+  }
+}
