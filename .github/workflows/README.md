@@ -424,6 +424,10 @@ esbuild `define` only substitutes the names `angular.json` lists. **One** deploy
 | web-artists | `VITE_API_URL` | web_artists_reusable.yml |
 | admin | `NG_APP_API_URL` | admin_reusable.yml |
 
+web-artists also links into the player, so it bakes the player origin as `VITE_PLAYER_URL`, fed
+by `vars.NEXT_PUBLIC_SITE_URL` (default `https://bitrate.me`), the variable web-player builds
+`NEXT_PUBLIC_SITE_URL` from.
+
 The image scan runs on exactly the image these build args produced, in the same job, so there is
 no second mapping to keep in sync.
 
