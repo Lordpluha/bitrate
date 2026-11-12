@@ -6,6 +6,8 @@ export const notifications = {
   'notifications.kind.released': 'Dostępne w Bitrate',
   'notifications.kind.publishFailed':
     'Publikacja nie powiodła się — Bitrate został powiadomiony',
+  'notifications.kind.changesDecided':
+    'Zmiany sprawdzone: zatwierdzono {approved}, odrzucono {rejected}',
   'notifications.kind.deliveryLive': 'Dostępne w {store}',
   'notifications.aStore': 'sklepu',
   'notifications.justNow': 'przed chwilą',

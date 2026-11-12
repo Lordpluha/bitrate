@@ -20,6 +20,7 @@ import { releaseWorkspaceKey } from './useReleaseWorkspace'
  */
 const RELEASE_LISTING_SCOPES = [
   'catalogue',
+  'changes',
   'counts',
   'dashboard',
   'delivery',
