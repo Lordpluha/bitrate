@@ -4401,9 +4401,9 @@ export interface components {
       isDemo: boolean
       trackCount: number
       /** @description Whether changes can be proposed now (published, not taken down) */
-      acceptsChanges: boolean
+      acceptsChanges?: boolean
       /** @description Whether a proposed change is awaiting review */
-      hasPendingChanges: boolean
+      hasPendingChanges?: boolean
       trackDrafts: components['schemas']['WorkspaceTrackDraftEntity'][]
       tracks: components['schemas']['WorkspaceTrackEntity'][]
       participants: components['schemas']['WorkspaceParticipantEntity'][]
@@ -4832,9 +4832,9 @@ export interface components {
       updatedAt: string
       release: components['schemas']['MusicTrackReleaseEntity'] | null
       /** @description Whether changes can be proposed now (published, not taken down) */
-      acceptsChanges: boolean
+      acceptsChanges?: boolean
       /** @description Whether a proposed change is awaiting review */
-      hasPendingChanges: boolean
+      hasPendingChanges?: boolean
     }
     MusicReleaseEntity: {
       /** Format: uuid */
@@ -4854,9 +4854,9 @@ export interface components {
       isDemo: boolean
       trackCount: number
       /** @description Whether changes can be proposed now (published, not taken down) */
-      acceptsChanges: boolean
+      acceptsChanges?: boolean
       /** @description Whether a proposed change is awaiting review */
-      hasPendingChanges: boolean
+      hasPendingChanges?: boolean
     }
     MusicCountsEntity: {
       tracks: number
