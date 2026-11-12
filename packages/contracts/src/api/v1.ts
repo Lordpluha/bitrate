@@ -2977,7 +2977,7 @@ export interface paths {
     get: operations['ArtistWorkspaceController_layout_v1']
     /**
      * Replace the artist's tile layout for a workspace page
-     * @description The list is the whole layout: order, width (1–12 columns), optional height (1–12 rows) and visibility of every tile. Legacy S/M/L layouts remain supported; explicit columns takes precedence.
+     * @description The list is the whole layout: width (1–12 columns), optional height (1–12 rows), optional grid position (x 0–11, y 0–199, with x + columns ≤ 12) and visibility of every tile. Layouts without positions remain valid and are read in display order; legacy S/M/L presets apply when columns is absent.
      */
     put: operations['ArtistWorkspaceController_saveLayout_v1']
     post?: never
@@ -5153,6 +5153,10 @@ export interface components {
       columns?: number
       /** @description Height in grid rows; omitted means fit the content automatically */
       rows?: number
+      /** @description Left column (0-based); x + columns never exceeds 12. Absent in older layouts */
+      x?: number
+      /** @description Top row (0-based). Absent in older layouts, which flow in display order */
+      y?: number
       hidden: boolean
     }
     WorkspaceLayoutEntity: {
@@ -5176,6 +5180,10 @@ export interface components {
         columns?: number
         /** @description Height in grid rows; omitted means fit the content automatically */
         rows?: number
+        /** @description Left column (0-based); omitted in layouts saved before the free grid */
+        x?: number
+        /** @description Top row (0-based); omitted in layouts saved before the free grid */
+        y?: number
         /** @description Hidden tiles stay in the layout so they can be shown again */
         hidden: boolean
       }[]

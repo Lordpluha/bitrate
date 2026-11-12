@@ -5,6 +5,12 @@ import { ARTIST_WORKSPACE_VALIDATION } from '../artist-workspace.errors'
 /** More tiles than any page has; keeps a stored layout small. */
 const MAX_LAYOUT_TILES = 24
 
+/** Columns of the workspace grid; `x + columns` never exceeds it. */
+export const WORKSPACE_GRID_COLUMNS = 12
+
+/** The deepest row a tile may start at; keeps a free canvas from growing without bound. */
+export const WORKSPACE_GRID_MAX_ROW = 199
+
 /** Workspace pages with an arrangeable layout, as they appear in the URL. */
 export const WORKSPACE_LAYOUT_PAGES = {
   dashboard: 'dashboard',
@@ -16,30 +22,52 @@ export type WorkspaceLayoutPage = keyof typeof WORKSPACE_LAYOUT_PAGES
 
 export const workspaceTileSizes = ['S', 'M', 'L'] as const
 
-const WorkspaceTileSchema = z.strictObject({
-  id: z
-    .string()
-    .regex(/^[a-z][a-z0-9-]{0,39}$/)
-    .describe('Tile identifier the web app defines for the page'),
-  size: z
-    .enum(workspaceTileSizes)
-    .describe('Legacy preset used when columns is absent; explicit columns takes precedence'),
-  columns: z
-    .number()
-    .int()
-    .min(1)
-    .max(12)
-    .optional()
-    .describe('Width in a 12-column grid; omitted for legacy S/M/L layouts'),
-  rows: z
-    .number()
-    .int()
-    .min(1)
-    .max(12)
-    .optional()
-    .describe('Height in grid rows; omitted means fit the content automatically'),
-  hidden: z.boolean().describe('Hidden tiles stay in the layout so they can be shown again'),
-})
+const WorkspaceTileSchema = z
+  .strictObject({
+    id: z
+      .string()
+      .regex(/^[a-z][a-z0-9-]{0,39}$/)
+      .describe('Tile identifier the web app defines for the page'),
+    size: z
+      .enum(workspaceTileSizes)
+      .describe('Legacy preset used when columns is absent; explicit columns takes precedence'),
+    columns: z
+      .number()
+      .int()
+      .min(1)
+      .max(12)
+      .optional()
+      .describe('Width in a 12-column grid; omitted for legacy S/M/L layouts'),
+    rows: z
+      .number()
+      .int()
+      .min(1)
+      .max(12)
+      .optional()
+      .describe('Height in grid rows; omitted means fit the content automatically'),
+    x: z
+      .number()
+      .int()
+      .min(0)
+      .max(WORKSPACE_GRID_COLUMNS - 1)
+      .optional()
+      .describe('Left column (0-based); omitted in layouts saved before the free grid'),
+    y: z
+      .number()
+      .int()
+      .min(0)
+      .max(WORKSPACE_GRID_MAX_ROW)
+      .optional()
+      .describe('Top row (0-based); omitted in layouts saved before the free grid'),
+    hidden: z.boolean().describe('Hidden tiles stay in the layout so they can be shown again'),
+  })
+  .refine(
+    (tile) =>
+      tile.x === undefined ||
+      tile.columns === undefined ||
+      tile.x + tile.columns <= WORKSPACE_GRID_COLUMNS,
+    ARTIST_WORKSPACE_VALIDATION.TILE_OVERFLOWS_GRID,
+  )
 
 export const WorkspaceTilesSchema = z
   .array(WorkspaceTileSchema)
