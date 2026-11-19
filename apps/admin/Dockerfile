@@ -11,42 +11,33 @@ ENV TURBO_TEAM=team_Ao32Preb1GI1Ohd56uSdfxEZ
 RUN npm install -g pnpm@12.7.0 && pnpm config set store-dir /pnpm/store
 WORKDIR /app
 
-# Stage 2: Dependencies
+# Stage 2: Prune
+# The only stage that sees the whole repository. `turbo prune --docker` writes out/json (the
+# package.json of @bitrate/admin and of each workspace package it depends on, plus a lockfile cut
+# down to those importers) and out/full (their sources). Every later stage copies from out/, so
+# no other app's dependencies are installed and no other app's source reaches a build layer.
+# Pinned to the root devDependency — bump both together.
+FROM base AS pruner
+RUN npm install -g turbo@2.11.7
+COPY . .
+RUN turbo prune @bitrate/admin --docker
+
+# Stage 3: Dependencies
 FROM base AS dependencies
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-COPY patches ./patches
-COPY scripts ./scripts
-COPY apps/admin/package.json ./apps/admin/
-# pnpm's frozen-lockfile check validates every workspace importer in pnpm-lock.yaml has a
-# package.json on disk, not just the ones this app depends on — so every workspace member's
-# package.json has to be copied here, even packages this image never installs code from.
-COPY apps/api/package.json ./apps/api/
-COPY apps/desktop/package.json ./apps/desktop/
-COPY apps/docs/package.json ./apps/docs/
-COPY apps/mobile/package.json ./apps/mobile/
-COPY apps/web-artists/package.json ./apps/web-artists/
-COPY apps/web-player/package.json ./apps/web-player/
-COPY packages/contracts/package.json ./packages/contracts/
-COPY packages/converter/package.json ./packages/converter/
-COPY packages/ncs-parser/package.json ./packages/ncs-parser/
-COPY packages/player/package.json ./packages/player/
-COPY packages/svgr/package.json ./packages/svgr/
-COPY packages/tailwind/package.json ./packages/tailwind/
-COPY packages/ui-react/package.json ./packages/ui-react/
-COPY packages/vite-svgr/package.json ./packages/vite-svgr/
-COPY turbo.json ./
+COPY --from=pruner /app/out/json/ ./
+# The root postinstall runs these two; they return early under the SKIP_* flags below, but node
+# still has to find the files. turbo prune does not carry root-level scripts/.
+COPY scripts/setup-graphify.mjs scripts/setup-rtk.mjs ./scripts/
 RUN SKIP_GRAPHIFY_INSTALL=1 SKIP_RTK_INSTALL=1 pnpm install --frozen-lockfile
 
-# Stage 3: Development
+# Stage 4: Development
 FROM base AS development
-COPY --from=dependencies /app/node_modules ./node_modules
-COPY --from=dependencies /pnpm/store /pnpm/store
-COPY . .
-COPY --from=dependencies /app/apps/admin/node_modules ./apps/admin/node_modules
+COPY --from=dependencies /app/ ./
+COPY --from=pruner /app/out/full/ ./
 EXPOSE 3005
 CMD ["pnpm", "--filter", "@bitrate/admin", "run", "dev"]
 
-# Stage 4: Build
+# Stage 5: Build
 FROM base AS build
 # Baked into the bundle at BUILD time, so it cannot be a runtime ENV in the production stage. The
 # deployment variable is the shared NEXT_PUBLIC_API_URL; compose and CI map it to this app's name,
@@ -56,10 +47,9 @@ ARG NG_APP_API_URL
 ENV NG_APP_API_URL=${NG_APP_API_URL}
 ENV NODE_ENV=production
 
-COPY --from=dependencies /app/node_modules ./node_modules
-COPY --from=dependencies /pnpm/store /pnpm/store
-COPY . .
-COPY --from=dependencies /app/apps/admin/node_modules ./apps/admin/node_modules
+# node_modules (the root one and every per-package one pnpm created), then the pruned sources.
+COPY --from=dependencies /app/ ./
+COPY --from=pruner /app/out/full/ ./
 
 # `scripts/with-env.mjs` reads NG_APP_API_URL from the environment set above and writes the
 # generated config module before Angular runs. There is no .env file in the image.
@@ -68,7 +58,7 @@ COPY --from=dependencies /app/apps/admin/node_modules ./apps/admin/node_modules
 RUN --mount=type=secret,id=turbo_token,env=TURBO_TOKEN \
     pnpm exec turbo run build --filter=@bitrate/admin
 
-# Stage 5: Production — static files behind nginx. There is no server to run: the app is an SPA
+# Stage 6: Production — static files behind nginx. There is no server to run: the app is an SPA
 # by decision (it sits entirely behind operator auth, so it has nothing to server-render).
 FROM nginx:1.31-alpine AS production
 # The nginx base is rebuilt upstream only every few weeks, while Alpine ships fixes for its
