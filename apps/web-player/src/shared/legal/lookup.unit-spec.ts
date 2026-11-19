@@ -24,11 +24,37 @@ describe('legal documents', () => {
     expect(findLegalDocument({ slug: 'cookies' })).toBeUndefined()
   })
 
-  it('keeps every document draft-marked with its operator placeholders', () => {
+  it('publishes the Privacy Policy and keeps every other document a draft', () => {
+    const published = LEGAL_DOCUMENTS.filter((document) => !document.draft)
+
+    expect(published.map((document) => document.slug)).toEqual(['privacy'])
+  })
+
+  it('fills in the operator details in every document', () => {
     const text = JSON.stringify(LEGAL_DOCUMENTS)
 
-    expect(text).toContain('[[OPERATOR_NAME]]')
-    expect(text).toContain('[[LEGAL_CONTACT_EMAIL]]')
+    for (const placeholder of [
+      '[[OPERATOR_NAME]]',
+      '[[OPERATOR_ADDRESS]]',
+      '[[OPERATOR_REGISTRATION]]',
+      '[[LEGAL_CONTACT_EMAIL]]',
+      '[[EFFECTIVE_DATE]]',
+    ]) {
+      expect(text).not.toContain(placeholder)
+    }
+  })
+
+  it('leaves no placeholder in a published document', () => {
+    for (const document of LEGAL_DOCUMENTS.filter((doc) => !doc.draft)) {
+      expect(JSON.stringify(document)).not.toMatch(/\[\[[A-Z_]/)
+    }
+  })
+
+  it('states the Google API Services User Data Policy in the Privacy Policy', () => {
+    const privacy = JSON.stringify(findLegalDocument({ slug: 'privacy' }))
+
+    expect(privacy).toContain('Google API Services User Data Policy')
+    expect(privacy).toContain('Limited Use')
   })
 
   it('links between documents by slug, never by markdown file name', () => {

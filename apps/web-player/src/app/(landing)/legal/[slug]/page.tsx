@@ -9,16 +9,18 @@ type LegalPageProps = {
 
 export const generateStaticParams = () => LEGAL_SLUGS.map((slug) => ({ slug }))
 
-/** The documents are drafts, so crawlers are told to skip them until they are reviewed. */
+/** Draft documents are marked as such and kept out of search until they are reviewed. */
 export const generateMetadata = async ({
   params,
 }: LegalPageProps): Promise<Metadata> => {
   const { slug } = await params
   const document = findLegalDocument({ slug })
+  if (!document) return { title: 'Legal' }
+  if (!document.draft) return { title: document.title }
 
   return {
     robots: { follow: false, index: false },
-    title: document ? `${document.title} (draft)` : 'Legal',
+    title: `${document.title} (draft)`,
   }
 }
 
