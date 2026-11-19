@@ -20,10 +20,13 @@ describe('legal documents', () => {
     expect(findLegalDocument({ slug: 'cookies' })).toBeUndefined()
   })
 
-  it('publishes the Privacy Policy and keeps every other document a draft', () => {
+  it('publishes the Terms and the Privacy Policy and keeps every other document a draft', () => {
     const published = LEGAL_DOCUMENTS.filter((document) => !document.draft)
 
-    expect(published.map((document) => document.slug)).toEqual(['privacy'])
+    expect(published.map((document) => document.slug)).toEqual([
+      'terms',
+      'privacy',
+    ])
   })
 
   it('fills in the operator details in every document', () => {
