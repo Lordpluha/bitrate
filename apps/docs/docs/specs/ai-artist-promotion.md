@@ -1,8 +1,9 @@
 # AI artist promotion: behavior and implementation
 
-Status: **Draft.** Decisions agreed with the product owner in a planning interview between
-2026-11-10 and 2026-11-19 (see [Decisions and approval](#decisions-and-approval)). One
-decision is still open (D-21). The implementation plan has **not** been confirmed yet.
+Status: **Approved, not started.** Decisions agreed with the product owner in a planning
+interview between 2026-11-10 and 2026-11-19 (see [Decisions and approval](#decisions-and-approval));
+the owner confirmed the implementation plan on 2026-11-19. Architecture:
+[ADR-0071](../architecture/0071-ai-provider-boundary.md) (Proposed).
 
 ## Goal and boundaries
 
@@ -116,9 +117,9 @@ Stored per artist; each field can be overridden for one generation.
   [law roadmap](../strategy/law-roadmap.md)). Nothing is published or sent without the
   artist's per-item approval.
 
-### AI platform (provider boundary)
+### AI platform (provider boundary, ADR-0071)
 
-- One `AiProvider` interface in `apps/api`; no provider SDK call outside its adapters, and none
+- One `AiProvider` interface in `apps/api/src/infra/ai/`; no provider SDK call outside its adapters, and none
   in a controller. Calls are routed **by task**, from configuration:
 
   | Task | Purpose | Default (subject to the eval) | Fallback |
@@ -167,15 +168,15 @@ the metric for the [Stage 5 gate](../strategy/tech-roadmap.md#stage-5--autopilot
 
 ### API (sketch)
 
-Under the artist workspace, owner-only like the rest of the release API:
+Under `/artists/me` ([ADR-0070](../architecture/0070-artist-workspace-routes.md)), owner-only like the rest of the release API:
 
-- `GET/PUT /artist/promotion-profile`
-- `POST /artist/releases/:id/promotion/plans` (starts a job, returns 202 and a job id) ·
+- `GET/PUT /artists/me/promotion-profile`
+- `POST /artists/me/releases/:id/promotion/plans` (starts a job, returns 202 and a job id) ·
   `GET …/plans/latest`
 - `PATCH …/steps/:stepId` (approve, edit, reject, done) · `POST …/steps/:stepId/regenerate`
 - `POST …/posts/:postId/translations` (languages) · `PATCH …/translations/:id` (edit, rate)
-- `GET /artist/promotion/calendar`
-- `GET /artist/ai/usage` (remaining quota)
+- `GET /artists/me/promotion/calendar`
+- `GET /artists/me/ai/usage` (remaining quota)
 
 Errors: 409 when the release has no date, 402-style quota error (`AI_QUOTA_EXCEEDED`), 422 when
 validation fails twice, 503 when no enabled provider is available.
@@ -196,7 +197,7 @@ validation fails twice, 503 when no enabled provider is available.
 | AC-10 | The follower notification includes the artist message only when it was approved before release; otherwise it is unchanged | Notifications unit/e2e | Pending |
 | AC-11 | An approved countdown step shows the tile on the player's artist page until the release goes live | web-player test | Pending |
 | AC-12 | Every provider call writes an `AiUsage` record. A Free artist past the ceiling gets `AI_QUOTA_EXCEEDED` and the quota state | Unit + e2e | Pending |
-| AC-13 | No provider SDK is imported outside the `ai` module's adapters; switching the task route in config needs no code change | Lint rule (oxlint) + unit | Pending |
+| AC-13 | No provider SDK is imported outside the `infra/ai` adapters; switching the task route in config needs no code change | Lint rule (oxlint) + unit | Pending |
 | AC-14 | Only EU-processing providers can be enabled in production configuration | Config validation test | Pending |
 | AC-15 | The listed promotion events are recorded with a schema version | Unit | Pending |
 | AC-16 | Eval: the chosen model meets the agreed bar on 15–20 release fixtures (schema validity, no ungrounded claims, glossary preservation, judge score) | Eval report linked here | Pending |
@@ -232,16 +233,9 @@ Agreed with the product owner in the planning interview (2026-11-10 to 2026-11-1
 | D-18 | BullMQ `ai` queue in the worker service, socket.io progress, no token streaming in v1, `AiUsage` accounting |
 | D-19 | Pencil designs with all states come before UI code |
 | D-20 | The artist reviews translation quality. The eval checks translations automatically (glossary, placeholders, length, LLM judge), and the product tracks the edit rate and ratings |
+| D-21 | An approved step is tracked on `PromotionPlanStep` itself (state and due date), with no dependency on `ReleaseTask`. This replaces the first idea of creating a `ReleaseTask` on approval (interview question 12), because release tasks left the workspace UI on 2026-10-27 and their API may be removed ([release publishing](./release-publishing.md)). The approval-rate metric is unchanged |
 
-**Open — D-21: where an approved step lives.** The interview agreed that approving a step
-creates a `ReleaseTask` (decision 12). But release tasks were removed from the workspace UI on
-2026-10-27, and their API remains only "until its removal is decided"
-([release publishing](./release-publishing.md)). Options:
-(a) revive `ReleaseTask` as the promotion checklist, which decides against its removal; or
-(b) make `PromotionPlanStep` itself the tracked item (state and due date), with no dependency
-on `ReleaseTask`. Recommendation: **(b)**. The approval-rate metric is unchanged.
-
-The implementation plan below is **awaiting the owner's confirmation**.
+The owner confirmed the implementation plan below on 2026-11-19.
 
 ## Implementation plan
 
