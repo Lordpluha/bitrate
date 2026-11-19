@@ -29,11 +29,10 @@ bitrate/
     converter/        Media conversion utilities
     ncs-parser/       NCS audio format parser
   infra/
-    docker-compose.dev.yaml       infra only: postgres, postgres_test, redis
-    docker-compose.preprod.yaml   full stack — what every `task dev:*`/`db:*` targets
+    docker-compose.dev.yaml       local stack: infra by default, apps behind `--profile apps`
     docker-compose.prod.yaml      production stack
     docker-monitor.sh             health/resource/db/error reporting — see `task monitor:*`
-    nginx/                        reverse-proxy config for the preprod and prod stacks
+    nginx/                        reverse-proxy config for the dev and prod stacks
   biome.json      Root Biome config (extended by apps)
   turbo.json      Turborepo pipeline
   Taskfile.yml    Task runner — the only interface to Docker/db workflows
@@ -152,8 +151,8 @@ arguments lists every task with its description; the groups are:
 
 | Group | Covers |
 |---|---|
-| `infra:*` | `docker-compose.dev.yaml` — postgres, postgres_test, redis |
-| `dev:*` | `docker-compose.preprod.yaml` — the full app stack |
+| `infra:*` | `docker-compose.dev.yaml` without a profile — postgres, postgres_test, redis, seaweedfs |
+| `dev:*` | `docker-compose.dev.yaml --profile apps` — the full app stack |
 | `prod:*` | `docker-compose.prod.yaml` |
 | `db:*` | Prisma inside the `api` container; `:native` variants run it on the host |
 | `shell:*` | a shell (or psql) inside one container |
@@ -262,8 +261,8 @@ do not reintroduce either.
 | A developer running one app natively | That app's own `.env`, seeded from its own `apps/<app>/.env.example` |
 | The Docker stacks | The `:-default` values written into `infra/docker-compose.*.yaml` |
 
-Every variable in `docker-compose.dev.yaml` and `docker-compose.preprod.yaml` is declared
-with a default, so both stacks come up on a clean checkout with no env file present;
+Every variable in `docker-compose.dev.yaml` is declared with a default, so the stack comes
+up on a clean checkout with no env file present;
 `docker compose -f infra/docker-compose.dev.yaml config -q` exits 0 with nothing to read.
 Override one by exporting it in the shell — a shell variable beats the compose default.
 `Taskfile.yml`'s `infra:*` and `dev:*` therefore pass no `--env-file`; adding one back makes

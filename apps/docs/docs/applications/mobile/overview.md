@@ -31,7 +31,7 @@ task mobile:qr      # print the QR code URL
 
 `Taskfile.yml` is the only supported interface to Docker here. A bare `docker compose` will not
 work from the repository root — the compose files live in `infra/`, so every raw invocation needs
-`-f infra/docker-compose.preprod.yaml`, which is exactly what the `task` targets supply.
+`-f infra/docker-compose.dev.yaml`, which is exactly what the `task` targets supply.
 
 ### Native run (recommended)
 
@@ -84,7 +84,7 @@ export MOBILE_HOST=192.168.0.31   # replace with your IP
 
 There is no repository-root `.env` any more, and writing one would not help: the compose files
 live in `infra/`, so that directory is the project directory and compose reads `infra/.env`, never
-a root file. Every variable in `docker-compose.preprod.yaml` carries a default
+a root file. Every variable in `docker-compose.dev.yaml` carries a default
 (`MOBILE_HOST` falls back to `192.168.1.100`), and a shell variable beats the default.
 
 **3. Restart the container:**
@@ -134,13 +134,13 @@ curl http://localhost:8081/status
 ### Check environment variables
 
 ```bash
-docker compose -f infra/docker-compose.preprod.yaml exec mobile printenv | grep -E "(EXPO|MOBILE)"
+docker compose -f infra/docker-compose.dev.yaml --profile apps exec mobile printenv | grep -E "(EXPO|MOBILE)"
 ```
 
 ### Enter the container
 
 ```bash
-docker compose -f infra/docker-compose.preprod.yaml exec mobile sh
+docker compose -f infra/docker-compose.dev.yaml --profile apps exec mobile sh
 ```
 
 ### View Metro logs
@@ -152,7 +152,7 @@ task mobile:logs | grep "Metro\|Bundler\|exp://"
 ### Restart with cache clear
 
 ```bash
-docker compose -f infra/docker-compose.preprod.yaml exec mobile npx expo start --clear
+docker compose -f infra/docker-compose.dev.yaml --profile apps exec mobile npx expo start --clear
 ```
 
 ---
@@ -174,7 +174,7 @@ docker compose -f infra/docker-compose.preprod.yaml exec mobile npx expo start -
 **Solution:**
 - Update packages on the host, not in the container
 - Or rebuild the container:
-  `docker compose -f infra/docker-compose.preprod.yaml build --no-cache mobile`
+  `docker compose -f infra/docker-compose.dev.yaml --profile apps build --no-cache mobile`
 
 ### QR code doesn't appear
 

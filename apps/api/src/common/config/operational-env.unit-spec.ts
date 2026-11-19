@@ -31,7 +31,7 @@ describe('operational environment schema', () => {
 
   it('accepts the local Compose metrics token and matches the Prometheus credential', () => {
     const root = resolve(__dirname, '../../../../..')
-    const compose = readFileSync(resolve(root, 'infra/docker-compose.preprod.yaml'), 'utf8')
+    const compose = readFileSync(resolve(root, 'infra/docker-compose.dev.yaml'), 'utf8')
     const prometheus = readFileSync(
       resolve(root, 'infra/observability/prometheus/prometheus.yml'),
       'utf8',

@@ -143,8 +143,7 @@ explicitly so the rendered root file is the one that is read — which is exactl
 `prod:deploy` must be run from `$HOME/bitrate`.
 
 Note the asymmetry: `dev:*` and `infra:*` pass **no** `--env-file`, because every variable in
-`docker-compose.dev.yaml` and `docker-compose.preprod.yaml` has a `:-default` and those stacks
-must work on a clean checkout. Only `prod:*` needs the file, and only on the server. See
+`docker-compose.dev.yaml` has a `:-default` and that stack must work on a clean checkout. Only `prod:*` needs the file, and only on the server. See
 [Environment variables](../guides/environment.md).
 
 ### Where production configuration actually lives
@@ -358,7 +357,7 @@ with `@faker-js/faker`, both devDependencies that the production image deliberat
 filling a live catalogue with generated artists is not something to do by accident. A production
 database starts empty.
 
-Not `task db:migrate` — that targets the preprod stack and runs `prisma migrate dev`, which
+Not `task db:migrate` — that targets the dev stack and runs `prisma migrate dev`, which
 generates migrations, wants a shadow database, and can reset the data it is pointed at.
 `prod:migrate` runs `migrate deploy` against the production stack.
 
