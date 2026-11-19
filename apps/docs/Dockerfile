@@ -17,21 +17,40 @@ ENV TURBO_TEAM=team_Ao32Preb1GI1Ohd56uSdfxEZ
 RUN npm install -g pnpm@12.7.0 && pnpm config set store-dir /pnpm/store
 WORKDIR /app
 
-# Stage 2: Development
-FROM base AS development
+# Stage 2: Prune
+# The only stage that sees the whole repository. `turbo prune --docker` writes out/json (the
+# package.json of @bitrate/docs and of each workspace package it depends on, plus a lockfile cut down
+# to those importers) and out/full (their sources). Later stages copy from out/, so no other
+# app's dependencies are installed and no other app's source reaches a build layer.
+# Pinned to the root devDependency — bump both together.
+FROM base AS pruner
+RUN npm install -g turbo@2.11.7
 COPY . .
-RUN SKIP_GRAPHIFY_INSTALL=1 SKIP_RTK_INSTALL=1 pnpm install --frozen-lockfile --filter @bitrate/docs...
+RUN turbo prune @bitrate/docs --docker
+
+# Stage 3: Development
+FROM base AS development
+COPY --from=pruner /app/out/json/ ./
+# The root postinstall runs these two; they return early under the SKIP_* flags below, but node
+# still has to find the files. turbo prune does not carry root-level scripts/.
+COPY scripts/setup-graphify.mjs scripts/setup-rtk.mjs ./scripts/
+RUN SKIP_GRAPHIFY_INSTALL=1 SKIP_RTK_INSTALL=1 pnpm install --frozen-lockfile
+COPY --from=pruner /app/out/full/ ./
 EXPOSE 3003
 WORKDIR /app/apps/docs
 CMD ["pnpm", "run", "start", "--host", "0.0.0.0"]
 
-# Stage 3: Build
+# Stage 4: Build
 FROM base AS build
-COPY . .
 # Dev dependencies are needed even for a production build: the site is configured in TypeScript
 # (docusaurus.config.ts), so the compiler has to be present. NODE_ENV stays unset here for the
 # same reason — pnpm drops devDependencies when it is `production`.
-RUN SKIP_GRAPHIFY_INSTALL=1 SKIP_RTK_INSTALL=1 pnpm install --frozen-lockfile --filter @bitrate/docs...
+COPY --from=pruner /app/out/json/ ./
+# The root postinstall runs these two; they return early under the SKIP_* flags below, but node
+# still has to find the files. turbo prune does not carry root-level scripts/.
+COPY scripts/setup-graphify.mjs scripts/setup-rtk.mjs ./scripts/
+RUN SKIP_GRAPHIFY_INSTALL=1 SKIP_RTK_INSTALL=1 pnpm install --frozen-lockfile
+COPY --from=pruner /app/out/full/ ./
 # Routed through turbo, not a plain pnpm script, so an unchanged source tree restores build/
 # from the remote cache instead of rerunning docusaurus build. The secret mount is optional
 # (required=false is the default), so a build without TURBO_TOKEN — a fork PR, a local
@@ -39,7 +58,7 @@ RUN SKIP_GRAPHIFY_INSTALL=1 SKIP_RTK_INSTALL=1 pnpm install --frozen-lockfile --
 RUN --mount=type=secret,id=turbo_token,env=TURBO_TOKEN \
     NODE_ENV=production pnpm exec turbo run build --filter=@bitrate/docs
 
-# Stage 4: Production
+# Stage 5: Production
 FROM nginx:1.31-alpine AS production
 # The nginx base is rebuilt upstream only every few weeks, while Alpine ships fixes for its
 # packages (curl, brotli, ...) in between; upgrading here keeps the scan clean without

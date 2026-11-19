@@ -8,7 +8,7 @@ draft: true
 Draft for lawyer review. Placeholders in `[[double brackets]]` are not filled in.
 :::
 
-**Effective date:** [[EFFECTIVE_DATE]]
+**Effective date:** 1 October 2026
 
 Bitrate respects the rights of creators. This page explains how to tell us about content you believe infringes
 copyright or is otherwise illegal, and how uploaders can respond. It reflects the notice-and-action rules of the
@@ -16,7 +16,7 @@ EU Digital Services Act (Art. 16) and the established notice-and-takedown model.
 
 ## How to submit a notice
 
-Send an email to **[[LEGAL_CONTACT_EMAIL]]** with the subject "Notice of alleged infringement". A web form is planned
+Send an email to **tesluakevlad@gmail.com** with the subject "Notice of alleged infringement". A web form is planned
 but not available yet. Your notice must contain:
 
 1. **Your details** — name and email address (not required for notices about child sexual abuse material).
@@ -56,4 +56,4 @@ elements above are treated as DMCA notices. [[DMCA_AGENT — designate an agent 
 
 ## Contact
 
-[[OPERATOR_NAME]], [[OPERATOR_ADDRESS]] — [[LEGAL_CONTACT_EMAIL]].
+Vladyslav Tesliuk, Warsaw, Poland — tesluakevlad@gmail.com.

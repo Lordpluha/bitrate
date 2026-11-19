@@ -8,11 +8,11 @@ draft: true
 Draft for lawyer review. Placeholders in `[[double brackets]]` are not filled in.
 :::
 
-**Effective date:** [[EFFECTIVE_DATE]]
+**Effective date:** 1 October 2026
 
 These Terms of Use ("Terms") govern your use of Bitrate, a music streaming and publishing service
-operated by [[OPERATOR_NAME]], [[OPERATOR_ADDRESS]], registration number [[OPERATOR_REGISTRATION]]
-("Bitrate", "we", "us"). Contact: [[LEGAL_CONTACT_EMAIL]].
+operated by Vladyslav Tesliuk, Warsaw, Poland, a private individual
+("Bitrate", "we", "us"). Contact: tesluakevlad@gmail.com.
 
 ## 1. Acceptance and eligibility
 
@@ -28,7 +28,7 @@ operated by [[OPERATOR_NAME]], [[OPERATOR_ADDRESS]], registration number [[OPERA
 
 2.1 Provide accurate information and keep your credentials secure. You are responsible for activity on your account.
 
-2.2 Tell us promptly at [[LEGAL_CONTACT_EMAIL]] if you suspect unauthorised access.
+2.2 Tell us promptly at tesluakevlad@gmail.com if you suspect unauthorised access.
 
 2.3 We may limit or lock an account after repeated failed sign-in attempts to protect it.
 
@@ -90,4 +90,4 @@ These Terms are governed by [[GOVERNING_LAW]]. Mandatory consumer-protection rul
 
 ## 11. Contact
 
-[[OPERATOR_NAME]], [[OPERATOR_ADDRESS]] — [[LEGAL_CONTACT_EMAIL]].
+Vladyslav Tesliuk, Warsaw, Poland — tesluakevlad@gmail.com.
