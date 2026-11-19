@@ -22,7 +22,14 @@ const readyRelease = {
   writersConfirmedAt: confirmedAt,
   accuracyConfirmedAt: confirmedAt,
   cover: '/static/releases/covers/ready.jpg',
-  trackDrafts: [{ id: trackDraftId, isrc: null, audioKey: 'releases/masters/ready.wav' }],
+  trackDrafts: [
+    {
+      id: trackDraftId,
+      isrc: null,
+      audioKey: 'releases/masters/ready.wav',
+      _count: { genres: 1 },
+    },
+  ],
   tracks: [],
   contributors: [{ id: creditId, roles: ['PERFORMER' as const] }],
   splits: [
@@ -185,6 +192,7 @@ describe('Release submission (HTTP)', () => {
             duration: 236,
             isDemo: false,
             isrc: null,
+            genres: [],
           },
         ],
         tracks: [],

@@ -1,5 +1,6 @@
-import { ApiProperty } from '@nestjs/swagger'
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 import { ReleaseRightType } from '@prisma/client'
+import { GenreOptionEntity } from './genre-option.entity'
 import { ReleaseEntity } from './release.entity'
 
 export class ReleaseShareEntity {
@@ -30,6 +31,12 @@ export class ReleaseTrackIdentifierEntity {
 
   @ApiProperty({ type: String, nullable: true, example: 'USRC17607839' })
   isrc: string | null
+
+  @ApiPropertyOptional({
+    type: [GenreOptionEntity],
+    description: 'Present when the request replaced the recording genres; alphabetical',
+  })
+  genres?: GenreOptionEntity[]
 }
 
 export class ReleaseTrackUpdatedEntity {

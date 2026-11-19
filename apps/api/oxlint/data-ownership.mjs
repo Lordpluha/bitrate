@@ -48,6 +48,7 @@ export const DATA_OWNERS = {
   releaseTerritory: ['releases'],
   releaseTrack: ['releases'],
   artistTrackDraft: ['releases'],
+  artistTrackDraftGenre: ['releases'],
   artistNotificationPreference: ['releases'],
   artistNotificationState: ['releases'],
   /** Review decisions are made by staff; the artist side only reads them. */

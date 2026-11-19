@@ -2,6 +2,7 @@ export {
   useAddCompilationTracks,
   useCompilationCatalogue,
 } from './api/compilation'
+export { useGenres, useSaveTrackGenres } from './api/genres'
 export {
   useContributor,
   useCreditSelf,
@@ -42,6 +43,10 @@ export {
   contributorSchema,
   type ReleaseContributor,
 } from './model/contributor.schema'
+export {
+  type GenreOption,
+  MAX_RECORDING_GENRES,
+} from './model/genre'
 export {
   AUDIO_ACCEPT,
   audioFileProblem,
@@ -84,6 +89,7 @@ export {
 export {
   participantRoleLabels,
   type ReleaseWorkspace,
+  releaseWorkspaceSchema,
 } from './model/workspace.schema'
 export { ReleaseFields } from './ui/ReleaseFields'
 export { StageRing } from './ui/StageRing'

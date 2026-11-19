@@ -7,6 +7,7 @@ import {
   ReleaseReviewDecision,
   ReleaseRightType,
 } from '@prisma/client'
+import { GenreOptionEntity } from './genre-option.entity'
 import { MusicReleaseEntity } from './music-catalogue.entity'
 
 export class WorkspaceTrackDraftEntity {
@@ -42,6 +43,14 @@ export class WorkspaceTrackDraftEntity {
 
   @ApiProperty({ description: 'Whether a master audio file was uploaded for this draft' })
   hasAudio: boolean
+
+  @ApiProperty({
+    type: [GenreOptionEntity],
+    maxItems: 3,
+    description:
+      'Chosen genres, alphabetical; a reused compilation recording shows its catalogue genres',
+  })
+  genres: GenreOptionEntity[]
 
   @ApiProperty({ type: String, nullable: true, description: 'Original name of the uploaded file' })
   audioFileName: string | null
@@ -116,6 +125,7 @@ export class ReleaseBlockerEntity {
       'NO_TRACKS',
       'COVER_MISSING',
       'TRACK_AUDIO_MISSING',
+      'TRACK_GENRES_MISSING',
       'MASTER_OWNER_MISSING',
       'WRITERS_NOT_CONFIRMED',
       'CONTRIBUTOR_ROLES_MISSING',

@@ -2629,6 +2629,26 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/api/v1/artists/me/genres': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * List the genres artists can tag recordings with
+     * @description The whole admin-managed catalogue, sorted by name.
+     */
+    get: operations['ArtistGenresController_list_v1']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/api/v1/artists/me/releases/{id}/delivery': {
     parameters: {
       query?: never
@@ -4192,6 +4212,7 @@ export interface components {
       | 'NO_TRACKS'
       | 'COVER_MISSING'
       | 'TRACK_AUDIO_MISSING'
+      | 'TRACK_GENRES_MISSING'
       | 'MASTER_OWNER_MISSING'
       | 'WRITERS_NOT_CONFIRMED'
       | 'CONTRIBUTOR_ROLES_MISSING'
@@ -4225,6 +4246,14 @@ export interface components {
       | 'NEEDS_CHANGES'
       | 'PUBLISHED'
       | 'UPLOAD_FAILED'
+    GenreOptionEntity: {
+      /** Format: uuid */
+      id: string
+      /** @example house */
+      slug: string
+      /** @example House */
+      name: string
+    }
     WorkspaceTrackDraftEntity: {
       /** Format: uuid */
       id: string
@@ -4242,6 +4271,8 @@ export interface components {
       isrc: string | null
       /** @description Whether a master audio file was uploaded for this draft */
       hasAudio: boolean
+      /** @description Chosen genres, alphabetical; a reused compilation recording shows its catalogue genres */
+      genres: components['schemas']['GenreOptionEntity'][]
       /** @description Original name of the uploaded file */
       audioFileName: string | null
       audioSizeBytes: number | null
@@ -4452,6 +4483,8 @@ export interface components {
       title?: string
       /** @description ISO 3901 code, with or without hyphens; stored without them. null clears it. Optional for submission. */
       isrc?: string | null
+      /** @description Catalogue genre IDs; replaces the recording genres. Required for submission. */
+      genreIds?: string[]
       /**
        * Format: date-time
        * @description Release version read before editing
@@ -4464,6 +4497,8 @@ export interface components {
       title: string
       /** @example USRC17607839 */
       isrc: string | null
+      /** @description Present when the request replaced the recording genres; alphabetical */
+      genres?: components['schemas']['GenreOptionEntity'][]
     }
     ReleaseTrackUpdatedEntity: {
       release: components['schemas']['ReleaseEntity']
@@ -24562,7 +24597,9 @@ export interface operations {
         headers: {
           [name: string]: unknown
         }
-        content?: never
+        content: {
+          'application/json': Record<string, never>
+        }
       }
     }
   }
@@ -27720,6 +27757,147 @@ export interface operations {
           [name: string]: unknown
         }
         content?: never
+      }
+    }
+  }
+  ArtistGenresController_list_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['GenreOptionEntity'][]
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            message?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
+            /** @example Unauthorized */
+            error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
+          }
+        }
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': Record<string, never>
+        }
       }
     }
   }

@@ -32,6 +32,8 @@ export type ReleaseRecordingInput = {
   contentType: string
   /** Credited Bitrate artists other than the owner, in credit order. */
   featuredArtistIds: string[]
+  /** Catalogue genres the artist chose for the recording. */
+  genreIds: string[]
 }
 
 /** A created, still unpublished release track and the conversion that makes it playable. */
@@ -105,6 +107,7 @@ export class ReleaseTrackService {
                 isPrimary: position === 0,
               })),
             },
+            genres: { create: recording.genreIds.map((genreId) => ({ genreId })) },
           },
           select: { id: true },
         })

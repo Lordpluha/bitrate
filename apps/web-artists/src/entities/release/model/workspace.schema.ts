@@ -1,6 +1,7 @@
 import type { ApiSchemas } from '@bitrate/contracts'
 import type { TranslationKey } from '@shared/i18n'
 import { z } from 'zod'
+import { genreOptionSchema } from './genre'
 import { releaseSummarySchema } from './release.schema'
 import {
   FULL_SHARE_BASIS_POINTS,
@@ -49,6 +50,8 @@ export const releaseWorkspaceSchema = releaseSummarySchema
           isDemo: z.boolean(),
           isrc,
           hasAudio: z.boolean(),
+          // Reused catalogue tracks can carry more genres than artists may choose.
+          genres: z.array(genreOptionSchema).max(50).default([]),
           audioFileName: z.string().nullable(),
           audioSizeBytes: z.number().int().nonnegative().nullable(),
           // Older API builds omit it; an empty waveform draws a flat placeholder.

@@ -15,6 +15,7 @@ export const PUBLISH_SOURCE_SELECT = {
       isrc: true,
       audioKey: true,
       audioContentType: true,
+      genres: { select: { genreId: true } },
     },
   },
   contributors: { orderBy: { id: 'asc' }, select: { artistId: true } },

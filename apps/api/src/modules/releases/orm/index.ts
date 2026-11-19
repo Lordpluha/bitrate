@@ -1,4 +1,5 @@
 export * from './current-release.select'
+export * from './genre.select'
 export * from './publish-source.select'
 export * from './release.select'
 export * from './release-delivery.select'

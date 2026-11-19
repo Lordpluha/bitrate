@@ -6,6 +6,7 @@ import { ArrowDown, ArrowUp, CircleAlert } from 'lucide-react'
 import {
   audioLabel,
   durationLabel,
+  genresLabel,
   isrcLabel,
   type TrackDraft,
 } from '../lib/trackLabels'
@@ -92,6 +93,17 @@ export function DraftTrackRow({
             )}
             <span className="truncate">{audioLabel(track, t)}</span>
           </p>
+          <p className="flex items-center gap-1">
+            {!reused && track.genres.length === 0 && (
+              <CircleAlert
+                aria-hidden="true"
+                className="size-4 shrink-0 text-destructive"
+              />
+            )}
+            <span className="truncate">
+              {t('workspace.track.genres')}: {genresLabel(track, t)}
+            </span>
+          </p>
         </div>
         <span
           className="artist-release-chip artist-release-track-status"
@@ -142,6 +154,18 @@ export function DraftTrackRow({
                 variant="outline"
               >
                 {t('workspace.track.rename')}
+              </Button>
+              <Button
+                aria-label={t('workspace.track.genresFor', {
+                  title: track.title,
+                })}
+                onClick={() =>
+                  onAction({ kind: 'track-genres', trackId: track.id })
+                }
+                size="sm"
+                variant="outline"
+              >
+                {t('workspace.track.genres')}
               </Button>
               <Button
                 aria-label={t('workspace.track.isrcFor', {

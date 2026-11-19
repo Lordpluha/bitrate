@@ -17,7 +17,8 @@ contributor relationship does not grant workspace access.
 | `PATCH /api/v1/artists/me/releases/:id` | Updates title, type, planned date and/or optional UPC of an owned `DRAFT`, requiring the previously read `updatedAt`. |
 | `PATCH /api/v1/artists/me/releases/:id/rights` | Replaces the master owner and both rights confirmations of a DRAFT. |
 | `PUT /api/v1/artists/me/releases/:id/splits` | Replaces one right type's shares (≤ 100% in a draft); clears the accuracy confirmation. |
-| `PATCH /api/v1/artists/me/releases/:id/tracks/:trackId` | Sets or clears the optional ISRC of an owned recording on the DRAFT. |
+| `PATCH /api/v1/artists/me/releases/:id/tracks/:trackId` | Renames an owned recording on the DRAFT, sets or clears its optional ISRC, and/or replaces its 1–3 genres. |
+| `GET /api/v1/artists/me/genres` | Lists the admin-managed genre catalogue (`id`, `slug`, `name`) by name. |
 | `POST /api/v1/artists/me/releases/:id/submit` | Re-checks readiness and moves DRAFT → SUBMITTED (Bitrate review only); blockers return 422. |
 | `POST /api/v1/artists/me/releases/:id/withdraw` | Returns SUBMITTED → DRAFT. |
 | `GET /api/v1/artists/me/music/counts` | Counts the artist's active private recordings and releases. |
@@ -139,6 +140,18 @@ when it fails, and replaced files are deleted after the commit. Audio changes cl
 accuracy confirmation. Readiness blocks submission without artwork (`COVER_MISSING`) or
 without a master for each draft recording (`TRACK_AUDIO_MISSING`). Uploading publishes
 and delivers nothing.
+
+## Recording genres
+
+Genres belong to recordings, not to the release. `genreIds` on the recording PATCH takes 1–3
+unique catalogue IDs and replaces the set; an unknown ID returns 400
+(`errors.release.genre_unknown`) and reused compilation recordings keep their catalogue
+genres (409, `COMPILATION_TRACK_LOCKED`). Each uploaded recording without a genre blocks
+submission (`TRACK_GENRES_MISSING`). Publishing copies the genres to the catalogue track when
+it is created, and the album gets the union of its tracks' genres at go-live, so genre
+browse, search and recommendations pick the release up. The catalogue itself is seeded by
+the `recording_genres` migration and edited by admins. Spec:
+[release-genres](../../../../docs/docs/specs/release-genres.md).
 
 ## Release tasks
 

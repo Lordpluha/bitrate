@@ -49,6 +49,7 @@ const blockerCodeDto = contractEnum<ApiSchemas['ReleaseBlockerCode']>()([
   'NO_TRACKS',
   'COVER_MISSING',
   'TRACK_AUDIO_MISSING',
+  'TRACK_GENRES_MISSING',
   'MASTER_OWNER_MISSING',
   'WRITERS_NOT_CONFIRMED',
   'CONTRIBUTOR_ROLES_MISSING',

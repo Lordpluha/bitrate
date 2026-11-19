@@ -131,6 +131,9 @@ export const workspace = {
   'workspace.track.isrcFor': 'Змінити ISRC для «{title}»',
   'workspace.track.remove': 'Вилучити',
   'workspace.track.removeFor': 'Вилучити «{title}»',
+  'workspace.track.genres': 'Жанри',
+  'workspace.track.genresFor': 'Оберіть жанри для «{title}»',
+  'workspace.track.noGenres': 'Жанр не вказано',
   'workspace.credits.title': 'Автори та частки',
   'workspace.credits.editSplits': 'Змінити частки',
   'workspace.credits.description':

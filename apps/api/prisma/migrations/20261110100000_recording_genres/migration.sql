@@ -1,0 +1,107 @@
+-- Genres an artist picks for each recording before it goes live.
+CREATE TABLE "ArtistTrackDraftGenre" (
+    "draftId" UUID NOT NULL,
+    "genreId" UUID NOT NULL,
+
+    CONSTRAINT "ArtistTrackDraftGenre_pkey" PRIMARY KEY ("draftId","genreId")
+);
+
+CREATE INDEX "ArtistTrackDraftGenre_genreId_idx" ON "ArtistTrackDraftGenre"("genreId");
+
+ALTER TABLE "ArtistTrackDraftGenre" ADD CONSTRAINT "ArtistTrackDraftGenre_draftId_fkey" FOREIGN KEY ("draftId") REFERENCES "ArtistTrackDraft"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE "ArtistTrackDraftGenre" ADD CONSTRAINT "ArtistTrackDraftGenre_genreId_fkey" FOREIGN KEY ("genreId") REFERENCES "Genre"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- Starter catalogue of common streaming genres. Admins own the table afterwards, so rows that
+-- already exist (by slug or name) are left exactly as they are.
+INSERT INTO "Genre" ("id", "slug", "name", "color")
+SELECT gen_random_uuid(), v.slug, v.name, v.color
+FROM (VALUES
+  ('pop', 'Pop', '#477d95'),
+  ('indie-pop', 'Indie Pop', '#477d95'),
+  ('k-pop', 'K-Pop', '#477d95'),
+  ('j-pop', 'J-Pop', '#477d95'),
+  ('synth-pop', 'Synth-pop', '#477d95'),
+  ('dance-pop', 'Dance Pop', '#477d95'),
+  ('electropop', 'Electropop', '#477d95'),
+  ('latin-pop', 'Latin Pop', '#477d95'),
+  ('hip-hop', 'Hip-Hop', '#bc5900'),
+  ('rap', 'Rap', '#bc5900'),
+  ('trap', 'Trap', '#bc5900'),
+  ('drill', 'Drill', '#bc5900'),
+  ('boom-bap', 'Boom Bap', '#bc5900'),
+  ('lo-fi-hip-hop', 'Lo-fi Hip-Hop', '#bc5900'),
+  ('r-and-b', 'R&B', '#8c1932'),
+  ('soul', 'Soul', '#8c1932'),
+  ('neo-soul', 'Neo Soul', '#8c1932'),
+  ('funk', 'Funk', '#8c1932'),
+  ('gospel', 'Gospel', '#8c1932'),
+  ('disco', 'Disco', '#8c1932'),
+  ('electronic', 'Electronic', '#148a78'),
+  ('dance', 'Dance', '#148a78'),
+  ('edm', 'EDM', '#148a78'),
+  ('house', 'House', '#148a78'),
+  ('deep-house', 'Deep House', '#148a78'),
+  ('tech-house', 'Tech House', '#148a78'),
+  ('progressive-house', 'Progressive House', '#148a78'),
+  ('techno', 'Techno', '#148a78'),
+  ('trance', 'Trance', '#148a78'),
+  ('drum-and-bass', 'Drum & Bass', '#148a78'),
+  ('dubstep', 'Dubstep', '#148a78'),
+  ('uk-garage', 'UK Garage', '#148a78'),
+  ('breakbeat', 'Breakbeat', '#148a78'),
+  ('electro', 'Electro', '#148a78'),
+  ('hardstyle', 'Hardstyle', '#148a78'),
+  ('synthwave', 'Synthwave', '#148a78'),
+  ('ambient', 'Ambient', '#148a78'),
+  ('downtempo', 'Downtempo', '#148a78'),
+  ('idm', 'IDM', '#148a78'),
+  ('lo-fi', 'Lo-fi', '#148a78'),
+  ('phonk', 'Phonk', '#148a78'),
+  ('rock', 'Rock', '#e61e32'),
+  ('alternative', 'Alternative', '#e61e32'),
+  ('indie-rock', 'Indie Rock', '#e61e32'),
+  ('punk', 'Punk', '#e61e32'),
+  ('pop-punk', 'Pop Punk', '#e61e32'),
+  ('post-punk', 'Post-punk', '#e61e32'),
+  ('hard-rock', 'Hard Rock', '#e61e32'),
+  ('grunge', 'Grunge', '#e61e32'),
+  ('psychedelic-rock', 'Psychedelic Rock', '#e61e32'),
+  ('progressive-rock', 'Progressive Rock', '#e61e32'),
+  ('shoegaze', 'Shoegaze', '#e61e32'),
+  ('emo', 'Emo', '#e61e32'),
+  ('metal', 'Metal', '#2d2d2d'),
+  ('heavy-metal', 'Heavy Metal', '#2d2d2d'),
+  ('death-metal', 'Death Metal', '#2d2d2d'),
+  ('black-metal', 'Black Metal', '#2d2d2d'),
+  ('metalcore', 'Metalcore', '#2d2d2d'),
+  ('nu-metal', 'Nu Metal', '#2d2d2d'),
+  ('jazz', 'Jazz', '#1e3264'),
+  ('smooth-jazz', 'Smooth Jazz', '#1e3264'),
+  ('blues', 'Blues', '#1e3264'),
+  ('classical', 'Classical', '#7d4b32'),
+  ('opera', 'Opera', '#7d4b32'),
+  ('soundtrack', 'Soundtrack', '#7d4b32'),
+  ('instrumental', 'Instrumental', '#7d4b32'),
+  ('new-age', 'New Age', '#7d4b32'),
+  ('folk', 'Folk', '#608108'),
+  ('indie-folk', 'Indie Folk', '#608108'),
+  ('country', 'Country', '#608108'),
+  ('americana', 'Americana', '#608108'),
+  ('singer-songwriter', 'Singer-Songwriter', '#608108'),
+  ('acoustic', 'Acoustic', '#608108'),
+  ('latin', 'Latin', '#e1118c'),
+  ('reggaeton', 'Reggaeton', '#e1118c'),
+  ('salsa', 'Salsa', '#e1118c'),
+  ('bachata', 'Bachata', '#e1118c'),
+  ('cumbia', 'Cumbia', '#e1118c'),
+  ('reggae', 'Reggae', '#27856a'),
+  ('dancehall', 'Dancehall', '#27856a'),
+  ('afrobeats', 'Afrobeats', '#27856a'),
+  ('amapiano', 'Amapiano', '#27856a'),
+  ('world', 'World', '#27856a'),
+  ('experimental', 'Experimental', '#777777'),
+  ('spoken-word', 'Spoken Word', '#777777'),
+  ('children', 'Children', '#777777')
+) AS v(slug, name, color)
+ON CONFLICT DO NOTHING;

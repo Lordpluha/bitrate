@@ -78,21 +78,27 @@ const LegalBlockView = ({ block }: { block: LegalBlock }) => {
 }
 
 /**
- * One legal document as a readable page. The banner stays until the texts have been reviewed
- * by a lawyer and the operator placeholders are filled in.
+ * One legal document as a readable page. A draft document carries a banner until it has been
+ * reviewed by a lawyer and its remaining placeholders are filled in; outside English the
+ * banner also says the text is English-only.
  */
 export const LegalView = ({ document }: LegalViewProps) => {
   const { t, locale } = useI18n()
+  const notices = [
+    document.draft ? t('landing.legalDraft') : null,
+    locale === 'en' ? null : t('landing.legalEnglishOnly'),
+  ].filter((notice) => notice !== null)
   return (
     <div className="min-h-screen bg-black-800 text-white">
       <article className="mx-auto flex max-w-3xl flex-col gap-6 px-6 py-12">
-        <p
-          className="rounded-md border border-primary px-4 py-3 text-sm"
-          role="note"
-        >
-          {t('landing.legalDraft')}
-          {locale !== 'en' && ` ${t('landing.legalEnglishOnly')}`}
-        </p>
+        {notices.length > 0 ? (
+          <p
+            className="rounded-md border border-primary px-4 py-3 text-sm"
+            role="note"
+          >
+            {notices.join(' ')}
+          </p>
+        ) : null}
 
         <Typography as="h1" size="heading2">
           {document.title}

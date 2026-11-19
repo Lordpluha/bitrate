@@ -2,6 +2,7 @@ import { normalizePagination } from '@common/pagination'
 import { isPrismaP2002 } from '@common/utils/prisma'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import {
+  BadRequestException,
   ConflictException,
   Injectable,
   NotFoundException,
@@ -20,6 +21,7 @@ import type { UpdateReleaseDto } from './dtos/update-release.dto'
 import type { UpdateReleaseTrackDto } from './dtos/update-release-track.dto'
 import { RELEASE_ERRORS } from './errors'
 import {
+  GENRE_OPTION_SELECT,
   RELEASE_SUMMARY_SELECT,
   type ReadinessRecord,
   type ReleaseWorkspaceRecord,
@@ -196,6 +198,7 @@ export class ReleasesService {
       })
       if (recording?.sourceTrackId)
         throw new ConflictException(RELEASE_ERRORS.COMPILATION_TRACK_LOCKED)
+      const genres = await this.catalogueGenres(tx, input.genreIds)
       const [track] = await this.uniqueIdentifier(
         'This ISRC is already used by another recording',
         () =>
@@ -209,8 +212,26 @@ export class ReleasesService {
           }),
       )
       if (!track) throw new NotFoundException(RELEASE_ERRORS.RECORDING_NOT_FOUND)
-      return { release, track }
+      if (!genres) return { release, track }
+      await tx.artistTrackDraftGenre.deleteMany({ where: { draftId: trackId } })
+      await tx.artistTrackDraftGenre.createMany({
+        data: genres.map((genre) => ({ draftId: trackId, genreId: genre.id })),
+      })
+      return { release, track: { ...track, genres } }
     })
+  }
+
+  /** The catalogue genres behind `genreIds`, alphabetical; any unknown ID rejects the request. */
+  private async catalogueGenres(tx: Prisma.TransactionClient, genreIds: string[] | undefined) {
+    if (!genreIds) return undefined
+    const genres = await tx.genre.findMany({
+      where: { id: { in: genreIds } },
+      select: GENRE_OPTION_SELECT,
+      orderBy: { name: 'asc' },
+    })
+    if (genres.length !== genreIds.length)
+      throw new BadRequestException(RELEASE_ERRORS.GENRE_UNKNOWN)
+    return genres
   }
 
   /**
@@ -273,12 +294,13 @@ function toWorkspaceView(release: ReleaseWorkspaceRecord, readinessRecord: Readi
     artistName: owner.username,
     latestReview: reviews[0] ?? null,
     // The storage key stays server-side; the artist plays audio through the owned route.
-    trackDrafts: trackDrafts.map(({ audioKey, sourceTrack, ...draft }) => ({
+    trackDrafts: trackDrafts.map(({ audioKey, sourceTrack, genres, ...draft }) => ({
       ...draft,
       ...(sourceTrack
         ? { title: sourceTrack.title, duration: sourceTrack.duration, isrc: sourceTrack.isrc }
         : {}),
       hasAudio: draft.sourceTrackId ? sourceAvailable(sourceTrack) : !!audioKey,
+      genres: (sourceTrack?.genres ?? genres).map(({ genre }) => genre),
     })),
     tracks: tracks.map(({ position, track }) => ({ ...track, position })),
     participants: contributors,

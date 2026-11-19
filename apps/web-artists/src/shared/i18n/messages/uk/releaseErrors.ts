@@ -110,6 +110,10 @@ export const releaseErrors = {
   'release.error.titleInvalid': 'Введіть назву до 255 символів.',
   'release.error.titleUnconfirmed':
     'Не вдалося підтвердити збереження назви. Закрийте вікно й перевірте треки, перш ніж пробувати знову.',
+  'release.error.genresInvalid':
+    'Оберіть від одного до трьох жанрів зі списку.',
+  'release.error.genresUnconfirmed':
+    'Не вдалося підтвердити збереження жанрів. Відкрийте реліз знову, щоб перевірити.',
   'release.error.reorderInvalid':
     'Не вдалося зберегти новий порядок. Спробуйте ще раз.',
   'release.error.reorderUnconfirmed':

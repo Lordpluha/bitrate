@@ -245,6 +245,7 @@ export class ReleasePublishingService implements OnApplicationBootstrap {
             sourceKey: draft.audioKey,
             contentType: draft.audioContentType,
             featuredArtistIds,
+            genreIds: draft.genres.map(({ genreId }) => genreId),
           },
           async (tx, trackId) => {
             // Serialize a late materialization with deletion before attaching a catalogue copy.
@@ -328,6 +329,12 @@ export class ReleasePublishingService implements OnApplicationBootstrap {
       // A track deleted or reconverted meanwhile rolls everything back; the next event retries.
       if (published !== nativeIds.length)
         throw new Error(`Release ${releaseId} changed while publishing`)
+      const trackGenres = await tx.trackGenre.findMany({
+        where: { trackId: { in: trackIds } },
+        select: { genreId: true },
+        distinct: ['genreId'],
+        orderBy: { genreId: 'asc' },
+      })
       const album = await this.albums.createForRelease(tx, {
         artistId: release.ownerArtistId,
         title: release.title,
@@ -335,6 +342,7 @@ export class ReleasePublishingService implements OnApplicationBootstrap {
         cover: release.cover,
         publishedAt,
         trackIds,
+        genreIds: trackGenres.map(({ genreId }) => genreId),
       })
       await tx.release.update({ where: { id: releaseId }, data: { albumId: album } })
       return album

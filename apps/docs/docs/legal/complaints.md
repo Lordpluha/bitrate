@@ -8,7 +8,7 @@ draft: true
 Draft for lawyer review. Placeholders in `[[double brackets]]` are not filled in.
 :::
 
-**Effective date:** [[EFFECTIVE_DATE]]
+**Effective date:** 1 October 2026
 
 Use this page to report content or an account, to contest a moderation decision, to make a complaint about Bitrate, or to make a privacy request. Send everything to **tesluakevlad@gmail.com**. One address is used for all of it; put the type of message in the subject line so it reaches the right review.
 
@@ -41,4 +41,4 @@ You can always go to court. In addition:
 
 ## Notes
 
-The address above is a temporary single contact for the draft. Replace it with the operator contact address before publication. A web form and an in-app report option for tracks, albums and accounts are planned; today the in-app option covers playlists only.
+A web form and an in-app report option for tracks, albums and accounts are planned; today the in-app option covers playlists only.

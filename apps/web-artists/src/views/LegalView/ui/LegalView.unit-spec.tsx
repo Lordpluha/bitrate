@@ -21,6 +21,15 @@ describe('LegalView', () => {
     )
   })
 
+  it('shows a published document without the draft banner', () => {
+    renderDocument('privacy')
+
+    expect(
+      screen.getByRole('heading', { level: 1, name: 'Privacy Policy' }),
+    ).toBeInTheDocument()
+    expect(screen.queryByRole('note')).not.toBeInTheDocument()
+  })
+
   it('links to every other document, including the Artist Agreement', () => {
     renderDocument('terms')
     const nav = screen.getByRole('navigation', {

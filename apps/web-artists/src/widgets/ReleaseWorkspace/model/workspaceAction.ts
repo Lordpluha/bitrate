@@ -1,4 +1,9 @@
-type TrackActionKind = 'isrc' | 'track-audio' | 'track-rename' | 'track-remove'
+type TrackActionKind =
+  | 'isrc'
+  | 'track-audio'
+  | 'track-rename'
+  | 'track-genres'
+  | 'track-remove'
 
 /** Everything the workspace asks its page to open; the page shows one dialog per action. */
 export type WorkspaceAction =
