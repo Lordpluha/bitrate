@@ -70,11 +70,12 @@ describe('LegalDocumentView', () => {
     ).toBeGreaterThan(0)
   })
 
-  it('keeps operator placeholders visible while the texts are drafts', () => {
+  it('shows a published document without the draft banner', () => {
     renderDocument('privacy')
 
-    expect(screen.getAllByText(/\[\[OPERATOR_NAME\]\]/).length).toBeGreaterThan(
-      0,
-    )
+    expect(
+      screen.getByRole('heading', { level: 1, name: 'Privacy Policy' }),
+    ).toBeInTheDocument()
+    expect(screen.queryByRole('note')).not.toBeInTheDocument()
   })
 })
