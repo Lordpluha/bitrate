@@ -1,11 +1,14 @@
 ---
 id: privacy-policy
 title: Privacy Policy
+draft: true
 ---
 
 :::info[Published]
 This is the published text, served at bitrate.me/legal/privacy and artists.bitrate.me/legal/privacy.
 The apps hold their own copy in `src/shared/legal/documents.ts`; change all three together.
+`draft: true` above only keeps the legal folder out of the docs site's production build, like the
+other legal sources; it says nothing about the policy's status.
 :::
 
 **Effective date:** 1 October 2026. **Last updated:** 19 November 2026.
