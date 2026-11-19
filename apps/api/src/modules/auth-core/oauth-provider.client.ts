@@ -1,7 +1,7 @@
 import { randomBytes } from 'node:crypto'
 import type { AppConfig } from '@common/config'
-import { InternalServerErrorException, UnauthorizedException } from '@nestjs/common'
 import type { ConfigService } from '@nestjs/config'
+import { OAuthSignInError } from './oauth-sign-in.error'
 
 /** The social sign-in providers both audiences offer. */
 export type OAuthProvider = 'google' | 'facebook'
@@ -71,7 +71,7 @@ export class OAuthProviderClient {
 
   private googleAuthUrl(callbackBase: string, state: string): string {
     const clientId = this.config.get('OAUTH_GOOGLE_CLIENT_ID')
-    if (!clientId) throw new InternalServerErrorException('Google OAuth is not configured')
+    if (!clientId) throw new OAuthSignInError('unavailable', 'Google OAuth is not configured')
     const params = new URLSearchParams({
       client_id: clientId,
       redirect_uri: this.redirectUri('google', callbackBase),
@@ -85,7 +85,7 @@ export class OAuthProviderClient {
 
   private facebookAuthUrl(callbackBase: string, state: string): string {
     const appId = this.config.get('OAUTH_FACEBOOK_APP_ID')
-    if (!appId) throw new InternalServerErrorException('Facebook OAuth is not configured')
+    if (!appId) throw new OAuthSignInError('unavailable', 'Facebook OAuth is not configured')
     const params = new URLSearchParams({
       client_id: appId,
       redirect_uri: this.redirectUri('facebook', callbackBase),
@@ -97,8 +97,11 @@ export class OAuthProviderClient {
   }
 
   private async exchangeGoogleCode(code: string, callbackBase: string): Promise<OAuthProfile> {
-    const clientId = this.config.get('OAUTH_GOOGLE_CLIENT_ID')!
-    const clientSecret = this.config.get('OAUTH_GOOGLE_CLIENT_SECRET')!
+    const clientId = this.config.get('OAUTH_GOOGLE_CLIENT_ID')
+    const clientSecret = this.config.get('OAUTH_GOOGLE_CLIENT_SECRET')
+    if (!(clientId && clientSecret)) {
+      throw new OAuthSignInError('unavailable', 'Google OAuth is not configured')
+    }
 
     const tokenRes = await fetch('https://oauth2.googleapis.com/token', {
       method: 'POST',
@@ -114,7 +117,7 @@ export class OAuthProviderClient {
 
     const tokenData = (await tokenRes.json()) as { access_token?: string; error?: string }
     if (!tokenData.access_token) {
-      throw new UnauthorizedException('Failed to exchange Google OAuth code')
+      throw new OAuthSignInError('exchange_failed', 'Failed to exchange Google OAuth code')
     }
 
     const profileRes = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
@@ -128,15 +131,18 @@ export class OAuthProviderClient {
     }
 
     if (!profile.verified_email) {
-      throw new UnauthorizedException('Google account email is not verified')
+      throw new OAuthSignInError('email_unverified', 'Google account email is not verified')
     }
 
     return { id: profile.id, email: profile.email, name: profile.name }
   }
 
   private async exchangeFacebookCode(code: string, callbackBase: string): Promise<OAuthProfile> {
-    const appId = this.config.get('OAUTH_FACEBOOK_APP_ID')!
-    const appSecret = this.config.get('OAUTH_FACEBOOK_APP_SECRET')!
+    const appId = this.config.get('OAUTH_FACEBOOK_APP_ID')
+    const appSecret = this.config.get('OAUTH_FACEBOOK_APP_SECRET')
+    if (!(appId && appSecret)) {
+      throw new OAuthSignInError('unavailable', 'Facebook OAuth is not configured')
+    }
     const redirectUri = this.redirectUri('facebook', callbackBase)
 
     const tokenRes = await fetch(
@@ -144,7 +150,7 @@ export class OAuthProviderClient {
     )
     const tokenData = (await tokenRes.json()) as { access_token?: string }
     if (!tokenData.access_token) {
-      throw new UnauthorizedException('Failed to exchange Facebook OAuth code')
+      throw new OAuthSignInError('exchange_failed', 'Failed to exchange Facebook OAuth code')
     }
 
     const profileRes = await fetch(
@@ -152,7 +158,10 @@ export class OAuthProviderClient {
     )
     const profile = (await profileRes.json()) as { id: string; email?: string; name: string }
     if (!profile.email) {
-      throw new UnauthorizedException('Facebook account did not provide an email address')
+      throw new OAuthSignInError(
+        'email_missing',
+        'Facebook account did not provide an email address',
+      )
     }
     return { id: profile.id, email: profile.email, name: profile.name }
   }
