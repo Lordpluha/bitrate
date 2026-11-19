@@ -438,6 +438,10 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
           },
           {
             kind: 'paragraph',
+            text: '**How to delete your data.** Artists can delete their account under Settings in the artist portal. Listeners can email tesluakevlad@gmail.com from the address on their Bitrate account with the subject "Delete my account". We then delete the account and the data linked to it, including the sign-in identity received from Google or Facebook, within 30 days, and confirm by email. To also remove Bitrate from your Facebook account, open Facebook Settings, then Apps and websites (https://www.facebook.com/settings?tab=applications), choose Bitrate and remove it; for Google, use https://myaccount.google.com/permissions.',
+          },
+          {
+            kind: 'paragraph',
             text: 'You also have the right to lodge a complaint with the Polish supervisory authority, the President of the Personal Data Protection Office (**UODO**), ul. Stawki 2, 00-193 Warsaw, https://uodo.gov.pl, or with the authority in your own EU country.',
           },
         ],
