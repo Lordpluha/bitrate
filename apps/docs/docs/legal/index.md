@@ -17,7 +17,7 @@ the Polish digital-consent age (16) are the baseline.
 
 | Draft | Applies to |
 |---|---|
-| [Terms of Use](./terms-of-use.md) | web-player, web-artists |
+| [Terms of Use](./terms-of-use.md) — **published** | web-player, web-artists |
 | [Privacy Policy](./privacy-policy.md) — **published** | web-player, web-artists |
 | [Community Guidelines](./community-guidelines.md) | web-player, web-artists |
 | [Complaints and reports](./complaints.md) | web-player, web-artists |
@@ -31,10 +31,11 @@ private individual; contact `tesluakevlad@gmail.com`. Every effective date is 1 
 value of the stored `legalVersion` (`apps/api/src/common/legal.ts`), so no user has to accept the
 documents again. Bump both together when a revision must be re-accepted.
 
-The Privacy Policy is published without the draft banner, because Google's OAuth brand
-verification requires a complete policy on the home-page domain. Every other document stays a
-draft and keeps its remaining placeholders, such as `[[GOVERNING_LAW]]` and the clauses marked for
-counsel.
+The Privacy Policy and the Terms of Use are published without the draft banner, because Google's
+and Meta's sign-in reviews read both on the home-page domain. The Terms are governed by Polish law,
+and their liability clause (8.2) keeps every limit EU consumer law requires; it was written without
+counsel and is the first clause to have reviewed. Every other document stays a draft and keeps its
+remaining placeholders and the clauses marked for counsel.
 
 ## Open items a lawyer or the founder must settle
 
