@@ -5,6 +5,7 @@ import { CacheService } from '@infra/cache/cache.service'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import { PUBLIC_ALBUM_WHERE } from '@modules/albums/orm'
 import { PUBLIC_ARTIST_SELECT } from '@modules/artists/orm'
+import { TasteService } from '@modules/recommendations/taste.service'
 import { PUBLIC_TRACK_SQL, PUBLIC_TRACK_WHERE } from '@modules/tracks/orm'
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common'
 import { Prisma } from '@prisma/client'
@@ -27,6 +28,7 @@ export class DiscoveryService {
     private readonly prisma: PrismaService,
     private readonly cache: CacheService,
     private readonly personalTop: PersonalTopService,
+    private readonly taste: TasteService,
   ) {}
 
   getCategories(page = 1, limit = 20) {
@@ -80,10 +82,15 @@ export class DiscoveryService {
       : false
     const key = `${userId ?? 'anonymous'}:${hideExplicit ? 'clean' : 'all'}`
     return this.cache.wrap(NS.RECOMMENDATIONS, `feed:${key}`, TTL.SHORT, async () => {
-      const preferredGenreIds = userId ? await this.getPreferredGenreIds(userId) : []
+      const [preferredGenreIds, hidden] = userId
+        ? await Promise.all([this.getPreferredGenreIds(userId), this.taste.hiddenIds(userId)])
+        : [[], null]
       const trackWhere = {
         ...PUBLIC_TRACK_WHERE,
         ...(hideExplicit ? { explicit: false } : {}),
+        /* "Not interested" (stage 1 of the recommendation system) */
+        ...(hidden?.trackIds.length ? { id: { notIn: hidden.trackIds } } : {}),
+        ...(hidden?.artistIds.length ? { artistId: { notIn: hidden.artistIds } } : {}),
         ...(preferredGenreIds.length > 0
           ? { genres: { some: { genreId: { in: preferredGenreIds } } } }
           : {}),
