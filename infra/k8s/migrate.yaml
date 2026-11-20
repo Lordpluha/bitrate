@@ -1,0 +1,29 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: migrate
+spec:
+  backoffLimit: 5
+  ttlSecondsAfterFinished: 600
+  template:
+    spec:
+      enableServiceLinks: false
+      restartPolicy: OnFailure
+      initContainers:
+        - name: wait-postgres
+          image: postgres:16-alpine
+          command: ["sh", "-c", "until pg_isready -h postgres -p 5432; do sleep 2; done"]
+          resources:
+            requests: { cpu: 10m, memory: 16Mi }
+            limits: { cpu: 100m, memory: 64Mi }
+      containers:
+        - name: migrate
+          image: bitrate/api:dev
+          imagePullPolicy: IfNotPresent
+          command: ["pnpm", "--filter", "@bitrate/api", "run", "db:migration:deploy"]
+          envFrom:
+            - secretRef:
+                name: bitrate-env
+          resources:
+            requests: { cpu: 100m, memory: 256Mi }
+            limits: { cpu: "1", memory: 512Mi }

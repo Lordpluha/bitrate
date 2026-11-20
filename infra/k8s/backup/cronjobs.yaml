@@ -1,0 +1,140 @@
+# Off-site backups to Cloudflare R2 — runbook: README.md next to this file.
+#
+# Credentials: `bitrate-env` (database + SeaweedFS source) and `backup-env` (R2 target +
+# restic password). `backup-env` is created outside kustomize (task k8s:backup:secret)
+# so the app stack applies without backup credentials; a run without it fails loudly.
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: backup-postgres
+spec:
+  schedule: "15 */6 * * *"
+  timeZone: Etc/UTC
+  concurrencyPolicy: Forbid
+  startingDeadlineSeconds: 3600
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      activeDeadlineSeconds: 3600
+      template:
+        spec:
+          restartPolicy: Never
+          enableServiceLinks: false
+          initContainers:
+            - name: tools
+              image: restic/restic:0.18.0
+              command: ["cp", "/usr/bin/restic", "/tools/restic"]
+              volumeMounts:
+                - { name: tools, mountPath: /tools }
+              resources:
+                requests: { cpu: 10m, memory: 16Mi }
+                limits: { cpu: 100m, memory: 64Mi }
+          containers:
+            - name: backup
+              image: postgres:16-alpine
+              command: ["sh", "/scripts/backup-postgres.sh"]
+              envFrom:
+                - secretRef: { name: bitrate-env }
+                - secretRef: { name: backup-env }
+              env:
+                - { name: RESTIC_CACHE_DIR, value: /work/restic-cache }
+              volumeMounts:
+                - { name: tools, mountPath: /tools }
+                - { name: scripts, mountPath: /scripts }
+                - { name: work, mountPath: /work }
+              resources:
+                requests: { cpu: 100m, memory: 128Mi }
+                limits: { cpu: "1", memory: 512Mi }
+          volumes:
+            - { name: tools, emptyDir: {} }
+            - { name: work, emptyDir: {} }
+            - { name: scripts, configMap: { name: backup-scripts } }
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: backup-audio
+spec:
+  schedule: "45 3 * * *"
+  timeZone: Etc/UTC
+  concurrencyPolicy: Forbid
+  startingDeadlineSeconds: 3600
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      # The first run uploads the whole bucket; later runs only the difference.
+      activeDeadlineSeconds: 21600
+      template:
+        spec:
+          restartPolicy: Never
+          enableServiceLinks: false
+          containers:
+            - name: backup
+              image: rclone/rclone:1.69.1
+              command: ["sh", "/scripts/backup-audio.sh"]
+              envFrom:
+                - secretRef: { name: bitrate-env }
+                - secretRef: { name: backup-env }
+              volumeMounts:
+                - { name: scripts, mountPath: /scripts }
+              resources:
+                requests: { cpu: 100m, memory: 128Mi }
+                limits: { cpu: "1", memory: 512Mi }
+          volumes:
+            - { name: scripts, configMap: { name: backup-scripts } }
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: backup-verify
+spec:
+  schedule: "30 5 * * 0"
+  timeZone: Etc/UTC
+  concurrencyPolicy: Forbid
+  startingDeadlineSeconds: 3600
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 1
+      activeDeadlineSeconds: 3600
+      template:
+        spec:
+          restartPolicy: Never
+          enableServiceLinks: false
+          securityContext:
+            # postgres in the alpine image; initdb refuses to run as root
+            runAsUser: 70
+            runAsGroup: 70
+            fsGroup: 70
+          initContainers:
+            - name: tools
+              image: restic/restic:0.18.0
+              command: ["cp", "/usr/bin/restic", "/tools/restic"]
+              volumeMounts:
+                - { name: tools, mountPath: /tools }
+              resources:
+                requests: { cpu: 10m, memory: 16Mi }
+                limits: { cpu: 100m, memory: 64Mi }
+          containers:
+            - name: verify
+              image: postgres:16-alpine
+              command: ["sh", "/scripts/verify-restore.sh"]
+              envFrom:
+                - secretRef: { name: bitrate-env }
+                - secretRef: { name: backup-env }
+              volumeMounts:
+                - { name: tools, mountPath: /tools }
+                - { name: scripts, mountPath: /scripts }
+                - { name: work, mountPath: /work }
+              resources:
+                requests: { cpu: 200m, memory: 256Mi }
+                limits: { cpu: "1", memory: 1Gi }
+          volumes:
+            - { name: tools, emptyDir: {} }
+            - { name: work, emptyDir: {} }
+            - { name: scripts, configMap: { name: backup-scripts } }
