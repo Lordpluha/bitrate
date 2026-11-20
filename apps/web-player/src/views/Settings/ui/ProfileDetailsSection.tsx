@@ -13,7 +13,7 @@ export const ProfileDetailsSection = () => {
         <label className="grid gap-2 text-sm text-foreground">
           {t('settings.profile.username')}
           <input
-            className="h-10 rounded-md border border-border bg-background px-3 text-sm text-foreground outline-none placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring"
+            className="h-10 rounded-md border border-border bg-background px-3 text-sm text-foreground outline-hidden placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring"
             maxLength={80}
             minLength={3}
             onChange={(event) => profile.setUsername(event.target.value)}
@@ -24,7 +24,7 @@ export const ProfileDetailsSection = () => {
         <label className="grid gap-2 text-sm text-foreground">
           {t('settings.profile.description')}
           <textarea
-            className="min-h-24 rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground outline-none placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring"
+            className="min-h-24 rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground outline-hidden placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring"
             maxLength={500}
             onChange={(event) => profile.setDescription(event.target.value)}
             placeholder={t('settings.profile.description.placeholder')}

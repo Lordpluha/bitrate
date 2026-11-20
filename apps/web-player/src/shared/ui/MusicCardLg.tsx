@@ -73,7 +73,7 @@ export const MusicCardLg = ({
       </div>
       <div className="flex min-w-0 flex-col gap-0.75">
         <Link
-          className="line-clamp-1 text-[13px] font-semibold text-foreground outline-none after:absolute after:inset-0 after:rounded-[14px]"
+          className="line-clamp-1 text-[13px] font-semibold text-foreground outline-hidden after:absolute after:inset-0 after:rounded-[14px]"
           href={href}
         >
           {name}

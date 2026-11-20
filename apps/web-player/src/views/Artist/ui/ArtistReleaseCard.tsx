@@ -11,7 +11,7 @@ import { getReleaseMetadata } from '../model/artistDiscography'
 import type { ArtistDiscographyProps } from './ArtistDiscography'
 
 const cardClassName =
-  'group flex min-w-0 flex-col gap-3 rounded-[14px] border border-border bg-card p-3 text-left outline-none transition-colors hover:bg-secondary focus-visible:ring-2 focus-visible:ring-ring'
+  'group flex min-w-0 flex-col gap-3 rounded-[14px] border border-border bg-card p-3 text-left outline-hidden transition-colors hover:bg-secondary focus-visible:ring-2 focus-visible:ring-ring'
 
 const Cover = ({ alt, src }: { alt: string; src: string }) => (
   <div className="relative aspect-square overflow-hidden rounded-[9px]">

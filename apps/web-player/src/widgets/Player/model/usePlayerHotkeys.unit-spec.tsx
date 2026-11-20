@@ -3,7 +3,11 @@ import { renderHook } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { isPlayerHotkeyTarget, usePlayerHotkeys } from './usePlayerHotkeys'
 
-const renderHotkeys = () => {
+type RenderHotkeysInput = { isSingleKeyEnabled?: boolean }
+
+const renderHotkeys = ({
+  isSingleKeyEnabled = true,
+}: RenderHotkeysInput = {}) => {
   const onTogglePlay = vi.fn()
   const onToggleShuffle = vi.fn()
   const onSeek = vi.fn()
@@ -14,6 +18,7 @@ const renderHotkeys = () => {
       currentTime: 30,
       duration: 100,
       isEnabled: true,
+      isSingleKeyEnabled,
       onNext: vi.fn(),
       onOpenQueue,
       onPrevious: vi.fn(),
@@ -48,12 +53,35 @@ describe('isPlayerHotkeyTarget', () => {
 })
 
 const press = (code: string, init: KeyboardEventInit = {}) => {
-  window.dispatchEvent(new KeyboardEvent('keydown', { code, ...init }))
+  const event = new KeyboardEvent('keydown', {
+    cancelable: true,
+    code,
+    ...init,
+  })
+  window.dispatchEvent(event)
+  return event
+}
+
+type PageScrollInput = { scrollHeight: number; scrollTop: number }
+
+/** jsdom has no layout, so the page's scroll geometry is stubbed per test. */
+const stubPageScroll = ({ scrollHeight, scrollTop }: PageScrollInput) => {
+  const page = document.documentElement
+  Object.defineProperty(page, 'scrollHeight', {
+    configurable: true,
+    value: scrollHeight,
+  })
+  Object.defineProperty(page, 'clientHeight', {
+    configurable: true,
+    value: 500,
+  })
+  page.scrollTop = scrollTop
 }
 
 describe('usePlayerHotkeys', () => {
   beforeEach(() => {
     usePlayerStore.getState().reset()
+    stubPageScroll({ scrollHeight: 500, scrollTop: 0 })
   })
 
   it('skips 5 s with the arrows and 10 s with Shift', () => {
@@ -105,5 +133,56 @@ describe('usePlayerHotkeys', () => {
 
     expect(onTogglePlay).not.toHaveBeenCalled()
     button.remove()
+  })
+
+  it('ignores single-key shortcuts when they are turned off (WCAG 2.1.4)', () => {
+    const { onOpenQueue, onToggleLike, onToggleShuffle } = renderHotkeys({
+      isSingleKeyEnabled: false,
+    })
+
+    press('KeyL')
+    press('KeyQ')
+    press('KeyS')
+    press('Equal')
+    const mute = press('KeyM')
+
+    expect(onToggleLike).not.toHaveBeenCalled()
+    expect(onOpenQueue).not.toHaveBeenCalled()
+    expect(onToggleShuffle).not.toHaveBeenCalled()
+    expect(usePlayerStore.getState().volume).toBe(0.5)
+    expect(mute.defaultPrevented).toBe(false)
+  })
+
+  it('keeps Space and the arrows when single-key shortcuts are off', () => {
+    const { onSeek, onTogglePlay } = renderHotkeys({
+      isSingleKeyEnabled: false,
+    })
+
+    press('Space')
+    press('ArrowRight')
+
+    expect(onTogglePlay).toHaveBeenCalledOnce()
+    expect(onSeek).toHaveBeenCalledWith(35)
+  })
+
+  it('leaves ArrowDown and ArrowUp to the page while it can still scroll that way', () => {
+    renderHotkeys()
+    stubPageScroll({ scrollHeight: 2000, scrollTop: 0 })
+
+    const down = press('ArrowDown')
+    expect(down.defaultPrevented).toBe(false)
+    expect(usePlayerStore.getState().volume).toBe(0.5)
+
+    const up = press('ArrowUp')
+    expect(up.defaultPrevented).toBe(true)
+  })
+
+  it('changes the volume with ArrowDown when the page cannot scroll', () => {
+    renderHotkeys()
+
+    const down = press('ArrowDown')
+
+    expect(down.defaultPrevented).toBe(true)
+    expect(usePlayerStore.getState().volume).toBeCloseTo(0.45)
   })
 })

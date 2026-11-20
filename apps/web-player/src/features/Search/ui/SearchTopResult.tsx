@@ -31,7 +31,7 @@ export const SearchTopResult = ({ card, onPlay }: SearchTopResultProps) => (
       <div className="flex min-w-0 flex-col gap-2">
         {card.href ? (
           <Link
-            className="truncate font-[family-name:var(--font-landing-display)] text-2xl leading-[1.25] font-semibold outline-none after:absolute after:inset-0 after:rounded-[14px]"
+            className="truncate font-[family-name:var(--font-landing-display)] text-2xl leading-[1.25] font-semibold outline-hidden after:absolute after:inset-0 after:rounded-[14px]"
             href={card.href}
           >
             {card.title}

@@ -6,7 +6,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 
 const NAV_BUTTON_CLASS =
-  'flex size-8 items-center justify-center rounded-full bg-background/70 text-foreground transition-colors hover:bg-background focus:outline-none focus-visible:ring-2 focus-visible:ring-ring'
+  'flex size-8 items-center justify-center rounded-full bg-background/70 text-foreground transition-colors hover:bg-background focus:outline-hidden focus-visible:ring-2 focus-visible:ring-ring'
 
 type HistoryNavProps = {
   className?: string

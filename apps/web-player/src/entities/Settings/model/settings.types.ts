@@ -17,6 +17,8 @@ export type SettingsSnapshot = {
   /** Library and display */
   compactLibrary: boolean
   nowPlayingPanel: boolean
+  /** Keyboard: device-only, never synced to the account. */
+  singleKeyShortcuts: boolean
 }
 
 export type SettingsKey = keyof SettingsSnapshot

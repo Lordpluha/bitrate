@@ -34,7 +34,7 @@ export const ActivityPopover = () => {
     <Popover onOpenChange={setIsOpen} open={isOpen}>
       <PopoverTrigger
         aria-label={t('activity.title')}
-        className="rounded-full p-2 text-muted-foreground transition-colors hover:bg-surface hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        className="rounded-full p-2 text-muted-foreground transition-colors hover:bg-surface hover:text-foreground focus:outline-hidden focus-visible:ring-2 focus-visible:ring-ring"
       >
         <MembersIcon className="size-5 xl:size-4.5" />
       </PopoverTrigger>

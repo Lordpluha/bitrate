@@ -50,7 +50,7 @@ export const ArtistPopularTrackRow = ({
       <button
         aria-current={isActive ? 'true' : undefined}
         aria-label={t('common.playName', { name: track.title })}
-        className="absolute inset-0 z-0 rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
+        className="absolute inset-0 z-0 rounded-lg outline-hidden focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
         onClick={onPlay}
         type="button"
       />

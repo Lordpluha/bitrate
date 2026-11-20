@@ -54,14 +54,14 @@ export const PlaylistEditForm = ({
     <div className="border-b border-border px-4 py-4 sm:px-6">
       <form className="grid max-w-160 gap-3" onSubmit={handleSubmit}>
         <input
-          className="h-10 rounded-md bg-surface px-3 text-sm text-foreground outline-none focus:ring-2 focus:ring-white/30"
+          className="h-10 rounded-md bg-surface px-3 text-sm text-foreground outline-hidden focus:ring-2 focus:ring-white/30"
           maxLength={80}
           onChange={(event) => setTitle(event.target.value)}
           required
           value={title}
         />
         <textarea
-          className="min-h-20 rounded-md bg-surface px-3 py-2 text-sm text-foreground outline-none focus:ring-2 focus:ring-white/30"
+          className="min-h-20 rounded-md bg-surface px-3 py-2 text-sm text-foreground outline-hidden focus:ring-2 focus:ring-white/30"
           maxLength={240}
           onChange={(event) => setDescription(event.target.value)}
           placeholder={t('playlist.description')}

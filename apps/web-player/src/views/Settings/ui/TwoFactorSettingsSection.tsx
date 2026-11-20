@@ -45,7 +45,7 @@ export const TwoFactorSettingsSection = () => {
           </label>
           <input
             autoComplete="one-time-code"
-            className="h-10 rounded-md border border-border bg-background px-3 text-sm text-foreground outline-none placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring"
+            className="h-10 rounded-md border border-border bg-background px-3 text-sm text-foreground outline-hidden placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring"
             id="enable-two-factor-code"
             inputMode="numeric"
             maxLength={6}
@@ -77,7 +77,7 @@ export const TwoFactorSettingsSection = () => {
           </label>
           <input
             autoComplete="one-time-code"
-            className="h-10 rounded-md border border-border bg-background px-3 text-sm text-foreground outline-none placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring"
+            className="h-10 rounded-md border border-border bg-background px-3 text-sm text-foreground outline-hidden placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring"
             id="disable-two-factor-code"
             inputMode="numeric"
             maxLength={6}
