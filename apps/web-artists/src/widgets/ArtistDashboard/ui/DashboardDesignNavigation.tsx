@@ -91,7 +91,7 @@ export function DashboardDesignNavigation({
   const pathname = useLocation({ select: (location) => location.pathname })
   const { nav, pill } = useNavigationPill(activeSection(pathname))
   const itemClass = cn(
-    'artist-workspace-nav-item flex min-h-11 items-center gap-3 rounded-lg border border-transparent px-3.5 py-2 text-left text-sm font-normal text-text-secondary hover:bg-secondary hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring',
+    'artist-workspace-nav-item flex min-h-11 items-center gap-3 rounded-lg border border-transparent px-3.5 py-2 text-left text-sm font-normal text-text-secondary hover:bg-secondary hover:text-foreground focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring',
     compact && 'justify-center',
   )
 
