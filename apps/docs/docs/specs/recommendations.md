@@ -35,21 +35,32 @@ Python HTTP service: the worker never serves requests; real-time model training.
 
 ### Signals
 
-- The player reports a playback event when a play ends, is skipped or is replaced. Each event
-  carries the track, listened milliseconds, the track duration, completed or skipped, and the
-  source context: `playlist | album | artist | search | library | radio | autoplay | mood |
-  generated_playlist | jam | connect`, with the context id where it has one.
-- Events go to an append-only table partitioned by month. Raw events are kept for 13 months;
-  older partitions are dropped. Per-user and per-track aggregates and trained vectors stay.
-- Taste weight: plays in `privateSession` produce no taste signal (they still count in artist
-  play statistics). In a Jam, tracks queued by other people count at reduced weight. Plays the
-  system chose (autoplay, radio, mood, generated playlists) count less than plays the listener
-  chose. A skip within the first 30 s is a negative signal.
+- The player reports a playback event when a play ends, is skipped or is stopped
+  (`POST /me/playback-events`). Each event carries a client play id, the track, start and end
+  times, listened milliseconds, how it ended (`COMPLETED | SKIPPED | STOPPED`) and the source:
+  `PLAYLIST | ALBUM | ARTIST | SEARCH | LIBRARY | HOME | CHART | HISTORY | RADIO | AUTOPLAY |
+  MOOD | GENERATED_PLAYLIST | JAM | OTHER`, with the context id where it has one. The duration
+  comes from the catalogue, not the client. A retried report with the same play id is stored
+  once. A report that ends more than 5 minutes in the future or started over 7 days ago is
+  refused.
+- Listening history is unchanged: it is still recorded when a play starts and feeds history,
+  charts, counts and friend activity. Events are a separate, richer signal.
+- Events go to an append-only table (`PlaybackEvent`). Raw events are kept for 13 calendar
+  months; a daily job deletes older ones in batches. Per-user and per-track aggregates and
+  trained vectors stay. Not partitioned: Prisma reads partitions as drift and would generate
+  migrations dropping them, and batched deletes suffice at this scale.
+- Taste weight, fixed when the event is stored: 1 for a play the listener chose; 0.5 for plays
+  the system chose (radio, autoplay, mood, generated mixes) and for Jam tracks someone else
+  queued. During a private session nothing is stored at all, as with listening history. A skip
+  within the first 30 s is a negative signal (applied when signals are read, stage 2).
 - Explicit feedback: "Not interested" on a track or an artist hides it from every recommendation
-  surface for that listener. "Don't use for my taste" on a playlist or a single play removes it
-  from the taste profile. Likes and follows keep their current meaning as positive signals.
+  surface for that listener (today: "Made For You"). "Don't use for my taste" on a playlist, an
+  album or a track removes plays of it, or started from it, from the taste profile; it applies
+  when signals are read, so it also covers past plays and can be undone. Likes and follows keep
+  their current meaning as positive signals.
 - Impressions (what was shown, on which surface, at which position, with which reason) and the
-  resulting actions (played, saved, skipped, "Not interested") are logged.
+  resulting actions (played, saved, skipped, "Not interested") are logged. This lands with the
+  serving module in stage 2, which issues the id of each served list.
 
 ### Serving
 
@@ -107,10 +118,10 @@ audio files and anonymous user ids.
 
 | ID | Observable criterion | Verification | Result / limitation |
 |---|---|---|---|
-| AC-1 | Every environment's database has the `vector` extension; existing volumes keep valid indexes | Image built and smoke-tested locally and in `postgres_image.yml`; an alpine-initialised volume attached to the new image passed `bt_index_check`; all migrations applied through the CI compose step | Stage 0 — done locally 2026-11-10; CI pending |
-| AC-2 | The player reports listened ms, completion or skip, and source context for every play | Integration test on the events endpoint; player unit test | Pending |
-| AC-3 | Private-session plays never reach the taste profile; Jam and system-chosen plays are down-weighted | Unit tests of the weighting | Pending |
-| AC-4 | "Not interested" hides the item from every surface; "Don't use for my taste" removes it from the profile | API integration tests across surfaces | Pending |
+| AC-1 | Every environment's database has the `vector` extension; existing volumes keep valid indexes | Image built and smoke-tested locally and in `postgres_image.yml`; an alpine-initialised volume attached to the new image passed `bt_index_check`; all migrations applied through the CI compose step | Stage 0 — done; CI green on #519 |
+| AC-2 | The player reports listened ms, completion or skip, and source context for every play | Integration test on the events endpoint; player unit test | API side: `recommendations.controller.int-spec.ts`, `playback-events.service.unit-spec.ts`. Player reporting pending |
+| AC-3 | Private-session plays never reach the taste profile; Jam and system-chosen plays are down-weighted | Unit tests of the weighting | `taste-weight.unit-spec.ts`, `playback-events.service.unit-spec.ts` |
+| AC-4 | "Not interested" hides the item from every surface; "Don't use for my taste" removes it from the profile | API integration tests across surfaces | API and "Made For You": `taste.service.unit-spec.ts`, `discovery.service.unit-spec.ts`. Exclusions take effect when stage 2 reads signals; web-player UI pending |
 | AC-5 | "Made For You", similar tracks and artists, and radio/autoplay come from co-listening, not genre overlap, and never return filtered items | Integration tests on seeded listening data | Pending |
 | AC-6 | About 15 % of slots are exploration; no artist exceeds the cap in a list | Unit tests on the ranker | Pending |
 | AC-7 | Every recommended item has a reason the UI can show as "Why this?" | Contract check plus web-player test | Pending |
@@ -120,7 +131,7 @@ audio files and anonymous user ids.
 | AC-11 | Weekly and daily mixes regenerate on schedule | Job tests | Pending |
 | AC-12 | Impressions and actions are logged; admin shows CTR and save rate and can change weights | Integration plus admin tests | Pending |
 | AC-13 | Artists see listeners reached through recommendation sources | web-artists test | Pending |
-| AC-14 | Raw events older than 13 months are removed; aggregates stay | Retention job test | Pending |
+| AC-14 | Raw events older than 13 months are removed; aggregates stay | Retention job test | `playback-events.service.unit-spec.ts`, `playback-events-retention.consumer.unit-spec.ts` (no aggregates exist before stage 2) |
 
 ## Decisions and approval
 
@@ -150,13 +161,15 @@ Open before the stages that need them:
 Each stage lands as its own PR chain (one workspace per PR, producer first).
 
 0. **Infrastructure** (AC-1): `infra/postgres` image (alpine + pgvector 0.8.7) in dev,
-   preprod, CI and prod; `postgres_image.yml`; migration `enable_pgvector`; ADR-0071.
-1. **Signals** (AC-2, AC-3, AC-4, AC-12 logging, AC-14): playback-event table with monthly
-   partitions and the endpoint (api); player reporting (player); "Not interested" and "Don't
-   use for my taste" (api, then web-player); impression logging; retention job.
-2. **Co-listening v1** (AC-5, AC-6, AC-7, AC-8): nightly BullMQ job building track similarity;
-   `recommendations` module with candidates, filters, ranker, diversity, exploration and
-   reasons; taste picker; replaces the genre-based feed and related artists.
+   CI and prod; `postgres_image.yml`; migration `enable_pgvector`; ADR-0071.
+1. **Signals** (AC-2, AC-3, AC-4, AC-14): `PlaybackEvent`, `NotInterested` and
+   `TasteExclusion` with their endpoints, "Not interested" applied to "Made For You", and the
+   retention job (api, with #519); then player reporting (player); then the "Not interested"
+   and "Don't use for my taste" UI (web-player).
+2. **Co-listening v1** (AC-5, AC-6, AC-7, AC-8, AC-12 logging): nightly BullMQ job building
+   track similarity; serving in the `recommendations` module with candidates, filters (including
+   taste exclusions and early skips), ranker, diversity, exploration and reasons; impression and
+   action logging; taste picker; replaces the genre-based feed and related artists.
 3. **Audio analysis** (AC-9): `apps/ml` worker, `analyze-audio` after publish, backfill, audio
    similarity as a candidate source.
 4. **Mood and generated playlists** (AC-10, AC-11): mood features in ranking, the mood pad
