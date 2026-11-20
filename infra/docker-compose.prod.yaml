@@ -503,7 +503,7 @@ services:
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       # Templates, not conf.d: the image's entrypoint renders ${DOMAIN} into conf.d at start,
-      # so conf.d must stay writable and must not also carry the preprod HTTP-only server.
+      # so conf.d must stay writable and must not also carry the dev HTTP-only server.
       - ./nginx/templates:/etc/nginx/templates:ro
       - ./nginx/snippets:/etc/nginx/snippets:ro
       # Blanks out the image's stock default.conf, which sorts before the rendered prod.conf

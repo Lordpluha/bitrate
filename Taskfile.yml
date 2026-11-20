@@ -1,7 +1,7 @@
 version: '3'
 
 vars:
-  # The dev/preprod stacks ask for no env file. Every variable in them is declared with a
+  # The dev stack asks for no env file. Every variable in them is declared with a
   # `:-default`, so they come up on a clean checkout. `--env-file .env` used to be passed
   # here; compose treats a missing --env-file as a hard error, so once the repository stopped
   # carrying a root .env that flag made every task below fail before it started.
@@ -10,11 +10,11 @@ vars:
   # default (`POSTGRES_PORT=5433 task infra:up`). Per-app .env files under apps/* configure
   # an app run natively; deploy and CI values come from GitHub environment secrets.
   #
-  # Day-to-day Docker environment despite the "preprod" file name: api,
-  # web-player, web-artists, admin and the infra services, plus the
-  # profile-gated mobile/desktop/docs/nginx. `dev:*`, `db:*`, `shell:*` and
-  # `mobile:*`/`desktop:*` all target this file.
-  DC_DEV: docker compose -f infra/docker-compose.preprod.yaml
+  # One compose file for local development. DC_DEV adds the `apps` profile — api, worker,
+  # admin-api, web-player, web-artists and admin in containers on top of the infra
+  # services; mobile/desktop/docs/nginx/observability stay behind their own profiles.
+  # `dev:*`, `db:*`, `shell:*` and `mobile:*`/`desktop:*` all use it.
+  DC_DEV: docker compose -f infra/docker-compose.dev.yaml --profile apps
   # prod KEEPS --env-file, and that is not an inconsistency. It defaults nothing on purpose
   # (DOMAIN, DATABASE_URL, JWT_SECRET, POSTGRES_*, REDIS_PASSWORD, WEB_HOST, NEXT_PUBLIC_*),
   # and it never runs from a developer checkout: deploy_reusable.yml renders those values
@@ -23,7 +23,8 @@ vars:
   # on the target host, not a repository file. Dropping --env-file here would make compose
   # look for infra/.env, find nothing, and fail every production deploy.
   DC_PROD: docker compose --env-file .env -f infra/docker-compose.prod.yaml
-  # Infrastructure only — no application containers. Used by `infra:*`.
+  # The same file without a profile: infrastructure only, for apps run natively with
+  # `pnpm dev`. Used by `infra:*`.
   DC_INFRA: docker compose -f infra/docker-compose.dev.yaml
 
 tasks:

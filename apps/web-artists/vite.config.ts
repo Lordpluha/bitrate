@@ -9,7 +9,7 @@ export default defineConfig({
     port: 3002,
     /**
      * `next dev` bound 0.0.0.0 by default; Vite binds localhost, which makes the dev container
-     * in docker-compose.preprod.yaml unreachable from the host. Keep this.
+     * in docker-compose.dev.yaml unreachable from the host. Keep this.
      */
     host: true,
   },

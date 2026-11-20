@@ -11,11 +11,11 @@ const LOCAL_DATABASE_HOSTS = new Set([
   'localhost',
   '127.0.0.1',
   '::1',
-  /** `infra/docker-compose.dev.yaml` / `infra/docker-compose.preprod.yaml` service name. */
+  /** `infra/docker-compose.dev.yaml` service name. */
   'postgres',
   /** `infra/docker-compose.dev.yaml`'s test-database service name. */
   'postgres_test',
-  /** `infra/docker-compose.preprod.yaml`'s `postgres` container name — also a valid DNS alias
+  /** `infra/docker-compose.dev.yaml`'s `postgres` container name — also a valid DNS alias
    * on the compose network. */
   'bitrate-postgres',
 ])

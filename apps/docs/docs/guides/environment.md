@@ -28,8 +28,8 @@ sidebar_position: 4
 | Одно приложение нативно (`pnpm dev`) | Собственный `.env` приложения, из его же шаблона в `apps/<app>/` |
 | Docker-стеки (`task infra:up`, `task dev:up`) | Значения `:-default`, зашитые в `infra/docker-compose.*.yaml` |
 
-В `docker-compose.dev.yaml` и `docker-compose.preprod.yaml` **у каждой** переменной объявлен
-default, поэтому оба стека поднимаются на чистом клоне без единого env-файла. Чтобы
+В `docker-compose.dev.yaml` **у каждой** переменной объявлен default, поэтому стек
+поднимается на чистом клоне без единого env-файла. Чтобы
 переопределить значение, экспортируй его в шелле — переменная окружения выигрывает у default:
 
 ```bash
@@ -251,7 +251,7 @@ Per-app файлы до контейнера тоже не доходят: ни 
 - `EXPO_NO_DOTENV=1` отключает загрузку целиком.
 - Валидации нет.
 
-Контейнер Expo в `docker-compose.preprod.yaml` получает `NODE_ENV`,
+Контейнер Expo в `docker-compose.dev.yaml` получает `NODE_ENV`,
 `EXPO_DEVTOOLS_LISTEN_ADDRESS` и `REACT_NATIVE_PACKAGER_HOSTNAME` — это служебные настройки
 Metro, а не конфигурация приложения.
 
@@ -270,10 +270,10 @@ Metro, а не конфигурация приложения.
 | `DOMAIN` | prod | Домен для nginx и TLS |
 | `IMAGE_TAG` | prod | Тег образов, к которому привязан откат |
 | `POSTGRES_USER` · `POSTGRES_PASSWORD` · `POSTGRES_DB` · `POSTGRES_PORT` | все стеки | Параметры контейнера Postgres |
-| `SHADOW_DATABASE_URL` | preprod | Shadow-база для миграций Prisma |
-| `API_PORT` · `WEB_PORT` · `WEB_ARTISTS_PORT` · `DOCS_PORT` · `DESKTOP_PORT` | preprod | Проброс портов |
-| `MOBILE_HOST` · `MOBILE_METRO_PORT` · `MOBILE_METRO_UI_PORT` · `MOBILE_WEB_PORT` · `MOBILE_DEVTOOLS_PORT` | preprod | Сервисы Expo за профилем |
-| `NGINX_HTTP_PORT` · `NGINX_HTTPS_PORT` | preprod | Порты reverse-proxy |
+| `SHADOW_DATABASE_URL` | dev (Docker) | Shadow-база для миграций Prisma |
+| `API_PORT` · `WEB_PORT` · `WEB_ARTISTS_PORT` · `DOCS_PORT` · `DESKTOP_PORT` | dev (Docker) | Проброс портов |
+| `MOBILE_HOST` · `MOBILE_METRO_PORT` · `MOBILE_METRO_UI_PORT` · `MOBILE_WEB_PORT` · `MOBILE_DEVTOOLS_PORT` | dev (Docker) | Сервисы Expo за профилем |
+| `NGINX_HTTP_PORT` · `NGINX_HTTPS_PORT` | dev (Docker) | Порты reverse-proxy |
 
 ## Пустое значение — не то же самое, что отсутствие
 
