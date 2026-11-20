@@ -1,6 +1,6 @@
 # ADR-0050: SeaweedFS single-node object storage for audio
 
-Status: Accepted
+Status: Accepted — for production, superseded by [ADR-0072](./0072-cloudflare-r2-production-storage-and-backups.md) (Cloudflare R2, which also closes the no-backup risk); local development and CI keep SeaweedFS.
 
 Date: 2026-10-01
 
