@@ -28,8 +28,8 @@ glibc server changes the sort order under every existing btree index on text (`e
 - The database runs on our own image, `infra/postgres/Dockerfile`: `postgres:16-alpine` with
   pgvector compiled from a pinned, checksummed release tarball. Same base and libc as before, so
   existing volumes attach unchanged.
-- Dev and preprod build that Dockerfile through compose. CI's API tests start Postgres from the
-  preprod definition, which uses the same Dockerfile. Production pulls
+- Development builds that Dockerfile through `infra/docker-compose.dev.yaml`. CI's API tests
+  start Postgres from the same definition, so they run the same Dockerfile. Production pulls
   `ghcr.io/lordpluha/bitrate/postgres:16-pgvector<version>`, published by
   `.github/workflows/postgres_image.yml`.
 - The production database image is versioned on its own tag and is not rebuilt per release. A

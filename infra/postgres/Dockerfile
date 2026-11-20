@@ -1,4 +1,4 @@
-# PostgreSQL with the pgvector extension, used by every environment (dev, preprod, CI, prod).
+# PostgreSQL with the pgvector extension, used by every environment (dev, CI, prod).
 #
 # Built on the same postgres:16-alpine base the databases already run on, not on the upstream
 # pgvector/pgvector image: that one is Debian (glibc), and attaching an existing alpine (musl)

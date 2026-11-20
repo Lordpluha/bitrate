@@ -61,7 +61,7 @@ with `apps/web-player`; the rename happens at this app's boundary only, in three
 | Where | Line |
 |---|---|
 | `Dockerfile` | `ARG VITE_API_URL` in the **build** stage |
-| `infra/docker-compose.{preprod,prod}.yaml` | `VITE_API_URL: ${NEXT_PUBLIC_API_URL}` on the `web-artists` service |
+| `infra/docker-compose.{dev,prod}.yaml` | `VITE_API_URL: ${NEXT_PUBLIC_API_URL}` on the `web-artists` service |
 | `.github/workflows/{web_artists,security}_reusable.yml` | `VITE_API_URL=` build arg |
 
 Copy `.env.example` to `.env` for local work.
