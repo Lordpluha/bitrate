@@ -50,6 +50,8 @@ export interface ButtonProps
   extends ComponentProps<'button'>,
     Omit<VariantProps<typeof buttonVariants>, 'disabled'> {
   isLoading?: boolean
+  /** The spinner's accessible name while `isLoading`; pass a translated string. */
+  loadingLabel?: string
   asChild?: boolean
 }
 
@@ -57,6 +59,7 @@ export const Button = ({
   className,
   children,
   isLoading = false,
+  loadingLabel,
   disabled,
   variant,
   asChild = false,
@@ -73,7 +76,7 @@ export const Button = ({
       {...props}
     >
       <Slottable>{children}</Slottable>
-      {!asChild && isLoading && <Spinner />}
+      {!asChild && isLoading && <Spinner aria-label={loadingLabel} />}
     </Component>
   )
 }
