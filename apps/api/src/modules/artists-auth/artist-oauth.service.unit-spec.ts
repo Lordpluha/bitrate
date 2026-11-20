@@ -113,14 +113,76 @@ describe('ArtistOAuthService', () => {
       createdAt: new Date(),
       artist,
     } as never)
-    await expect(
-      findOrCreate('google', {
-        id: 'provider-1',
-        email: artist.email,
-        name: artist.username,
-      }),
-    ).rejects.toThrow(UnauthorizedException)
+    const failure = findOrCreate('google', {
+      id: 'provider-1',
+      email: artist.email,
+      name: artist.username,
+    })
+    await expect(failure).rejects.toThrow(UnauthorizedException)
+    await expect(failure).rejects.toMatchObject({ reason: 'account_unavailable' })
     expect(prisma.artistSession.create).not.toHaveBeenCalled()
+  })
+
+  describe('existing accounts with the same email', () => {
+    const profile = { id: 'provider-20', email: 'Owner@Example.com', name: 'Owner' }
+
+    beforeEach(() => {
+      prisma.artistOAuthAccount.findUnique.mockResolvedValue(null)
+    })
+
+    /** The provider vouches for the address and the artist already proved it owns it. */
+    it('links the provider to an artist whose email is verified and signs in', async () => {
+      prisma.artist.findFirst.mockResolvedValue(
+        buildArtist({ id: 'artist-20', emailVerifiedAt: new Date(), twoFactorEnabled: false }),
+      )
+      prisma.artistOAuthAccount.create.mockResolvedValue({} as never)
+      prisma.artistSession.create.mockResolvedValue({} as never)
+      token.generateAccessToken.mockResolvedValue('access-token')
+      token.generateRefreshToken.mockResolvedValue('refresh-token')
+
+      await expect(findOrCreate('google', profile)).resolves.toEqual(
+        expect.objectContaining({ access_token: 'access-token' }),
+      )
+      expect(prisma.artistOAuthAccount.create).toHaveBeenCalledWith({
+        data: { artistId: 'artist-20', provider: 'google', providerAccountId: 'provider-20' },
+      })
+      expect(prisma.artist.create).not.toHaveBeenCalled()
+    })
+
+    it('keeps 2FA in front of an artist it links by email', async () => {
+      prisma.artist.findFirst.mockResolvedValue(
+        buildArtist({ id: 'artist-21', emailVerifiedAt: new Date(), twoFactorEnabled: true }),
+      )
+      prisma.artistOAuthAccount.create.mockResolvedValue({} as never)
+      token.generateTwoFAPendingToken.mockResolvedValue('pending-token')
+
+      await expect(findOrCreate('facebook', profile)).resolves.toEqual({
+        requires2fa: true,
+        pendingToken: 'pending-token',
+      })
+      expect(prisma.artistSession.create).not.toHaveBeenCalled()
+    })
+
+    it('refuses to link an artist whose email is not verified', async () => {
+      prisma.artist.findFirst.mockResolvedValue(
+        buildArtist({ id: 'artist-22', emailVerifiedAt: null }),
+      )
+
+      await expect(findOrCreate('google', profile)).rejects.toMatchObject({
+        reason: 'account_exists',
+      })
+      expect(prisma.artistOAuthAccount.create).not.toHaveBeenCalled()
+      expect(prisma.artistSession.create).not.toHaveBeenCalled()
+    })
+
+    it('refuses a soft-deleted artist with that email', async () => {
+      prisma.artist.findFirst.mockResolvedValue(buildArtist({ deletedAt: new Date() }))
+
+      await expect(findOrCreate('google', profile)).rejects.toMatchObject({
+        reason: 'account_unavailable',
+      })
+      expect(prisma.artistOAuthAccount.create).not.toHaveBeenCalled()
+    })
   })
 
   it('loads only the sign-in fields of a linked artist, never its password hash', async () => {
@@ -162,6 +224,9 @@ describe('ArtistOAuthService', () => {
           },
         ),
       ).rejects.toThrow('already exists')
+      await expect(
+        findOrCreate('google', { ...profile, email: 'New@Example.com' }),
+      ).rejects.toMatchObject({ reason: 'account_exists' })
       expect(prisma.artist.findFirst).toHaveBeenCalledWith({
         where: { email: { equals: 'New@Example.com', mode: 'insensitive' } },
       })

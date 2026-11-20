@@ -10,9 +10,9 @@ import {
   setPendingTwoFactorCookie,
 } from '@common/auth-cookies'
 import { type AppConfig, AUTH_ROUTE_THROTTLE } from '@common/config'
-import { LegalAcceptanceRequiredError } from '@common/legal'
+import { oauthErrorCode } from '@modules/auth-core'
 import { TokenService } from '@modules/tokens/token.service'
-import { Controller, Get, Query, Req, Res } from '@nestjs/common'
+import { Controller, Get, Logger, Query, Req, Res } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { ApiTags } from '@nestjs/swagger'
 import { Throttle } from '@nestjs/throttler'
@@ -26,11 +26,16 @@ import {
 } from './decorators'
 import { sessionClient } from './session-client'
 
+/** What the provider sent back besides the state: a code, or an error when the user backed out. */
+type OAuthCallback = { code?: string; providerError?: string }
+
 /** Handles the artist-facing social sign-in round trips. */
 @ApiTags('Artists Auth')
 @Throttle(AUTH_ROUTE_THROTTLE)
 @Controller({ path: 'artists/auth/oauth', version: '1' })
 export class ArtistsOAuthController {
+  private readonly logger = new Logger(ArtistsOAuthController.name)
+
   constructor(
     private oauthService: ArtistOAuthService,
     private tokenService: TokenService,
@@ -59,13 +64,19 @@ export class ArtistsOAuthController {
   @OAuthGoogleCallbackSwagger()
   @Get('google/callback')
   async googleCallback(
-    @Query('code') code: string,
+    @Query('code') code: string | undefined,
     @Query('state') state: string,
     @Req() req: Request,
     @Res() res: Response,
+    @Query('error') providerError?: string,
   ) {
-    return await this.completeOAuth(req, res, state, (acceptance) =>
-      this.oauthService.handleGoogleCallback(code, acceptance, sessionClient(req)),
+    return await this.completeOAuth(
+      req,
+      res,
+      state,
+      { code, providerError },
+      (authCode, acceptance) =>
+        this.oauthService.handleGoogleCallback(authCode, acceptance, sessionClient(req)),
     )
   }
 
@@ -91,13 +102,19 @@ export class ArtistsOAuthController {
   @OAuthFacebookCallbackSwagger()
   @Get('facebook/callback')
   async facebookCallback(
-    @Query('code') code: string,
+    @Query('code') code: string | undefined,
     @Query('state') state: string,
     @Req() req: Request,
     @Res() res: Response,
+    @Query('error') providerError?: string,
   ) {
-    return await this.completeOAuth(req, res, state, (acceptance) =>
-      this.oauthService.handleFacebookCallback(code, acceptance, sessionClient(req)),
+    return await this.completeOAuth(
+      req,
+      res,
+      state,
+      { code, providerError },
+      (authCode, acceptance) =>
+        this.oauthService.handleFacebookCallback(authCode, acceptance, sessionClient(req)),
     )
   }
 
@@ -111,22 +128,31 @@ export class ArtistsOAuthController {
     buildAuthUrl: (state: string) => string,
   ) {
     const state = this.oauthService.generateState()
+    let authUrl: string
+    try {
+      authUrl = buildAuthUrl(state)
+    } catch (err) {
+      return this.failOAuth(res, err)
+    }
     setOAuthStateCookie(res, state)
     setOAuthAcceptCookie(res, accepted)
-    return res.redirect(buildAuthUrl(state))
+    return res.redirect(authUrl)
   }
 
   /**
    * Verifies the echoed OAuth state before exchanging the authorization code.
    *
    * A mismatch means the callback did not come from the browser that started
-   * the flow, so it is bounced back to login rather than exchanged.
+   * the flow, so it is bounced back to login rather than exchanged. A callback
+   * without a code means the artist backed out at the provider. Every failure
+   * ends on the login page with an `?error=` code, never as an error body.
    */
   private async completeOAuth(
     req: Request,
     res: Response,
     state: string,
-    exchange: (acceptance: OAuthAcceptance) => Promise<LoginResult>,
+    callback: OAuthCallback,
+    exchange: (code: string, acceptance: OAuthAcceptance) => Promise<LoginResult>,
   ) {
     const host = this.config.getOrThrow('web').artistHost
 
@@ -138,22 +164,31 @@ export class ArtistsOAuthController {
     const acceptance = readOAuthAcceptance(req.cookies)
     clearOAuthAcceptCookie(res)
 
-    let result: LoginResult
-    try {
-      result = await exchange(acceptance)
-    } catch (err) {
-      if (err instanceof LegalAcceptanceRequiredError) {
-        return res.redirect(`${host}/login?error=legal_acceptance_required`)
-      }
-      throw err
+    if (callback.providerError || !callback.code) {
+      return res.redirect(`${host}/login?error=oauth_cancelled`)
     }
 
+    let result: LoginResult
+    try {
+      result = await exchange(callback.code, acceptance)
+    } catch (err) {
+      return this.failOAuth(res, err)
+    }
+
+    // The artist portal asks for the code on its login page rather than at a route of its own.
     if ('requires2fa' in result) {
       setPendingTwoFactorCookie(res, result.pendingToken)
-      return res.redirect(`${host}/login/2fa`)
+      return res.redirect(`${host}/login?twoFactor=1`)
     }
 
     this.tokenService.setAuthCookies(res, 'artist', result.access_token, result.refresh_token)
     return res.redirect(host)
+  }
+
+  /** Sends the browser back to login with the failure's code; unexpected failures are logged. */
+  private failOAuth(res: Response, err: unknown) {
+    const code = oauthErrorCode(err)
+    if (code === 'oauth_failed') this.logger.error('Social sign-in failed', err)
+    return res.redirect(`${this.config.getOrThrow('web').artistHost}/login?error=${code}`)
   }
 }

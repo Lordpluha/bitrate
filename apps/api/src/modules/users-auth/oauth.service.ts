@@ -6,9 +6,10 @@ import {
   type OAuthProfile,
   type OAuthProvider,
   OAuthProviderClient,
+  OAuthSignInError,
   oauthUsername,
 } from '@modules/auth-core'
-import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/common'
+import { ConflictException, Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { Prisma } from '@prisma/client'
 import { UserAuthService } from './user-auth.service'
@@ -82,21 +83,26 @@ export class OAuthService {
     })
 
     if (existing) {
-      if (existing.user.deletedAt)
-        throw new UnauthorizedException({ message: 'Invalid credentials' })
+      if (existing.user.deletedAt) {
+        throw new OAuthSignInError('account_unavailable', 'Invalid credentials')
+      }
       return this.auth.signInVerified(existing.user)
     }
 
-    // If an account with this email already has a password, refuse auto-linking.
-    // The user must log in with their password first and link from profile settings.
+    // An account with this email is linked to the provider only once it has verified the
+    // address: the provider vouches for the email too, so both belong to the same person.
+    // An unverified address proves nothing about who registered it, so that account is left
+    // alone and the user is told to sign in with the password instead. 2FA still applies,
+    // because the linked account signs in through the same path as a password login.
     // `deletedAt: null` — a soft-deleted account's email is treated as free, matching every
     // other lookup this module makes; see `UserAuthGuard` for the request-time half.
     const existingUser = await this.prisma.user.findFirst({
       where: { email: { equals: profile.email, mode: 'insensitive' }, deletedAt: null },
     })
-    if (existingUser?.password) {
-      throw new ConflictException(
-        'An account with this email already exists. Log in with your password to link OAuth.',
+    if (existingUser && !existingUser.emailVerifiedAt) {
+      throw new OAuthSignInError(
+        'account_exists',
+        'An account with this email already exists. Log in with your password and verify your email to link OAuth.',
       )
     }
 

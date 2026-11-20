@@ -10,9 +10,10 @@ import {
   type OAuthProfile,
   type OAuthProvider,
   OAuthProviderClient,
+  OAuthSignInError,
   oauthUsername,
 } from '@modules/auth-core'
-import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/common'
+import { ConflictException, Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { Prisma } from '@prisma/client'
 import { ArtistsAuthService } from './artists-auth.service'
@@ -99,21 +100,31 @@ export class ArtistOAuthService {
 
     if (existing) {
       if (existing.artist.deletedAt) {
-        throw new UnauthorizedException('Artist account is unavailable')
+        throw new OAuthSignInError('account_unavailable', 'Artist account is unavailable')
       }
       return this.auth.signInVerified(existing.artist, client)
     }
 
+    // An artist with this email is linked to the provider only once it has verified the
+    // address: the provider vouches for the email too, so both belong to the same person.
+    // 2FA still applies, because the linked artist signs in through the password-login path.
     const existingArtist = await this.prisma.artist.findFirst({
       where: { email: { equals: profile.email, mode: 'insensitive' } },
     })
     if (existingArtist) {
       if (existingArtist.deletedAt) {
-        throw new UnauthorizedException('Artist account is unavailable')
+        throw new OAuthSignInError('account_unavailable', 'Artist account is unavailable')
       }
-      throw new ConflictException(
-        'An account with this email already exists. Log in to your existing account to link OAuth.',
-      )
+      if (!existingArtist.emailVerifiedAt) {
+        throw new OAuthSignInError(
+          'account_exists',
+          'An account with this email already exists. Log in with your password and verify your email to link OAuth.',
+        )
+      }
+      await this.prisma.artistOAuthAccount.create({
+        data: { artistId: existingArtist.id, provider, providerAccountId: profile.id },
+      })
+      return this.auth.signInVerified(existingArtist, client)
     }
 
     // A brand-new account is only created once both documents were accepted.
