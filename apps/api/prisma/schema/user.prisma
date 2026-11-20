@@ -36,6 +36,9 @@ model User {
   likedAlbums            UserLikedAlbum[]
   likedPlaylists         UserLikedPlaylist[]
   listeningHistory       ListeningHistory[]
+  playbackEvents         PlaybackEvent[]
+  notInterested          NotInterested[]
+  tasteExclusions        TasteExclusion[]
   playlistTracksAdded    PlaylistTrack[]
   following              UserFollow[]            @relation("UserFollowing")
   followers              UserFollow[]            @relation("UserFollowers")

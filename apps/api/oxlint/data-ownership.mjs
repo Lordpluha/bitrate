@@ -71,6 +71,10 @@ export const DATA_OWNERS = {
 
   listeningHistory: ['history'],
   searchHistory: ['search'],
+  /** Recommendation signals: finished plays and the listener's explicit taste feedback. */
+  playbackEvent: ['recommendations'],
+  notInterested: ['recommendations'],
+  tasteExclusion: ['recommendations'],
   /** `notifications` creates rows from queued domain events; `me` marks them read. */
   notification: ['me', 'notifications'],
   playerDevice: ['me'],

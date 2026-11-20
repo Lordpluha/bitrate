@@ -147,6 +147,11 @@ by the Expo workflow action.
 - docs_reusable.yml — Docusaurus typecheck plus the apps/docs/Dockerfile
   (target: production) image build and publish.
 
+### Database image
+- postgres_image.yml — builds infra/postgres (postgres:16-alpine + pgvector), smoke-tests the
+  extension, scans it and pushes it to GHCR under the tag infra/docker-compose.prod.yaml pins.
+  Not part of a release: the tag is immutable unless re-published by hand (ADR-0071).
+
 ### Release (changesets)
 
 Four workflows, and one claim holds the whole thing together: **a human merging the release pull
@@ -371,7 +376,7 @@ SmartScreen warn on first launch.
 - monitoring_health_reusable.yml / monitoring_dependency_reusable.yml / monitoring_ssl_reusable.yml — smaller reusable monitoring blocks.
 
 ## Structure Summary
-- Entry workflows: admin.yml, api.yml, pr_scope.yml, desktop.yml, docs.yml, mobile.yml, player.yml, ui_react.yml, web_player.yml, web_artists.yml, security.yml, monitoring.yml, release.yml, release_publish.yml, release_images.yml, deploy.yml.
+- Entry workflows: admin.yml, api.yml, postgres_image.yml, pr_scope.yml, desktop.yml, docs.yml, mobile.yml, player.yml, ui_react.yml, web_player.yml, web_artists.yml, security.yml, monitoring.yml, release.yml, release_publish.yml, release_images.yml, deploy.yml.
 - Reusable workflows: all *_reusable.yml files at the top level of .github/workflows.
 - Note: GitHub Actions requires local reusable workflows referenced via uses: $/.github/workflows/... to be stored at the top level of .github/workflows.
 
@@ -388,6 +393,10 @@ on the VPS. The develop-branch reference for each:
 | admin | `ghcr.io/lordpluha/bitrate/admin:develop` | admin.yml |
 | docs | `ghcr.io/lordpluha/bitrate/docs:develop` | docs.yml |
 | storybook | `ghcr.io/lordpluha/bitrate/storybook:develop` | storybook.yml |
+
+The database is the one infrastructure image of our own: `ghcr.io/lordpluha/bitrate/postgres`
+under a fixed `16-pgvector<version>` tag, built by postgres_image.yml and not by a release, so
+a deploy only restarts the database when that tag is bumped (ADR-0071).
 
 Nothing else is published as an image. mobile-web is built and smoke-tested locally in
 mobile.yml but not pushed; build caches live under `cache/<app>:buildcache` and only develop
