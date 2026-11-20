@@ -4,7 +4,7 @@ import { z } from 'zod'
 import { RECOMMENDATION_VALIDATION } from '../errors'
 
 /** Longer than any track plus replays within one play; anything above is a broken client. */
-export const MAX_LISTENED_MS = 6 * 60 * 60 * 1000
+const MAX_LISTENED_MS = 6 * 60 * 60 * 1000
 
 export const RecordPlaybackEventSchema = z
   .strictObject({

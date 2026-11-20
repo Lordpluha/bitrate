@@ -12,6 +12,3 @@ export const TASTE_EXCLUSION_KINDS = {
   albums: 'ALBUM',
   tracks: 'TRACK',
 } as const satisfies Record<string, TasteExclusionType>
-
-export type NotInterestedKind = keyof typeof NOT_INTERESTED_KINDS
-export type TasteExclusionKind = keyof typeof TASTE_EXCLUSION_KINDS
