@@ -52,6 +52,24 @@ Requests carry artists' personal data (name, bio, profile text), and Bitrate ser
   AI applies to the release and the career
   ([vision](../strategy/vision.md#what-bitrate-deliberately-does-not-do)).
 
+### Provider due diligence (2026-11-20)
+
+Checked against official vendor pages on 2026-11-20. Re-check before a provider is switched on.
+
+| Provider | EU processing | DPA | No training | Verdict |
+|---|---|---|---|---|
+| Anthropic, first-party API | **No.** `inference_geo` offers only `us` and `global` ([data residency](https://platform.claude.com/docs/en/manage-claude/data-residency)). The same holds for the Anthropic-managed Google Cloud offering, and Microsoft Foundry offers only a US data zone | Yes, part of the Commercial Terms | Yes; retained 30 days | **Not allowed** |
+| Claude on Google Vertex AI, `eu` multi-region | **Yes** for Haiku, Sonnet and Opus 5.5. The `eu` endpoint keeps data in EU member states ([Vertex data residency](https://docs.cloud.google.com/vertex-ai/generative-ai/docs/learn/data-residency)). The `global` endpoint gives no guarantee | Google Cloud's DPA (Google is the processor) | Yes | **Allowed: the Claude route** |
+| Claude on Amazon Bedrock, `eu.` inference profile | Confirmed for Sonnet 5.5 only, when called from an EU-member region. Calls from London or Zurich can be routed outside the EU | AWS DPA | Yes | Possible alternative; not chosen |
+| Mistral, `api.eu.mistral.ai` | **Yes** for inference ([regional inference](https://docs.mistral.ai/inference/regional-inference)). The control plane is not regional, and Batch and Files are not available on the EU endpoint. Whether Large 4 and Small 4 are served there must be checked with `models.list` | Yes | Opt-out: must be switched off for the organization, and Labs or Preview models must not be used | **Allowed, with conditions** |
+| DeepL API Pro | **Not guaranteed.** DeepL chooses the processing location unless the Data Residency Add-On is bought | Yes | Yes; debug copies are kept up to 72 hours, and the free tier is excluded | **Not allowed** until the add-on is confirmed |
+
+Consequences for the defaults in the spec:
+
+- **Claude is called through Vertex AI's `eu` endpoint** with the `AnthropicVertex` client from the Anthropic SDK, so Google Cloud becomes a sub-processor. Vertex prices Claude separately from the first-party price list. Features that exist only on the first-party API, such as server-side refusal fallbacks, are replaced by the boundary's own fallback route.
+- **Mistral** stays the fallback on `api.eu.mistral.ai`. Before it is enabled, the training opt-out must be on and both models must be confirmed on that endpoint.
+- **Translation defaults to the LLM route.** The DeepL adapter can be built but stays disabled until EU processing is confirmed in writing.
+
 ## Consequences
 
 - Swapping or adding a model, or moving one task to a cheaper model, needs no change in a

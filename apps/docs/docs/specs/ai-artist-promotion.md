@@ -130,8 +130,11 @@ Stored per artist; each field can be overridden for one generation.
   | D | Moderation, validation, classification | Claude Haiku 5.5 | Mistral Small 4 |
 
 - **EU processing is a hard requirement.** A provider is enabled only with EU-region
-  processing, a DPA and no training on customer data. If the EU option for Claude is not
-  confirmed, Mistral becomes the default for A, B and D.
+  processing, a DPA and no training on customer data. Due diligence on 2026-11-20
+  ([ADR-0071](../architecture/0071-ai-provider-boundary.md#provider-due-diligence-2026-11-20))
+  found no EU option on Anthropic's own API, so **Claude is called through Google Vertex AI's
+  `eu` endpoint**. Mistral is used through `api.eu.mistral.ai` with training opted out. DeepL
+  stays disabled until EU processing is confirmed, so translation uses the LLM route.
 - Generation runs as BullMQ jobs on an `ai` queue in the worker service. The UI tracks
   progress over the existing socket.io connection with polling as a fallback. Tokens are
   not streamed in v1.
@@ -244,9 +247,11 @@ and run through `.claude/scripts/run-heavy.py`.
 
 1. **ADR-0071: AI provider boundary.** Task routing, EU-only providers, `AiUsage` accounting,
    the composition boundary, and the lint rule against direct SDK imports. Docs only.
-2. **Provider due diligence** (no code): confirm EU processing, DPA and no-training terms for
-   Anthropic and Mistral, and DeepL's language and glossary support. Record the outcome in the
-   ADR. Update the privacy policy's sub-processor list in the [privacy policy](../legal/privacy-policy.md).
+2. **Provider due diligence** (no code). **Done 2026-11-20**, recorded in ADR-0071: Claude
+   via Vertex AI `eu`, Mistral via `api.eu.mistral.ai`, DeepL disabled for now. Still open
+   before rollout (step 10): create the Google Cloud project with the `eu` endpoint, switch on
+   Mistral's training opt-out, confirm Large 4 and Small 4 on the EU endpoint, and add the
+   enabled providers to the sub-processor list in the [privacy policy](../legal/privacy-policy.md).
 3. **Eval bake-off.** 15–20 release fixtures (synthetic plus the owner's real releases),
    a runner script outside the production app, and an automatic grader (schema, grounding,
    glossary, length, LLM judge). Run only after the owner approves the budget. The resulting
