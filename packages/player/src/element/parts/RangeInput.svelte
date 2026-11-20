@@ -9,9 +9,12 @@
     step,
     progress,
     variant,
+    valueText,
     onInput,
   }: {
     label: string
+    /** What a screen reader says for the value, e.g. `1:23 of 3:45`, instead of the raw number. */
+    valueText: string
     value: number
     min: string | number
     max: string | number
@@ -24,6 +27,7 @@
 
 <input
   aria-label={label}
+  aria-valuetext={valueText}
   class={variant}
   {max}
   {min}
@@ -89,6 +93,19 @@
   input[type='range']:hover::-moz-range-thumb,
   input[type='range']:focus-visible::-moz-range-thumb {
     opacity: 1;
+  }
+
+  /** Forced colours drop the gradient fill and the hidden thumb; fall back to the native control. */
+  @media (forced-colors: active) {
+    input[type='range'] {
+      appearance: auto;
+      -webkit-appearance: auto;
+      background: none;
+    }
+
+    input[type='range']:focus-visible {
+      outline-color: Highlight;
+    }
   }
 
   .seek {
