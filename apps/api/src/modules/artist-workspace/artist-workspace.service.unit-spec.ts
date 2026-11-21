@@ -45,6 +45,19 @@ describe('ArtistWorkspaceService', () => {
     )
   })
 
+  it('returns stored grid coordinates next to the size', async () => {
+    const placed = [
+      { id: 'current-release', size: 'L' as const, columns: 6, rows: 4, x: 6, y: 3, hidden: false },
+    ]
+    prisma.artistWorkspaceLayout.findUnique.mockResolvedValue({
+      tiles: placed,
+      updatedAt: new Date('2026-11-12T10:00:00Z'),
+    } as never)
+    await expect(service.layout('artist-1', 'dashboard')).resolves.toMatchObject({
+      tiles: placed,
+    })
+  })
+
   it('treats a stored layout that no longer validates as the default', async () => {
     prisma.artistWorkspaceLayout.findUnique.mockResolvedValue({
       tiles: [{ id: 'x', size: 'XL', hidden: false }],
@@ -126,9 +139,46 @@ describe('SaveWorkspaceLayoutSchema', () => {
     for (const tile of [
       { id: 'activity', size: 'XL', hidden: false },
       { id: 'Activity!', size: 'S', hidden: false },
-      { id: 'activity', size: 'S', hidden: false, x: 1 },
+      { id: 'activity', size: 'S', hidden: false, z: 1 },
     ])
       expect(SaveWorkspaceLayoutSchema.safeParse({ tiles: [tile] }).success).toBe(false)
+  })
+
+  it('accepts grid coordinates and keeps layouts without them valid', () => {
+    const input = {
+      tiles: [
+        {
+          id: 'current-release',
+          size: 'M' as const,
+          columns: 6,
+          rows: 4,
+          x: 0,
+          y: 0,
+          hidden: false,
+        },
+        { id: 'activity', size: 'S' as const, columns: 1, rows: 2, x: 11, y: 199, hidden: true },
+        { id: 'listening', size: 'S' as const, hidden: false },
+      ],
+    }
+    expect(SaveWorkspaceLayoutSchema.parse(input)).toEqual(input)
+  })
+
+  it('rejects coordinates outside the grid', () => {
+    const tile = { id: 'activity', size: 'S', columns: 1, rows: 2, hidden: false }
+    for (const x of [-1, 12, 1.5, '3', null])
+      expect(SaveWorkspaceLayoutSchema.safeParse({ tiles: [{ ...tile, x }] }).success).toBe(false)
+    for (const y of [-1, 200, 0.5, '0', null])
+      expect(SaveWorkspaceLayoutSchema.safeParse({ tiles: [{ ...tile, y }] }).success).toBe(false)
+  })
+
+  it('rejects a tile that overflows the twelve columns', () => {
+    const tile = { id: 'activity', size: 'S', rows: 2, hidden: false, y: 0 }
+    expect(
+      SaveWorkspaceLayoutSchema.safeParse({ tiles: [{ ...tile, x: 6, columns: 6 }] }).success,
+    ).toBe(true)
+    const result = SaveWorkspaceLayoutSchema.safeParse({ tiles: [{ ...tile, x: 7, columns: 6 }] })
+    expect(result.success).toBe(false)
+    expect(result.error?.issues[0]?.message).toBe('validation.workspace.tile_overflows_grid')
   })
 
   it('rejects more tiles than any page has', () => {
