@@ -1,6 +1,7 @@
 import { pipeToResponse } from '@common/utils/stream'
 import type { UserEntity } from '@modules/users/entities'
 import { CurrentUser } from '@modules/users-auth/decorators/current-user.decorator'
+import { UserThrottlerGuard } from '@modules/users-auth/user-throttler.guard'
 import { UserAuth } from '@modules/users-auth/users-auth.guard'
 import {
   Body,
@@ -14,6 +15,7 @@ import {
   Query,
   Req,
   Res,
+  UseGuards,
 } from '@nestjs/common'
 import { ApiExtraModels, ApiTags } from '@nestjs/swagger'
 import { Throttle } from '@nestjs/throttler'
@@ -75,6 +77,8 @@ export class TrackPlaybackController {
   constructor(private trackPlaybackService: TrackPlaybackService) {}
 
   @OpenPlaySessionSwagger()
+  // Above @UserAuth: decorators apply bottom-up, so the auth guard runs first and sets req.user.
+  @UseGuards(UserThrottlerGuard)
   @UserAuth()
   @Throttle({ default: { ttl: 60_000, limit: 120 } })
   @Post(':id/play-sessions')

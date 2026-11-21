@@ -72,6 +72,7 @@ how to apply it day to day.
 | [0068](./0068-operator-api-process.md) | The operator API runs as its own process with its own contract, served from the admin panel's host with host-only staff cookies |
 | [0069](./0069-gsap-web-animation-standard.md) | GSAP is the only JavaScript animation library on web surfaces; CSS keeps hover, press and Base UI enter or exit |
 | [0070](./0070-artist-workspace-routes.md) | Every artist-only API route is under `/artists/`: the workspace under `/artists/me`, sign-in under `/artists/auth` |
+| [0072](./0072-listener-wide-playback-pacing.md) | A listener-wide bucket of two real-time streams across tracks, per-user session throttling, and pacing in memory while Redis is down |
 
 Create new records from [`template.md`](./template.md). Accepted decisions are changed by
 a superseding ADR rather than silently rewriting history.
