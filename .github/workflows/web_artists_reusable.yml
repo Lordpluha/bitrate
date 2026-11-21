@@ -63,6 +63,10 @@ env:
   # repository declares no Actions variables, so the fallback is the value that applies;
   # `vars.*` stays as the override hook for forks and a future staging environment.
   BUILD_NEXT_PUBLIC_API_URL: ${{ vars.NEXT_PUBLIC_API_URL || 'https://api.bitrate.me' }}
+  # The same applies to the player origin behind "Copy link" and "Open in Bitrate": without the
+  # arg the bundle keeps src/shared/routes/routes.ts's http://localhost:3001 fallback. It is the
+  # player's public address, so it reads the same variable web_player_reusable.yml builds with.
+  BUILD_NEXT_PUBLIC_SITE_URL: ${{ vars.NEXT_PUBLIC_SITE_URL || 'https://bitrate.me' }}
 
 jobs:
   web-artists-checks:
@@ -150,6 +154,7 @@ jobs:
             turbo_token=${{ secrets.turbo-token }}
           build-args: |
             VITE_API_URL=${{ env.BUILD_NEXT_PUBLIC_API_URL }}
+            VITE_PLAYER_URL=${{ env.BUILD_NEXT_PUBLIC_SITE_URL }}
           target: production
 
       - name: Resolve image reference for scanning
