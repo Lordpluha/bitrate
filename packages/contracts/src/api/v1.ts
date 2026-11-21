@@ -2408,6 +2408,50 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/api/v1/artists/me/releases/{id}/changes': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * List proposed changes of an owned release
+     * @description Every pending change plus the latest approved or rejected change for each title, cover and recording.
+     */
+    get: operations['ReleaseChangesController_list_v1']
+    put?: never
+    /**
+     * Propose changes to a published release
+     * @description Sends a new release title, cover and recording titles for review. The release stays live with its current data until staff approve each change. Only RELEASED releases and ones the artist took offline accept changes; one change per title, cover or recording may be pending.
+     */
+    post: operations['ReleaseChangesController_submit_v1']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/artists/me/releases/{id}/changes/{requestId}/withdraw': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Withdraw the pending changes of a request
+     * @description Changes staff already decided keep their outcome.
+     */
+    post: operations['ReleaseChangesController_withdraw_v1']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/api/v1/artists/me/releases/{id}/cover': {
     parameters: {
       query?: never
@@ -4356,6 +4400,10 @@ export interface components {
       cover: string | null
       isDemo: boolean
       trackCount: number
+      /** @description Whether changes can be proposed now (published, not taken down) */
+      acceptsChanges?: boolean
+      /** @description Whether a proposed change is awaiting review */
+      hasPendingChanges?: boolean
       trackDrafts: components['schemas']['WorkspaceTrackDraftEntity'][]
       tracks: components['schemas']['WorkspaceTrackEntity'][]
       participants: components['schemas']['WorkspaceParticipantEntity'][]
@@ -4556,6 +4604,77 @@ export interface components {
       release: components['schemas']['ReleaseEntity']
       trackIds: string[]
     }
+    /** @enum {string} */
+    ReleaseChangeField: 'RELEASE_TITLE' | 'RELEASE_COVER' | 'RECORDING_TITLE'
+    /** @enum {string} */
+    ReleaseChangeStatus: 'PENDING' | 'APPROVED' | 'REJECTED' | 'WITHDRAWN' | 'CANCELLED'
+    ArtistReleaseChangeEntity: {
+      /** Format: uuid */
+      id: string
+      /** Format: uuid */
+      requestId: string
+      field: components['schemas']['ReleaseChangeField']
+      /**
+       * Format: uuid
+       * @description The renamed recording, for RECORDING_TITLE
+       */
+      recordingId: string | null
+      /** @description Title or public cover path when the change was proposed */
+      previousValue: string | null
+      /** @description Proposed title. For a cover: a short-lived signed link while pending, the public path once approved, otherwise null */
+      proposedValue: string | null
+      status: components['schemas']['ReleaseChangeStatus']
+      /** @description Why staff rejected it, in Markdown */
+      reason: string | null
+      /** Format: date-time */
+      decidedAt: string | null
+      /** Format: date-time */
+      createdAt: string
+      /** @description Staff comment on the whole request, in Markdown */
+      reviewerMessage: string | null
+    }
+    ArtistReleaseChangeListEntity: {
+      data: components['schemas']['ArtistReleaseChangeEntity'][]
+    }
+    ReleaseChangeEntity: {
+      /** Format: uuid */
+      id: string
+      /** Format: uuid */
+      requestId: string
+      field: components['schemas']['ReleaseChangeField']
+      /**
+       * Format: uuid
+       * @description The renamed recording, for RECORDING_TITLE
+       */
+      recordingId: string | null
+      /** @description Title or public cover path when the change was proposed */
+      previousValue: string | null
+      /** @description Proposed title. For a cover: a short-lived signed link while pending, the public path once approved, otherwise null */
+      proposedValue: string | null
+      status: components['schemas']['ReleaseChangeStatus']
+      /** @description Why staff rejected it, in Markdown */
+      reason: string | null
+      /** Format: date-time */
+      decidedAt: string | null
+      /** Format: date-time */
+      createdAt: string
+    }
+    ReleaseChangeRequestEntity: {
+      /** Format: uuid */
+      id: string
+      /** Format: uuid */
+      releaseId: string
+      /** @description Staff comment, in Markdown */
+      message: string | null
+      /**
+       * Format: date-time
+       * @description Set once no change is pending
+       */
+      closedAt: string | null
+      /** Format: date-time */
+      createdAt: string
+      changes: components['schemas']['ReleaseChangeEntity'][]
+    }
     ReleaseCoverUpdatedEntity: {
       release: components['schemas']['ReleaseEntity']
       /**
@@ -4712,6 +4831,10 @@ export interface components {
       /** Format: date-time */
       updatedAt: string
       release: components['schemas']['MusicTrackReleaseEntity'] | null
+      /** @description Whether changes can be proposed now (published, not taken down) */
+      acceptsChanges?: boolean
+      /** @description Whether a proposed change is awaiting review */
+      hasPendingChanges?: boolean
     }
     MusicReleaseEntity: {
       /** Format: uuid */
@@ -4730,6 +4853,10 @@ export interface components {
       cover: string | null
       isDemo: boolean
       trackCount: number
+      /** @description Whether changes can be proposed now (published, not taken down) */
+      acceptsChanges?: boolean
+      /** @description Whether a proposed change is awaiting review */
+      hasPendingChanges?: boolean
     }
     MusicCountsEntity: {
       tracks: number
@@ -4956,6 +5083,7 @@ export interface components {
       | 'RELEASE_RELEASED'
       | 'PUBLISH_FAILED'
       | 'DELIVERY_LIVE'
+      | 'RELEASE_CHANGES_DECIDED'
     ArtistNotificationEntity: {
       /** @description Stable per notification, for list keys */
       id: string
@@ -4967,6 +5095,10 @@ export interface components {
       releaseTitle: string
       taskTitle?: string
       destination?: components['schemas']['DeliveryDestination']
+      /** @description Set for RELEASE_CHANGES_DECIDED */
+      approvedCount?: number
+      /** @description Set for RELEASE_CHANGES_DECIDED */
+      rejectedCount?: number
       /** Format: date-time */
       at: string
       unread: boolean
@@ -25369,6 +25501,488 @@ export interface operations {
       }
       /** @description Loop detected */
       508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  ReleaseChangesController_list_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ArtistReleaseChangeListEntity']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            message?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
+            /** @example Unauthorized */
+            error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
+          }
+        }
+      }
+      /** @description Release unavailable to this artist */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  ReleaseChangesController_submit_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'multipart/form-data': {
+          title?: string
+          /**
+           * @description JSON array of { id, title } for recordings first published here
+           * @example [{"id":"0199aee0-0000-7000-8000-0000000000d1","title":"Night drive"}]
+           */
+          recordings?: string
+          /**
+           * Format: binary
+           * @description JPEG, PNG or WebP up to 20 MB
+           */
+          cover?: string
+        }
+      }
+    }
+    responses: {
+      201: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ReleaseChangeRequestEntity']
+        }
+      }
+      /** @description No change, invalid fields or an invalid image */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            message?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
+            /** @example Unauthorized */
+            error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
+          }
+        }
+      }
+      /** @description Release unavailable to this artist */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Release does not accept changes, a value is unchanged, a recording is locked or a change is already pending */
+      409: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  ReleaseChangesController_withdraw_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+        requestId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ReleaseChangeRequestEntity']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            message?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
+            /** @example Unauthorized */
+            error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
+          }
+        }
+      }
+      /** @description Release unavailable to this artist */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Nothing left to withdraw */
+      409: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
         headers: {
           [name: string]: unknown
         }
