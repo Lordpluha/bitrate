@@ -15,6 +15,7 @@ import {
   CircleAlert,
   CircleCheck,
   Clock3,
+  FilePen,
   LoaderCircle,
   MessageSquareWarning,
   Radio,
@@ -28,6 +29,7 @@ const notificationIcons = {
   RELEASE_RELEASED: Radio,
   PUBLISH_FAILED: CircleAlert,
   DELIVERY_LIVE: CircleCheck,
+  RELEASE_CHANGES_DECIDED: FilePen,
 } as const
 
 interface DashboardNotificationsProps {
