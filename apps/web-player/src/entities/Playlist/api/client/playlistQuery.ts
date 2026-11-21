@@ -1,18 +1,5 @@
 import { queryOptions } from '@shared/api/client'
-import { getApiUrl } from '@shared/utils/mediaUrl'
 import type { QueryClient } from '@tanstack/react-query'
-import type { PlaylistTrack } from './playlist.types'
-
-export const withPlayableTrackUrls = <T extends { tracks?: PlaylistTrack[] }>(
-  playlist: T,
-) => ({
-  ...playlist,
-  tracks:
-    playlist.tracks?.map((track) => ({
-      ...track,
-      audioUrl: getApiUrl(`/api/v1/tracks/stream/${track.id}`),
-    })) ?? [],
-})
 
 export const playlistQueryKeys = {
   lists: ['get', '/api/v1/playlists'] as const,
