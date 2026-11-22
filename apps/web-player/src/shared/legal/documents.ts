@@ -218,7 +218,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
         blocks: [
           {
             kind: 'paragraph',
-            text: '**Effective date:** 1 October 2026. **Last updated:** 19 November 2026.',
+            text: '**Effective date:** 1 October 2026. **Last updated:** 22 November 2026.',
           },
           {
             kind: 'paragraph',
@@ -343,7 +343,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
           },
           {
             kind: 'paragraph',
-            text: 'In the listener web app, our error-monitoring tool (Sentry) records error details and, for about one in ten sessions and for every session in which an error occurs, a session replay of how the interface was used. Replays mask all text and everything you type, and block images and media, so they show the layout of the page, clicks and navigation, not what you read or enter. We use replays only to find and fix bugs, on the basis of our legitimate interest in a working service. You can object at any time by writing to us (section 9).',
+            text: 'In the listener web app and the artists portal, our error-monitoring tool (Sentry) records error details and, for about one in ten sessions and for every session in which an error occurs, a session replay of how the interface was used. Replays mask all text and everything you type, and block images and media, so they show the layout of the page, clicks and navigation, not what you read or enter. We use replays only to find and fix bugs, on the basis of our legitimate interest in a working service. You can object at any time by writing to us (section 9).',
           },
         ],
       },

@@ -184,7 +184,7 @@ finish() {
 # ──────────────────────────────────────────────────────────────────────────
 
 # Run from anywhere in the repo, not just infra/observability/ — write to the real repo-root
-# .env, the same file infra/docker-compose.preprod.yaml reads via Compose's own interpolation.
+# .env, the same file infra/docker-compose.dev.yaml reads via Compose's own interpolation.
 if REPO_ROOT=$(git rev-parse --show-toplevel 2>/dev/null); then
   ENV_FILE="$REPO_ROOT/.env"
 else
@@ -202,7 +202,7 @@ say "Cloudflare account. It is separate from the admin panel's production tunnel
 say "(a different token, CLOUDFLARE_TUNNEL_TOKEN, used only in"
 say "infra/docker-compose.prod.yaml) — do not reuse that one here."
 say ""
-say "Grafana itself only binds 127.0.0.1 inside infra/docker-compose.preprod.yaml's"
+say "Grafana itself only binds 127.0.0.1 inside infra/docker-compose.dev.yaml's"
 say "observability profile; the grafana-cloudflared container is what's meant to"
 say "make it reachable, once CLOUDFLARE_TUNNEL_TOKEN_GRAFANA is set below."
 if command -v cloudflared >/dev/null 2>&1; then
@@ -223,7 +223,7 @@ step "Click 'Create a tunnel', choose 'Cloudflared', and name it bitrate-grafana
 step "On the next screen, under 'Choose your environment', pick Docker."
 step "You'll see a command containing a long --token value — copy just that token"
 step "string (everything after --token), not the whole command."
-note "Do not run that docker command yourself — infra/docker-compose.preprod.yaml's"
+note "Do not run that docker command yourself — infra/docker-compose.dev.yaml's"
 note "grafana-cloudflared service runs it for you, reading the token from .env."
 ask_secret CLOUDFLARE_TUNNEL_TOKEN_GRAFANA "Paste the tunnel token:"
 write_env CLOUDFLARE_TUNNEL_TOKEN_GRAFANA "$CLOUDFLARE_TUNNEL_TOKEN_GRAFANA"

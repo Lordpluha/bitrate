@@ -52,6 +52,9 @@ overrides:
   "uuid@7": "^11.1.1"
   "uuid@8": "^11.1.1"
   "uuid@11": "^11.1.1"
+  # GHSA-7589-6fvf-x4pw (ReDoS in Schema.TemplateLiteral). @prisma/config 7.10.1 — the latest
+  # stable Prisma — pins effect 3.20.0 exactly; 3.22.x is a compatible minor of the same major.
+  "effect@3": "^3.22.1"
   # Docusaurus core still asks for tinypool ^1; 2.x keeps the Tinypool/run/destroy API it uses.
   "tinypool@1": "^2.2.0"
   "deepmerge-ts@7": "^8.0.2"

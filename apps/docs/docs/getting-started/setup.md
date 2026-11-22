@@ -45,8 +45,7 @@ if you do not want Graphify or global RTK setup.
 ### 3. Environment Variables
 
 Nothing to do for the Docker stacks — there is no repository-root env file. Every variable in
-`infra/docker-compose.dev.yaml` and `infra/docker-compose.preprod.yaml` carries a default, so
-they start on a clean checkout. Export a shell variable to override one:
+`infra/docker-compose.dev.yaml` carries a default, so it starts on a clean checkout. Export a shell variable to override one:
 
 ```bash
 POSTGRES_PORT=5433 task infra:up
@@ -389,7 +388,7 @@ pnpm update -r
 lsof -i :3000
 
 # Or stop all Docker services
-docker compose -f infra/docker-compose.preprod.yaml down
+docker compose -f infra/docker-compose.dev.yaml --profile apps down
 ```
 
 ### Database Connection Issues
