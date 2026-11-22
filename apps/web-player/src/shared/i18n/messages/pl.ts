@@ -266,6 +266,20 @@ export const pl = {
     'Logowanie przez serwis społecznościowy nie zakończyło się. Spróbuj ponownie.',
   'auth.login.failed.oauthExpired':
     'Sesja logowania wygasła. Spróbuj ponownie.',
+  'auth.login.failed.oauthAccountExists':
+    'Konto z tym adresem e-mail już istnieje. Najpierw zaloguj się hasłem i potwierdź adres e-mail.',
+  'auth.login.failed.oauthAccountUnavailable':
+    'To konto nie jest już dostępne.',
+  'auth.login.failed.oauthCancelled':
+    'Logowanie zostało anulowane. Wybierz sposób logowania, aby kontynuować.',
+  'auth.login.failed.oauthEmailMissing':
+    'To konto nie przekazało adresu e-mail. Zezwól na dostęp do adresu e-mail lub zaloguj się inaczej.',
+  'auth.login.failed.oauthEmailUnverified':
+    'To konto nie potwierdziło adresu e-mail. Potwierdź go u dostawcy lub zaloguj się inaczej.',
+  'auth.login.failed.oauthLegal':
+    'Aby utworzyć konto, najpierw zaakceptuj Warunki korzystania i Zasady społeczności.',
+  'auth.login.failed.oauthUnavailable':
+    'Ten sposób logowania nie jest jeszcze dostępny. Zaloguj się inaczej.',
   'auth.login.forgotPassword': 'Nie pamiętasz hasła?',
   'auth.login.noAccount': 'Nie masz jeszcze konta?',
   'auth.login.submitting': 'Logujemy...',

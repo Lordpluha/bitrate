@@ -267,6 +267,19 @@ export const uk = {
   'auth.login.failed.oauth':
     'Вхід через соцмережу не завершився. Спробуйте ще раз.',
   'auth.login.failed.oauthExpired': 'Сеанс входу закінчився. Спробуйте ще раз.',
+  'auth.login.failed.oauthAccountExists':
+    'Акаунт із цією адресою вже існує. Спершу увійдіть за паролем і підтвердьте email.',
+  'auth.login.failed.oauthAccountUnavailable': 'Цей акаунт більше недоступний.',
+  'auth.login.failed.oauthCancelled':
+    'Вхід скасовано. Оберіть спосіб входу, щоб продовжити.',
+  'auth.login.failed.oauthEmailMissing':
+    'Цей акаунт не передав адресу email. Дозвольте доступ до email або увійдіть іншим способом.',
+  'auth.login.failed.oauthEmailUnverified':
+    'Цей акаунт не підтвердив адресу email. Підтвердьте її в провайдера або увійдіть іншим способом.',
+  'auth.login.failed.oauthLegal':
+    'Щоб створити акаунт, спершу прийміть Умови використання та Правила спільноти.',
+  'auth.login.failed.oauthUnavailable':
+    'Цей спосіб входу поки недоступний. Увійдіть іншим способом.',
   'auth.login.forgotPassword': 'Забули пароль?',
   'auth.login.noAccount': 'Ще немає облікового запису?',
   'auth.login.submitting': 'Входимо...',

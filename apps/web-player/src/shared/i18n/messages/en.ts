@@ -259,6 +259,20 @@ export const en = {
   'auth.login.failed.oauth': 'Social sign-in did not finish. Please try again.',
   'auth.login.failed.oauthExpired':
     'Your sign-in session expired. Please try again.',
+  'auth.login.failed.oauthAccountExists':
+    'An account with this email already exists. Sign in with your password and confirm your email first.',
+  'auth.login.failed.oauthAccountUnavailable':
+    'This account is no longer available.',
+  'auth.login.failed.oauthCancelled':
+    'Sign-in was cancelled. Choose a way to sign in to continue.',
+  'auth.login.failed.oauthEmailMissing':
+    'We did not receive an email address from that account. Allow access to your email, or sign in another way.',
+  'auth.login.failed.oauthEmailUnverified':
+    'That account has not confirmed its email address. Confirm it with the provider, or sign in another way.',
+  'auth.login.failed.oauthLegal':
+    'To create an account, accept the Terms of Use and Community Guidelines first.',
+  'auth.login.failed.oauthUnavailable':
+    'This sign-in option is not available yet. Use another way to sign in.',
   'auth.login.forgotPassword': 'Forgot password?',
   'auth.login.noAccount': "Don't have an account?",
   'auth.login.submitting': 'Logging in...',
