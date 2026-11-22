@@ -54,7 +54,7 @@ for (const [path, storyModule] of Object.entries(storyModules)) {
       initialGlobals: { theme },
     })
 
-    describe(`${path.replace('../', '')} [${theme}]`, () => {
+    describe(`${path.replace(/^\.\.\//, '')} [${theme}]`, () => {
       for (const [name, Story] of Object.entries(stories)) {
         const a11y = readA11yParameters(Story.parameters)
         const run = a11y.test === 'off' ? it.skip : it
