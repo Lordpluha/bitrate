@@ -415,6 +415,10 @@ jobs:
           JWT_ACCESS_EXPIRES_IN: ${{ vars.JWT_ACCESS_EXPIRES_IN }}
           JWT_REFRESH_EXPIRES_IN: ${{ vars.JWT_REFRESH_EXPIRES_IN }}
           S3_BUCKET: ${{ vars.S3_BUCKET }}
+          S3_ENDPOINT: ${{ vars.S3_ENDPOINT }}
+          S3_REGION: ${{ vars.S3_REGION }}
+          BACKUP_S3_ENDPOINT: ${{ vars.BACKUP_S3_ENDPOINT }}
+          BACKUP_S3_BUCKET: ${{ vars.BACKUP_S3_BUCKET }}
           TRUST_PROXY_HOPS: ${{ vars.TRUST_PROXY_HOPS }}
           HEALTH_CHECK_TIMEOUT_MS: ${{ vars.HEALTH_CHECK_TIMEOUT_MS }}
           AUDIO_PROCESSING_WORKER_ENABLED: ${{ vars.AUDIO_PROCESSING_WORKER_ENABLED }}
@@ -432,6 +436,9 @@ jobs:
           METRICS_TOKEN: ${{ secrets.METRICS_TOKEN }}
           S3_ACCESS_KEY: ${{ secrets.S3_ACCESS_KEY }}
           S3_SECRET_KEY: ${{ secrets.S3_SECRET_KEY }}
+          BACKUP_S3_ACCESS_KEY: ${{ secrets.BACKUP_S3_ACCESS_KEY }}
+          BACKUP_S3_SECRET_KEY: ${{ secrets.BACKUP_S3_SECRET_KEY }}
+          RESTIC_PASSWORD: ${{ secrets.RESTIC_PASSWORD }}
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
           SENTRY_RELEASE: ${{ steps.release-id.outputs.release }}
           SENTRY_ENVIRONMENT: ${{ inputs.environment }}
@@ -470,7 +477,9 @@ jobs:
           optional="
             USER_WEB_HOST ARTIST_WEB_HOST ADMIN_WEB_HOST API_URL
             REDIS_PORT SMTP_HOST SMTP_PORT SMTP_USER SMTP_PASS EMAIL_FROM
-            COOKIE_DOMAIN S3_BUCKET
+            COOKIE_DOMAIN S3_BUCKET S3_ENDPOINT S3_REGION
+            BACKUP_S3_ENDPOINT BACKUP_S3_BUCKET BACKUP_S3_ACCESS_KEY BACKUP_S3_SECRET_KEY
+            RESTIC_PASSWORD
             TRUST_PROXY_HOPS HEALTH_CHECK_TIMEOUT_MS DEV_MAIL_LOG_TOKENS
             AUDIO_PROCESSING_WORKER_ENABLED
             OAUTH_GOOGLE_CLIENT_ID OAUTH_GOOGLE_CLIENT_SECRET
@@ -500,6 +509,8 @@ jobs:
           fi
           # The SeaweedFS service writes these into its JSON identity file with printf, so
           # anything beyond letters and digits would break the JSON and the object store with it.
+          # It keeps running after the move to R2 (ADR-0072) as the rollback path, configured
+          # with the same keys; R2 keys are hex, so they pass.
           case "${S3_ACCESS_KEY}" in
             *[!A-Za-z0-9]*) bad+=("S3_ACCESS_KEY (letters and digits only; it is written into the object store's JSON identity file)") ;;
           esac
@@ -511,6 +522,28 @@ jobs:
             true|false) ;;
             *) bad+=("AUDIO_PROCESSING_WORKER_ENABLED (only true or false)") ;;
           esac
+          if [ -n "${S3_ENDPOINT:-}" ]; then
+            case "${S3_ENDPOINT}" in
+              http://*|https://*) ;;
+              *) bad+=("S3_ENDPOINT (an absolute http(s) URL, e.g. https://<account>.r2.cloudflarestorage.com)") ;;
+            esac
+          fi
+          # Backups (ADR-0072) are all or nothing: the backup service starts only with every
+          # one of these, so a partial set is a mistake to report, not a silent no-op.
+          backup_set=0
+          backup_missing=()
+          for name in BACKUP_S3_ENDPOINT BACKUP_S3_ACCESS_KEY BACKUP_S3_SECRET_KEY RESTIC_PASSWORD; do
+            if [ -n "${!name:-}" ]; then backup_set=1; else backup_missing+=("${name}"); fi
+          done
+          if [ "${backup_set}" = 1 ] && [ ${#backup_missing[@]} -gt 0 ]; then
+            bad+=("backups are partly configured; also set: ${backup_missing[*]}")
+          fi
+          if [ -n "${RESTIC_PASSWORD:-}" ] && [ "${#RESTIC_PASSWORD}" -lt 20 ]; then
+            bad+=("RESTIC_PASSWORD (use at least 20 characters: openssl rand -base64 32)")
+          fi
+          if [ -z "${RESTIC_PASSWORD:-}" ]; then
+            echo "::warning::Off-site backups are not configured (BACKUP_S3_* and RESTIC_PASSWORD). The deploy continues without them."
+          fi
           if [ -n "${S3_BUCKET:-}" ]; then
             case "${S3_BUCKET}" in
               *[!a-z0-9-]*|-*|*-) bad+=("S3_BUCKET (lowercase letters, digits and hyphens, not starting or ending with a hyphen)") ;;
@@ -696,6 +729,10 @@ jobs:
           JWT_ACCESS_EXPIRES_IN: ${{ vars.JWT_ACCESS_EXPIRES_IN }}
           JWT_REFRESH_EXPIRES_IN: ${{ vars.JWT_REFRESH_EXPIRES_IN }}
           S3_BUCKET: ${{ vars.S3_BUCKET }}
+          S3_ENDPOINT: ${{ vars.S3_ENDPOINT }}
+          S3_REGION: ${{ vars.S3_REGION }}
+          BACKUP_S3_ENDPOINT: ${{ vars.BACKUP_S3_ENDPOINT }}
+          BACKUP_S3_BUCKET: ${{ vars.BACKUP_S3_BUCKET }}
           TRUST_PROXY_HOPS: ${{ vars.TRUST_PROXY_HOPS }}
           HEALTH_CHECK_TIMEOUT_MS: ${{ vars.HEALTH_CHECK_TIMEOUT_MS }}
           AUDIO_PROCESSING_WORKER_ENABLED: ${{ vars.AUDIO_PROCESSING_WORKER_ENABLED }}
@@ -713,6 +750,9 @@ jobs:
           METRICS_TOKEN: ${{ secrets.METRICS_TOKEN }}
           S3_ACCESS_KEY: ${{ secrets.S3_ACCESS_KEY }}
           S3_SECRET_KEY: ${{ secrets.S3_SECRET_KEY }}
+          BACKUP_S3_ACCESS_KEY: ${{ secrets.BACKUP_S3_ACCESS_KEY }}
+          BACKUP_S3_SECRET_KEY: ${{ secrets.BACKUP_S3_SECRET_KEY }}
+          RESTIC_PASSWORD: ${{ secrets.RESTIC_PASSWORD }}
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
           # Not configuration a human sets anywhere: both are derived per deploy.
           # SENTRY_RELEASE names the released version being started, and
@@ -810,12 +850,32 @@ jobs:
             opt DEV_MAIL_LOG_TOKENS
 
             printf '\n# --- Storage ---\n'
-            # The object store (ADR-0050): the bucket-scoped application identity the
-            # seaweedfs service is configured with and the api is handed. Required: the
-            # api has no other storage backend.
+            # The object store: the bucket-scoped application token the api is handed
+            # (and the seaweedfs service is configured with). Required: the api has no
+            # other storage backend. S3_ENDPOINT unset keeps the in-stack SeaweedFS
+            # (ADR-0050); set to the R2 endpoint, the api uses Cloudflare R2 (ADR-0072).
             req S3_ACCESS_KEY
             req S3_SECRET_KEY
             opt S3_BUCKET
+            opt S3_ENDPOINT
+            opt S3_REGION
+
+            # Off-site backups (ADR-0072). Only when fully configured -- the preflight
+            # rejects a partial set -- and then COMPOSE_PROFILES turns on the backup
+            # service of infra/docker-compose.prod.yaml.
+            if [ -n "${RESTIC_PASSWORD:-}" ]; then
+              printf '\n# --- Backups ---\n'
+              printf 'COMPOSE_PROFILES=backup\n'
+              case "${S3_ENDPOINT:-}" in
+                *.r2.cloudflarestorage.com*) printf 'BACKUP_SOURCE_PROVIDER=Cloudflare\n' ;;
+                *) printf 'BACKUP_SOURCE_PROVIDER=SeaweedFS\n' ;;
+              esac
+              req BACKUP_S3_ENDPOINT
+              opt BACKUP_S3_BUCKET
+              req BACKUP_S3_ACCESS_KEY
+              req BACKUP_S3_SECRET_KEY
+              req RESTIC_PASSWORD
+            fi
 
             printf '\n# --- Observability ---\n'
             opt METRICS_TOKEN

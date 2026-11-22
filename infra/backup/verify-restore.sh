@@ -17,6 +17,8 @@ restic() { /tools/restic -o s3.bucket-lookup=path --retry-lock 10m "$@"; }
 
 PGDATA=/work/pgdata
 SOCK=/work
+# A Kubernetes run gets a fresh emptyDir; the compose service reuses /work between runs.
+rm -rf "$PGDATA"
 initdb -D "$PGDATA" -U verify --auth=trust >/dev/null
 pg_ctl -D "$PGDATA" -o "-c listen_addresses='' -k $SOCK" -w start >/dev/null
 trap 'pg_ctl -D "$PGDATA" -m fast stop >/dev/null 2>&1 || true' EXIT

@@ -1,7 +1,10 @@
 #!/bin/sh
-# Mirror the SeaweedFS media bucket into R2.
+# Mirror the media bucket into the backup bucket.
 #
-# Runs in rclone/rclone. `sync` is incremental: only new or changed objects are copied.
+# The source is the application's own bucket: SeaweedFS locally, Cloudflare R2 in production
+# (BACKUP_SOURCE_PROVIDER). It is read with the application's credentials, and the target is
+# written with separate backup credentials the application never has, so a leaked application
+# key cannot erase the backups. Runs in rclone/rclone or with an rclone binary on PATH. `sync` is incremental: only new or changed objects are copied.
 # Objects that disappeared from the source are not deleted in R2 but moved into
 # audio/deleted/<date>/, so an accidental delete (or a bug that deletes) stays
 # recoverable for DELETED_RETENTION_DAYS. Remotes are configured through env vars only,
@@ -9,8 +12,9 @@
 set -eu
 
 export RCLONE_CONFIG_SRC_TYPE=s3
-export RCLONE_CONFIG_SRC_PROVIDER=SeaweedFS
+export RCLONE_CONFIG_SRC_PROVIDER="${BACKUP_SOURCE_PROVIDER:-SeaweedFS}"
 export RCLONE_CONFIG_SRC_ENDPOINT="$S3_ENDPOINT"
+export RCLONE_CONFIG_SRC_REGION="${S3_REGION:-us-east-1}"
 export RCLONE_CONFIG_SRC_ACCESS_KEY_ID="$S3_ACCESS_KEY"
 export RCLONE_CONFIG_SRC_SECRET_ACCESS_KEY="$S3_SECRET_KEY"
 
