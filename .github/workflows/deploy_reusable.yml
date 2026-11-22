@@ -307,7 +307,7 @@ jobs:
 
       # Which published image tag every service is pulled at. ONE value for the
       # whole stack, because infra/docker-compose.prod.yaml writes
-      # `image: ghcr.io/lordpluha/bitrate/<svc>:${IMAGE_TAG:-master}` for all
+      # `image: ghcr.io/lordpluha/bitrate/<svc>:${IMAGE_TAG:?...}` for all
       # six services -- rolling one service back independently is not something
       # that compose file can express, and pretending otherwise would produce a
       # deploy that half-applies.
@@ -453,12 +453,17 @@ jobs:
           #
           # IMAGE_TAG is derived rather than configured, so a missing one is a
           # broken workflow rather than a missing setting -- but it is checked
-          # here anyway, because an empty one silently deploys `:master`.
+          # here anyway, so it fails before anything touches the server; the
+          # compose file would otherwise refuse to start with it empty.
+          #
+          # API_BASE_URL has a schema-valid absence, but the API then builds media
+          # URLs and OAuth callbacks on http://localhost:3000, so it is required.
           required="
             DEPLOY_HOST DEPLOY_USER DEPLOY_SSH_KEY
             IMAGE_TAG
             DOMAIN NODE_ENV PORT
             WEB_HOST NEXT_PUBLIC_API_URL NEXT_PUBLIC_SITE_URL
+            API_BASE_URL
             POSTGRES_USER POSTGRES_PASSWORD POSTGRES_DB
             REDIS_HOST REDIS_PASSWORD
             DATABASE_URL JWT_SECRET
@@ -470,7 +475,7 @@ jobs:
           # Every name the rendered file may carry. Checked below for characters a
           # compose env file cannot represent.
           optional="
-            USER_WEB_HOST ARTIST_WEB_HOST ADMIN_WEB_HOST API_BASE_URL API_URL
+            USER_WEB_HOST ARTIST_WEB_HOST ADMIN_WEB_HOST API_URL
             REDIS_PORT SMTP_HOST SMTP_PORT SMTP_USER SMTP_PASS EMAIL_FROM
             COOKIE_DOMAIN S3_BUCKET S3_ENDPOINT S3_REGION
             BACKUP_S3_ENDPOINT BACKUP_S3_BUCKET BACKUP_S3_ACCESS_KEY BACKUP_S3_SECRET_KEY
@@ -757,10 +762,10 @@ jobs:
           SENTRY_RELEASE: ${{ steps.release-id.outputs.release }}
           SENTRY_ENVIRONMENT: ${{ inputs.environment }}
           # The single tag every service in the prod compose file is pulled at.
-          # Always written, never omitted: relying on the compose file's
-          # `${IMAGE_TAG:-master}` default would silently deploy `:master` if
-          # this ever resolved empty, which is the exact accident a rollback
-          # cannot afford.
+          # Always written, never omitted. The compose file has no default for it
+          # (`${IMAGE_TAG:?...}`): a fallback such as `:master` would silently
+          # deploy an image that is no longer published, which is the exact
+          # accident a rollback cannot afford.
           IMAGE_TAG: ${{ steps.image-tag.outputs.tag }}
           RENDERED_FROM: ${{ github.sha }}
           ENVIRONMENT_NAME: ${{ inputs.environment }}
@@ -808,7 +813,9 @@ jobs:
             opt USER_WEB_HOST
             opt ARTIST_WEB_HOST
             opt ADMIN_WEB_HOST
-            opt API_BASE_URL
+            # Required: the API falls back to http://localhost:3000 for media URLs and
+            # OAuth callbacks when it is unset, which is never right for a deploy.
+            req API_BASE_URL
             opt API_URL
             req NEXT_PUBLIC_API_URL
             req NEXT_PUBLIC_SITE_URL

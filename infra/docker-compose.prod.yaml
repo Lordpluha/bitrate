@@ -283,7 +283,7 @@ services:
 
   api:
     logging: *default-logging
-    image: ghcr.io/lordpluha/bitrate/api:${IMAGE_TAG:-master}
+    image: ghcr.io/lordpluha/bitrate/api:${IMAGE_TAG:?IMAGE_TAG must name the release to deploy}
     build:
       context: ..
       dockerfile: ./apps/api/Dockerfile
@@ -321,7 +321,7 @@ services:
   # the public HTTP endpoints only, so it does not read this container's state.
   worker:
     logging: *default-logging
-    image: ghcr.io/lordpluha/bitrate/api:${IMAGE_TAG:-master}
+    image: ghcr.io/lordpluha/bitrate/api:${IMAGE_TAG:?IMAGE_TAG must name the release to deploy}
     build:
       context: ..
       dockerfile: ./apps/api/Dockerfile
@@ -380,7 +380,7 @@ services:
   # consumes no queue — it only enqueues, like the public API.
   admin-api:
     logging: *default-logging
-    image: ghcr.io/lordpluha/bitrate/api:${IMAGE_TAG:-master}
+    image: ghcr.io/lordpluha/bitrate/api:${IMAGE_TAG:?IMAGE_TAG must name the release to deploy}
     build:
       context: ..
       dockerfile: ./apps/api/Dockerfile
@@ -420,7 +420,7 @@ services:
 
   web-player:
     logging: *default-logging
-    image: ghcr.io/lordpluha/bitrate/web-player:${IMAGE_TAG:-master}
+    image: ghcr.io/lordpluha/bitrate/web-player:${IMAGE_TAG:?IMAGE_TAG must name the release to deploy}
     build:
       context: ..
       dockerfile: ./apps/web-player/Dockerfile
@@ -458,7 +458,7 @@ services:
 
   web-artists:
     logging: *default-logging
-    image: ghcr.io/lordpluha/bitrate/web-artists:${IMAGE_TAG:-master}
+    image: ghcr.io/lordpluha/bitrate/web-artists:${IMAGE_TAG:?IMAGE_TAG must name the release to deploy}
     build:
       context: ..
       dockerfile: ./apps/web-artists/Dockerfile
@@ -466,6 +466,10 @@ services:
       args:
         - VITE_API_URL=${NEXT_PUBLIC_API_URL}
         - VITE_PLAYER_URL=${NEXT_PUBLIC_SITE_URL}
+        # Sentry is baked in at build time, like web-player's. Unset, the SDK starts disabled.
+        - VITE_SENTRY_DSN=${VITE_SENTRY_DSN:-}
+        - VITE_SENTRY_ENVIRONMENT=${VITE_SENTRY_ENVIRONMENT:-production}
+        - SENTRY_RELEASE=${SENTRY_RELEASE:-}
     container_name: bitrate-web-artists-prod
     restart: always
     environment:
@@ -486,7 +490,7 @@ services:
 
   admin:
     logging: *default-logging
-    image: ghcr.io/lordpluha/bitrate/admin:${IMAGE_TAG:-master}
+    image: ghcr.io/lordpluha/bitrate/admin:${IMAGE_TAG:?IMAGE_TAG must name the release to deploy}
     build:
       context: ..
       dockerfile: ./apps/admin/Dockerfile
@@ -541,7 +545,7 @@ services:
   # runtime state, so they need neither environment nor a dependency on the API.
   docs:
     logging: *default-logging
-    image: ghcr.io/lordpluha/bitrate/docs:${IMAGE_TAG:-master}
+    image: ghcr.io/lordpluha/bitrate/docs:${IMAGE_TAG:?IMAGE_TAG must name the release to deploy}
     build:
       context: ..
       dockerfile: ./apps/docs/Dockerfile
@@ -560,7 +564,7 @@ services:
   # Composed Storybook: ui-react at /, player at /player/, admin UI kit at /admin/.
   storybook:
     logging: *default-logging
-    image: ghcr.io/lordpluha/bitrate/storybook:${IMAGE_TAG:-master}
+    image: ghcr.io/lordpluha/bitrate/storybook:${IMAGE_TAG:?IMAGE_TAG must name the release to deploy}
     build:
       context: ..
       dockerfile: ./packages/ui-react/Dockerfile
