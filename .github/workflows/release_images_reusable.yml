@@ -115,6 +115,7 @@ jobs:
     uses: $/.github/workflows/web_artists_reusable.yml
     secrets:
       turbo-token: ${{ secrets.turbo-token }}
+      sentry-auth-token: ${{ secrets.sentry-auth-token }}
     with:
       push-image: ${{ inputs.push-image }}
       tags: |

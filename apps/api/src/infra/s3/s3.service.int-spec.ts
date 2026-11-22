@@ -19,14 +19,16 @@ import { S3Service } from './s3.service'
 
 /**
  * Runs S3Service against a real S3-compatible endpoint (SeaweedFS in CI and in the ADR-0050
- * spike). Point it at one with S3_INT_ENDPOINT, S3_INT_BUCKET, S3_INT_ACCESS_KEY and
- * S3_INT_SECRET_KEY. Without them the suite is skipped locally, but fails under CI so the
+ * spike, Cloudflare R2 before the ADR-0072 cutover). Point it at one with S3_INT_ENDPOINT,
+ * S3_INT_BUCKET, S3_INT_ACCESS_KEY and S3_INT_SECRET_KEY, plus S3_INT_REGION=auto for R2.
+ * Without them the suite is skipped locally, but fails under CI so the
  * spec can never be skipped silently there.
  */
 const endpoint = process.env.S3_INT_ENDPOINT
 const bucket = process.env.S3_INT_BUCKET ?? 'bitrate-audio'
 const accessKey = process.env.S3_INT_ACCESS_KEY ?? ''
 const secretKey = process.env.S3_INT_SECRET_KEY ?? ''
+const region = process.env.S3_INT_REGION ?? 'us-east-1'
 
 const suite = endpoint ? describe : describe.skip
 
@@ -51,7 +53,7 @@ suite('S3Service (int, real S3-compatible endpoint)', () => {
   beforeAll(() => {
     const s3 = {
       endpoint: endpoint as string,
-      region: 'us-east-1',
+      region,
       bucket,
       accessKey,
       secretKey,

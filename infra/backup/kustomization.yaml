@@ -1,0 +1,11 @@
+# Backup scripts shared by every runtime: the Kubernetes CronJobs (infra/k8s/backup) mount
+# them from this ConfigMap. See infra/k8s/backup/README.md.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+configMapGenerator:
+  - name: backup-scripts
+    files:
+      - backup-postgres.sh
+      - backup-audio.sh
+      - verify-restore.sh
