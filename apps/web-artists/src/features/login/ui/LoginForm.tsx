@@ -18,13 +18,17 @@ import { Link, useSearch } from '@tanstack/react-router'
 import { useState } from 'react'
 import { type SubmitHandler, useForm } from 'react-hook-form'
 import { useLogin } from '../api/useLogin'
+import { oauthFailureMessageKey } from '../model/oauthFailure'
 import { type LoginFormData, loginSchema } from '../validation'
 import { TwoFactorLoginForm } from './TwoFactorLoginForm'
 
 export const LoginForm = () => {
   const { t, tMessage } = useI18n()
   const search = useSearch({ from: '/login' })
-  const [requiresTwoFactor, setRequiresTwoFactor] = useState(false)
+  const [requiresTwoFactor, setRequiresTwoFactor] = useState(
+    search.twoFactor === true,
+  )
+  const oauthFailure = oauthFailureMessageKey(search.error)
   const completeLogin = () => {
     artistSessionCheck.clear()
     notifyArtistSessionChange('changed')
@@ -128,6 +132,11 @@ export const LoginForm = () => {
         ) : null}
 
         <div className="mt-4 flex flex-col items-stretch gap-4">
+          {!form.formState.errors.root && oauthFailure ? (
+            <div role="alert">
+              <p>{t(oauthFailure)}</p>
+            </div>
+          ) : null}
           {form.formState.errors.root && (
             <div role="alert">
               <p>{tMessage(form.formState.errors.root.message)}</p>

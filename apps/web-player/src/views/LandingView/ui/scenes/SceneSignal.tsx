@@ -1,4 +1,3 @@
-import { QuickGoogleSignIn } from '@features/Auth'
 import { useI18n } from '@shared/i18n'
 import { ROUTES } from '@shared/routes'
 import Link from 'next/link'
@@ -69,12 +68,6 @@ export const SceneSignal = ({ signedIn, stats }: HeroSceneProps) => {
               </Link>
             )}
           </div>
-          {/* one step in: Google creates the account and signs in, behind the same consent box */}
-          {!signedIn && (
-            <div className={lc('quick-in')} data-a="up">
-              <QuickGoogleSignIn />
-            </div>
-          )}
           {stats && (
             <dl className={lc('hstats')} data-a="up">
               {STAT_ROWS.map(({ key, label }) => (

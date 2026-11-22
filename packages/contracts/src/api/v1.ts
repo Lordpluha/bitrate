@@ -430,7 +430,7 @@ export interface paths {
     }
     /**
      * Runs the google callback operation.
-     * @description Handled by Google after user consents. On success sets auth cookies and redirects to USER_WEB_HOST (or legacy WEB_HOST). On 2FA required, redirects to /login/2fa with a pending token.
+     * @description Handled by Google after user consents. On success sets auth cookies and redirects to USER_WEB_HOST (or legacy WEB_HOST). On 2FA required, redirects to /login/2fa with a pending token. Every failure redirects to /login?error=<code> on the web app: oauth_state_mismatch, oauth_cancelled, oauth_unavailable, oauth_exchange_failed, oauth_email_unverified, oauth_email_missing, oauth_account_exists, oauth_account_unavailable, legal_acceptance_required or oauth_failed.
      */
     get: operations['UsersOAuthController_googleCallback_v1']
     put?: never
@@ -470,7 +470,7 @@ export interface paths {
     }
     /**
      * Runs the facebook callback operation.
-     * @description Handled by Facebook after user consents. On success sets auth cookies and redirects to USER_WEB_HOST (or legacy WEB_HOST). On 2FA required, redirects to /login/2fa with a pending token.
+     * @description Handled by Facebook after user consents. On success sets auth cookies and redirects to USER_WEB_HOST (or legacy WEB_HOST). On 2FA required, redirects to /login/2fa with a pending token. Every failure redirects to /login?error=<code> on the web app: oauth_state_mismatch, oauth_cancelled, oauth_unavailable, oauth_exchange_failed, oauth_email_unverified, oauth_email_missing, oauth_account_exists, oauth_account_unavailable, legal_acceptance_required or oauth_failed.
      */
     get: operations['UsersOAuthController_facebookCallback_v1']
     put?: never
@@ -1396,7 +1396,7 @@ export interface paths {
     }
     /**
      * Runs the google callback operation.
-     * @description Handled by Google after artist consents. On success sets auth cookies and redirects to ARTIST_WEB_HOST (or legacy WEB_HOST). On 2FA required, redirects to /login/2fa with a pending token.
+     * @description Handled by Google after artist consents. On success sets auth cookies and redirects to ARTIST_WEB_HOST (or legacy WEB_HOST). On 2FA required, redirects to /login?twoFactor=1 with a pending token. Every failure redirects to /login?error=<code> on the web app: oauth_state_mismatch, oauth_cancelled, oauth_unavailable, oauth_exchange_failed, oauth_email_unverified, oauth_email_missing, oauth_account_exists, oauth_account_unavailable, legal_acceptance_required or oauth_failed.
      */
     get: operations['ArtistsOAuthController_googleCallback_v1']
     put?: never
@@ -1436,7 +1436,7 @@ export interface paths {
     }
     /**
      * Runs the facebook callback operation.
-     * @description Handled by Facebook after artist consents. On success sets auth cookies and redirects to ARTIST_WEB_HOST (or legacy WEB_HOST). On 2FA required, redirects to /login/2fa with a pending token.
+     * @description Handled by Facebook after artist consents. On success sets auth cookies and redirects to ARTIST_WEB_HOST (or legacy WEB_HOST). On 2FA required, redirects to /login?twoFactor=1 with a pending token. Every failure redirects to /login?error=<code> on the web app: oauth_state_mismatch, oauth_cancelled, oauth_unavailable, oauth_exchange_failed, oauth_email_unverified, oauth_email_missing, oauth_account_exists, oauth_account_unavailable, legal_acceptance_required or oauth_failed.
      */
     get: operations['ArtistsOAuthController_facebookCallback_v1']
     put?: never
@@ -8274,10 +8274,12 @@ export interface operations {
   UsersOAuthController_googleCallback_v1: {
     parameters: {
       query: {
-        /** @description Authorization code from Google */
-        code: string
         /** @description CSRF state token */
         state: string
+        /** @description Set by Google instead of a code when the user cancelled */
+        error?: string
+        /** @description Authorization code from Google; absent when the user cancelled */
+        code?: string
       }
       header?: never
       path?: never
@@ -8488,10 +8490,12 @@ export interface operations {
   UsersOAuthController_facebookCallback_v1: {
     parameters: {
       query: {
-        /** @description Authorization code from Facebook */
-        code: string
         /** @description CSRF state token */
         state: string
+        /** @description Set by Facebook instead of a code when the user cancelled */
+        error?: string
+        /** @description Authorization code from Facebook; absent when the user cancelled */
+        code?: string
       }
       header?: never
       path?: never
@@ -16639,10 +16643,12 @@ export interface operations {
   ArtistsOAuthController_googleCallback_v1: {
     parameters: {
       query: {
-        /** @description Authorization code from Google */
-        code: string
         /** @description CSRF state token */
         state: string
+        /** @description Set by Google instead of a code when the user cancelled */
+        error?: string
+        /** @description Authorization code from Google; absent when the user cancelled */
+        code?: string
       }
       header?: never
       path?: never
@@ -16851,10 +16857,12 @@ export interface operations {
   ArtistsOAuthController_facebookCallback_v1: {
     parameters: {
       query: {
-        /** @description Authorization code from Facebook */
-        code: string
         /** @description CSRF state token */
         state: string
+        /** @description Set by Facebook instead of a code when the user cancelled */
+        error?: string
+        /** @description Authorization code from Facebook; absent when the user cancelled */
+        code?: string
       }
       header?: never
       path?: never

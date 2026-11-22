@@ -149,7 +149,7 @@ task worker:logs                      # the dev worker's logs
 - Step 2: upload a track against the dev API and watch `task worker:logs` next to the `api` logs.
 - Step 3: the dev worker's metrics token is `dev-metrics-token-local-only-0001`, so the same
   `node -e` from step 3 works through `docker compose -f
-  infra/docker-compose.preprod.yaml exec worker ...`. The dev Redis has no password and the
+  infra/docker-compose.dev.yaml exec worker ...`. The dev Redis has no password and the
   container is `redis`, so use `redis-cli llen bull:audio-processing:wait` there.
 - Step 4: restart with the consumer off in `api`:
 
@@ -158,4 +158,4 @@ task worker:logs                      # the dev worker's logs
   ```
 
 - Steps 5 to 7 are the same, with the container name `bitrate-worker` in `docker kill` and
-  `restart worker` through `docker compose -f infra/docker-compose.preprod.yaml`.
+  `restart worker` through `docker compose -f infra/docker-compose.dev.yaml --profile apps`.

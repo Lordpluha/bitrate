@@ -15,6 +15,13 @@ interface ImportMetaEnv {
    * the player's `NEXT_PUBLIC_SITE_URL` to it, like `VITE_API_URL` above.
    */
   readonly VITE_PLAYER_URL?: string
+  /**
+   * DSN of the `artists` Sentry project. Build-time like every `VITE_*` value; unset, the browser
+   * SDK starts disabled. The Dockerfile also exposes it to the server as `SENTRY_DSN`.
+   */
+  readonly VITE_SENTRY_DSN?: string
+  /** Sentry environment for this build; defaults to Vite's mode. */
+  readonly VITE_SENTRY_ENVIRONMENT?: string
 }
 
 interface ImportMeta {

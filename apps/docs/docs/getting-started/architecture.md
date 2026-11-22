@@ -28,8 +28,7 @@ bitrate/
 │   └── ncs-parser/       # NCS (audio format) parser
 │
 ├── infra/             # Docker Compose files + shell scripts
-│   ├── docker-compose.dev.yaml      # Minimal: postgres + redis
-│   ├── docker-compose.preprod.yaml  # Full dev stack
+│   ├── docker-compose.dev.yaml      # Dev: infra by default, apps with --profile apps
 │   ├── docker-compose.prod.yaml     # Production
 │   ├── nginx/           # Nginx configuration
 │   └── docker-monitor.sh # health/resource/db reporting — see `task monitor:*`

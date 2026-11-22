@@ -37,6 +37,38 @@ describe('getSignInFailure', () => {
     })
   })
 
+  it.each([
+    [
+      'oauth_cancelled',
+      'Sign-in was cancelled. Choose a way to sign in to continue.',
+    ],
+    [
+      'oauth_unavailable',
+      'This sign-in option is not available yet. Use another way to sign in.',
+    ],
+    [
+      'oauth_account_exists',
+      'An account with this email already exists. Sign in with your password and confirm your email first.',
+    ],
+    [
+      'oauth_email_missing',
+      'We did not receive an email address from that account. Allow access to your email, or sign in another way.',
+    ],
+    [
+      'oauth_email_unverified',
+      'That account has not confirmed its email address. Confirm it with the provider, or sign in another way.',
+    ],
+    ['oauth_account_unavailable', 'This account is no longer available.'],
+    [
+      'legal_acceptance_required',
+      'To create an account, accept the Terms of Use and Community Guidelines first.',
+    ],
+  ])('explains the %s social sign-in failure', (oauthError, message) => {
+    expect(
+      getSignInFailure({ oauthError, submitError: null, t })?.message,
+    ).toBe(message)
+  })
+
   it('reports any other social sign-in failure', () => {
     expect(
       getSignInFailure({ oauthError: 'access_denied', submitError: null, t })

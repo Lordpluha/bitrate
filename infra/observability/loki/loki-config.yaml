@@ -1,5 +1,5 @@
 # See ADR-0046. Single-node, filesystem-backed — no S3/GCS, same spirit as prometheus_data/
-# grafana_data in infra/docker-compose.preprod.yaml. `store: tsdb` is the current recommended
+# grafana_data in infra/docker-compose.dev.yaml. `store: tsdb` is the current recommended
 # index (Loki 2.8+); `boltdb-shipper`, which this repo's grill-me interview originally settled
 # on, is deprecated as of Loki 3.x and slated for removal in Loki 4.0 — verified against
 # Grafana's own docs while implementing, not the version assumed during the interview.

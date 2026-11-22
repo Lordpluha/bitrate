@@ -77,11 +77,14 @@ env:
   BUILD_API_URL: ${{ vars.API_URL || 'http://api:3000' }}
 
   # Sentry. The DSN is inlined into the client bundle by `next build`, so like the
-  # NEXT_PUBLIC_* values above it is fixed at image build time. Unset, the SDK
-  # initialises disabled and the image simply reports nothing — there is no
-  # hardcoded fallback in the source. SENTRY_AUTH_TOKEN is a secret and only
-  # enables the source map upload; without it the build still succeeds.
-  BUILD_NEXT_PUBLIC_SENTRY_DSN: ${{ vars.NEXT_PUBLIC_SENTRY_DSN }}
+  # NEXT_PUBLIC_* values above it is fixed at image build time. The source keeps no
+  # fallback (a developer build reports nowhere), but this workflow must: the repository
+  # declares no Actions variables, so a bare `vars.*` reference built every production
+  # image with `dsn: ""` and the player reported nothing. A DSN is public — it ships in
+  # every bundle — so, like the URLs above, the fallback is the real `player` project
+  # value. SENTRY_AUTH_TOKEN is a secret and only enables the source map upload; without
+  # it the build still succeeds.
+  BUILD_NEXT_PUBLIC_SENTRY_DSN: ${{ vars.NEXT_PUBLIC_SENTRY_DSN || 'https://7f786b1079e711e574f5d0c90bf02ae7@o4512027079213056.ingest.de.sentry.io/4512039180632144' }}
   BUILD_NEXT_PUBLIC_SENTRY_ENVIRONMENT: ${{ vars.NEXT_PUBLIC_SENTRY_ENVIRONMENT || 'production' }}
 
 jobs:
