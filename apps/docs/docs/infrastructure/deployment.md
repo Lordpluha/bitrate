@@ -143,8 +143,7 @@ explicitly so the rendered root file is the one that is read — which is exactl
 `prod:deploy` must be run from `$HOME/bitrate`.
 
 Note the asymmetry: `dev:*` and `infra:*` pass **no** `--env-file`, because every variable in
-`docker-compose.dev.yaml` and `docker-compose.preprod.yaml` has a `:-default` and those stacks
-must work on a clean checkout. Only `prod:*` needs the file, and only on the server. See
+`docker-compose.dev.yaml` has a `:-default` and that stack must work on a clean checkout. Only `prod:*` needs the file, and only on the server. See
 [Environment variables](../guides/environment.md).
 
 ### Where production configuration actually lives
@@ -154,8 +153,8 @@ GitHub, so editing it by hand on the server works only until the next deploy ove
 
 | Kind | Stored as | Holds |
 |---|---|---|
-| Secret | **environment** secret | `POSTGRES_PASSWORD`, `REDIS_PASSWORD`, `JWT_SECRET`, `DATABASE_URL`, `SMTP_USER`, `SMTP_PASS`, both OAuth client secrets, `METRICS_TOKEN`, `SENTRY_DSN`, `S3_ACCESS_KEY`, `S3_SECRET_KEY` (object store, ADR-0050), `DEPLOY_SSH_KEY` |
-| Configuration | **environment** variable | hosts, ports, token lifetimes, cookie names, `S3_BUCKET` (optional), `AUDIO_PROCESSING_WORKER_ENABLED` (optional, `true` or `false`; unset means `true`, see the [worker rollout runbook](./worker-rollout-runbook.md)), both OAuth client ids, `DEPLOY_HOST`, `DEPLOY_USER` |
+| Secret | **environment** secret | `POSTGRES_PASSWORD`, `REDIS_PASSWORD`, `JWT_SECRET`, `DATABASE_URL`, `SMTP_USER`, `SMTP_PASS`, both OAuth client secrets, `METRICS_TOKEN`, `SENTRY_DSN`, `S3_ACCESS_KEY`, `S3_SECRET_KEY` (object store: SeaweedFS per ADR-0050, or the R2 application token per ADR-0072), `BACKUP_S3_ACCESS_KEY`, `BACKUP_S3_SECRET_KEY`, `RESTIC_PASSWORD` (off-site backups, ADR-0072), `DEPLOY_SSH_KEY` |
+| Configuration | **environment** variable | hosts, ports, token lifetimes, cookie names, `S3_BUCKET` (optional), `S3_ENDPOINT` and `S3_REGION` (optional; unset keeps the in-stack SeaweedFS, set to the R2 endpoint and `auto` for Cloudflare R2), `BACKUP_S3_ENDPOINT` and `BACKUP_S3_BUCKET` (backups; bucket defaults to `bitrate-backups`), `AUDIO_PROCESSING_WORKER_ENABLED` (optional, `true` or `false`; unset means `true`, see the [worker rollout runbook](./worker-rollout-runbook.md)), both OAuth client ids, `DEPLOY_HOST`, `DEPLOY_USER` |
 
 `NEXT_PUBLIC_*` belong in the variable column on purpose: they are compiled into a client bundle
 that any visitor can read, so storing them as secrets protects nothing and only makes them harder
@@ -358,7 +357,7 @@ with `@faker-js/faker`, both devDependencies that the production image deliberat
 filling a live catalogue with generated artists is not something to do by accident. A production
 database starts empty.
 
-Not `task db:migrate` — that targets the preprod stack and runs `prisma migrate dev`, which
+Not `task db:migrate` — that targets the dev stack and runs `prisma migrate dev`, which
 generates migrations, wants a shadow database, and can reset the data it is pointed at.
 `prod:migrate` runs `migrate deploy` against the production stack.
 
@@ -375,14 +374,59 @@ certificate, or a missing certificate at `/etc/letsencrypt/live/<DOMAIN>/`.
 
 ## 6. Backups
 
-Production has **no automated backup**, and none of the tooling for one is in the repository. The
-off-host design of [ADR-0033](../architecture/0033-off-host-backups-and-object-storage.md) was
-removed on 2026-10-08 because its bucket and credentials were never provisioned, and the on-host
-`prod:backup` dumps that briefly replaced it were removed before they ever ran. Backups are
-tracked as separate work. SeaweedFS audio is not backed up either (ADR-0050).
+Off-site backups to Cloudflare R2 ([ADR-0072](../architecture/0072-cloudflare-r2-production-storage-and-backups.md)),
+run by the `backup` service of `infra/docker-compose.prod.yaml`:
 
-A snapshot of a volume with a running Postgres is not a consistent backup, so volume snapshots
-are a second line of defence, not a substitute.
+| What | When (UTC) | Where |
+|---|---|---|
+| PostgreSQL (`pg_dump`, encrypted restic repository) | every 6 h, and once when the service starts | `bitrate-backups/postgres` |
+| Audio bucket (`rclone sync`; removed objects kept 30 days) | daily 03:45 | `bitrate-backups/audio` |
+| Restore check (latest dump into a throwaway Postgres) | Sundays 05:30 | — |
+
+**Enable it** — the service starts only when every setting below exists on the `production`
+environment; a partial set fails the deploy preflight, none at all deploys with a warning:
+
+1. Cloudflare → R2: create the private bucket `bitrate-backups`, and an API token with *Object
+   Read & Write* on that bucket only. The application never receives this token.
+2. Generate the repository password: `openssl rand -base64 32`. **Store it in a password manager
+   first** — without it no database backup can be read.
+3. Variables `BACKUP_S3_ENDPOINT` (`https://<account>.r2.cloudflarestorage.com`) and optionally
+   `BACKUP_S3_BUCKET`; secrets `BACKUP_S3_ACCESS_KEY`, `BACKUP_S3_SECRET_KEY`, `RESTIC_PASSWORD`.
+4. Redeploy. On the server, `docker logs bitrate-backup-prod` shows each run; the container turns
+   `unhealthy` when the last good database backup is older than 7 hours.
+
+Restore procedures (database and audio): [infra/k8s/backup/README.md](https://github.com/Lordpluha/bitrate/blob/develop/infra/k8s/backup/README.md);
+on the compose stack run the same commands against `bitrate-postgres-prod` with `docker exec`.
+
+Before the R2 cutover the audio source is the in-stack SeaweedFS, which the service also backs
+up. A snapshot of a volume with a running Postgres is not a consistent backup, so volume
+snapshots are a second line of defence, not a substitute.
+
+### Object storage cutover to R2
+
+Moves production audio from SeaweedFS to R2 (ADR-0072). Production keeps serving from SeaweedFS
+until the last step; the only downtime is between `final` and the redeploy (minutes).
+
+1. **Prove R2 works with the API first.** From a workstation, with an R2 token for a scratch
+   bucket: `S3_INT_ENDPOINT=<endpoint> S3_INT_REGION=auto S3_INT_BUCKET=<bucket> S3_INT_ACCESS_KEY=… S3_INT_SECRET_KEY=…
+   pnpm --filter @bitrate/api run test:int -- s3.service` must pass all cases.
+2. Create the bucket `bitrate-audio` and an API token with *Object Read & Write* on it only.
+3. On the server, from `~/bitrate`, with the token in the shell only:
+   ```bash
+   export R2_ENDPOINT=https://<account>.r2.cloudflarestorage.com R2_BUCKET=bitrate-audio
+   export R2_ACCESS_KEY=… R2_SECRET_KEY=…
+   bash infra/storage-cutover.sh copy     # bulk copy while production runs; repeatable
+   bash infra/storage-cutover.sh verify   # optional: every object present?
+   bash infra/storage-cutover.sh final    # stops api/worker/admin-api, copies the rest, verifies
+   ```
+4. In GitHub → Settings → Environments → `production`: variables `S3_ENDPOINT` (the R2 endpoint),
+   `S3_REGION=auto`, `S3_BUCKET=bitrate-audio`; secrets `S3_ACCESS_KEY` / `S3_SECRET_KEY` = the R2
+   token. Then run **[platform] Deploy Production** with mode `redeploy` for the deployed tag.
+5. Check playback and an upload. SeaweedFS keeps its data; a later release removes it.
+
+**Rollback:** `bash infra/storage-cutover.sh rollback` copies anything written to R2 since the
+switch back into SeaweedFS; then unset `S3_ENDPOINT` / `S3_REGION`, restore the previous
+`S3_ACCESS_KEY` / `S3_SECRET_KEY`, and redeploy.
 
 ### One-off: copy the retired `api_storage` volume into the bucket
 

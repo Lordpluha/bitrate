@@ -1,0 +1,54 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: migrate
+spec:
+  backoffLimit: 5
+  ttlSecondsAfterFinished: 600
+  template:
+    spec:
+      enableServiceLinks: false
+      restartPolicy: OnFailure
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        runAsGroup: 1001
+        seccompProfile: { type: RuntimeDefault }
+      initContainers:
+        - name: wait-postgres
+          image: postgres:16-alpine
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities: { drop: [ALL] }
+          command: ["sh", "-c", "until pg_isready -h postgres -p 5432; do sleep 2; done"]
+          # The pod runs as uid 1001, which has no passwd entry in this image; without an explicit
+          # user libpq cannot name one and pg_isready answers "no attempt" forever.
+          env:
+            - { name: PGUSER, value: postgres }
+          resources:
+            requests: { cpu: 10m, memory: 16Mi }
+            limits: { cpu: 100m, memory: 64Mi }
+          volumeMounts:
+            - { name: tmp, mountPath: /tmp }
+      containers:
+        - name: migrate
+          image: bitrate/api:dev
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities: { drop: [ALL] }
+          command: ["pnpm", "--filter", "@bitrate/api", "run", "db:migration:deploy"]
+          envFrom:
+            - secretRef:
+                name: bitrate-env
+          env:
+            - { name: HOME, value: /tmp }
+          resources:
+            requests: { cpu: 100m, memory: 256Mi }
+            limits: { cpu: "1", memory: 512Mi }
+          volumeMounts:
+            - { name: tmp, mountPath: /tmp }
+      volumes:
+        - { name: tmp, emptyDir: {} }

@@ -56,14 +56,16 @@ x-api-env: &api-env
   SMTP_USER:
   SMTP_PASS:
   EMAIL_FROM:
-  # The object store is internal and fixed, so the endpoint is not configuration. The credentials
-  # are the bucket-scoped application identity, never an admin one.
-  S3_ENDPOINT: http://seaweedfs:8333
+  # Object storage. Cloudflare R2 once S3_ENDPOINT points at it (ADR-0072); while it is unset,
+  # the in-stack SeaweedFS service below (ADR-0050), which stays until the cutover is complete.
+  # The credentials are the bucket-scoped application token, never an account-wide one.
+  S3_ENDPOINT: ${S3_ENDPOINT:-http://seaweedfs:8333}
   S3_BUCKET: ${S3_BUCKET:-bitrate-audio}
   S3_ACCESS_KEY: ${S3_ACCESS_KEY}
   S3_SECRET_KEY: ${S3_SECRET_KEY}
   S3_FORCE_PATH_STYLE: "true"
-  S3_REGION:
+  # `auto` for R2. SeaweedFS ignores the region.
+  S3_REGION: ${S3_REGION:-us-east-1}
   S3_PUBLIC_URL:
   # Token lifetimes. Absent here, the API fell back to its schema defaults, so
   # changing any of them in .env had no effect on production at all.
@@ -123,7 +125,9 @@ services:
     networks:
       - bitrate-network
 
-  # S3-compatible object store for audio (ADR-0050). Single node, internal network only: no
+  # S3-compatible object store for audio (ADR-0050) until the move to Cloudflare R2 (ADR-0072):
+  # the application uses it while S3_ENDPOINT is unset, and it keeps its data afterwards as the
+  # rollback path until a later release removes it. Single node, internal network only: no
   # `ports:`, no nginx route, so nothing outside bitrate-network can reach it. The API serves
   # objects to browsers (signed token URLs), the store is never published.
   #
@@ -193,9 +197,93 @@ services:
     networks:
       - bitrate-network
 
+  # ─────────────────────────────────────────
+  # Off-site backups (ADR-0072), enabled by the `backup` profile: the deploy workflow renders
+  # COMPOSE_PROFILES=backup once the backup credentials are configured. The same scripts as
+  # the Kubernetes CronJobs (infra/backup), scheduled by crond inside postgres:16-alpine:
+  # the database every 6 h into an encrypted restic repository, the media bucket daily into a
+  # second bucket, and a weekly restore check. BACKUP_S3_* is a token for the backup bucket
+  # that the application never gets. Runbook: infra/k8s/backup/README.md.
+  # ─────────────────────────────────────────
+  # One-shots that copy the static restic and rclone binaries into a shared volume, so the
+  # backup service runs a stock postgres image (pg_dump matching the server) with both tools.
+  backup-restic:
+    profiles: [backup]
+    logging: *default-logging
+    image: restic/restic:0.18.0
+    restart: "no"
+    entrypoint: ["cp", "/usr/bin/restic", "/tools/restic"]
+    volumes:
+      - backup_tools:/tools
+
+  backup-rclone:
+    profiles: [backup]
+    logging: *default-logging
+    image: rclone/rclone:1.69.1
+    restart: "no"
+    entrypoint: ["cp", "/usr/local/bin/rclone", "/tools/rclone"]
+    volumes:
+      - backup_tools:/tools
+
+  backup:
+    profiles: [backup]
+    logging: *default-logging
+    image: postgres:16-alpine
+    container_name: bitrate-backup-prod
+    restart: always
+    entrypoint: ["sh", "/scripts/compose-entrypoint.sh"]
+    environment:
+      PATH: /tools:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      # Source: the application's bucket, read with the application's own token.
+      S3_ENDPOINT: ${S3_ENDPOINT:-http://seaweedfs:8333}
+      S3_BUCKET: ${S3_BUCKET:-bitrate-audio}
+      S3_ACCESS_KEY: ${S3_ACCESS_KEY}
+      S3_SECRET_KEY: ${S3_SECRET_KEY}
+      S3_REGION: ${S3_REGION:-us-east-1}
+      BACKUP_SOURCE_PROVIDER: ${BACKUP_SOURCE_PROVIDER:-SeaweedFS}
+      # Target: the backup bucket, written with the backup token.
+      BACKUP_S3_ENDPOINT: ${BACKUP_S3_ENDPOINT:-}
+      BACKUP_S3_BUCKET: ${BACKUP_S3_BUCKET:-bitrate-backups}
+      BACKUP_S3_PROVIDER: Cloudflare
+      BACKUP_S3_ACCESS_KEY: ${BACKUP_S3_ACCESS_KEY:-}
+      BACKUP_S3_SECRET_KEY: ${BACKUP_S3_SECRET_KEY:-}
+      RESTIC_PASSWORD: ${RESTIC_PASSWORD:-}
+      RESTIC_CACHE_DIR: /root/.cache/restic
+    volumes:
+      - ./backup:/scripts:ro
+      - backup_tools:/tools:ro
+      - backup_work:/work
+      - backup_cache:/root/.cache/restic
+    # Unhealthy when the last good database backup is older than 7 hours (one missed 6-hour
+    # run), so `docker ps` and the monitoring scripts show it without reading the logs.
+    healthcheck:
+      test: ["CMD-SHELL", "f=/run/backup/ok-backup-postgres; [ -f $$f ] && [ $$(( $$(date +%s) - $$(cat $$f) )) -lt 25200 ]"]
+      interval: 5m
+      timeout: 5s
+      retries: 1
+      start_period: 15m
+    depends_on:
+      backup-restic:
+        condition: service_completed_successfully
+      backup-rclone:
+        condition: service_completed_successfully
+      postgres:
+        condition: service_healthy
+    networks:
+      - bitrate-network
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+        reservations:
+          memory: 64M
+
   api:
     logging: *default-logging
-    image: ghcr.io/lordpluha/bitrate/api:${IMAGE_TAG:-master}
+    image: ghcr.io/lordpluha/bitrate/api:${IMAGE_TAG:?IMAGE_TAG must name the release to deploy}
     build:
       context: ..
       dockerfile: ./apps/api/Dockerfile
@@ -233,7 +321,7 @@ services:
   # the public HTTP endpoints only, so it does not read this container's state.
   worker:
     logging: *default-logging
-    image: ghcr.io/lordpluha/bitrate/api:${IMAGE_TAG:-master}
+    image: ghcr.io/lordpluha/bitrate/api:${IMAGE_TAG:?IMAGE_TAG must name the release to deploy}
     build:
       context: ..
       dockerfile: ./apps/api/Dockerfile
@@ -292,7 +380,7 @@ services:
   # consumes no queue — it only enqueues, like the public API.
   admin-api:
     logging: *default-logging
-    image: ghcr.io/lordpluha/bitrate/api:${IMAGE_TAG:-master}
+    image: ghcr.io/lordpluha/bitrate/api:${IMAGE_TAG:?IMAGE_TAG must name the release to deploy}
     build:
       context: ..
       dockerfile: ./apps/api/Dockerfile
@@ -332,7 +420,7 @@ services:
 
   web-player:
     logging: *default-logging
-    image: ghcr.io/lordpluha/bitrate/web-player:${IMAGE_TAG:-master}
+    image: ghcr.io/lordpluha/bitrate/web-player:${IMAGE_TAG:?IMAGE_TAG must name the release to deploy}
     build:
       context: ..
       dockerfile: ./apps/web-player/Dockerfile
@@ -370,7 +458,7 @@ services:
 
   web-artists:
     logging: *default-logging
-    image: ghcr.io/lordpluha/bitrate/web-artists:${IMAGE_TAG:-master}
+    image: ghcr.io/lordpluha/bitrate/web-artists:${IMAGE_TAG:?IMAGE_TAG must name the release to deploy}
     build:
       context: ..
       dockerfile: ./apps/web-artists/Dockerfile
@@ -378,6 +466,10 @@ services:
       args:
         - VITE_API_URL=${NEXT_PUBLIC_API_URL}
         - VITE_PLAYER_URL=${NEXT_PUBLIC_SITE_URL}
+        # Sentry is baked in at build time, like web-player's. Unset, the SDK starts disabled.
+        - VITE_SENTRY_DSN=${VITE_SENTRY_DSN:-}
+        - VITE_SENTRY_ENVIRONMENT=${VITE_SENTRY_ENVIRONMENT:-production}
+        - SENTRY_RELEASE=${SENTRY_RELEASE:-}
     container_name: bitrate-web-artists-prod
     restart: always
     environment:
@@ -398,7 +490,7 @@ services:
 
   admin:
     logging: *default-logging
-    image: ghcr.io/lordpluha/bitrate/admin:${IMAGE_TAG:-master}
+    image: ghcr.io/lordpluha/bitrate/admin:${IMAGE_TAG:?IMAGE_TAG must name the release to deploy}
     build:
       context: ..
       dockerfile: ./apps/admin/Dockerfile
@@ -453,7 +545,7 @@ services:
   # runtime state, so they need neither environment nor a dependency on the API.
   docs:
     logging: *default-logging
-    image: ghcr.io/lordpluha/bitrate/docs:${IMAGE_TAG:-master}
+    image: ghcr.io/lordpluha/bitrate/docs:${IMAGE_TAG:?IMAGE_TAG must name the release to deploy}
     build:
       context: ..
       dockerfile: ./apps/docs/Dockerfile
@@ -472,7 +564,7 @@ services:
   # Composed Storybook: ui-react at /, player at /player/, admin UI kit at /admin/.
   storybook:
     logging: *default-logging
-    image: ghcr.io/lordpluha/bitrate/storybook:${IMAGE_TAG:-master}
+    image: ghcr.io/lordpluha/bitrate/storybook:${IMAGE_TAG:?IMAGE_TAG must name the release to deploy}
     build:
       context: ..
       dockerfile: ./packages/ui-react/Dockerfile
@@ -503,7 +595,7 @@ services:
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       # Templates, not conf.d: the image's entrypoint renders ${DOMAIN} into conf.d at start,
-      # so conf.d must stay writable and must not also carry the preprod HTTP-only server.
+      # so conf.d must stay writable and must not also carry the dev HTTP-only server.
       - ./nginx/templates:/etc/nginx/templates:ro
       - ./nginx/snippets:/etc/nginx/snippets:ro
       # Blanks out the image's stock default.conf, which sorts before the rendered prod.conf
@@ -535,6 +627,12 @@ volumes:
   # SeaweedFS data (ADR-0050). NOT covered by any backup yet: audio written here
   # has no off-host copy. Accepted risk, recorded in ADR-0050.
   seaweedfs_data:
+    driver: local
+  backup_tools:
+    driver: local
+  backup_work:
+    driver: local
+  backup_cache:
     driver: local
 
 networks:

@@ -147,9 +147,9 @@ jobs:
       WEB_HOST: http://localhost:3001
       JWT_SECRET: api-ci-secret-value
       PORT: 3000
-      # Object storage is required to boot. These are the preprod compose defaults for the
+      # Object storage is required to boot. These are the dev compose defaults for the
       # bucket-scoped application identity of the SeaweedFS service started below (published
-      # on loopback by the CI overlay).
+      # on loopback by the dev compose file).
       S3_ENDPOINT: http://127.0.0.1:8333
       S3_BUCKET: bitrate-audio
       S3_ACCESS_KEY: bitrateDevAccessKey
@@ -234,18 +234,18 @@ jobs:
       # The shipped SeaweedFS definition (same image, entrypoint and bucket-scoped identity
       # as production), not a stock service container: a service container cannot override
       # the image command, and the default `mini` command takes no S3 identity config. The
-      # preprod file defaults every variable, so no env is needed; the CI overlay publishes
-      # the S3 port on loopback for the runner. See ADR-0050.
+      # dev file defaults every variable, so no env is needed, and publishes the S3 port on
+      # loopback for the runner. See ADR-0050.
       - name: Start SeaweedFS object store
         run: |
-          COMPOSE="docker compose -f infra/docker-compose.preprod.yaml -f infra/docker-compose.ci.yaml"
+          COMPOSE="docker compose -f infra/docker-compose.dev.yaml -f infra/docker-compose.ci.yaml"
           $COMPOSE up -d --wait seaweedfs
           $COMPOSE run --rm seaweedfs-init
 
       - name: Run integration tests
         run: pnpm --filter @bitrate/api run test:int
         env:
-          # The preprod compose defaults for the bucket-scoped application identity.
+          # The dev compose defaults for the bucket-scoped application identity.
           S3_INT_ENDPOINT: http://127.0.0.1:8333
           S3_INT_BUCKET: bitrate-audio
           S3_INT_ACCESS_KEY: bitrateDevAccessKey
@@ -259,7 +259,7 @@ jobs:
 
       - name: Show SeaweedFS logs on failure
         if: failure()
-        run: docker compose -f infra/docker-compose.preprod.yaml -f infra/docker-compose.ci.yaml logs --tail=100 seaweedfs
+        run: docker compose -f infra/docker-compose.dev.yaml -f infra/docker-compose.ci.yaml logs --tail=100 seaweedfs
 
       # One contract per API process (#458). The public process builds dist with the Swagger
       # plugin; the operator process then runs from that same build, because a second
