@@ -629,7 +629,6 @@ export const pl = {
   'sidebar.credits': 'Twórcy',
   'sidebar.mainArtist': 'Główny wykonawca',
   'sidebar.nowPlayingFrom': 'Teraz odtwarzane · {name}',
-  'sidebar.openArtist': 'Otwórz stronę wykonawcy {name}',
   'sidebar.upNext': 'Następne',
   'stats.allTime': 'Cały czas',
   'stats.artists': 'Wykonawcy',

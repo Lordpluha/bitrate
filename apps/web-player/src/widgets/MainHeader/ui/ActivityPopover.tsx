@@ -147,7 +147,7 @@ export const ActivityPopover = () => {
         </div>
         <div className="border-t border-border p-2">
           <Link
-            className="block rounded-md py-2 text-center text-[13px] font-semibold text-primary transition-colors hover:bg-surface"
+            className="block rounded-md py-2 text-center text-[13px] font-semibold text-text-brand transition-colors hover:bg-surface"
             href={ROUTES.activity}
             onClick={() => setIsOpen(false)}
           >

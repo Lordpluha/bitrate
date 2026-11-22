@@ -90,7 +90,7 @@ export const TwoFactorSettingsSection = () => {
             value={twoFactor.disableCode}
           />
           <button
-            className="inline-flex h-9 w-fit items-center rounded-md bg-destructive px-6 text-sm font-medium text-destructive-foreground transition-colors hover:bg-destructive/90 disabled:opacity-60"
+            className="inline-flex h-9 w-fit items-center rounded-md bg-destructive-surface px-6 text-sm font-medium text-destructive-foreground transition-colors hover:bg-destructive-surface/90 disabled:opacity-60"
             disabled={twoFactor.isPending}
             type="submit"
           >

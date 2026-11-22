@@ -72,15 +72,12 @@ export const ArtistSingleCard = ({
 
   return (
     <button
-      aria-label={t('common.playName', { name: release.track.title })}
       className={cn(cardClassName, 'w-full cursor-pointer')}
       onClick={() => onPlayTrack(release.track, release.index)}
       type="button"
     >
-      <Cover
-        alt={release.track.title}
-        src={getTrackCoverUrl(release.track.cover)}
-      />
+      <span className="sr-only">{t('common.play')} </span>
+      <Cover alt="" src={getTrackCoverUrl(release.track.cover)} />
       <h3 className="line-clamp-1 font-[family-name:var(--font-landing-body)] text-[13px] font-semibold text-foreground">
         {release.track.title}
       </h3>

@@ -53,7 +53,7 @@ export const LikeAlbumButton = ({
       className={cn(
         'rounded-full transition-colors disabled:cursor-not-allowed disabled:opacity-60',
         isLiked
-          ? 'text-primary hover:text-primary-hover'
+          ? 'text-text-brand hover:text-primary-hover'
           : 'text-muted-foreground hover:text-foreground',
         className,
       )}

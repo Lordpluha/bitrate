@@ -56,7 +56,11 @@ export const ArtistPopularTrackRow = ({
       />
       <span className="pointer-events-none relative z-10 flex justify-start font-[family-name:var(--font-landing-display)] text-xl font-bold text-muted-foreground">
         {isActive && isPlaying ? (
-          <AudioLines aria-hidden="true" className="text-primary" size={16} />
+          <AudioLines
+            aria-hidden="true"
+            className="text-text-brand"
+            size={16}
+          />
         ) : (
           <>
             <span className="group-hover:hidden group-focus-within:hidden">
@@ -85,7 +89,7 @@ export const ArtistPopularTrackRow = ({
         <span
           className={cn(
             'truncate text-sm font-semibold',
-            isActive ? 'text-primary' : 'text-foreground',
+            isActive ? 'text-text-brand' : 'text-foreground',
           )}
         >
           {track.title}

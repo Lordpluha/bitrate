@@ -605,7 +605,6 @@ export const en = {
   'sidebar.credits': 'Credits',
   'sidebar.mainArtist': 'Main Artist',
   'sidebar.nowPlayingFrom': 'Now playing · {name}',
-  'sidebar.openArtist': 'Open {name} artist page',
   'sidebar.upNext': 'Up next',
   'stats.allTime': 'All time',
   'stats.artists': 'Artists',

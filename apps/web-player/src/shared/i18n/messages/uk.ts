@@ -624,7 +624,6 @@ export const uk = {
   'sidebar.credits': 'Автори',
   'sidebar.mainArtist': 'Основний виконавець',
   'sidebar.nowPlayingFrom': 'Зараз грає · {name}',
-  'sidebar.openArtist': 'Відкрити сторінку виконавця {name}',
   'sidebar.upNext': 'Далі',
   'stats.allTime': 'За весь час',
   'stats.artists': 'Виконавці',

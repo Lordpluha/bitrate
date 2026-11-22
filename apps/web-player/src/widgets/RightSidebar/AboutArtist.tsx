@@ -38,7 +38,6 @@ export const AboutArtist = () => {
   return (
     <div className="overflow-hidden rounded-lg bg-surface">
       <Link
-        aria-label={t('sidebar.openArtist', { name: artist.username })}
         className="group block rounded-t-lg outline-hidden focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-text"
         href={ROUTES.artist(artist.username)}
       >
@@ -62,6 +61,7 @@ export const AboutArtist = () => {
             {t('sidebar.aboutArtist')}
           </h2>
         </div>
+        <span className="sr-only">{artist.username}</span>
       </Link>
 
       <div className="p-4">
@@ -87,7 +87,7 @@ export const AboutArtist = () => {
               <>
                 {ncsBioPrefix}{' '}
                 <a
-                  className="font-medium text-foreground underline decoration-text-subdued underline-offset-2 transition-colors hover:text-primary focus-visible:rounded-sm focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-text"
+                  className="font-medium text-foreground underline decoration-text-subdued underline-offset-2 transition-colors hover:text-text-brand focus-visible:rounded-sm focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-text"
                   href={ncsBioLink.href}
                   rel="noopener noreferrer"
                   target="_blank"
