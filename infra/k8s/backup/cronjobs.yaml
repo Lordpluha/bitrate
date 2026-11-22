@@ -7,6 +7,7 @@ apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: backup-postgres
+  namespace: bitrate
 spec:
   schedule: "15 */6 * * *"
   timeZone: Etc/UTC
@@ -71,6 +72,7 @@ apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: backup-audio
+  namespace: bitrate
 spec:
   schedule: "45 3 * * *"
   timeZone: Etc/UTC
@@ -119,6 +121,7 @@ apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: backup-verify
+  namespace: bitrate
 spec:
   schedule: "30 5 * * 0"
   timeZone: Etc/UTC
