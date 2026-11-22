@@ -69,11 +69,13 @@ themes and five front-ends.
   and artist. Progress ticks, buffering and position updates are never announced.
 - **P-4 Single-key shortcuts are controllable (SC 2.1.4).** Any shortcut that uses a letter,
   digit or punctuation key without a modifier can be turned off in settings, or works only
-  while the player has focus. Shortcuts are listed in a keyboard-shortcut help dialog.
-- **P-5 Global shortcuts do not take keys from the page.** Arrow keys and Space go to the
-  player only when focus is on the player or nowhere interactive *and* the page cannot use
-  them, such as scrolling. Editable fields, sliders, listboxes, menus and dialogs always
-  keep their keys.
+  while the player has focus. Every shortcut is listed where the switch is (web-player:
+  Settings → Keyboard).
+- **P-5 Global shortcuts do not take keys from the page.** Up and Down go to the player only
+  when nothing interactive has focus *and* the focused area cannot scroll that way. Space
+  toggles playback when nothing interactive has focus, as music players conventionally do;
+  Page Down still scrolls. Editable fields, sliders, listboxes, menus and dialogs always keep
+  their keys.
 - **P-6 No surprise audio (SC 1.4.2).** Nothing starts playing on page load without a user
   gesture. The user's `autoplay` setting only continues a queue the user started. Any audio
   that plays can be paused or muted from a control reachable in the first few Tab stops.
@@ -94,9 +96,9 @@ themes and five front-ends.
 
 ### Language and content
 
-- **L-1 `<html lang>` matches the content from the first byte** in every locale (en, pl, uk),
-  not only after hydration. A screen reader that loads the server HTML must pick the right
-  voice.
+- **L-1 `<html lang>` matches the content at every moment** in every locale (en, pl, uk).
+  When the server renders English and the client switches language after hydration, `lang`
+  switches with the content, not before or after it.
 - **L-2 Every accessible name is translated.** No hard-coded English in `aria-label`,
   `aria-valuetext`, live-region text or `alt`. That includes `ui-react` defaults such as the
   spinner's "Loading" and `packages/player` labels.
@@ -131,116 +133,82 @@ themes and five front-ends.
 
 ## Current state
 
-Audited on 2026-11-19 against `develop` at `8c657ce74`.
+Audited on 2026-11-19 against `develop` at `8c657ce74`; the first round of fixes and gates
+landed in [#553](https://github.com/Lordpluha/bitrate/pull/553).
 
-### Tooling
+### Gates
 
-| Check | Where it runs | Gate? |
+| Check | Command | Runs in CI |
 |---|---|---|
-| Biome `recommended` a11y group | root, `ui-react`, `web-player`, `web-artists`, `desktop` | Yes, through `biome ci` |
-| angular-eslint `templateAccessibility` | `apps/admin` | Yes, through lint in CI |
-| `eslint-plugin-svelte` recommended + Svelte compiler a11y warnings | `packages/player` | Lint only |
-| `@storybook/addon-a11y` | `ui-react`, `player` | **No**: `a11y: { test: 'todo' }` only reports |
-| axe in Playwright / Vitest | nowhere | — |
-| Contrast check on token pairs | nowhere (`check:tokens` only rejects stock scales and hex) | — |
-| Mobile a11y lint | none (`eslint-config-expo` only) | — |
+| Biome `recommended` a11y group | `biome ci` | Every Biome workspace |
+| angular-eslint `templateAccessibility` | `pnpm --filter @bitrate/admin lint` | admin |
+| Token contrast, every theme | `pnpm check:tokens` | ui-react "Design Tokens" job |
+| axe over every ui-react story, every theme | `pnpm --filter @bitrate/ui-react test:a11y` | ui-react "Accessibility" job |
+| axe over every player layout | `pnpm --filter @bitrate/player test:browser` | player browser tests |
+| axe over web-player routes, every theme | `pnpm --filter @bitrate/web-player test:screenshot` | web-player screenshot job |
+| axe over web-artists public routes | `pnpm --filter @bitrate/web-artists test:screenshot` | web-artists screenshot job |
 
-### What already works
+A story or route that must skip an axe rule says why in its `parameters.a11y` (Storybook's own
+format), and the exemption names a gap below.
 
+### What works
+
+- **Everywhere on the web:**
+  - Contrast holds in dark, light and dim. `text-brand` is the purple for text,
+    `destructive-surface` the red for filled controls.
+  - Focus stays visible in forced colours: `outline-hidden`, not `outline-none`, plus a
+    forced-colours layer in `@bitrate/tailwind`.
+  - A skip link in every app shell.
 - **web-player:**
-  - Global `:focus-visible` ring from `--color-ring`.
-  - Global reduced-motion override.
-  - `TrackAnnouncer` polite now-playing region, with a spec.
-  - `useOverlayFocus` (trap, Escape, restore) for its dialogs.
-  - `inert` behind the burger menu.
-  - Player hotkeys that skip editable targets.
-  - Labelled volume range.
-  - Media Session.
+  - Single-key shortcuts can be switched off and are listed in Settings → Keyboard.
+  - Up/Down leave scrollable pages alone.
+  - Every page has a title, which the Next.js route announcer reads on navigation.
+  - Accessible names contain the visible label (WCAG 2.5.3).
+  - Slider values are spoken, and the live region announces the track.
 - **web-artists:**
-  - `<html lang={locale}>`.
-  - Skip link to `#workspace-content`.
+  - `<html lang>` follows the locale from the server.
   - Native `<dialog>` with initial focus and restore.
-  - Sliders with `aria-valuetext` (listening chart, waveform).
-  - Reduced motion handled throughout.
-  - Live regions on charts.
+  - Sliders speak their values.
 - **admin:**
+  - `<html lang>` follows the locale switch.
   - Template a11y lint.
-  - `aria-invalid` / `aria-describedby` on forms.
-  - `sr-only` text throughout.
-  - Reduced-motion styles.
+  - Forms wire `aria-invalid` and `aria-describedby`.
 - **player element:**
-  - Native buttons and ranges with labels.
-  - `aria-pressed` toggles.
-  - `role="alert"` errors.
-  - Decorative cover `alt=""`.
-  - Reduced-motion styles.
-  - Translatable labels.
-  - Opt-in Media Session.
+  - Seek and volume speak `1:23 of 3:45` and `75%`, translatable through `labels`.
+  - Pressed buttons and sliders keep a visible shape in forced colours.
 - **ui-react:**
-  - Base UI for menus, popovers, selects and tooltips.
-  - Form fields wire `aria-describedby` / `aria-invalid`.
-  - Password toggle exposes `aria-pressed`.
+  - Every story passes axe in every theme.
+  - Items in an `ItemGroup` are list items.
+  - Decorative separators carry no stray ARIA.
+  - No placeholder lint suppressions.
 
 ## Known gaps
 
-Ordered by severity within each workspace. IDs are stable; reference them in commits and
-PRs.
+IDs are stable; reference them in commits and PRs. Closed rows are removed in the PR that
+closes them (A11Y-01 to A11Y-19 closed in #553; A11Y-03 and A11Y-15 turned out not to be
+defects: the server HTML is English content with `lang="en"`, and the web-artists theme
+script runs before paint).
 
 | ID | Workspace | Gap | Evidence | Requirement |
 |---|---|---|---|---|
-| A11Y-01 | web-player | Single-key shortcuts (M, S, R, L, Q, +, −) are global and cannot be turned off | `widgets/Player/model/usePlayerHotkeys.ts:132-173`; `isEnabled` follows only player visibility (`usePlayerController.ts:69`) | P-4 |
-| A11Y-02 | web-player | Arrow keys and Space are taken from the page whenever focus is outside an interactive element, so arrow-key scrolling stops working | `usePlayerHotkeys.ts:97-128` | P-5 |
-| A11Y-03 | web-player | Server HTML is always `lang="en"`; the real locale is set only after hydration | `app/layout.tsx:74-79`, `shared/i18n/ui/I18nProvider.tsx:19` | L-1 |
-| A11Y-04 | web-player | No skip link | no match in `src/` | N-1 |
-| A11Y-05 | web-player | Library mobile search input removes the outline with no replacement | `views/Library/ui/LibraryMobileControls.tsx:73` | T-3 |
-| A11Y-06 | web-player | Route-change focus or announcement is not implemented by the app; it relies on whatever Next.js provides, which is unverified | — | N-3 |
-| A11Y-07 | player | Seek and volume ranges have no `aria-valuetext`; seek announces raw seconds | `RangeInput.svelte:25-35`, `SeekBar.svelte` | P-2 |
-| A11Y-08 | ui-react | Eight `biome-ignore lint/a11y/*` with the placeholder reason `hz`, including a `div onClick` without keyboard support in `InputGroup` | `carousel.tsx:146,182`, `item.tsx:10`, `input-group.tsx:10,62-63`, `button-group.tsx:30` | D-2 |
-| A11Y-09 | ui-react | Menu and select items use `outline-none` with a background-only focus state | `dropdown-menu.tsx:43,99,116,139`, `select.tsx:120` | T-2, T-3 |
-| A11Y-10 | ui-react | `Badge` uses `focus:` instead of `focus-visible:` | `badge.tsx:6` | baseline |
-| A11Y-11 | ui-react | `Spinner` label is hard-coded English | `spinner.tsx:8-9` | L-2 |
-| A11Y-12 | ui-react, player | Storybook a11y does not fail the build | `.storybook/preview.tsx:54`, `.storybook/preview.ts:17` | D-3 |
-| A11Y-13 | admin | `<html lang="en">` is static; switching to uk does not update it | `src/index.html:2` | L-1 |
-| A11Y-14 | admin | No skip link | — | N-1 |
-| A11Y-15 | web-artists | `<html className="dark">` is hard-coded in the root route; confirm the theme script replaces it before paint, or light-theme users get a flash of the wrong contrast | `routes/__root.tsx:79-82` | T-1 |
-| A11Y-16 | all web | No `forced-colors` handling anywhere | — | T-2 |
-| A11Y-17 | all web | No automated contrast check for token pairs in any theme | `scripts/check-design-tokens.mjs` | T-1 |
-| A11Y-18 | all web | No axe run in e2e or browser tests | — | Verification |
-| A11Y-19 | docs | `a11y.md` and `PRODUCT.md` require contrast in dark and light only; dim is not named | `a11y.md` (Colour and contrast) | T-1 |
 | A11Y-20 | mobile | Starter screens have no `accessibilityLabel`/`Role` and no reduced-motion handling; no a11y lint | `apps/mobile` | Scope (applies once product screens land) |
-| A11Y-21 | desktop | Starter input has a placeholder but no label | `apps/desktop/src/App.tsx:39-43` | Scope (applies once product screens land) |
+| A11Y-21 | desktop | Starter input has a placeholder but no label | `apps/desktop/src/App.tsx` | Scope (applies once product screens land) |
+| A11Y-22 | ui-react | `Table`'s scroll wrapper cannot be reached by keyboard when its content overflows | `components/ui/table/table.tsx`; exempted in the token-catalogue stories | 2.1.1 |
+| A11Y-23 | player | Shuffle and repeat show "on" by colour alone outside forced colours (`aria-pressed` covers screen readers) | `element/parts/IconButton.svelte` (`.icon-button--active`) | 1.4.1; needs a design decision |
+| A11Y-24 | web-artists, admin | No axe pass over the signed-in workspace or the admin console: the screenshot suites have no fixture API for them | `apps/web-artists/tests/configs`, `apps/admin` | Verification |
+| A11Y-25 | web-player | Page titles come from server metadata and stay English in pl and uk | `src/app/**/page.tsx` | 3.1.2 |
+| A11Y-26 | web-player | The landing shows the app scaled down (player-preview hotspots 15px tall with no other screen switcher, demo panels), so its targets fall below 24px; `target-size` is skipped on `/` in the route axe pass | `views/LandingView/ui/scenes/PlayerPreview.tsx` (`.pv-spot`), `SceneDevices.tsx`, `SceneRules.tsx` | 2.5.8; needs a design decision |
 
 ## Plan
 
-Each phase is a separate PR chain, one workspace per PR, as in
-[`commit-style`](.claude/rules/commit-style.md). Phase 1 comes first, because without gates
-the fixes in Phase 2 regress silently.
-
-1. **Gates.**
-   - Switch Storybook a11y to `test: 'error'` in `ui-react` and `player` (A11Y-12) and fix
-     what it surfaces.
-   - Add `@axe-core/playwright` to the existing web-player and web-artists e2e suites, with
-     one axe pass per route in every theme (A11Y-18).
-   - Extend `pnpm check:tokens` with a WCAG contrast check over the declared foreground and
-     background token pairs for dark, light and dim (A11Y-17).
-2. **Level A failures and blockers.**
-   - A11Y-01, A11Y-02: a settings toggle for single-key shortcuts, on by default, persisted
-     with account settings; arrows only when nothing scrollable has focus; a shortcut help
-     dialog.
-   - A11Y-07: `aria-valuetext` in the player element, with translatable templates.
-   - A11Y-03, A11Y-13: correct `lang` from the server or at bootstrap.
-   - A11Y-08: replace each suppression with a semantic element or a real reason.
-3. **AA polish.**
-   - Skip links (A11Y-04, A11Y-14).
-   - Focus rings (A11Y-05, A11Y-09, A11Y-10).
-   - Spinner i18n (A11Y-11).
-   - Route-change announcement (A11Y-06).
-   - Theme flash check (A11Y-15).
-   - Align `a11y.md` with three themes (A11Y-19).
-4. **Forced colours** across `packages/tailwind` themes and `ui-react` (A11Y-16).
-5. **Native surfaces.**
-   - Add `eslint-plugin-react-native-a11y` or an equivalent to mobile.
-   - Apply the mobile rules from the first product screen (A11Y-20, A11Y-21).
+1. **A11Y-24:** extend the fixture APIs so the web-artists workspace and the admin console get
+   the same route-level axe pass.
+2. **A11Y-22, A11Y-23, A11Y-26:** a focusable, labelled scroll region for `Table`; a
+   non-colour "on" mark for player toggles and a visible screen switcher for the landing
+   preview, designed in Pencil first.
+3. **A11Y-25:** localised titles once the locale reaches the server (cookie or path).
+4. **A11Y-20, A11Y-21 (native surfaces):** add `eslint-plugin-react-native-a11y` or an
+   equivalent to mobile, and apply the mobile rules from the first product screen.
 
 A gap is closed when its fix is merged together with a test or a gate that would have caught
 it. Remove the row from the table in the same PR.
@@ -252,7 +220,8 @@ it. Remove the row from the table in the same PR.
 Before marking a UI change ready:
 
 1. `pnpm lint` passes with no new a11y suppression, or every new one carries a real reason.
-2. Storybook a11y panel is clean for every touched `ui-react` or `player` story.
+2. `pnpm --filter @bitrate/ui-react test:a11y` passes, and the Storybook a11y panel is clean for
+   every touched `player` story.
 3. Tab through the changed flow: everything reachable, order matches the screen, focus
    always visible, Escape closes overlays and focus returns to the trigger.
 4. Run it with one screen reader from the support matrix: names, roles, states and
