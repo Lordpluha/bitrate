@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/tanstackstart-react'
 import { PagePending } from '@shared/ui/Loading'
 import { NotFound } from '@shared/ui/NotFound'
 import { createRouter } from '@tanstack/react-router'
@@ -9,7 +10,7 @@ import { routeTree } from './routeTree.gen'
  * into the next request's SSR render.
  */
 export function getRouter() {
-  return createRouter({
+  const router = createRouter({
     routeTree,
     scrollRestoration: true,
     defaultPendingComponent: PagePending,
@@ -19,6 +20,13 @@ export function getRouter() {
     defaultNotFoundComponent: NotFound,
     defaultPreload: 'intent',
   })
+  /** Turns client navigations into Sentry spans; the server traces requests in `server.ts`. */
+  if (!router.isServer) {
+    Sentry.addIntegration(
+      Sentry.tanstackRouterBrowserTracingIntegration(router),
+    )
+  }
+  return router
 }
 
 declare module '@tanstack/react-router' {
