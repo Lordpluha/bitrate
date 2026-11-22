@@ -65,6 +65,16 @@ ENV VITE_API_URL=${VITE_API_URL}
 # Public player address (the player's NEXT_PUBLIC_SITE_URL), for links to released albums.
 ARG VITE_PLAYER_URL
 ENV VITE_PLAYER_URL=${VITE_PLAYER_URL}
+# Sentry. The DSN is inlined into the browser bundle, so like the URLs above it is a build arg;
+# unset, the SDK starts disabled. SENTRY_RELEASE names the release the source maps attach to.
+# The auth token only enables the source map upload and arrives as a secret mount below, so it
+# never lands in the image's layer history.
+ARG VITE_SENTRY_DSN
+ENV VITE_SENTRY_DSN=${VITE_SENTRY_DSN}
+ARG VITE_SENTRY_ENVIRONMENT
+ENV VITE_SENTRY_ENVIRONMENT=${VITE_SENTRY_ENVIRONMENT}
+ARG SENTRY_RELEASE
+ENV SENTRY_RELEASE=${SENTRY_RELEASE}
 ENV NODE_ENV=production
 
 # node_modules (the root one and every per-package one pnpm created), then the pruned sources.
@@ -78,6 +88,7 @@ COPY --from=pruner /app/out/full/ ./
 RUN --mount=type=secret,id=turbo_token,env=TURBO_TOKEN \
     pnpm exec turbo run build --filter=@bitrate/ui-react
 RUN --mount=type=secret,id=turbo_token,env=TURBO_TOKEN \
+    --mount=type=secret,id=sentry_auth_token,env=SENTRY_AUTH_TOKEN \
     pnpm exec turbo run build --filter=@bitrate/web-artists
 
 # Stage 6: Production
@@ -85,6 +96,16 @@ RUN --mount=type=secret,id=turbo_token,env=TURBO_TOKEN \
 # needs — so there is no prod-dependencies stage and no node_modules to copy.
 FROM base AS production
 ENV NODE_ENV=production
+# The SSR server's Sentry (src/instrument.server.ts) reads process.env at runtime first, so the
+# same build-time values are carried into the runtime image: browser and server then report to
+# one project, environment and release (the server has no other source for the release). A DSN
+# is public, it already ships in the client bundle.
+ARG VITE_SENTRY_DSN
+ARG VITE_SENTRY_ENVIRONMENT
+ARG SENTRY_RELEASE
+ENV SENTRY_DSN=${VITE_SENTRY_DSN}
+ENV SENTRY_ENVIRONMENT=${VITE_SENTRY_ENVIRONMENT}
+ENV SENTRY_RELEASE=${SENTRY_RELEASE}
 # node:26-alpine is rebuilt upstream only every few weeks, while Alpine ships fixes for its
 # packages (zlib, musl, ...) in between; upgrading here keeps the scan clean without waiting
 # for a new tag.

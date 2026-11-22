@@ -378,6 +378,10 @@ services:
       args:
         - VITE_API_URL=${NEXT_PUBLIC_API_URL}
         - VITE_PLAYER_URL=${NEXT_PUBLIC_SITE_URL}
+        # Sentry is baked in at build time, like web-player's. Unset, the SDK starts disabled.
+        - VITE_SENTRY_DSN=${VITE_SENTRY_DSN:-}
+        - VITE_SENTRY_ENVIRONMENT=${VITE_SENTRY_ENVIRONMENT:-production}
+        - SENTRY_RELEASE=${SENTRY_RELEASE:-}
     container_name: bitrate-web-artists-prod
     restart: always
     environment:

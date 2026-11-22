@@ -45,6 +45,9 @@ on:
       turbo-token:
         description: Turbo remote cache token for the turbo build inside the Dockerfile
         required: false
+      sentry-auth-token:
+        description: Sentry token the Dockerfile uses to upload source maps
+        required: false
 
 permissions:
   contents: read
@@ -63,6 +66,15 @@ env:
   # repository declares no Actions variables, so the fallback is the value that applies;
   # `vars.*` stays as the override hook for forks and a future staging environment.
   BUILD_NEXT_PUBLIC_API_URL: ${{ vars.NEXT_PUBLIC_API_URL || 'https://api.bitrate.me' }}
+
+  # Sentry (`artists` project). The DSN is inlined into the client bundle by `vite build`, so it
+  # is fixed at image build time like the URL above, and the Dockerfile carries it into the
+  # runtime image for the SSR server. A DSN is public — it ships in every bundle — so, as with
+  # the URL, the fallback is the real value: the repository declares no Actions variables, and an
+  # empty `vars.*` reference is exactly how web-player's production image ended up reporting
+  # nothing. SENTRY_AUTH_TOKEN is a secret and only enables the source map upload.
+  BUILD_VITE_SENTRY_DSN: ${{ vars.VITE_SENTRY_DSN || 'https://2a00fbe7db2f0b8ac693e0f1f865334b@o4512027079213056.ingest.de.sentry.io/4512474689044560' }}
+  BUILD_VITE_SENTRY_ENVIRONMENT: ${{ vars.VITE_SENTRY_ENVIRONMENT || 'production' }}
 
 jobs:
   web-artists-checks:
@@ -148,8 +160,12 @@ jobs:
           cache-to: ${{ inputs.cache-to-registry && format('type=registry,ref={0}/{1}/cache/web-artists:buildcache,mode=max,compression=zstd,ignore-error=true', env.REGISTRY, env.IMAGE_PREFIX) || '' }}
           secrets: |
             turbo_token=${{ secrets.turbo-token }}
+            sentry_auth_token=${{ secrets.sentry-auth-token }}
           build-args: |
             VITE_API_URL=${{ env.BUILD_NEXT_PUBLIC_API_URL }}
+            VITE_SENTRY_DSN=${{ env.BUILD_VITE_SENTRY_DSN }}
+            VITE_SENTRY_ENVIRONMENT=${{ env.BUILD_VITE_SENTRY_ENVIRONMENT }}
+            SENTRY_RELEASE=${{ github.sha }}
           target: production
 
       - name: Resolve image reference for scanning

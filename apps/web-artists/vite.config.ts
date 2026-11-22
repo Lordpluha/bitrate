@@ -1,3 +1,4 @@
+import { sentryTanstackStart } from '@sentry/tanstackstart-react/vite'
 import tailwindcss from '@tailwindcss/vite'
 import { nitroV2Plugin } from '@tanstack/nitro-v2-vite-plugin'
 import { tanstackStart } from '@tanstack/react-start/plugin/vite'
@@ -43,5 +44,17 @@ export default defineConfig({
     }),
     /** react's vite plugin must come after start's vite plugin. */
     viteReact(),
+    /**
+     * Last, as Sentry requires. Uploads source maps when SENTRY_AUTH_TOKEN is set at build time
+     * (absent, the build just skips it), names the release from SENTRY_RELEASE, instruments the
+     * middlewares in src/start.ts and adds the release meta tag the browser SDK reads. Server init
+     * is imported by src/server.ts: the plugin's automatic loading needs Nitro v3, not nitro-v2.
+     */
+    sentryTanstackStart({
+      org: 'bitrate-1l',
+      project: 'artists',
+      authToken: process.env.SENTRY_AUTH_TOKEN,
+      silent: !process.env.CI,
+    }),
   ],
 })

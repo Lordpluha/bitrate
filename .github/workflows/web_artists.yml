@@ -69,6 +69,7 @@ jobs:
     uses: $/.github/workflows/web_artists_reusable.yml
     secrets:
       turbo-token: ${{ secrets.TURBO_TOKEN }}
+      sentry-auth-token: ${{ secrets.SENTRY_AUTH_TOKEN }}
     with:
       push-image: false
       tags: ghcr.io/lordpluha/${{ github.event.repository.name }}/web-artists:pr-${{ github.sha }}
@@ -84,6 +85,7 @@ jobs:
     uses: $/.github/workflows/web_artists_reusable.yml
     secrets:
       turbo-token: ${{ secrets.TURBO_TOKEN }}
+      sentry-auth-token: ${{ secrets.SENTRY_AUTH_TOKEN }}
     with:
       push-image: true
       tags: |
@@ -111,6 +113,7 @@ jobs:
     uses: $/.github/workflows/web_artists_reusable.yml
     secrets:
       turbo-token: ${{ secrets.TURBO_TOKEN }}
+      sentry-auth-token: ${{ secrets.SENTRY_AUTH_TOKEN }}
     with:
       push-image: true
       # Three tags, and the third one is the rollback handle:
