@@ -2,6 +2,7 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: migrate
+  namespace: bitrate
 spec:
   backoffLimit: 5
   ttlSecondsAfterFinished: 600
