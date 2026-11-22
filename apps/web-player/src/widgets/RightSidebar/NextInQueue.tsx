@@ -40,7 +40,7 @@ const UpNextRowContent = ({ track }: UpNextRowContentProps) => (
       width={48}
     />
     <span className="flex min-w-0 flex-1 flex-col gap-1.25">
-      <span className="truncate text-[13px] font-semibold text-foreground group-hover:text-primary">
+      <span className="truncate text-[13px] font-semibold text-foreground group-hover:text-text-brand">
         {track.title}
       </span>
       <span className="truncate text-[11px] text-muted-foreground">
@@ -107,7 +107,8 @@ export const NextInQueue = () => {
             </button>
           ) : null}
           <Link
-            className="text-xs text-accent hover:underline"
+            /* 28px tall target (WCAG 2.5.8); the negative margin keeps the row's height */
+            className="-my-1.5 inline-block py-1.5 text-xs text-accent hover:underline"
             href={ROUTES.queue}
           >
             {t('player.openQueue')}
@@ -123,7 +124,6 @@ export const NextInQueue = () => {
               </Link>
             ) : (
               <button
-                aria-label={t('common.playName', { name: track.title })}
                 className={cn(rowClassName, 'w-full text-left')}
                 onClick={() =>
                   playPlaylist({
@@ -136,6 +136,7 @@ export const NextInQueue = () => {
                 }
                 type="button"
               >
+                <span className="sr-only">{t('common.play')} </span>
                 <UpNextRowContent track={track} />
               </button>
             )}

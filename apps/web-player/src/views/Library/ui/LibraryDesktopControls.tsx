@@ -25,7 +25,7 @@ export const LibraryDesktopControls = ({
       <label>
         <span className="sr-only">{t('library.sort')}</span>
         <select
-          className="h-9 w-45 rounded-md border border-border bg-background px-3 text-sm text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          className="h-9 w-45 rounded-md border border-border bg-background px-3 text-sm text-foreground outline-hidden focus-visible:ring-2 focus-visible:ring-ring"
           onChange={(event) =>
             onChange({
               sortMode: event.target.value as LibraryControls['sortMode'],

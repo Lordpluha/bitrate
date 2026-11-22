@@ -14,7 +14,8 @@ const preview: Preview = {
         date: /Date$/i,
       },
     },
-    a11y: { test: 'todo' },
+    /** Violations fail; `src/element/a11y.browser-spec.ts` runs axe over every layout in CI. */
+    a11y: { test: 'error' },
   },
 }
 

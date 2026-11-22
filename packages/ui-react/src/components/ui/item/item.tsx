@@ -1,19 +1,27 @@
 import { cva, type VariantProps } from 'class-variance-authority'
-import type { ComponentProps } from 'react'
+import { type ComponentProps, createContext, useContext } from 'react'
 
 import { Slot } from '@/lib/slot'
 import { cn } from '@/lib/utils'
 import { Separator } from '../separator'
 
+/**
+ * Whether an Item renders inside an ItemGroup, so it takes the listitem role. An `asChild` Item
+ * keeps its child's own role (link, button): a listitem role would replace it.
+ */
+const ItemGroupContext = createContext(false)
+
 function ItemGroup({ className, ...props }: ComponentProps<'div'>) {
   return (
-    // biome-ignore lint/a11y/useSemanticElements: hz
-    <div
-      role="list"
-      data-slot="item-group"
-      className={cn('group/item-group flex flex-col', className)}
-      {...props}
-    />
+    <ItemGroupContext.Provider value={true}>
+      {/* biome-ignore lint/a11y/useSemanticElements: Items may render through asChild as links or buttons, which a <ul> cannot hold directly; role="listitem" keeps the list semantics */}
+      <div
+        role="list"
+        data-slot="item-group"
+        className={cn('group/item-group flex flex-col', className)}
+        {...props}
+      />
+    </ItemGroupContext.Provider>
   )
 }
 
@@ -29,7 +37,7 @@ function ItemSeparator({ className, ...props }: ComponentProps<typeof Separator>
 }
 
 const itemVariants = cva(
-  'group/item [a]:hover:bg-collection-row-hover/50 focus-visible:border-ring focus-visible:ring-ring/50 [a]:transition-colors flex flex-wrap items-center rounded-md border border-transparent text-sm outline-none transition-colors duration-100 focus-visible:ring-[3px]',
+  'group/item [a]:hover:bg-collection-row-hover/50 focus-visible:border-ring focus-visible:ring-ring/50 [a]:transition-colors flex flex-wrap items-center rounded-md border border-transparent text-sm outline-hidden transition-colors duration-100 focus-visible:ring-[3px]',
   {
     variants: {
       variant: {
@@ -57,8 +65,10 @@ function Item({
   ...props
 }: ComponentProps<'div'> & VariantProps<typeof itemVariants> & { asChild?: boolean }) {
   const Comp = asChild ? Slot : 'div'
+  const isInGroup = useContext(ItemGroupContext)
   return (
     <Comp
+      role={isInGroup && !asChild ? 'listitem' : undefined}
       data-slot="item"
       data-variant={variant}
       data-size={size}

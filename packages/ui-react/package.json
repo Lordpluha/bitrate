@@ -41,6 +41,7 @@
     "test:int": "vitest run --project=integration --reporter=verbose",
     "test:snapshot": "vitest run --project=snapshot --reporter=verbose",
     "test:snapshot:update": "vitest run --project=snapshot --reporter=verbose --update",
+    "test:a11y": "vitest run --project=a11y",
     "test:screenshot": "vitest run --project=screenshot",
     "test:screenshot:update": "vitest run --project=screenshot --update",
     "test:cov": "vitest run --project=unit --project=integration --project=snapshot --coverage"
@@ -70,6 +71,7 @@
     "@vitest/browser": "^5.0.3",
     "@vitest/browser-playwright": "^5.0.3",
     "@vitest/coverage-v8": "^5.0.3",
+    "axe-core": "^4.14.0",
     "jsdom": "^30.1.1",
     "playwright": "^1.64.0",
     "storybook": "^10.6.1",

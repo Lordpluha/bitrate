@@ -26,15 +26,14 @@ describe('LanguageSwitcher', () => {
     expect(
       screen.getByRole('group', { name: 'Interface language' }),
     ).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'English' })).toHaveAttribute(
+    expect(screen.getByRole('button', { name: 'EN English' })).toHaveAttribute(
       'aria-pressed',
       'true',
     )
-    expect(screen.getByRole('button', { name: 'Українська' })).toHaveAttribute(
-      'aria-pressed',
-      'false',
-    )
-    expect(screen.getByRole('button', { name: 'Polski' })).toHaveTextContent(
+    expect(
+      screen.getByRole('button', { name: 'UK Українська' }),
+    ).toHaveAttribute('aria-pressed', 'false')
+    expect(screen.getByRole('button', { name: 'PL Polski' })).toHaveTextContent(
       'PL',
     )
   })
@@ -43,15 +42,14 @@ describe('LanguageSwitcher', () => {
     const user = userEvent.setup()
     render(<Harness />)
 
-    await user.click(screen.getByRole('button', { name: 'Українська' }))
+    await user.click(screen.getByRole('button', { name: 'UK Українська' }))
 
     expect(useSettingsStore.getState().language).toBe('uk')
     expect(
       screen.getByRole('group', { name: 'Мова інтерфейсу' }),
     ).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Українська' })).toHaveAttribute(
-      'aria-pressed',
-      'true',
-    )
+    expect(
+      screen.getByRole('button', { name: 'UK Українська' }),
+    ).toHaveAttribute('aria-pressed', 'true')
   })
 })

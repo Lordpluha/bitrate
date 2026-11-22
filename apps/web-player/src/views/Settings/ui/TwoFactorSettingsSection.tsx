@@ -45,7 +45,7 @@ export const TwoFactorSettingsSection = () => {
           </label>
           <input
             autoComplete="one-time-code"
-            className="h-10 rounded-md border border-border bg-background px-3 text-sm text-foreground outline-none placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring"
+            className="h-10 rounded-md border border-border bg-background px-3 text-sm text-foreground outline-hidden placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring"
             id="enable-two-factor-code"
             inputMode="numeric"
             maxLength={6}
@@ -77,7 +77,7 @@ export const TwoFactorSettingsSection = () => {
           </label>
           <input
             autoComplete="one-time-code"
-            className="h-10 rounded-md border border-border bg-background px-3 text-sm text-foreground outline-none placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring"
+            className="h-10 rounded-md border border-border bg-background px-3 text-sm text-foreground outline-hidden placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring"
             id="disable-two-factor-code"
             inputMode="numeric"
             maxLength={6}
@@ -90,7 +90,7 @@ export const TwoFactorSettingsSection = () => {
             value={twoFactor.disableCode}
           />
           <button
-            className="inline-flex h-9 w-fit items-center rounded-md bg-destructive px-6 text-sm font-medium text-destructive-foreground transition-colors hover:bg-destructive/90 disabled:opacity-60"
+            className="inline-flex h-9 w-fit items-center rounded-md bg-destructive-surface px-6 text-sm font-medium text-destructive-foreground transition-colors hover:bg-destructive-surface/90 disabled:opacity-60"
             disabled={twoFactor.isPending}
             type="submit"
           >

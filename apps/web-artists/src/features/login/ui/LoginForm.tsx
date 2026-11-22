@@ -142,7 +142,7 @@ export const LoginForm = () => {
               <p>{tMessage(form.formState.errors.root.message)}</p>
               {form.formState.errors.root.type === 'emailVerification' && (
                 <Link
-                  className="font-semibold underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  className="font-semibold underline focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring"
                   search={{ email: form.getValues('email'), next: search.next }}
                   to={ROUTES.auth.verifyEmail}
                 >

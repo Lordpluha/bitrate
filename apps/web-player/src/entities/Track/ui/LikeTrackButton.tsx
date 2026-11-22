@@ -32,7 +32,7 @@ export const LikeButton = ({
       aria-label={t(isLiked ? 'likes.remove' : 'likes.add', { title })}
       aria-pressed={isLiked}
       className={cn(
-        'shrink-0 rounded-full p-1 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-60',
+        'shrink-0 rounded-full p-1 transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-60',
         isLiked ? 'text-accent' : 'text-muted-foreground hover:text-foreground',
         className,
       )}

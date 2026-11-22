@@ -1,5 +1,6 @@
 import { Component, inject } from '@angular/core'
 import { RouterOutlet } from '@angular/router'
+import { TranslocoPipe } from '@jsverse/transloco'
 import { SessionStore } from '@application/session'
 import {
   AppMobileBars,
@@ -16,7 +17,7 @@ import {
  */
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, AppMobileBars, AppSidebar, AppTopBar],
+  imports: [RouterOutlet, AppMobileBars, AppSidebar, AppTopBar, TranslocoPipe],
   host: { '(document:keydown)': 'onKeydown($event)' },
   templateUrl: './app.html',
 })

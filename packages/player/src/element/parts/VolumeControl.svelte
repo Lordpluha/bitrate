@@ -22,5 +22,6 @@
   progress={player.volumeProgress}
   step="0.01"
   value={player.volume}
+  valueText={player.labels.volumeValue(player.volumeProgress)}
   variant="volume"
 />
