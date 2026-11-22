@@ -14,10 +14,19 @@ spec:
     spec:
       enableServiceLinks: false
       terminationGracePeriodSeconds: 660
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        runAsGroup: 1001
+        seccompProfile: { type: RuntimeDefault }
       containers:
         - name: worker
           image: bitrate/api:dev
           imagePullPolicy: IfNotPresent
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities: { drop: [ALL] }
           command: ["node", "apps/api/dist/src/main.worker.js"]
           envFrom:
             - secretRef:
@@ -41,6 +50,8 @@ spec:
           volumeMounts:
             - name: scratch
               mountPath: /app/worker-tmp
+            - { name: tmp, mountPath: /tmp }
       volumes:
         - name: scratch
           emptyDir: {}
+        - { name: tmp, emptyDir: {} }

@@ -28,9 +28,18 @@ spec:
       labels:
         app: local-r2
     spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        seccompProfile: { type: RuntimeDefault }
       containers:
         - name: s3
           image: rclone/rclone:1.69.1
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities: { drop: [ALL] }
           command: ["sh", "-c"]
           args:
             - mkdir -p /data/bitrate-backups && exec rclone serve s3 /data --addr :8080 --auth-key local-backup,local-backup-secret
@@ -41,5 +50,7 @@ spec:
             limits: { cpu: 500m, memory: 256Mi }
           volumeMounts:
             - { name: data, mountPath: /data }
+            - { name: tmp, mountPath: /tmp }
       volumes:
         - { name: data, emptyDir: {} }
+        - { name: tmp, emptyDir: {} }

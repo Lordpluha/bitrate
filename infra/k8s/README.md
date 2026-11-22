@@ -24,6 +24,10 @@ After a rebuild: `task k8s:build && task k8s:restart`. Remove everything: `task 
 - Every container sets CPU/memory requests and limits; CPU is written as `"1"` rather than
   `1000m` because the API server normalises it, and `kubectl apply` would otherwise report a
   change on every run.
+- Every pod runs as a non-root user with a read-only root filesystem, no privilege escalation,
+  no capabilities and the `RuntimeDefault` seccomp profile; the paths a process writes to
+  (`/tmp`, caches, sockets) are `emptyDir` volumes. A new workload needs the same, or Trivy's
+  IaC scan in CI fails the pull request.
 - `migrate` and `seaweedfs-init` are Jobs, whose pod template cannot change in place. If an
   apply fails on them: `kubectl -n bitrate delete job migrate seaweedfs-init`, then apply again.
 - Backups (CronJobs to an S3 target, R2 in production): [backup/README.md](backup/README.md).
