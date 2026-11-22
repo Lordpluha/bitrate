@@ -3,7 +3,23 @@ import tailwindcss from '@tailwindcss/vite'
 import { nitroV2Plugin } from '@tanstack/nitro-v2-vite-plugin'
 import { tanstackStart } from '@tanstack/react-start/plugin/vite'
 import viteReact from '@vitejs/plugin-react'
-import { defineConfig } from 'vite'
+import { defineConfig, type Plugin } from 'vite'
+import { assertDeployEnv } from './env.schema'
+
+/**
+ * Refuses a deployable build that would ship the source's localhost fallbacks. The Dockerfile
+ * that builds the image sets ENFORCE_DEPLOY_ENV; lint, typecheck, tests and local builds do not,
+ * and legitimately have no public origin. `config.env` is what Vite inlines into the bundle,
+ * `.env` files and shell values already merged in Vite's own precedence.
+ */
+const enforceDeployEnv = (): Plugin => ({
+  name: 'bitrate-enforce-deploy-env',
+  apply: 'build',
+  configResolved(config) {
+    if (process.env.ENFORCE_DEPLOY_ENV)
+      assertDeployEnv({ environment: config.env })
+  },
+})
 
 export default defineConfig({
   server: {
@@ -19,6 +35,7 @@ export default defineConfig({
     tsconfigPaths: true,
   },
   plugins: [
+    enforceDeployEnv(),
     tailwindcss(),
     tanstackStart(),
     /**

@@ -76,6 +76,11 @@ ENV VITE_SENTRY_ENVIRONMENT=${VITE_SENTRY_ENVIRONMENT}
 ARG SENTRY_RELEASE
 ENV SENTRY_RELEASE=${SENTRY_RELEASE}
 ENV NODE_ENV=production
+# This stage produces the deployable artifact, so vite.config.ts refuses to build unless
+# VITE_API_URL and VITE_PLAYER_URL are real public HTTPS origins. Without it a missing build arg
+# silently shipped the source's localhost fallbacks. Demanded here rather than on every
+# `vite build`: lint, typecheck, E2E and local builds legitimately have no public origin.
+ENV ENFORCE_DEPLOY_ENV=1
 
 # node_modules (the root one and every per-package one pnpm created), then the pruned sources.
 COPY --from=dependencies /app/ ./

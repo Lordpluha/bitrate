@@ -59,13 +59,15 @@ env:
   REGISTRY: ghcr.io
   IMAGE_PREFIX: lordpluha/${{ github.event.repository.name }}
 
-  # `next build` inlines NEXT_PUBLIC_* into the client bundle, so this value is what the
-  # published image talks to forever — a server-side env var cannot correct it later. This
-  # build passed no build arg at all before, which left the ARG empty and the bundle
-  # pointing at apps/web-artists/env.schema.ts's http://localhost:3000 default. The
-  # repository declares no Actions variables, so the fallback is the value that applies;
-  # `vars.*` stays as the override hook for forks and a future staging environment.
+  # `vite build` inlines VITE_* into the client bundle, so these values are what the published
+  # image uses forever — a server-side env var cannot correct them later. A missing build arg
+  # used to ship the source's localhost fallbacks (the production portal linked albums to
+  # http://localhost:3001); the Dockerfile now refuses to build without real HTTPS origins. The
+  # repository declares no Actions variables, so the fallbacks are the values that apply;
+  # `vars.*` stays as the override hook for forks and a future staging environment. The names
+  # are the deployment's shared ones, mapped to this app's VITE_ names in the build args.
   BUILD_NEXT_PUBLIC_API_URL: ${{ vars.NEXT_PUBLIC_API_URL || 'https://api.bitrate.me' }}
+  BUILD_NEXT_PUBLIC_SITE_URL: ${{ vars.NEXT_PUBLIC_SITE_URL || 'https://bitrate.me' }}
 
   # Sentry (`artists` project). The DSN is inlined into the client bundle by `vite build`, so it
   # is fixed at image build time like the URL above, and the Dockerfile carries it into the
@@ -163,6 +165,7 @@ jobs:
             sentry_auth_token=${{ secrets.sentry-auth-token }}
           build-args: |
             VITE_API_URL=${{ env.BUILD_NEXT_PUBLIC_API_URL }}
+            VITE_PLAYER_URL=${{ env.BUILD_NEXT_PUBLIC_SITE_URL }}
             VITE_SENTRY_DSN=${{ env.BUILD_VITE_SENTRY_DSN }}
             VITE_SENTRY_ENVIRONMENT=${{ env.BUILD_VITE_SENTRY_ENVIRONMENT }}
             SENTRY_RELEASE=${{ github.sha }}
