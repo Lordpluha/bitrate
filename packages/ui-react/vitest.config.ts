@@ -60,6 +60,25 @@ export default defineConfig({
         },
       },
       {
+        /* Every story through axe in a real browser with the real CSS, so contrast counts too. */
+        plugins: [icons(), tailwindcss(), react()],
+        resolve: { alias },
+        test: {
+          name: 'a11y',
+          globals: true,
+          fileParallelism: false,
+          testTimeout: 60_000,
+          setupFiles: ['./vitest-browser-setup.ts'],
+          include: ['src/**/*.a11y-spec.{ts,tsx}'],
+          browser: {
+            enabled: true,
+            provider: playwright(),
+            screenshotFailures: false,
+            instances: [{ browser: 'chromium' }],
+          },
+        },
+      },
+      {
         plugins: [icons(), tailwindcss(), react()],
         resolve: { alias },
         test: {

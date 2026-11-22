@@ -113,6 +113,27 @@ jobs:
       - name: Run snapshot tests
         run: pnpm --filter @bitrate/ui-react run test:snapshot
 
+  a11y:
+    if: ${{ always() && inputs.run-tests && (!inputs.run-biome || needs.biome.result == 'success') }}
+    needs: biome
+    name: UI React Accessibility (axe, every story, every theme)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup Node.js and pnpm
+        uses: $/.github/actions/setup-node-pnpm
+
+      - name: Install Playwright Chromium
+        run: pnpm exec playwright install chromium --with-deps
+
+      - name: Run axe over every story in every theme
+        run: pnpm --filter @bitrate/ui-react run test:a11y
+
   screenshot:
     if: ${{ always() && inputs.run-screenshot && (!inputs.run-biome || needs.biome.result == 'success') }}
     needs: biome
