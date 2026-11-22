@@ -22,9 +22,18 @@ spec:
         spec:
           restartPolicy: Never
           enableServiceLinks: false
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 70
+            runAsGroup: 70
+            seccompProfile: { type: RuntimeDefault }
           initContainers:
             - name: tools
               image: restic/restic:0.18.0
+              securityContext:
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: true
+                capabilities: { drop: [ALL] }
               command: ["cp", "/usr/bin/restic", "/tools/restic"]
               volumeMounts:
                 - { name: tools, mountPath: /tools }
@@ -34,6 +43,10 @@ spec:
           containers:
             - name: backup
               image: postgres:16-alpine
+              securityContext:
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: true
+                capabilities: { drop: [ALL] }
               command: ["sh", "/scripts/backup-postgres.sh"]
               envFrom:
                 - secretRef: { name: bitrate-env }
@@ -44,6 +57,7 @@ spec:
                 - { name: tools, mountPath: /tools }
                 - { name: scripts, mountPath: /scripts }
                 - { name: work, mountPath: /work }
+                - { name: tmp, mountPath: /tmp }
               resources:
                 requests: { cpu: 100m, memory: 128Mi }
                 limits: { cpu: "1", memory: 512Mi }
@@ -51,6 +65,7 @@ spec:
             - { name: tools, emptyDir: {} }
             - { name: work, emptyDir: {} }
             - { name: scripts, configMap: { name: backup-scripts } }
+            - { name: tmp, emptyDir: {} }
 ---
 apiVersion: batch/v1
 kind: CronJob
@@ -72,20 +87,33 @@ spec:
         spec:
           restartPolicy: Never
           enableServiceLinks: false
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+            runAsGroup: 1000
+            seccompProfile: { type: RuntimeDefault }
           containers:
             - name: backup
               image: rclone/rclone:1.69.1
+              securityContext:
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: true
+                capabilities: { drop: [ALL] }
               command: ["sh", "/scripts/backup-audio.sh"]
               envFrom:
                 - secretRef: { name: bitrate-env }
                 - secretRef: { name: backup-env }
+              env:
+                - { name: HOME, value: /tmp }
               volumeMounts:
                 - { name: scripts, mountPath: /scripts }
+                - { name: tmp, mountPath: /tmp }
               resources:
                 requests: { cpu: 100m, memory: 128Mi }
                 limits: { cpu: "1", memory: 512Mi }
           volumes:
             - { name: scripts, configMap: { name: backup-scripts } }
+            - { name: tmp, emptyDir: {} }
 ---
 apiVersion: batch/v1
 kind: CronJob
@@ -108,12 +136,18 @@ spec:
           enableServiceLinks: false
           securityContext:
             # postgres in the alpine image; initdb refuses to run as root
+            runAsNonRoot: true
             runAsUser: 70
             runAsGroup: 70
             fsGroup: 70
+            seccompProfile: { type: RuntimeDefault }
           initContainers:
             - name: tools
               image: restic/restic:0.18.0
+              securityContext:
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: true
+                capabilities: { drop: [ALL] }
               command: ["cp", "/usr/bin/restic", "/tools/restic"]
               volumeMounts:
                 - { name: tools, mountPath: /tools }
@@ -123,6 +157,10 @@ spec:
           containers:
             - name: verify
               image: postgres:16-alpine
+              securityContext:
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: true
+                capabilities: { drop: [ALL] }
               command: ["sh", "/scripts/verify-restore.sh"]
               envFrom:
                 - secretRef: { name: bitrate-env }
@@ -131,6 +169,7 @@ spec:
                 - { name: tools, mountPath: /tools }
                 - { name: scripts, mountPath: /scripts }
                 - { name: work, mountPath: /work }
+                - { name: tmp, mountPath: /tmp }
               resources:
                 requests: { cpu: 200m, memory: 256Mi }
                 limits: { cpu: "1", memory: 1Gi }
@@ -138,3 +177,4 @@ spec:
             - { name: tools, emptyDir: {} }
             - { name: work, emptyDir: {} }
             - { name: scripts, configMap: { name: backup-scripts } }
+            - { name: tmp, emptyDir: {} }
