@@ -20,6 +20,8 @@ import {
   DISTRIBUTION_ADAPTER,
   NotConnectedDistributionAdapter,
 } from './distribution/distribution-adapter'
+import { ReleaseChangesController } from './release-changes.controller'
+import { ReleaseChangesService } from './release-changes.service'
 import { ReleaseCompilationController } from './release-compilation.controller'
 import { ReleaseCompilationService } from './release-compilation.service'
 import { ReleaseCoverService } from './release-cover.service'
@@ -45,6 +47,7 @@ import { ReleasesService } from './releases.service'
   controllers: [
     ReleasesController,
     ReleaseCompilationController,
+    ReleaseChangesController,
     ReleaseMediaController,
     ReleaseTasksController,
     ArtistTasksController,
@@ -60,6 +63,7 @@ import { ReleasesService } from './releases.service'
   providers: [
     ReleasesService,
     ReleaseCompilationService,
+    ReleaseChangesService,
     ReleaseDeletionService,
     ReleaseCreditsService,
     ReleaseMediaService,
