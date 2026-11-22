@@ -2,7 +2,7 @@
 
 > Status: **implemented on 2026-11-12; PR preparation authorized** (branch `feat/web-artists-free-grid`,
 > API and web-artists are submitted separately). The owner confirmed the decisions and the plan in chat
-> on 2026-11-12. Clickable prototype: <https://claude.ai/artifact/MCLXXM9akb3DhJ8Y75fBoT>
+> on 2026-11-12. Clickable prototype: [claude.ai/artifact/MCLXXM9akb3DhJ8Y75fBoT](https://claude.ai/artifact/MCLXXM9akb3DhJ8Y75fBoT)
 > (the owner's verdict: "much better, port it to the project").
 
 ## Goal and boundaries
@@ -88,7 +88,7 @@ Choices made while implementing, within the approved decisions:
 - Placement reports "will shrink to fit" against the requested size, so a tile clipped at
   the right edge also shows the badge. `pushDown` stays internal and is covered through
   `placeTile`, `resizeTile` and `resizeTileFrom` (edge and corner handles).
-- Each tile in edit mode has a transparent full-size "Move {tile}" button that takes focus
+- Each tile in edit mode has a transparent full-size `Move {tile}` button that takes focus
   and the arrow keys; dragging works from anywhere on the tile. A polite status line
   announces the new cell and size after each key press.
 - Phones and touch-only screens (`max-width: 639px`, or `hover: none` with a coarse
