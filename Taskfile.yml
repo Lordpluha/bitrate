@@ -42,7 +42,7 @@ tasks:
   # Recommended for native app development
   # ─────────────────────────────────────────
   infra:up:
-    desc: Start infra only — postgres, postgres_test, redis, seaweedfs object store
+    desc: Start infra only — postgres, postgres_test, redis, seaweedfs object store, qdrant
     cmds:
       - cmd: '{{.DC_INFRA}} up -d'
 

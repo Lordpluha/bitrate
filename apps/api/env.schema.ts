@@ -108,6 +108,22 @@ export const envSchema = z
      */
     AUDIO_PROCESSING_WORKER_ENABLED: booleanFromEnv.default(true),
 
+    /**
+     * Support assistant knowledge index (ADR-0075). The ingest runs only when both
+     * `QDRANT_URL` and `OPENAI_API_KEY` are set; otherwise it is skipped with a log line.
+     */
+    QDRANT_URL: z.url().optional(),
+    QDRANT_API_KEY: z.string().min(1).optional(),
+    /** Key for the default embedding provider (`SUPPORT_EMBED_MODEL`, ADR-0074). */
+    OPENAI_API_KEY: z.string().min(1).optional(),
+    /** `provider:model`; changing it builds a new collection on the next start. */
+    SUPPORT_EMBED_MODEL: z.string().min(3).default('openai:text-embedding-3-small'),
+    /**
+     * Directory holding `help/` and `legal/` knowledge sources. The image bakes them into
+     * `apps/api/knowledge`; in development the API reads `apps/docs/docs` directly.
+     */
+    SUPPORT_KNOWLEDGE_DIR: z.string().min(1).default('../docs/docs'),
+
     // CDN
     // CDN_URL: z.string().url().optional(),
 
