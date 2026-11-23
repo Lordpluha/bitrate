@@ -129,12 +129,12 @@ Stored per artist; each field can be overridden for one generation.
   | C | Translation EN→UK/PL | Claude Haiku 5.5 via the `Translator` interface, batch where possible | DeepL adapter behind the same interface |
   | D | Moderation, validation, classification | Claude Haiku 5.5 | Mistral Small 4 |
 
-- **EU processing is a hard requirement.** A provider is enabled only with EU-region
-  processing, a DPA and no training on customer data. Due diligence on 2026-11-20
-  ([ADR-0071](../architecture/0071-ai-provider-boundary.md#provider-due-diligence-2026-11-20))
-  found no EU option on Anthropic's own API, so **Claude is called through Google Vertex AI's
-  `eu` endpoint**. Mistral is used through `api.eu.mistral.ai` with training opted out. DeepL
-  stays disabled until EU processing is confirmed, so translation uses the LLM route.
+- **Providers need a DPA and no training on data**
+  ([ADR-0071](../architecture/0071-ai-provider-boundary.md)). EU-region processing is preferred,
+  not required: Claude is called through Anthropic's own API (processing in the US, under a DPA
+  with SCCs). Requests carry only public profile and release fields. Mistral is the fallback with
+  training opted out. DeepL API Pro is an allowed translation alternative, and translation uses
+  the LLM route by default.
 - Generation runs as BullMQ jobs on an `ai` queue in the worker service. The UI tracks
   progress over the existing socket.io connection with polling as a fallback. Tokens are
   not streamed in v1.
@@ -201,7 +201,7 @@ validation fails twice, 503 when no enabled provider is available.
 | AC-11 | An approved countdown step shows the tile on the player's artist page until the release goes live | web-player test | Pending |
 | AC-12 | Every provider call writes an `AiUsage` record. A Free artist past the ceiling gets `AI_QUOTA_EXCEEDED` and the quota state | Unit + e2e | Pending |
 | AC-13 | No provider SDK is imported outside the `infra/ai` adapters; switching the task route in config needs no code change | Lint rule (oxlint) + unit | Pending |
-| AC-14 | Only EU-processing providers can be enabled in production configuration | Config validation test | Pending |
+| AC-14 | Only approved providers (DPA, no training) can be enabled in production configuration, and requests contain no email, listener or payment data | Config validation test; unit test of the context builder | Pending |
 | AC-15 | The listed promotion events are recorded with a schema version | Unit | Pending |
 | AC-16 | Eval: the chosen model meets the agreed bar on 15–20 release fixtures (schema validity, no ungrounded claims, glossary preservation, judge score) | Eval report linked here | Pending |
 | AC-17 | Pencil designs cover every listed state on desktop and mobile, using library components only, before UI implementation starts | Design review | Pending |
@@ -219,7 +219,7 @@ Agreed with the product owner in the planning interview (2026-11-10 to 2026-11-1
 | D-5 | Provider-agnostic `AiProvider` with routing by task. Claude is the default provider and Mistral the fallback |
 | D-5.2 | Run an eval bake-off (Sonnet 5.5, Mistral Large 4, `gpt-6.1-sol`) before locking models. Its budget, a few dollars, is approved separately before the run |
 | D-5.3 | Translation behind a `Translator` interface: LLM by default, DeepL as an alternative |
-| D-5.4 | EU processing, a DPA and no training on data are hard requirements |
+| D-5.4 | A DPA (with SCCs for transfers outside the EU), no training on data and data minimisation are hard requirements; EU-region processing is preferred, not required. Revised on 2026-11-23 from "EU processing only", after due diligence showed that this would need Vertex AI for Claude |
 | D-5.5 | Monthly AI cost ceiling per artist: $2 Free (hard), $5 Artist (soft) |
 | D-6 | Quotas from day one, before payments exist |
 | D-7 | English master, then translation to target languages (uk, pl; extensible) |
@@ -245,13 +245,13 @@ The owner confirmed the implementation plan below on 2026-11-19.
 Each step is one PR into `develop` unless noted. Checks are scoped to the touched workspace
 and run through `.claude/scripts/run-heavy.py`.
 
-1. **ADR-0071: AI provider boundary.** Task routing, EU-only providers, `AiUsage` accounting,
+1. **ADR-0071: AI provider boundary.** Task routing, approved providers, `AiUsage` accounting,
    the composition boundary, and the lint rule against direct SDK imports. Docs only.
-2. **Provider due diligence** (no code). **Done 2026-11-20**, recorded in ADR-0071: Claude
-   via Vertex AI `eu`, Mistral via `api.eu.mistral.ai`, DeepL disabled for now. Still open
-   before rollout (step 10): create the Google Cloud project with the `eu` endpoint, switch on
-   Mistral's training opt-out, confirm Large 4 and Small 4 on the EU endpoint, and add the
-   enabled providers to the sub-processor list in the [privacy policy](../legal/privacy-policy.md).
+2. **Provider due diligence** (no code). **Done 2026-11-20**, recorded in ADR-0071. The
+   requirement was revised on 2026-11-23 (D-5.4): Claude is called through Anthropic's own API,
+   Mistral is the fallback, and DeepL API Pro is allowed. Still open before rollout (step 10):
+   switch on Mistral's training opt-out, and add the enabled providers, with the countries
+   where they process data, to the sub-processor list in the [privacy policy](../legal/privacy-policy.md).
 3. **Eval bake-off.** 15–20 release fixtures (synthetic plus the owner's real releases),
    a runner script outside the production app, and an automatic grader (schema, grounding,
    glossary, length, LLM judge). Run only after the owner approves the budget. The resulting
