@@ -107,7 +107,7 @@ Per-app файлы до контейнера тоже не доходят: ни 
 | `DATABASE_URL` | данные | URL | PostgreSQL connection string. `postgresql://user:pass@host:5432/bitrate` |
 | `REDIS_HOST` | данные | строка | Хост Redis |
 | `JWT_SECRET` | аутентификация | строка ≥10 символов | Секрет для подписи JWT |
-| `S3_ENDPOINT` | файлы | URL | S3-совместимое хранилище объектов (SeaweedFS, ADR-0050). Другого бэкенда хранения нет. Локально `http://localhost:8333` — его поднимает `task infra:up`; внутри контейнеров `task dev:up` — `http://seaweedfs:8333` |
+| `S3_ENDPOINT` | файлы | URL | S3-совместимое хранилище объектов (SeaweedFS, ADR-0050). Другого бэкенда хранения нет. Локально `http://localhost:8333` — его поднимает `task infra:up`; внутри контейнеров `task dev:up` — `http://seaweedfs:8333`. В проде — Cloudflare R2 (`https://<account>.r2.cloudflarestorage.com`, ADR-0072) вместе с `S3_REGION=auto` |
 | `S3_BUCKET` | файлы | строка | Бакет с аудио. Для dev-стека `bitrate-audio` |
 | `S3_ACCESS_KEY` · `S3_SECRET_KEY` | файлы | строка | Ключи прикладной идентичности, ограниченной одним бакетом. Dev-значения — в `apps/api/.env.example` |
 

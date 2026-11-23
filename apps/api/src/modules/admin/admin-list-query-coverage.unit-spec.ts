@@ -15,6 +15,8 @@ import { AdminOverviewController } from '@modules/admin/overview/admin-overview.
 import { GetOverviewSeriesQuerySchema } from '@modules/admin/overview/dtos'
 import { AdminPlaylistsController } from '@modules/admin/playlists/admin-playlists.controller'
 import { ListAdminPlaylistsQuerySchema } from '@modules/admin/playlists/dtos'
+import { AdminReleaseChangesController } from '@modules/admin/releases/admin-release-changes.controller'
+import { ListReleaseChangeRequestsQuerySchema } from '@modules/admin/releases/dtos/release-change-review.dto'
 import { AdminTracksController } from '@modules/admin/tracks/admin-tracks.controller'
 import {
   ListAdminTracksQuerySchema,
@@ -123,6 +125,12 @@ const LIST_ROUTES: ListRouteCase[] = [
     controller: AdminOverviewController,
     handlerName: 'getReportsByType',
     schema: GetOverviewSeriesQuerySchema,
+  },
+  {
+    name: 'AdminReleaseChangesController.list',
+    controller: AdminReleaseChangesController,
+    handlerName: 'list',
+    schema: ListReleaseChangeRequestsQuerySchema,
   },
   {
     name: 'AdminTracksController.listProcessingAttempts',

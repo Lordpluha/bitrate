@@ -4,7 +4,7 @@
 # pgvector/pgvector image: that one is Debian (glibc), and attaching an existing alpine (musl)
 # data directory to a glibc server changes text collation under the existing btree indexes
 # (email, username, slug), which silently corrupts lookups until a full REINDEX. Staying on
-# musl keeps every existing volume valid. See ADR-0071.
+# musl keeps every existing volume valid. See ADR-0077.
 FROM postgres:16-alpine
 
 ARG PGVECTOR_VERSION=0.8.7

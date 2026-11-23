@@ -94,6 +94,10 @@ export const FontFamily: Story = {
  * Font size tokens for the design system.
  */
 export const FontSize: Story = {
+  /** Token table; Table's scroll wrapper is not keyboard-focusable yet (A11Y-22). */
+  parameters: {
+    a11y: { config: { rules: [{ id: 'scrollable-region-focusable', enabled: false }] } },
+  },
   args: {
     key: 'fontSize',
     property: [

@@ -381,6 +381,7 @@ later action. Agents do not create releases unless explicitly asked.
 - Persistent implementation plans: [`apps/docs/docs/plans/`](apps/docs/docs/plans/)
 - Design token contract: [`apps/docs/docs/brand/tokens.md`](apps/docs/docs/brand/tokens.md)
 - Accessibility baseline: [`apps/docs/docs/brand/a11y.md`](apps/docs/docs/brand/a11y.md)
+- Accessibility status, known gaps and plan: [`ACCESSIBILITY.md`](ACCESSIBILITY.md)
 - Working conventions: [`CLAUDE.md`](CLAUDE.md)
 
 New durable architectural choices should get an ADR. Cross-cutting designs may start as a

@@ -7,6 +7,8 @@ export type UsePlayerHotkeysInput = {
   currentTime: number
   duration: number
   isEnabled: boolean
+  /** Letter and punctuation shortcuts without a modifier; users can turn them off (WCAG 2.1.4). */
+  isSingleKeyEnabled: boolean
   onNext: () => void
   onOpenQueue: () => void
   onPrevious: () => void
@@ -57,19 +59,64 @@ export const isPlayerHotkeyTarget = (target: EventTarget | null) =>
 const clamp = (value: number, min: number, max: number) =>
   Math.min(max, Math.max(min, value))
 
+type VerticalDirection = 'up' | 'down'
+
+type CanScrollVerticallyInput = {
+  target: EventTarget | null
+  direction: VerticalDirection
+}
+
+const SCROLLABLE_OVERFLOW = new Set(['auto', 'scroll', 'overlay'])
+
+const canElementScroll = (element: Element, direction: VerticalDirection) => {
+  const page = document.scrollingElement ?? document.documentElement
+  const isPage = element === page
+  if (
+    !isPage &&
+    !SCROLLABLE_OVERFLOW.has(getComputedStyle(element).overflowY)
+  ) {
+    return false
+  }
+
+  if (direction === 'up') return element.scrollTop > 0
+  return element.scrollTop + element.clientHeight < element.scrollHeight - 1
+}
+
+/**
+ * Whether ArrowUp/ArrowDown would scroll the focused area or the page. While it would, the
+ * keys stay with the page, so arrow-key scrolling keeps working for keyboard users.
+ */
+const canScrollVertically = ({
+  target,
+  direction,
+}: CanScrollVerticallyInput) => {
+  const page = document.scrollingElement ?? document.documentElement
+  let element: Element | null = target instanceof Element ? target : page
+
+  while (element) {
+    if (canElementScroll(element, direction)) return true
+    element = element.parentElement
+  }
+
+  return false
+}
+
 /** Volume up/down on the main row and the keypad, beside the arrows. */
 const VOLUME_UP_CODES = new Set(['Equal', 'NumpadAdd'])
 const VOLUME_DOWN_CODES = new Set(['Minus', 'NumpadSubtract'])
 
 /**
  * Global playback shortcuts.
- * Space toggles playback; arrows seek 5 s (10 s with Shift) and change volume, as do + and −;
- * Ctrl/⌘ with an arrow skips tracks; M/S/R/L/Q map to mute, shuffle, repeat, like and the queue.
+ * Space toggles playback; Left/Right seek 5 s (10 s with Shift); Up/Down change the volume
+ * once the page cannot scroll that way; Ctrl/⌘ with an arrow skips tracks. Single-key
+ * shortcuts (+ and − for volume, M/S/R/L/Q for mute, shuffle, repeat, like and the queue)
+ * run only while `isSingleKeyEnabled` is on.
  */
 export const usePlayerHotkeys = ({
   currentTime,
   duration,
   isEnabled,
+  isSingleKeyEnabled,
   onNext,
   onOpenQueue,
   onPrevious,
@@ -116,10 +163,14 @@ export const usePlayerHotkeys = ({
           onSeek(clamp(currentTime - seekStep, 0, duration || 0))
           return
         case 'ArrowUp':
+          if (canScrollVertically({ direction: 'up', target: event.target }))
+            return
           event.preventDefault()
           setVolume(clamp(volume + VOLUME_STEP, 0, 1))
           return
         case 'ArrowDown':
+          if (canScrollVertically({ direction: 'down', target: event.target }))
+            return
           event.preventDefault()
           setVolume(clamp(volume - VOLUME_STEP, 0, 1))
           return
@@ -127,7 +178,7 @@ export const usePlayerHotkeys = ({
           break
       }
 
-      if (withModifier) return
+      if (withModifier || !isSingleKeyEnabled) return
 
       if (VOLUME_UP_CODES.has(event.code)) {
         event.preventDefault()
@@ -181,6 +232,7 @@ export const usePlayerHotkeys = ({
     cycleRepeatMode,
     duration,
     isEnabled,
+    isSingleKeyEnabled,
     onNext,
     onOpenQueue,
     onPrevious,

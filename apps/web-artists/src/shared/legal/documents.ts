@@ -43,7 +43,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
   {
     slug: 'terms',
     title: 'Terms of Use',
-    draft: true,
+    draft: false,
     sections: [
       {
         heading: null,
@@ -159,7 +159,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
         blocks: [
           {
             kind: 'paragraph',
-            text: '7.1 You may stop using Bitrate and delete your account at any time [[ACCOUNT_DELETION_NOTE]].',
+            text: '7.1 You may stop using Bitrate and delete your account at any time: artists under Settings in the artist portal, listeners by writing to tesluakevlad@gmail.com from the address on their account, as described in the [Privacy Policy](privacy).',
           },
           {
             kind: 'paragraph',
@@ -176,7 +176,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
           },
           {
             kind: 'paragraph',
-            text: '8.2 [[LIABILITY_CLAUSE — counsel to draft limits that are valid under EU consumer law]]',
+            text: '8.2 Nothing in these Terms limits or excludes our liability where the law does not allow it, including liability for damage caused intentionally or through gross negligence, for death or personal injury, or your statutory rights as a consumer. Within those limits, and because Bitrate is provided to listeners free of charge, we are not liable for indirect or unforeseeable loss, or for loss caused by events outside our reasonable control.',
           },
         ],
       },
@@ -194,7 +194,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
         blocks: [
           {
             kind: 'paragraph',
-            text: 'These Terms are governed by [[GOVERNING_LAW]]. Mandatory consumer-protection rules of your country of residence continue to apply.',
+            text: 'These Terms are governed by the law of Poland. Disputes are decided by the competent courts in Poland. If you are a consumer, the mandatory consumer-protection rules of your country of residence continue to apply and you may also bring a claim before the courts of that country.',
           },
         ],
       },
@@ -219,7 +219,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
         blocks: [
           {
             kind: 'paragraph',
-            text: '**Effective date:** 1 October 2026. **Last updated:** 19 November 2026.',
+            text: '**Effective date:** 1 October 2026. **Last updated:** 22 November 2026.',
           },
           {
             kind: 'paragraph',
@@ -344,7 +344,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
           },
           {
             kind: 'paragraph',
-            text: 'In the listener web app, our error-monitoring tool (Sentry) records error details and, for about one in ten sessions and for every session in which an error occurs, a session replay of how the interface was used. Replays mask all text and everything you type, and block images and media, so they show the layout of the page, clicks and navigation, not what you read or enter. We use replays only to find and fix bugs, on the basis of our legitimate interest in a working service. You can object at any time by writing to us (section 9).',
+            text: 'In the listener web app and the artists portal, our error-monitoring tool (Sentry) records error details and, for about one in ten sessions and for every session in which an error occurs, a session replay of how the interface was used. Replays mask all text and everything you type, and block images and media, so they show the layout of the page, clicks and navigation, not what you read or enter. We use replays only to find and fix bugs, on the basis of our legitimate interest in a working service. You can object at any time by writing to us (section 9).',
           },
         ],
       },

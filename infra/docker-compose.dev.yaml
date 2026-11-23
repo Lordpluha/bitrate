@@ -48,7 +48,7 @@ services:
   # PostgreSQL Database
   postgres:
     # Postgres + pgvector, built from infra/postgres (alpine, so existing volumes stay valid) --
-    # the same Dockerfile production pulls from GHCR (ADR-0071).
+    # the same Dockerfile production pulls from GHCR (ADR-0077).
     image: bitrate-postgres:16-pgvector0.8.7
     build: ./postgres
     container_name: bitrate-postgres

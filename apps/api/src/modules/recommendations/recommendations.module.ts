@@ -13,7 +13,7 @@ import { TasteController } from './taste.controller'
 import { TasteService } from './taste.service'
 
 /**
- * The recommendation system (docs/specs/recommendations.md, ADR-0071). Stage 1: the signals —
+ * The recommendation system (docs/specs/recommendations.md, ADR-0077). Stage 1: the signals —
  * finished plays, "Not interested" and taste exclusions — and their retention.
  */
 @Module({

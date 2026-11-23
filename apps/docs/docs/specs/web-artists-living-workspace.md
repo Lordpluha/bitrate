@@ -40,7 +40,9 @@ sounds (removed).
   the user's request.
 - **Celebrations.** A short confetti burst plays once when the artist first sees a release
   approved or released, remembered per release in this browser.
-- **Customizable layouts.** Dashboard and Analytics have a
+- **Customizable layouts.** *Superseded on 2026-11-12 by the free 12-column grid in
+  [web-artists-free-grid](./web-artists-free-grid.md); the text below records the original
+  order-based behavior.* Dashboard and Analytics have a
   Customize button in the page heading. In customize mode tiles can be reordered by drag or
   keyboard, resized to any integer width from 1 to 12 columns and optional height from 1 to 12 rows, and hidden or shown again; Done saves,
   Reset restores the default. Unknown or missing tiles in a stored layout are dropped or
@@ -52,6 +54,8 @@ sounds (removed).
   resets it. `page` is one of `dashboard|analytics|release-draft`. All routes need the
   artist session and only touch the caller's own layout. Omitted rows preserve automatic height. Explicit columns override legacy
   S/M/L widths; existing preferences remain valid without a database migration.
+  The free grid later added optional `x`/`y` per tile; see
+  [web-artists-free-grid](./web-artists-free-grid.md).
 - Every animation respects `prefers-reduced-motion` and the workspace Motion setting.
 
 ## Acceptance and evidence

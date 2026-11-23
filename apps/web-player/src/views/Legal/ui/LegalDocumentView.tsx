@@ -126,7 +126,7 @@ export const LegalDocumentView = ({ document }: LegalDocumentViewProps) => (
       {LEGAL_DOCUMENTS.filter((other) => other.slug !== document.slug).map(
         (other) => (
           <Link
-            className="text-primary hover:opacity-70"
+            className="text-text-brand hover:opacity-70"
             href={ROUTES.legal(other.slug)}
             key={other.slug}
           >

@@ -72,7 +72,7 @@ export const BrowseCategoryGrid = () => {
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-5 lg:grid-cols-4 xl:grid-cols-5">
         {categories.map((category) => (
           <button
-            className="group relative flex h-24 items-start overflow-hidden rounded-xl p-4 text-left font-[family-name:var(--font-landing-display)] text-lg font-bold text-white transition-transform hover:scale-[1.02] focus:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:h-30 sm:text-xl"
+            className="group relative flex h-24 items-start overflow-hidden rounded-xl p-4 text-left font-[family-name:var(--font-landing-display)] text-lg font-bold text-white transition-transform hover:scale-[1.02] focus:outline-hidden focus-visible:ring-2 focus-visible:ring-ring sm:h-30 sm:text-xl"
             key={category.id}
             onClick={() => router.push(ROUTES.searchCategory(category.slug))}
             style={{

@@ -41,6 +41,18 @@ describe('LocaleStore', () => {
     })
   })
 
+  /** Screen readers pick their voice from `<html lang>` (WCAG 3.1.1). */
+  it('keeps <html lang> on the active locale', () => {
+    const store = create()
+    TestBed.tick()
+    expect(document.documentElement.lang).toBe('en')
+
+    store.setLocale('uk')
+    TestBed.tick()
+
+    expect(document.documentElement.lang).toBe('uk')
+  })
+
   it('cycles English to Ukrainian and back to English', () => {
     const store = create()
 

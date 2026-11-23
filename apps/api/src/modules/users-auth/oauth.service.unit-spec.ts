@@ -109,9 +109,9 @@ describe('OAuthService', () => {
         user: { id: 'user-1', username: 'user', twoFactorEnabled: false, deletedAt: new Date() },
       } as never)
 
-      await expect(
-        call('google', { id: 'google-1', email: 'user@example.com', name: 'User' }),
-      ).rejects.toThrow('Invalid credentials')
+      const failure = call('google', { id: 'google-1', email: 'user@example.com', name: 'User' })
+      await expect(failure).rejects.toThrow('Invalid credentials')
+      await expect(failure).rejects.toMatchObject({ reason: 'account_unavailable' })
       expect(prisma.userSession.create).not.toHaveBeenCalled()
     })
 
@@ -216,6 +216,7 @@ describe('OAuthService', () => {
         username: 'oauth-only',
         password: null,
         twoFactorEnabled: false,
+        emailVerifiedAt: new Date(),
       } as never)
       prisma.userOAuthAccount.create.mockResolvedValue({} as never)
       prisma.userSession.create.mockResolvedValue({} as never)
@@ -226,6 +227,75 @@ describe('OAuthService', () => {
       expect(prisma.userOAuthAccount.create).toHaveBeenCalledWith({
         data: { userId: 'user-11', provider: 'facebook', providerAccountId: 'fb-11' },
       })
+    })
+
+    /** The provider vouches for the address and the account already proved it owns it, so
+     * both belong to the same person: link the provider instead of locking them out. */
+    it('links a provider to an existing password account with a verified email', async () => {
+      prisma.userOAuthAccount.findUnique.mockResolvedValue(null)
+      prisma.user.findFirst.mockResolvedValue({
+        id: 'user-12',
+        username: 'has-password',
+        password: 'hash',
+        twoFactorEnabled: false,
+        emailVerifiedAt: new Date(),
+      } as never)
+      prisma.userOAuthAccount.create.mockResolvedValue({} as never)
+      prisma.userSession.create.mockResolvedValue({} as never)
+      token.generateAccessToken.mockResolvedValue('access-token')
+      token.generateRefreshToken.mockResolvedValue('refresh-token')
+
+      await expect(
+        call('google', { id: 'google-12', email: 'Has@Example.com', name: 'Has' }),
+      ).resolves.toEqual(expect.objectContaining({ access_token: 'access-token' }))
+      expect(prisma.userOAuthAccount.create).toHaveBeenCalledWith({
+        data: { userId: 'user-12', provider: 'google', providerAccountId: 'google-12' },
+      })
+      expect(prisma.user.create).not.toHaveBeenCalled()
+    })
+
+    it('keeps 2FA in front of an account it links by email', async () => {
+      prisma.userOAuthAccount.findUnique.mockResolvedValue(null)
+      prisma.user.findFirst.mockResolvedValue({
+        id: 'user-13',
+        username: 'guarded',
+        password: 'hash',
+        twoFactorEnabled: true,
+        emailVerifiedAt: new Date(),
+      } as never)
+      prisma.userOAuthAccount.create.mockResolvedValue({} as never)
+      token.generateTwoFAPendingToken.mockResolvedValue('pending-token')
+
+      await expect(
+        call('google', { id: 'google-13', email: 'guarded@example.com', name: 'G' }),
+      ).resolves.toEqual({ requires2fa: true, pendingToken: 'pending-token' })
+      expect(prisma.userSession.create).not.toHaveBeenCalled()
+    })
+
+    /** An unverified address proves nothing about who registered it, so the provider is not
+     * attached to an account someone else may have created with that email. */
+    it('refuses to link an existing account whose email is not verified', async () => {
+      prisma.userOAuthAccount.findUnique.mockResolvedValue(null)
+      prisma.user.findFirst.mockResolvedValue({
+        id: 'user-14',
+        username: 'unverified',
+        password: 'hash',
+        twoFactorEnabled: false,
+        emailVerifiedAt: null,
+      } as never)
+
+      await expect(
+        call(
+          'facebook',
+          { id: 'fb-14', email: 'unverified@example.com', name: 'U' },
+          {
+            acceptLegal: true,
+          },
+        ),
+      ).rejects.toMatchObject({ reason: 'account_exists' })
+      expect(prisma.userOAuthAccount.create).not.toHaveBeenCalled()
+      expect(prisma.user.create).not.toHaveBeenCalled()
+      expect(prisma.userSession.create).not.toHaveBeenCalled()
     })
 
     it('still signs in an already linked account without asking for acceptance again', async () => {

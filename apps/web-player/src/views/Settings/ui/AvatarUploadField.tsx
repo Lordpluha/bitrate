@@ -59,7 +59,7 @@ export const AvatarUploadField = ({
         aria-labelledby="avatar-upload-label"
         className={cn(
           'grid w-full gap-2 rounded-lg border border-dashed border-border bg-surface px-4 py-6 text-center transition-colors',
-          'hover:bg-surface-hover focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none',
+          'hover:bg-surface-hover focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-hidden',
           isDraggingOver && 'border-primary bg-surface-hover',
           isPending && 'opacity-60',
         )}

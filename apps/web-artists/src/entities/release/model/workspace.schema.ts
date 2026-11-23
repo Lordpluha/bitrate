@@ -40,6 +40,9 @@ export const releaseWorkspaceSchema = releaseSummarySchema
     isDemo: z.boolean(),
     trackCount: z.number().int().nonnegative(),
     participantCount: z.number().int().nonnegative(),
+    // Older API builds omit both; the release page then offers no changes.
+    acceptsChanges: z.boolean().default(false),
+    hasPendingChanges: z.boolean().default(false),
     trackDrafts: z
       .array(
         z.object({

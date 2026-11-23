@@ -85,7 +85,7 @@ export function ArtistDashboard({ artist, children }: ArtistDashboardProps) {
             <div className="artist-workspace-brand-row flex items-start justify-between">
               <Link
                 aria-label={t('shell.homeLink')}
-                className="artist-workspace-brand mb-8 flex min-h-11 items-center gap-3 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className="artist-workspace-brand mb-8 flex min-h-11 items-center gap-3 rounded-lg focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring"
                 preload={false}
                 to={ROUTES.dashboard.home}
               >
@@ -134,7 +134,7 @@ export function ArtistDashboard({ artist, children }: ArtistDashboardProps) {
                 <DashboardMobileMenu artist={artist} />
                 <Link
                   aria-label={t('shell.homeLink')}
-                  className="flex items-center gap-2 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  className="flex items-center gap-2 rounded-lg focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring"
                   preload={false}
                   to={ROUTES.dashboard.home}
                 >

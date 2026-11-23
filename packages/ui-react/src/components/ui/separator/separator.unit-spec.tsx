@@ -23,6 +23,12 @@ describe('Separator', () => {
     expect(container.firstChild).toHaveAttribute('role', 'none')
   })
 
+  it('drops aria-orientation when decorative, since role="none" does not allow it', () => {
+    const { container } = render(<Separator orientation="vertical" />)
+    expect(container.firstChild).not.toHaveAttribute('aria-orientation')
+    expect(container.firstChild).toHaveAttribute('data-orientation', 'vertical')
+  })
+
   it('merges a custom className', () => {
     const { container } = render(<Separator className="custom" />)
     expect(container.firstChild).toHaveClass('custom')

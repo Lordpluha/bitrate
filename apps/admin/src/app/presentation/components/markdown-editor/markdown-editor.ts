@@ -99,7 +99,7 @@ function line(prefix: (index: number) => string): LineFormat {
       >
         @for (tool of tools; track tool.key) {
           <button
-            class="grid size-8 place-items-center rounded-lg text-muted-foreground transition-colors hover:bg-foreground/8 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 disabled:pointer-events-none disabled:opacity-40"
+            class="grid size-8 place-items-center rounded-lg text-muted-foreground transition-colors hover:bg-foreground/8 hover:text-foreground focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary/40 disabled:pointer-events-none disabled:opacity-40"
             type="button"
             [attr.aria-label]="'ui.markdown.' + tool.key | transloco"
             [attr.title]="'ui.markdown.' + tool.key | transloco"
@@ -133,7 +133,7 @@ function line(prefix: (index: number) => string): LineFormat {
     </div>
     <textarea
       #field
-      class="block w-full min-w-0 resize-y bg-transparent px-3 py-2 text-sm outline-none placeholder:text-muted-foreground disabled:opacity-50"
+      class="block w-full min-w-0 resize-y bg-transparent px-3 py-2 text-sm outline-hidden placeholder:text-muted-foreground disabled:opacity-50"
       [class.hidden]="preview()"
       [id]="inputId()"
       [rows]="rows()"

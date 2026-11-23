@@ -104,7 +104,7 @@ export const NowPlayingView = ({
             <div className="flex items-center gap-3">
               <ConnectDevicesPopover
                 iconSize={20}
-                triggerClassName="flex size-10 items-center justify-center rounded-full text-primary transition-colors hover:bg-surface"
+                triggerClassName="flex size-10 items-center justify-center rounded-full text-text-brand transition-colors hover:bg-surface"
               />
               {/* Shown only for a CMAF track with more than one rendition. */}
               <PlayerMirror>

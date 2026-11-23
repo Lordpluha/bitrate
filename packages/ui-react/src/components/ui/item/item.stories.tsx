@@ -366,7 +366,12 @@ export const WithGroup: Story = {
                   <ItemDescription>{person.email}</ItemDescription>
                 </ItemContent>
                 <ItemActions>
-                  <Button variant="ghost" size="icon" className="rounded-full">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="rounded-full"
+                    aria-label={`Add ${person.username}`}
+                  >
                     <PlusIcon />
                   </Button>
                 </ItemActions>

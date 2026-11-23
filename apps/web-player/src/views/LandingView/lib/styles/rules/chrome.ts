@@ -113,7 +113,8 @@ export const CHROME: readonly LandingRule[] = [
   ],
   [
     'dots',
-    'fixed top-1/2 right-[clamp(10px,1.6vw,26px)] z-[40] flex flex-col gap-[12px] [transform:translateY(-50%)]',
+    /* 18px gaps: the 9px dots (12.6px when current) each keep a 24px clear circle, WCAG 2.5.8 */
+    'fixed top-1/2 right-[clamp(10px,1.6vw,26px)] z-[40] flex flex-col gap-[18px] [transform:translateY(-50%)]',
   ],
   [
     'dots',

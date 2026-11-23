@@ -28,7 +28,7 @@ worker), `packages/player` (playback events), `apps/web-player` (surfaces and fe
 `apps/admin` (tuning tile, metrics), `apps/web-artists` (recommendation source stats),
 `infra` (pgvector image), `pencil/` and prototypes (every new screen and state).
 
-**Out of scope:** podcasts and spoken word (ADR-0066); a separate vector database (ADR-0071); a
+**Out of scope:** podcasts and spoken word (ADR-0066); a separate vector database (ADR-0077); a
 Python HTTP service: the worker never serves requests; real-time model training.
 
 ## Observable behavior and contracts
@@ -99,7 +99,7 @@ Python HTTP service: the worker never serves requests; real-time model training.
 ### Storage
 
 PostgreSQL with pgvector holds events, aggregates, similarity tables, audio features and
-vectors (ADR-0071). Redis holds cached recommendation lists, queues and per-session radio state.
+vectors (ADR-0077). Redis holds cached recommendation lists, queues and per-session radio state.
 
 ### Admin and artists
 
@@ -142,7 +142,7 @@ All decisions below were confirmed by the project owner in the planning intervie
 - Rich playback events: yes. Retention: 13 months raw, then aggregates.
 - Engine: hybrid. NestJS serves from Postgres with pgvector; an offline Python worker
   (`apps/ml`, BullMQ, no HTTP) does audio analysis and collaborative-filtering training.
-- Database: the existing PostgreSQL with pgvector plus Redis; no new datastore (ADR-0071).
+- Database: the existing PostgreSQL with pgvector plus Redis; no new datastore (ADR-0077).
 - Cold start: taste picker, popular plus friends, audio features, about 15 % exploration
   (admin-tunable).
 - Feedback: "Not interested", "Don't use for my taste", "Why this?".
@@ -161,7 +161,7 @@ Open before the stages that need them:
 Each stage lands as its own PR chain (one workspace per PR, producer first).
 
 0. **Infrastructure** (AC-1): `infra/postgres` image (alpine + pgvector 0.8.7) in dev,
-   CI and prod; `postgres_image.yml`; migration `enable_pgvector`; ADR-0071.
+   CI and prod; `postgres_image.yml`; migration `enable_pgvector`; ADR-0077.
 1. **Signals** (AC-2, AC-3, AC-4, AC-14): `PlaybackEvent`, `NotInterested` and
    `TasteExclusion` with their endpoints, "Not interested" applied to "Made For You", and the
    retention job (api, with #519); then player reporting (player); then the "Not interested"

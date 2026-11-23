@@ -31,6 +31,22 @@ export const auth = {
   'auth.login.verifyFirst': 'Potwierdź e-mail, zanim się zalogujesz.',
   'auth.login.invalidCredentials':
     'Nieprawidłowy e-mail lub hasło. Spróbuj ponownie.',
+  'auth.oauth.failed':
+    'Logowanie przez serwis społecznościowy nie zostało dokończone. Spróbuj ponownie.',
+  'auth.oauth.failed.accountExists':
+    'Konto z tym adresem e-mail już istnieje. Najpierw zaloguj się hasłem i potwierdź adres e-mail.',
+  'auth.oauth.failed.accountUnavailable': 'To konto nie jest już dostępne.',
+  'auth.oauth.failed.cancelled':
+    'Logowanie zostało anulowane. Wybierz sposób logowania, aby kontynuować.',
+  'auth.oauth.failed.emailMissing':
+    'To konto nie przekazało adresu e-mail. Zezwól na dostęp do adresu e-mail lub zaloguj się inaczej.',
+  'auth.oauth.failed.emailUnverified':
+    'To konto nie potwierdziło adresu e-mail. Potwierdź go u dostawcy lub zaloguj się inaczej.',
+  'auth.oauth.failed.expired': 'Sesja logowania wygasła. Spróbuj ponownie.',
+  'auth.oauth.failed.legal':
+    'Aby utworzyć konto, najpierw zaakceptuj Warunki korzystania, Zasady społeczności i Umowę artysty.',
+  'auth.oauth.failed.unavailable':
+    'Ten sposób logowania nie jest jeszcze dostępny. Zaloguj się inaczej.',
   'auth.twoFactor.title': 'Potwierdź logowanie',
   'auth.twoFactor.description': 'Wpisz kod z aplikacji uwierzytelniającej.',
   'auth.twoFactor.codeLabel': 'Kod uwierzytelniający',

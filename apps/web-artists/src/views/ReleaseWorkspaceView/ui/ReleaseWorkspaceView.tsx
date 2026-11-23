@@ -5,6 +5,7 @@ import {
   useReleaseWorkspace,
 } from '@entities/release'
 import { ReleaseTitleEditor } from '@features/edit-release'
+import { ReleaseChangesPanel } from '@features/propose-release-changes'
 import { useI18n } from '@shared/i18n'
 import { ROUTES } from '@shared/routes/routes'
 import { PageSkeleton } from '@shared/ui'
@@ -116,6 +117,15 @@ export function ReleaseWorkspaceView({
           )}
           {stage === 'launch' && (
             <LaunchStage artistId={artistId} release={query.data} />
+          )}
+          {query.data.acceptsChanges && (
+            <ReleaseChangesPanel
+              artistId={artistId}
+              recordings={query.data.trackDrafts.filter(
+                (recording) => !recording.sourceTrackId,
+              )}
+              release={query.data}
+            />
           )}
           <ReleaseDangerZone onDelete={() => openDialog({ kind: 'delete' })} />
         </>

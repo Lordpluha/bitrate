@@ -143,7 +143,7 @@ export const CarouselComponent = ({
         showNavigation,
       }}
     >
-      {/** biome-ignore lint/a11y/useSemanticElements: hz */}
+      {/** biome-ignore lint/a11y/useSemanticElements: APG carousel pattern (region + roledescription); a <section> would change the ref type consumers rely on */}
       <div
         onKeyDownCapture={handleKeyDown}
         className={cn('relative', className)}
@@ -179,7 +179,7 @@ export const CarouselItem = ({ className, ...props }: ComponentProps<'div'>) => 
   useCarousel()
 
   return (
-    /* biome-ignore lint/a11y/useSemanticElements: hz */
+    /* biome-ignore lint/a11y/useSemanticElements: APG slide pattern; role="group" is the WAI-ARIA grouping pattern; <fieldset> would add legend semantics and browser fieldset styling */
     <div
       role="group"
       aria-roledescription="slide"

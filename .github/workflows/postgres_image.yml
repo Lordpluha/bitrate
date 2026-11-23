@@ -1,7 +1,7 @@
 name: "[infra] Postgres Image"
 
 # Builds infra/postgres (postgres:16-alpine + pgvector) and publishes it to GHCR for
-# infra/docker-compose.prod.yaml. See ADR-0071.
+# infra/docker-compose.prod.yaml. See ADR-0077.
 #
 # Unlike the app images this one is NOT part of release_images_reusable.yml and is not
 # published under ${IMAGE_TAG}: a rebuild per release would give the database a new digest

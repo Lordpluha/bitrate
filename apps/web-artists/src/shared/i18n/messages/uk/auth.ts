@@ -31,6 +31,21 @@ export const auth = {
   'auth.login.verifyFirst': 'Підтвердьте пошту, перш ніж увійти.',
   'auth.login.invalidCredentials':
     'Неправильна пошта або пароль. Спробуйте ще раз.',
+  'auth.oauth.failed': 'Вхід через соцмережу не завершився. Спробуйте ще раз.',
+  'auth.oauth.failed.accountExists':
+    'Акаунт із цією адресою вже існує. Спершу увійдіть за паролем і підтвердьте email.',
+  'auth.oauth.failed.accountUnavailable': 'Цей акаунт більше недоступний.',
+  'auth.oauth.failed.cancelled':
+    'Вхід скасовано. Оберіть спосіб входу, щоб продовжити.',
+  'auth.oauth.failed.emailMissing':
+    'Цей акаунт не передав адресу email. Дозвольте доступ до email або увійдіть іншим способом.',
+  'auth.oauth.failed.emailUnverified':
+    'Цей акаунт не підтвердив адресу email. Підтвердьте її в провайдера або увійдіть іншим способом.',
+  'auth.oauth.failed.expired': 'Сеанс входу закінчився. Спробуйте ще раз.',
+  'auth.oauth.failed.legal':
+    'Щоб створити акаунт, спершу прийміть Умови використання, Правила спільноти та Угоду артиста.',
+  'auth.oauth.failed.unavailable':
+    'Цей спосіб входу поки недоступний. Увійдіть іншим способом.',
   'auth.twoFactor.title': 'Підтвердьте вхід',
   'auth.twoFactor.description': 'Введіть код із застосунку автентифікації.',
   'auth.twoFactor.codeLabel': 'Код автентифікації',
