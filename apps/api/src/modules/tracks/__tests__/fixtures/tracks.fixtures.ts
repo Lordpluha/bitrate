@@ -4,7 +4,6 @@ import type { TrackEntity } from '../../entities'
 export const buildTrack = (overrides: Partial<TrackEntity> = {}): TrackEntity => ({
   id: 'track-1',
   title: 'Track title',
-  audioUrl: 'audio.mp3',
   cover: 'cover.jpg',
   artistId: 'artist-1',
   createdAt: new Date(),
