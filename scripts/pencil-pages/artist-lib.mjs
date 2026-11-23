@@ -9,14 +9,21 @@ import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { setMode } from './kit.mjs'
 import { addActions } from './artist-ws/lib-actions.mjs'
+import { addAuth } from './artist-ws/lib-auth.mjs'
+import { addData } from './artist-ws/lib-data.mjs'
+import { addFields } from './artist-ws/lib-fields.mjs'
 import { addForms } from './artist-ws/lib-forms.mjs'
+import { addLanding } from './artist-ws/lib-landing.mjs'
+import { addLandingMenu } from './artist-ws/lib-landing-menu.mjs'
 import { addNav } from './artist-ws/lib-nav.mjs'
 import { addNavItems } from './artist-ws/lib-nav-items.mjs'
 import { libraryPage } from './artist-ws/lib-page.mjs'
 import { addRelease } from './artist-ws/lib-release.mjs'
 import { addShell } from './artist-ws/lib-shell.mjs'
+import { addShowcase } from './artist-ws/lib-showcase.mjs'
 import { addStates } from './artist-ws/lib-states.mjs'
 import { addStepper } from './artist-ws/lib-stepper.mjs'
+import { addSurfaces } from './artist-ws/lib-surfaces.mjs'
 import { addTiles } from './artist-ws/lib-tiles.mjs'
 import { addType } from './artist-ws/lib-type.mjs'
 import { createLibrary } from './artist-ws/library.mjs'
@@ -35,6 +42,13 @@ addStates(lib)
 addRelease(lib)
 addStepper(lib)
 addNavItems(lib)
+addFields(lib)
+addAuth(lib, ROOT)
+addSurfaces(lib)
+addLanding(lib)
+addLandingMenu(lib)
+addShowcase(lib)
+addData(lib)
 const nav = addNav(lib)
 addShell(lib, nav)
 const root = lib.stampPage(libraryPage(lib.blocks))

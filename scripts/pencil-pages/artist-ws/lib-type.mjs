@@ -19,6 +19,15 @@ const TYPE = {
   Figure: [36, '500', 'artistForeground', -0.7],
   Link: [11, '500', 'artistIcon', 0],
   Error: [11, '400', 'artistStatusError', 0],
+  /* public pages: landing display sizes, the auth card title, the one-time code and legal reading text */
+  Hero: [56, '600', 'artistForeground', -1.6],
+  'Hero Accent': [56, '600', 'artistIcon', -1.6],
+  Section: [40, '600', 'artistForeground', -1],
+  'Section Accent': [40, '600', 'artistIcon', -1],
+  Lead: [16, '400', 'artistTextSecondary', 0],
+  Title: [26, '500', 'artistForeground', -0.4],
+  Code: [28, '500', 'artistForeground', 8],
+  Reading: [14, '400', 'artistForeground', 0],
 }
 
 /** Adds the type styles and the small primitives to the library. */

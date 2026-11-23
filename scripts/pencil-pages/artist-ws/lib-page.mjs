@@ -6,18 +6,18 @@ import { workspaceCanvas } from './canvas.mjs'
 const SECTIONS = [
   [
     'Foundations',
-    'Poppins type at the workspace sizes, the Bitrate mark and lockup, avatar, divider, skeleton, spinner and the phone status bar.',
-    /^(Text|Logo|Avatar|Divider|Skeleton$|Spinner|Status Bar)/,
+    'Poppins type at the workspace and public-page sizes, the Bitrate mark and lockup, the Google and Facebook marks, avatar, divider, skeleton, spinner and the phone status bar.',
+    /^(Text|Logo|Mark\/|Avatar|Divider|Skeleton$|Spinner|Status Bar)/,
   ],
   [
     'Actions and status',
-    'The gradient primary action with its glow, secondary, outline, ghost and danger buttons in two sizes, the icon button, status chips in the artist status tones and the allowance bar.',
+    'The gradient primary action with its glow, secondary, outline, ghost and danger buttons in three sizes, the icon button, the social sign-in buttons (locked until consent), status chips in the artist status tones and the allowance bar.',
     /^(Button|Status\/|Progress)/,
   ],
   [
     'Forms',
-    'Inputs, textarea and select on the control surface, field errors, switches, option cards, checks and the tab strip.',
-    /^(Field|Switch|Option|Check|Tabs?(\/|$))/,
+    'Inputs, textarea, select, password and one-time code fields on the control surface, field errors, consent checkboxes, password rules, switches, option cards, checks and the tab strip.',
+    /^(Field|Switch|Option|Check|Rule|Tabs?(\/|$))/,
   ],
   [
     'Bento tiles',
@@ -33,6 +33,11 @@ const SECTIONS = [
     'Release workspace',
     'The cover-tinted release header with the next action, and the stage stepper with the Promotion stage.',
     /^(Release|Step)/,
+  ],
+  [
+    'Public pages',
+    'The auth card and its divider, panel, popover with option rows, toasts, the legal note and list item, and the landing: glass header with section dock, eyebrow and capability pills, studio window and stage tabs, journey step, area chart, release sleeve, footer and the phone menu sheet.',
+    /^(Auth|Landing|Legal|Toast|Popover|Panel$|Menu\/|Chart)/,
   ],
   [
     'Shell',

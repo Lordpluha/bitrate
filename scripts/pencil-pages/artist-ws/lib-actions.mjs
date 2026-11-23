@@ -61,6 +61,44 @@ export function addActions(lib) {
           ),
         ),
       )
+  for (const [name, primary] of [
+    ['Button/Large Primary', true],
+    ['Button/Large Glass', false],
+  ])
+    add(
+      comp(
+        name,
+        Row(
+          {
+            name: 'Large Button',
+            height: 48,
+            padding: [0, 22],
+            gap: 10,
+            cornerRadius: 12,
+            justifyContent: 'center',
+            ...(primary ? paint.action() : paint.control()),
+          },
+          [
+            part(
+              'label',
+              T('Create an account', {
+                fontSize: 13,
+                fontWeight: '600',
+                fill: primary ? C.primaryForeground : C.artistForeground,
+              }),
+            ),
+            part(
+              'icon',
+              I('arrow-right', {
+                width: 16,
+                height: 16,
+                fill: primary ? C.primaryForeground : C.artistIcon,
+              }),
+            ),
+          ],
+        ),
+      ),
+    )
   add(
     comp(
       'Button/Icon',
