@@ -8,7 +8,7 @@ import {
 } from '@entities/release'
 import { type TranslationKey, useI18n } from '@shared/i18n'
 import { WorkspaceFormModal } from '@shared/ui/WorkspaceFormModal/WorkspaceFormModal'
-import { useEffect, useId, useMemo, useState } from 'react'
+import { useEffect, useId, useState } from 'react'
 import { buildProposal } from '../model/proposal'
 
 export interface ProposeReleaseChangesDialogProps {
@@ -38,16 +38,18 @@ export function ProposeReleaseChangesDialog({
   >({})
   const [cover, setCover] = useState<File | undefined>()
   const [problem, setProblem] = useState<TranslationKey | null>(null)
-  const preview = useMemo(
-    () => (cover ? URL.createObjectURL(cover) : null),
-    [cover],
-  )
-  useEffect(
-    () => () => {
-      if (preview) URL.revokeObjectURL(preview)
-    },
-    [preview],
-  )
+  const [preview, setPreview] = useState<string | null>(null)
+  useEffect(() => {
+    if (!cover) {
+      setPreview(null)
+      return
+    }
+    const url = URL.createObjectURL(cover)
+    setPreview(url)
+    return () => URL.revokeObjectURL(url)
+  }, [cover])
+  const shownCover =
+    preview ?? (release.cover ? releaseCoverUrl(release.cover) : null)
   const pending = new Set(
     (changes.data ?? [])
       .filter((change) => change.status === 'PENDING')
@@ -111,11 +113,11 @@ export function ProposeReleaseChangesDialog({
           {t('releaseChanges.dialog.cover')}
         </label>
         <div className="flex items-center gap-3">
-          {(preview ?? release.cover) && (
+          {shownCover && (
             <img
               alt=""
               className="size-16 shrink-0 rounded-lg object-cover"
-              src={preview ?? releaseCoverUrl(release.cover ?? '')}
+              src={shownCover}
             />
           )}
           <input
