@@ -1,9 +1,12 @@
 import { normalizePagination } from '@common/pagination'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import { Injectable } from '@nestjs/common'
-import type { Prisma } from '@prisma/client'
+import { type Prisma, ReleaseChangeStatus } from '@prisma/client'
 import type { MusicReleasesDto, MusicTracksDto } from './dtos/music-catalogue.dto'
 import { RELEASE_SUMMARY_SELECT } from './orm'
+import { acceptsChanges } from './release-change-rules'
+
+const PENDING_CHANGE = { status: ReleaseChangeStatus.PENDING } as const
 
 @Injectable()
 export class ArtistMusicService {
@@ -49,15 +52,38 @@ export class ArtistMusicService {
           isDemo: true,
           updatedAt: true,
           owner: { select: { username: true } },
-          release: { select: { id: true, title: true, cover: true, deletedAt: true } },
+          release: {
+            select: {
+              id: true,
+              title: true,
+              cover: true,
+              deletedAt: true,
+              status: true,
+              unpublishedBy: true,
+              isDemo: true,
+            },
+          },
+          publishedAs: {
+            select: { track: { select: { deletedAt: true, moderationBlockedAt: true } } },
+          },
+          changes: { where: PENDING_CHANGE, select: { id: true }, take: 1 },
         },
       }),
       this.prisma.artistTrackDraft.count({ where }),
     ])
-    const data = records.map(({ owner, release, ...record }) => {
+    const data = records.map(({ owner, release, publishedAs, changes, ...record }) => {
       const live = release && !release.deletedAt ? release : null
+      const track = publishedAs?.track
       return {
         ...record,
+        // Only a recording uploaded into a live release is renamed, through that release.
+        acceptsChanges:
+          !!live &&
+          acceptsChanges(live) &&
+          !!track &&
+          !track.deletedAt &&
+          !track.moderationBlockedAt,
+        hasPendingChanges: changes.length > 0,
         // A recording uploaded into a release has no artwork of its own; it shows the release's.
         cover: record.cover ?? live?.cover ?? null,
         artistName: owner.username,
@@ -90,19 +116,23 @@ export class ArtistMusicService {
           ...RELEASE_SUMMARY_SELECT,
           cover: true,
           isDemo: true,
+          unpublishedBy: true,
           owner: { select: { username: true } },
           _count: {
             select: {
               trackDrafts: { where: { deletedAt: null } },
               tracks: { where: { track: { deletedAt: null } } },
+              changes: { where: PENDING_CHANGE },
             },
           },
         },
       }),
       this.prisma.release.count({ where }),
     ])
-    const data = records.map(({ owner, _count, ...record }) => ({
+    const data = records.map(({ owner, _count, unpublishedBy, ...record }) => ({
       ...record,
+      acceptsChanges: acceptsChanges({ ...record, unpublishedBy }),
+      hasPendingChanges: _count.changes > 0,
       artistName: owner.username,
       // Published tracks are catalogue copies of the drafts, so they are not counted twice.
       trackCount: Math.max(_count.trackDrafts, _count.tracks),
