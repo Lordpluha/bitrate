@@ -1967,7 +1967,7 @@ export interface paths {
       cookie?: never
     }
     /** List items marked "Not interested", newest first */
-    get: operations['TasteController_listNotInterested_v1']
+    get: operations['NotInterestedController_list_v1']
     put?: never
     post?: never
     delete?: never
@@ -1985,10 +1985,10 @@ export interface paths {
     }
     get?: never
     /** Mark a track or an artist "Not interested" */
-    put: operations['TasteController_markNotInterested_v1']
+    put: operations['NotInterestedController_mark_v1']
     post?: never
     /** Undo "Not interested" */
-    delete: operations['TasteController_unmarkNotInterested_v1']
+    delete: operations['NotInterestedController_unmark_v1']
     options?: never
     head?: never
     patch?: never
@@ -2002,7 +2002,7 @@ export interface paths {
       cookie?: never
     }
     /** List items excluded from the taste profile, newest first */
-    get: operations['TasteController_listExclusions_v1']
+    get: operations['TasteExclusionsController_list_v1']
     put?: never
     post?: never
     delete?: never
@@ -2023,10 +2023,10 @@ export interface paths {
      * "Don't use for my taste": exclude a playlist, an album or a track
      * @description Also covers past plays, and is undone by removing the exclusion.
      */
-    put: operations['TasteController_exclude_v1']
+    put: operations['TasteExclusionsController_exclude_v1']
     post?: never
     /** Remove a taste exclusion */
-    delete: operations['TasteController_include_v1']
+    delete: operations['TasteExclusionsController_include_v1']
     options?: never
     head?: never
     patch?: never
@@ -21276,7 +21276,7 @@ export interface operations {
       }
     }
   }
-  TasteController_listNotInterested_v1: {
+  NotInterestedController_list_v1: {
     parameters: {
       query?: {
         page?: number
@@ -21425,7 +21425,7 @@ export interface operations {
       }
     }
   }
-  TasteController_markNotInterested_v1: {
+  NotInterestedController_mark_v1: {
     parameters: {
       query?: never
       header?: never
@@ -21573,7 +21573,7 @@ export interface operations {
       }
     }
   }
-  TasteController_unmarkNotInterested_v1: {
+  NotInterestedController_unmark_v1: {
     parameters: {
       query?: never
       header?: never
@@ -21714,7 +21714,7 @@ export interface operations {
       }
     }
   }
-  TasteController_listExclusions_v1: {
+  TasteExclusionsController_list_v1: {
     parameters: {
       query?: {
         page?: number
@@ -21863,7 +21863,7 @@ export interface operations {
       }
     }
   }
-  TasteController_exclude_v1: {
+  TasteExclusionsController_exclude_v1: {
     parameters: {
       query?: never
       header?: never
@@ -22011,7 +22011,7 @@ export interface operations {
       }
     }
   }
-  TasteController_include_v1: {
+  TasteExclusionsController_include_v1: {
     parameters: {
       query?: never
       header?: never
