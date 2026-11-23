@@ -1,15 +1,15 @@
 import { createAnthropic } from '@ai-sdk/anthropic'
 import { createMistral } from '@ai-sdk/mistral'
 import type { LanguageModel } from 'ai'
+import { unpricedModels } from '../pricing'
 import {
   type ApprovedProvider,
   type ModelRef,
   type PromotionModelConfig,
   PromotionModelConfigError,
   resolvePromotionRoutes,
-} from './model-routing'
-import { unpricedModels } from './pricing'
-import type { PromotionModels } from './promotion-generator'
+} from '../routing'
+import type { PromotionModels } from './promotion-models'
 
 export interface PromotionProviderKeys {
   anthropicApiKey?: string | undefined

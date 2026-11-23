@@ -1,11 +1,12 @@
 import { PrismaService } from '@infra/prisma/prisma.service'
 import { Injectable } from '@nestjs/common'
 import type { AiCallOutcome } from '@prisma/client'
-import type { ModelRef, PromotionTask } from '../ai/model-routing'
 import { costMicroUsd, type TokenUsage } from '../ai/pricing'
+import type { ModelRef, PromotionTask } from '../ai/routing'
+import { monthStart } from './month-start'
 
 /** The feature name written to `AiUsage.feature` for every promotion call. */
-export const PROMOTION_FEATURE = 'promotion'
+const PROMOTION_FEATURE = 'promotion'
 
 export interface AiCallRecord {
   artistId: string
@@ -14,10 +15,6 @@ export interface AiCallRecord {
   usage: TokenUsage
   outcome: AiCallOutcome
 }
-
-/** First instant of the calendar month (UTC) that contains `now`. */
-export const monthStart = (now: Date) =>
-  new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1))
 
 /** Writes one `AiUsage` row per billed model call and sums an artist's monthly spend. */
 @Injectable()

@@ -1,6 +1,6 @@
 import { describe, expect, it } from '@jest/globals'
-import { parseModelRef, resolvePromotionRoutes } from './model-routing'
-import { costMicroUsd, unpricedModels } from './pricing'
+import { parseModelRef } from '../routing'
+import { costMicroUsd } from './cost-micro-usd'
 
 describe('costMicroUsd', () => {
   it('prices full-rate, cached and output tokens separately', () => {
@@ -22,20 +22,5 @@ describe('costMicroUsd', () => {
         outputTokens: 0,
       }),
     ).toBe(1)
-  })
-})
-
-describe('unpricedModels', () => {
-  it('lists routed models without a price', () => {
-    const routes = resolvePromotionRoutes(
-      {
-        plan: { primary: 'anthropic:claude-sonnet-5-5', fallback: 'mistral:mistral-medium-9' },
-        copy: { primary: 'anthropic:claude-sonnet-5-5' },
-        translate: { primary: 'anthropic:claude-haiku-5-5' },
-        check: { primary: 'anthropic:claude-haiku-5-5' },
-      },
-      new Set(['anthropic', 'mistral']),
-    )
-    expect(unpricedModels(routes)).toEqual(['mistral:mistral-medium-9'])
   })
 })

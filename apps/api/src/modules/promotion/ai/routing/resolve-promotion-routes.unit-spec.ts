@@ -1,11 +1,6 @@
 import { describe, expect, it } from '@jest/globals'
-import {
-  type ApprovedProvider,
-  type PromotionModelConfig,
-  PromotionModelConfigError,
-  parseModelRef,
-  resolvePromotionRoutes,
-} from './model-routing'
+import type { ApprovedProvider, PromotionModelConfig } from './promotion-tasks'
+import { resolvePromotionRoutes } from './resolve-promotion-routes'
 
 const config = (over: Partial<PromotionModelConfig> = {}): PromotionModelConfig => ({
   plan: { primary: 'anthropic:claude-sonnet-5-5', fallback: 'mistral:mistral-large-4' },
@@ -15,27 +10,6 @@ const config = (over: Partial<PromotionModelConfig> = {}): PromotionModelConfig 
   ...over,
 })
 const both = new Set<ApprovedProvider>(['anthropic', 'mistral'])
-
-describe('parseModelRef', () => {
-  it('splits provider and model', () => {
-    expect(parseModelRef(' anthropic:claude-sonnet-5-5 ')).toEqual({
-      id: 'anthropic:claude-sonnet-5-5',
-      provider: 'anthropic',
-      modelId: 'claude-sonnet-5-5',
-    })
-  })
-
-  it.each(['claude-sonnet-5-5', ':claude', 'anthropic:', 'anthropic: '])(
-    'rejects the malformed id %j',
-    (id) => {
-      expect(() => parseModelRef(id)).toThrow(PromotionModelConfigError)
-    },
-  )
-
-  it('rejects a provider that has not passed due diligence', () => {
-    expect(() => parseModelRef('openai:gpt-6.1-sol')).toThrow(/not approved/)
-  })
-})
 
 describe('resolvePromotionRoutes', () => {
   it('resolves every task with its fallback', () => {

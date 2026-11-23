@@ -1,41 +1,15 @@
 import type { AppConfig } from '@common/config'
+import { PrismaModule } from '@infra/prisma/prisma.module'
 import { Module } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
-import { PROMOTION_TASKS, type PromotionModelConfig } from './ai/model-routing'
-import { PROMOTION_MODELS, PromotionGenerator } from './ai/promotion-generator'
-import { createPromotionModels } from './ai/promotion-models'
-import { AI_QUOTA_LIMITS, type AiQuotaLimits, AiQuotaService } from './usage/ai-quota.service'
-import { AiUsageService } from './usage/ai-usage.service'
+import { createPromotionModels, PROMOTION_MODELS, PromotionGenerator } from './ai/generator'
+import { readPromotionModelConfig } from './ai/routing'
+import { AI_QUOTA_LIMITS, type AiQuotaLimits, AiQuotaService, AiUsageService } from './usage'
 
 type Env = ConfigService<AppConfig>
 
 /** Matches the env schema default; used only if the value was not validated in. */
 const DEFAULT_MONTHLY_LIMIT_USD = 2
-
-const MODEL_ENV = {
-  plan: ['PROMOTION_MODEL_PLAN', 'PROMOTION_MODEL_PLAN_FALLBACK'],
-  copy: ['PROMOTION_MODEL_COPY', 'PROMOTION_MODEL_COPY_FALLBACK'],
-  translate: ['PROMOTION_MODEL_TRANSLATE', 'PROMOTION_MODEL_TRANSLATE_FALLBACK'],
-  check: ['PROMOTION_MODEL_CHECK', 'PROMOTION_MODEL_CHECK_FALLBACK'],
-} as const satisfies PromotionModelConfigKeys
-
-type PromotionModelConfigKeys = Record<
-  (typeof PROMOTION_TASKS)[number],
-  readonly [keyof AppConfig, keyof AppConfig]
->
-
-/** Reads the per-task model ids; an empty fallback means the task has none. */
-export function promotionModelConfig(
-  read: (key: keyof AppConfig) => unknown,
-): PromotionModelConfig {
-  const config = {} as PromotionModelConfig
-  for (const task of PROMOTION_TASKS) {
-    const [primary, fallback] = MODEL_ENV[task]
-    const fallbackId = String(read(fallback) ?? '').trim()
-    config[task] = { primary: String(read(primary)), fallback: fallbackId || undefined }
-  }
-  return config
-}
 
 /**
  * AI promotion foundation (spec ai-artist-promotion, ADR-0076): model routing, generation with
@@ -43,6 +17,7 @@ export function promotionModelConfig(
  * features build on `PromotionGenerator` and `AiQuotaService`.
  */
 @Module({
+  imports: [PrismaModule],
   providers: [
     {
       provide: PROMOTION_MODELS,
@@ -50,7 +25,7 @@ export function promotionModelConfig(
       useFactory: (env: Env) =>
         env.get('PROMOTION_AI_ENABLED') === true
           ? createPromotionModels(
-              promotionModelConfig((key) => env.get(key)),
+              readPromotionModelConfig((key) => env.get(key)),
               {
                 anthropicApiKey: env.get('ANTHROPIC_API_KEY'),
                 mistralApiKey: env.get('MISTRAL_API_KEY'),

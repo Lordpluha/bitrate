@@ -1,14 +1,11 @@
 import { beforeEach, describe, expect, it, jest } from '@jest/globals'
 import { MockLanguageModelV4 } from 'ai/test'
 import { z } from 'zod'
-import type { AiCallRecord, AiUsageService } from '../usage/ai-usage.service'
-import { type ModelRef, parseModelRef, type TaskRoute } from './model-routing'
-import {
-  PromotionGenerator,
-  type PromotionModels,
-  PromotionModelUnavailableError,
-  PromotionOutputRejectedError,
-} from './promotion-generator'
+import type { AiCallRecord, AiUsageService } from '../../usage/ai-usage.service'
+import { type ModelRef, parseModelRef, type TaskRoute } from '../routing'
+import { PromotionModelUnavailableError, PromotionOutputRejectedError } from './generation-errors'
+import { PromotionGenerator } from './promotion-generator.service'
+import type { PromotionModels } from './promotion-models'
 
 const usage = {
   inputTokens: { total: 100, noCache: 100, cacheRead: undefined, cacheWrite: undefined },

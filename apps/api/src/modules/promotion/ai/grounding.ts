@@ -4,7 +4,7 @@
  * is reported, and the caller regenerates once before surfacing an error.
  */
 
-export type UngroundedKind = 'number' | 'year' | 'rank' | 'url' | 'email' | 'handle' | 'achievement'
+type UngroundedKind = 'number' | 'year' | 'rank' | 'url' | 'email' | 'handle' | 'achievement'
 
 export interface UngroundedClaim {
   kind: UngroundedKind

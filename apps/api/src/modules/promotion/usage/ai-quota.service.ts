@@ -1,27 +1,8 @@
-import { TranslatableException } from '@common/exceptions'
-import { HttpStatus, Inject, Injectable } from '@nestjs/common'
-import { AiUsageService, monthStart } from './ai-usage.service'
-
-/** Monthly AI spending ceilings in micro-dollars (spec: Free $2 hard, Artist $5 soft). */
-export interface AiQuotaLimits {
-  freeMicroUsd: number
-}
-export const AI_QUOTA_LIMITS = Symbol('AI_QUOTA_LIMITS')
-
-/** The artist used this month's AI allowance; it resets at the start of the next UTC month. */
-export class AiQuotaExceededException extends TranslatableException {
-  constructor(resetsAt: Date) {
-    super('errors.promotion.ai_quota_exceeded', HttpStatus.PAYMENT_REQUIRED, {
-      resetsAt: resetsAt.toISOString().slice(0, 10),
-    })
-  }
-}
-
-export interface AiAllowance {
-  usedMicroUsd: number
-  limitMicroUsd: number
-  resetsAt: Date
-}
+import { Inject, Injectable } from '@nestjs/common'
+import { AiQuotaExceededException } from './ai-quota-exceeded.exception'
+import { AI_QUOTA_LIMITS, type AiAllowance, type AiQuotaLimits } from './ai-quota-limits'
+import { AiUsageService } from './ai-usage.service'
+import { monthStart } from './month-start'
 
 /**
  * Checks an artist's monthly AI allowance before a generation job is queued. Billing does not
