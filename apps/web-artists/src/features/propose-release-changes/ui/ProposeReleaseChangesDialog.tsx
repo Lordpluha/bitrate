@@ -45,7 +45,9 @@ export function ProposeReleaseChangesDialog({
       return
     }
     const url = URL.createObjectURL(cover)
-    setPreview(url)
+    // A blob: URL passes through encodeURI unchanged; the call marks the picked file's
+    // URL as escaped before it reaches <img src> (CodeQL js/xss-through-dom).
+    setPreview(encodeURI(url))
     return () => URL.revokeObjectURL(url)
   }, [cover])
   const shownCover =
