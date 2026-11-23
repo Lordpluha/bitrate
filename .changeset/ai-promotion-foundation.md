@@ -1,5 +1,6 @@
 ---
 '@bitrate/api': minor
+'@bitrate/contracts': minor
 ---
 
 Added the foundation for AI artist promotion (ADR-0076). It is off until `PROMOTION_AI_ENABLED`
