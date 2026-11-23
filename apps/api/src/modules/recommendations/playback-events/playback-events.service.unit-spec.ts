@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, it, jest } from '@jest/globals'
 import { BadRequestException, NotFoundException } from '@nestjs/common'
 import { type PrismaMock, prismaMock, resetPrismaMock } from '@test/mocks'
-import type { RecordPlaybackEventDto } from './dtos'
-import { RECOMMENDATION_ERRORS } from './errors'
+import { RECOMMENDATION_ERRORS } from '../errors'
+import type { RecordPlaybackEventDto } from './dtos/record-playback-event.dto'
 import { PLAYBACK_EVENT_RETENTION_MONTHS, PlaybackEventsService } from './playback-events.service'
 import { SYSTEM_CHOSEN_WEIGHT } from './taste-weight'
 

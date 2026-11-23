@@ -4,8 +4,8 @@ import { UserAuth } from '@modules/users-auth/users-auth.guard'
 import { Body, Controller, HttpCode, Post } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
 import { ZodValidationPipe } from 'nestjs-zod'
-import { RecordPlaybackEventSwagger } from './decorators'
-import { RecordPlaybackEventDto, RecordPlaybackEventSchema } from './dtos'
+import { RecordPlaybackEventSwagger } from './decorators/record-playback-event.decorator'
+import { RecordPlaybackEventDto, RecordPlaybackEventSchema } from './dtos/record-playback-event.dto'
 import { PlaybackEventsService } from './playback-events.service'
 
 @ApiTags('Recommendations')

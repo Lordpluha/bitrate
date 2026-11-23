@@ -1,7 +1,7 @@
 import { PlaybackEndReason, PlaybackSource } from '@prisma/client'
 import { createZodDto } from 'nestjs-zod'
 import { z } from 'zod'
-import { RECOMMENDATION_VALIDATION } from '../errors'
+import { RECOMMENDATION_VALIDATION } from '../../errors'
 
 /** Longer than any track plus replays within one play; anything above is a broken client. */
 const MAX_LISTENED_MS = 6 * 60 * 60 * 1000

@@ -1,0 +1,6 @@
+export * from './exclude-from-taste.decorator'
+export * from './include-in-taste.decorator'
+export * from './list-not-interested.decorator'
+export * from './list-taste-exclusions.decorator'
+export * from './mark-not-interested.decorator'
+export * from './unmark-not-interested.decorator'

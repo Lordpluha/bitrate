@@ -1,5 +1,5 @@
 import { NotFoundException, type PipeTransform } from '@nestjs/common'
-import { RECOMMENDATION_ERRORS } from './errors'
+import { RECOMMENDATION_ERRORS } from '../errors'
 
 /**
  * Maps a URL segment (`tracks`, `playlists`) to the stored entity type. An unknown segment is a

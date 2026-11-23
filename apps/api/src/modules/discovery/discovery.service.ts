@@ -5,7 +5,7 @@ import { CacheService } from '@infra/cache/cache.service'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import { PUBLIC_ALBUM_WHERE } from '@modules/albums/orm'
 import { PUBLIC_ARTIST_SELECT } from '@modules/artists/orm'
-import { TasteService } from '@modules/recommendations/taste.service'
+import { NotInterestedService } from '@modules/recommendations/taste/not-interested.service'
 import { PUBLIC_TRACK_SQL, PUBLIC_TRACK_WHERE } from '@modules/tracks/orm'
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common'
 import { Prisma } from '@prisma/client'
@@ -28,7 +28,7 @@ export class DiscoveryService {
     private readonly prisma: PrismaService,
     private readonly cache: CacheService,
     private readonly personalTop: PersonalTopService,
-    private readonly taste: TasteService,
+    private readonly notInterested: NotInterestedService,
   ) {}
 
   getCategories(page = 1, limit = 20) {
@@ -83,7 +83,10 @@ export class DiscoveryService {
     const key = `${userId ?? 'anonymous'}:${hideExplicit ? 'clean' : 'all'}`
     return this.cache.wrap(NS.RECOMMENDATIONS, `feed:${key}`, TTL.SHORT, async () => {
       const [preferredGenreIds, hidden] = userId
-        ? await Promise.all([this.getPreferredGenreIds(userId), this.taste.hiddenIds(userId)])
+        ? await Promise.all([
+            this.getPreferredGenreIds(userId),
+            this.notInterested.hiddenIds(userId),
+          ])
         : [[], null]
       const trackWhere = {
         ...PUBLIC_TRACK_WHERE,

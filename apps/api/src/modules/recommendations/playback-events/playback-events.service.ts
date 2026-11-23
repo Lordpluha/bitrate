@@ -3,8 +3,8 @@ import { PrismaService } from '@infra/prisma/prisma.service'
 import { PUBLIC_TRACK_WHERE } from '@modules/tracks/orm'
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common'
 import { Prisma } from '@prisma/client'
-import type { RecordPlaybackEventDto } from './dtos'
-import { RECOMMENDATION_ERRORS } from './errors'
+import { RECOMMENDATION_ERRORS } from '../errors'
+import type { RecordPlaybackEventDto } from './dtos/record-playback-event.dto'
 import { tasteWeight } from './taste-weight'
 
 /** Raw events are kept this many calendar months; older ones are removed by the retention job. */

@@ -1,7 +1,7 @@
 import type { CacheService } from '@infra/cache/cache.service'
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals'
 import { PUBLIC_ARTIST_SELECT } from '@modules/artists/orm'
-import { TasteService } from '@modules/recommendations/taste.service'
+import { NotInterestedService } from '@modules/recommendations/taste/not-interested.service'
 import type { Prisma } from '@prisma/client'
 import { type PrismaMock, prismaMock, resetPrismaMock } from '@test/mocks'
 import { mockDeep } from 'jest-mock-extended'
@@ -21,7 +21,7 @@ describe('DiscoveryService public artist projections', () => {
       prisma,
       cache,
       new PersonalTopService(prisma),
-      new TasteService(prisma),
+      new NotInterestedService(prisma),
     )
   })
 
