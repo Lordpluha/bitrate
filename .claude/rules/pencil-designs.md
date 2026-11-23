@@ -72,7 +72,8 @@ paths:
   writes them from `scripts/pencil-pages/pages/artist/` (`index.mjs` + area modules `public`,
   `workspace`, `release`, `insights`, `account`, `overlays`, `promotion`, small files per page); drawn so
   far: the public pages (landing, auth, legal, not-found, session-error) over the canvas without the
-  shell, the workspace pages `dashboard` and `music`, the overlays (`workspace-search`,
+  shell, the workspace pages `dashboard`, `music` and `distribution`, the four release stages
+  (`release-draft|review|deliver|launch`: header, four-stage stepper, stage tiles, every dialog), the overlays (`workspace-search`,
   `notifications`, `account-switcher`, `mobile-menu`; modals and popovers in flow over the shell) and
   the promotion pages, as bento tiles on the 12-column grid (73px columns, 64px rows, 20px gaps).
   Copy is the English i18n of `apps/web-artists`; see `pencil/web-artist-design/DESIGN.md`.
