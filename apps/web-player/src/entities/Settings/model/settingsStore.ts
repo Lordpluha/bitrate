@@ -26,6 +26,7 @@ export const initialSettings: SettingsSnapshot = {
   compactLibrary: false,
   language: 'en',
   nowPlayingPanel: true,
+  singleKeyShortcuts: true,
   streamingQuality: 'Automatic',
 }
 
@@ -53,3 +54,6 @@ export const selectCompactLibrary = (state: SettingsState) =>
 
 export const selectNowPlayingPanel = (state: SettingsState) =>
   state.nowPlayingPanel
+
+export const selectSingleKeyShortcuts = (state: SettingsState) =>
+  state.singleKeyShortcuts

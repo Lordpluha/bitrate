@@ -12,9 +12,14 @@ import { Player } from '@widgets/Player'
 import { RightSidebar } from '@widgets/RightSidebar'
 import { ChevronLeft } from 'lucide-react'
 import { type PropsWithChildren, useState } from 'react'
+import { useI18n } from '@/shared/i18n'
 import { useMainShellResize } from './useMainShellResize'
 
+/** The skip link's target; the page content that follows the header and the library. */
+const MAIN_CONTENT_ID = 'main-content'
+
 export default function MainLayout({ children }: PropsWithChildren) {
+  const { t } = useI18n()
   const currentTrack = usePlayerStore(selectCurrentTrack)
   const hasPlayer = !!currentTrack
   const [isPlayerExpanded, setIsPlayerExpanded] = useState(false)
@@ -38,6 +43,12 @@ export default function MainLayout({ children }: PropsWithChildren) {
 
   return (
     <div className="h-dvh overflow-hidden bg-background text-foreground xl:flex xl:h-screen xl:flex-col xl:gap-3 xl:p-4">
+      <a
+        className="sr-only z-50 rounded-lg bg-primary p-3 text-primary-foreground focus:not-sr-only focus:fixed focus:left-4 focus:top-4"
+        href={`#${MAIN_CONTENT_ID}`}
+      >
+        {t('shell.skipToContent')}
+      </a>
       <MainHeader />
       <LegalReacceptanceDialog />
       <BitrateConnectSync />
@@ -72,27 +83,33 @@ export default function MainLayout({ children }: PropsWithChildren) {
         </aside>
 
         <hr
-          aria-label="Resize library"
+          aria-label={t('shell.resizeLibrary')}
           aria-orientation="vertical"
           aria-valuemax={leftResizeLimits.max}
           aria-valuemin={leftResizeLimits.min}
           aria-valuenow={Math.round(leftResizeLimits.value)}
-          className="relative hidden h-full w-full cursor-col-resize border-0 bg-transparent outline-none before:absolute before:left-1/2 before:top-0 before:h-full before:w-px before:-translate-x-1/2 before:bg-transparent before:transition-colors hover:before:bg-border focus-visible:before:bg-ring active:before:bg-primary xl:block"
+          className="relative hidden h-full w-full cursor-col-resize border-0 bg-transparent outline-hidden before:absolute before:left-1/2 before:top-0 before:h-full before:w-px before:-translate-x-1/2 before:bg-transparent before:transition-colors hover:before:bg-border focus-visible:before:bg-ring active:before:bg-primary xl:block"
           tabIndex={0}
           {...leftResizeHandleProps}
         />
 
-        <main className="min-w-0 xl:overflow-hidden">{children}</main>
+        <main
+          className="min-w-0 focus:outline-hidden xl:overflow-hidden"
+          id={MAIN_CONTENT_ID}
+          tabIndex={-1}
+        >
+          {children}
+        </main>
 
         {hasRightSidebar && (
           <hr
-            aria-label="Resize now playing"
+            aria-label={t('shell.resizeNowPlaying')}
             aria-orientation="vertical"
             aria-valuemax={rightResizeLimits.max}
             aria-valuemin={rightResizeLimits.min}
             aria-valuenow={Math.round(rightResizeLimits.value)}
             className={cn(
-              'relative h-full w-full cursor-col-resize border-0 bg-transparent outline-none before:absolute before:left-1/2 before:top-0 before:h-full before:w-px before:-translate-x-1/2 before:bg-transparent before:transition-colors hover:before:bg-border focus-visible:before:bg-ring active:before:bg-primary',
+              'relative h-full w-full cursor-col-resize border-0 bg-transparent outline-hidden before:absolute before:left-1/2 before:top-0 before:h-full before:w-px before:-translate-x-1/2 before:bg-transparent before:transition-colors hover:before:bg-border focus-visible:before:bg-ring active:before:bg-primary',
               isRightSidebarCollapsed && 'cursor-default hover:bg-transparent',
             )}
             tabIndex={0}

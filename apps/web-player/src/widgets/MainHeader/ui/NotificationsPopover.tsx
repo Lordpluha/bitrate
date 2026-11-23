@@ -36,7 +36,7 @@ export const NotificationsPopover = () => {
             ? t('notifications.withUnread', { count: data.unread })
             : t('notifications.title')
         }
-        className="relative rounded-full p-2 text-muted-foreground transition-colors hover:bg-surface hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        className="relative rounded-full p-2 text-muted-foreground transition-colors hover:bg-surface hover:text-foreground focus:outline-hidden focus-visible:ring-2 focus-visible:ring-ring"
       >
         <NotificationIcon className="size-5 xl:size-4.5" />
         {Boolean(data?.unread) && (

@@ -19,7 +19,7 @@ import { lucideSearch } from '@ng-icons/lucide'
     <ng-icon class="shrink-0 text-base" name="lucideSearch" aria-hidden="true" />
     <input
       #field
-      class="min-w-0 flex-1 bg-transparent text-sm font-medium text-foreground outline-none placeholder:text-muted-foreground disabled:cursor-default"
+      class="min-w-0 flex-1 bg-transparent text-sm font-medium text-foreground outline-hidden placeholder:text-muted-foreground disabled:cursor-default"
       type="search"
       [placeholder]="label()"
       [attr.aria-label]="label()"

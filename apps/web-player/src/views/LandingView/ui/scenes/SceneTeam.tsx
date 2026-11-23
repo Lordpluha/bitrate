@@ -75,7 +75,7 @@ export const SceneTeam = () => {
           id="jarLid"
           type="button"
         />
-        <div className={lc('hc')} id="hc" role="tooltip"></div>
+        <div aria-hidden="true" className={lc('hc')} id="hc"></div>
       </Abs>
       <SceneFootnote
         noteKey="team.stack_bubbles_show_where_each_technology"

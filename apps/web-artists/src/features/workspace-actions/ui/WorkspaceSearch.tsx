@@ -17,7 +17,7 @@ export interface WorkspaceDestination {
 const SEARCH_DELAY_MS = 250
 
 const resultClass =
-  'flex min-h-11 items-center gap-3 rounded-lg px-3 text-sm hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
+  'flex min-h-11 items-center gap-3 rounded-lg px-3 text-sm hover:bg-secondary focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring'
 
 /** Workspace sections plus the artist's releases and tracks matching the query. */
 export function WorkspaceSearch({
@@ -49,7 +49,7 @@ export function WorkspaceSearch({
         {t('shell.search')}
       </label>
       <input
-        className="h-11 w-full rounded-lg border border-input bg-background px-3 text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        className="h-11 w-full rounded-lg border border-input bg-background px-3 text-foreground focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring"
         data-initial-focus
         id={inputId}
         onChange={(event) => setQuery(event.target.value)}

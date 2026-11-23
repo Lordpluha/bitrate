@@ -54,7 +54,7 @@ export const SettingsSelect = <TValue extends string>({
         aria-expanded={select.isOpen}
         aria-haspopup="listbox"
         aria-label={ariaLabel}
-        className="flex h-9 w-full items-center justify-between gap-4 rounded-md border border-border bg-background px-3 text-left text-sm text-foreground outline-none transition-colors hover:bg-surface focus-visible:ring-2 focus-visible:ring-ring"
+        className="flex h-9 w-full items-center justify-between gap-4 rounded-md border border-border bg-background px-3 text-left text-sm text-foreground outline-hidden transition-colors hover:bg-surface focus-visible:ring-2 focus-visible:ring-ring"
         onClick={() => {
           if (select.isOpen) select.close()
           else select.openAt(selectedIndex)

@@ -118,10 +118,12 @@ export function LandingFinale() {
             />
             <div className="artist-finale-sleeve">
               <Link
-                aria-label={t('landing.finale.coverAction')}
                 className="artist-finale-cover"
                 to={ROUTES.auth.registration}
               >
+                <span className="sr-only">
+                  {t('landing.finale.coverAction')}:{' '}
+                </span>
                 <span className="artist-finale-cover-top">
                   <img alt="" height={18} src="/bitrate-logo.svg" width={18} />
                   <span>FOR ARTISTS</span>
