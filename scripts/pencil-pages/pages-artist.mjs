@@ -1219,7 +1219,6 @@ export const wsShell = (crumb, action) => ({
   actionIcon: null,
 })
 const WS_TABS = ['Overview', 'Tasks', 'Feedback', 'Delivery', 'Versions', 'Activity', 'Promotion']
-export const PROMOTION_TAB = WS_TABS.indexOf('Promotion')
 export const wsTabs = (i) => Tabs(WS_TABS, i)
 export const releasePages = {
   'release-workspace': pair(
