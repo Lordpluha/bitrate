@@ -4,12 +4,30 @@
 // lead track playing in the now-playing island.
 import { pageSpec } from '../../../artist-ws/spec.mjs'
 import { bento } from './bento.mjs'
-import { dashboardCustomize, REMOVED } from './dashboard-customize.mjs'
+import { layoutCustomize } from './customize.mjs'
 import { dashboardLists } from './dashboard-lists.mjs'
 import { dashboardTiles } from './dashboard-tiles.mjs'
 import { coverFill } from './demo.mjs'
 
 const SUB = 'Everything you need for your next release.'
+const LAYOUT = [
+  [
+    [8, 'Current release'],
+    [4, 'Needs attention'],
+  ],
+  [
+    [8, 'Your catalogue'],
+    [4, 'Next premiere'],
+  ],
+  [
+    [8, 'Your releases'],
+    [4, 'Coming up'],
+  ],
+  [
+    [8, 'Recent activity'],
+    [4, 'Listening data'],
+  ],
+]
 
 /** The dashboard page spec. */
 export function dashboardPage(ui, frames) {
@@ -17,7 +35,7 @@ export function dashboardPage(ui, frames) {
   const { pageHead } = frames
   const t = { ...dashboardTiles(ui), ...dashboardLists(ui) }
   const grid = bento(ui)
-  const edit = dashboardCustomize(ui)
+  const edit = layoutCustomize(ui, { title: 'Dashboard', sub: SUB, rows: LAYOUT })
   const shell = { nav: 'dashboard', crumb: 'Dashboard', action: 'Create release' }
   const head = (m, customize = true) =>
     pageHead(
@@ -132,7 +150,10 @@ export function dashboardPage(ui, frames) {
       [
         'Customize with removed blocks',
         shell,
-        () => [edit.heading(pageHead), ...edit.canvas({ removed: REMOVED })],
+        () => [
+          edit.heading(pageHead),
+          ...edit.canvas({ removed: ['Recent activity', 'Listening data'] }),
+        ],
         desktopOnly,
       ],
       [

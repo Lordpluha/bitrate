@@ -2,7 +2,7 @@
 // the header with the section dock (theme button shows the current theme), the theme and language
 // popovers, the phone page menu and the legal footer.
 
-export const LANDING_NAV = ['Product', 'Releases', 'Journey', 'Credits', 'Listening']
+const LANDING_NAV = ['Product', 'Releases', 'Journey', 'Credits', 'Listening']
 const LEGAL = [
   'Terms of Use',
   'Artist Agreement',

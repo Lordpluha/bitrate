@@ -2,7 +2,7 @@
 // the auth card, fields, actions, social sign-in with its consent, alerts, password rules and toasts —
 // each an artist-library instance with English copy from shared/i18n/messages/en.
 
-export const CONSENT =
+const CONSENT =
   'I am at least 16 years old, I accept the Terms of Use, Community Guidelines and Artist Agreement, and I have read the Privacy Policy.'
 
 /** Auth helpers bound to the screen helpers `ui`. */
