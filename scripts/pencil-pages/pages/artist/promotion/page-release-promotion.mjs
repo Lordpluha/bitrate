@@ -3,7 +3,7 @@
 import { releasePromotionStatesAfter } from './release-promotion-after.mjs'
 import { releasePromotionStatesBefore } from './release-promotion-before.mjs'
 import { releasePromotionKit } from './release-promotion-kit.mjs'
-import { pageSpec } from './spec.mjs'
+import { pageSpec } from '../../../artist-ws/spec.mjs'
 
 /** The release-promotion page spec. */
 export function releasePromotionPage(ui, frames) {

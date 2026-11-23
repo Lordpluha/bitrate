@@ -2,7 +2,7 @@
 // this week and later on eight columns with the active plans table, releases without a plan and the
 // promise on four. Nothing is posted automatically.
 import { activePlans } from './promo-calendar.mjs'
-import { pageSpec } from './spec.mjs'
+import { pageSpec } from '../../../artist-ws/spec.mjs'
 
 /** The promotion-overview page spec. */
 export function promotionOverviewPage(ui, frames) {

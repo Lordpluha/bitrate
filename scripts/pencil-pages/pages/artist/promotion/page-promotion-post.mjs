@@ -2,7 +2,7 @@
 // PL machine translations the artist reviews (edited translations are never overwritten), publishing
 // by the artist, checks — as bento tiles, with every state.
 import { postBlocks } from './promo-post.mjs'
-import { pageSpec } from './spec.mjs'
+import { pageSpec } from '../../../artist-ws/spec.mjs'
 
 /** The promotion-post page spec. */
 export function promotionPostPage(ui, frames) {

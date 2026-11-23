@@ -1,7 +1,7 @@
 // Artist / Promotion profile: set once per artist and overridable per release; states what is sent to
 // the AI provider and what is not. Form tiles on eight columns, the privacy tile on four.
 import { profileBlocks } from './promo-profile.mjs'
-import { pageSpec } from './spec.mjs'
+import { pageSpec } from '../../../artist-ws/spec.mjs'
 
 /** The promotion-profile page spec. */
 export function promotionProfilePage(ui, frames) {
