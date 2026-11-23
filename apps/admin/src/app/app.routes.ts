@@ -97,6 +97,24 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'release-changes',
+        title: 'Release changes',
+        canActivate: [requirePermission('releases:read')],
+        loadComponent: () =>
+          import('@presentation/pages/release-review/release-changes').then(
+            (m) => m.ReleaseChangesPage,
+          ),
+      },
+      {
+        path: 'release-changes/:id',
+        title: 'Release change',
+        canActivate: [requirePermission('releases:read')],
+        loadComponent: () =>
+          import('@presentation/pages/release-review/release-change-detail').then(
+            (m) => m.ReleaseChangeDetailPage,
+          ),
+      },
+      {
         path: 'playlists',
         title: 'Playlists',
         canActivate: [requirePermission('playlists:read')],
