@@ -4337,6 +4337,7 @@ export interface components {
       queuedByListener?: boolean
     }
     PlaybackEventRecordedEntity: {
+      /** @description False during a private session: the play was not stored. A repeated report is still true. */
       recorded: boolean
     }
     /** @enum {string} */
