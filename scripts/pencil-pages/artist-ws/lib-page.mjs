@@ -40,6 +40,11 @@ const SECTIONS = [
     /^(Auth|Landing|Legal|Toast|Popover|Panel$|Menu\/|Chart)/,
   ],
   [
+    'Workspace pages',
+    'Release covers, the stage ring, premiere countdown, track player and share bar; the first-run poster, the Add a block drawer and the modal; the music catalogue table, filters and pagination; the now-playing island.',
+    /^(Cover|Ring|Countdown|Player|Share|Poster|Drawer|Modal|Catalogue|Page\/|Select|Island)/,
+  ],
+  [
     'Shell',
     'Navigation items with the active pill, the expanded and collapsed glass sidebars, the 4rem glass header, the phone header and menu, and the desktop and phone shells.',
     /^(Nav|Sidebar|Header|Mobile|Shell)/,
