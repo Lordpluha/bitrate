@@ -27,8 +27,13 @@ export type TrackManifestPayload = {
     size: number
     initRange: [number, number]
     fragments: [number, number, number, number][]
+    /** CENC `cbcs` under the track's content key (ADR-0077); `null` for a clear rendition. */
+    encryption: RenditionEncryption | null
   }[]
 }
+
+/** How an encrypted rendition is protected; the key id is public, it is in the init segment. */
+export type RenditionEncryption = { scheme: 'cbcs'; keyId: string }
 
 /** One rendition as it appears in the public manifest. */
 export type ManifestRendition = TrackManifestPayload['renditions'][number]
@@ -56,6 +61,8 @@ export type StoredRendition = {
   initRangeStart: number | null
   initRangeEnd: number | null
   fragments: unknown
+  /** Absent on rows written before ADR-0077, which are all clear. */
+  encrypted?: boolean
 }
 
 /** Carries the representation size required by an RFC 9110 416 response. */

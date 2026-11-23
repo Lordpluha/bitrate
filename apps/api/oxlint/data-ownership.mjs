@@ -29,6 +29,7 @@ export const DATA_OWNERS = {
 
   track: ['tracks'],
   trackFile: ['tracks'],
+  trackContentKey: ['tracks'],
   trackProcessingAttempt: ['tracks'],
   trackArtist: ['tracks'],
   trackGenre: ['tracks'],

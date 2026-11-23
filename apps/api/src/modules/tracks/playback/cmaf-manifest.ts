@@ -33,11 +33,17 @@ function isContiguous(fragments: [number, number, number, number][]): boolean {
  *
  * A row that fails any check is dropped rather than repaired: the player seeks
  * by byte offset, so a manifest that misdescribes the file is worse than a
- * missing rendition.
+ * missing rendition. An encrypted rendition without the track's key id is
+ * untrustworthy too — nobody could play it (ADR-0077).
  *
+ * @param keyId the track's content key id, or `null` when it has none.
  * @returns the rendition, or `null` when the stored row is not trustworthy.
  */
-export function parseRendition(file: StoredRendition): ManifestRendition | null {
+export function parseRendition(
+  file: StoredRendition,
+  keyId: string | null = null,
+): ManifestRendition | null {
+  if (file.encrypted === true && !keyId) return null
   if (
     !Number.isSafeInteger(file.bitrate) ||
     file.bitrate <= 0 ||
@@ -68,5 +74,6 @@ export function parseRendition(file: StoredRendition): ManifestRendition | null 
     size: file.size as number,
     initRange: [file.initRangeStart as number, file.initRangeEnd as number],
     fragments: parsedFragments,
+    encryption: file.encrypted === true && keyId ? { scheme: 'cbcs', keyId } : null,
   }
 }
