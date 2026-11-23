@@ -1,15 +1,14 @@
-// Artist / Music (views/MusicView + widgets/MusicCatalogue): tracks and releases in one catalogue with
-// filters, the draft notices, the table (rows on a phone) and pagination of six; loading, error,
-// first-time and filtered empty states, counts unavailable, a preview playing in the now-playing
-// island, the item dialog and the "Upload track" explainer.
+// Artist / Music (views/MusicView + widgets/MusicCatalogue): tracks and releases with filters, notices,
+// table and pagination; loading, error, empty (first-time, filtered), counts unavailable, a preview in
+// the now-playing island, the item dialog and the "Upload track" explainer.
 import { pageSpec } from '../../../artist-ws/spec.mjs'
-import { coverFill } from './demo.mjs'
 import { musicDialogs } from './music-dialogs.mjs'
+import { musicStates } from './music-states.mjs'
 import { musicTable } from './music-table.mjs'
 
 /** The music page spec. */
 export function musicPage(ui, frames) {
-  const { W, Tx, P, Row, Col, inline, Btn } = ui
+  const { W, inline, Btn } = ui
   const { pageHead } = frames
   const cat = musicTable(ui)
   const dlg = musicDialogs(ui)
@@ -34,40 +33,7 @@ export function musicPage(ui, frames) {
     cat.surface(m, tab, o.surface),
     ...(o.after ?? []),
   ]
-  const message = (m, title, body, actions, icon = 'disc-3') => [
-    W(
-      'State/Empty',
-      { name: `Empty / ${title.slice(0, 20)}`, width: 'fill_container' },
-      {
-        icon: { icon },
-        title: { content: title },
-        body: m ? { content: body, width: 'fill_container' } : { content: body },
-        action: inline('Action', actions),
-      },
-    ),
-  ]
-  const loading = (tab) => [
-    Col({ name: 'Loading', gap: 0, width: 'fill_container', padding: 16 }, [
-      Tx('Muted', tab === 'tracks' ? 'Loading your tracks…' : 'Loading your releases…'),
-      ...[1, 2, 3, 4, 5, 6].map((i) =>
-        W('Skeleton/Row', { name: `Skeleton ${i}`, width: 'fill_container' }),
-      ),
-    ]),
-  ]
-  const failed = (tab) => [
-    Col({ name: 'Error', gap: 16, width: 'fill_container', padding: [48, 24] }, [
-      P(
-        'Body',
-        tab === 'tracks'
-          ? 'Could not load your tracks. Please try again.'
-          : 'Could not load your releases. Please try again.',
-      ),
-      Btn('Try again', 'Outline', 'refresh-cw'),
-    ]),
-  ]
-  const island = Row({ name: 'Island', width: 'fill_container', justifyContent: 'center' }, [
-    W('Island/Now Playing Expanded', { name: 'Now playing' }, { cover: coverFill('night-signal') }),
-  ])
+  const { message, loading, failed, island } = musicStates(ui)
   const over = (dialog) => (m) => [head(m), dialog(m)]
   return pageSpec(
     frames,
@@ -185,7 +151,7 @@ export function musicPage(ui, frames) {
       [
         'Playing preview',
         shell,
-        (m) => page(m, 'tracks', { surface: { playing: 0 }, after: [island] }),
+        (m) => page(m, 'tracks', { surface: { playing: 0 }, after: [island(m)] }),
       ],
       ['Release actions', shell, over((m) => dlg.release(m, true))],
       ['Release details', shell, over((m) => dlg.release(m, false))],

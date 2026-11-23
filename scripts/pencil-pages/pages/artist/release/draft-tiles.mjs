@@ -77,30 +77,46 @@ export function draftTiles(ui, k) {
       {},
       act(o, 'Edit timing', 'pencil'),
     )
-  const track = ([variant, title, meta, number, genres]) =>
-    W(
-      variant ? `Row/Track ${variant}` : 'Row/Track',
-      { name: `Track / ${title}`, width: 'fill_container' },
-      {
-        number: { content: number },
-        title: { content: title },
-        meta: { content: meta },
-        genres: genres.length
-          ? inline(
-              'Genres',
-              genres.map((g) => W('Chip', { name: `Genre / ${g}` }, { label: { content: g } })),
-            )
-          : { enabled: false },
-        trail: inline('Actions', [
-          Btn(
-            variant === 'Missing' ? 'Upload audio' : 'Replace audio',
-            'Compact Outline',
-            'upload',
-          ),
-          W('Button/Icon', { name: 'More', width: 30, height: 30 }, { icon: { icon: 'ellipsis' } }),
-        ]),
-      },
-    )
+  /* locked: no reordering or file actions; on a phone the file action is an icon button */
+  const track =
+    (o) =>
+    ([variant, title, meta, number, genres]) =>
+      W(
+        variant ? `Row/Track ${variant}` : 'Row/Track',
+        { name: `Track / ${title}`, width: 'fill_container' },
+        {
+          number: { content: number },
+          title: { content: title },
+          meta: { content: meta },
+          genres: genres.length
+            ? inline(
+                'Genres',
+                genres.map((g) => W('Chip', { name: `Genre / ${g}` }, { label: { content: g } })),
+              )
+            : { enabled: false },
+          ...(o.locked ? { order: { enabled: false } } : {}),
+          trail: o.locked
+            ? { enabled: false }
+            : inline('Actions', [
+                o.m
+                  ? W(
+                      'Button/Icon',
+                      { name: 'Upload', width: 30, height: 30 },
+                      { icon: { icon: 'upload' } },
+                    )
+                  : Btn(
+                      variant === 'Missing' ? 'Upload audio' : 'Replace audio',
+                      'Compact Outline',
+                      'upload',
+                    ),
+                W(
+                  'Button/Icon',
+                  { name: 'More', width: 30, height: 30 },
+                  { icon: { icon: 'ellipsis' } },
+                ),
+              ]),
+        },
+      )
   const tracks = (o = {}) =>
     k.tile(
       'Tracks',
@@ -118,9 +134,17 @@ export function draftTiles(ui, k) {
                   '1',
                   ['Synthwave', 'Electronic'],
                 ],
-                ['Missing', 'Low Tide', 'Original · Duration unavailable · No ISRC yet', '2', []],
+                o.complete
+                  ? ['', 'Low Tide', 'Original · 3:18 · No ISRC yet', '2', ['Ambient']]
+                  : [
+                      'Missing',
+                      'Low Tide',
+                      'Original · Duration unavailable · No ISRC yet',
+                      '2',
+                      [],
+                    ],
               ]
-            ).map(track)),
+            ).map(track(o))),
       ],
       {},
       act(o, 'Upload track', 'upload', 'Compact Primary'),

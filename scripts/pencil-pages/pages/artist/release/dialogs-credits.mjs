@@ -30,13 +30,16 @@ export function creditDialogs(ui, k) {
           P('Muted', 'Credit a person involved in this release and assign at least one role.'),
           Field('Contributor name', 'Kite Harbor'),
           P('Body Strong', 'Assigned roles'),
-          Row(
-            { name: 'Roles', gap: 6 },
-            ROLES.map(([role, on]) =>
-              W(
-                on && !error ? 'Chip/Toggle On' : 'Chip/Toggle',
-                { name: `Role / ${role}` },
-                { label: { content: role } },
+          /* five chips do not fit a phone row: three, then two */
+          ...(m ? [ROLES.slice(0, 3), ROLES.slice(3)] : [ROLES]).map((roles, i) =>
+            Row(
+              { name: `Roles ${i + 1}`, gap: 6 },
+              roles.map(([role, on]) =>
+                W(
+                  on && !error ? 'Chip/Toggle On' : 'Chip/Toggle',
+                  { name: `Role / ${role}` },
+                  { label: { content: role } },
+                ),
               ),
             ),
           ),

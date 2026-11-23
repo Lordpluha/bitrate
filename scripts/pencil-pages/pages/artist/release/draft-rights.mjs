@@ -6,7 +6,7 @@ export function draftRights(ui, k) {
   const { W, P, inline, Btn } = ui
   const act = (o, label, icon, variant = 'Compact Ghost') =>
     o.locked ? [] : [Btn(label, variant, icon)]
-  const credit = (name, initials, roles, share, needs = false) =>
+  const credit = (o, name, initials, roles, share, needs = false) =>
     W(
       needs ? 'Row/Credit Needs Role' : 'Row/Credit',
       { name: `Credit / ${name}`, width: 'fill_container' },
@@ -15,9 +15,15 @@ export function draftRights(ui, k) {
         name: { content: name },
         roles: { content: roles },
         share: { content: share },
-        trail: inline('Actions', [
-          W('Button/Icon', { name: 'Edit', width: 30, height: 30 }, { icon: { icon: 'pencil' } }),
-        ]),
+        trail: o.locked
+          ? { enabled: false }
+          : inline('Actions', [
+              W(
+                'Button/Icon',
+                { name: 'Edit', width: 30, height: 30 },
+                { icon: { icon: 'pencil' } },
+              ),
+            ]),
       },
     )
   const credits = (o = {}) =>
@@ -43,10 +49,10 @@ export function draftRights(ui, k) {
                 name: 'Split total',
                 width: 'fill_container',
               }),
-              credit('Mira Sol', 'MS', 'Performer · Producer · Master 75%', '75%'),
+              credit(o, 'Mira Sol', 'MS', 'Performer · Producer · Master 75%', '75%'),
               o.complete
-                ? credit('Kite Harbor', 'KH', 'Composer · Master 25%', '25%')
-                : credit('Kite Harbor', 'KH', 'Assign at least one role.', '0%', true),
+                ? credit(o, 'Kite Harbor', 'KH', 'Composer · Master 25%', '25%')
+                : credit(o, 'Kite Harbor', 'KH', 'Assign at least one role.', '0%', true),
             ]),
         P(
           'Caption',

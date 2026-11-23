@@ -56,8 +56,13 @@ export function authKit(ui) {
       { name: `Rule / ${label.slice(0, 20)}` },
       { label: { content: label } },
     )
-  const toast = (tone, text) =>
-    W(`Toast/${tone}`, { name: `Toast / ${tone}` }, { text: { content: text } })
+  /* on a phone the toast spans the screen */
+  const toast = (tone, text, m = false) =>
+    W(
+      `Toast/${tone}`,
+      { name: `Toast / ${tone}`, ...(m ? { width: 'fill_container' } : {}) },
+      { text: { content: text } },
+    )
   return {
     card,
     input: field('Input'),

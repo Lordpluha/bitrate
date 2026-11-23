@@ -58,7 +58,7 @@ export function registrationPage(ui, frames) {
       a.primary(o.busy ? 'Creating account...' : 'Continue', o.busy ? 'loader-circle' : null),
     ])
   }
-  const toastAbove = (tone, text, node) => (m) => [a.toast(tone, text), node(m)]
+  const toastAbove = (tone, text, node) => (m) => [a.toast(tone, text, m), node(m)]
   return publicSpec(
     frames,
     {

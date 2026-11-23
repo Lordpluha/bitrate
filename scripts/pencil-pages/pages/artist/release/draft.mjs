@@ -32,7 +32,7 @@ export function releaseDraftPage(ui, frames) {
     k.columns(
       m,
       [t.readiness(o)],
-      [t.timing(o), t.tracks(o), ...halves(m, t.credits(o), t.rights(o))],
+      [t.timing(o), t.tracks({ ...o, m }), ...halves(m, t.credits(o), t.rights(o))],
     ),
     ...(o.after ?? []),
     ...(o.locked ? [] : [t.danger()]),

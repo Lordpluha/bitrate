@@ -81,9 +81,13 @@ export function dashboardPage(ui, frames) {
         W('Skeleton/Tile', { name: `Skeleton ${i}`, width: 'fill_container' }),
       ),
     ])
-  const island = () =>
+  const island = (m) =>
     ui.Row({ name: 'Island', width: 'fill_container', justifyContent: 'center' }, [
-      W('Island/Now Playing', { name: 'Now playing' }, { cover: coverFill('night-signal') }),
+      W(
+        'Island/Now Playing',
+        { name: 'Now playing', ...(m ? { width: 'fill_container' } : {}) },
+        { cover: coverFill('night-signal') },
+      ),
     ])
   const desktopOnly = {
     side: 'desktop',
@@ -168,7 +172,7 @@ export function dashboardPage(ui, frames) {
         () => [edit.heading(pageHead), ...edit.canvas({ error: true })],
         desktopOnly,
       ],
-      ['Playing lead track', shell, (m) => [head(m), overview(m), island()]],
+      ['Playing lead track', shell, (m) => [head(m), overview(m), island(m)]],
     ],
   )
 }

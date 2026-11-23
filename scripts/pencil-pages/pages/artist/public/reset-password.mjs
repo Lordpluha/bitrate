@@ -15,7 +15,7 @@ export function resetPasswordPage(ui, frames) {
       a.secondary('Set new password'),
     ])
   const filled = { password: '••••••••••', confirm: '••••••••••' }
-  const withToast = (tone, text, o) => (m) => [a.toast(tone, text), form(m, o)]
+  const withToast = (tone, text, o) => (m) => [a.toast(tone, text, m), form(m, o)]
   return publicSpec(
     frames,
     {

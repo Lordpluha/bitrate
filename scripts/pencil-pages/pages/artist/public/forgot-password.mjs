@@ -11,7 +11,7 @@ export function forgotPasswordPage(ui, frames) {
       a.input('Email', o.email ?? '', o.error),
       a.secondary('Send reset link'),
     ])
-  const withToast = (tone, text, o) => (m) => [a.toast(tone, text), form(m, o)]
+  const withToast = (tone, text, o) => (m) => [a.toast(tone, text, m), form(m, o)]
   return publicSpec(
     frames,
     {
