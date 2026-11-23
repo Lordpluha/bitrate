@@ -24,10 +24,12 @@ import { addMedia } from './artist-ws/lib-media.mjs'
 import { addNav } from './artist-ws/lib-nav.mjs'
 import { addPaging } from './artist-ws/lib-paging.mjs'
 import { addPickers } from './artist-ws/lib-pickers.mjs'
+import { addProfile } from './artist-ws/lib-profile.mjs'
 import { addNavItems } from './artist-ws/lib-nav-items.mjs'
 import { libraryPage } from './artist-ws/lib-page.mjs'
 import { addRelease } from './artist-ws/lib-release.mjs'
 import { addRows } from './artist-ws/lib-rows.mjs'
+import { addSecurity } from './artist-ws/lib-security.mjs'
 import { addShell } from './artist-ws/lib-shell.mjs'
 import { addShowcase } from './artist-ws/lib-showcase.mjs'
 import { addStates } from './artist-ws/lib-states.mjs'
@@ -69,6 +71,8 @@ addDraft(lib)
 addUpload(lib)
 addDelivery(lib)
 addPickers(lib)
+addProfile(lib)
+addSecurity(lib)
 const nav = addNav(lib)
 addShell(lib, nav)
 const root = lib.stampPage(libraryPage(lib.blocks))

@@ -50,6 +50,11 @@ const SECTIONS = [
     /^(Split|Dropzone|Upload|Artwork|Cell|Matrix|Flow|Chip)/,
   ],
   [
+    'Account and insights',
+    'The public profile preview card, the hued analytics stat, the authenticator QR code and the bare toggles of the notification channels. Image and link fields sit with the forms; device and channel rows with the bento rows.',
+    /^(Profile|QR|Toggle|Stat\/Hue)/,
+  ],
+  [
     'Shell',
     'Navigation items with the active pill, the expanded and collapsed glass sidebars, the 4rem glass header, the phone header and menu, and the desktop and phone shells.',
     /^(Nav|Sidebar|Header|Mobile|Shell)/,
