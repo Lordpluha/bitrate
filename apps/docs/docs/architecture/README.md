@@ -76,7 +76,7 @@ how to apply it day to day.
 | [0072](./0072-cloudflare-r2-production-storage-and-backups.md) | Production audio in Cloudflare R2; off-site backups (database every 6 h, audio daily) to a second R2 bucket with a separate token |
 | [0074](./0074-support-assistant-core-and-channels.md) | One framework-free support assistant core hosted by the API; web over SSE, messengers through webhook adapters and the worker; provider-agnostic models |
 | [0075](./0075-qdrant-for-support-knowledge.md) | The support knowledge index lives in Qdrant as rebuildable derived data; recommendation vectors stay in pgvector |
-| [0076](./0076-ai-provider-boundary.md) | AI calls go through one provider boundary in `infra/ai`, routed by task from configuration, providers under a DPA with no training, every call accounted in `AiUsage` |
+| [0076](./0076-ai-provider-boundary.md) | AI promotion calls models through the AI SDK as in ADR-0074, routed by task from configuration, providers under a DPA with no training, every call accounted in `AiUsage` |
 
 Create new records from [`template.md`](./template.md). Accepted decisions are changed by
 a superseding ADR rather than silently rewriting history.

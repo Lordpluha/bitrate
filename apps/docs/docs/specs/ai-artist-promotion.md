@@ -117,10 +117,12 @@ Stored per artist; each field can be overridden for one generation.
   [law roadmap](../strategy/law-roadmap.md)). Nothing is published or sent without the
   artist's per-item approval.
 
-### AI platform (provider boundary, ADR-0076)
+### AI platform (ADR-0076)
 
-- One `AiProvider` interface in `apps/api/src/infra/ai/`; no provider SDK call outside its adapters, and none
-  in a controller. Calls are routed **by task**, from configuration:
+- Models are called through the Vercel AI SDK, as the support assistant does
+  ([ADR-0074](../architecture/0074-support-assistant-core-and-channels.md)). Provider packages
+  are imported only in the promotion module's model adapter, and never in a controller. Calls
+  are routed **by task**, with a `provider:model` string per task in configuration:
 
   | Task | Purpose | Default (subject to the eval) | Fallback |
   |---|---|---|---|
@@ -200,7 +202,7 @@ validation fails twice, 503 when no enabled provider is available.
 | AC-10 | The follower notification includes the artist message only when it was approved before release; otherwise it is unchanged | Notifications unit/e2e | Pending |
 | AC-11 | An approved countdown step shows the tile on the player's artist page until the release goes live | web-player test | Pending |
 | AC-12 | Every provider call writes an `AiUsage` record. A Free artist past the ceiling gets `AI_QUOTA_EXCEEDED` and the quota state | Unit + e2e | Pending |
-| AC-13 | No provider SDK is imported outside the `infra/ai` adapters; switching the task route in config needs no code change | Lint rule (oxlint) + unit | Pending |
+| AC-13 | No provider package is imported outside the promotion module's model adapter; switching a task's `provider:model` in config needs no code change | Lint rule (oxlint) + unit | Pending |
 | AC-14 | Only approved providers (DPA, no training) can be enabled in production configuration, and requests contain no email, listener or payment data | Config validation test; unit test of the context builder | Pending |
 | AC-15 | The listed promotion events are recorded with a schema version | Unit | Pending |
 | AC-16 | Eval: the chosen model meets the agreed bar on 15–20 release fixtures (schema validity, no ungrounded claims, glossary preservation, judge score) | Eval report linked here | Pending |
@@ -216,7 +218,7 @@ Agreed with the product owner in the planning interview (2026-11-10 to 2026-11-1
 | D-2 | v1 = AI Release Plan + AI Social Posts. A&R, Marketing strategy and Campaigns come later |
 | D-3 | Advisory only, with approve / edit / reject per item. No external actions, no spending |
 | D-4 | Bitrate-internal channels plus export of copy for external ones. No social OAuth |
-| D-5 | Provider-agnostic `AiProvider` with routing by task. Claude is the default provider and Mistral the fallback |
+| D-5 | Provider-agnostic model access with routing by task. Claude is the default provider and Mistral the fallback. On 2026-11-23 the owner chose to use the Vercel AI SDK, as ADR-0074 does, instead of a separate `AiProvider` interface |
 | D-5.2 | Run an eval bake-off (Sonnet 5.5, Mistral Large 4, `gpt-6.1-sol`) before locking models. Its budget, a few dollars, is approved separately before the run |
 | D-5.3 | Translation behind a `Translator` interface: LLM by default, DeepL as an alternative |
 | D-5.4 | A DPA (with SCCs for transfers outside the EU), no training on data and data minimisation are hard requirements; EU-region processing is preferred, not required. Revised on 2026-11-23 from "EU processing only", after due diligence showed that this would need Vertex AI for Claude |
@@ -245,8 +247,9 @@ The owner confirmed the implementation plan below on 2026-11-19.
 Each step is one PR into `develop` unless noted. Checks are scoped to the touched workspace
 and run through `.claude/scripts/run-heavy.py`.
 
-1. **ADR-0076: AI provider boundary.** Task routing, approved providers, `AiUsage` accounting,
-   the composition boundary, and the lint rule against direct SDK imports. Docs only.
+1. **ADR-0076: AI model access for promotion.** Aligned with ADR-0074: AI SDK, task routing,
+   approved providers, `AiUsage` accounting, the composition boundary, and the lint rule
+   against direct provider imports. Docs only.
 2. **Provider due diligence** (no code). **Done 2026-11-20**, recorded in ADR-0076. The
    requirement was revised on 2026-11-23 (D-5.4): Claude is called through Anthropic's own API,
    Mistral is the fallback, and DeepL API Pro is allowed. Still open before rollout (step 10):
@@ -257,10 +260,12 @@ and run through `.claude/scripts/run-heavy.py`.
    glossary, length, LLM judge). Run only after the owner approves the budget. The resulting
    choice of models goes into the config defaults and AC-16.
 4. **Pencil designs** in `pencil/web-artist-design*`: profile form, Promotion tab, step and
-   post editors, translations, calendar, and every state in AC-17. Prototype kept in sync.
-5. **API, AI foundation**: `ai` module (`AiProvider`, Anthropic and Mistral adapters, task
-   router, moderation, grounding validator), `ai` queue in the worker, `AiUsage`, quotas,
-   oxlint rule. Tests with a fake provider (TDD per the project workflow).
+   post editors, translations, calendar, and every state in AC-17. **Drafted in #577**;
+   the countdown tile on the player's artist page is still to be drawn.
+5. **API, AI foundation**: the promotion module's model adapter on the AI SDK (task router,
+   `anthropic:` and `mistral:` providers, moderation, grounding validator), the `ai` queue in
+   the worker, `AiUsage`, quotas and the oxlint rule. Tests use a fake model (TDD per the
+   project workflow).
 6. **API, promotion domain**: profile, plans and steps, posts, re-anchoring on date change,
    events, endpoints, Swagger decorators, regenerated `packages/contracts`.
 7. **API, translator**: `Translator` with LLM and DeepL adapters, glossary, `STALE` and
