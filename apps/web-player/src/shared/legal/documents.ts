@@ -1,8 +1,8 @@
 /**
- * Draft legal texts, converted from `apps/docs/docs/legal/`. Placeholders such as
- * [[OPERATOR_NAME]] are deliberately left in: the texts are drafts pending legal review and
- * the operator details do not exist yet. Inline markup is limited to **bold** and
- * `[label](slug)` links to a sibling document.
+ * Legal texts, converted from `apps/docs/docs/legal/`. The operator details are filled in;
+ * a document with `draft: true` is still pending legal review and keeps its remaining
+ * [[PLACEHOLDERS]], a draft banner and a noindex robots tag. Inline markup is limited to
+ * **bold** and `[label](slug)` links to a sibling document.
  */
 
 export const LEGAL_SLUGS = [
@@ -33,6 +33,8 @@ type LegalSection = { heading: string | null; blocks: LegalBlock[] }
 export type LegalDocument = {
   slug: LegalSlug
   title: string
+  /** Still pending legal review: shown with a draft banner and kept out of search. */
+  draft: boolean
   sections: LegalSection[]
 }
 
@@ -40,17 +42,18 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
   {
     slug: 'terms',
     title: 'Terms of Use',
+    draft: false,
     sections: [
       {
         heading: null,
         blocks: [
           {
             kind: 'paragraph',
-            text: '**Effective date:** [[EFFECTIVE_DATE]]',
+            text: '**Effective date:** 1 October 2026',
           },
           {
             kind: 'paragraph',
-            text: 'These Terms of Use ("Terms") govern your use of Bitrate, a music streaming and publishing service operated by [[OPERATOR_NAME]], [[OPERATOR_ADDRESS]], registration number [[OPERATOR_REGISTRATION]] ("Bitrate", "we", "us"). Contact: [[LEGAL_CONTACT_EMAIL]].',
+            text: 'These Terms of Use ("Terms") govern your use of Bitrate, a music streaming and publishing service operated by Vladyslav Tesliuk, Warsaw, Poland, a private individual ("Bitrate", "we", "us"). Contact: tesluakevlad@gmail.com.',
           },
         ],
       },
@@ -80,7 +83,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
           },
           {
             kind: 'paragraph',
-            text: '2.2 Tell us promptly at [[LEGAL_CONTACT_EMAIL]] if you suspect unauthorised access.',
+            text: '2.2 Tell us promptly at tesluakevlad@gmail.com if you suspect unauthorised access.',
           },
           {
             kind: 'paragraph',
@@ -155,7 +158,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
         blocks: [
           {
             kind: 'paragraph',
-            text: '7.1 You may stop using Bitrate and delete your account at any time [[ACCOUNT_DELETION_NOTE]].',
+            text: '7.1 You may stop using Bitrate and delete your account at any time: artists under Settings in the artist portal, listeners by writing to tesluakevlad@gmail.com from the address on their account, as described in the [Privacy Policy](privacy).',
           },
           {
             kind: 'paragraph',
@@ -172,7 +175,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
           },
           {
             kind: 'paragraph',
-            text: '8.2 [[LIABILITY_CLAUSE — counsel to draft limits that are valid under EU consumer law]]',
+            text: '8.2 Nothing in these Terms limits or excludes our liability where the law does not allow it, including liability for damage caused intentionally or through gross negligence, for death or personal injury, or your statutory rights as a consumer. Within those limits, and because Bitrate is provided to listeners free of charge, we are not liable for indirect or unforeseeable loss, or for loss caused by events outside our reasonable control.',
           },
         ],
       },
@@ -190,7 +193,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
         blocks: [
           {
             kind: 'paragraph',
-            text: 'These Terms are governed by [[GOVERNING_LAW]]. Mandatory consumer-protection rules of your country of residence continue to apply.',
+            text: 'These Terms are governed by the law of Poland. Disputes are decided by the competent courts in Poland. If you are a consumer, the mandatory consumer-protection rules of your country of residence continue to apply and you may also bring a claim before the courts of that country.',
           },
         ],
       },
@@ -199,7 +202,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
         blocks: [
           {
             kind: 'paragraph',
-            text: '[[OPERATOR_NAME]], [[OPERATOR_ADDRESS]] — [[LEGAL_CONTACT_EMAIL]].',
+            text: 'Vladyslav Tesliuk, Warsaw, Poland — tesluakevlad@gmail.com.',
           },
         ],
       },
@@ -208,13 +211,18 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
   {
     slug: 'privacy',
     title: 'Privacy Policy',
+    draft: false,
     sections: [
       {
         heading: null,
         blocks: [
           {
             kind: 'paragraph',
-            text: '**Effective date:** [[EFFECTIVE_DATE]]',
+            text: '**Effective date:** 1 October 2026. **Last updated:** 22 November 2026.',
+          },
+          {
+            kind: 'paragraph',
+            text: 'This policy explains what personal data Bitrate collects when you use the listener app at bitrate.me and the artist portal at artists.bitrate.me, why we collect it, who we share it with, how long we keep it and what rights you have.',
           },
         ],
       },
@@ -223,7 +231,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
         blocks: [
           {
             kind: 'paragraph',
-            text: 'The controller of your personal data is [[OPERATOR_NAME]], [[OPERATOR_ADDRESS]], registration number [[OPERATOR_REGISTRATION]] ("Bitrate", "we"). Contact for privacy matters: [[LEGAL_CONTACT_EMAIL]]. We have not appointed a data protection officer [[DPO_NOTE]].',
+            text: 'The controller of your personal data is Vladyslav Tesliuk, Warsaw, Poland, a private individual ("Bitrate", "we"). Contact for privacy matters: tesluakevlad@gmail.com. We have not appointed a data protection officer because the GDPR does not require one for a service of this size and kind (Art. 37); please send every privacy question to the address above.',
           },
         ],
       },
@@ -254,8 +262,8 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
                 'Contract; legitimate interest in security (6(1)(f))',
               ],
               [
-                'Sign-in identity from Google or Facebook (provider id, email, name)',
-                'Sign in with a social account',
+                'Sign-in identity from Google or Facebook (provider account id, email, name)',
+                'Sign in with a social account (see section 4)',
                 'Contract',
               ],
               [
@@ -281,7 +289,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
               [
                 'Error reports, performance traces and, for a sample of sessions, session recordings (Sentry)',
                 'Find and fix bugs',
-                'Legitimate interest [[REPLAY_LEGAL_BASIS — to be decided; see #178]]',
+                'Legitimate interest in keeping the service working (6(1)(f)); see section 5',
               ],
               [
                 'Reports you file, and reports filed about you',
@@ -297,12 +305,37 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
           },
           {
             kind: 'paragraph',
-            text: 'Where we rely on legitimate interest you may object (section 8).',
+            text: 'Where we rely on legitimate interest you may object (section 9).',
           },
         ],
       },
       {
-        heading: '4. Cookies and similar technologies',
+        heading: '4. Data we receive from Google',
+        blocks: [
+          {
+            kind: 'paragraph',
+            text: 'If you choose **Sign in with Google**, Bitrate asks Google only for the basic sign-in scopes **openid**, **email** and **profile**. From Google we receive your Google account id, your email address, whether Google has verified that address, and your name. We do not request access to Gmail, Google Drive, Contacts, Calendar, YouTube or any other Google data.',
+          },
+          {
+            kind: 'paragraph',
+            text: 'We use this data only to create your Bitrate account or find your existing one, to sign you in, and to contact you about your account. Your name is used to suggest your initial username. The Google token is used once, right after you sign in, to read the details above, and is then discarded: we do not store Google access or refresh tokens.',
+          },
+          {
+            kind: 'paragraph',
+            text: 'We do not sell data received from Google, do not use it for advertising, do not use it to train artificial-intelligence or machine-learning models, and do not let people read it except where you ask us to, for security purposes, or where the law requires it. We transfer it only to the providers in section 6 that we need to run the service, or where the law requires it.',
+          },
+          {
+            kind: 'paragraph',
+            text: "Bitrate's use and transfer to any other app of information received from Google APIs will adhere to the Google API Services User Data Policy (https://developers.google.com/terms/api-services-user-data-policy), including the Limited Use requirements.",
+          },
+          {
+            kind: 'paragraph',
+            text: "You can revoke Bitrate's access to your Google account at any time at https://myaccount.google.com/permissions. To have the data we received from Google deleted, delete your account or write to us (section 9).",
+          },
+        ],
+      },
+      {
+        heading: '5. Cookies and similar technologies',
         blocks: [
           {
             kind: 'paragraph',
@@ -310,12 +343,12 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
           },
           {
             kind: 'paragraph',
-            text: 'In the listener web app, our error-monitoring tool (Sentry) may record error details and, for a sample of sessions, session replays that capture how the interface is used. [[REPLAY_NOTE — update after the decision on whether replay is disabled or consent-gated]]',
+            text: 'In the listener web app and the artists portal, our error-monitoring tool (Sentry) records error details and, for about one in ten sessions and for every session in which an error occurs, a session replay of how the interface was used. Replays mask all text and everything you type, and block images and media, so they show the layout of the page, clicks and navigation, not what you read or enter. We use replays only to find and fix bugs, on the basis of our legitimate interest in a working service. You can object at any time by writing to us (section 9).',
           },
         ],
       },
       {
-        heading: '5. Who receives your data',
+        heading: '6. Who receives your data',
         blocks: [
           {
             kind: 'paragraph',
@@ -330,34 +363,34 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
             ],
             rows: [
               [
-                'Sentry',
+                'netcup GmbH (hosting)',
+                'All data processed by the service, including the database and uploaded files, which we store on our own server',
+                'Servers in Vienna, Austria (EU)',
+              ],
+              [
+                'Cloudflare, Inc. (DNS, network delivery and protection)',
+                'Every request to Bitrate, including your IP address',
+                'Global network; USA, EU–US Data Privacy Framework',
+              ],
+              [
+                'Functional Software, Inc. (Sentry)',
                 'Errors, traces, session replays',
-                '[[SENTRY_REGION_AND_SAFEGUARD]]',
+                'Data stored in the EU (Germany); Standard Contractual Clauses for access from the USA',
               ],
               [
-                'Google (if you use Google sign-in)',
-                'Sign-in identity',
-                '[[TRANSFER_SAFEGUARD]]',
-              ],
-              [
-                'Meta (if you use Facebook sign-in)',
-                'Sign-in identity',
-                '[[TRANSFER_SAFEGUARD]]',
-              ],
-              [
-                'Object storage provider',
-                'Audio files and images',
-                '[[STORAGE_PROVIDER_AND_REGION]]',
-              ],
-              [
-                'Email provider',
+                'Resend, Inc. (email delivery)',
                 'Your email address and the content of service emails',
-                '[[EMAIL_PROVIDER_AND_REGION]]',
+                'USA, Standard Contractual Clauses',
               ],
               [
-                'Hosting provider',
-                'All data processed by the service',
-                '[[HOSTING_PROVIDER_AND_REGION]]',
+                'Google LLC (if you use Google sign-in)',
+                'Sign-in identity',
+                'USA, EU–US Data Privacy Framework',
+              ],
+              [
+                'Meta Platforms Ireland Ltd (if you use Facebook sign-in)',
+                'Sign-in identity',
+                'Ireland (EU); Meta Platforms, Inc. under the EU–US Data Privacy Framework',
               ],
             ],
           },
@@ -368,37 +401,44 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
         ],
       },
       {
-        heading: '6. Transfers outside the EEA',
+        heading: '7. Transfers outside the EEA',
         blocks: [
           {
             kind: 'paragraph',
-            text: 'Where a provider is outside the European Economic Area we rely on [[TRANSFER_MECHANISM — adequacy decision, standard contractual clauses, etc.]].',
+            text: "Our database and file storage stay in the EU. Some providers in section 6 are based in the USA. Where the provider is certified under the EU–US Data Privacy Framework we rely on the European Commission's adequacy decision for it (GDPR Art. 45); otherwise we rely on the Standard Contractual Clauses adopted by the Commission (Art. 46(2)(c)).",
           },
         ],
       },
       {
-        heading: '7. How long we keep data',
+        heading: '8. How long we keep data',
         blocks: [
           {
-            kind: 'paragraph',
-            text: '[[RETENTION_ACCOUNT]] for account data after you delete your account. [[RETENTION_LISTENING_HISTORY]] for listening and search history. [[RETENTION_AUDIT_LOG]] for audit logs including IP addresses. [[RETENTION_REPORTS]] for moderation records.',
-          },
-          {
-            kind: 'note',
-            text: 'No retention policy exists yet. These periods must be decided before this document is published.',
+            kind: 'list',
+            ordered: false,
+            items: [
+              '**Account data:** while your account exists, and deleted within 30 days after you delete it, except records we must keep for legal reasons.',
+              '**Listening and search history:** while your account exists. You can clear your listening history at any time.',
+              '**Audit logs, including IP addresses:** 12 months.',
+              '**Moderation records and reports:** 3 years after the case is closed.',
+              '**Records of the document versions you accepted:** while your account exists and for 3 years after, to prove acceptance.',
+            ],
           },
         ],
       },
       {
-        heading: '8. Your rights',
+        heading: '9. Your rights',
         blocks: [
           {
             kind: 'paragraph',
-            text: 'Under GDPR you have the right to: access your data (Art. 15), correct it (16), have it erased (17), restrict processing (18), receive it in a portable format (20), object to processing based on legitimate interest (21), and withdraw consent at any time where processing is based on consent. Contact [[LEGAL_CONTACT_EMAIL]]. We aim to respond within one month.',
+            text: 'Under GDPR you have the right to: access your data (Art. 15), correct it (16), have it erased (17), restrict processing (18), receive it in a portable format (20), object to processing based on legitimate interest (21), and withdraw consent at any time where processing is based on consent. Contact tesluakevlad@gmail.com. We aim to respond within one month.',
           },
           {
-            kind: 'note',
-            text: 'Self-service access, export and erasure are not yet implemented in the product. Until they are, requests are handled by email. Adjust this wording to match what exists at release.',
+            kind: 'paragraph',
+            text: 'You can change your profile and clear your listening history in the app, and artists can delete their account in the artist portal. Other requests, including a copy of your data or deletion of a listener account, are handled by email: write to us from the address on your account so we can confirm it is you.',
+          },
+          {
+            kind: 'paragraph',
+            text: '**How to delete your data.** Artists can delete their account under Settings in the artist portal. Listeners can email tesluakevlad@gmail.com from the address on their Bitrate account with the subject "Delete my account". We then delete the account and the data linked to it, including the sign-in identity received from Google or Facebook, within 30 days, and confirm by email. To also remove Bitrate from your Facebook account, open Facebook Settings, then Apps and websites (https://www.facebook.com/settings?tab=applications), choose Bitrate and remove it; for Google, use https://myaccount.google.com/permissions.',
           },
           {
             kind: 'paragraph',
@@ -407,16 +447,16 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
         ],
       },
       {
-        heading: '9. Security',
+        heading: '10. Security',
         blocks: [
           {
             kind: 'paragraph',
-            text: 'We use technical and organisational measures including hashed passwords, optional two-factor authentication, access controls and account lockout after repeated failed sign-ins. No system is perfectly secure; we handle personal-data breaches as required by GDPR Art. 33–34.',
+            text: 'We use technical and organisational measures including hashed passwords, optional two-factor authentication, encrypted connections, access controls and account lockout after repeated failed sign-ins. No system is perfectly secure; we handle personal-data breaches as required by GDPR Art. 33–34.',
           },
         ],
       },
       {
-        heading: '10. Automated decisions',
+        heading: '11. Automated decisions',
         blocks: [
           {
             kind: 'paragraph',
@@ -425,11 +465,11 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
         ],
       },
       {
-        heading: '11. Changes',
+        heading: '12. Changes',
         blocks: [
           {
             kind: 'paragraph',
-            text: 'We will tell you about material changes before they take effect and record the version you accept.',
+            text: 'We will tell you about material changes before they take effect and record the version you accept. The date at the top of this page shows when it was last updated.',
           },
         ],
       },
@@ -438,13 +478,14 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
   {
     slug: 'community',
     title: 'Community Guidelines',
+    draft: true,
     sections: [
       {
         heading: null,
         blocks: [
           {
             kind: 'paragraph',
-            text: '**Effective date:** [[EFFECTIVE_DATE]]',
+            text: '**Effective date:** 1 October 2026',
           },
           {
             kind: 'paragraph',
@@ -515,13 +556,14 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
   {
     slug: 'complaints',
     title: 'Complaints and reports',
+    draft: true,
     sections: [
       {
         heading: null,
         blocks: [
           {
             kind: 'paragraph',
-            text: '**Effective date:** [[EFFECTIVE_DATE]]',
+            text: '**Effective date:** 1 October 2026',
           },
           {
             kind: 'paragraph',
@@ -607,7 +649,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
         blocks: [
           {
             kind: 'note',
-            text: 'The address above is a temporary single contact for the draft. Replace it with the operator contact address before publication. A web form and an in-app report option for tracks, albums and accounts are planned; today the in-app option covers playlists only.',
+            text: 'A web form and an in-app report option for tracks, albums and accounts are planned; today the in-app option covers playlists only.',
           },
         ],
       },
@@ -616,13 +658,14 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
   {
     slug: 'copyright',
     title: 'Copyright and notice-and-action',
+    draft: true,
     sections: [
       {
         heading: null,
         blocks: [
           {
             kind: 'paragraph',
-            text: '**Effective date:** [[EFFECTIVE_DATE]]',
+            text: '**Effective date:** 1 October 2026',
           },
           {
             kind: 'paragraph',
@@ -635,7 +678,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
         blocks: [
           {
             kind: 'paragraph',
-            text: 'Send an email to **[[LEGAL_CONTACT_EMAIL]]** with the subject "Notice of alleged infringement". A web form is planned but not available yet. Your notice must contain:',
+            text: 'Send an email to **tesluakevlad@gmail.com** with the subject "Notice of alleged infringement". A web form is planned but not available yet. Your notice must contain:',
           },
           {
             kind: 'list',
@@ -710,7 +753,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
         blocks: [
           {
             kind: 'paragraph',
-            text: '[[OPERATOR_NAME]], [[OPERATOR_ADDRESS]] — [[LEGAL_CONTACT_EMAIL]].',
+            text: 'Vladyslav Tesliuk, Warsaw, Poland — tesluakevlad@gmail.com.',
           },
         ],
       },

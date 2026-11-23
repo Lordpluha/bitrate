@@ -67,9 +67,10 @@ explicitly; do not slip it in.
 `*_reusable.yml` that holds the logic, and composite actions for shared setup. Match it — do
 not paste a fourth copy of the pnpm setup steps into a new workflow.
 
-**Docker/compose.** `infra/docker-compose.dev.yaml` is the minimal local stack (postgres +
-redis) and must stay small — it is what every developer runs. Never add a service to it that
-local development does not require. Never commit a real credential into a compose file or an
+**Docker/compose.** `infra/docker-compose.dev.yaml` is the one local stack. Its default
+(no-profile) services — postgres, postgres_test, redis, seaweedfs — are what every developer
+runs and must stay small: anything else goes behind a profile (`apps`, `mobile`, `desktop`,
+`docs`, `production`, `observability`). Never commit a real credential into a compose file or an
 `.env`; templates only.
 
 ## Verify before you burn a CI run

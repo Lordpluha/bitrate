@@ -1,4 +1,4 @@
-import { Injectable, computed, inject } from '@angular/core'
+import { DOCUMENT, Injectable, computed, effect, inject } from '@angular/core'
 import {
   DEFAULT_LOCALE,
   LOCALES,
@@ -24,6 +24,7 @@ export { DEFAULT_LOCALE, LOCALES, LOCALE_STORAGE_KEY, type AppLocale }
 @Injectable({ providedIn: 'root' })
 export class LocaleStore {
   private readonly transloco = inject(TranslocoService)
+  private readonly document = inject(DOCUMENT)
 
   readonly locale = computed<AppLocale>(() => {
     const active = this.transloco.activeLang()
@@ -32,6 +33,10 @@ export class LocaleStore {
 
   constructor() {
     this.transloco.setActiveLang(readPersistedLocale())
+    /** Screen readers choose their voice from `<html lang>` (WCAG 3.1.1). */
+    effect(() => {
+      this.document.documentElement.lang = this.locale()
+    })
   }
 
   setLocale(locale: AppLocale): void {

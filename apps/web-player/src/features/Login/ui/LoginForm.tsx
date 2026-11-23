@@ -85,7 +85,7 @@ export const LoginForm = () => {
               )}
             />
             <Link
-              className="self-end text-[13px] leading-[1.25] font-semibold text-primary hover:opacity-80"
+              className="self-end text-[13px] leading-[1.25] font-semibold text-text-brand hover:opacity-80"
               href={ROUTES.auth.forgotPassword}
             >
               {t('auth.login.forgotPassword')}

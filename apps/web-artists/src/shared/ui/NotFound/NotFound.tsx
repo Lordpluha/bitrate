@@ -13,7 +13,7 @@ import { Link } from '@tanstack/react-router'
 export function NotFound() {
   const { t } = useI18n()
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center gap-6 p-8 text-center">
+    <main className="flex min-h-screen flex-col items-center justify-center gap-6 bg-background p-8 text-center text-foreground">
       <div className="space-y-2">
         <p className="text-sm font-medium uppercase tracking-wider text-muted-foreground">
           404

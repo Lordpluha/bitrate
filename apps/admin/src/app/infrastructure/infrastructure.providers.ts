@@ -7,7 +7,7 @@ import { GenreRepository } from '@domain/genre'
 import { ModerationReportRepository } from '@domain/moderation'
 import { OverviewRepository } from '@domain/overview'
 import { PlaylistRepository } from '@domain/playlist'
-import { ReleaseReviewRepository } from '@domain/release-review'
+import { ReleaseChangeRepository, ReleaseReviewRepository } from '@domain/release-review'
 import { RoleRepository } from '@domain/role'
 import { StaffRepository, StaffSessionRepository } from '@domain/staff'
 import { TrackRepository } from '@domain/track'
@@ -23,7 +23,7 @@ import { HttpOverviewRepository } from './overview'
 import { HttpRoleRepository } from './roles'
 import { HttpStaffRepository, HttpStaffSessionRepository } from './staff'
 import { HttpPlaylistRepository } from './playlists'
-import { HttpReleaseReviewRepository } from './release-review'
+import { HttpReleaseChangeRepository, HttpReleaseReviewRepository } from './release-review'
 import { HttpUserRepository } from './users'
 
 /**
@@ -41,6 +41,7 @@ export function provideAdminInfrastructure(): EnvironmentProviders {
     { provide: GenreRepository, useClass: HttpGenreRepository },
     { provide: PlaylistRepository, useClass: HttpPlaylistRepository },
     { provide: ReleaseReviewRepository, useClass: HttpReleaseReviewRepository },
+    { provide: ReleaseChangeRepository, useClass: HttpReleaseChangeRepository },
     { provide: ModerationReportRepository, useClass: HttpModerationReportRepository },
     { provide: OverviewRepository, useClass: HttpOverviewRepository },
     { provide: RoleRepository, useClass: HttpRoleRepository },

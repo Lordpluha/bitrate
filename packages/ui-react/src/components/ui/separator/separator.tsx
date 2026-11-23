@@ -2,6 +2,12 @@ import { Separator as SeparatorPrimitive } from '@base-ui/react/separator'
 import type { ComponentProps } from 'react'
 import { cn } from '@/lib/utils'
 
+/**
+ * A decorative separator is `role="none"`, which does not allow the `aria-orientation` the
+ * primitive sets, so that attribute is cleared; `data-orientation` still drives styling.
+ */
+const DECORATIVE_PROPS = { role: 'none', 'aria-orientation': undefined } as const
+
 export const Separator = ({
   className,
   orientation = 'horizontal',
@@ -9,7 +15,6 @@ export const Separator = ({
   ...props
 }: ComponentProps<typeof SeparatorPrimitive> & { decorative?: boolean }) => (
   <SeparatorPrimitive
-    {...(decorative ? { role: 'none' as const } : {})}
     orientation={orientation}
     className={cn(
       'shrink-0 bg-separator-color',
@@ -17,5 +22,6 @@ export const Separator = ({
       className,
     )}
     {...props}
+    {...(decorative ? DECORATIVE_PROPS : {})}
   />
 )

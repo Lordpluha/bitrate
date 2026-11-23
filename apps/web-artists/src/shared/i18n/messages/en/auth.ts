@@ -31,6 +31,23 @@ export const auth = {
   'auth.login.verifyFirst': 'Verify your email before signing in.',
   'auth.login.invalidCredentials':
     'Invalid email or password. Please try again.',
+  'auth.oauth.failed': 'Social sign-in did not finish. Please try again.',
+  'auth.oauth.failed.accountExists':
+    'An account with this email already exists. Sign in with your password and confirm your email first.',
+  'auth.oauth.failed.accountUnavailable':
+    'This account is no longer available.',
+  'auth.oauth.failed.cancelled':
+    'Sign-in was cancelled. Choose a way to sign in to continue.',
+  'auth.oauth.failed.emailMissing':
+    'We did not receive an email address from that account. Allow access to your email, or sign in another way.',
+  'auth.oauth.failed.emailUnverified':
+    'That account has not confirmed its email address. Confirm it with the provider, or sign in another way.',
+  'auth.oauth.failed.expired':
+    'Your sign-in session expired. Please try again.',
+  'auth.oauth.failed.legal':
+    'To create an account, accept the Terms of Use, Community Guidelines and Artist Agreement first.',
+  'auth.oauth.failed.unavailable':
+    'This sign-in option is not available yet. Use another way to sign in.',
   'auth.twoFactor.title': 'Verify your sign-in',
   'auth.twoFactor.description': 'Enter the code from your authenticator app.',
   'auth.twoFactor.codeLabel': 'Authentication code',

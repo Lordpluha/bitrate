@@ -52,6 +52,25 @@ export const pl = {
   'settings.display.nowPlaying': 'Pokazuj panel odtwarzanego utworu',
   'settings.language': 'Język',
   'settings.language.description': 'Wybierz język aplikacji',
+  'shell.skipToContent': 'Przejdź do treści',
+  'shell.resizeLibrary': 'Zmień szerokość biblioteki',
+  'shell.resizeNowPlaying': 'Zmień szerokość panelu „Teraz odtwarzane”',
+  'settings.keyboard': 'Klawiatura',
+  'settings.keyboard.singleKey': 'Skróty jednym klawiszem',
+  'settings.keyboard.singleKey.description':
+    'Klawisze liter i symboli sterują odtwarzaniem bez Ctrl ani ⌘. Wyłącz to, jeśli używasz sterowania głosem lub innego narzędzia, które wpisuje pojedyncze klawisze.',
+  'settings.keyboard.list': 'Skróty klawiszowe',
+  'settings.keyboard.column.action': 'Akcja',
+  'settings.keyboard.column.keys': 'Klawisze',
+  'settings.keyboard.action.playPause': 'Odtwórz lub wstrzymaj',
+  'settings.keyboard.action.seek': 'Do tyłu lub do przodu o 5 s (10 s z Shift)',
+  'settings.keyboard.action.skip': 'Poprzedni lub następny utwór',
+  'settings.keyboard.action.volume': 'Ciszej lub głośniej',
+  'settings.keyboard.action.mute': 'Wycisz lub przywróć dźwięk',
+  'settings.keyboard.action.shuffle': 'Losowo',
+  'settings.keyboard.action.repeat': 'Powtarzaj',
+  'settings.keyboard.action.like': 'Polub utwór',
+  'settings.keyboard.action.queue': 'Otwórz kolejkę',
   'settings.library': 'Twoja biblioteka',
   'settings.library.compact': 'Użyj kompaktowego widoku biblioteki',
   'settings.library.compact.description':
@@ -266,6 +285,20 @@ export const pl = {
     'Logowanie przez serwis społecznościowy nie zakończyło się. Spróbuj ponownie.',
   'auth.login.failed.oauthExpired':
     'Sesja logowania wygasła. Spróbuj ponownie.',
+  'auth.login.failed.oauthAccountExists':
+    'Konto z tym adresem e-mail już istnieje. Najpierw zaloguj się hasłem i potwierdź adres e-mail.',
+  'auth.login.failed.oauthAccountUnavailable':
+    'To konto nie jest już dostępne.',
+  'auth.login.failed.oauthCancelled':
+    'Logowanie zostało anulowane. Wybierz sposób logowania, aby kontynuować.',
+  'auth.login.failed.oauthEmailMissing':
+    'To konto nie przekazało adresu e-mail. Zezwól na dostęp do adresu e-mail lub zaloguj się inaczej.',
+  'auth.login.failed.oauthEmailUnverified':
+    'To konto nie potwierdziło adresu e-mail. Potwierdź go u dostawcy lub zaloguj się inaczej.',
+  'auth.login.failed.oauthLegal':
+    'Aby utworzyć konto, najpierw zaakceptuj Warunki korzystania i Zasady społeczności.',
+  'auth.login.failed.oauthUnavailable':
+    'Ten sposób logowania nie jest jeszcze dostępny. Zaloguj się inaczej.',
   'auth.login.forgotPassword': 'Nie pamiętasz hasła?',
   'auth.login.noAccount': 'Nie masz jeszcze konta?',
   'auth.login.submitting': 'Logujemy...',
@@ -508,9 +541,11 @@ export const pl = {
   'player.repeatOne': 'Powtarzaj jeden utwór',
   'player.repeatPlaylist': 'Powtarzaj playlistę',
   'player.seek': 'Przewijanie',
+  'player.seekValue': '{elapsed} z {total}',
   'player.seekTrack': 'Przewiń utwór',
   'player.unmute': 'Wyłącz wyciszenie',
   'player.volume': 'Głośność',
+  'player.volumeValue': '{percent}%',
   'playlist.actions': 'Akcje playlisty',
   'playlist.addedTo': 'Dodano do „{title}”',
   'playlist.changeView': 'Zmień widok listy utworów',
@@ -608,7 +643,6 @@ export const pl = {
   'sidebar.credits': 'Twórcy',
   'sidebar.mainArtist': 'Główny wykonawca',
   'sidebar.nowPlayingFrom': 'Teraz odtwarzane · {name}',
-  'sidebar.openArtist': 'Otwórz stronę wykonawcy {name}',
   'sidebar.upNext': 'Następne',
   'stats.allTime': 'Cały czas',
   'stats.artists': 'Wykonawcy',

@@ -64,7 +64,7 @@ export const PlaylistTrackFinder = ({
             size={18}
           />
           <input
-            className="h-10 w-full rounded bg-surface py-2 pl-10 pr-10 text-sm text-foreground outline-none transition-colors placeholder:text-muted-foreground focus:bg-surface-hover focus-visible:ring-2 focus-visible:ring-ring"
+            className="h-10 w-full rounded bg-surface py-2 pl-10 pr-10 text-sm text-foreground outline-hidden transition-colors placeholder:text-muted-foreground focus:bg-surface-hover focus-visible:ring-2 focus-visible:ring-ring"
             onChange={(event) => setQuery(event.target.value)}
             placeholder={t('playlist.search')}
             value={query}

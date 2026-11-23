@@ -1,0 +1,56 @@
+# LOCAL ONLY — an S3-compatible stand-in for Cloudflare R2, so the backup CronJobs can be
+# exercised on the k3d cluster without real R2 credentials. Not part of kustomization.yaml;
+# `task k8s:backup:local` applies it and creates a matching `backup-env` Secret.
+# Data lives in an emptyDir and disappears with the pod.
+apiVersion: v1
+kind: Service
+metadata:
+  name: local-r2
+  namespace: bitrate
+spec:
+  selector:
+    app: local-r2
+  ports:
+    - port: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: local-r2
+  namespace: bitrate
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: local-r2
+  template:
+    metadata:
+      labels:
+        app: local-r2
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        seccompProfile: { type: RuntimeDefault }
+      containers:
+        - name: s3
+          image: rclone/rclone:1.69.1
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities: { drop: [ALL] }
+          command: ["sh", "-c"]
+          args:
+            - mkdir -p /data/bitrate-backups && exec rclone serve s3 /data --addr :8080 --auth-key local-backup,local-backup-secret
+          ports:
+            - containerPort: 8080
+          resources:
+            requests: { cpu: 10m, memory: 32Mi }
+            limits: { cpu: 500m, memory: 256Mi }
+          volumeMounts:
+            - { name: data, mountPath: /data }
+            - { name: tmp, mountPath: /tmp }
+      volumes:
+        - { name: data, emptyDir: {} }
+        - { name: tmp, emptyDir: {} }

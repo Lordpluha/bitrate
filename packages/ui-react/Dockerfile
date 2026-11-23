@@ -25,11 +25,27 @@ ENV TURBO_TEAM=team_Ao32Preb1GI1Ohd56uSdfxEZ
 RUN npm install -g pnpm@12.7.0 && pnpm config set store-dir /pnpm/store
 WORKDIR /app
 
-# Stage 2: Build
-FROM base AS build
+# Stage 2: Prune
+# The only stage that sees the whole repository. `turbo prune --docker` writes out/json (the
+# package.json of the three Storybook hosts and of each workspace package they depends on, plus a lockfile cut down
+# to those importers) and out/full (their sources). Later stages copy from out/, so no other
+# app's dependencies are installed and no other app's source reaches a build layer.
+# Pinned to the root devDependency — bump both together.
+FROM base AS pruner
+RUN npm install -g turbo@2.11.7
 COPY . .
-RUN SKIP_GRAPHIFY_INSTALL=1 SKIP_RTK_INSTALL=1 pnpm install --frozen-lockfile \
-    --filter @bitrate/ui-react... --filter @bitrate/player... --filter @bitrate/admin...
+RUN turbo prune @bitrate/ui-react @bitrate/player @bitrate/admin --docker
+
+# Stage 3: Build
+FROM base AS build
+COPY --from=pruner /app/out/json/ ./
+# pnpm links the svgr bin while installing, so the file it points at has to exist already.
+COPY --from=pruner /app/out/full/packages/svgr/bin ./packages/svgr/bin
+# The root postinstall runs these two; they return early under the SKIP_* flags below, but node
+# still has to find the files. turbo prune does not carry root-level scripts/.
+COPY scripts/setup-graphify.mjs scripts/setup-rtk.mjs ./scripts/
+RUN SKIP_GRAPHIFY_INSTALL=1 SKIP_RTK_INSTALL=1 pnpm install --frozen-lockfile
+COPY --from=pruner /app/out/full/ ./
 
 # storybook:build depends on ^build, so turbo builds what the stories import first — the
 # ui-react library (its svgr plugin generates src/icons/svgr/) and the player element the admin
@@ -42,7 +58,7 @@ RUN --mount=type=secret,id=turbo_token,env=TURBO_TOKEN \
     NODE_ENV=production pnpm exec turbo run storybook:build --concurrency=1 \
       --filter=@bitrate/ui-react --filter=@bitrate/player --filter=@bitrate/admin
 
-# Stage 3: Production
+# Stage 4: Production
 FROM nginx:1.31-alpine AS production
 # The nginx base is rebuilt upstream only every few weeks, while Alpine ships fixes for its
 # packages (curl, brotli, ...) in between; upgrading here keeps the scan clean without

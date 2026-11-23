@@ -10,9 +10,9 @@ This draft covers **only the hosting licence needed for uploads today**. Distrib
 payouts are out of scope and need their own agreement at Gate 3 and Gate 4. Do not publish.
 :::
 
-**Effective date:** [[EFFECTIVE_DATE]]
+**Effective date:** 1 October 2026
 
-This Artist Agreement ("Agreement") is between [[OPERATOR_NAME]], [[OPERATOR_ADDRESS]] ("Bitrate") and the artist account
+This Artist Agreement ("Agreement") is between Vladyslav Tesliuk, Warsaw, Poland ("Bitrate") and the artist account
 holder ("you"). It applies in addition to the [Terms of Use](./terms-of-use.md).
 
 ## 1. What Bitrate is
@@ -61,7 +61,7 @@ and you will be asked to accept them.
 ## 7. Term and termination
 
 This Agreement lasts while your artist account is active. Either party may end it by closing the account or notifying the other
-at [[LEGAL_CONTACT_EMAIL]]. Sections that by nature should survive (warranties, indemnity, removal) continue.
+at tesluakevlad@gmail.com. Sections that by nature should survive (warranties, indemnity, removal) continue.
 
 ## 8. Governing law
 
@@ -69,4 +69,4 @@ at [[LEGAL_CONTACT_EMAIL]]. Sections that by nature should survive (warranties, 
 
 ## 9. Contact
 
-[[OPERATOR_NAME]], [[OPERATOR_ADDRESS]] — [[LEGAL_CONTACT_EMAIL]].
+Vladyslav Tesliuk, Warsaw, Poland — tesluakevlad@gmail.com.

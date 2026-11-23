@@ -43,7 +43,7 @@ export const TrackViewMenu = ({ onChange, value }: TrackViewMenuProps) => {
           aria-checked={value === viewMode}
           className={cn(
             'flex w-full items-center justify-between rounded-sm px-3 py-2 text-left capitalize transition-colors hover:bg-surface',
-            value === viewMode ? 'text-primary' : 'text-foreground',
+            value === viewMode ? 'text-text-brand' : 'text-foreground',
           )}
           key={viewMode}
           onClick={() => onChange(viewMode)}

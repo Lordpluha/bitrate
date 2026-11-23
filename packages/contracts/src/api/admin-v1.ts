@@ -1185,6 +1185,86 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/api/v1/admin/release-changes': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * List change requests for published releases
+     * @description OPEN (default) lists requests with pending changes, oldest first; CLOSED lists decided ones, newest first. Requires releases:read.
+     */
+    get: operations['AdminReleaseChangesController_list_v1']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/admin/release-changes/stats': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Count open change requests
+     * @description Requires releases:read.
+     */
+    get: operations['AdminReleaseChangesController_stats_v1']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/admin/release-changes/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Read a change request with each change as before and after
+     * @description A pending proposed cover is a short-lived signed link. Requires releases:read.
+     */
+    get: operations['AdminReleaseChangesController_detail_v1']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/admin/release-changes/{id}/decide': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Approve or reject pending changes of a request
+     * @description Each change is decided on its own; approval updates the release, its album and its catalogue tracks. A rejection requires a Markdown reason. The request closes when nothing is pending. Requires releases:review.
+     */
+    post: operations['AdminReleaseChangesController_decide_v1']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
 }
 export type webhooks = Record<string, never>
 export interface components {
@@ -3146,6 +3226,107 @@ export interface components {
       createdAt: string
       /** Format: date-time */
       updatedAt: string
+    }
+    AdminReleaseChangeRequestRowEntity: {
+      /** Format: uuid */
+      id: string
+      /** Format: uuid */
+      releaseId: string
+      releaseTitle: string
+      releaseCover: string | null
+      artistUsername: string
+      changeCount: number
+      pendingCount: number
+      /** Format: date-time */
+      createdAt: string
+      /** Format: date-time */
+      closedAt: string | null
+    }
+    PaginatedAdminReleaseChangeRequestsEntity: {
+      data: components['schemas']['AdminReleaseChangeRequestRowEntity'][]
+      total: number
+      page: number
+      limit: number
+    }
+    AdminReleaseChangeStatsEntity: {
+      /** @description Requests with at least one pending change */
+      open: number
+    }
+    /** @enum {string} */
+    ReleaseUnpublishedBy: 'ARTIST' | 'ADMIN'
+    AdminReleaseChangeReleaseEntity: {
+      /** Format: uuid */
+      id: string
+      title: string
+      cover: string | null
+      status: components['schemas']['ReleaseStatus']
+      unpublishedBy: components['schemas']['ReleaseUnpublishedBy'] | null
+      /** Format: uuid */
+      artistId: string
+      artistUsername: string
+    }
+    /** @enum {string} */
+    ReleaseChangeField: 'RELEASE_TITLE' | 'RELEASE_COVER' | 'RECORDING_TITLE'
+    /** @enum {string} */
+    ReleaseChangeStatus: 'PENDING' | 'APPROVED' | 'REJECTED' | 'WITHDRAWN' | 'CANCELLED'
+    AdminReleaseChangeEntity: {
+      /** Format: uuid */
+      id: string
+      /** Format: uuid */
+      requestId: string
+      field: components['schemas']['ReleaseChangeField']
+      /**
+       * Format: uuid
+       * @description The renamed recording, for RECORDING_TITLE
+       */
+      recordingId: string | null
+      /** @description Title or public cover path when the change was proposed */
+      previousValue: string | null
+      /** @description Proposed title. For a cover: a short-lived signed link while pending, the public path once approved, otherwise null */
+      proposedValue: string | null
+      status: components['schemas']['ReleaseChangeStatus']
+      /** @description Why staff rejected it, in Markdown */
+      reason: string | null
+      /** Format: date-time */
+      decidedAt: string | null
+      /** Format: date-time */
+      createdAt: string
+      reviewerUsername: string | null
+    }
+    AdminReleaseChangeRequestEntity: {
+      /** Format: uuid */
+      id: string
+      /** Format: uuid */
+      releaseId: string
+      /** @description Staff comment, in Markdown */
+      message: string | null
+      /** Format: date-time */
+      closedAt: string | null
+      /** Format: date-time */
+      createdAt: string
+      release: components['schemas']['AdminReleaseChangeReleaseEntity']
+      changes: components['schemas']['AdminReleaseChangeEntity'][]
+    }
+    DecideReleaseChangesDto: {
+      /** @description Outcomes for some or all pending changes of the request */
+      decisions: (
+        | {
+            /** Format: uuid */
+            changeId: string
+            /** @constant */
+            decision: 'APPROVE'
+          }
+        | {
+            /** Format: uuid */
+            changeId: string
+            /** @constant */
+            decision: 'REJECT'
+            /** @description Why the change was rejected, in Markdown */
+            reason: string
+          }
+      )[]
+      /** @description Optional comment on the whole request, in Markdown */
+      message?: string
     }
   }
   responses: never
@@ -14550,6 +14731,590 @@ export interface operations {
         content?: never
       }
       /** @description Release changed or is not live on Bitrate */
+      409: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  AdminReleaseChangesController_list_v1: {
+    parameters: {
+      query?: {
+        page?: number
+        limit?: number
+        status?: 'OPEN' | 'CLOSED'
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PaginatedAdminReleaseChangeRequestsEntity']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example Invalid or expired token
+             * @enum {string}
+             */
+            message?:
+              | 'Access token required'
+              | 'Refresh token required'
+              | 'Invalid token requirement'
+              | 'Invalid or expired token'
+              | 'Staff not found'
+              | 'Session not found'
+            /** @example Unauthorized */
+            error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
+          }
+        }
+      }
+      /** @description Requires the releases:read permission */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  AdminReleaseChangesController_stats_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AdminReleaseChangeStatsEntity']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example Invalid or expired token
+             * @enum {string}
+             */
+            message?:
+              | 'Access token required'
+              | 'Refresh token required'
+              | 'Invalid token requirement'
+              | 'Invalid or expired token'
+              | 'Staff not found'
+              | 'Session not found'
+            /** @example Unauthorized */
+            error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
+          }
+        }
+      }
+      /** @description Requires the releases:read permission */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  AdminReleaseChangesController_detail_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AdminReleaseChangeRequestEntity']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example Invalid or expired token
+             * @enum {string}
+             */
+            message?:
+              | 'Access token required'
+              | 'Refresh token required'
+              | 'Invalid token requirement'
+              | 'Invalid or expired token'
+              | 'Staff not found'
+              | 'Session not found'
+            /** @example Unauthorized */
+            error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
+          }
+        }
+      }
+      /** @description Requires the releases:read permission */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  AdminReleaseChangesController_decide_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['DecideReleaseChangesDto']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AdminReleaseChangeRequestEntity']
+        }
+      }
+      /** @description Invalid decisions */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example Invalid or expired token
+             * @enum {string}
+             */
+            message?:
+              | 'Access token required'
+              | 'Refresh token required'
+              | 'Invalid token requirement'
+              | 'Invalid or expired token'
+              | 'Staff not found'
+              | 'Session not found'
+            /** @example Unauthorized */
+            error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
+          }
+        }
+      }
+      /** @description Requires the releases:review permission */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description A change is no longer pending or the release no longer takes changes */
       409: {
         headers: {
           [name: string]: unknown

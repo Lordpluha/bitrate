@@ -1,0 +1,26 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: bitrate
+
+resources:
+  - namespace.yaml
+  - postgres.yaml
+  - redis.yaml
+  - qdrant.yaml
+  - mailpit.yaml
+  - seaweedfs.yaml
+  - migrate.yaml
+  - api.yaml
+  - worker.yaml
+  - admin-api.yaml
+  - web-player.yaml
+  - web-artists.yaml
+  - admin.yaml
+  - ingress.yaml
+  - backup/cronjobs.yaml
+  - ../backup
+
+secretGenerator:
+  - name: bitrate-env
+    envs:
+      - .env

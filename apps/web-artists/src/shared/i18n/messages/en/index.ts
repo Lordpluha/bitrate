@@ -15,6 +15,7 @@ import { player } from './player'
 import { profile } from './profile'
 import { publish } from './publish'
 import { release } from './release'
+import { releaseChanges } from './releaseChanges'
 import { releaseErrors } from './releaseErrors'
 import { settings } from './settings'
 import { shell } from './shell'
@@ -39,6 +40,7 @@ export const en = {
   ...profile,
   ...publish,
   ...release,
+  ...releaseChanges,
   ...releaseErrors,
   ...settings,
   ...shell,

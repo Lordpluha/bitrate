@@ -85,7 +85,8 @@ test.describe('desktop', () => {
     /** A playlist, not the restored single track, so there is a queue to move through. */
     await open(page, '/main/playlist/p1')
     await page
-      .getByRole('button', { exact: true, name: 'Play Night Drive' })
+      /** A track row's play button: its visible number leads the name. */
+      .getByRole('button', { name: /^\d+\. Play Night Drive$/ })
       .click()
     await expect.poll(async () => (await state(page)).status).toBe('playing')
     const first = (await state(page)).key

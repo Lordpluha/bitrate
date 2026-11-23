@@ -7,6 +7,7 @@ import { SettingsSearchProvider } from '@/views/Settings/model/settingsSearchCon
 import { AccountSettingsSection } from '@/views/Settings/ui/AccountSettingsSection'
 import { ActiveSessionsSection } from '@/views/Settings/ui/ActiveSessionsSection'
 import { AudioSettingsSection } from '@/views/Settings/ui/AudioSettingsSection'
+import { KeyboardSettingsSection } from '@/views/Settings/ui/KeyboardSettingsSection'
 import { LibraryDisplaySettings } from '@/views/Settings/ui/LibraryDisplaySettings'
 import { ProfileDetailsSection } from '@/views/Settings/ui/ProfileDetailsSection'
 import { ServerPrivacySettingsSection } from '@/views/Settings/ui/ServerPrivacySettingsSection'
@@ -35,7 +36,7 @@ export const SettingsPage = () => {
               <Search className="shrink-0 text-muted-foreground" size={16} />
               <input
                 aria-label={t('settings.search')}
-                className="h-9 min-w-0 flex-1 bg-transparent px-2 text-sm text-foreground outline-none placeholder:text-muted-foreground"
+                className="h-9 min-w-0 flex-1 bg-transparent px-2 text-sm text-foreground outline-hidden placeholder:text-muted-foreground"
                 onChange={(event) => setQuery(event.target.value)}
                 onKeyDown={(event) => {
                   if (event.key === 'Escape') closeSearch()
@@ -71,6 +72,7 @@ export const SettingsPage = () => {
             <SubscriptionSettingsSection />
             <AudioSettingsSection />
             <LibraryDisplaySettings />
+            <KeyboardSettingsSection />
             <ServerPrivacySettingsSection />
             <ProfileDetailsSection />
             <TwoFactorSettingsSection />

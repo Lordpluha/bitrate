@@ -8,7 +8,7 @@ draft: true
 Draft for lawyer review. Placeholders in `[[double brackets]]` are not filled in.
 :::
 
-**Effective date:** [[EFFECTIVE_DATE]]
+**Effective date:** 1 October 2026
 
 Bitrate is a place for music and the people who make and enjoy it. These guidelines explain what is and is not
 allowed. They form part of the [Terms of Use](./terms-of-use.md).

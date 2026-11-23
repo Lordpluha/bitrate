@@ -1,4 +1,10 @@
 @if (staff()) {
+  <a
+    class="sr-only z-50 rounded-lg bg-primary p-3 text-primary-foreground focus:not-sr-only focus:fixed focus:left-4 focus:top-4"
+    href="#main-content"
+  >
+    {{ 'shell.skipToContent' | transloco }}
+  </a>
   <div class="min-h-dvh lg:flex lg:items-start lg:gap-4 lg:p-4">
     <app-sidebar />
 
@@ -7,7 +13,9 @@
     >
       <app-top-bar />
       <app-mobile-bars />
-      <main class="min-w-0"><router-outlet /></main>
+      <main class="min-w-0 focus:outline-hidden" id="main-content" tabindex="-1">
+        <router-outlet />
+      </main>
     </div>
   </div>
 } @else {

@@ -28,8 +28,8 @@ sidebar_position: 4
 | Одно приложение нативно (`pnpm dev`) | Собственный `.env` приложения, из его же шаблона в `apps/<app>/` |
 | Docker-стеки (`task infra:up`, `task dev:up`) | Значения `:-default`, зашитые в `infra/docker-compose.*.yaml` |
 
-В `docker-compose.dev.yaml` и `docker-compose.preprod.yaml` **у каждой** переменной объявлен
-default, поэтому оба стека поднимаются на чистом клоне без единого env-файла. Чтобы
+В `docker-compose.dev.yaml` **у каждой** переменной объявлен default, поэтому стек
+поднимается на чистом клоне без единого env-файла. Чтобы
 переопределить значение, экспортируй его в шелле — переменная окружения выигрывает у default:
 
 ```bash
@@ -107,7 +107,7 @@ Per-app файлы до контейнера тоже не доходят: ни 
 | `DATABASE_URL` | данные | URL | PostgreSQL connection string. `postgresql://user:pass@host:5432/bitrate` |
 | `REDIS_HOST` | данные | строка | Хост Redis |
 | `JWT_SECRET` | аутентификация | строка ≥10 символов | Секрет для подписи JWT |
-| `S3_ENDPOINT` | файлы | URL | S3-совместимое хранилище объектов (SeaweedFS, ADR-0050). Другого бэкенда хранения нет. Локально `http://localhost:8333` — его поднимает `task infra:up`; внутри контейнеров `task dev:up` — `http://seaweedfs:8333` |
+| `S3_ENDPOINT` | файлы | URL | S3-совместимое хранилище объектов (SeaweedFS, ADR-0050). Другого бэкенда хранения нет. Локально `http://localhost:8333` — его поднимает `task infra:up`; внутри контейнеров `task dev:up` — `http://seaweedfs:8333`. В проде — Cloudflare R2 (`https://<account>.r2.cloudflarestorage.com`, ADR-0072) вместе с `S3_REGION=auto` |
 | `S3_BUCKET` | файлы | строка | Бакет с аудио. Для dev-стека `bitrate-audio` |
 | `S3_ACCESS_KEY` · `S3_SECRET_KEY` | файлы | строка | Ключи прикладной идентичности, ограниченной одним бакетом. Dev-значения — в `apps/api/.env.example` |
 
@@ -127,6 +127,8 @@ Per-app файлы до контейнера тоже не доходят: ни 
 | `SMTP_PORT` | почта | `587` | SMTP-порт |
 | `HEALTH_CHECK_TIMEOUT_MS` | наблюдаемость | `2000` | Таймаут health-проверок (100–10000) |
 | `DEV_MAIL_LOG_TOKENS` | разработка | `false` | Логировать токены писем. В production обязан быть `false` |
+| `SUPPORT_EMBED_MODEL` | ассистент поддержки | `openai:text-embedding-3-small` | Модель эмбеддингов базы знаний в формате `provider:model` (ADR-0074). Смена модели строит новую коллекцию при следующем старте |
+| `SUPPORT_KNOWLEDGE_DIR` | ассистент поддержки | `../docs/docs` | Каталог с `help/` и `legal/`. Образ API кладёт их в `/app/apps/api/knowledge` и задаёт переменную сам |
 
 Имена кук сессии через окружение не настраиваются. Все куки живут на общем `COOKIE_DOMAIN`,
 поэтому у каждого типа аккаунта своя пара: `user_*` у плеера, `artist_*` у портала артистов,
@@ -150,6 +152,9 @@ Per-app файлы до контейнера тоже не доходят: ни 
 | `SMTP_HOST` | почта | SMTP-сервер. Без него письма сброса пароля пишутся в лог |
 | `METRICS_TOKEN` | наблюдаемость | Токен доступа к метрикам, минимум 32 символа |
 | `SENTRY_DSN` | наблюдаемость | DSN проекта API в Sentry. Без него SDK стартует отключённым |
+| `QDRANT_URL` | ассистент поддержки | Qdrant с индексом базы знаний (ADR-0075). Локально `http://localhost:6333` (`task infra:up`), в проде `http://qdrant:6333`. Без него индексация пропускается |
+| `QDRANT_API_KEY` | ассистент поддержки | Ключ Qdrant. Локально не нужен; в prod-compose обязателен, без него стек не поднимется |
+| `OPENAI_API_KEY` | ассистент поддержки | Ключ провайдера эмбеддингов по умолчанию. Без него индексация пропускается с записью в лог |
 
 ### Условно обязательные
 
@@ -251,7 +256,7 @@ Per-app файлы до контейнера тоже не доходят: ни 
 - `EXPO_NO_DOTENV=1` отключает загрузку целиком.
 - Валидации нет.
 
-Контейнер Expo в `docker-compose.preprod.yaml` получает `NODE_ENV`,
+Контейнер Expo в `docker-compose.dev.yaml` получает `NODE_ENV`,
 `EXPO_DEVTOOLS_LISTEN_ADDRESS` и `REACT_NATIVE_PACKAGER_HOSTNAME` — это служебные настройки
 Metro, а не конфигурация приложения.
 
@@ -270,10 +275,10 @@ Metro, а не конфигурация приложения.
 | `DOMAIN` | prod | Домен для nginx и TLS |
 | `IMAGE_TAG` | prod | Тег образов, к которому привязан откат |
 | `POSTGRES_USER` · `POSTGRES_PASSWORD` · `POSTGRES_DB` · `POSTGRES_PORT` | все стеки | Параметры контейнера Postgres |
-| `SHADOW_DATABASE_URL` | preprod | Shadow-база для миграций Prisma |
-| `API_PORT` · `WEB_PORT` · `WEB_ARTISTS_PORT` · `DOCS_PORT` · `DESKTOP_PORT` | preprod | Проброс портов |
-| `MOBILE_HOST` · `MOBILE_METRO_PORT` · `MOBILE_METRO_UI_PORT` · `MOBILE_WEB_PORT` · `MOBILE_DEVTOOLS_PORT` | preprod | Сервисы Expo за профилем |
-| `NGINX_HTTP_PORT` · `NGINX_HTTPS_PORT` | preprod | Порты reverse-proxy |
+| `SHADOW_DATABASE_URL` | dev (Docker) | Shadow-база для миграций Prisma |
+| `API_PORT` · `WEB_PORT` · `WEB_ARTISTS_PORT` · `DOCS_PORT` · `DESKTOP_PORT` | dev (Docker) | Проброс портов |
+| `MOBILE_HOST` · `MOBILE_METRO_PORT` · `MOBILE_METRO_UI_PORT` · `MOBILE_WEB_PORT` · `MOBILE_DEVTOOLS_PORT` | dev (Docker) | Сервисы Expo за профилем |
+| `NGINX_HTTP_PORT` · `NGINX_HTTPS_PORT` | dev (Docker) | Порты reverse-proxy |
 
 ## Пустое значение — не то же самое, что отсутствие
 
@@ -327,6 +332,9 @@ S3_ENDPOINT=http://localhost:8333
 S3_BUCKET=bitrate-audio
 S3_ACCESS_KEY=bitrateDevAccessKey
 S3_SECRET_KEY=bitrateDevSecretKeyChangeMe0001
+# support assistant knowledge index (ADR-0075). Without OPENAI_API_KEY the ingest is skipped.
+QDRANT_URL=http://localhost:6333
+# OPENAI_API_KEY=sk-...
 
 # ══════════ 2. OPTIONAL, WITH A DEFAULT ══════════
 # The values below match the schema defaults: drop a line entirely if you like,

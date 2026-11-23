@@ -83,7 +83,7 @@ export function DashboardMobileMenu({ artist }: DashboardMobileMenuProps) {
         <div className="flex shrink-0 items-start justify-between gap-3 px-3 pb-14 pt-3">
           <Link
             aria-label={t('shell.homeLink')}
-            className="flex min-h-11 items-start gap-3 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="flex min-h-11 items-start gap-3 rounded-lg focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring"
             onClick={() => setOpen(false)}
             preload={false}
             to={ROUTES.dashboard.home}
