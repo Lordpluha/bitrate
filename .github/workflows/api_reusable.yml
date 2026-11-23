@@ -225,6 +225,10 @@ jobs:
       - name: Build ncs-parser
         run: pnpm --filter @bitrate/ncs-parser run build
 
+      # ts-jest type-checks the support module against the package's compiled types (ADR-0074).
+      - name: Build support-core
+        run: pnpm --filter @bitrate/support-core run build
+
       - name: Run converter tests
         run: pnpm --filter @bitrate/converter run test
 

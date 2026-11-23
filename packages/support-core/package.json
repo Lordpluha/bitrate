@@ -31,6 +31,7 @@
   "scripts": {
     "build": "rimraf dist && tsc -p tsconfig.build.json",
     "check-types": "tsc --noEmit",
+    "generate-types": "tsc -p tsconfig.build.json",
     "test": "vitest run",
     "test:unit": "vitest run --reporter=verbose",
     "format": "biome format --write"
