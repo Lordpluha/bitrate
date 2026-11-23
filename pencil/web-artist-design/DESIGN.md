@@ -47,10 +47,11 @@ context.
 | Overlays | `workspace-search`, `notifications`, `account-switcher`, `mobile-menu` |
 | Promotion (planned) | `release-promotion`, `promotion-post`, `promotion-profile`, `promotion-overview` |
 
-All pages import only the artist library. Drawn so far: the public pages, `dashboard`, `music`, the
-four overlays and the promotion pages; the release stages, `distribution`, `analytics`, `profile`
-and `settings` are still to be drawn. Overlays (modals, popovers, the phone drawer) are drawn in
-flow over the workspace shell.
+All pages import only the artist library. Drawn so far: the public pages, `dashboard`, `music`,
+`distribution`, the four release stages, the four overlays and the promotion pages; `analytics`,
+`profile` and `settings` are still to be drawn. Overlays and dialogs (modals, popovers, the phone
+drawer) are drawn in flow over the page they open on. The release stages use the four-stage stepper
+(`Release/Stages`); only the planned promotion pages show Promotion as a fifth stage.
 
 - **Generated, not hand-drawn.** `node scripts/pencil-pages/run-artist.mjs pencil/web-artist-design
   [page …]` writes them from `scripts/pencil-pages/pages/artist/` (`index.mjs` plus one module per

@@ -1,0 +1,4957 @@
+{
+  "version": "2.20",
+  "imports": {
+    "artist": "../design-system/artist.lib.pen"
+  },
+  "children": [
+    {
+      "type": "frame",
+      "id": "YmyEuy",
+      "name": "Artist / Distribution / Desktop / Dark",
+      "width": 1440,
+      "height": "fit_content",
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "4pTfYd",
+          "ref": "artist:EoFzgK",
+          "name": "Shell",
+          "width": 1440,
+          "descendants": {
+            "artist:wUJe6Y/artist:yE32Cq": {
+              "type": "ref",
+              "id": "07vGV3",
+              "ref": "artist:eNXmbM",
+              "name": "Nav / Distribution",
+              "descendants": {
+                "artist:it6GEx": {
+                  "icon": "send"
+                },
+                "artist:9i1hx0": {
+                  "content": "Distribution"
+                }
+              }
+            },
+            "artist:wUJe6Y/artist:cQW2W1/artist:wU47I0": {
+              "icon": "moon"
+            },
+            "artist:wUJe6Y/artist:cQW2W1/artist:n1Vqlv": {
+              "content": "Dark"
+            },
+            "artist:Ni7iI8/artist:qAqwpx": {
+              "content": "Distribution"
+            },
+            "artist:Ni7iI8/artist:ZD0P3t/artist:vg489O": {
+              "content": "Create release"
+            },
+            "artist:Ni7iI8/artist:ZD0P3t/artist:wAdYtR": {
+              "icon": "plus"
+            },
+            "artist:QNgR6T": {
+              "type": "frame",
+              "id": "5Lv7zD",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 20,
+              "width": "fill_container",
+              "padding": [
+                36,
+                48,
+                48,
+                48
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "JFdU1f",
+                  "name": "Page Heading",
+                  "gap": 16,
+                  "alignItems": "end",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "zbioLE",
+                      "name": "Text",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "Dn7NLx",
+                          "ref": "artist:MgMQ2L",
+                          "name": "Distribution",
+                          "content": "Distribution"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "GFIB5g",
+                          "ref": "artist:C5Ih8u",
+                          "name": "Where your releases are plan",
+                          "width": "fill_container",
+                          "textGrowth": "fixed-width",
+                          "content": "Where your releases are planned to go, and what stores report back."
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "MVGTVK",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / No partner",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "icon": "unplug"
+                    },
+                    "artist:EZZdAr": {
+                      "content": "No distribution partner yet"
+                    },
+                    "artist:lICt0a": {
+                      "enabled": false
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "WRUgCp",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "KWu30D",
+                          "ref": "artist:C5Ih8u",
+                          "name": "No distribution partner is c",
+                          "width": "fill_container",
+                          "textGrowth": "fixed-width",
+                          "content": "No distribution partner is connected yet, so nothing has been sent to a streaming service. You can already plan stores and territories; delivery starts once a partner is connected."
+                        },
+                        {
+                          "type": "frame",
+                          "id": "HZUykL",
+                          "name": "Flow",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "DlcuiA",
+                              "ref": "artist:YJv8x6",
+                              "name": "Your plan",
+                              "descendants": {
+                                "artist:TlyBAH": {
+                                  "content": "Your plan"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "EjbkJa",
+                              "ref": "artist:Ghhp15",
+                              "name": "Partner",
+                              "descendants": {
+                                "artist:ZBvIrE": {
+                                  "content": "Partner"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "nmGFyA",
+                              "ref": "artist:Ghhp15",
+                              "name": "Stores",
+                              "descendants": {
+                                "artist:ZBvIrE": {
+                                  "content": "Stores"
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "xQR9S6",
+                  "ref": "artist:ZqiZXM",
+                  "name": "Delivery plan",
+                  "width": "fill_container",
+                  "padding": 0,
+                  "descendants": {
+                    "artist:5uVeAv": {
+                      "type": "frame",
+                      "id": "6qDkrx",
+                      "name": "Content",
+                      "layout": "vertical",
+                      "gap": 0,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "cbkK7s",
+                          "ref": "artist:Kui8cd",
+                          "name": "Header",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "9q3caH",
+                          "ref": "artist:rKJ8AS",
+                          "name": "Release / Night Signal",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:lLhf2K": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../../web-player-design/design-system/assets/albums/album-night-signal.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "artist:iLWJse": {
+                              "content": "Night Signal"
+                            },
+                            "artist:di7HgV": {
+                              "content": "Worldwide · Not sent"
+                            },
+                            "artist:ea4lxR": {
+                              "type": "frame",
+                              "id": "Kg7zIG",
+                              "name": "Cells",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "Cc8qP9",
+                                  "ref": "artist:JMLQvz",
+                                  "name": "Spotify / Not sent"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "Fq8OCA",
+                                  "ref": "artist:JMLQvz",
+                                  "name": "Apple Music / Not sent"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "Ys3BJC",
+                                  "ref": "artist:JMLQvz",
+                                  "name": "YouTube Music / Not sent"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "VFKDhA",
+                                  "ref": "artist:pitgVr",
+                                  "name": "Amazon Music / Not in plan"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "UITWT1",
+                                  "ref": "artist:JMLQvz",
+                                  "name": "Deezer / Not sent"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "18oYr1",
+                                  "ref": "artist:pitgVr",
+                                  "name": "TIDAL / Not in plan"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "6kXmfH",
+                          "ref": "artist:rKJ8AS",
+                          "name": "Release / Echoes in Motion",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:lLhf2K": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../../web-player-design/design-system/assets/albums/album-echoes-in-motion.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "artist:iLWJse": {
+                              "content": "Echoes in Motion"
+                            },
+                            "artist:di7HgV": {
+                              "content": "2 countries · Not sent"
+                            },
+                            "artist:ea4lxR": {
+                              "type": "frame",
+                              "id": "x6ry5l",
+                              "name": "Cells",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "Jnn8Te",
+                                  "ref": "artist:JMLQvz",
+                                  "name": "Spotify / Not sent"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "GxeZkT",
+                                  "ref": "artist:JMLQvz",
+                                  "name": "Apple Music / Not sent"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "ZWlaZQ",
+                                  "ref": "artist:pitgVr",
+                                  "name": "YouTube Music / Not in plan"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "4fOkSb",
+                                  "ref": "artist:pitgVr",
+                                  "name": "Amazon Music / Not in plan"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "7GzhlK",
+                                  "ref": "artist:pitgVr",
+                                  "name": "Deezer / Not in plan"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "02HFhg",
+                                  "ref": "artist:pitgVr",
+                                  "name": "TIDAL / Not in plan"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "ba6v26",
+                          "ref": "artist:rKJ8AS",
+                          "name": "Release / Afterglow",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:lLhf2K": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../../web-player-design/design-system/assets/albums/album-afterglow.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "artist:iLWJse": {
+                              "content": "Afterglow"
+                            },
+                            "artist:di7HgV": {
+                              "content": "Worldwide · No stores planned"
+                            },
+                            "artist:ea4lxR": {
+                              "type": "frame",
+                              "id": "0RgtmG",
+                              "name": "Cells",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "EvJLAL",
+                                  "ref": "artist:pitgVr",
+                                  "name": "Spotify / Not in plan"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "xY4lLY",
+                                  "ref": "artist:pitgVr",
+                                  "name": "Apple Music / Not in plan"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "wPsuRx",
+                                  "ref": "artist:pitgVr",
+                                  "name": "YouTube Music / Not in plan"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "lVrXGT",
+                                  "ref": "artist:pitgVr",
+                                  "name": "Amazon Music / Not in plan"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "WrIf8S",
+                                  "ref": "artist:pitgVr",
+                                  "name": "Deezer / Not in plan"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "VwKXpf",
+                                  "ref": "artist:pitgVr",
+                                  "name": "TIDAL / Not in plan"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "6zMjlr",
+                          "ref": "artist:rKJ8AS",
+                          "name": "Release / Static Lines",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:lLhf2K": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../../web-player-design/design-system/assets/albums/album-static-lines.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "artist:iLWJse": {
+                              "content": "Static Lines"
+                            },
+                            "artist:di7HgV": {
+                              "content": "Worldwide · Not sent"
+                            },
+                            "artist:ea4lxR": {
+                              "type": "frame",
+                              "id": "BJDayH",
+                              "name": "Cells",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "LTy9mU",
+                                  "ref": "artist:JMLQvz",
+                                  "name": "Spotify / Not sent"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "OsjVWm",
+                                  "ref": "artist:JMLQvz",
+                                  "name": "Apple Music / Not sent"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "vWONjU",
+                                  "ref": "artist:JMLQvz",
+                                  "name": "YouTube Music / Not sent"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "sK5mV9",
+                                  "ref": "artist:JMLQvz",
+                                  "name": "Amazon Music / Not sent"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "RlptZ2",
+                                  "ref": "artist:JMLQvz",
+                                  "name": "Deezer / Not sent"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "UniOWl",
+                                  "ref": "artist:JMLQvz",
+                                  "name": "TIDAL / Not sent"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "frame",
+                          "id": "3b3ASL",
+                          "name": "Footer",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "padding": [
+                            12,
+                            16
+                          ],
+                          "justifyContent": "space_between",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "DPbZXh",
+                              "ref": "artist:C5Ih8u",
+                              "name": "1–4 of 4",
+                              "content": "1–4 of 4"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "E7kpJ9",
+                              "ref": "artist:Cic4Sr",
+                              "name": "Page 1"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 0,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Dark"
+      },
+      "context": "/dashboard/distribution — Plans only: no distribution partner is connected, so every store reads Not sent or Not in the plan. Each row opens the release on Deliver."
+    },
+    {
+      "type": "frame",
+      "id": "KgtsJF",
+      "name": "Artist / Distribution / Desktop / Light",
+      "width": 1440,
+      "height": "fit_content",
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "ytRIfS",
+          "ref": "artist:EoFzgK",
+          "name": "Shell",
+          "width": 1440,
+          "descendants": {
+            "artist:wUJe6Y/artist:yE32Cq": {
+              "type": "ref",
+              "id": "so1Ts6",
+              "ref": "artist:eNXmbM",
+              "name": "Nav / Distribution",
+              "descendants": {
+                "artist:it6GEx": {
+                  "icon": "send"
+                },
+                "artist:9i1hx0": {
+                  "content": "Distribution"
+                }
+              }
+            },
+            "artist:wUJe6Y/artist:cQW2W1/artist:wU47I0": {
+              "icon": "sun"
+            },
+            "artist:wUJe6Y/artist:cQW2W1/artist:n1Vqlv": {
+              "content": "Light"
+            },
+            "artist:Ni7iI8/artist:qAqwpx": {
+              "content": "Distribution"
+            },
+            "artist:Ni7iI8/artist:ZD0P3t/artist:vg489O": {
+              "content": "Create release"
+            },
+            "artist:Ni7iI8/artist:ZD0P3t/artist:wAdYtR": {
+              "icon": "plus"
+            },
+            "artist:QNgR6T": {
+              "type": "frame",
+              "id": "lQV11S",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 20,
+              "width": "fill_container",
+              "padding": [
+                36,
+                48,
+                48,
+                48
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "7S3K5p",
+                  "name": "Page Heading",
+                  "gap": 16,
+                  "alignItems": "end",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "ThxoRp",
+                      "name": "Text",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "Lnque0",
+                          "ref": "artist:MgMQ2L",
+                          "name": "Distribution",
+                          "content": "Distribution"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "IeeJEH",
+                          "ref": "artist:C5Ih8u",
+                          "name": "Where your releases are plan",
+                          "width": "fill_container",
+                          "textGrowth": "fixed-width",
+                          "content": "Where your releases are planned to go, and what stores report back."
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "272THn",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / No partner",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "icon": "unplug"
+                    },
+                    "artist:EZZdAr": {
+                      "content": "No distribution partner yet"
+                    },
+                    "artist:lICt0a": {
+                      "enabled": false
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "ypAk7o",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "elqqWi",
+                          "ref": "artist:C5Ih8u",
+                          "name": "No distribution partner is c",
+                          "width": "fill_container",
+                          "textGrowth": "fixed-width",
+                          "content": "No distribution partner is connected yet, so nothing has been sent to a streaming service. You can already plan stores and territories; delivery starts once a partner is connected."
+                        },
+                        {
+                          "type": "frame",
+                          "id": "hVGYnP",
+                          "name": "Flow",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "l6ffJw",
+                              "ref": "artist:YJv8x6",
+                              "name": "Your plan",
+                              "descendants": {
+                                "artist:TlyBAH": {
+                                  "content": "Your plan"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "uN2NN8",
+                              "ref": "artist:Ghhp15",
+                              "name": "Partner",
+                              "descendants": {
+                                "artist:ZBvIrE": {
+                                  "content": "Partner"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "x2tz1b",
+                              "ref": "artist:Ghhp15",
+                              "name": "Stores",
+                              "descendants": {
+                                "artist:ZBvIrE": {
+                                  "content": "Stores"
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "nvwriz",
+                  "ref": "artist:ZqiZXM",
+                  "name": "Delivery plan",
+                  "width": "fill_container",
+                  "padding": 0,
+                  "descendants": {
+                    "artist:5uVeAv": {
+                      "type": "frame",
+                      "id": "Ueo5Dt",
+                      "name": "Content",
+                      "layout": "vertical",
+                      "gap": 0,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "qHHiru",
+                          "ref": "artist:Kui8cd",
+                          "name": "Header",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "fIKGNu",
+                          "ref": "artist:rKJ8AS",
+                          "name": "Release / Night Signal",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:lLhf2K": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../../web-player-design/design-system/assets/albums/album-night-signal.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "artist:iLWJse": {
+                              "content": "Night Signal"
+                            },
+                            "artist:di7HgV": {
+                              "content": "Worldwide · Not sent"
+                            },
+                            "artist:ea4lxR": {
+                              "type": "frame",
+                              "id": "Krh2t1",
+                              "name": "Cells",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "0ZmSu8",
+                                  "ref": "artist:JMLQvz",
+                                  "name": "Spotify / Not sent"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "XmaE6D",
+                                  "ref": "artist:JMLQvz",
+                                  "name": "Apple Music / Not sent"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "SwzFWR",
+                                  "ref": "artist:JMLQvz",
+                                  "name": "YouTube Music / Not sent"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "ZevCp5",
+                                  "ref": "artist:pitgVr",
+                                  "name": "Amazon Music / Not in plan"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "WEsm9o",
+                                  "ref": "artist:JMLQvz",
+                                  "name": "Deezer / Not sent"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "R0tl8p",
+                                  "ref": "artist:pitgVr",
+                                  "name": "TIDAL / Not in plan"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "uJjlxz",
+                          "ref": "artist:rKJ8AS",
+                          "name": "Release / Echoes in Motion",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:lLhf2K": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../../web-player-design/design-system/assets/albums/album-echoes-in-motion.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "artist:iLWJse": {
+                              "content": "Echoes in Motion"
+                            },
+                            "artist:di7HgV": {
+                              "content": "2 countries · Not sent"
+                            },
+                            "artist:ea4lxR": {
+                              "type": "frame",
+                              "id": "Rblikz",
+                              "name": "Cells",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "36TrOV",
+                                  "ref": "artist:JMLQvz",
+                                  "name": "Spotify / Not sent"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "68i3St",
+                                  "ref": "artist:JMLQvz",
+                                  "name": "Apple Music / Not sent"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "Rrdt77",
+                                  "ref": "artist:pitgVr",
+                                  "name": "YouTube Music / Not in plan"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "07CCP0",
+                                  "ref": "artist:pitgVr",
+                                  "name": "Amazon Music / Not in plan"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "p5nvup",
+                                  "ref": "artist:pitgVr",
+                                  "name": "Deezer / Not in plan"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "uniFNx",
+                                  "ref": "artist:pitgVr",
+                                  "name": "TIDAL / Not in plan"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "r85sDu",
+                          "ref": "artist:rKJ8AS",
+                          "name": "Release / Afterglow",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:lLhf2K": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../../web-player-design/design-system/assets/albums/album-afterglow.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "artist:iLWJse": {
+                              "content": "Afterglow"
+                            },
+                            "artist:di7HgV": {
+                              "content": "Worldwide · No stores planned"
+                            },
+                            "artist:ea4lxR": {
+                              "type": "frame",
+                              "id": "sdb6Ox",
+                              "name": "Cells",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "cGu7RH",
+                                  "ref": "artist:pitgVr",
+                                  "name": "Spotify / Not in plan"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "1bjx5L",
+                                  "ref": "artist:pitgVr",
+                                  "name": "Apple Music / Not in plan"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "i8pe8q",
+                                  "ref": "artist:pitgVr",
+                                  "name": "YouTube Music / Not in plan"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "h7Vc6E",
+                                  "ref": "artist:pitgVr",
+                                  "name": "Amazon Music / Not in plan"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "Sq81Pp",
+                                  "ref": "artist:pitgVr",
+                                  "name": "Deezer / Not in plan"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "HGvgIe",
+                                  "ref": "artist:pitgVr",
+                                  "name": "TIDAL / Not in plan"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "KO7DhS",
+                          "ref": "artist:rKJ8AS",
+                          "name": "Release / Static Lines",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:lLhf2K": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../../web-player-design/design-system/assets/albums/album-static-lines.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "artist:iLWJse": {
+                              "content": "Static Lines"
+                            },
+                            "artist:di7HgV": {
+                              "content": "Worldwide · Not sent"
+                            },
+                            "artist:ea4lxR": {
+                              "type": "frame",
+                              "id": "fpoiWh",
+                              "name": "Cells",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "LvcgOA",
+                                  "ref": "artist:JMLQvz",
+                                  "name": "Spotify / Not sent"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "UfrHzA",
+                                  "ref": "artist:JMLQvz",
+                                  "name": "Apple Music / Not sent"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "XOv0Kk",
+                                  "ref": "artist:JMLQvz",
+                                  "name": "YouTube Music / Not sent"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "0QpOPe",
+                                  "ref": "artist:JMLQvz",
+                                  "name": "Amazon Music / Not sent"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "33K9EQ",
+                                  "ref": "artist:JMLQvz",
+                                  "name": "Deezer / Not sent"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "gxbtaa",
+                                  "ref": "artist:JMLQvz",
+                                  "name": "TIDAL / Not sent"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "frame",
+                          "id": "zfzBro",
+                          "name": "Footer",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "padding": [
+                            12,
+                            16
+                          ],
+                          "justifyContent": "space_between",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "dXtarL",
+                              "ref": "artist:C5Ih8u",
+                              "name": "1–4 of 4",
+                              "content": "1–4 of 4"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "afD7G6",
+                              "ref": "artist:Cic4Sr",
+                              "name": "Page 1"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 1540,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Light"
+      },
+      "context": "/dashboard/distribution — Plans only: no distribution partner is connected, so every store reads Not sent or Not in the plan. Each row opens the release on Deliver."
+    },
+    {
+      "type": "frame",
+      "id": "WqkCtS",
+      "name": "Artist / Distribution / Desktop / Dim",
+      "width": 1440,
+      "height": "fit_content",
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "oh3CHn",
+          "ref": "artist:EoFzgK",
+          "name": "Shell",
+          "width": 1440,
+          "descendants": {
+            "artist:wUJe6Y/artist:yE32Cq": {
+              "type": "ref",
+              "id": "Wdg5a3",
+              "ref": "artist:eNXmbM",
+              "name": "Nav / Distribution",
+              "descendants": {
+                "artist:it6GEx": {
+                  "icon": "send"
+                },
+                "artist:9i1hx0": {
+                  "content": "Distribution"
+                }
+              }
+            },
+            "artist:wUJe6Y/artist:cQW2W1/artist:wU47I0": {
+              "icon": "contrast"
+            },
+            "artist:wUJe6Y/artist:cQW2W1/artist:n1Vqlv": {
+              "content": "Dim"
+            },
+            "artist:Ni7iI8/artist:qAqwpx": {
+              "content": "Distribution"
+            },
+            "artist:Ni7iI8/artist:ZD0P3t/artist:vg489O": {
+              "content": "Create release"
+            },
+            "artist:Ni7iI8/artist:ZD0P3t/artist:wAdYtR": {
+              "icon": "plus"
+            },
+            "artist:QNgR6T": {
+              "type": "frame",
+              "id": "jIEaE4",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 20,
+              "width": "fill_container",
+              "padding": [
+                36,
+                48,
+                48,
+                48
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "zC2Rqs",
+                  "name": "Page Heading",
+                  "gap": 16,
+                  "alignItems": "end",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "52xzoR",
+                      "name": "Text",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "VxWmwV",
+                          "ref": "artist:MgMQ2L",
+                          "name": "Distribution",
+                          "content": "Distribution"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "WsoBfQ",
+                          "ref": "artist:C5Ih8u",
+                          "name": "Where your releases are plan",
+                          "width": "fill_container",
+                          "textGrowth": "fixed-width",
+                          "content": "Where your releases are planned to go, and what stores report back."
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "Epo4kV",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / No partner",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "icon": "unplug"
+                    },
+                    "artist:EZZdAr": {
+                      "content": "No distribution partner yet"
+                    },
+                    "artist:lICt0a": {
+                      "enabled": false
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "64uYwK",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "e44ccr",
+                          "ref": "artist:C5Ih8u",
+                          "name": "No distribution partner is c",
+                          "width": "fill_container",
+                          "textGrowth": "fixed-width",
+                          "content": "No distribution partner is connected yet, so nothing has been sent to a streaming service. You can already plan stores and territories; delivery starts once a partner is connected."
+                        },
+                        {
+                          "type": "frame",
+                          "id": "bvSMAQ",
+                          "name": "Flow",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "p1HZzy",
+                              "ref": "artist:YJv8x6",
+                              "name": "Your plan",
+                              "descendants": {
+                                "artist:TlyBAH": {
+                                  "content": "Your plan"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "swwNTy",
+                              "ref": "artist:Ghhp15",
+                              "name": "Partner",
+                              "descendants": {
+                                "artist:ZBvIrE": {
+                                  "content": "Partner"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "9oNQGG",
+                              "ref": "artist:Ghhp15",
+                              "name": "Stores",
+                              "descendants": {
+                                "artist:ZBvIrE": {
+                                  "content": "Stores"
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "nDTCFG",
+                  "ref": "artist:ZqiZXM",
+                  "name": "Delivery plan",
+                  "width": "fill_container",
+                  "padding": 0,
+                  "descendants": {
+                    "artist:5uVeAv": {
+                      "type": "frame",
+                      "id": "kfbXTZ",
+                      "name": "Content",
+                      "layout": "vertical",
+                      "gap": 0,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "aYoODz",
+                          "ref": "artist:Kui8cd",
+                          "name": "Header",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "9lwhw6",
+                          "ref": "artist:rKJ8AS",
+                          "name": "Release / Night Signal",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:lLhf2K": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../../web-player-design/design-system/assets/albums/album-night-signal.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "artist:iLWJse": {
+                              "content": "Night Signal"
+                            },
+                            "artist:di7HgV": {
+                              "content": "Worldwide · Not sent"
+                            },
+                            "artist:ea4lxR": {
+                              "type": "frame",
+                              "id": "mdAoYk",
+                              "name": "Cells",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "YwZpmN",
+                                  "ref": "artist:JMLQvz",
+                                  "name": "Spotify / Not sent"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "NUJltR",
+                                  "ref": "artist:JMLQvz",
+                                  "name": "Apple Music / Not sent"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "692Mc8",
+                                  "ref": "artist:JMLQvz",
+                                  "name": "YouTube Music / Not sent"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "3ZRlB4",
+                                  "ref": "artist:pitgVr",
+                                  "name": "Amazon Music / Not in plan"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "ienG7p",
+                                  "ref": "artist:JMLQvz",
+                                  "name": "Deezer / Not sent"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "7tSWX4",
+                                  "ref": "artist:pitgVr",
+                                  "name": "TIDAL / Not in plan"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "4FeY1P",
+                          "ref": "artist:rKJ8AS",
+                          "name": "Release / Echoes in Motion",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:lLhf2K": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../../web-player-design/design-system/assets/albums/album-echoes-in-motion.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "artist:iLWJse": {
+                              "content": "Echoes in Motion"
+                            },
+                            "artist:di7HgV": {
+                              "content": "2 countries · Not sent"
+                            },
+                            "artist:ea4lxR": {
+                              "type": "frame",
+                              "id": "9M2KV6",
+                              "name": "Cells",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "D9sDPK",
+                                  "ref": "artist:JMLQvz",
+                                  "name": "Spotify / Not sent"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "Q7FfOf",
+                                  "ref": "artist:JMLQvz",
+                                  "name": "Apple Music / Not sent"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "TIB3b0",
+                                  "ref": "artist:pitgVr",
+                                  "name": "YouTube Music / Not in plan"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "WUtVUX",
+                                  "ref": "artist:pitgVr",
+                                  "name": "Amazon Music / Not in plan"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "ZV32R8",
+                                  "ref": "artist:pitgVr",
+                                  "name": "Deezer / Not in plan"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "c3QMiq",
+                                  "ref": "artist:pitgVr",
+                                  "name": "TIDAL / Not in plan"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "TqX9qI",
+                          "ref": "artist:rKJ8AS",
+                          "name": "Release / Afterglow",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:lLhf2K": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../../web-player-design/design-system/assets/albums/album-afterglow.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "artist:iLWJse": {
+                              "content": "Afterglow"
+                            },
+                            "artist:di7HgV": {
+                              "content": "Worldwide · No stores planned"
+                            },
+                            "artist:ea4lxR": {
+                              "type": "frame",
+                              "id": "EPrU1l",
+                              "name": "Cells",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "q7XhRZ",
+                                  "ref": "artist:pitgVr",
+                                  "name": "Spotify / Not in plan"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "n3a71x",
+                                  "ref": "artist:pitgVr",
+                                  "name": "Apple Music / Not in plan"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "2hVA65",
+                                  "ref": "artist:pitgVr",
+                                  "name": "YouTube Music / Not in plan"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "7ZhL9U",
+                                  "ref": "artist:pitgVr",
+                                  "name": "Amazon Music / Not in plan"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "w5ybr8",
+                                  "ref": "artist:pitgVr",
+                                  "name": "Deezer / Not in plan"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "rBrdP8",
+                                  "ref": "artist:pitgVr",
+                                  "name": "TIDAL / Not in plan"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "OsXg1g",
+                          "ref": "artist:rKJ8AS",
+                          "name": "Release / Static Lines",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:lLhf2K": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../../web-player-design/design-system/assets/albums/album-static-lines.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "artist:iLWJse": {
+                              "content": "Static Lines"
+                            },
+                            "artist:di7HgV": {
+                              "content": "Worldwide · Not sent"
+                            },
+                            "artist:ea4lxR": {
+                              "type": "frame",
+                              "id": "xcmY9N",
+                              "name": "Cells",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "z1T0KB",
+                                  "ref": "artist:JMLQvz",
+                                  "name": "Spotify / Not sent"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "ClMKM6",
+                                  "ref": "artist:JMLQvz",
+                                  "name": "Apple Music / Not sent"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "nxuTex",
+                                  "ref": "artist:JMLQvz",
+                                  "name": "YouTube Music / Not sent"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "wAUcwQ",
+                                  "ref": "artist:JMLQvz",
+                                  "name": "Amazon Music / Not sent"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "Vw9TFf",
+                                  "ref": "artist:JMLQvz",
+                                  "name": "Deezer / Not sent"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "0sdnIa",
+                                  "ref": "artist:JMLQvz",
+                                  "name": "TIDAL / Not sent"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "frame",
+                          "id": "LpXSYN",
+                          "name": "Footer",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "padding": [
+                            12,
+                            16
+                          ],
+                          "justifyContent": "space_between",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "57gDog",
+                              "ref": "artist:C5Ih8u",
+                              "name": "1–4 of 4",
+                              "content": "1–4 of 4"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "6kzWKL",
+                              "ref": "artist:Cic4Sr",
+                              "name": "Page 1"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 3080,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Dim"
+      },
+      "context": "/dashboard/distribution — Plans only: no distribution partner is connected, so every store reads Not sent or Not in the plan. Each row opens the release on Deliver."
+    },
+    {
+      "type": "frame",
+      "id": "yvwjeR",
+      "name": "Artist / Distribution / Mobile / Dark",
+      "width": 390,
+      "height": "fit_content",
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "GaVMcC",
+          "ref": "artist:8H12ea",
+          "name": "Shell",
+          "width": 390,
+          "descendants": {
+            "artist:SIErRw": {
+              "type": "frame",
+              "id": "vQmL5Z",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 16,
+              "width": "fill_container",
+              "padding": [
+                12,
+                16,
+                40,
+                16
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "F7lZat",
+                  "name": "Page Heading",
+                  "gap": 16,
+                  "alignItems": "end",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "RJ5ps0",
+                      "name": "Text",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "NGiINP",
+                          "ref": "artist:MgMQ2L",
+                          "name": "Distribution",
+                          "content": "Distribution"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "KEktXZ",
+                          "ref": "artist:C5Ih8u",
+                          "name": "Where your releases are plan",
+                          "width": "fill_container",
+                          "textGrowth": "fixed-width",
+                          "content": "Where your releases are planned to go, and what stores report back."
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "Ai39FY",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / No partner",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "icon": "unplug"
+                    },
+                    "artist:EZZdAr": {
+                      "content": "No distribution partner yet"
+                    },
+                    "artist:lICt0a": {
+                      "enabled": false
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "YFab2k",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "soFV8t",
+                          "ref": "artist:C5Ih8u",
+                          "name": "No distribution partner is c",
+                          "width": "fill_container",
+                          "textGrowth": "fixed-width",
+                          "content": "No distribution partner is connected yet, so nothing has been sent to a streaming service. You can already plan stores and territories; delivery starts once a partner is connected."
+                        },
+                        {
+                          "type": "frame",
+                          "id": "zvGSaW",
+                          "name": "Flow",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "width": "fill_container",
+                          "alignItems": "start",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "tYFc9W",
+                              "ref": "artist:YJv8x6",
+                              "name": "Your plan",
+                              "descendants": {
+                                "artist:TlyBAH": {
+                                  "content": "Your plan"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "EfC5xE",
+                              "ref": "artist:Ghhp15",
+                              "name": "Partner",
+                              "descendants": {
+                                "artist:ZBvIrE": {
+                                  "content": "Partner"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "JghJaL",
+                              "ref": "artist:Ghhp15",
+                              "name": "Stores",
+                              "descendants": {
+                                "artist:ZBvIrE": {
+                                  "content": "Stores"
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "DHpCrv",
+                  "ref": "artist:ZqiZXM",
+                  "name": "Delivery plan",
+                  "width": "fill_container",
+                  "padding": 0,
+                  "descendants": {
+                    "artist:5uVeAv": {
+                      "type": "frame",
+                      "id": "ygvdx4",
+                      "name": "Content",
+                      "layout": "vertical",
+                      "gap": 0,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "oWX659",
+                          "ref": "artist:nC6VAu",
+                          "name": "Release / Night Signal",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:TeeiCg": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../../web-player-design/design-system/assets/albums/album-night-signal.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "artist:M4wRua": {
+                              "content": "Night Signal"
+                            },
+                            "artist:JNMZAk": {
+                              "content": "Worldwide · Not sent · 4 of 6 planned"
+                            },
+                            "artist:9B16Nf": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "rJqw2m",
+                          "ref": "artist:nC6VAu",
+                          "name": "Release / Echoes in Motion",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:TeeiCg": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../../web-player-design/design-system/assets/albums/album-echoes-in-motion.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "artist:M4wRua": {
+                              "content": "Echoes in Motion"
+                            },
+                            "artist:JNMZAk": {
+                              "content": "2 countries · Not sent · 2 of 6 planned"
+                            },
+                            "artist:9B16Nf": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "supZAw",
+                          "ref": "artist:nC6VAu",
+                          "name": "Release / Afterglow",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:TeeiCg": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../../web-player-design/design-system/assets/albums/album-afterglow.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "artist:M4wRua": {
+                              "content": "Afterglow"
+                            },
+                            "artist:JNMZAk": {
+                              "content": "Worldwide · No stores planned · 0 of 6 planned"
+                            },
+                            "artist:9B16Nf": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "pAk6rV",
+                          "ref": "artist:nC6VAu",
+                          "name": "Release / Static Lines",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:TeeiCg": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../../web-player-design/design-system/assets/albums/album-static-lines.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "artist:M4wRua": {
+                              "content": "Static Lines"
+                            },
+                            "artist:JNMZAk": {
+                              "content": "Worldwide · Not sent · 6 of 6 planned"
+                            },
+                            "artist:9B16Nf": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "frame",
+                          "id": "0FiXBP",
+                          "name": "Footer",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "padding": [
+                            12,
+                            16
+                          ],
+                          "justifyContent": "space_between",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "uElsXi",
+                              "ref": "artist:C5Ih8u",
+                              "name": "1–4 of 4",
+                              "content": "1–4 of 4"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "r3WJ5N",
+                              "ref": "artist:Cic4Sr",
+                              "name": "Page 1"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 4620,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Dark"
+      },
+      "context": "/dashboard/distribution — Plans only: no distribution partner is connected, so every store reads Not sent or Not in the plan. Each row opens the release on Deliver."
+    },
+    {
+      "type": "frame",
+      "id": "Vo3UGZ",
+      "name": "Artist / Distribution / Second page / Desktop",
+      "width": 1440,
+      "height": "fit_content",
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "RgPyOO",
+          "ref": "artist:EoFzgK",
+          "name": "Shell",
+          "width": 1440,
+          "descendants": {
+            "artist:wUJe6Y/artist:yE32Cq": {
+              "type": "ref",
+              "id": "jKjROI",
+              "ref": "artist:eNXmbM",
+              "name": "Nav / Distribution",
+              "descendants": {
+                "artist:it6GEx": {
+                  "icon": "send"
+                },
+                "artist:9i1hx0": {
+                  "content": "Distribution"
+                }
+              }
+            },
+            "artist:wUJe6Y/artist:cQW2W1/artist:wU47I0": {
+              "icon": "moon"
+            },
+            "artist:wUJe6Y/artist:cQW2W1/artist:n1Vqlv": {
+              "content": "Dark"
+            },
+            "artist:Ni7iI8/artist:qAqwpx": {
+              "content": "Distribution"
+            },
+            "artist:Ni7iI8/artist:ZD0P3t/artist:vg489O": {
+              "content": "Create release"
+            },
+            "artist:Ni7iI8/artist:ZD0P3t/artist:wAdYtR": {
+              "icon": "plus"
+            },
+            "artist:QNgR6T": {
+              "type": "frame",
+              "id": "kskizZ",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 20,
+              "width": "fill_container",
+              "padding": [
+                36,
+                48,
+                48,
+                48
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "gSMESy",
+                  "name": "Page Heading",
+                  "gap": 16,
+                  "alignItems": "end",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "4II98m",
+                      "name": "Text",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "yuUVl5",
+                          "ref": "artist:MgMQ2L",
+                          "name": "Distribution",
+                          "content": "Distribution"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "BNlVgu",
+                          "ref": "artist:C5Ih8u",
+                          "name": "Where your releases are plan",
+                          "width": "fill_container",
+                          "textGrowth": "fixed-width",
+                          "content": "Where your releases are planned to go, and what stores report back."
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "jRVwJs",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / No partner",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "icon": "unplug"
+                    },
+                    "artist:EZZdAr": {
+                      "content": "No distribution partner yet"
+                    },
+                    "artist:lICt0a": {
+                      "enabled": false
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "7M9Chj",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "vmqcxb",
+                          "ref": "artist:C5Ih8u",
+                          "name": "No distribution partner is c",
+                          "width": "fill_container",
+                          "textGrowth": "fixed-width",
+                          "content": "No distribution partner is connected yet, so nothing has been sent to a streaming service. You can already plan stores and territories; delivery starts once a partner is connected."
+                        },
+                        {
+                          "type": "frame",
+                          "id": "yXv0U7",
+                          "name": "Flow",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "6JIhe1",
+                              "ref": "artist:YJv8x6",
+                              "name": "Your plan",
+                              "descendants": {
+                                "artist:TlyBAH": {
+                                  "content": "Your plan"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "dO8LmX",
+                              "ref": "artist:Ghhp15",
+                              "name": "Partner",
+                              "descendants": {
+                                "artist:ZBvIrE": {
+                                  "content": "Partner"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "ePoRLB",
+                              "ref": "artist:Ghhp15",
+                              "name": "Stores",
+                              "descendants": {
+                                "artist:ZBvIrE": {
+                                  "content": "Stores"
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "CI7hTs",
+                  "ref": "artist:ZqiZXM",
+                  "name": "Delivery plan",
+                  "width": "fill_container",
+                  "padding": 0,
+                  "descendants": {
+                    "artist:5uVeAv": {
+                      "type": "frame",
+                      "id": "vJEQbF",
+                      "name": "Content",
+                      "layout": "vertical",
+                      "gap": 0,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "HuIuUk",
+                          "ref": "artist:Kui8cd",
+                          "name": "Header",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "KAsThL",
+                          "ref": "artist:rKJ8AS",
+                          "name": "Release / Night Signal",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:lLhf2K": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../../web-player-design/design-system/assets/albums/album-night-signal.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "artist:iLWJse": {
+                              "content": "Night Signal"
+                            },
+                            "artist:di7HgV": {
+                              "content": "Worldwide · Not sent"
+                            },
+                            "artist:ea4lxR": {
+                              "type": "frame",
+                              "id": "X34KUD",
+                              "name": "Cells",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "vPVcjx",
+                                  "ref": "artist:JMLQvz",
+                                  "name": "Spotify / Not sent"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "AeSaMa",
+                                  "ref": "artist:JMLQvz",
+                                  "name": "Apple Music / Not sent"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "jGM3IQ",
+                                  "ref": "artist:JMLQvz",
+                                  "name": "YouTube Music / Not sent"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "sOwC4G",
+                                  "ref": "artist:pitgVr",
+                                  "name": "Amazon Music / Not in plan"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "dDSWWZ",
+                                  "ref": "artist:JMLQvz",
+                                  "name": "Deezer / Not sent"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "gBSaOB",
+                                  "ref": "artist:pitgVr",
+                                  "name": "TIDAL / Not in plan"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "LB9AuB",
+                          "ref": "artist:rKJ8AS",
+                          "name": "Release / Echoes in Motion",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:lLhf2K": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../../web-player-design/design-system/assets/albums/album-echoes-in-motion.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "artist:iLWJse": {
+                              "content": "Echoes in Motion"
+                            },
+                            "artist:di7HgV": {
+                              "content": "2 countries · Not sent"
+                            },
+                            "artist:ea4lxR": {
+                              "type": "frame",
+                              "id": "q71Ge3",
+                              "name": "Cells",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "4b8dOw",
+                                  "ref": "artist:JMLQvz",
+                                  "name": "Spotify / Not sent"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "1530o9",
+                                  "ref": "artist:JMLQvz",
+                                  "name": "Apple Music / Not sent"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "YEp36V",
+                                  "ref": "artist:pitgVr",
+                                  "name": "YouTube Music / Not in plan"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "L8H6Tp",
+                                  "ref": "artist:pitgVr",
+                                  "name": "Amazon Music / Not in plan"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "qdQnLG",
+                                  "ref": "artist:pitgVr",
+                                  "name": "Deezer / Not in plan"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "ligpsY",
+                                  "ref": "artist:pitgVr",
+                                  "name": "TIDAL / Not in plan"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "frame",
+                          "id": "EgCWgG",
+                          "name": "Footer",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "padding": [
+                            12,
+                            16
+                          ],
+                          "justifyContent": "space_between",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "obslqP",
+                              "ref": "artist:C5Ih8u",
+                              "name": "11–12 of 12",
+                              "content": "11–12 of 12"
+                            },
+                            {
+                              "type": "frame",
+                              "id": "jeBQ6M",
+                              "name": "Pages",
+                              "gap": 4,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "p3FvgA",
+                                  "ref": "artist:4Ilw6A",
+                                  "name": "Page 1"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "qZ5d7K",
+                                  "ref": "artist:Cic4Sr",
+                                  "name": "Page 2",
+                                  "descendants": {
+                                    "artist:CLHuXp": {
+                                      "content": "2"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 5110,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Dark"
+      },
+      "context": "/dashboard/distribution — Plans only: no distribution partner is connected, so every store reads Not sent or Not in the plan. Each row opens the release on Deliver."
+    },
+    {
+      "type": "frame",
+      "id": "zznnro",
+      "name": "Artist / Distribution / Second page / Mobile",
+      "width": 390,
+      "height": "fit_content",
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "RrALCI",
+          "ref": "artist:8H12ea",
+          "name": "Shell",
+          "width": 390,
+          "descendants": {
+            "artist:SIErRw": {
+              "type": "frame",
+              "id": "ISpSqK",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 16,
+              "width": "fill_container",
+              "padding": [
+                12,
+                16,
+                40,
+                16
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "SHAv2O",
+                  "name": "Page Heading",
+                  "gap": 16,
+                  "alignItems": "end",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "iiIqOI",
+                      "name": "Text",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "SeIVjm",
+                          "ref": "artist:MgMQ2L",
+                          "name": "Distribution",
+                          "content": "Distribution"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "Rn58Zz",
+                          "ref": "artist:C5Ih8u",
+                          "name": "Where your releases are plan",
+                          "width": "fill_container",
+                          "textGrowth": "fixed-width",
+                          "content": "Where your releases are planned to go, and what stores report back."
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "PDzWln",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / No partner",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "icon": "unplug"
+                    },
+                    "artist:EZZdAr": {
+                      "content": "No distribution partner yet"
+                    },
+                    "artist:lICt0a": {
+                      "enabled": false
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "5LylYH",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "z3WvrU",
+                          "ref": "artist:C5Ih8u",
+                          "name": "No distribution partner is c",
+                          "width": "fill_container",
+                          "textGrowth": "fixed-width",
+                          "content": "No distribution partner is connected yet, so nothing has been sent to a streaming service. You can already plan stores and territories; delivery starts once a partner is connected."
+                        },
+                        {
+                          "type": "frame",
+                          "id": "uzKVdz",
+                          "name": "Flow",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "width": "fill_container",
+                          "alignItems": "start",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "OzGio4",
+                              "ref": "artist:YJv8x6",
+                              "name": "Your plan",
+                              "descendants": {
+                                "artist:TlyBAH": {
+                                  "content": "Your plan"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "H73i3y",
+                              "ref": "artist:Ghhp15",
+                              "name": "Partner",
+                              "descendants": {
+                                "artist:ZBvIrE": {
+                                  "content": "Partner"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "E0yYDM",
+                              "ref": "artist:Ghhp15",
+                              "name": "Stores",
+                              "descendants": {
+                                "artist:ZBvIrE": {
+                                  "content": "Stores"
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "uFxSeR",
+                  "ref": "artist:ZqiZXM",
+                  "name": "Delivery plan",
+                  "width": "fill_container",
+                  "padding": 0,
+                  "descendants": {
+                    "artist:5uVeAv": {
+                      "type": "frame",
+                      "id": "1xGpCt",
+                      "name": "Content",
+                      "layout": "vertical",
+                      "gap": 0,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "Z6Tsiu",
+                          "ref": "artist:nC6VAu",
+                          "name": "Release / Night Signal",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:TeeiCg": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../../web-player-design/design-system/assets/albums/album-night-signal.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "artist:M4wRua": {
+                              "content": "Night Signal"
+                            },
+                            "artist:JNMZAk": {
+                              "content": "Worldwide · Not sent · 4 of 6 planned"
+                            },
+                            "artist:9B16Nf": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "aGxfEM",
+                          "ref": "artist:nC6VAu",
+                          "name": "Release / Echoes in Motion",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:TeeiCg": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../../web-player-design/design-system/assets/albums/album-echoes-in-motion.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "artist:M4wRua": {
+                              "content": "Echoes in Motion"
+                            },
+                            "artist:JNMZAk": {
+                              "content": "2 countries · Not sent · 2 of 6 planned"
+                            },
+                            "artist:9B16Nf": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "frame",
+                          "id": "b6gmgs",
+                          "name": "Footer",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "padding": [
+                            12,
+                            16
+                          ],
+                          "justifyContent": "space_between",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "bjDQ4r",
+                              "ref": "artist:C5Ih8u",
+                              "name": "11–12 of 12",
+                              "content": "11–12 of 12"
+                            },
+                            {
+                              "type": "frame",
+                              "id": "c2gFqY",
+                              "name": "Pages",
+                              "gap": 4,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "OKrv5I",
+                                  "ref": "artist:4Ilw6A",
+                                  "name": "Page 1"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "DUgQJG",
+                                  "ref": "artist:Cic4Sr",
+                                  "name": "Page 2",
+                                  "descendants": {
+                                    "artist:CLHuXp": {
+                                      "content": "2"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 6650,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Dark"
+      },
+      "context": "/dashboard/distribution — Plans only: no distribution partner is connected, so every store reads Not sent or Not in the plan. Each row opens the release on Deliver."
+    },
+    {
+      "type": "frame",
+      "id": "yEBaBT",
+      "name": "Artist / Distribution / Loading / Desktop",
+      "width": 1440,
+      "height": "fit_content",
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "4PpC0Q",
+          "ref": "artist:EoFzgK",
+          "name": "Shell",
+          "width": 1440,
+          "descendants": {
+            "artist:wUJe6Y/artist:yE32Cq": {
+              "type": "ref",
+              "id": "OsXHT4",
+              "ref": "artist:eNXmbM",
+              "name": "Nav / Distribution",
+              "descendants": {
+                "artist:it6GEx": {
+                  "icon": "send"
+                },
+                "artist:9i1hx0": {
+                  "content": "Distribution"
+                }
+              }
+            },
+            "artist:wUJe6Y/artist:cQW2W1/artist:wU47I0": {
+              "icon": "moon"
+            },
+            "artist:wUJe6Y/artist:cQW2W1/artist:n1Vqlv": {
+              "content": "Dark"
+            },
+            "artist:Ni7iI8/artist:qAqwpx": {
+              "content": "Distribution"
+            },
+            "artist:Ni7iI8/artist:ZD0P3t/artist:vg489O": {
+              "content": "Create release"
+            },
+            "artist:Ni7iI8/artist:ZD0P3t/artist:wAdYtR": {
+              "icon": "plus"
+            },
+            "artist:QNgR6T": {
+              "type": "frame",
+              "id": "r04wX9",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 20,
+              "width": "fill_container",
+              "padding": [
+                36,
+                48,
+                48,
+                48
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "XS4KJZ",
+                  "name": "Page Heading",
+                  "gap": 16,
+                  "alignItems": "end",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "l3QRth",
+                      "name": "Text",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "z1knhy",
+                          "ref": "artist:MgMQ2L",
+                          "name": "Distribution",
+                          "content": "Distribution"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "KgqSDp",
+                          "ref": "artist:C5Ih8u",
+                          "name": "Where your releases are plan",
+                          "width": "fill_container",
+                          "textGrowth": "fixed-width",
+                          "content": "Where your releases are planned to go, and what stores report back."
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "6nY2OB",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / No partner",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "icon": "unplug"
+                    },
+                    "artist:EZZdAr": {
+                      "content": "No distribution partner yet"
+                    },
+                    "artist:lICt0a": {
+                      "enabled": false
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "CpSPCl",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "2ygXaB",
+                          "ref": "artist:C5Ih8u",
+                          "name": "No distribution partner is c",
+                          "width": "fill_container",
+                          "textGrowth": "fixed-width",
+                          "content": "No distribution partner is connected yet, so nothing has been sent to a streaming service. You can already plan stores and territories; delivery starts once a partner is connected."
+                        },
+                        {
+                          "type": "frame",
+                          "id": "R6F2Dj",
+                          "name": "Flow",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "3crA5D",
+                              "ref": "artist:YJv8x6",
+                              "name": "Your plan",
+                              "descendants": {
+                                "artist:TlyBAH": {
+                                  "content": "Your plan"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "YDH77D",
+                              "ref": "artist:Ghhp15",
+                              "name": "Partner",
+                              "descendants": {
+                                "artist:ZBvIrE": {
+                                  "content": "Partner"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "f1wt1K",
+                              "ref": "artist:Ghhp15",
+                              "name": "Stores",
+                              "descendants": {
+                                "artist:ZBvIrE": {
+                                  "content": "Stores"
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "9rJAVx",
+                  "ref": "artist:ZqiZXM",
+                  "name": "Delivery plan",
+                  "width": "fill_container",
+                  "padding": 0,
+                  "descendants": {
+                    "artist:5uVeAv": {
+                      "type": "frame",
+                      "id": "6GWtMk",
+                      "name": "Content",
+                      "layout": "vertical",
+                      "gap": 0,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "sjBjpc",
+                          "name": "Loading",
+                          "layout": "vertical",
+                          "gap": 0,
+                          "width": "fill_container",
+                          "padding": 16,
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "mAXtsu",
+                              "ref": "artist:C5Ih8u",
+                              "name": "Loading distribution…",
+                              "content": "Loading distribution…"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "jJqor5",
+                              "ref": "artist:PDk409",
+                              "name": "Skeleton 1",
+                              "width": "fill_container"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "gHbiNI",
+                              "ref": "artist:PDk409",
+                              "name": "Skeleton 2",
+                              "width": "fill_container"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "hoSctg",
+                              "ref": "artist:PDk409",
+                              "name": "Skeleton 3",
+                              "width": "fill_container"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "gYWQnj",
+                              "ref": "artist:PDk409",
+                              "name": "Skeleton 4",
+                              "width": "fill_container"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 7140,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Dark"
+      },
+      "context": "/dashboard/distribution — Plans only: no distribution partner is connected, so every store reads Not sent or Not in the plan. Each row opens the release on Deliver."
+    },
+    {
+      "type": "frame",
+      "id": "SJzOes",
+      "name": "Artist / Distribution / Loading / Mobile",
+      "width": 390,
+      "height": "fit_content",
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "wOxrx1",
+          "ref": "artist:8H12ea",
+          "name": "Shell",
+          "width": 390,
+          "descendants": {
+            "artist:SIErRw": {
+              "type": "frame",
+              "id": "HVsBUi",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 16,
+              "width": "fill_container",
+              "padding": [
+                12,
+                16,
+                40,
+                16
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "DiyGtJ",
+                  "name": "Page Heading",
+                  "gap": 16,
+                  "alignItems": "end",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "391IUt",
+                      "name": "Text",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "VKUA4k",
+                          "ref": "artist:MgMQ2L",
+                          "name": "Distribution",
+                          "content": "Distribution"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "S3d6cZ",
+                          "ref": "artist:C5Ih8u",
+                          "name": "Where your releases are plan",
+                          "width": "fill_container",
+                          "textGrowth": "fixed-width",
+                          "content": "Where your releases are planned to go, and what stores report back."
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "yoRkvb",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / No partner",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "icon": "unplug"
+                    },
+                    "artist:EZZdAr": {
+                      "content": "No distribution partner yet"
+                    },
+                    "artist:lICt0a": {
+                      "enabled": false
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "kRovhm",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "mekpdt",
+                          "ref": "artist:C5Ih8u",
+                          "name": "No distribution partner is c",
+                          "width": "fill_container",
+                          "textGrowth": "fixed-width",
+                          "content": "No distribution partner is connected yet, so nothing has been sent to a streaming service. You can already plan stores and territories; delivery starts once a partner is connected."
+                        },
+                        {
+                          "type": "frame",
+                          "id": "tOQpi3",
+                          "name": "Flow",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "width": "fill_container",
+                          "alignItems": "start",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "D7AxMd",
+                              "ref": "artist:YJv8x6",
+                              "name": "Your plan",
+                              "descendants": {
+                                "artist:TlyBAH": {
+                                  "content": "Your plan"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "Qpk81d",
+                              "ref": "artist:Ghhp15",
+                              "name": "Partner",
+                              "descendants": {
+                                "artist:ZBvIrE": {
+                                  "content": "Partner"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "TCnmBw",
+                              "ref": "artist:Ghhp15",
+                              "name": "Stores",
+                              "descendants": {
+                                "artist:ZBvIrE": {
+                                  "content": "Stores"
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "PKS2aG",
+                  "ref": "artist:ZqiZXM",
+                  "name": "Delivery plan",
+                  "width": "fill_container",
+                  "padding": 0,
+                  "descendants": {
+                    "artist:5uVeAv": {
+                      "type": "frame",
+                      "id": "ipRzRo",
+                      "name": "Content",
+                      "layout": "vertical",
+                      "gap": 0,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "2ShFat",
+                          "name": "Loading",
+                          "layout": "vertical",
+                          "gap": 0,
+                          "width": "fill_container",
+                          "padding": 16,
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "Gt2GsN",
+                              "ref": "artist:C5Ih8u",
+                              "name": "Loading distribution…",
+                              "content": "Loading distribution…"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "B9tyya",
+                              "ref": "artist:PDk409",
+                              "name": "Skeleton 1",
+                              "width": "fill_container"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "yLkftO",
+                              "ref": "artist:PDk409",
+                              "name": "Skeleton 2",
+                              "width": "fill_container"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "ls2wYg",
+                              "ref": "artist:PDk409",
+                              "name": "Skeleton 3",
+                              "width": "fill_container"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "iwjSfr",
+                              "ref": "artist:PDk409",
+                              "name": "Skeleton 4",
+                              "width": "fill_container"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 8680,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Dark"
+      },
+      "context": "/dashboard/distribution — Plans only: no distribution partner is connected, so every store reads Not sent or Not in the plan. Each row opens the release on Deliver."
+    },
+    {
+      "type": "frame",
+      "id": "iANy0O",
+      "name": "Artist / Distribution / Error / Desktop",
+      "width": 1440,
+      "height": "fit_content",
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "GpzJLz",
+          "ref": "artist:EoFzgK",
+          "name": "Shell",
+          "width": 1440,
+          "descendants": {
+            "artist:wUJe6Y/artist:yE32Cq": {
+              "type": "ref",
+              "id": "IbsPve",
+              "ref": "artist:eNXmbM",
+              "name": "Nav / Distribution",
+              "descendants": {
+                "artist:it6GEx": {
+                  "icon": "send"
+                },
+                "artist:9i1hx0": {
+                  "content": "Distribution"
+                }
+              }
+            },
+            "artist:wUJe6Y/artist:cQW2W1/artist:wU47I0": {
+              "icon": "moon"
+            },
+            "artist:wUJe6Y/artist:cQW2W1/artist:n1Vqlv": {
+              "content": "Dark"
+            },
+            "artist:Ni7iI8/artist:qAqwpx": {
+              "content": "Distribution"
+            },
+            "artist:Ni7iI8/artist:ZD0P3t/artist:vg489O": {
+              "content": "Create release"
+            },
+            "artist:Ni7iI8/artist:ZD0P3t/artist:wAdYtR": {
+              "icon": "plus"
+            },
+            "artist:QNgR6T": {
+              "type": "frame",
+              "id": "5eI3cb",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 20,
+              "width": "fill_container",
+              "padding": [
+                36,
+                48,
+                48,
+                48
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "PqkUOx",
+                  "name": "Page Heading",
+                  "gap": 16,
+                  "alignItems": "end",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "TEpAJb",
+                      "name": "Text",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "bgxrvp",
+                          "ref": "artist:MgMQ2L",
+                          "name": "Distribution",
+                          "content": "Distribution"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "cne8ws",
+                          "ref": "artist:C5Ih8u",
+                          "name": "Where your releases are plan",
+                          "width": "fill_container",
+                          "textGrowth": "fixed-width",
+                          "content": "Where your releases are planned to go, and what stores report back."
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "UhSZnc",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / No partner",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "icon": "unplug"
+                    },
+                    "artist:EZZdAr": {
+                      "content": "No distribution partner yet"
+                    },
+                    "artist:lICt0a": {
+                      "enabled": false
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "4nxuZn",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "mHSWsj",
+                          "ref": "artist:C5Ih8u",
+                          "name": "No distribution partner is c",
+                          "width": "fill_container",
+                          "textGrowth": "fixed-width",
+                          "content": "No distribution partner is connected yet, so nothing has been sent to a streaming service. You can already plan stores and territories; delivery starts once a partner is connected."
+                        },
+                        {
+                          "type": "frame",
+                          "id": "hfRghB",
+                          "name": "Flow",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "TJEFtB",
+                              "ref": "artist:YJv8x6",
+                              "name": "Your plan",
+                              "descendants": {
+                                "artist:TlyBAH": {
+                                  "content": "Your plan"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "Whxl0h",
+                              "ref": "artist:Ghhp15",
+                              "name": "Partner",
+                              "descendants": {
+                                "artist:ZBvIrE": {
+                                  "content": "Partner"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "RIe2Gk",
+                              "ref": "artist:Ghhp15",
+                              "name": "Stores",
+                              "descendants": {
+                                "artist:ZBvIrE": {
+                                  "content": "Stores"
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "RECrYQ",
+                  "ref": "artist:ZqiZXM",
+                  "name": "Delivery plan",
+                  "width": "fill_container",
+                  "padding": 0,
+                  "descendants": {
+                    "artist:5uVeAv": {
+                      "type": "frame",
+                      "id": "2PMrWt",
+                      "name": "Content",
+                      "layout": "vertical",
+                      "gap": 0,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "ezqEe9",
+                          "name": "State",
+                          "layout": "vertical",
+                          "gap": 14,
+                          "width": "fill_container",
+                          "padding": [
+                            40,
+                            24
+                          ],
+                          "alignItems": "start",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "qfcRdI",
+                              "ref": "artist:P2oa0L",
+                              "name": "Could not load distribution.",
+                              "width": "fill_container",
+                              "textGrowth": "fixed-width",
+                              "content": "Could not load distribution. Please try again."
+                            },
+                            {
+                              "type": "ref",
+                              "id": "vEvM21",
+                              "ref": "artist:kRq5ZY",
+                              "name": "Button / Try again",
+                              "descendants": {
+                                "artist:v1XZog": {
+                                  "content": "Try again"
+                                },
+                                "artist:ASfyG9": {
+                                  "icon": "refresh-cw"
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 9170,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Dark"
+      },
+      "context": "/dashboard/distribution — Plans only: no distribution partner is connected, so every store reads Not sent or Not in the plan. Each row opens the release on Deliver."
+    },
+    {
+      "type": "frame",
+      "id": "Y7LBJM",
+      "name": "Artist / Distribution / Error / Mobile",
+      "width": 390,
+      "height": "fit_content",
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "WAyc0j",
+          "ref": "artist:8H12ea",
+          "name": "Shell",
+          "width": 390,
+          "descendants": {
+            "artist:SIErRw": {
+              "type": "frame",
+              "id": "V2aWHH",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 16,
+              "width": "fill_container",
+              "padding": [
+                12,
+                16,
+                40,
+                16
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "5CTX2N",
+                  "name": "Page Heading",
+                  "gap": 16,
+                  "alignItems": "end",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "LDRh3O",
+                      "name": "Text",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "LvbKYz",
+                          "ref": "artist:MgMQ2L",
+                          "name": "Distribution",
+                          "content": "Distribution"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "OKVEJa",
+                          "ref": "artist:C5Ih8u",
+                          "name": "Where your releases are plan",
+                          "width": "fill_container",
+                          "textGrowth": "fixed-width",
+                          "content": "Where your releases are planned to go, and what stores report back."
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "8FYVuv",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / No partner",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "icon": "unplug"
+                    },
+                    "artist:EZZdAr": {
+                      "content": "No distribution partner yet"
+                    },
+                    "artist:lICt0a": {
+                      "enabled": false
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "QFiqSV",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "SWaIoi",
+                          "ref": "artist:C5Ih8u",
+                          "name": "No distribution partner is c",
+                          "width": "fill_container",
+                          "textGrowth": "fixed-width",
+                          "content": "No distribution partner is connected yet, so nothing has been sent to a streaming service. You can already plan stores and territories; delivery starts once a partner is connected."
+                        },
+                        {
+                          "type": "frame",
+                          "id": "PrnzRj",
+                          "name": "Flow",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "width": "fill_container",
+                          "alignItems": "start",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "FxyRpM",
+                              "ref": "artist:YJv8x6",
+                              "name": "Your plan",
+                              "descendants": {
+                                "artist:TlyBAH": {
+                                  "content": "Your plan"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "GXRXf9",
+                              "ref": "artist:Ghhp15",
+                              "name": "Partner",
+                              "descendants": {
+                                "artist:ZBvIrE": {
+                                  "content": "Partner"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "HG9EcY",
+                              "ref": "artist:Ghhp15",
+                              "name": "Stores",
+                              "descendants": {
+                                "artist:ZBvIrE": {
+                                  "content": "Stores"
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "7kd6nx",
+                  "ref": "artist:ZqiZXM",
+                  "name": "Delivery plan",
+                  "width": "fill_container",
+                  "padding": 0,
+                  "descendants": {
+                    "artist:5uVeAv": {
+                      "type": "frame",
+                      "id": "CaiyIQ",
+                      "name": "Content",
+                      "layout": "vertical",
+                      "gap": 0,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "ArK81O",
+                          "name": "State",
+                          "layout": "vertical",
+                          "gap": 14,
+                          "width": "fill_container",
+                          "padding": [
+                            40,
+                            24
+                          ],
+                          "alignItems": "start",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "spfidu",
+                              "ref": "artist:P2oa0L",
+                              "name": "Could not load distribution.",
+                              "width": "fill_container",
+                              "textGrowth": "fixed-width",
+                              "content": "Could not load distribution. Please try again."
+                            },
+                            {
+                              "type": "ref",
+                              "id": "vBJITF",
+                              "ref": "artist:kRq5ZY",
+                              "name": "Button / Try again",
+                              "descendants": {
+                                "artist:v1XZog": {
+                                  "content": "Try again"
+                                },
+                                "artist:ASfyG9": {
+                                  "icon": "refresh-cw"
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 10710,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Dark"
+      },
+      "context": "/dashboard/distribution — Plans only: no distribution partner is connected, so every store reads Not sent or Not in the plan. Each row opens the release on Deliver."
+    },
+    {
+      "type": "frame",
+      "id": "X9BjRx",
+      "name": "Artist / Distribution / Empty / Desktop",
+      "width": 1440,
+      "height": "fit_content",
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "9ulxDP",
+          "ref": "artist:EoFzgK",
+          "name": "Shell",
+          "width": 1440,
+          "descendants": {
+            "artist:wUJe6Y/artist:yE32Cq": {
+              "type": "ref",
+              "id": "dE0qwN",
+              "ref": "artist:eNXmbM",
+              "name": "Nav / Distribution",
+              "descendants": {
+                "artist:it6GEx": {
+                  "icon": "send"
+                },
+                "artist:9i1hx0": {
+                  "content": "Distribution"
+                }
+              }
+            },
+            "artist:wUJe6Y/artist:cQW2W1/artist:wU47I0": {
+              "icon": "moon"
+            },
+            "artist:wUJe6Y/artist:cQW2W1/artist:n1Vqlv": {
+              "content": "Dark"
+            },
+            "artist:Ni7iI8/artist:qAqwpx": {
+              "content": "Distribution"
+            },
+            "artist:Ni7iI8/artist:ZD0P3t/artist:vg489O": {
+              "content": "Create release"
+            },
+            "artist:Ni7iI8/artist:ZD0P3t/artist:wAdYtR": {
+              "icon": "plus"
+            },
+            "artist:QNgR6T": {
+              "type": "frame",
+              "id": "wuJemK",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 20,
+              "width": "fill_container",
+              "padding": [
+                36,
+                48,
+                48,
+                48
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "sE8DDm",
+                  "name": "Page Heading",
+                  "gap": 16,
+                  "alignItems": "end",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "UbRBBO",
+                      "name": "Text",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "oxyFgT",
+                          "ref": "artist:MgMQ2L",
+                          "name": "Distribution",
+                          "content": "Distribution"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "l60yaS",
+                          "ref": "artist:C5Ih8u",
+                          "name": "Where your releases are plan",
+                          "width": "fill_container",
+                          "textGrowth": "fixed-width",
+                          "content": "Where your releases are planned to go, and what stores report back."
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "nwh2cG",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / No partner",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "icon": "unplug"
+                    },
+                    "artist:EZZdAr": {
+                      "content": "No distribution partner yet"
+                    },
+                    "artist:lICt0a": {
+                      "enabled": false
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "1tob0M",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "JvFscy",
+                          "ref": "artist:C5Ih8u",
+                          "name": "No distribution partner is c",
+                          "width": "fill_container",
+                          "textGrowth": "fixed-width",
+                          "content": "No distribution partner is connected yet, so nothing has been sent to a streaming service. You can already plan stores and territories; delivery starts once a partner is connected."
+                        },
+                        {
+                          "type": "frame",
+                          "id": "E7bxNm",
+                          "name": "Flow",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "2oMpJE",
+                              "ref": "artist:YJv8x6",
+                              "name": "Your plan",
+                              "descendants": {
+                                "artist:TlyBAH": {
+                                  "content": "Your plan"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "ZO0Fx9",
+                              "ref": "artist:Ghhp15",
+                              "name": "Partner",
+                              "descendants": {
+                                "artist:ZBvIrE": {
+                                  "content": "Partner"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "IgzXIP",
+                              "ref": "artist:Ghhp15",
+                              "name": "Stores",
+                              "descendants": {
+                                "artist:ZBvIrE": {
+                                  "content": "Stores"
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "mHoBMf",
+                  "ref": "artist:ZqiZXM",
+                  "name": "Delivery plan",
+                  "width": "fill_container",
+                  "padding": 0,
+                  "descendants": {
+                    "artist:5uVeAv": {
+                      "type": "frame",
+                      "id": "rL66aj",
+                      "name": "Content",
+                      "layout": "vertical",
+                      "gap": 0,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "7OhOLL",
+                          "name": "State",
+                          "layout": "vertical",
+                          "gap": 14,
+                          "width": "fill_container",
+                          "padding": [
+                            40,
+                            24
+                          ],
+                          "alignItems": "start",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "xtUoCi",
+                              "ref": "artist:P2oa0L",
+                              "name": "No releases yet. Create a re",
+                              "width": "fill_container",
+                              "textGrowth": "fixed-width",
+                              "content": "No releases yet. Create a release to plan its delivery."
+                            },
+                            {
+                              "type": "ref",
+                              "id": "GEjGe8",
+                              "ref": "artist:WHXSr6",
+                              "name": "Button / Open Music",
+                              "descendants": {
+                                "artist:vg489O": {
+                                  "content": "Open Music"
+                                },
+                                "artist:wAdYtR": {
+                                  "icon": "arrow-right"
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 11200,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Dark"
+      },
+      "context": "/dashboard/distribution — Plans only: no distribution partner is connected, so every store reads Not sent or Not in the plan. Each row opens the release on Deliver."
+    },
+    {
+      "type": "frame",
+      "id": "Zd0dfM",
+      "name": "Artist / Distribution / Empty / Mobile",
+      "width": 390,
+      "height": "fit_content",
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "HOeQHU",
+          "ref": "artist:8H12ea",
+          "name": "Shell",
+          "width": 390,
+          "descendants": {
+            "artist:SIErRw": {
+              "type": "frame",
+              "id": "0t6evd",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 16,
+              "width": "fill_container",
+              "padding": [
+                12,
+                16,
+                40,
+                16
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "MMvboq",
+                  "name": "Page Heading",
+                  "gap": 16,
+                  "alignItems": "end",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "KCRvNZ",
+                      "name": "Text",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "Gavxx0",
+                          "ref": "artist:MgMQ2L",
+                          "name": "Distribution",
+                          "content": "Distribution"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "Jvv4WJ",
+                          "ref": "artist:C5Ih8u",
+                          "name": "Where your releases are plan",
+                          "width": "fill_container",
+                          "textGrowth": "fixed-width",
+                          "content": "Where your releases are planned to go, and what stores report back."
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "PZQ5ss",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / No partner",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "icon": "unplug"
+                    },
+                    "artist:EZZdAr": {
+                      "content": "No distribution partner yet"
+                    },
+                    "artist:lICt0a": {
+                      "enabled": false
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "rb4WcV",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "dxtWaI",
+                          "ref": "artist:C5Ih8u",
+                          "name": "No distribution partner is c",
+                          "width": "fill_container",
+                          "textGrowth": "fixed-width",
+                          "content": "No distribution partner is connected yet, so nothing has been sent to a streaming service. You can already plan stores and territories; delivery starts once a partner is connected."
+                        },
+                        {
+                          "type": "frame",
+                          "id": "g8x1M8",
+                          "name": "Flow",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "width": "fill_container",
+                          "alignItems": "start",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "46O8EO",
+                              "ref": "artist:YJv8x6",
+                              "name": "Your plan",
+                              "descendants": {
+                                "artist:TlyBAH": {
+                                  "content": "Your plan"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "b63uaY",
+                              "ref": "artist:Ghhp15",
+                              "name": "Partner",
+                              "descendants": {
+                                "artist:ZBvIrE": {
+                                  "content": "Partner"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "cuOlmn",
+                              "ref": "artist:Ghhp15",
+                              "name": "Stores",
+                              "descendants": {
+                                "artist:ZBvIrE": {
+                                  "content": "Stores"
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "8GO9Eb",
+                  "ref": "artist:ZqiZXM",
+                  "name": "Delivery plan",
+                  "width": "fill_container",
+                  "padding": 0,
+                  "descendants": {
+                    "artist:5uVeAv": {
+                      "type": "frame",
+                      "id": "7u6hih",
+                      "name": "Content",
+                      "layout": "vertical",
+                      "gap": 0,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "HlaBfp",
+                          "name": "State",
+                          "layout": "vertical",
+                          "gap": 14,
+                          "width": "fill_container",
+                          "padding": [
+                            40,
+                            24
+                          ],
+                          "alignItems": "start",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "5WkAtd",
+                              "ref": "artist:P2oa0L",
+                              "name": "No releases yet. Create a re",
+                              "width": "fill_container",
+                              "textGrowth": "fixed-width",
+                              "content": "No releases yet. Create a release to plan its delivery."
+                            },
+                            {
+                              "type": "ref",
+                              "id": "8AIV0y",
+                              "ref": "artist:WHXSr6",
+                              "name": "Button / Open Music",
+                              "descendants": {
+                                "artist:vg489O": {
+                                  "content": "Open Music"
+                                },
+                                "artist:wAdYtR": {
+                                  "icon": "arrow-right"
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 12740,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Dark"
+      },
+      "context": "/dashboard/distribution — Plans only: no distribution partner is connected, so every store reads Not sent or Not in the plan. Each row opens the release on Deliver."
+    }
+  ]
+}
