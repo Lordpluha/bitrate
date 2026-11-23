@@ -150,7 +150,7 @@ by the Expo workflow action.
 ### Database image
 - postgres_image.yml — builds infra/postgres (postgres:16-alpine + pgvector), smoke-tests the
   extension, scans it and pushes it to GHCR under the tag infra/docker-compose.prod.yaml pins.
-  Not part of a release: the tag is immutable unless re-published by hand (ADR-0077).
+  Not part of a release: the tag is immutable unless re-published by hand (ADR-0080).
 
 ### Release (changesets)
 
@@ -396,7 +396,7 @@ on the VPS. The develop-branch reference for each:
 
 The database is the one infrastructure image of our own: `ghcr.io/lordpluha/bitrate/postgres`
 under a fixed `16-pgvector<version>` tag, built by postgres_image.yml and not by a release, so
-a deploy only restarts the database when that tag is bumped (ADR-0077).
+a deploy only restarts the database when that tag is bumped (ADR-0080).
 
 Nothing else is published as an image. mobile-web is built and smoke-tested locally in
 mobile.yml but not pushed; build caches live under `cache/<app>:buildcache` and only develop

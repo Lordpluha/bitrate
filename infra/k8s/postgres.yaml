@@ -32,7 +32,7 @@ spec:
         seccompProfile: { type: RuntimeDefault }
       containers:
         - name: postgres
-          # postgres:16-alpine plus pgvector (infra/postgres, ADR-0077), built and imported by
+          # postgres:16-alpine plus pgvector (infra/postgres, ADR-0080), built and imported by
           # `task k8s:build`. The migrations need the extension; a stock image fails them.
           image: bitrate/postgres:dev
           imagePullPolicy: IfNotPresent

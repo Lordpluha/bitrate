@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
-import { renderForChannel } from '../channels/render.js'
-import { chunkKnowledgeDocument, parseHelpArticle } from '../knowledge/chunker.js'
+import { renderForChannel } from '../channels/render-for-channel.js'
+import { chunkKnowledgeDocument } from '../knowledge/chunk-knowledge-document.js'
+import { parseHelpArticle } from '../knowledge/parse-help-article.js'
 
 /**
  * Inputs that make a backtracking regular expression take quadratic time (CodeQL

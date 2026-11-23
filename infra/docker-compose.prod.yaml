@@ -83,6 +83,13 @@ x-api-env: &api-env
   OAUTH_GOOGLE_CLIENT_SECRET:
   OAUTH_FACEBOOK_APP_ID:
   OAUTH_FACEBOOK_APP_SECRET:
+  # Support assistant knowledge index (ADR-0075). Qdrant runs in this stack on the internal
+  # network only; the key is defence in depth, not the only barrier. Without OPENAI_API_KEY the
+  # API skips the knowledge ingest and logs why.
+  QDRANT_URL: ${QDRANT_URL:-http://qdrant:6333}
+  QDRANT_API_KEY: ${QDRANT_API_KEY:?QDRANT_API_KEY is required for the support knowledge index}
+  OPENAI_API_KEY:
+  SUPPORT_EMBED_MODEL:
 
 services:
   postgres:
@@ -127,6 +134,35 @@ services:
       retries: 3
     networks:
       - bitrate-network
+
+  # Vector index of the support assistant's knowledge base (ADR-0075). Derived data: the API
+  # rebuilds it from the help articles baked into its image, so the volume has no backup.
+  # Internal network only (no `ports:`), API key required, 512M as agreed in #567.
+  qdrant:
+    logging: *default-logging
+    image: qdrant/qdrant:v1.20.2-unprivileged
+    container_name: bitrate-qdrant-prod
+    restart: always
+    environment:
+      - QDRANT__SERVICE__API_KEY=${QDRANT_API_KEY:?QDRANT_API_KEY is required for the support knowledge index}
+      - QDRANT__TELEMETRY_DISABLED=true
+    volumes:
+      - qdrant_data:/qdrant/storage
+    healthcheck:
+      # The image ships no HTTP client; a TCP connect proves the REST port is listening.
+      test: ["CMD-SHELL", "bash -c ':> /dev/tcp/127.0.0.1/6333'"]
+      interval: 10s
+      timeout: 3s
+      retries: 6
+      start_period: 10s
+    networks:
+      - bitrate-network
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
 
   # S3-compatible object store for audio (ADR-0050) until the move to Cloudflare R2 (ADR-0072):
   # the application uses it while S3_ENDPOINT is unset, and it keeps its data afterwards as the
@@ -630,6 +666,9 @@ volumes:
   # SeaweedFS data (ADR-0050). NOT covered by any backup yet: audio written here
   # has no off-host copy. Accepted risk, recorded in ADR-0050.
   seaweedfs_data:
+    driver: local
+  # Support knowledge index (ADR-0075): rebuilt by the API from the help articles, no backup.
+  qdrant_data:
     driver: local
   backup_tools:
     driver: local

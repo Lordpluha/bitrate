@@ -6,6 +6,15 @@
   "license": "MIT",
   "author": "Lordpluha",
   "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "typesVersions": {
+    "*": {
+      "ai-sdk": [
+        "./dist/ai-sdk/index.d.ts"
+      ]
+    }
+  },
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -22,6 +31,7 @@
   "scripts": {
     "build": "rimraf dist && tsc -p tsconfig.build.json",
     "check-types": "tsc --noEmit",
+    "generate-types": "tsc -p tsconfig.build.json",
     "test": "vitest run",
     "test:unit": "vitest run --reporter=verbose",
     "format": "biome format --write"

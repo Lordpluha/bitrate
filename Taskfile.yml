@@ -42,7 +42,7 @@ tasks:
   # Recommended for native app development
   # ─────────────────────────────────────────
   infra:up:
-    desc: Start infra only — postgres, postgres_test, redis, seaweedfs object store
+    desc: Start infra only — postgres, postgres_test, redis, seaweedfs object store, qdrant
     cmds:
       - cmd: '{{.DC_INFRA}} up -d'
 
@@ -518,7 +518,7 @@ tasks:
   k8s:build:
     desc: Build app images for the local cluster and import them
     cmds:
-      # Postgres with pgvector (ADR-0077); the stock image cannot run the migrations.
+      # Postgres with pgvector (ADR-0080); the stock image cannot run the migrations.
       - docker build -t bitrate/postgres:dev infra/postgres
       - docker build -f apps/api/Dockerfile --target production -t bitrate/api:dev .
       - >-

@@ -40,6 +40,10 @@ x-api-env: &api-env
   S3_ACCESS_KEY: ${S3_ACCESS_KEY:-bitrateDevAccessKey}
   S3_SECRET_KEY: ${S3_SECRET_KEY:-bitrateDevSecretKeyChangeMe0001}
   S3_FORCE_PATH_STYLE: "true"
+  # Support knowledge index (ADR-0075). The ingest runs only when OPENAI_API_KEY is set in the
+  # shell or .env; without it the API logs that it skipped and moves on.
+  QDRANT_URL: http://qdrant:6333
+  OPENAI_API_KEY:
   # Whether `api` also consumes the audio-processing queue; `worker` forces it to "true" below.
   # Set it to false to rehearse the production cutover (apps/docs/docs/infrastructure/worker-rollout-runbook.md).
   AUDIO_PROCESSING_WORKER_ENABLED: ${AUDIO_PROCESSING_WORKER_ENABLED:-true}
@@ -48,7 +52,7 @@ services:
   # PostgreSQL Database
   postgres:
     # Postgres + pgvector, built from infra/postgres (alpine, so existing volumes stay valid) --
-    # the same Dockerfile production pulls from GHCR (ADR-0077).
+    # the same Dockerfile production pulls from GHCR (ADR-0080).
     image: bitrate-postgres:16-pgvector0.8.7
     build: ./postgres
     container_name: bitrate-postgres
@@ -107,6 +111,30 @@ services:
       retries: 3
     networks:
       - bitrate-network
+
+  # Support knowledge index (ADR-0075). Loopback only and no API key: development data, rebuilt
+  # by the API from apps/docs/docs/help on start. 512M as in production.
+  qdrant:
+    image: qdrant/qdrant:v1.20.2-unprivileged
+    container_name: bitrate-qdrant
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${QDRANT_PORT:-6333}:6333"
+    environment:
+      - QDRANT__TELEMETRY_DISABLED=true
+    volumes:
+      - qdrant_data:/qdrant/storage
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c ':> /dev/tcp/127.0.0.1/6333'"]
+      interval: 10s
+      timeout: 3s
+      retries: 6
+    networks:
+      - bitrate-network
+    deploy:
+      resources:
+        limits:
+          memory: 512M
 
   # S3-compatible object store for audio (ADR-0050). Single node. The S3 port is published on
   # loopback only, so an API started natively (`pnpm dev`) reaches it at http://localhost:8333
@@ -711,6 +739,8 @@ volumes:
   redis_data:
     driver: local
   seaweedfs_data:
+    driver: local
+  qdrant_data:
     driver: local
   prometheus_data:
     driver: local

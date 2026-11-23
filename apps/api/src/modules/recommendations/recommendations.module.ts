@@ -15,7 +15,7 @@ import { TasteExclusionsController } from './taste/taste-exclusions.controller'
 import { TasteExclusionsService } from './taste/taste-exclusions.service'
 
 /**
- * The recommendation system (docs/specs/recommendations.md, ADR-0077). Stage 1: the signals —
+ * The recommendation system (docs/specs/recommendations.md, ADR-0080). Stage 1: the signals —
  * finished plays, "Not interested" and taste exclusions — and their retention.
  */
 @Module({

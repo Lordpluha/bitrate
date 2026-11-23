@@ -225,6 +225,10 @@ jobs:
       - name: Build ncs-parser
         run: pnpm --filter @bitrate/ncs-parser run build
 
+      # ts-jest type-checks the support module against the package's compiled types (ADR-0074).
+      - name: Build support-core
+        run: pnpm --filter @bitrate/support-core run build
+
       - name: Run converter tests
         run: pnpm --filter @bitrate/converter run test
 
@@ -242,9 +246,15 @@ jobs:
           $COMPOSE up -d --wait seaweedfs
           $COMPOSE run --rm seaweedfs-init
 
+      # The support knowledge index (ADR-0075), from the same dev compose definition and image
+      # as production. Loopback port 6333 for the runner.
+      - name: Start Qdrant
+        run: docker compose -f infra/docker-compose.dev.yaml -f infra/docker-compose.ci.yaml up -d --wait qdrant
+
       - name: Run integration tests
         run: pnpm --filter @bitrate/api run test:int
         env:
+          QDRANT_INT_URL: http://127.0.0.1:6333
           # The dev compose defaults for the bucket-scoped application identity.
           S3_INT_ENDPOINT: http://127.0.0.1:8333
           S3_INT_BUCKET: bitrate-audio
@@ -253,6 +263,8 @@ jobs:
           # The email-code suite skips without it. Database 15 keeps its keys apart from the
           # app's; the suite only touches and deletes its own `test-<uuid>` keys anyway.
           EMAIL_CODE_TEST_REDIS_URL: redis://localhost:6379/15
+          # The playback-session suite runs the listener bucket's Lua script; same isolation.
+          PLAYBACK_TEST_REDIS_URL: redis://localhost:6379/15
 
       - name: Run e2e tests
         run: pnpm --filter @bitrate/api run test:e2e
