@@ -70,7 +70,7 @@ export function addShell(lib, nav) {
       Row({ name: 'Mobile Header', width: 390, height: 64, padding: [0, 12], gap: 8 }, [
         use('Button/Icon', { name: 'Menu' }, { icon: { icon: 'menu' } }),
         Row({ name: 'Brand', gap: 8, width: 'fill_container' }, [
-          use('Logo/Mark', { name: 'Mark', width: 28, height: 28 }),
+          use('Logo/Mark', { name: 'Mark' }),
           T('Bitrate', { fontSize: 18, fill: C.artistForeground }),
         ]),
         part('bell', use('Button/Icon', { name: 'Notifications' }, { icon: { icon: 'bell' } })),
@@ -109,7 +109,7 @@ export function addShell(lib, nav) {
     comp(
       'Shell/Desktop',
       Row({ name: 'Artist Shell', width: 1440, gap: 0, alignItems: 'start' }, [
-        part('sidebar', use('Sidebar', { name: 'Sidebar' })),
+        part('sidebar', use('Sidebar', { name: 'Sidebar', height: 'fill_container' })),
         Col({ name: 'Main', width: 'fill_container', gap: 0 }, [
           part('header', use('Header', { name: 'Header', width: 'fill_container' })),
           slot('content', { gap: 20, padding: [36, 48, 48, 48] }),

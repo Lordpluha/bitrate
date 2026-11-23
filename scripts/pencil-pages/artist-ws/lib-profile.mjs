@@ -53,7 +53,7 @@ export function addProfile(lib) {
             part('handle', small('@mirasol')),
             Row({ name: 'Country', gap: 6 }, [
               I('map-pin', { width: 13, height: 13, fill: C.artistTextSecondary }),
-              part('country', small('Poland', { width: 'fit_content' })),
+              part('country', small('Poland', { width: 'fit_content', textGrowth: 'auto' })),
             ]),
             part('bio', T('No bio yet.', { fontSize: 12, fill: C.artistForeground, ...wrap })),
             slot('links', { layout: 'horizontal', width: 'fit_content', gap: 6 }),
@@ -102,7 +102,14 @@ export function addProfile(lib) {
       Row({ name: 'Link Field', width: 520, gap: 10 }, [
         Row({ name: 'Service', width: 120, gap: 8 }, [
           part('icon', I('globe', { width: 15, height: 15, fill: C.artistIcon })),
-          part('label', small('Website', { width: 'fit_content', fill: C.artistForeground })),
+          part(
+            'label',
+            small('Website', {
+              width: 'fit_content',
+              textGrowth: 'auto',
+              fill: C.artistForeground,
+            }),
+          ),
         ]),
         Row(
           {

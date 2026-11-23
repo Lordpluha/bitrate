@@ -34,18 +34,21 @@ export function addDraft(lib) {
             ...paint.hairline(),
           },
           [
-            Col({ name: 'Order', gap: 2 }, [
-              use(
-                'Button/Icon',
-                { name: 'Move up', width: 26, height: 26 },
-                { icon: { icon: 'arrow-up' } },
-              ),
-              use(
-                'Button/Icon',
-                { name: 'Move down', width: 26, height: 26 },
-                { icon: { icon: 'arrow-down' } },
-              ),
-            ]),
+            part(
+              'order',
+              Col({ name: 'Order', gap: 2 }, [
+                use(
+                  'Button/Icon',
+                  { name: 'Move up', width: 26, height: 26 },
+                  { icon: { icon: 'arrow-up' } },
+                ),
+                use(
+                  'Button/Icon',
+                  { name: 'Move down', width: 26, height: 26 },
+                  { icon: { icon: 'arrow-down' } },
+                ),
+              ]),
+            ),
             part(
               'number',
               T('1', { fontSize: 13, fontWeight: '500', fill: C.artistTextSecondary }),
@@ -53,9 +56,9 @@ export function addDraft(lib) {
             Col({ name: 'Text', gap: 4, width: 'fill_container' }, [
               part('title', strong('Night Signal')),
               part('meta', small('Original · 3:42 · ISRC GB-BTR-26-00012')),
-              Row({ name: 'Status', gap: 6 }, [
+              Row({ name: 'Status', gap: 6, width: 'fill_container' }, [
                 I(icon, { width: 13, height: 13, fill: C[role] }),
-                part('status', small(status, { fill: C[role], width: 'fit_content' })),
+                part('status', small(status, { fill: C[role] })),
               ]),
               ...(variant === 'Uploading'
                 ? [
@@ -169,7 +172,7 @@ export function addDraft(lib) {
             use(
               'Progress',
               { name: 'Total', width: 'fill_container' },
-              { bar: { width: complete ? 520 : 390 } },
+              { bar: { width: complete ? 520 : 225 } },
             ),
           ),
         ]),

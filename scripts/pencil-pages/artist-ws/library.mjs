@@ -27,6 +27,13 @@ export function createLibrary() {
     const parts = {}
     const walk = (n) => {
       if (!n || typeof n !== 'object') return
+      /* a fixed-width text needs a width to wrap in; without one it collapses to zero */
+      if (
+        n.type === 'text' &&
+        n.textGrowth === 'fixed-width' &&
+        (n.width ?? 'fit_content') === 'fit_content'
+      )
+        throw new Error(`"${name}": text "${n.name}" is fixed-width without a width`)
       if (n._part) {
         parts[n._part] = n.id
         delete n._part

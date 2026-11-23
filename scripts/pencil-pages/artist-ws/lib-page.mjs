@@ -63,9 +63,13 @@ const SECTIONS = [
 const cellWidth = (b) =>
   typeof b.width === 'number'
     ? Math.max(180, b.width)
-    : /Stat|Nav\/(Item|Preference|Account)/.test(b.name)
-      ? 260
-      : 220
+    : /^Text\/(Hero|Section)/.test(b.name)
+      ? 640
+      : /^Landing\/(Eyebrow|Morph)/.test(b.name)
+        ? 340
+        : /Stat|Nav\/(Item|Preference|Account)/.test(b.name)
+          ? 260
+          : 220
 
 /** Lays the components out as the library page. */
 export function libraryPage(blocks) {
@@ -78,7 +82,7 @@ export function libraryPage(blocks) {
     let width = 0
     for (const b of items) {
       const w = cellWidth(b)
-      if (width && width + w > 1640) {
+      if (width && width + w > 1600) {
         rows.push(line)
         line = []
         width = 0
