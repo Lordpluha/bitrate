@@ -1,5 +1,5 @@
 /** How long a support conversation is kept after its last message (#567). */
-export const SUPPORT_RETENTION_DAYS = 90
+const SUPPORT_RETENTION_DAYS = 90
 
 /** The one Prisma call the purge makes; `PrismaService` satisfies it. */
 export interface ConversationPurger {
