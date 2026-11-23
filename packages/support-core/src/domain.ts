@@ -61,15 +61,3 @@ export type SupportEvent =
   | { type: 'state'; state: ConversationState; reason?: string }
   | { type: 'citation'; citation: Citation }
   | { type: 'done'; outcome: TurnOutcome; usage: TokenUsage; grounded: boolean }
-
-export function isLocale(value: string): value is Locale {
-  return (SUPPORTED_LOCALES as readonly string[]).includes(value)
-}
-
-export function isAudience(value: string): value is Audience {
-  return value === 'listener' || value === 'artist'
-}
-
-export function isKnowledgeAudience(value: string): value is KnowledgeAudience {
-  return value === 'all' || isAudience(value)
-}

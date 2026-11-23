@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { chunkKnowledgeDocument, KnowledgeSourceError, parseHelpArticle } from './chunker.js'
+import { KnowledgeSourceError } from './knowledge-source-error.js'
+import { parseHelpArticle } from './parse-help-article.js'
 
 const article = `---
 id: delete-account
@@ -53,59 +54,5 @@ describe('parseHelpArticle', () => {
   it('refuses draft text with unfilled [[placeholders]]', () => {
     const draft = article.replace('30 days', '[[DAYS]] days')
     expect(() => parseHelpArticle('listener/en/delete-account.md', draft)).toThrow(/placeholder/)
-  })
-})
-
-describe('chunkKnowledgeDocument', () => {
-  const base = {
-    slug: 'guide',
-    title: 'Guide',
-    audience: 'all' as const,
-    locale: 'en' as const,
-  }
-
-  it('keeps a short article in one chunk that carries its title and filters', () => {
-    const chunks = chunkKnowledgeDocument({ ...base, url: 'https://x.test', body: 'One.\n\nTwo.' })
-
-    expect(chunks).toEqual([
-      {
-        id: 'all/en/guide#0',
-        slug: 'guide',
-        title: 'Guide',
-        audience: 'all',
-        locale: 'en',
-        url: 'https://x.test',
-        text: 'Guide\n\nOne.\n\nTwo.',
-      },
-    ])
-  })
-
-  it('splits at section headings and keeps the heading in the chunk', () => {
-    const chunks = chunkKnowledgeDocument({
-      ...base,
-      body: 'Intro.\n\n## Sign in\n\nUse Google.\n\n## Delete\n\nEmail us.',
-    })
-
-    expect(chunks.map((chunk) => chunk.text)).toEqual([
-      'Guide\n\nIntro.',
-      'Guide — Sign in\n\nUse Google.',
-      'Guide — Delete\n\nEmail us.',
-    ])
-    expect(chunks.map((chunk) => chunk.id)).toEqual([
-      'all/en/guide#0',
-      'all/en/guide#1',
-      'all/en/guide#2',
-    ])
-  })
-
-  it('packs paragraphs up to the size limit without splitting one', () => {
-    const paragraph = 'word '.repeat(40).trim()
-    const chunks = chunkKnowledgeDocument(
-      { ...base, body: [paragraph, paragraph, paragraph].join('\n\n') },
-      { maxChars: 450 },
-    )
-
-    expect(chunks).toHaveLength(2)
-    for (const chunk of chunks) expect(chunk.text.length).toBeLessThanOrEqual(450)
   })
 })
