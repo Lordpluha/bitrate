@@ -2,6 +2,7 @@ import { writePage, setLibDir } from './kit.mjs'
 import { Shell, MShell } from './artist-ui.mjs'
 import { artistPages, releaseWizard, releasePages } from './pages-artist.mjs'
 import { artistPages2 } from './pages-artist2.mjs'
+import { artistPromotionPages } from './pages-artist-promotion.mjs'
 
 setLibDir('../../web-player-design/design-system/')
 const root = process.argv[2]
@@ -17,7 +18,7 @@ const wizard = Object.fromEntries(
     },
   ]),
 )
-const all = { ...artistPages, ...wizard, ...releasePages, ...artistPages2 }
+const all = { ...artistPages, ...wizard, ...releasePages, ...artistPages2, ...artistPromotionPages }
 let written = 0
 let frames = 0
 for (const [dir, spec] of Object.entries(all)) {

@@ -69,7 +69,7 @@ const summary = (items, actions) =>
     Divider(),
     ...actions,
   ])
-const releaseHead = (title, sub, status) =>
+export const releaseHead = (title, sub, status) =>
   Row({ name: 'Release Head', width: 'fill_container', gap: 16 }, [
     R('Media/Cover', { width: 64, height: 64, fill: img(ART.afterglow) }),
     Col({ gap: 4, width: 'fill_container' }, [
@@ -1212,13 +1212,15 @@ export const releaseWizard = {
     ],
   },
 }
-const wsShell = (crumb, action) => ({
+export const wsShell = (crumb, action) => ({
   nav: 'music',
   crumb: `Music / Afterglow${crumb ? ` / ${crumb}` : ''}`,
   action,
   actionIcon: null,
 })
-const wsTabs = (i) => Tabs(['Overview', 'Tasks', 'Feedback', 'Delivery', 'Versions', 'Activity'], i)
+const WS_TABS = ['Overview', 'Tasks', 'Feedback', 'Delivery', 'Versions', 'Activity', 'Promotion']
+export const PROMOTION_TAB = WS_TABS.indexOf('Promotion')
+export const wsTabs = (i) => Tabs(WS_TABS, i)
 export const releasePages = {
   'release-workspace': pair(
     'Release workspace',
