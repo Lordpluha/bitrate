@@ -1,0 +1,34 @@
+/// What happened to one model call, for quotas and for spotting a model that fails often.
+enum AiCallOutcome {
+  SUCCEEDED
+  /// The provider failed (network, overload, refusal); a fallback may have run instead.
+  FAILED
+  /// The output did not match its schema.
+  REJECTED_SCHEMA
+  /// The output stated facts absent from the generation context (spec AC-5).
+  REJECTED_UNGROUNDED
+}
+
+/// One billed model call (ADR-0076). Quotas sum `costMicroUsd` per artist per calendar month
+/// (UTC), so every call is written, including failed ones the provider still billed.
+model AiUsage {
+  id                String        @id @default(uuid(7)) @db.Uuid
+  artistId          String        @db.Uuid
+  /// The product feature that made the call; `promotion` for now.
+  feature           String
+  /// `plan`, `copy`, `translate` or `check` (ADR-0076 task routing).
+  task              String
+  provider          String
+  model             String
+  inputTokens       Int
+  cachedInputTokens Int           @default(0)
+  outputTokens      Int
+  /// Whole micro-dollars (US$ 1 = 1,000,000); integer so sums stay exact.
+  costMicroUsd      Int
+  outcome           AiCallOutcome
+  createdAt         DateTime      @default(now()) @db.Timestamptz(3)
+
+  artist Artist @relation(fields: [artistId], references: [id], onDelete: Cascade)
+
+  @@index([artistId, createdAt])
+}

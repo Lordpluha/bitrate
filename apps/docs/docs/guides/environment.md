@@ -127,6 +127,10 @@ Per-app файлы до контейнера тоже не доходят: ни 
 | `SMTP_PORT` | почта | `587` | SMTP-порт |
 | `HEALTH_CHECK_TIMEOUT_MS` | наблюдаемость | `2000` | Таймаут health-проверок (100–10000) |
 | `DEV_MAIL_LOG_TOKENS` | разработка | `false` | Логировать токены писем. В production обязан быть `false` |
+| `PROMOTION_AI_ENABLED` | AI | `false` | Включает AI-продвижение (ADR-0076). Пока выключено, генерация недоступна, а ключи не нужны |
+| `PROMOTION_MODEL_PLAN` · `_COPY` · `_TRANSLATE` · `_CHECK` | AI | см. `.env.example` | Модель задачи в формате `provider:model`; разрешены только `anthropic` и `mistral` |
+| `PROMOTION_MODEL_*_FALLBACK` | AI | см. `.env.example` | Резервная модель задачи; пустая строка — без резерва |
+| `PROMOTION_AI_MONTHLY_LIMIT_USD` | AI | `2` | Месячный лимит расходов на AI для одного артиста, в долларах |
 
 Имена кук сессии через окружение не настраиваются. Все куки живут на общем `COOKIE_DOMAIN`,
 поэтому у каждого типа аккаунта своя пара: `user_*` у плеера, `artist_*` у портала артистов,
@@ -150,6 +154,7 @@ Per-app файлы до контейнера тоже не доходят: ни 
 | `SMTP_HOST` | почта | SMTP-сервер. Без него письма сброса пароля пишутся в лог |
 | `METRICS_TOKEN` | наблюдаемость | Токен доступа к метрикам, минимум 32 символа |
 | `SENTRY_DSN` | наблюдаемость | DSN проекта API в Sentry. Без него SDK стартует отключённым |
+| `ANTHROPIC_API_KEY` · `MISTRAL_API_KEY` | AI | Ключи провайдеров AI-продвижения. Провайдер без ключа считается недоступным |
 
 ### Условно обязательные
 
@@ -161,6 +166,7 @@ Per-app файлы до контейнера тоже не доходят: ни 
 | `EMAIL_FROM` обязателен | задан `SMTP_HOST` |
 | `SMTP_USER` и `SMTP_PASS` только парой | задан любой из двух |
 | `DEV_MAIL_LOG_TOKENS` обязан быть `false` | `NODE_ENV=production` |
+| Ключ и цена есть у каждой модели из `PROMOTION_MODEL_*` (проверяет `PromotionModule` при старте, не `superRefine`) | `PROMOTION_AI_ENABLED=true` |
 
 ### Читаются в обход схемы
 
@@ -351,6 +357,18 @@ SMTP_PORT=587
 HEALTH_CHECK_TIMEOUT_MS=2000
 # development — must be false in production, or the process refuses to start
 DEV_MAIL_LOG_TOKENS=false
+# AI promotion (ADR-0076) — off until enabled; when on, every task's model must have a key
+PROMOTION_AI_ENABLED=false
+PROMOTION_MODEL_PLAN="anthropic:claude-sonnet-5-5"
+PROMOTION_MODEL_PLAN_FALLBACK="mistral:mistral-large-4"
+PROMOTION_MODEL_COPY="anthropic:claude-sonnet-5-5"
+PROMOTION_MODEL_COPY_FALLBACK="mistral:mistral-large-4"
+PROMOTION_MODEL_TRANSLATE="anthropic:claude-haiku-5-5"
+PROMOTION_MODEL_TRANSLATE_FALLBACK="mistral:mistral-small-4"
+PROMOTION_MODEL_CHECK="anthropic:claude-haiku-5-5"
+PROMOTION_MODEL_CHECK_FALLBACK="mistral:mistral-small-4"
+# monthly AI allowance per artist, in US dollars
+PROMOTION_AI_MONTHLY_LIMIT_USD=2
 
 # ══════════ 3. OPTIONAL, NO DEFAULT ══════════
 # Uncomment only together with a real value.
@@ -390,6 +408,9 @@ DEV_MAIL_LOG_TOKENS=false
 # mail — only as a pair: either one alone aborts startup
 #SMTP_USER=
 #SMTP_PASS=
+# AI promotion — the key of every provider a PROMOTION_MODEL_* names, once PROMOTION_AI_ENABLED=true
+#ANTHROPIC_API_KEY=
+#MISTRAL_API_KEY=
 ```
 
 ## Шаблон `.env` для `apps/web-player`
