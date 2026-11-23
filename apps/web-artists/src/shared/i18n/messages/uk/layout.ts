@@ -1,35 +1,26 @@
 export const layout = {
   'layout.customize': 'Налаштувати',
   'layout.customizeHint':
-    'Змінити порядок, розмір і видимість блоків на цій сторінці',
+    'Переміщуйте, змінюйте розмір і прибирайте блоки на цій сторінці',
   'layout.editingHint':
-    'Перетягніть назву, щоб перемістити блок. Змінюйте розмір за краї чи кут у сітці 12 × 12 або виберіть ширину й висоту зверху. «Авто» підлаштовує висоту. «Готово» збереже вигляд.',
-  'layout.rows': 'Висота «{tile}»',
-  'layout.auto': 'Авто',
-  'layout.resizeHeight': 'Змінити висоту «{tile}»',
-  'layout.resizeBoth': 'Змінити ширину й висоту «{tile}»',
-  'layout.rowCount': '{rows} із 12 рядків',
-  'layout.columns': 'Ширина «{tile}»',
-  'layout.resize': 'Змінити ширину «{tile}»',
-  'layout.columnCount': '{columns} із 12 колонок',
-  'layout.mobileHint':
-    'На вузькому екрані блоки підлаштовуються під екран. Вибрані ширина й висота застосовуються на ширших екранах.',
+    'Перетягніть блок у будь-яке місце. Тягніть за будь-який край чи кут, щоб змінити розмір. «Готово» збереже вигляд.',
   'layout.instructions':
-    'Щоб узяти блок, натисніть Пробіл або Enter. Переміщуйте стрілками, відпустіть Пробілом або Enter, Escape скасовує.',
+    'Стрілки переміщують блок. Shift + стрілки змінюють його розмір.',
+  'layout.mobileHint':
+    'Тут блоки стоять в одну колонку. Розставити їх можна на ширшому екрані.',
+  'layout.move': 'Перемістити «{tile}»',
+  'layout.pullUp': 'Підтягнути вгору',
+  'layout.remove': 'Прибрати «{tile}»',
+  'layout.add': 'Додати «{tile}»',
+  'layout.drawer.title': 'Додати блок',
+  'layout.drawer.empty':
+    'Усі блоки вже на сторінці. Приберіть блок хрестиком, і він з’явиться тут.',
+  'layout.willShrink': 'Зменшиться під вільне місце',
+  'layout.announce.position':
+    '«{tile}»: колонка {column}, рядок {row}, розмір {columns} × {rows}.',
   'layout.reset': 'Скинути до стандартного',
   'layout.done': 'Готово',
   'layout.saving': 'Зберігаємо…',
-  'layout.move': 'Перемістити «{tile}»',
-  'layout.size': 'Розмір «{tile}»',
-  'layout.size.S': 'Малий',
-  'layout.size.M': 'Середній',
-  'layout.size.L': 'Великий',
-  'layout.hide': 'Сховати «{tile}»',
-  'layout.show': 'Показати «{tile}»',
-  'layout.announce.picked': 'Узято «{tile}».',
-  'layout.announce.over': '«{tile}» на позиції {position} з {total}.',
-  'layout.announce.dropped': '«{tile}» поставлено на позицію {position}.',
-  'layout.announce.cancelled': 'Переміщення «{tile}» скасовано.',
   'layout.error.load':
     'Не вдалося завантажити ваш вигляд, тому показано стандартний.',
   'layout.error.save': 'Не вдалося зберегти вигляд. Спробуйте ще раз.',

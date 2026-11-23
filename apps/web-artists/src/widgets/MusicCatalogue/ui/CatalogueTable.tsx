@@ -51,9 +51,17 @@ function catalogueStatus(item: CatalogueItem) {
 export function CatalogueStatus({ item }: { item: CatalogueItem }) {
   const { t } = useI18n()
   return (
-    <span className="artist-music-badge" data-status={item.status}>
-      <Circle aria-hidden="true" className="size-3 shrink-0" />
-      {t(catalogueStatus(item))}
+    <span className="inline-flex flex-wrap items-center gap-1.5">
+      <span className="artist-music-badge" data-status={item.status}>
+        <Circle aria-hidden="true" className="size-3 shrink-0" />
+        {t(catalogueStatus(item))}
+      </span>
+      {item.hasPendingChanges && (
+        <span className="artist-music-badge" data-status="SUBMITTED">
+          <Circle aria-hidden="true" className="size-3 shrink-0" />
+          {t('releaseChanges.pendingBadge')}
+        </span>
+      )}
     </span>
   )
 }

@@ -5,6 +5,7 @@ import {
   type DeliveryDestination,
   DeliveryState,
   type Prisma,
+  ReleaseChangeStatus,
   ReleaseStatus,
   ReleaseTaskStatus,
 } from '@prisma/client'
@@ -28,6 +29,7 @@ type NotificationKind =
   | 'RELEASE_RELEASED'
   | 'PUBLISH_FAILED'
   | 'DELIVERY_LIVE'
+  | 'RELEASE_CHANGES_DECIDED'
 
 /** Which switchable category each derived notification belongs to. */
 const CATEGORY_OF = {
@@ -40,6 +42,7 @@ const CATEGORY_OF = {
   RELEASE_RELEASED: ArtistNotificationCategory.DELIVERY,
   PUBLISH_FAILED: ArtistNotificationCategory.DELIVERY,
   DELIVERY_LIVE: ArtistNotificationCategory.DELIVERY,
+  RELEASE_CHANGES_DECIDED: ArtistNotificationCategory.REVIEW,
 } as const satisfies Record<NotificationKind, ArtistNotificationCategory>
 
 interface ArtistNotification {
@@ -52,6 +55,9 @@ interface ArtistNotification {
   taskTitle?: string
   /** Set for delivery notifications. */
   destination?: DeliveryDestination
+  /** Set for decided change requests. */
+  approvedCount?: number
+  rejectedCount?: number
   at: Date
 }
 
@@ -79,17 +85,21 @@ export class ArtistNotificationsService {
     const owned = { ownerArtistId: artistId, deletedAt: null }
 
     // A switched-off category is not queried at all.
-    const [tasks, releases, deliveries] = await Promise.all([
+    const [tasks, releases, deliveries, changeRequests] = await Promise.all([
       muted.has(ArtistNotificationCategory.TASKS) ? none<DueTask>() : this.dueTasks(owned, now),
       this.releaseUpdates(owned, since, muted),
       muted.has(ArtistNotificationCategory.DELIVERY)
         ? none<DeliveryUpdate>()
         : this.deliveryUpdates(owned, since),
+      muted.has(ArtistNotificationCategory.REVIEW)
+        ? none<DecidedChangeRequest>()
+        : this.decidedChangeRequests(owned, since),
     ])
     const items = [
       ...tasks.flatMap((task) => taskNotification(task, now)),
       ...releases.flatMap(releaseNotification),
       ...deliveries.map(deliveryNotification),
+      ...changeRequests.map(changeRequestNotification),
     ]
     return toFeed(items, muted, artist.notificationState?.seenAt ?? null)
   }
@@ -170,6 +180,26 @@ export class ArtistNotificationsService {
     })
   }
 
+  /** Change requests staff finished deciding recently; ones the artist only withdrew are left out. */
+  private decidedChangeRequests(owned: OwnedRelease, since: Date): Promise<DecidedChangeRequest[]> {
+    const decided = [ReleaseChangeStatus.APPROVED, ReleaseChangeStatus.REJECTED]
+    return this.prisma.releaseChangeRequest.findMany({
+      where: {
+        release: owned,
+        closedAt: { gte: since },
+        changes: { some: { status: { in: decided } } },
+      },
+      orderBy: { closedAt: 'desc' },
+      take: NOTIFICATION_LIMIT,
+      select: {
+        id: true,
+        closedAt: true,
+        release: RELEASE_REF,
+        changes: { select: { status: true } },
+      },
+    })
+  }
+
   /** Failed deliveries and ones that went live recently. */
   private deliveryUpdates(owned: OwnedRelease, since: Date): Promise<DeliveryUpdate[]> {
     return this.prisma.releaseDelivery.findMany({
@@ -221,6 +251,13 @@ interface DeliveryUpdate {
   state: DeliveryState
   updatedAt: Date
   release: ReleaseRef
+}
+
+interface DecidedChangeRequest {
+  id: string
+  closedAt: Date | null
+  release: ReleaseRef
+  changes: { status: ReleaseChangeStatus }[]
 }
 
 const none = <T>(): Promise<T[]> => Promise.resolve([])
@@ -289,6 +326,23 @@ function deliveryNotification(delivery: DeliveryUpdate): ArtistNotification {
     releaseId: delivery.release.id,
     releaseTitle: delivery.release.title,
     at: delivery.updatedAt,
+  }
+}
+
+/** One notification per decided request; a rejection asks the artist to look. */
+function changeRequestNotification(request: DecidedChangeRequest): ArtistNotification {
+  const count = (status: ReleaseChangeStatus) =>
+    request.changes.filter((change) => change.status === status).length
+  const rejectedCount = count(ReleaseChangeStatus.REJECTED)
+  return {
+    id: `changes-${request.id}`,
+    kind: 'RELEASE_CHANGES_DECIDED',
+    actionRequired: rejectedCount > 0,
+    releaseId: request.release.id,
+    releaseTitle: request.release.title,
+    approvedCount: count(ReleaseChangeStatus.APPROVED),
+    rejectedCount,
+    at: request.closedAt ?? new Date(0),
   }
 }
 

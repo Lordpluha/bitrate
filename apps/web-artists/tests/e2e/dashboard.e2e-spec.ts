@@ -2302,6 +2302,8 @@ test('release list paginates and restores the selected page on reload', async ({
       cover: null,
       isDemo: false,
       trackCount: 0,
+      acceptsChanges: false,
+      hasPendingChanges: false,
       type: 'SINGLE',
       status: 'DRAFT',
       upc: null,

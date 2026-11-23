@@ -72,7 +72,10 @@ how to apply it day to day.
 | [0068](./0068-operator-api-process.md) | The operator API runs as its own process with its own contract, served from the admin panel's host with host-only staff cookies |
 | [0069](./0069-gsap-web-animation-standard.md) | GSAP is the only JavaScript animation library on web surfaces; CSS keeps hover, press and Base UI enter or exit |
 | [0070](./0070-artist-workspace-routes.md) | Every artist-only API route is under `/artists/`: the workspace under `/artists/me`, sign-in under `/artists/auth` |
+| [0071](./0071-reviewed-changes-to-published-releases.md) | Published releases change only through reviewed change requests, decided per change |
 | [0072](./0072-cloudflare-r2-production-storage-and-backups.md) | Production audio in Cloudflare R2; off-site backups (database every 6 h, audio daily) to a second R2 bucket with a separate token |
+| [0074](./0074-support-assistant-core-and-channels.md) | One framework-free support assistant core hosted by the API; web over SSE, messengers through webhook adapters and the worker; provider-agnostic models |
+| [0075](./0075-qdrant-for-support-knowledge.md) | The support knowledge index lives in Qdrant as rebuildable derived data; recommendation vectors stay in pgvector |
 
 Create new records from [`template.md`](./template.md). Accepted decisions are changed by
 a superseding ADR rather than silently rewriting history.
