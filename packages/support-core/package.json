@@ -6,6 +6,15 @@
   "license": "MIT",
   "author": "Lordpluha",
   "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "typesVersions": {
+    "*": {
+      "ai-sdk": [
+        "./dist/ai-sdk/index.d.ts"
+      ]
+    }
+  },
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
