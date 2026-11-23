@@ -49,7 +49,6 @@ export function DashboardOverview({
       className="artist-dash-grid"
       layout={layout}
       renderTile={renderTile}
-      variant="thirds"
     />
   )
 }

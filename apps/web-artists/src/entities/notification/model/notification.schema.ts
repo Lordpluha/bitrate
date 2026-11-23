@@ -32,11 +32,14 @@ const notificationSchema = z.object({
     'RELEASE_RELEASED',
     'PUBLISH_FAILED',
     'DELIVERY_LIVE',
+    'RELEASE_CHANGES_DECIDED',
   ]),
   actionRequired: z.boolean(),
   releaseId: z.uuid(),
   releaseTitle: z.string(),
   destination: z.enum(deliveryDestinations).optional(),
+  approvedCount: z.number().int().nonnegative().optional(),
+  rejectedCount: z.number().int().nonnegative().optional(),
   at: z.iso.datetime({ offset: true }),
   unread: z.boolean(),
 })
@@ -72,6 +75,11 @@ export function describeNotification(
       return t('notifications.kind.publishFailed')
     case 'DELIVERY_LIVE':
       return t('notifications.kind.deliveryLive', { store })
+    case 'RELEASE_CHANGES_DECIDED':
+      return t('notifications.kind.changesDecided', {
+        approved: item.approvedCount ?? 0,
+        rejected: item.rejectedCount ?? 0,
+      })
   }
 }
 

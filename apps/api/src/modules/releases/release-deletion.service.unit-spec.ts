@@ -3,9 +3,10 @@ import type { AlbumsService } from '@modules/albums/albums.service'
 import type { ReleaseTrackDeletionService } from '@modules/tracks/release-track-deletion.service'
 import { ConflictException } from '@nestjs/common'
 import type { Prisma } from '@prisma/client'
-import { prismaMock, resetPrismaMock } from '@test/mocks'
+import { prismaMock, resetPrismaMock, untypedSpy } from '@test/mocks'
 import { mockDeep, mockReset } from 'jest-mock-extended'
 import { RELEASE_ERRORS } from './errors'
+import type { ReleaseChangesService } from './release-changes.service'
 import { ReleaseDeletionService } from './release-deletion.service'
 
 const OWNER = '019a0000-0000-7000-8000-000000000001'
@@ -17,6 +18,7 @@ describe('release deletion', () => {
   const tx = mockDeep<Prisma.TransactionClient>()
   const tracks = mockDeep<ReleaseTrackDeletionService>()
   const albums = mockDeep<AlbumsService>()
+  const changes = mockDeep<ReleaseChangesService>()
   let service: ReleaseDeletionService
 
   beforeEach(() => {
@@ -24,6 +26,7 @@ describe('release deletion', () => {
     mockReset(tx)
     mockReset(tracks)
     mockReset(albums)
+    mockReset(changes)
     prismaMock.$transaction.mockImplementation(async (callback) => {
       if (typeof callback !== 'function') throw new Error('Expected transaction')
       return await callback(tx)
@@ -33,7 +36,7 @@ describe('release deletion', () => {
       albumId: null,
       tracks: [{ trackId: TRACK }],
     } as never)
-    service = new ReleaseDeletionService(prismaMock, tracks, albums)
+    service = new ReleaseDeletionService(prismaMock, tracks, albums, changes)
   })
 
   it('refuses while a compilation draft still uses one of its recordings', async () => {
@@ -59,6 +62,16 @@ describe('release deletion', () => {
     expect(tx.$queryRaw.mock.invocationCallOrder[0]).toBeLessThan(
       tx.artistTrackDraft.count.mock.invocationCallOrder[0] ?? 0,
     )
-    expect(tracks.remove).toHaveBeenCalledWith(tx, [TRACK], expect.any(Date))
+    expect(untypedSpy(tracks.remove)).toHaveBeenCalledWith(tx, [TRACK], expect.any(Date))
+  })
+
+  it('cancels changes waiting for review and discards their proposed covers after commit', async () => {
+    tx.artistTrackDraft.count.mockResolvedValue(0)
+    changes.cancelPending.mockResolvedValue(['releases/pending-covers/new.png'])
+
+    await service.remove(OWNER, ID, VERSION)
+
+    expect(untypedSpy(changes.cancelPending)).toHaveBeenCalledWith(tx, ID)
+    expect(changes.discardCovers).toHaveBeenCalledWith(['releases/pending-covers/new.png'])
   })
 })
