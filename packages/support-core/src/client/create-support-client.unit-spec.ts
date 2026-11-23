@@ -43,6 +43,15 @@ describe('createSupportClient', () => {
     expect(new Headers(calls[0]?.init.headers).get('x-support-token')).toBe('secret')
   })
 
+  it('keeps a tampered conversation id inside the support path', async () => {
+    const { fetch, calls } = fakeFetch(() => Response.json(conversation))
+    const client = createSupportClient({ baseUrl: 'https://api.test', fetch })
+
+    await client.load('../../me')
+
+    expect(calls[0]?.url).toBe('https://api.test/api/v1/support/conversations/..%2F..%2Fme')
+  })
+
   it('turns an error status into SupportClientError with that status', async () => {
     const { fetch } = fakeFetch(() => new Response(null, { status: 409 }))
     const client = createSupportClient({ baseUrl: 'https://api.test', fetch })

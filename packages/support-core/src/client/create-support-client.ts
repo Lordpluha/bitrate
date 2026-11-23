@@ -54,7 +54,7 @@ export function createSupportClient({ baseUrl, fetch: send = fetch }: SupportCli
     },
 
     async load(id: string, token?: string): Promise<SupportConversationView> {
-      const response = await request(`/${id}`, { method: 'GET' }, token)
+      const response = await request(`/${encodeURIComponent(id)}`, { method: 'GET' }, token)
       return toConversationView(await response.json())
     },
 
@@ -65,7 +65,11 @@ export function createSupportClient({ baseUrl, fetch: send = fetch }: SupportCli
       signal?: AbortSignal,
     ): AsyncGenerator<ClientSupportEvent> {
       const init: RequestInit = { method: 'POST', body: JSON.stringify({ text }) }
-      const response = await request(`/${id}/messages`, signal ? { ...init, signal } : init, token)
+      const response = await request(
+        `/${encodeURIComponent(id)}/messages`,
+        signal ? { ...init, signal } : init,
+        token,
+      )
       if (!response.body) return
       yield* readSupportStream(response.body)
     },
