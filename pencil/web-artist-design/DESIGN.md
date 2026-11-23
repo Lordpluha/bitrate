@@ -47,9 +47,10 @@ context.
 | Overlays | `workspace-search`, `notifications`, `account-switcher`, `mobile-menu` |
 | Promotion (planned) | `release-promotion`, `promotion-post`, `promotion-profile`, `promotion-overview` |
 
-Public, auth and promotion pages are on the artist library. `dashboard` and `music` still import the
-player's library (`ds`) until they are redrawn; the other workspace and overlay pages are still to be
-drawn.
+All pages import only the artist library. Drawn so far: the public pages, `dashboard`, `music`, the
+four overlays and the promotion pages; the release stages, `distribution`, `analytics`, `profile`
+and `settings` are still to be drawn. Overlays (modals, popovers, the phone drawer) are drawn in
+flow over the workspace shell.
 
 - **Generated, not hand-drawn.** `node scripts/pencil-pages/run-artist.mjs pencil/web-artist-design
   [page …]` writes them from `scripts/pencil-pages/pages/artist/` (`index.mjs` plus one module per
