@@ -137,7 +137,7 @@ Stored per artist; each field can be overridden for one generation.
   with SCCs). Requests carry only public profile and release fields. Mistral is the fallback with
   training opted out. DeepL API Pro is an allowed translation alternative, and translation uses
   the LLM route by default.
-- Generation runs as BullMQ jobs on an `ai` queue in the worker service. The UI tracks
+- Generation runs as BullMQ jobs on a `promotion` queue consumed by the API process. The UI tracks
   progress over the existing socket.io connection with polling as a fallback. Tokens are
   not streamed in v1.
 - Every call writes an `AiUsage` record: artist, task, provider, model, input, cached and
@@ -202,7 +202,7 @@ validation fails twice, 503 when no enabled provider is available.
 | AC-10 | The follower notification includes the artist message only when it was approved before release; otherwise it is unchanged | Notifications unit/e2e | Pending |
 | AC-11 | An approved countdown step shows the tile on the player's artist page until the release goes live | web-player test | Pending |
 | AC-12 | Every provider call writes an `AiUsage` record. A Free artist past the ceiling gets `AI_QUOTA_EXCEEDED` and the quota state | Unit + e2e | Pending |
-| AC-13 | No provider package is imported outside the promotion module's model adapter; switching a task's `provider:model` in config needs no code change | Lint rule (oxlint) + unit | Pending |
+| AC-13 | No provider package is imported outside the promotion module's model adapter; switching a task's `provider:model` in config needs no code change | Biome rule + unit | Pending |
 | AC-14 | Only approved providers (DPA, no training) can be enabled in production configuration, and requests contain no email, listener or payment data | Config validation test; unit test of the context builder | Pending |
 | AC-15 | The listed promotion events are recorded with a schema version | Unit | Pending |
 | AC-16 | Eval: the chosen model meets the agreed bar on 15–20 release fixtures (schema validity, no ungrounded claims, glossary preservation, judge score) | Eval report linked here | Pending |
@@ -235,7 +235,7 @@ Agreed with the product owner in the planning interview (2026-11-10 to 2026-11-1
 | D-15 | Internal channels in v1: follower message on the existing release notification, and the countdown tile. Pre-save later |
 | D-16 | Grounding: structured context only, a validator for ungrounded claims, input moderation, "Created with AI" marker, no auto-publishing |
 | D-17 | Stage 3 is a separate spec. Only the promotion events listed here are added now |
-| D-18 | BullMQ `ai` queue in the worker service, socket.io progress, no token streaming in v1, `AiUsage` accounting |
+| D-18 | BullMQ `promotion` queue (consumed by the API process, as release publishing is), socket.io progress, no token streaming in v1, `AiUsage` accounting |
 | D-19 | Pencil designs with all states come before UI code |
 | D-20 | The artist reviews translation quality. The eval checks translations automatically (glossary, placeholders, length, LLM judge), and the product tracks the edit rate and ratings |
 | D-21 | An approved step is tracked on `PromotionPlanStep` itself (state and due date), with no dependency on `ReleaseTask`. This replaces the first idea of creating a `ReleaseTask` on approval (interview question 12), because release tasks left the workspace UI on 2026-10-27 and their API may be removed ([release publishing](./release-publishing.md)). The approval-rate metric is unchanged |
@@ -263,8 +263,8 @@ and run through `.claude/scripts/run-heavy.py`.
    post editors, translations, calendar, and every state in AC-17. **Drafted in #577**;
    the countdown tile on the player's artist page is still to be drawn.
 5. **API, AI foundation**: the promotion module's model adapter on the AI SDK (task router,
-   `anthropic:` and `mistral:` providers, moderation, grounding validator), the `ai` queue in
-   the worker, `AiUsage`, quotas and the oxlint rule. Tests use a fake model (TDD per the
+   `anthropic:` and `mistral:` providers, moderation, grounding validator), the `promotion`
+   queue, `AiUsage`, quotas and the Biome import rule. Tests use a fake model (TDD per the
    project workflow).
 6. **API, promotion domain**: profile, plans and steps, posts, re-anchoring on date change,
    events, endpoints, Swagger decorators, regenerated `packages/contracts`.

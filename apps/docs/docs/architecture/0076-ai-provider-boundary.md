@@ -37,8 +37,8 @@ artist page (name, bio, genres, track titles), and Bitrate serves EU users.
 - **Same model access as ADR-0074.** Promotion calls models through the Vercel AI SDK. It uses
   structured output validated against a schema. Provider packages are imported only in
   `apps/api/src/modules/promotion/ai/`, the module's model adapter. The rest of the module
-  depends on that adapter's interface, and no controller calls a model. An oxlint JS plugin
-  beside `prisma-write-ownership` enforces the import rule.
+  depends on that adapter's interface, and no controller calls a model. A Biome `noRestrictedImports` override in
+  `apps/api/biome.json` enforces the import rule.
 - **Routing by task, from configuration.** Callers name a task, not a model: `A` plan
   generation, `B` copy, `C` translation, `D` moderation and validation. Each task has a
   `provider:model` string and a fallback in configuration (`PROMOTION_MODEL_A` …), so
@@ -58,8 +58,9 @@ artist page (name, bio, genres, track titles), and Bitrate serves EU users.
   (`legal/privacy-policy.md`, published at bitrate.me/legal/privacy) names each provider and
   the country where it processes data. The entry is added in the same change that switches
   promotion on, not earlier.
-- **Asynchronous.** Generation runs as BullMQ jobs on an `ai` queue in the worker service
-  ([ADR-0049](./0049-transcode-worker-process-boundary.md)), never inside an HTTP request.
+- **Asynchronous.** Generation runs as BullMQ jobs on a `promotion` queue, never inside an
+  HTTP request. The API process consumes it, as it does release publishing; the transcode
+  worker ([ADR-0049](./0049-transcode-worker-process-boundary.md)) stays audio-only.
 - **Every call is accounted for.** Each model call writes an `AiUsage` row with: artist, task,
   provider, model, input, cached and output tokens, cost, and outcome. The token counts come
   from the AI SDK's usage result. The promotion module owns that table
@@ -109,8 +110,9 @@ Consequences for the defaults in the spec:
   caching can apply.
 - Cost per artist is visible from the first call and can be compared against the
   [business model](../strategy/business-model.md).
-- The `ai` queue adds load to the worker service, so its concurrency is configured separately
-  from transcoding.
+- The `promotion` queue runs in the API process. Model calls wait on the network, not the CPU,
+  so they do not compete with audio work; if they ever load the API, the consumer can move to
+  the worker without changing the queue.
 - Out of scope: autonomous actions (Stage 5), embeddings and recommendations, and self-hosted
   models. Each needs its own ADR.
 
