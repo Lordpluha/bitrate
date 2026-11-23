@@ -40,12 +40,12 @@ export class SupportModelConfigError extends Error {
 }
 
 /** `provider:model`, as in `SUPPORT_CHAT_MODEL=anthropic:claude-haiku-5-5`. */
-export interface ParsedModelId {
+interface ParsedModelId {
   provider: string
   modelId: string
 }
 
-export function parseModelId(id: string): ParsedModelId {
+function parseModelId(id: string): ParsedModelId {
   const separator = id.indexOf(':')
   const provider = id.slice(0, separator)
   const modelId = id.slice(separator + 1).trim()
