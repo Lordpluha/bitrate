@@ -8,6 +8,7 @@ import {
   usePlayerStore,
   useStreamingPlayer,
 } from '@entities/Player'
+import { selectSingleKeyShortcuts, useSettingsStore } from '@entities/Settings'
 import { useTrackLike } from '@entities/Track'
 import { useI18n } from '@shared/i18n'
 import { ROUTES } from '@shared/routes'
@@ -50,6 +51,7 @@ export const usePlayerController = ({
     playlist,
   })
   const isVisible = Boolean(currentTrack)
+  const isSingleKeyEnabled = useSettingsStore(selectSingleKeyShortcuts)
 
   const router = useRouter()
   const openQueue = useCallback(() => router.push(ROUTES.queue), [router])
@@ -67,6 +69,7 @@ export const usePlayerController = ({
     currentTime: player.currentTime,
     duration: player.duration,
     isEnabled: isVisible,
+    isSingleKeyEnabled,
     onNext: playNext,
     onOpenQueue: openQueue,
     onPrevious: playPrevious,

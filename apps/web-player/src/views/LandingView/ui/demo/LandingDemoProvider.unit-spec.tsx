@@ -98,7 +98,8 @@ describe('landing demo blocks', () => {
     expect(like.getAttribute('aria-pressed')).not.toBe(wasLiked)
 
     fireEvent.click(
-      liked.getAllByRole('button', { name: /^Play / })[0] as Element,
+      /** A track row's play button: its visible number leads the name. */
+      liked.getAllByRole('button', { name: /^\d+\. Play / })[0] as Element,
     )
     await settle()
 

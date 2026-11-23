@@ -1,0 +1,97 @@
+<app-page-header
+  [eyebrow]="'releaseChanges.eyebrow' | transloco"
+  [title]="'releaseChanges.title' | transloco"
+  [subtitle]="'releaseChanges.subtitle' | transloco"
+/>
+
+<app-metric-strip>
+  <app-metric-tile
+    icon="lucideFilePen"
+    tone="warning"
+    [label]="'releaseChanges.kpi.open' | transloco"
+    [value]="openCount()"
+    [sub]="openCount() === null ? null : ('releaseChanges.kpi.openSub' | transloco)"
+    [loading]="countLoading()"
+  />
+</app-metric-strip>
+
+<app-table-panel>
+  <app-panel-bar panelBar>
+    <app-filter-menu
+      [label]="'releaseChanges.filter' | transloco"
+      [options]="statusOptions()"
+      [value]="status()"
+      [defaultValue]="'OPEN'"
+      (valueChange)="setStatus($event)"
+    />
+  </app-panel-bar>
+
+  <app-collection-status
+    [loading]="collection.loading() && collection.items().length === 0"
+    [failure]="failureText()"
+    [isEmpty]="collection.items().length === 0"
+    [emptyMessage]="'releaseChanges.empty' | transloco"
+    [retryLabel]="'ui.tryAgain' | transloco"
+    (retry)="retry()"
+  />
+
+  @if (collection.items().length > 0 && !collection.failure()) {
+    <ul class="flex flex-col gap-2.5 p-3">
+      @for (row of collection.items(); track row.id) {
+        <li>
+          <a
+            class="flex items-center gap-3 rounded-[18px] border border-glass-line bg-card/50 p-3.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+            [routerLink]="['/release-changes', row.id]"
+          >
+            @if (row.releaseCoverUrl) {
+              <img
+                class="size-10 shrink-0 rounded-[10px] object-cover"
+                [src]="row.releaseCoverUrl"
+                alt=""
+              />
+            } @else {
+              <span
+                class="grid size-10 shrink-0 place-items-center rounded-[10px] bg-foreground/8 text-muted-foreground"
+                aria-hidden="true"
+              >
+                <ng-icon name="lucideDisc3" />
+              </span>
+            }
+            <span class="flex min-w-0 flex-1 flex-col">
+              <span class="truncate font-semibold">{{ row.releaseTitle }}</span>
+              <span class="truncate text-xs text-muted-foreground">
+                {{ row.artistUsername }} ·
+                <time
+                  [attr.datetime]="row.createdAt.toISOString()"
+                  [title]="row.createdAt | localizedDate: 'dd.MM.yyyy HH:mm'"
+                  >{{ row.createdAt | elapsed }}</time
+                >
+              </span>
+            </span>
+            <span hlmBadge [variant]="row.pendingCount > 0 ? 'warning' : 'secondary'">
+              {{
+                row.pendingCount > 0
+                  ? ('releaseChanges.pending' | transloco: { count: row.pendingCount })
+                  : ('releaseChanges.changes' | transloco: { count: row.changeCount })
+              }}
+            </span>
+            <ng-icon
+              class="text-base text-muted-foreground"
+              name="lucideChevronRight"
+              aria-hidden="true"
+            />
+          </a>
+        </li>
+      }
+    </ul>
+  }
+
+  <app-paginator
+    panelFooter
+    [page]="collection.page()"
+    [pageCount]="collection.pageCount()"
+    [total]="collection.total()"
+    [disabled]="collection.loading()"
+    (goTo)="goToPage($event)"
+  />
+</app-table-panel>

@@ -34,7 +34,7 @@ export const ActivityPopover = () => {
     <Popover onOpenChange={setIsOpen} open={isOpen}>
       <PopoverTrigger
         aria-label={t('activity.title')}
-        className="rounded-full p-2 text-muted-foreground transition-colors hover:bg-surface hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        className="rounded-full p-2 text-muted-foreground transition-colors hover:bg-surface hover:text-foreground focus:outline-hidden focus-visible:ring-2 focus-visible:ring-ring"
       >
         <MembersIcon className="size-5 xl:size-4.5" />
       </PopoverTrigger>
@@ -147,7 +147,7 @@ export const ActivityPopover = () => {
         </div>
         <div className="border-t border-border p-2">
           <Link
-            className="block rounded-md py-2 text-center text-[13px] font-semibold text-primary transition-colors hover:bg-surface"
+            className="block rounded-md py-2 text-center text-[13px] font-semibold text-text-brand transition-colors hover:bg-surface"
             href={ROUTES.activity}
             onClick={() => setIsOpen(false)}
           >

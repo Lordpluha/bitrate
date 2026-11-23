@@ -43,6 +43,15 @@ export class MusicTrackEntity {
 
   @ApiProperty({ type: MusicTrackReleaseEntity, nullable: true })
   release: MusicTrackReleaseEntity | null
+  // Optional in the contract so clients built before these flags keep their schemas valid.
+  @ApiProperty({
+    required: false,
+    description: 'Whether changes can be proposed now (published, not taken down)',
+  })
+  acceptsChanges?: boolean
+
+  @ApiProperty({ required: false, description: 'Whether a proposed change is awaiting review' })
+  hasPendingChanges?: boolean
 }
 
 export class MusicReleaseEntity extends ReleaseEntity {
@@ -57,6 +66,15 @@ export class MusicReleaseEntity extends ReleaseEntity {
 
   @ApiProperty({ minimum: 0 })
   trackCount: number
+  // Optional in the contract so clients built before these flags keep their schemas valid.
+  @ApiProperty({
+    required: false,
+    description: 'Whether changes can be proposed now (published, not taken down)',
+  })
+  acceptsChanges?: boolean
+
+  @ApiProperty({ required: false, description: 'Whether a proposed change is awaiting review' })
+  hasPendingChanges?: boolean
 }
 
 export class MusicCountsEntity {

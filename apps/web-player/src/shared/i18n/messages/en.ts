@@ -51,6 +51,25 @@ export const en = {
   'settings.language': 'Language',
   'settings.language.description':
     'Choose the language used throughout the app',
+  'shell.skipToContent': 'Skip to content',
+  'shell.resizeLibrary': 'Resize the library',
+  'shell.resizeNowPlaying': 'Resize the now-playing panel',
+  'settings.keyboard': 'Keyboard',
+  'settings.keyboard.singleKey': 'Single-key shortcuts',
+  'settings.keyboard.singleKey.description':
+    'Letter and symbol keys control playback without Ctrl or ⌘. Turn this off if you use speech input or another tool that types single keys.',
+  'settings.keyboard.list': 'Keyboard shortcuts',
+  'settings.keyboard.column.action': 'Action',
+  'settings.keyboard.column.keys': 'Keys',
+  'settings.keyboard.action.playPause': 'Play or pause',
+  'settings.keyboard.action.seek': 'Back or forward 5 s (10 s with Shift)',
+  'settings.keyboard.action.skip': 'Previous or next track',
+  'settings.keyboard.action.volume': 'Volume down or up',
+  'settings.keyboard.action.mute': 'Mute or unmute',
+  'settings.keyboard.action.shuffle': 'Shuffle',
+  'settings.keyboard.action.repeat': 'Repeat',
+  'settings.keyboard.action.like': 'Like the track',
+  'settings.keyboard.action.queue': 'Open the queue',
   'settings.library': 'Your Library',
   'settings.library.compact': 'Use compact library layout',
   'settings.library.compact.description':
@@ -259,6 +278,20 @@ export const en = {
   'auth.login.failed.oauth': 'Social sign-in did not finish. Please try again.',
   'auth.login.failed.oauthExpired':
     'Your sign-in session expired. Please try again.',
+  'auth.login.failed.oauthAccountExists':
+    'An account with this email already exists. Sign in with your password and confirm your email first.',
+  'auth.login.failed.oauthAccountUnavailable':
+    'This account is no longer available.',
+  'auth.login.failed.oauthCancelled':
+    'Sign-in was cancelled. Choose a way to sign in to continue.',
+  'auth.login.failed.oauthEmailMissing':
+    'We did not receive an email address from that account. Allow access to your email, or sign in another way.',
+  'auth.login.failed.oauthEmailUnverified':
+    'That account has not confirmed its email address. Confirm it with the provider, or sign in another way.',
+  'auth.login.failed.oauthLegal':
+    'To create an account, accept the Terms of Use and Community Guidelines first.',
+  'auth.login.failed.oauthUnavailable':
+    'This sign-in option is not available yet. Use another way to sign in.',
   'auth.login.forgotPassword': 'Forgot password?',
   'auth.login.noAccount': "Don't have an account?",
   'auth.login.submitting': 'Logging in...',
@@ -488,9 +521,11 @@ export const en = {
   'player.repeatOne': 'Repeat one track',
   'player.repeatPlaylist': 'Repeat playlist',
   'player.seek': 'Seek playback',
+  'player.seekValue': '{elapsed} of {total}',
   'player.seekTrack': 'Seek track',
   'player.unmute': 'Unmute',
   'player.volume': 'Volume',
+  'player.volumeValue': '{percent}%',
   'playlist.actions': 'Playlist actions',
   'playlist.addedTo': 'Added to {title}',
   'playlist.changeView': 'Change track list view',
@@ -584,7 +619,6 @@ export const en = {
   'sidebar.credits': 'Credits',
   'sidebar.mainArtist': 'Main Artist',
   'sidebar.nowPlayingFrom': 'Now playing · {name}',
-  'sidebar.openArtist': 'Open {name} artist page',
   'sidebar.upNext': 'Up next',
   'stats.allTime': 'All time',
   'stats.artists': 'Artists',

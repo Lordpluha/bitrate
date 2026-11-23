@@ -9,12 +9,15 @@ export const Route = createFileRoute('/legal/$slug')({
     if (!document) throw notFound()
     return document
   },
-  /** The documents are drafts, so crawlers are told to skip them until they are reviewed. */
+  /** Draft documents are marked as such and kept out of search until they are reviewed. */
   head: ({ loaderData }) => ({
-    meta: [
-      { title: `${loaderData?.title ?? 'Legal'} (draft)` },
-      { name: 'robots', content: 'noindex, nofollow' },
-    ],
+    meta:
+      loaderData && !loaderData.draft
+        ? [{ title: loaderData.title }]
+        : [
+            { title: `${loaderData?.title ?? 'Legal'} (draft)` },
+            { name: 'robots', content: 'noindex, nofollow' },
+          ],
   }),
   component: LegalPage,
 })

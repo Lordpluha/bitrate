@@ -242,7 +242,11 @@ export type BitratePlayerLabels = {
   mute: string
   unmute: string
   volume: string
+  /** The volume slider's spoken value, from 0–100 (WCAG: a slider says what it means). */
+  volumeValue: (percent: number) => string
   seek: string
+  /** The seek slider's spoken value, from the `m:ss` elapsed and total times. */
+  seekValue: (elapsed: string, total: string) => string
   openFloating: string
   openQueue: string
   openFull: string

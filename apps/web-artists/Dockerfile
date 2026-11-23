@@ -11,60 +11,51 @@ ENV TURBO_TEAM=team_Ao32Preb1GI1Ohd56uSdfxEZ
 RUN npm install -g pnpm@12.7.0 && pnpm config set store-dir /pnpm/store
 WORKDIR /app
 
-# Stage 2: Dependencies
+# Stage 2: Prune
+# The only stage that sees the whole repository. `turbo prune --docker` writes out/json (the
+# package.json of @bitrate/web-artists and of each workspace package it depends on, plus a lockfile
+# cut down to those importers) and out/full (their sources). Every later stage copies from out/,
+# so no other app's dependencies are installed and no other app's source reaches a build layer.
+# Pinned to the root devDependency — bump both together.
+FROM base AS pruner
+RUN npm install -g turbo@2.11.7
+COPY . .
+RUN turbo prune @bitrate/web-artists --docker
+
+# Stage 3: Dependencies
 FROM base AS dependencies
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-COPY patches ./patches
-COPY scripts ./scripts
-COPY apps/web-artists/package.json ./apps/web-artists/
-COPY packages/tailwind/package.json ./packages/tailwind/
-COPY packages/ui-react/package.json ./packages/ui-react/
-COPY packages/svgr/package.json ./packages/svgr/
-COPY packages/svgr/bin ./packages/svgr/bin
-COPY packages/vite-svgr/package.json ./packages/vite-svgr/
-COPY packages/contracts/package.json ./packages/contracts/
-# pnpm's frozen-lockfile check validates every workspace importer in pnpm-lock.yaml has a
-# package.json on disk, not just the ones this app depends on — so every workspace member's
-# package.json has to be copied here, even packages this image never installs code from.
-COPY apps/admin/package.json ./apps/admin/
-COPY apps/api/package.json ./apps/api/
-COPY apps/desktop/package.json ./apps/desktop/
-COPY apps/docs/package.json ./apps/docs/
-COPY apps/mobile/package.json ./apps/mobile/
-COPY apps/web-player/package.json ./apps/web-player/
-COPY packages/converter/package.json ./packages/converter/
-COPY packages/ncs-parser/package.json ./packages/ncs-parser/
-COPY packages/player/package.json ./packages/player/
-COPY turbo.json ./
+COPY --from=pruner /app/out/json/ ./
+# pnpm links the svgr bin while installing, so the file it points at has to exist already.
+COPY --from=pruner /app/out/full/packages/svgr/bin ./packages/svgr/bin
+# The root postinstall runs these two; they return early under the SKIP_* flags below, but node
+# still has to find the files. turbo prune does not carry root-level scripts/.
+COPY scripts/setup-graphify.mjs scripts/setup-rtk.mjs ./scripts/
 RUN SKIP_GRAPHIFY_INSTALL=1 SKIP_RTK_INSTALL=1 pnpm install --frozen-lockfile
 
-# Stage 3: Development
+# Stage 4: Development
 FROM base AS development
-COPY --from=dependencies /app/node_modules ./node_modules
-COPY --from=dependencies /pnpm/store /pnpm/store
-COPY --from=dependencies /app/apps/web-artists/node_modules ./apps/web-artists/node_modules
-COPY --from=dependencies /app/packages/ui-react/node_modules ./packages/ui-react/node_modules
-COPY --from=dependencies /app/packages/vite-svgr/node_modules ./packages/vite-svgr/node_modules
+# node_modules — the root one and every per-package one pnpm created.
+COPY --from=dependencies /app/ ./
 
 # Only what `turbo run build --filter=@bitrate/ui-react` touches — its own source plus its
 # workspace deps (tailwind; vite-svgr, which itself depends on svgr) — resolved from src, not
-# dist, per each package's own exports. Kept ahead of the full `COPY . .` below so a change to
-# this app's own source, or to any other app/package, does not invalidate this layer and force
-# a cold ui-react rebuild on every unrelated PR.
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json ./
-COPY packages/ui-react ./packages/ui-react
-COPY packages/tailwind ./packages/tailwind
-COPY packages/vite-svgr ./packages/vite-svgr
-COPY packages/svgr ./packages/svgr
+# dist, per each package's own exports. Kept ahead of the full source copy below so a change to
+# this app's own source does not invalidate this layer and force a cold ui-react rebuild.
+# out/json carries no turbo.json; turbo refuses to run without the root one.
+COPY --from=pruner /app/out/full/turbo.json ./
+COPY --from=pruner /app/out/full/packages/ui-react ./packages/ui-react
+COPY --from=pruner /app/out/full/packages/tailwind ./packages/tailwind
+COPY --from=pruner /app/out/full/packages/vite-svgr ./packages/vite-svgr
+COPY --from=pruner /app/out/full/packages/svgr ./packages/svgr
 # CI runs the development image without host build output.
 RUN --mount=type=secret,id=turbo_token,env=TURBO_TOKEN \
     pnpm exec turbo run build --filter=@bitrate/ui-react
 
-COPY . .
+COPY --from=pruner /app/out/full/ ./
 EXPOSE 3002
 CMD ["pnpm", "--filter", "@bitrate/web-artists", "run", "dev"]
 
-# Stage 4: Build
+# Stage 5: Build
 FROM base AS build
 # Vite inlines import.meta.env at BUILD time, so this must be an ARG here, not a runtime ENV in
 # the production stage. The deployment variable is still called NEXT_PUBLIC_API_URL (shared with
@@ -74,14 +65,26 @@ ENV VITE_API_URL=${VITE_API_URL}
 # Public player address (the player's NEXT_PUBLIC_SITE_URL), for links to released albums.
 ARG VITE_PLAYER_URL
 ENV VITE_PLAYER_URL=${VITE_PLAYER_URL}
+# Sentry. The DSN is inlined into the browser bundle, so like the URLs above it is a build arg;
+# unset, the SDK starts disabled. SENTRY_RELEASE names the release the source maps attach to.
+# The auth token only enables the source map upload and arrives as a secret mount below, so it
+# never lands in the image's layer history.
+ARG VITE_SENTRY_DSN
+ENV VITE_SENTRY_DSN=${VITE_SENTRY_DSN}
+ARG VITE_SENTRY_ENVIRONMENT
+ENV VITE_SENTRY_ENVIRONMENT=${VITE_SENTRY_ENVIRONMENT}
+ARG SENTRY_RELEASE
+ENV SENTRY_RELEASE=${SENTRY_RELEASE}
 ENV NODE_ENV=production
+# This stage produces the deployable artifact, so vite.config.ts refuses to build unless
+# VITE_API_URL and VITE_PLAYER_URL are real public HTTPS origins. Without it a missing build arg
+# silently shipped the source's localhost fallbacks. Demanded here rather than on every
+# `vite build`: lint, typecheck, E2E and local builds legitimately have no public origin.
+ENV ENFORCE_DEPLOY_ENV=1
 
-COPY --from=dependencies /app/node_modules ./node_modules
-COPY --from=dependencies /pnpm/store /pnpm/store
-COPY . .
-COPY --from=dependencies /app/apps/web-artists/node_modules ./apps/web-artists/node_modules
-COPY --from=dependencies /app/packages/ui-react/node_modules ./packages/ui-react/node_modules
-COPY --from=dependencies /app/packages/vite-svgr/node_modules ./packages/vite-svgr/node_modules
+# node_modules (the root one and every per-package one pnpm created), then the pruned sources.
+COPY --from=dependencies /app/ ./
+COPY --from=pruner /app/out/full/ ./
 
 # Build приложения. Routed through turbo, not a plain pnpm script, so an unchanged source
 # tree restores dist/.output from the remote cache instead of rerunning the build; the
@@ -90,13 +93,24 @@ COPY --from=dependencies /app/packages/vite-svgr/node_modules ./packages/vite-sv
 RUN --mount=type=secret,id=turbo_token,env=TURBO_TOKEN \
     pnpm exec turbo run build --filter=@bitrate/ui-react
 RUN --mount=type=secret,id=turbo_token,env=TURBO_TOKEN \
+    --mount=type=secret,id=sentry_auth_token,env=SENTRY_AUTH_TOKEN \
     pnpm exec turbo run build --filter=@bitrate/web-artists
 
-# Stage 5: Production
+# Stage 6: Production
 # Nitro emits a self-contained bundle in .output — server, static assets and the runtime deps it
 # needs — so there is no prod-dependencies stage and no node_modules to copy.
 FROM base AS production
 ENV NODE_ENV=production
+# The SSR server's Sentry (src/instrument.server.ts) reads process.env at runtime first, so the
+# same build-time values are carried into the runtime image: browser and server then report to
+# one project, environment and release (the server has no other source for the release). A DSN
+# is public, it already ships in the client bundle.
+ARG VITE_SENTRY_DSN
+ARG VITE_SENTRY_ENVIRONMENT
+ARG SENTRY_RELEASE
+ENV SENTRY_DSN=${VITE_SENTRY_DSN}
+ENV SENTRY_ENVIRONMENT=${VITE_SENTRY_ENVIRONMENT}
+ENV SENTRY_RELEASE=${SENTRY_RELEASE}
 # node:26-alpine is rebuilt upstream only every few weeks, while Alpine ships fixes for its
 # packages (zlib, musl, ...) in between; upgrading here keeps the scan clean without waiting
 # for a new tag.

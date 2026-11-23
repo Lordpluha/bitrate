@@ -1,8 +1,9 @@
 import type { AppConfig } from '@common/config'
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals'
-import { InternalServerErrorException, UnauthorizedException } from '@nestjs/common'
+import { UnauthorizedException } from '@nestjs/common'
 import type { ConfigService } from '@nestjs/config'
 import { OAuthProviderClient, oauthUsername } from './oauth-provider.client'
+import { OAuthSignInError } from './oauth-sign-in.error'
 
 const CONFIG: Partial<Record<keyof AppConfig, string>> = {
   API_BASE_URL: 'https://api.example.com',
@@ -49,13 +50,30 @@ describe('OAuthProviderClient', () => {
     expect(params.get('client_id')).toBe(provider === 'google' ? 'google-id' : 'fb-id')
   })
 
-  it.each(['google', 'facebook'] as const)('refuses %s when it is not configured', (provider) => {
-    const unconfigured = new OAuthProviderClient(configOf({}))
+  it.each(['google', 'facebook'] as const)(
+    'reports %s as unavailable when it is not configured',
+    (provider) => {
+      const unconfigured = new OAuthProviderClient(configOf({}))
 
-    expect(() => unconfigured.authUrl(provider, 'auth/oauth', 'state')).toThrow(
-      InternalServerErrorException,
-    )
-  })
+      expect(() => unconfigured.authUrl(provider, 'auth/oauth', 'state')).toThrow(
+        expect.objectContaining({ reason: 'unavailable' }),
+      )
+    },
+  )
+
+  it.each(['google', 'facebook'] as const)(
+    'reports %s as unavailable when its secret is missing at the callback',
+    async (provider) => {
+      const withoutSecrets = new OAuthProviderClient(
+        configOf({ OAUTH_GOOGLE_CLIENT_ID: 'google-id', OAUTH_FACEBOOK_APP_ID: 'fb-id' }),
+      )
+
+      await expect(withoutSecrets.exchange(provider, 'code', 'auth/oauth')).rejects.toMatchObject({
+        reason: 'unavailable',
+      })
+      expect(fetchMock).not.toHaveBeenCalled()
+    },
+  )
 
   it('returns the verified Google profile', async () => {
     fetchMock
@@ -78,9 +96,9 @@ describe('OAuthProviderClient', () => {
         jsonResponse({ id: 'g-1', email: 'a@example.com', name: 'A', verified_email: false }),
       )
 
-    await expect(client.exchange('google', 'code', 'auth/oauth')).rejects.toThrow(
-      UnauthorizedException,
-    )
+    const failure = client.exchange('google', 'code', 'auth/oauth')
+    await expect(failure).rejects.toThrow(UnauthorizedException)
+    await expect(failure).rejects.toMatchObject({ reason: 'email_unverified' })
   })
 
   it('rejects a Facebook account without an email address', async () => {
@@ -88,18 +106,27 @@ describe('OAuthProviderClient', () => {
       .mockResolvedValueOnce(jsonResponse({ access_token: 'token' }))
       .mockResolvedValueOnce(jsonResponse({ id: 'f-1', name: 'F' }))
 
-    await expect(client.exchange('facebook', 'code', 'artists/auth/oauth')).rejects.toThrow(
-      'Facebook account did not provide an email address',
-    )
+    const failure = client.exchange('facebook', 'code', 'artists/auth/oauth')
+    await expect(failure).rejects.toThrow('Facebook account did not provide an email address')
+    await expect(failure).rejects.toBeInstanceOf(OAuthSignInError)
+    await expect(failure).rejects.toMatchObject({ reason: 'email_missing' })
   })
 
   it('rejects a code the provider does not exchange for a token', async () => {
     fetchMock.mockResolvedValueOnce(jsonResponse({ error: 'invalid_grant' }))
 
-    await expect(client.exchange('google', 'bad-code', 'auth/oauth')).rejects.toThrow(
-      'Failed to exchange Google OAuth code',
-    )
+    const failure = client.exchange('google', 'bad-code', 'auth/oauth')
+    await expect(failure).rejects.toThrow('Failed to exchange Google OAuth code')
+    await expect(failure).rejects.toMatchObject({ reason: 'exchange_failed' })
     expect(fetchMock).toHaveBeenCalledTimes(1)
+  })
+
+  it('reports a Facebook code that does not exchange for a token as a failed exchange', async () => {
+    fetchMock.mockResolvedValueOnce(jsonResponse({ error: { message: 'bad code' } }))
+
+    await expect(client.exchange('facebook', 'bad-code', 'auth/oauth')).rejects.toMatchObject({
+      reason: 'exchange_failed',
+    })
   })
 })
 

@@ -80,6 +80,23 @@ updates:
           - "@tailwindcss/*"
           - "@types/react"
           - "@types/react-dom"
+    # Held back until each gets its own migration PR (found while combining #560–#565
+    # in #578; Dependabot re-proposed them in #580). Remove an entry once that PR lands.
+    ignore:
+      # TS 7 removes baseUrl and moduleResolution=node10 (api, web-player, web-artists,
+      # ui-react, ncs-parser, the @docusaurus/tsconfig preset), drops the JS compiler
+      # API used by an api test helper, and svelte-check needs a dual TS 6 + 7 install.
+      - dependency-name: "typescript"
+        versions: [">=7.0.0"]
+      # jsdom 31 serializes inline styles wrongly (min-width/min-height -> a
+      # non-existent min-size, flex-direction/flex-wrap -> flex-flow), which breaks
+      # the ui-react carousel and resizable-panels snapshots.
+      - dependency-name: "jsdom"
+        versions: [">=31.0.0"]
+      # 3.7.1 keeps leading-none before text-sm, so the ui-react Label drops to a 1x
+      # line height and every labelled field shifts; needs a visual review first.
+      - dependency-name: "tailwind-merge"
+        versions: [">=3.7.1"]
 
   - package-ecosystem: cargo
     directory: "/apps/desktop/src-tauri"

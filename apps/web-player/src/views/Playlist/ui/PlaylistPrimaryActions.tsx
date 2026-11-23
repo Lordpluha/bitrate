@@ -57,7 +57,7 @@ export const PlaylistPrimaryActions = ({
             aria-pressed={playback.isShuffled}
             className={
               playback.isShuffled
-                ? 'text-primary transition-colors hover:text-primary-hover'
+                ? 'text-text-brand transition-colors hover:text-primary-hover'
                 : 'transition-colors hover:text-foreground'
             }
             onClick={playback.handleShufflePlaylist}

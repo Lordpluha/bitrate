@@ -45,7 +45,7 @@ export const NotificationItem = ({ notification }: NotificationItemProps) => {
   const Icon = ICON_BY_TYPE[notification.type]
   const isUnread = !notification.readAt
   const className = cn(
-    'flex w-full items-center gap-3.5 rounded-[10px] px-4 py-3.5 text-left transition-colors hover:bg-surface focus:outline-none focus-visible:ring-2 focus-visible:ring-ring',
+    'flex w-full items-center gap-3.5 rounded-[10px] px-4 py-3.5 text-left transition-colors hover:bg-surface focus:outline-hidden focus-visible:ring-2 focus-visible:ring-ring',
     isUnread && 'bg-muted',
   )
   const markRead = () => {

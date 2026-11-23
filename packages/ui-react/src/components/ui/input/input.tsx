@@ -13,7 +13,7 @@ export const inputVariants = cva(
         contrast:
           'border-input-border bg-input-contrast-surface text-input-contrast-foreground focus-visible:ring-ring',
         black:
-          'border-neutral-600 bg-black-800 text-white placeholder:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:border-transparent',
+          'border-neutral-600 bg-black-800 text-white placeholder:text-white focus:outline-hidden focus-visible:ring-2 focus-visible:ring-black focus-visible:border-transparent',
         search: 'bg-background-elevated text-text placeholder:text-text-subdued rounded-full h-12',
       },
     },

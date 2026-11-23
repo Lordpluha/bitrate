@@ -38,6 +38,27 @@ describe('<bitrate-player>', () => {
     expect(element.shadowRoot?.querySelector('input[type="range"]')).not.toBeNull()
   })
 
+  it('gives the seek and volume sliders a spoken value, which the host can translate', async () => {
+    const { BITRATE_PLAYER_TAG_NAME, defineBitratePlayer } = await import('./index')
+    await defineBitratePlayer()
+
+    const element = document.createElement(BITRATE_PLAYER_TAG_NAME) as BitratePlayerElement
+    document.body.append(element)
+    const valueTexts = () =>
+      [...(element.shadowRoot?.querySelectorAll('input[type="range"]') ?? [])].map((input) =>
+        input.getAttribute('aria-valuetext'),
+      )
+
+    await expect.poll(valueTexts).toEqual(['0:00 of 0:00', '100%'])
+
+    element.labels = {
+      seekValue: (elapsed, total) => `${elapsed} з ${total}`,
+      volumeValue: (percent) => `Гучність ${percent} відсотків`,
+    }
+
+    await expect.poll(valueTexts).toEqual(['0:00 з 0:00', 'Гучність 100 відсотків'])
+  })
+
   it('hides the quality selector with a single rendition, shows it with more than one', async () => {
     const { BITRATE_PLAYER_TAG_NAME, defineBitratePlayer } = await import('./index')
     await defineBitratePlayer()

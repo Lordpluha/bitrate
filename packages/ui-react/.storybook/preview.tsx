@@ -51,7 +51,8 @@ const preview: Preview = {
         date: /Date$/i,
       },
     },
-    a11y: { test: 'todo' },
+    /** Violations fail: `pnpm test:a11y` runs every story through axe in all three themes. */
+    a11y: { test: 'error' },
   },
 }
 

@@ -1,5 +1,5 @@
 # See ADR-0044. Every target here is a service in the `observability` Compose profile of
-# infra/docker-compose.preprod.yaml — this file is never used outside that profile.
+# infra/docker-compose.dev.yaml — this file is never used outside that profile.
 global:
   scrape_interval: 15s
   evaluation_interval: 15s
@@ -10,10 +10,10 @@ scrape_configs:
   #
   # Prometheus reads this file as a static bind mount — it does not interpolate `${VAR}` from
   # the environment the way Compose does with the compose YAML itself, so this cannot read
-  # METRICS_TOKEN from .env the way infra/docker-compose.preprod.yaml's api service does.
+  # METRICS_TOKEN from .env the way infra/docker-compose.dev.yaml's api service does.
   # `dev-metrics-token-local-only-0001` is the api service's own METRICS_TOKEN default in that file (see the
   # api service's environment block) — a fixed, non-secret local-dev value, in keeping with
-  # this whole file's admin/admin-style preprod defaults. Overriding METRICS_TOKEN for the api
+  # this whole file's admin/admin-style dev defaults. Overriding METRICS_TOKEN for the api
   # service without updating this value breaks the scrape with 401s, silently (Prometheus logs
   # it as a normal failed scrape, not a startup error) — that is the one thing to remember if
   # this token is ever changed.
@@ -59,7 +59,7 @@ scrape_configs:
 
   # Host-level CPU/memory/disk — network-interface figures here reflect this container's own
   # veth, not the host's real traffic; see node-exporter's own comment in
-  # docker-compose.preprod.yaml for why, and use cadvisor's per-container network panels for
+  # docker-compose.dev.yaml for why, and use cadvisor's per-container network panels for
   # real network load instead.
   - job_name: node
     static_configs:

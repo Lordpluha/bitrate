@@ -60,7 +60,8 @@ describe('ArtistView', () => {
         name: 'Your next release starts here.',
       }),
     )
-    for (const name of ['Create your release', 'Start a new release']) {
+    /** The cover's name leads with the action, then its visible text (WCAG 2.5.3). */
+    for (const name of ['Create your release', /^Start a new release:/]) {
       expect(finale.getByRole('link', { name })).toHaveAttribute(
         'href',
         '/registration',

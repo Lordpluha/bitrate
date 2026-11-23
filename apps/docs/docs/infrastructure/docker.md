@@ -12,22 +12,30 @@ Docker Compose files live in `infra/`:
 
 | File | Purpose |
 |------|---------|
-| `infra/docker-compose.dev.yaml` | Minimal — postgres + redis only (~320 MB). Use with native app dev. |
-| `infra/docker-compose.preprod.yaml` | Full development stack — all apps in containers. |
+| `infra/docker-compose.dev.yaml` | Local development. Without a profile: infrastructure only (postgres, postgres_test, redis, SeaweedFS) for native app dev. `--profile apps`: every app in containers too. |
 | `infra/docker-compose.prod.yaml` | Production stack with nginx reverse proxy. |
 
 ## 📦 Services
 
-### Development Stack (`docker-compose.preprod.yaml`)
+### Development Stack (`docker-compose.dev.yaml`)
 
 ```yaml
 services:
-  postgres:     # PostgreSQL 16 database
-  redis:        # Cache & sessions
-  api:          # NestJS backend
-  web:          # Next.js frontend (web-player)
-  mobile:       # React Native / Expo bundler  [--profile mobile]
-  desktop:      # Vite dev server (UI only)    [--profile desktop]
+  postgres:       # PostgreSQL 16 database
+  postgres_test:  # Test database on port 5433
+  redis:          # Cache & sessions
+  seaweedfs:      # S3 object store for audio (127.0.0.1:8333)
+  api:            # NestJS backend                [--profile apps]
+  worker:         # Audio transcode worker        [--profile apps]
+  admin-api:      # Operator API                  [--profile apps]
+  web-player:     # Next.js frontend              [--profile apps]
+  web-artists:    # TanStack Start artist app     [--profile apps]
+  admin:          # Angular admin panel           [--profile apps]
+  mobile:         # React Native / Expo bundler   [--profile mobile]
+  desktop:        # Vite dev server (UI only)     [--profile desktop]
+  docs:           # Docusaurus                    [--profile docs]
+  nginx:          # Reverse proxy                 [--profile production]
+  # prometheus, grafana, loki, ...                [--profile observability]
 ```
 
 ### Production Services (`docker-compose.prod.yaml`)
@@ -46,7 +54,7 @@ services:
 ### Recommended: minimal infra + native apps
 
 ```bash
-# Start postgres + redis only
+# Start the infrastructure only (no profile)
 docker compose -f infra/docker-compose.dev.yaml up -d
 
 # Run apps natively
@@ -57,21 +65,21 @@ pnpm dev
 
 ```bash
 # First run (build images, migrate, seed)
-docker compose -f infra/docker-compose.preprod.yaml up -d --build
-docker compose -f infra/docker-compose.preprod.yaml exec api pnpm --filter @bitrate/api run db:migration:start
-docker compose -f infra/docker-compose.preprod.yaml exec api pnpm --filter @bitrate/api run seed
+docker compose -f infra/docker-compose.dev.yaml --profile apps up -d --build
+docker compose -f infra/docker-compose.dev.yaml --profile apps exec api pnpm --filter @bitrate/api run db:migration:start
+docker compose -f infra/docker-compose.dev.yaml --profile apps exec api pnpm --filter @bitrate/api run seed
 
 # Subsequent runs
-docker compose -f infra/docker-compose.preprod.yaml up -d
+docker compose -f infra/docker-compose.dev.yaml --profile apps up -d
 
 # Stop
-docker compose -f infra/docker-compose.preprod.yaml down
+docker compose -f infra/docker-compose.dev.yaml --profile apps down
 ```
 
 ### Via task (cross-platform shortcut)
 
 ```bash
-task infra:up       # minimal: postgres + redis
+task infra:up       # infrastructure only
 task dev:up         # full dev stack
 task init           # first-time: build + migrate + seed
 task dev:down       # stop
@@ -115,7 +123,7 @@ redis:
 ### Container Management
 
 ```bash
-DC="docker compose -f infra/docker-compose.preprod.yaml"
+DC="docker compose -f infra/docker-compose.dev.yaml --profile apps"
 
 # View running containers
 $DC ps
@@ -139,7 +147,7 @@ $DC down -v
 ### Exec Commands
 
 ```bash
-DC="docker compose -f infra/docker-compose.preprod.yaml"
+DC="docker compose -f infra/docker-compose.dev.yaml --profile apps"
 
 # Run migrations
 $DC exec api pnpm --filter @bitrate/api run db:migration:start
@@ -154,7 +162,7 @@ $DC exec postgres psql -U admin bitrate
 ### Build & Rebuild
 
 ```bash
-DC="docker compose -f infra/docker-compose.preprod.yaml"
+DC="docker compose -f infra/docker-compose.dev.yaml --profile apps"
 
 # Build specific service
 $DC build api
@@ -175,7 +183,7 @@ $DC build --no-cache api
 docker compose -f infra/docker-compose.dev.yaml up -d
 
 # Full stack
-docker compose -f infra/docker-compose.preprod.yaml up -d
+docker compose -f infra/docker-compose.dev.yaml --profile apps up -d
 ```
 
 ### 2. Run Apps Locally
@@ -191,16 +199,16 @@ Mobile and Desktop services use Docker Compose profiles:
 
 ```bash
 # Mobile (Metro Bundler + Expo tunnel)
-docker compose -f infra/docker-compose.preprod.yaml --profile mobile up -d mobile
+docker compose -f infra/docker-compose.dev.yaml --profile apps --profile mobile up -d mobile
 # Open http://localhost:19000
 
 # Desktop (Vite only, no Tauri)
-docker compose -f infra/docker-compose.preprod.yaml --profile desktop up -d desktop
+docker compose -f infra/docker-compose.dev.yaml --profile apps --profile desktop up -d desktop
 # Open http://localhost:1420
 
 # Stop profile containers
-docker compose -f infra/docker-compose.preprod.yaml --profile mobile down
-docker compose -f infra/docker-compose.preprod.yaml --profile desktop down
+docker compose -f infra/docker-compose.dev.yaml --profile apps --profile mobile down
+docker compose -f infra/docker-compose.dev.yaml --profile apps --profile desktop down
 ```
 
 ## 🔍 Debugging
@@ -208,7 +216,7 @@ docker compose -f infra/docker-compose.preprod.yaml --profile desktop down
 ### View Logs
 
 ```bash
-DC="docker compose -f infra/docker-compose.preprod.yaml"
+DC="docker compose -f infra/docker-compose.dev.yaml --profile apps"
 
 $DC logs -f             # all services
 $DC logs -f api         # specific service
@@ -218,7 +226,7 @@ $DC logs --tail=100 api # last 100 lines
 ### Inspect Container
 
 ```bash
-DC="docker compose -f infra/docker-compose.preprod.yaml"
+DC="docker compose -f infra/docker-compose.dev.yaml --profile apps"
 
 $DC exec api env        # environment variables
 $DC exec api ps aux     # processes
@@ -228,7 +236,7 @@ $DC exec api ls -la /app
 ### Network Issues
 
 ```bash
-DC="docker compose -f infra/docker-compose.preprod.yaml"
+DC="docker compose -f infra/docker-compose.dev.yaml --profile apps"
 
 docker network ls
 $DC exec api ping postgres
@@ -239,7 +247,7 @@ $DC exec api ping postgres
 ### Clear All Data
 
 ```bash
-docker compose -f infra/docker-compose.preprod.yaml down -v
+docker compose -f infra/docker-compose.dev.yaml --profile apps down -v
 # Or via task (with prompt):
 task dev:clean
 ```
@@ -258,7 +266,7 @@ task prod:up
 
 ### Environment Variables
 
-The `dev` and `preprod` stacks default every variable, so they need no env file. `prod`
+The dev stack defaults every variable, so it needs no env file. `prod`
 defaults nothing on purpose — `DOMAIN`, `DATABASE_URL`, `JWT_SECRET`, `POSTGRES_*`,
 `REDIS_PASSWORD`, `WEB_HOST` and `NEXT_PUBLIC_*` come from the deploying environment
 (GitHub environment secrets in the deploy workflow, exported shell variables for a manual
@@ -300,7 +308,7 @@ kill -9 <PID>
 ### Container Won't Start
 
 ```bash
-DC="docker compose -f infra/docker-compose.preprod.yaml"
+DC="docker compose -f infra/docker-compose.dev.yaml --profile apps"
 $DC logs api
 $DC build --no-cache api
 $DC up -d api
@@ -309,7 +317,7 @@ $DC up -d api
 ### Database Connection Failed
 
 ```bash
-DC="docker compose -f infra/docker-compose.preprod.yaml"
+DC="docker compose -f infra/docker-compose.dev.yaml --profile apps"
 $DC ps postgres
 $DC logs postgres
 $DC restart postgres

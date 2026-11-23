@@ -35,7 +35,7 @@ export const NotFoundView = () => {
       <Logo href={ROUTES.main} wordmark />
       <p
         aria-hidden="true"
-        className="font-[family-name:var(--font-landing-display)] text-[54px] leading-none font-bold text-primary"
+        className="font-[family-name:var(--font-landing-display)] text-[54px] leading-none font-bold text-text-brand"
       >
         404
       </p>

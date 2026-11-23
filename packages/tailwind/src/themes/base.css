@@ -43,6 +43,10 @@
   /* Destructive (delete/remove) action surface. Same value as `error` (global/status.css) in
      every theme; kept separate so a destructive control and an error message can diverge. */
   --color-destructive: var(--color-red-500);
+  /* A filled destructive control (button, badge). Darker than `destructive`, which stays light
+     enough to read as text on dark surfaces: white on red-500 is 3.76:1 and fails WCAG AA,
+     white on red-600 is 4.83:1. */
+  --color-destructive-surface: var(--color-red-600);
   /* Text on a destructive surface. */
   --color-destructive-foreground: var(--color-white);
   /* Default border color for shadcn primitives. */
@@ -83,6 +87,7 @@
   --color-accent: var(--color-purple-500);
   --color-accent-foreground: var(--color-white);
   --color-destructive: var(--color-red-600);
+  --color-destructive-surface: var(--color-red-600);
   --color-destructive-foreground: var(--color-white);
   --color-border: var(--color-neutral-200);
   --color-progress-track: var(--color-neutral-300);
@@ -121,8 +126,10 @@
   --color-secondary: #1f2633;
   --color-muted: #1f2633;
   --color-muted-foreground: #a1a7b3;
-  /* Accent keeps #8b5cf6: its foreground stays the inherited black, 4.96:1. */
-  --color-accent: #8b5cf6;
+  /* The brand board's #8b5cf6, nudged lighter: apps also write `text-accent` as text, and
+     #8b5cf6 measures 4.46:1 on dim's background and 3.59:1 on its popover. #9d73f8 is the
+     nearest step that clears 4.5:1 on every dim surface; black on it is 6.24:1. */
+  --color-accent: #9d73f8;
   --color-border: #2b3242;
   --color-input: #2b3242;
   --color-ring: var(--color-purple-500);

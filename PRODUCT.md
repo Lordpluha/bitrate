@@ -235,7 +235,7 @@ regressions are treated like failing tests. The full contract lives in
 `apps/docs/docs/brand/a11y.md`; the binding points for design work:
 
 - Text contrast ≥ 4.5:1 (large text ≥ 3:1); component boundaries and focus indicators
-  ≥ 3:1 against adjacent colors, verified in **both** dark and light themes.
+  ≥ 3:1 against adjacent colors, verified in **every** theme: dark, light and dim.
 - Information is never carried by color alone.
 - Every pointer action is keyboard operable; focus order follows reading order; focus
   indicators stay visible; overlays trap focus only while open and return it to the trigger.

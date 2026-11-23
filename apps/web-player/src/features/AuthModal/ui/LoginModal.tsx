@@ -44,7 +44,7 @@ export const LoginModal = ({
           >
             <LoginModalFields control={form.control} />
             <Link
-              className="text-right text-sm text-primary hover:underline"
+              className="text-right text-sm text-text-brand hover:underline"
               href={ROUTES.auth.forgotPassword}
             >
               Forgot password?
@@ -69,7 +69,7 @@ export const LoginModal = ({
               <p className="text-center text-base text-text-contrast">
                 Don&apos;t have an account?{' '}
                 <button
-                  className="font-bold text-primary underline hover:no-underline"
+                  className="font-bold text-text-brand underline hover:no-underline"
                   onClick={() => {
                     if (onSwitchToSignUp) onSwitchToSignUp()
                     else onOpenChange(false)

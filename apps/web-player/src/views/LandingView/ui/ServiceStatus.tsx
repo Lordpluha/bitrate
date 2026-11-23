@@ -164,7 +164,7 @@ export const ServiceStatus = () => {
       <button
         aria-controls="hpanel"
         aria-expanded={open}
-        aria-label={c('status.toggle')}
+        aria-label={`${c(PILL[state])} — ${c('status.toggle')}`}
         className={lc('hpill')}
         id="hpill"
         onClick={() =>

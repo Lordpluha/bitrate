@@ -22,11 +22,11 @@ export const HistoryEntryRow = ({
   return (
     <li className="group grid min-h-16 grid-cols-[46px_minmax(0,1fr)_auto] items-center gap-3 rounded-lg px-2 py-1.5 transition-colors hover:bg-surface">
       <button
-        aria-label={t('common.playName', { name: entry.track.title })}
         className="contents text-left"
         onClick={() => onPlay(entry.track.id)}
         type="button"
       >
+        <span className="sr-only">{t('common.play')} </span>
         <MediaImage
           alt=""
           className="size-11.5 rounded-md object-cover"
