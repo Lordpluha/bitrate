@@ -1,4 +1,4 @@
-# ADR-0071: CMAF content encryption — one `cbcs` packaging, keys only for a live play session
+# ADR-0077: CMAF content encryption — one `cbcs` packaging, keys only for a live play session
 
 Status: Accepted — supersedes "DRM is out of scope" in
 [ADR-0065](./0065-single-cmaf-aac-delivery-format.md) and the matching consequence of
