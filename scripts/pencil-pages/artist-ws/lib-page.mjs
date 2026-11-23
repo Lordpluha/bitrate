@@ -45,6 +45,11 @@ const SECTIONS = [
     /^(Cover|Ring|Countdown|Player|Share|Poster|Drawer|Modal|Catalogue|Page\/|Select|Island)/,
   ],
   [
+    'Release stages',
+    'Split totals, the file drop zone, upload progress and artwork tile, chips and role toggles, the delivery matrix with its status cells, and the plan → partner → stores flow steps. Their rows (track, checklist, credit, identifier, store, pick, progress step, link) sit with the bento rows.',
+    /^(Split|Dropzone|Upload|Artwork|Cell|Matrix|Flow|Chip)/,
+  ],
+  [
     'Shell',
     'Navigation items with the active pill, the expanded and collapsed glass sidebars, the 4rem glass header, the phone header and menu, and the desktop and phone shells.',
     /^(Nav|Sidebar|Header|Mobile|Shell)/,

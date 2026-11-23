@@ -12,6 +12,8 @@ import { addActions } from './artist-ws/lib-actions.mjs'
 import { addAuth } from './artist-ws/lib-auth.mjs'
 import { addCatalogue } from './artist-ws/lib-catalogue.mjs'
 import { addData } from './artist-ws/lib-data.mjs'
+import { addDelivery } from './artist-ws/lib-delivery.mjs'
+import { addDraft } from './artist-ws/lib-draft.mjs'
 import { addFields } from './artist-ws/lib-fields.mjs'
 import { addForms } from './artist-ws/lib-forms.mjs'
 import { addIsland } from './artist-ws/lib-island.mjs'
@@ -21,6 +23,7 @@ import { addLayout } from './artist-ws/lib-layout.mjs'
 import { addMedia } from './artist-ws/lib-media.mjs'
 import { addNav } from './artist-ws/lib-nav.mjs'
 import { addPaging } from './artist-ws/lib-paging.mjs'
+import { addPickers } from './artist-ws/lib-pickers.mjs'
 import { addNavItems } from './artist-ws/lib-nav-items.mjs'
 import { libraryPage } from './artist-ws/lib-page.mjs'
 import { addRelease } from './artist-ws/lib-release.mjs'
@@ -32,6 +35,7 @@ import { addStepper } from './artist-ws/lib-stepper.mjs'
 import { addSurfaces } from './artist-ws/lib-surfaces.mjs'
 import { addTiles } from './artist-ws/lib-tiles.mjs'
 import { addType } from './artist-ws/lib-type.mjs'
+import { addUpload } from './artist-ws/lib-upload.mjs'
 import { createLibrary } from './artist-ws/library.mjs'
 
 setMode('lib')
@@ -61,6 +65,10 @@ addLayout(lib)
 addCatalogue(lib)
 addPaging(lib)
 addIsland(lib)
+addDraft(lib)
+addUpload(lib)
+addDelivery(lib)
+addPickers(lib)
 const nav = addNav(lib)
 addShell(lib, nav)
 const root = lib.stampPage(libraryPage(lib.blocks))
