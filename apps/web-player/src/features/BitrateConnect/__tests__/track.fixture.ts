@@ -3,7 +3,6 @@ import type { PlayerTrack } from '@/entities/Player'
 /** A ready track with every field set, so specs only state the id. */
 export const track = (id: string): PlayerTrack => ({
   artistId: 'artist-1',
-  audioUrl: `/audio/${id}`,
   cover: '/cover.jpg',
   createdAt: '2026-10-01T00:00:00.000Z',
   deletedAt: null,

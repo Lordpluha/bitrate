@@ -77,6 +77,7 @@ how to apply it day to day.
 | [0074](./0074-support-assistant-core-and-channels.md) | One framework-free support assistant core hosted by the API; web over SSE, messengers through webhook adapters and the worker; provider-agnostic models |
 | [0075](./0075-qdrant-for-support-knowledge.md) | The support knowledge index lives in Qdrant as rebuildable derived data; recommendation vectors stay in pgvector |
 | [0076](./0076-ai-provider-boundary.md) | AI promotion calls models through the AI SDK as in ADR-0074, routed by task from configuration, providers under a DPA with no training, every call accounted in `AiUsage` |
+| [0077](./0077-cmaf-content-encryption.md) | CMAF `cbcs` encryption with one key per track, released only against a live play session; clear-key first, multi-DRM later |
 | [0078](./0078-listener-wide-playback-pacing.md) | A listener-wide bucket of two real-time streams across tracks, per-user session throttling, and pacing in memory while Redis is down |
 | [0079](./0079-rendition-caching-and-abuse-signals.md) | Rendition bytes are `no-store`; distinct tracks per listener in 10 minutes are reported at 40 and refused at 120 |
 
