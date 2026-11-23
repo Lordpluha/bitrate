@@ -1,4 +1,12 @@
 import { isKnowledgeAudience, isLocale, type KnowledgeAudience, type Locale } from '../domain.js'
+import {
+  hasPlaceholder,
+  listItemContent,
+  parseHeading,
+  splitLines,
+  splitParagraphs,
+  unquote,
+} from '../text/markdown.js'
 
 /** A knowledge source ready for chunking: a help article or an allowlisted legal text. */
 export interface KnowledgeDocument {
@@ -43,8 +51,8 @@ export class KnowledgeSourceError extends Error {
   }
 }
 
-const PLACEHOLDER = /\[\[[^\]\n]+\]\]/
-const HEADING = /^#{1,6}\s+(.+?)\s*#*$/
+/** A front-matter key. A single quantifier on an anchored string, so matching is linear. */
+const FIELD_KEY = /^[A-Za-z_][\w-]*$/
 
 /**
  * Parses `help/<audience>/<locale>/<slug>.md` (path relative to `help/`).
@@ -71,7 +79,7 @@ export function parseHelpArticle(path: string, raw: string): KnowledgeDocument {
   if (folderAudience !== audience) fail(`audience "${audience}" does not match its folder`)
   if (folderLocale !== locale) fail(`locale "${locale}" does not match its folder`)
   if (!file?.endsWith('.md')) fail('expected <audience>/<locale>/<slug>.md')
-  if (PLACEHOLDER.test(raw)) fail('contains an unfilled [[placeholder]]; drafts are never ingested')
+  if (hasPlaceholder(raw)) fail('contains an unfilled [[placeholder]]; drafts are never ingested')
 
   const sources = fields.get('sources')
   const url = Array.isArray(sources) ? sources[0] : undefined
@@ -118,29 +126,29 @@ type FrontMatterValue = string | string[]
 function splitFrontMatter(
   raw: string,
 ): { fields: Map<string, FrontMatterValue>; body: string } | undefined {
-  const match = /^---\r?\n([\s\S]*?)\r?\n---\r?\n?/.exec(raw)
-  if (!match) return undefined
+  const lines = splitLines(raw)
+  if (lines[0] !== '---') return undefined
+  const end = lines.indexOf('---', 1)
+  if (end < 0) return undefined
+
   const fields = new Map<string, FrontMatterValue>()
   let listKey: string | undefined
-  for (const line of (match[1] ?? '').split(/\r?\n/)) {
-    const item = /^\s+-\s+(.+)$/.exec(line)
-    if (item && listKey !== undefined) {
+  for (const line of lines.slice(1, end)) {
+    const indented = line !== line.trimStart()
+    const item = indented ? listItemContent(line) : undefined
+    if (item !== undefined && listKey !== undefined) {
       const list = fields.get(listKey)
-      if (Array.isArray(list)) list.push(unquote(item[1] ?? ''))
+      if (Array.isArray(list)) list.push(unquote(item))
       continue
     }
-    const pair = /^([A-Za-z_][\w-]*):\s*(.*)$/.exec(line)
-    if (!pair) continue
-    const key = pair[1] ?? ''
-    const value = (pair[2] ?? '').trim()
+    const colon = line.indexOf(':')
+    const key = line.slice(0, colon)
+    if (colon <= 0 || !FIELD_KEY.test(key)) continue
+    const value = line.slice(colon + 1).trim()
     listKey = value === '' ? key : undefined
     fields.set(key, value === '' ? [] : unquote(value))
   }
-  return { fields, body: raw.slice(match[0].length) }
-}
-
-function unquote(value: string): string {
-  return value.trim().replace(/^(['"])(.*)\1$/, '$2')
+  return { fields, body: lines.slice(end + 1).join('\n') }
 }
 
 interface Section {
@@ -153,27 +161,20 @@ function splitSections(body: string): Section[] {
   let buffer: string[] = []
   const flush = () => {
     const current = sections.at(-1)
-    if (current) current.paragraphs.push(...toParagraphs(buffer.join('\n')))
+    if (current) current.paragraphs.push(...splitParagraphs(buffer.join('\n')))
     buffer = []
   }
-  for (const line of body.split(/\r?\n/)) {
-    const heading = HEADING.exec(line)
-    if (heading) {
+  for (const line of splitLines(body)) {
+    const heading = parseHeading(line)
+    if (heading !== undefined) {
       flush()
-      sections.push({ heading: heading[1] ?? '', paragraphs: [] })
+      sections.push({ heading, paragraphs: [] })
     } else {
       buffer.push(line)
     }
   }
   flush()
   return sections.filter((section) => section.paragraphs.length > 0)
-}
-
-function toParagraphs(text: string): string[] {
-  return text
-    .split(/\n\s*\n/)
-    .map((paragraph) => paragraph.trim())
-    .filter((paragraph) => paragraph !== '')
 }
 
 /** Greedy packing; a paragraph longer than the budget is split by words. */

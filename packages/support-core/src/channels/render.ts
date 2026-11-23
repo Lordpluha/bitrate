@@ -1,4 +1,5 @@
 import type { Channel, Citation, Locale } from '../domain.js'
+import { listItemContent, parseHeading, splitLines, splitParagraphs } from '../text/markdown.js'
 
 /** An assistant or operator answer before channel formatting: Markdown plus its sources. */
 export interface RenderableMessage {
@@ -39,11 +40,9 @@ export function renderForChannel(
   const format = FORMATTERS[channel]
   const limit = CHANNEL_MESSAGE_LIMITS[channel]
 
-  const blocks = message.text
-    .split(/\n\s*\n/)
-    .map((paragraph) => paragraph.trim())
-    .filter((paragraph) => paragraph !== '')
-    .flatMap((paragraph) => formatWithinLimit(paragraph, format, limit))
+  const blocks = splitParagraphs(message.text).flatMap((paragraph) =>
+    formatWithinLimit(paragraph, format, limit),
+  )
   if (message.citations.length > 0) {
     blocks.push(
       ...formatWithinLimit(sourcesBlock(message.citations, channel, locale), (s) => s, limit),
@@ -52,32 +51,45 @@ export function renderForChannel(
   return pack(blocks, limit)
 }
 
+/*
+ * Inline patterns. Each repeated class excludes the delimiter that ends it (and `[` for
+ * links), so a failed match stops at the next delimiter and a whole pass stays linear.
+ * Headings and list items are handled per line by `transformLines`, without regexes.
+ */
+const CODE = /`([^`\n]+)`/g
+const BOLD = /\*\*([^*\n]+)\*\*/g
+const ITALIC = /(^|[^\w*])[*_]([^*_\n]+)[*_](?=$|[^\w*])/gm
+const LINK = /\[([^[\]\n]+)\]\(([^()\s]+)\)/g
+
+/** Rewrites ATX headings with `heading` and bullet markers as `• `. */
+function transformLines(markdown: string, heading: (text: string) => string): string {
+  return splitLines(markdown)
+    .map((line) => {
+      const title = parseHeading(line)
+      if (title !== undefined) return heading(title)
+      const item = listItemContent(line)
+      return item === undefined ? line : `• ${item}`
+    })
+    .join('\n')
+}
+
 const FORMATTERS: Record<Exclude<Channel, 'web'>, Formatter> = {
   telegram: (markdown) =>
-    markdown
-      .replaceAll('&', '&amp;')
-      .replaceAll('<', '&lt;')
-      .replaceAll('>', '&gt;')
-      .replace(/^#{1,6}\s+(.+?)\s*#*$/gm, '<b>$1</b>')
-      .replace(/^\s*[-*+]\s+/gm, '• ')
-      .replace(/`([^`\n]+)`/g, '<code>$1</code>')
-      .replace(/\*\*([^*\n]+)\*\*/g, '<b>$1</b>')
-      .replace(/(^|[^\w*])[*_]([^*_\n]+)[*_](?=$|[^\w*])/gm, '$1<i>$2</i>')
-      .replace(/\[([^\]\n]+)\]\(([^)\s]+)\)/g, '<a href="$2">$1</a>'),
+    transformLines(escapeHtml(markdown), (title) => `<b>${title}</b>`)
+      .replace(CODE, '<code>$1</code>')
+      .replace(BOLD, '<b>$1</b>')
+      .replace(ITALIC, '$1<i>$2</i>')
+      .replace(LINK, '<a href="$2">$1</a>'),
   whatsapp: (markdown) =>
-    markdown
-      .replace(/^#{1,6}\s+(.+?)\s*#*$/gm, '*$1*')
-      .replace(/^\s*[-*+]\s+/gm, '• ')
-      .replace(/\*\*([^*\n]+)\*\*/g, '*$1*')
-      .replace(/\[([^\]\n]+)\]\(([^)\s]+)\)/g, '$1 ($2)'),
+    transformLines(markdown, (title) => `*${title}*`)
+      .replace(BOLD, '*$1*')
+      .replace(LINK, '$1 ($2)'),
   instagram: (markdown) =>
-    markdown
-      .replace(/^#{1,6}\s+(.+?)\s*#*$/gm, '$1')
-      .replace(/^\s*[-*+]\s+/gm, '• ')
-      .replace(/`([^`\n]+)`/g, '$1')
-      .replace(/\*\*([^*\n]+)\*\*/g, '$1')
-      .replace(/(^|[^\w*])[*_]([^*_\n]+)[*_](?=$|[^\w*])/gm, '$1$2')
-      .replace(/\[([^\]\n]+)\]\(([^)\s]+)\)/g, '$1 ($2)'),
+    transformLines(markdown, (title) => title)
+      .replace(CODE, '$1')
+      .replace(BOLD, '$1')
+      .replace(ITALIC, '$1$2')
+      .replace(LINK, '$1 ($2)'),
 }
 
 function sourcesBlock(citations: readonly Citation[], channel: Channel, locale: Locale): string {
