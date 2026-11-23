@@ -38,8 +38,7 @@ export const AboutArtist = () => {
   return (
     <div className="overflow-hidden rounded-lg bg-surface">
       <Link
-        aria-label={t('sidebar.openArtist', { name: artist.username })}
-        className="group block rounded-t-lg outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-text"
+        className="group block rounded-t-lg outline-hidden focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-text"
         href={ROUTES.artist(artist.username)}
       >
         <div className="relative aspect-[3/2] w-full overflow-hidden">
@@ -62,11 +61,12 @@ export const AboutArtist = () => {
             {t('sidebar.aboutArtist')}
           </h2>
         </div>
+        <span className="sr-only">{artist.username}</span>
       </Link>
 
       <div className="p-4">
         <Link
-          className="group/name flex w-fit max-w-full items-center gap-1.5 rounded-sm outline-none focus-visible:ring-2 focus-visible:ring-text"
+          className="group/name flex w-fit max-w-full items-center gap-1.5 rounded-sm outline-hidden focus-visible:ring-2 focus-visible:ring-text"
           href={ROUTES.artist(artist.username)}
         >
           <span className="truncate text-sm font-bold text-foreground group-hover/name:underline">
@@ -87,7 +87,7 @@ export const AboutArtist = () => {
               <>
                 {ncsBioPrefix}{' '}
                 <a
-                  className="font-medium text-foreground underline decoration-text-subdued underline-offset-2 transition-colors hover:text-primary focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-text"
+                  className="font-medium text-foreground underline decoration-text-subdued underline-offset-2 transition-colors hover:text-text-brand focus-visible:rounded-sm focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-text"
                   href={ncsBioLink.href}
                   rel="noopener noreferrer"
                   target="_blank"

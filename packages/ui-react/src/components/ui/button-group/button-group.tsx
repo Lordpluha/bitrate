@@ -27,7 +27,7 @@ function ButtonGroup({
   ...props
 }: ComponentProps<'div'> & VariantProps<typeof buttonGroupVariants>) {
   return (
-    // biome-ignore lint/a11y/useSemanticElements: hz
+    // biome-ignore lint/a11y/useSemanticElements: role="group" is the WAI-ARIA grouping pattern; <fieldset> would add legend semantics and browser fieldset styling
     <div
       role="group"
       data-slot="button-group"

@@ -19,7 +19,7 @@ export function DashboardAccountMenu({
     <button
       aria-label={t('shell.accountMenu')}
       className={cn(
-        'artist-workspace-account flex min-h-15 w-full items-center gap-3 rounded-lg bg-artist-account-surface p-3 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
+        'artist-workspace-account flex min-h-15 w-full items-center gap-3 rounded-lg bg-artist-account-surface p-3 text-left focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring',
         compact && 'justify-center px-1',
       )}
       onClick={() => {

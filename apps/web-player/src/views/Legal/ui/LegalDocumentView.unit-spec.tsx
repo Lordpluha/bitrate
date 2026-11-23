@@ -10,15 +10,21 @@ const renderDocument = (slug: string) => {
 }
 
 describe('LegalDocumentView', () => {
-  it('shows the title, the draft banner and numbered sections', () => {
+  it('marks a document that is still a draft with a banner', () => {
+    renderDocument('community')
+
+    expect(screen.getByRole('note')).toHaveTextContent(
+      'Draft — pending legal review',
+    )
+  })
+
+  it('shows the published Terms with its title and numbered sections, without a banner', () => {
     renderDocument('terms')
 
     expect(
       screen.getByRole('heading', { level: 1, name: 'Terms of Use' }),
     ).toBeInTheDocument()
-    expect(screen.getByRole('note')).toHaveTextContent(
-      'Draft — pending legal review',
-    )
+    expect(screen.queryByRole('note')).not.toBeInTheDocument()
     expect(
       screen.getByRole('heading', {
         level: 2,
@@ -70,11 +76,12 @@ describe('LegalDocumentView', () => {
     ).toBeGreaterThan(0)
   })
 
-  it('keeps operator placeholders visible while the texts are drafts', () => {
+  it('shows a published document without the draft banner', () => {
     renderDocument('privacy')
 
-    expect(screen.getAllByText(/\[\[OPERATOR_NAME\]\]/).length).toBeGreaterThan(
-      0,
-    )
+    expect(
+      screen.getByRole('heading', { level: 1, name: 'Privacy Policy' }),
+    ).toBeInTheDocument()
+    expect(screen.queryByRole('note')).not.toBeInTheDocument()
   })
 })

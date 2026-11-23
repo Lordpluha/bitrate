@@ -2,6 +2,9 @@ import { PassThrough, Readable } from 'node:stream'
 import { finished } from 'node:stream/promises'
 import { beforeEach, describe, expect, it, jest } from '@jest/globals'
 import { buildUser } from '@modules/users/__tests__/fixtures/users.fixtures'
+import { UserThrottlerGuard } from '@modules/users-auth/user-throttler.guard'
+import { UserAuthGuard } from '@modules/users-auth/users-auth.guard'
+import { GUARDS_METADATA } from '@nestjs/common/constants'
 import { PlaybackPacingError } from './playback-session.service'
 import { TrackPlaybackController } from './track-playback.controller'
 import type { TrackPlaybackService } from './track-playback.service'
@@ -28,6 +31,14 @@ const makePlaybackServiceMock = () =>
   }) as unknown as jest.Mocked<TrackPlaybackService>
 
 describe('TrackPlaybackController', () => {
+  it('throttles opening sessions per user only after the user is authenticated', () => {
+    const guards: unknown[] =
+      Reflect.getMetadata(GUARDS_METADATA, TrackPlaybackController.prototype.openPlaySession) ?? []
+
+    expect(guards).toContain(UserThrottlerGuard)
+    expect(guards.indexOf(UserAuthGuard)).toBeLessThan(guards.indexOf(UserThrottlerGuard))
+  })
+
   let controller: TrackPlaybackController
   let playbackService: jest.Mocked<TrackPlaybackService>
 

@@ -27,13 +27,13 @@ export const ArtistCompactHeader = ({
     style={{ '--artist-header': backgroundColor } as CSSProperties}
   >
     <div
-      aria-hidden={!isVisible}
       className={cn(
         'absolute inset-x-0 top-0 flex h-16 items-center gap-3 bg-[var(--artist-header)] px-4 shadow-sm transition-transform duration-200 sm:px-5',
         isVisible
           ? 'translate-y-0 pointer-events-auto'
           : '-translate-y-full pointer-events-none',
       )}
+      inert={!isVisible}
     >
       <ArtistPlayButton
         artistName={artistName}

@@ -5,7 +5,7 @@
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$REPO_ROOT"
 
-DC=(docker compose -f infra/docker-compose.preprod.yaml)
+DC=(docker compose -f infra/docker-compose.dev.yaml --profile apps)
 
 # Colors
 GREEN='\033[0;32m'
@@ -22,7 +22,7 @@ check_health() {
     print_header "Service Health Status"
     "${DC[@]}" ps
 
-    # Docker-stack ports (see infra/docker-compose.preprod.yaml). They differ
+    # Docker-stack ports (see infra/docker-compose.dev.yaml). They differ
     # from the native `pnpm dev` ports for web-artists and admin.
     echo -e "\n${YELLOW}Service URLs:${NC}"
     echo "  API:     http://localhost:${API_PORT:-3000}"

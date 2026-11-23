@@ -1,18 +1,21 @@
 ---
 id: terms-of-use
-title: Terms of Use (draft)
+title: Terms of Use
 draft: true
 ---
 
-:::warning[Draft — pending legal review]
-Draft for lawyer review. Placeholders in `[[double brackets]]` are not filled in.
+:::info[Published]
+This is the published text, served at bitrate.me/legal/terms and artists.bitrate.me/legal/terms.
+The apps hold their own copy in `src/shared/legal/documents.ts`; change all three together.
+`draft: true` above only keeps the legal folder out of the docs site's production build, like the
+other legal sources; it says nothing about the document's status.
 :::
 
-**Effective date:** [[EFFECTIVE_DATE]]
+**Effective date:** 1 October 2026
 
 These Terms of Use ("Terms") govern your use of Bitrate, a music streaming and publishing service
-operated by [[OPERATOR_NAME]], [[OPERATOR_ADDRESS]], registration number [[OPERATOR_REGISTRATION]]
-("Bitrate", "we", "us"). Contact: [[LEGAL_CONTACT_EMAIL]].
+operated by Vladyslav Tesliuk, Warsaw, Poland, a private individual
+("Bitrate", "we", "us"). Contact: tesluakevlad@gmail.com.
 
 ## 1. Acceptance and eligibility
 
@@ -28,7 +31,7 @@ operated by [[OPERATOR_NAME]], [[OPERATOR_ADDRESS]], registration number [[OPERA
 
 2.1 Provide accurate information and keep your credentials secure. You are responsible for activity on your account.
 
-2.2 Tell us promptly at [[LEGAL_CONTACT_EMAIL]] if you suspect unauthorised access.
+2.2 Tell us promptly at tesluakevlad@gmail.com if you suspect unauthorised access.
 
 2.3 We may limit or lock an account after repeated failed sign-in attempts to protect it.
 
@@ -67,7 +70,7 @@ We apply a repeat-infringer policy: accounts that repeatedly upload infringing c
 
 ## 7. Suspension and termination
 
-7.1 You may stop using Bitrate and delete your account at any time [[ACCOUNT_DELETION_NOTE]].
+7.1 You may stop using Bitrate and delete your account at any time: artists under Settings in the artist portal, listeners by writing to tesluakevlad@gmail.com from the address on their account, as described in the [Privacy Policy](./privacy-policy.md).
 
 7.2 We may suspend or terminate an account that breaches these Terms or the law. Where required we will state
 the reasons and describe how to contest the decision.
@@ -77,7 +80,7 @@ the reasons and describe how to contest the decision.
 8.1 The service is provided "as is" to the extent permitted by law. Mandatory consumer rights under
 EU and Polish law are not affected.
 
-8.2 [[LIABILITY_CLAUSE — counsel to draft limits that are valid under EU consumer law]]
+8.2 Nothing in these Terms limits or excludes our liability where the law does not allow it, including liability for damage caused intentionally or through gross negligence, for death or personal injury, or your statutory rights as a consumer. Within those limits, and because Bitrate is provided to listeners free of charge, we are not liable for indirect or unforeseeable loss, or for loss caused by events outside our reasonable control.
 
 ## 9. Changes to these Terms
 
@@ -86,8 +89,8 @@ Bitrate after the effective date means you accept the new version.
 
 ## 10. Governing law and disputes
 
-These Terms are governed by [[GOVERNING_LAW]]. Mandatory consumer-protection rules of your country of residence continue to apply.
+These Terms are governed by the law of Poland. Disputes are decided by the competent courts in Poland. If you are a consumer, the mandatory consumer-protection rules of your country of residence continue to apply and you may also bring a claim before the courts of that country.
 
 ## 11. Contact
 
-[[OPERATOR_NAME]], [[OPERATOR_ADDRESS]] — [[LEGAL_CONTACT_EMAIL]].
+Vladyslav Tesliuk, Warsaw, Poland — tesluakevlad@gmail.com.

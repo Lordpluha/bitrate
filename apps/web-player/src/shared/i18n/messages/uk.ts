@@ -53,6 +53,25 @@ export const uk = {
     'Показувати панель поточного треку після запуску',
   'settings.language': 'Мова',
   'settings.language.description': 'Виберіть мову інтерфейсу застосунку',
+  'shell.skipToContent': 'Перейти до вмісту',
+  'shell.resizeLibrary': 'Змінити ширину медіатеки',
+  'shell.resizeNowPlaying': 'Змінити ширину панелі «Зараз грає»',
+  'settings.keyboard': 'Клавіатура',
+  'settings.keyboard.singleKey': 'Скорочення однією клавішею',
+  'settings.keyboard.singleKey.description':
+    'Клавіші літер і символів керують відтворенням без Ctrl чи ⌘. Вимкніть, якщо користуєтеся голосовим введенням або іншим інструментом, що набирає окремі клавіші.',
+  'settings.keyboard.list': 'Клавіатурні скорочення',
+  'settings.keyboard.column.action': 'Дія',
+  'settings.keyboard.column.keys': 'Клавіші',
+  'settings.keyboard.action.playPause': 'Відтворити або призупинити',
+  'settings.keyboard.action.seek': 'Назад або вперед на 5 с (10 с із Shift)',
+  'settings.keyboard.action.skip': 'Попередній або наступний трек',
+  'settings.keyboard.action.volume': 'Тихіше або гучніше',
+  'settings.keyboard.action.mute': 'Вимкнути або ввімкнути звук',
+  'settings.keyboard.action.shuffle': 'Перемішати',
+  'settings.keyboard.action.repeat': 'Повтор',
+  'settings.keyboard.action.like': 'Вподобати трек',
+  'settings.keyboard.action.queue': 'Відкрити чергу',
   'settings.library': 'Моя медіатека',
   'settings.library.compact': 'Компактний вигляд медіатеки',
   'settings.library.compact.description':
@@ -267,6 +286,19 @@ export const uk = {
   'auth.login.failed.oauth':
     'Вхід через соцмережу не завершився. Спробуйте ще раз.',
   'auth.login.failed.oauthExpired': 'Сеанс входу закінчився. Спробуйте ще раз.',
+  'auth.login.failed.oauthAccountExists':
+    'Акаунт із цією адресою вже існує. Спершу увійдіть за паролем і підтвердьте email.',
+  'auth.login.failed.oauthAccountUnavailable': 'Цей акаунт більше недоступний.',
+  'auth.login.failed.oauthCancelled':
+    'Вхід скасовано. Оберіть спосіб входу, щоб продовжити.',
+  'auth.login.failed.oauthEmailMissing':
+    'Цей акаунт не передав адресу email. Дозвольте доступ до email або увійдіть іншим способом.',
+  'auth.login.failed.oauthEmailUnverified':
+    'Цей акаунт не підтвердив адресу email. Підтвердьте її в провайдера або увійдіть іншим способом.',
+  'auth.login.failed.oauthLegal':
+    'Щоб створити акаунт, спершу прийміть Умови використання та Правила спільноти.',
+  'auth.login.failed.oauthUnavailable':
+    'Цей спосіб входу поки недоступний. Увійдіть іншим способом.',
   'auth.login.forgotPassword': 'Забули пароль?',
   'auth.login.noAccount': 'Ще немає облікового запису?',
   'auth.login.submitting': 'Входимо...',
@@ -505,9 +537,11 @@ export const uk = {
   'player.repeatOne': 'Повторювати один трек',
   'player.repeatPlaylist': 'Повторювати плейлист',
   'player.seek': 'Перемотування',
+  'player.seekValue': '{elapsed} з {total}',
   'player.seekTrack': 'Перемотати трек',
   'player.unmute': 'Увімкнути звук',
   'player.volume': 'Гучність',
+  'player.volumeValue': '{percent}%',
   'playlist.actions': 'Дії з плейлистом',
   'playlist.addedTo': 'Додано до «{title}»',
   'playlist.changeView': 'Змінити вигляд списку треків',
@@ -603,7 +637,6 @@ export const uk = {
   'sidebar.credits': 'Автори',
   'sidebar.mainArtist': 'Основний виконавець',
   'sidebar.nowPlayingFrom': 'Зараз грає · {name}',
-  'sidebar.openArtist': 'Відкрити сторінку виконавця {name}',
   'sidebar.upNext': 'Далі',
   'stats.allTime': 'За весь час',
   'stats.artists': 'Виконавці',

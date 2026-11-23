@@ -277,5 +277,29 @@
       "src/widgets/Player/index.ts",
       "src/widgets/MobileIsland/index.ts"
     ]
+  },
+  {
+    "test": "src/app/accessibility.screenshot-spec.ts",
+    "dependsOn": [
+      "src/app/accessibility.screenshot-spec.ts",
+      "src/app/layout.tsx",
+      "src/app/_provider.tsx",
+      "src/app/(home)/layout.tsx",
+      "src/app/(home)/page.tsx",
+      "src/app/(auth)/layout.tsx",
+      "src/app/(auth)/auth/login/page.tsx",
+      "src/app/(auth)/auth/registration/page.tsx",
+      "src/app/(auth)/auth/forgot-password/page.tsx",
+      "src/app/main/layout.tsx",
+      "src/app/main/page.tsx",
+      "src/app/main/library/page.tsx",
+      "src/app/main/search/page.tsx",
+      "src/app/main/album/[id]/page.tsx",
+      "src/app/main/artist/[username]/page.tsx",
+      "src/app/main/(playlists)/playlist/[id]/page.tsx",
+      "src/app/main/queue/page.tsx",
+      "src/app/main/notifications/page.tsx",
+      "src/app/main/preferences/page.tsx"
+    ]
   }
 ]

@@ -77,18 +77,20 @@ const LegalBlockView = ({ block }: { block: LegalBlock }) => {
 }
 
 /**
- * One legal document as a readable page. The banner stays until the texts have been reviewed
- * by a lawyer and the operator placeholders are filled in.
+ * One legal document as a readable page. A draft document carries a banner until it has been
+ * reviewed by a lawyer and its remaining placeholders are filled in.
  */
 export const LegalDocumentView = ({ document }: LegalDocumentViewProps) => (
   <article className="mx-auto flex max-w-3xl flex-col gap-6 px-6 py-12 text-foreground">
-    <p
-      className="rounded-md border border-primary px-4 py-3 text-sm"
-      role="note"
-    >
-      Draft — pending legal review. Text in [[double brackets]] is not filled in
-      yet.
-    </p>
+    {document.draft ? (
+      <p
+        className="rounded-md border border-primary px-4 py-3 text-sm"
+        role="note"
+      >
+        Draft — pending legal review. Text in [[double brackets]] is not filled
+        in yet.
+      </p>
+    ) : null}
 
     <h1 className="text-2xl leading-[1.1] font-bold text-foreground md:text-[32px]">
       {document.title}
@@ -124,7 +126,7 @@ export const LegalDocumentView = ({ document }: LegalDocumentViewProps) => (
       {LEGAL_DOCUMENTS.filter((other) => other.slug !== document.slug).map(
         (other) => (
           <Link
-            className="text-primary hover:opacity-70"
+            className="text-text-brand hover:opacity-70"
             href={ROUTES.legal(other.slug)}
             key={other.slug}
           >

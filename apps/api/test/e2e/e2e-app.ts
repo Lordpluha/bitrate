@@ -1,5 +1,6 @@
 import { randomBytes } from 'node:crypto'
 import { appConfigs } from '@common/config'
+import { API_RATE_LIMITS } from '@common/config/rate-limit.config'
 import { CacheModule } from '@infra/cache/cache.module'
 import { ObservabilityModule } from '@infra/observability/observability.module'
 import { PrismaService } from '@infra/prisma/prisma.service'
@@ -17,6 +18,7 @@ import { BullModule } from '@nestjs/bullmq'
 import { type INestApplication, Module } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
 import { Test, type TestingModule } from '@nestjs/testing'
+import { ThrottlerModule } from '@nestjs/throttler'
 import cookieParser from 'cookie-parser'
 import request from 'supertest'
 import { envSchema } from '../../env.schema'
@@ -38,6 +40,9 @@ import { verifyArtistEmail, verifyUserEmail } from '../helpers/db'
         port: Number(process.env.REDIS_PORT ?? 6379),
       },
     }),
+    // Route-level throttler guards (UserThrottlerGuard) need the module's options, as in
+    // AppCoreModule; there is no global guard here, so only those routes are throttled.
+    ThrottlerModule.forRoot({ throttlers: API_RATE_LIMITS }),
     UsersAuthModule,
     UsersModule,
     ArtistsModule,

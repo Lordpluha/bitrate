@@ -11,60 +11,51 @@ ENV TURBO_TEAM=team_Ao32Preb1GI1Ohd56uSdfxEZ
 RUN npm install -g pnpm@12.7.0 && pnpm config set store-dir /pnpm/store
 WORKDIR /app
 
-# Stage 2: Dependencies
+# Stage 2: Prune
+# The only stage that sees the whole repository. `turbo prune --docker` writes out/json (the
+# package.json of @bitrate/web-player and of each workspace package it depends on, plus a lockfile
+# cut down to those importers) and out/full (their sources). Every later stage copies from out/,
+# so no other app's dependencies are installed and no other app's source reaches a build layer.
+# Pinned to the root devDependency — bump both together.
+FROM base AS pruner
+RUN npm install -g turbo@2.11.7
+COPY . .
+RUN turbo prune @bitrate/web-player --docker
+
+# Stage 3: Dependencies
 FROM base AS dependencies
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-COPY patches ./patches
-COPY scripts ./scripts
-COPY apps/web-player/package.json ./apps/web-player/
-COPY packages/tailwind/package.json ./packages/tailwind/
-COPY packages/ui-react/package.json ./packages/ui-react/
-COPY packages/svgr/package.json ./packages/svgr/
-COPY packages/svgr/bin ./packages/svgr/bin
-COPY packages/vite-svgr/package.json ./packages/vite-svgr/
-COPY packages/contracts/package.json ./packages/contracts/
-# pnpm's frozen-lockfile check validates every workspace importer in pnpm-lock.yaml has a
-# package.json on disk, not just the ones this app depends on — so every workspace member's
-# package.json has to be copied here, even packages this image never installs code from.
-COPY apps/admin/package.json ./apps/admin/
-COPY apps/api/package.json ./apps/api/
-COPY apps/desktop/package.json ./apps/desktop/
-COPY apps/docs/package.json ./apps/docs/
-COPY apps/mobile/package.json ./apps/mobile/
-COPY apps/web-artists/package.json ./apps/web-artists/
-COPY packages/converter/package.json ./packages/converter/
-COPY packages/ncs-parser/package.json ./packages/ncs-parser/
-COPY packages/player/package.json ./packages/player/
-COPY turbo.json ./
+COPY --from=pruner /app/out/json/ ./
+# pnpm links the svgr bin while installing, so the file it points at has to exist already.
+COPY --from=pruner /app/out/full/packages/svgr/bin ./packages/svgr/bin
+# The root postinstall runs these two; they return early under the SKIP_* flags below, but node
+# still has to find the files. turbo prune does not carry root-level scripts/.
+COPY scripts/setup-graphify.mjs scripts/setup-rtk.mjs ./scripts/
 RUN SKIP_GRAPHIFY_INSTALL=1 SKIP_RTK_INSTALL=1 pnpm install --frozen-lockfile
 
-# Stage 3: Development
+# Stage 4: Development
 FROM base AS development
-COPY --from=dependencies /app/node_modules ./node_modules
-COPY --from=dependencies /pnpm/store /pnpm/store
-COPY --from=dependencies /app/apps/web-player/node_modules ./apps/web-player/node_modules
-COPY --from=dependencies /app/packages/ui-react/node_modules ./packages/ui-react/node_modules
-COPY --from=dependencies /app/packages/vite-svgr/node_modules ./packages/vite-svgr/node_modules
+# node_modules — the root one and every per-package one pnpm created.
+COPY --from=dependencies /app/ ./
 
 # Only what `turbo run build --filter=@bitrate/ui-react` touches — its own source plus its
 # workspace deps (tailwind; vite-svgr, which itself depends on svgr) — resolved from src, not
-# dist, per each package's own exports. Kept ahead of the full `COPY . .` below so a change to
-# this app's own source, or to any other app/package, does not invalidate this layer and force
-# a cold ui-react rebuild on every unrelated PR.
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json ./
-COPY packages/ui-react ./packages/ui-react
-COPY packages/tailwind ./packages/tailwind
-COPY packages/vite-svgr ./packages/vite-svgr
-COPY packages/svgr ./packages/svgr
+# dist, per each package's own exports. Kept ahead of the full source copy below so a change to
+# this app's own source does not invalidate this layer and force a cold ui-react rebuild.
+# out/json carries no turbo.json; turbo refuses to run without the root one.
+COPY --from=pruner /app/out/full/turbo.json ./
+COPY --from=pruner /app/out/full/packages/ui-react ./packages/ui-react
+COPY --from=pruner /app/out/full/packages/tailwind ./packages/tailwind
+COPY --from=pruner /app/out/full/packages/vite-svgr ./packages/vite-svgr
+COPY --from=pruner /app/out/full/packages/svgr ./packages/svgr
 # CI runs the development image without host build output.
 RUN --mount=type=secret,id=turbo_token,env=TURBO_TOKEN \
     pnpm exec turbo run build --filter=@bitrate/ui-react
 
-COPY . .
+COPY --from=pruner /app/out/full/ ./
 EXPOSE 3001
 CMD ["pnpm", "--filter", "@bitrate/web-player", "run", "dev"]
 
-# Stage 4: Build
+# Stage 5: Build
 FROM base AS build
 ARG NEXT_PUBLIC_API_URL
 ARG NEXT_PUBLIC_SITE_URL
@@ -89,12 +80,9 @@ ENV NODE_ENV=production
 # legitimately have no canonical origin to give.
 ENV ENFORCE_DEPLOY_ENV=1
 
-COPY --from=dependencies /app/node_modules ./node_modules
-COPY --from=dependencies /pnpm/store /pnpm/store
-COPY . .
-COPY --from=dependencies /app/apps/web-player/node_modules ./apps/web-player/node_modules
-COPY --from=dependencies /app/packages/ui-react/node_modules ./packages/ui-react/node_modules
-COPY --from=dependencies /app/packages/vite-svgr/node_modules ./packages/vite-svgr/node_modules
+# node_modules (the root one and every per-package one pnpm created), then the pruned sources.
+COPY --from=dependencies /app/ ./
+COPY --from=pruner /app/out/full/ ./
 
 # Build приложения. Routed through turbo, not a plain pnpm script, so an unchanged source
 # tree (and unchanged build-time env below) restores dist/.next from the remote cache
@@ -106,7 +94,7 @@ RUN --mount=type=secret,id=turbo_token,env=TURBO_TOKEN \
     --mount=type=secret,id=sentry_auth_token,env=SENTRY_AUTH_TOKEN \
     pnpm exec turbo run build --filter=@bitrate/web-player
 
-# Stage 5: Production
+# Stage 6: Production
 #
 # There is no prod-dependencies stage any more. `output: 'standalone'` in next.config.ts makes
 # `next build` trace the server's real imports into .next/standalone, node_modules included, so

@@ -79,6 +79,18 @@
     color: var(--bitrate-player-accent, var(--color-success, mediumseagreen));
   }
 
+  /** Forced colours flatten the accent colour, so the pressed state needs a shape too. */
+  @media (forced-colors: active) {
+    .icon-button--active {
+      outline: 2px solid Highlight;
+      outline-offset: -2px;
+    }
+
+    button:focus-visible {
+      outline-color: Highlight;
+    }
+  }
+
   .play-button {
     display: flex;
     align-items: center;

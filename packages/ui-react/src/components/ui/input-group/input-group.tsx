@@ -7,12 +7,12 @@ import { Textarea } from '../textarea'
 
 function InputGroup({ className, ...props }: ComponentProps<'div'>) {
   return (
-    // biome-ignore lint/a11y/useSemanticElements: hz
+    // biome-ignore lint/a11y/useSemanticElements: role="group" is the WAI-ARIA grouping pattern; <fieldset> would add legend semantics and browser fieldset styling
     <div
       data-slot="input-group"
       role="group"
       className={cn(
-        'group/input-group border-input-border bg-input-group-surface/30 shadow-xs relative flex w-full items-center rounded-md border outline-none transition-[color,box-shadow]',
+        'group/input-group border-input-border bg-input-group-surface/30 shadow-xs relative flex w-full items-center rounded-md border outline-hidden transition-[color,box-shadow]',
         'h-9 has-[>textarea]:h-auto',
 
         // Variants based on alignment.
@@ -59,8 +59,8 @@ function InputGroupAddon({
   ...props
 }: ComponentProps<'div'> & VariantProps<typeof inputGroupAddonVariants>) {
   return (
-    // biome-ignore lint/a11y/useKeyWithClickEvents: hz
-    // biome-ignore lint/a11y/useSemanticElements: hz
+    // biome-ignore lint/a11y/useKeyWithClickEvents: pointer-only shortcut to focus the group's input; the input itself is in the tab order, so keyboard users lose nothing
+    // biome-ignore lint/a11y/useSemanticElements: role="group" is the WAI-ARIA grouping pattern; <fieldset> would add legend semantics and browser fieldset styling
     <div
       role="group"
       data-slot="input-group-addon"

@@ -46,7 +46,9 @@ export const TrackPrimaryInfo = ({
       <div
         className={cn(
           'truncate text-sm font-semibold',
-          isCurrent ? 'text-primary' : 'text-foreground group-hover:underline',
+          isCurrent
+            ? 'text-text-brand'
+            : 'text-foreground group-hover:underline',
         )}
       >
         {track.title}

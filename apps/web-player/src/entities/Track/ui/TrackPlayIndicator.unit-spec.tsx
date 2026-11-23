@@ -16,7 +16,8 @@ describe('TrackPlayIndicator', () => {
       />,
     )
 
-    fireEvent.click(screen.getByRole('button', { name: 'Play Nightcall' }))
+    /** The visible track number leads the name, so speech input can say it (WCAG 2.5.3). */
+    fireEvent.click(screen.getByRole('button', { name: '1. Play Nightcall' }))
 
     expect(onClick).toHaveBeenCalledOnce()
   })

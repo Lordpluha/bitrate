@@ -2,6 +2,10 @@ import { Button } from '@bitrate/ui-react'
 import { trackVersionLabels } from '@entities/music'
 import { type ReleaseSummary, releaseTypeLabels } from '@entities/release'
 import { DeleteReleaseDialog, EditReleaseDialog } from '@features/edit-release'
+import {
+  ProposeReleaseChangesLoader,
+  RenameRecordingDialog,
+} from '@features/propose-release-changes'
 import { useI18n } from '@shared/i18n'
 import { WorkspaceModal } from '@shared/ui/WorkspaceModal/WorkspaceModal'
 import { Link } from '@tanstack/react-router'
@@ -13,7 +17,7 @@ import {
 
 export interface CatalogueDetails {
   item: CatalogueItem
-  mode: 'details' | 'actions' | 'edit' | 'delete'
+  mode: 'details' | 'actions' | 'edit' | 'delete' | 'propose' | 'rename'
 }
 
 interface CatalogueItemDialogProps {
@@ -44,6 +48,24 @@ export function CatalogueItemDialog({
         onClose={() => onChange({ ...details, mode: 'actions' })}
         onDeleted={close}
         release={item}
+      />
+    )
+  if (mode === 'propose' && artistId && !('version' in item))
+    return (
+      <ProposeReleaseChangesLoader
+        artistId={artistId}
+        onClose={close}
+        releaseId={item.id}
+        title={item.title}
+      />
+    )
+  if (mode === 'rename' && artistId && 'version' in item && item.release)
+    return (
+      <RenameRecordingDialog
+        artistId={artistId}
+        onClose={close}
+        recording={item}
+        releaseId={item.release.id}
       />
     )
   if (mode === 'edit' && artistId)
@@ -108,6 +130,21 @@ export function CatalogueItemDialog({
             >
               {t('music.item.viewDetails')}
             </Button>
+            {item.acceptsChanges && !!artistId && (
+              <Button
+                onClick={() =>
+                  onChange({
+                    ...details,
+                    mode: 'version' in item ? 'rename' : 'propose',
+                  })
+                }
+                variant="outline"
+              >
+                {'version' in item
+                  ? t('releaseChanges.renameRecording')
+                  : t('releaseChanges.propose')}
+              </Button>
+            )}
             {deletableRelease && (
               <Button
                 onClick={() => onChange({ ...details, mode: 'delete' })}

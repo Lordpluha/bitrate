@@ -187,6 +187,15 @@ export class AlbumsService {
     await tx.album.update({ where: { id: albumId }, data: { publishedAt: at } })
   }
 
+  /** Applies an approved title or cover change of a live release inside the caller's transaction. */
+  async updateReleaseAlbumDetails(
+    tx: Prisma.TransactionClient,
+    albumId: string,
+    data: { title?: string; cover?: string },
+  ) {
+    await tx.album.update({ where: { id: albumId }, data })
+  }
+
   /** Removes the catalogue album in the transaction that deletes its owned release. */
   async deleteReleaseAlbum(tx: Prisma.TransactionClient, albumId: string, deletedAt: Date) {
     await tx.album.update({ where: { id: albumId }, data: { deletedAt, publishedAt: null } })

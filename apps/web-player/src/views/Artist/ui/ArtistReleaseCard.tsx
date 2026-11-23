@@ -11,7 +11,7 @@ import { getReleaseMetadata } from '../model/artistDiscography'
 import type { ArtistDiscographyProps } from './ArtistDiscography'
 
 const cardClassName =
-  'group flex min-w-0 flex-col gap-3 rounded-[14px] border border-border bg-card p-3 text-left outline-none transition-colors hover:bg-secondary focus-visible:ring-2 focus-visible:ring-ring'
+  'group flex min-w-0 flex-col gap-3 rounded-[14px] border border-border bg-card p-3 text-left outline-hidden transition-colors hover:bg-secondary focus-visible:ring-2 focus-visible:ring-ring'
 
 const Cover = ({ alt, src }: { alt: string; src: string }) => (
   <div className="relative aspect-square overflow-hidden rounded-[9px]">
@@ -72,15 +72,12 @@ export const ArtistSingleCard = ({
 
   return (
     <button
-      aria-label={t('common.playName', { name: release.track.title })}
       className={cn(cardClassName, 'w-full cursor-pointer')}
       onClick={() => onPlayTrack(release.track, release.index)}
       type="button"
     >
-      <Cover
-        alt={release.track.title}
-        src={getTrackCoverUrl(release.track.cover)}
-      />
+      <span className="sr-only">{t('common.play')} </span>
+      <Cover alt="" src={getTrackCoverUrl(release.track.cover)} />
       <h3 className="line-clamp-1 font-[family-name:var(--font-landing-body)] text-[13px] font-semibold text-foreground">
         {release.track.title}
       </h3>

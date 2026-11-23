@@ -307,7 +307,7 @@ jobs:
 
       # Which published image tag every service is pulled at. ONE value for the
       # whole stack, because infra/docker-compose.prod.yaml writes
-      # `image: ghcr.io/lordpluha/bitrate/<svc>:${IMAGE_TAG:-master}` for all
+      # `image: ghcr.io/lordpluha/bitrate/<svc>:${IMAGE_TAG:?...}` for all
       # six services -- rolling one service back independently is not something
       # that compose file can express, and pretending otherwise would produce a
       # deploy that half-applies.
@@ -415,6 +415,10 @@ jobs:
           JWT_ACCESS_EXPIRES_IN: ${{ vars.JWT_ACCESS_EXPIRES_IN }}
           JWT_REFRESH_EXPIRES_IN: ${{ vars.JWT_REFRESH_EXPIRES_IN }}
           S3_BUCKET: ${{ vars.S3_BUCKET }}
+          S3_ENDPOINT: ${{ vars.S3_ENDPOINT }}
+          S3_REGION: ${{ vars.S3_REGION }}
+          BACKUP_S3_ENDPOINT: ${{ vars.BACKUP_S3_ENDPOINT }}
+          BACKUP_S3_BUCKET: ${{ vars.BACKUP_S3_BUCKET }}
           TRUST_PROXY_HOPS: ${{ vars.TRUST_PROXY_HOPS }}
           HEALTH_CHECK_TIMEOUT_MS: ${{ vars.HEALTH_CHECK_TIMEOUT_MS }}
           AUDIO_PROCESSING_WORKER_ENABLED: ${{ vars.AUDIO_PROCESSING_WORKER_ENABLED }}
@@ -432,6 +436,9 @@ jobs:
           METRICS_TOKEN: ${{ secrets.METRICS_TOKEN }}
           S3_ACCESS_KEY: ${{ secrets.S3_ACCESS_KEY }}
           S3_SECRET_KEY: ${{ secrets.S3_SECRET_KEY }}
+          BACKUP_S3_ACCESS_KEY: ${{ secrets.BACKUP_S3_ACCESS_KEY }}
+          BACKUP_S3_SECRET_KEY: ${{ secrets.BACKUP_S3_SECRET_KEY }}
+          RESTIC_PASSWORD: ${{ secrets.RESTIC_PASSWORD }}
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
           SENTRY_RELEASE: ${{ steps.release-id.outputs.release }}
           SENTRY_ENVIRONMENT: ${{ inputs.environment }}
@@ -446,12 +453,17 @@ jobs:
           #
           # IMAGE_TAG is derived rather than configured, so a missing one is a
           # broken workflow rather than a missing setting -- but it is checked
-          # here anyway, because an empty one silently deploys `:master`.
+          # here anyway, so it fails before anything touches the server; the
+          # compose file would otherwise refuse to start with it empty.
+          #
+          # API_BASE_URL has a schema-valid absence, but the API then builds media
+          # URLs and OAuth callbacks on http://localhost:3000, so it is required.
           required="
             DEPLOY_HOST DEPLOY_USER DEPLOY_SSH_KEY
             IMAGE_TAG
             DOMAIN NODE_ENV PORT
             WEB_HOST NEXT_PUBLIC_API_URL NEXT_PUBLIC_SITE_URL
+            API_BASE_URL
             POSTGRES_USER POSTGRES_PASSWORD POSTGRES_DB
             REDIS_HOST REDIS_PASSWORD
             DATABASE_URL JWT_SECRET
@@ -463,9 +475,11 @@ jobs:
           # Every name the rendered file may carry. Checked below for characters a
           # compose env file cannot represent.
           optional="
-            USER_WEB_HOST ARTIST_WEB_HOST ADMIN_WEB_HOST API_BASE_URL API_URL
+            USER_WEB_HOST ARTIST_WEB_HOST ADMIN_WEB_HOST API_URL
             REDIS_PORT SMTP_HOST SMTP_PORT SMTP_USER SMTP_PASS EMAIL_FROM
-            COOKIE_DOMAIN S3_BUCKET
+            COOKIE_DOMAIN S3_BUCKET S3_ENDPOINT S3_REGION
+            BACKUP_S3_ENDPOINT BACKUP_S3_BUCKET BACKUP_S3_ACCESS_KEY BACKUP_S3_SECRET_KEY
+            RESTIC_PASSWORD
             TRUST_PROXY_HOPS HEALTH_CHECK_TIMEOUT_MS DEV_MAIL_LOG_TOKENS
             AUDIO_PROCESSING_WORKER_ENABLED
             OAUTH_GOOGLE_CLIENT_ID OAUTH_GOOGLE_CLIENT_SECRET
@@ -495,6 +509,8 @@ jobs:
           fi
           # The SeaweedFS service writes these into its JSON identity file with printf, so
           # anything beyond letters and digits would break the JSON and the object store with it.
+          # It keeps running after the move to R2 (ADR-0072) as the rollback path, configured
+          # with the same keys; R2 keys are hex, so they pass.
           case "${S3_ACCESS_KEY}" in
             *[!A-Za-z0-9]*) bad+=("S3_ACCESS_KEY (letters and digits only; it is written into the object store's JSON identity file)") ;;
           esac
@@ -506,6 +522,28 @@ jobs:
             true|false) ;;
             *) bad+=("AUDIO_PROCESSING_WORKER_ENABLED (only true or false)") ;;
           esac
+          if [ -n "${S3_ENDPOINT:-}" ]; then
+            case "${S3_ENDPOINT}" in
+              http://*|https://*) ;;
+              *) bad+=("S3_ENDPOINT (an absolute http(s) URL, e.g. https://<account>.r2.cloudflarestorage.com)") ;;
+            esac
+          fi
+          # Backups (ADR-0072) are all or nothing: the backup service starts only with every
+          # one of these, so a partial set is a mistake to report, not a silent no-op.
+          backup_set=0
+          backup_missing=()
+          for name in BACKUP_S3_ENDPOINT BACKUP_S3_ACCESS_KEY BACKUP_S3_SECRET_KEY RESTIC_PASSWORD; do
+            if [ -n "${!name:-}" ]; then backup_set=1; else backup_missing+=("${name}"); fi
+          done
+          if [ "${backup_set}" = 1 ] && [ ${#backup_missing[@]} -gt 0 ]; then
+            bad+=("backups are partly configured; also set: ${backup_missing[*]}")
+          fi
+          if [ -n "${RESTIC_PASSWORD:-}" ] && [ "${#RESTIC_PASSWORD}" -lt 20 ]; then
+            bad+=("RESTIC_PASSWORD (use at least 20 characters: openssl rand -base64 32)")
+          fi
+          if [ -z "${RESTIC_PASSWORD:-}" ]; then
+            echo "::warning::Off-site backups are not configured (BACKUP_S3_* and RESTIC_PASSWORD). The deploy continues without them."
+          fi
           if [ -n "${S3_BUCKET:-}" ]; then
             case "${S3_BUCKET}" in
               *[!a-z0-9-]*|-*|*-) bad+=("S3_BUCKET (lowercase letters, digits and hyphens, not starting or ending with a hyphen)") ;;
@@ -691,6 +729,10 @@ jobs:
           JWT_ACCESS_EXPIRES_IN: ${{ vars.JWT_ACCESS_EXPIRES_IN }}
           JWT_REFRESH_EXPIRES_IN: ${{ vars.JWT_REFRESH_EXPIRES_IN }}
           S3_BUCKET: ${{ vars.S3_BUCKET }}
+          S3_ENDPOINT: ${{ vars.S3_ENDPOINT }}
+          S3_REGION: ${{ vars.S3_REGION }}
+          BACKUP_S3_ENDPOINT: ${{ vars.BACKUP_S3_ENDPOINT }}
+          BACKUP_S3_BUCKET: ${{ vars.BACKUP_S3_BUCKET }}
           TRUST_PROXY_HOPS: ${{ vars.TRUST_PROXY_HOPS }}
           HEALTH_CHECK_TIMEOUT_MS: ${{ vars.HEALTH_CHECK_TIMEOUT_MS }}
           AUDIO_PROCESSING_WORKER_ENABLED: ${{ vars.AUDIO_PROCESSING_WORKER_ENABLED }}
@@ -708,6 +750,9 @@ jobs:
           METRICS_TOKEN: ${{ secrets.METRICS_TOKEN }}
           S3_ACCESS_KEY: ${{ secrets.S3_ACCESS_KEY }}
           S3_SECRET_KEY: ${{ secrets.S3_SECRET_KEY }}
+          BACKUP_S3_ACCESS_KEY: ${{ secrets.BACKUP_S3_ACCESS_KEY }}
+          BACKUP_S3_SECRET_KEY: ${{ secrets.BACKUP_S3_SECRET_KEY }}
+          RESTIC_PASSWORD: ${{ secrets.RESTIC_PASSWORD }}
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
           # Not configuration a human sets anywhere: both are derived per deploy.
           # SENTRY_RELEASE names the released version being started, and
@@ -717,10 +762,10 @@ jobs:
           SENTRY_RELEASE: ${{ steps.release-id.outputs.release }}
           SENTRY_ENVIRONMENT: ${{ inputs.environment }}
           # The single tag every service in the prod compose file is pulled at.
-          # Always written, never omitted: relying on the compose file's
-          # `${IMAGE_TAG:-master}` default would silently deploy `:master` if
-          # this ever resolved empty, which is the exact accident a rollback
-          # cannot afford.
+          # Always written, never omitted. The compose file has no default for it
+          # (`${IMAGE_TAG:?...}`): a fallback such as `:master` would silently
+          # deploy an image that is no longer published, which is the exact
+          # accident a rollback cannot afford.
           IMAGE_TAG: ${{ steps.image-tag.outputs.tag }}
           RENDERED_FROM: ${{ github.sha }}
           ENVIRONMENT_NAME: ${{ inputs.environment }}
@@ -768,7 +813,9 @@ jobs:
             opt USER_WEB_HOST
             opt ARTIST_WEB_HOST
             opt ADMIN_WEB_HOST
-            opt API_BASE_URL
+            # Required: the API falls back to http://localhost:3000 for media URLs and
+            # OAuth callbacks when it is unset, which is never right for a deploy.
+            req API_BASE_URL
             opt API_URL
             req NEXT_PUBLIC_API_URL
             req NEXT_PUBLIC_SITE_URL
@@ -803,12 +850,32 @@ jobs:
             opt DEV_MAIL_LOG_TOKENS
 
             printf '\n# --- Storage ---\n'
-            # The object store (ADR-0050): the bucket-scoped application identity the
-            # seaweedfs service is configured with and the api is handed. Required: the
-            # api has no other storage backend.
+            # The object store: the bucket-scoped application token the api is handed
+            # (and the seaweedfs service is configured with). Required: the api has no
+            # other storage backend. S3_ENDPOINT unset keeps the in-stack SeaweedFS
+            # (ADR-0050); set to the R2 endpoint, the api uses Cloudflare R2 (ADR-0072).
             req S3_ACCESS_KEY
             req S3_SECRET_KEY
             opt S3_BUCKET
+            opt S3_ENDPOINT
+            opt S3_REGION
+
+            # Off-site backups (ADR-0072). Only when fully configured -- the preflight
+            # rejects a partial set -- and then COMPOSE_PROFILES turns on the backup
+            # service of infra/docker-compose.prod.yaml.
+            if [ -n "${RESTIC_PASSWORD:-}" ]; then
+              printf '\n# --- Backups ---\n'
+              printf 'COMPOSE_PROFILES=backup\n'
+              case "${S3_ENDPOINT:-}" in
+                *.r2.cloudflarestorage.com*) printf 'BACKUP_SOURCE_PROVIDER=Cloudflare\n' ;;
+                *) printf 'BACKUP_SOURCE_PROVIDER=SeaweedFS\n' ;;
+              esac
+              req BACKUP_S3_ENDPOINT
+              opt BACKUP_S3_BUCKET
+              req BACKUP_S3_ACCESS_KEY
+              req BACKUP_S3_SECRET_KEY
+              req RESTIC_PASSWORD
+            fi
 
             printf '\n# --- Observability ---\n'
             opt METRICS_TOKEN
@@ -973,7 +1040,7 @@ jobs:
       - name: Publish the Sentry release
         if: ${{ inputs.run-deploy && steps.sentry.outputs.configured == 'true' }}
         continue-on-error: true
-        uses: getsentry/action-release@e6703d0b00208e0b3687ba660d18ab5af7892821 # v3.7.2
+        uses: getsentry/action-release@2e505a70ff06dac263413242aa3617fec90134e5 # v3.9.1
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: ${{ vars.SENTRY_ORG }}
