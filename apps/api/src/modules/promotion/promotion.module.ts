@@ -1,17 +1,9 @@
 import type { AppConfig } from '@common/config'
-import { PrismaModule } from '@infra/prisma/prisma.module'
-import { TokensModule } from '@modules/tokens/tokens.module'
-import { BullModule } from '@nestjs/bullmq'
 import { Module } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { PROMOTION_TASKS, type PromotionModelConfig } from './ai/model-routing'
 import { PROMOTION_MODELS, PromotionGenerator } from './ai/promotion-generator'
 import { createPromotionModels } from './ai/promotion-models'
-import { PromotionPlansService } from './plans/promotion-plans.service'
-import { PromotionProfileService } from './profile/promotion-profile.service'
-import { PromotionConsumer } from './promotion.consumer'
-import { PromotionController } from './promotion.controller'
-import { PROMOTION_QUEUE } from './promotion.queue'
 import { AI_QUOTA_LIMITS, type AiQuotaLimits, AiQuotaService } from './usage/ai-quota.service'
 import { AiUsageService } from './usage/ai-usage.service'
 
@@ -51,8 +43,6 @@ export function promotionModelConfig(
  * features build on `PromotionGenerator` and `AiQuotaService`.
  */
 @Module({
-  imports: [PrismaModule, TokensModule, BullModule.registerQueue({ name: PROMOTION_QUEUE })],
-  controllers: [PromotionController],
   providers: [
     {
       provide: PROMOTION_MODELS,
@@ -80,9 +70,6 @@ export function promotionModelConfig(
     AiUsageService,
     AiQuotaService,
     PromotionGenerator,
-    PromotionProfileService,
-    PromotionPlansService,
-    PromotionConsumer,
   ],
   exports: [PromotionGenerator, AiQuotaService],
 })
