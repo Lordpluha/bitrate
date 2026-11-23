@@ -3,7 +3,8 @@
 
 /**
  * `build(m)` returns the content nodes (`m` is true on a phone); each state is
- * `[label, shell, build]` with the shell options of `frames.desktop`.
+ * `[label, shell, build, only?]` with the shell options of `frames.desktop`; `only = { side:
+ * 'desktop' | 'mobile', reason }` draws a state that exists on one side only.
  */
 export function pageSpec(frames, meta, shell, build, states = []) {
   const desktop = (theme) => frames.desktop({ ...shell, theme }, build(false))
@@ -11,10 +12,12 @@ export function pageSpec(frames, meta, shell, build, states = []) {
     ...meta,
     desktop,
     mobile: () => frames.mobile(build(true)),
-    states: states.map(([label, stateShell, stateBuild]) => ({
+    states: states.map(([label, stateShell, stateBuild, only]) => ({
       label,
-      desktop: () => frames.desktop(stateShell, stateBuild(false)),
-      mobile: () => frames.mobile(stateBuild(true)),
+      reason: only?.reason,
+      desktop:
+        only?.side === 'mobile' ? undefined : () => frames.desktop(stateShell, stateBuild(false)),
+      mobile: only?.side === 'desktop' ? undefined : () => frames.mobile(stateBuild(true)),
     })),
   }
 }

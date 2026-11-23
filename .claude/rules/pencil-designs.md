@@ -70,10 +70,11 @@ paths:
   page set is exactly the screens in `apps/web-artists` (plus the planned promotion pages), one folder
   each; pages without a screen in code live in `pencil/web-artist-design/archive/`. `run-artist.mjs`
   writes them from `scripts/pencil-pages/pages/artist/` (`index.mjs` + area modules `public`,
-  `workspace`, `release`, `insights`, `account`, `overlays`, `promotion`, small files per page); on the
-  library so far: the public pages (landing, auth, legal, not-found, session-error) over the canvas
-  without the shell, and the promotion pages as bento tiles on the 12-column grid (73px columns, 20px
-  gaps). `dashboard` and `music` still import `ds` (old `pages-artist.mjs`) until they are redrawn.
+  `workspace`, `release`, `insights`, `account`, `overlays`, `promotion`, small files per page); drawn so
+  far: the public pages (landing, auth, legal, not-found, session-error) over the canvas without the
+  shell, the workspace pages `dashboard` and `music`, the overlays (`workspace-search`,
+  `notifications`, `account-switcher`, `mobile-menu`; modals and popovers in flow over the shell) and
+  the promotion pages, as bento tiles on the 12-column grid (73px columns, 64px rows, 20px gaps).
   Copy is the English i18n of `apps/web-artists`; see `pencil/web-artist-design/DESIGN.md`.
   Film grain has no Pencil equivalent and is not drawn.
 - Admin pages (`overview`, `notifications`) are a port of
