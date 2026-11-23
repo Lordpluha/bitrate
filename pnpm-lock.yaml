@@ -407,6 +407,9 @@ importers:
       '@bitrate/ncs-parser':
         specifier: workspace:*
         version: link:../../packages/ncs-parser
+      '@bitrate/support-core':
+        specifier: workspace:*
+        version: link:../../packages/support-core
       '@nestjs/bullmq':
         specifier: ^12.0.0
         version: 12.0.2(@nestjs/common@12.5.1(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@10.2.2))(@nestjs/core@12.5.1)(bullmq@6.7.8(ioredis@6.0.0(supports-color@10.2.2))(pg@8.23.1))
@@ -440,6 +443,9 @@ importers:
       '@prometheus-io/client':
         specifier: ^0.16.1
         version: 0.16.1
+      '@qdrant/js-client-rest':
+        specifier: ^1.20.0
+        version: 1.20.0(typescript@6.0.3)
       '@sentry/nestjs':
         specifier: ^11.5.0
         version: 11.15.0(@nestjs/common@12.5.1(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@10.2.2))(@nestjs/core@12.5.1)(rollup@4.64.2)(webpack@5.111.1(@swc/core@1.16.13(@swc/helpers@0.5.23))(@swc/html@1.16.13)(clean-css@5.3.3)(cssnano@6.1.2(postcss@8.5.29))(csso@5.0.5)(esbuild@0.28.2)(html-minifier-terser@7.2.0)(lightningcss@1.33.0)(postcss@8.5.29)(sharp@0.35.5(@types/node@26.6.4))(svgo@3.3.5)(uglify-js@3.19.3))
@@ -7481,6 +7487,16 @@ packages:
   '@prometheus-io/client@0.16.1':
     resolution: {integrity: sha512-XkFPsGFGoSs/UMg/vh0QLDpanl/tsrOV5PLHdpGe8Ho+ir/Llhytr15j6y8ZwLrpIGzK9gTVVpIalA6C4UjUZw==}
     engines: {node: ^22 || ^24 || >=26}
+
+  '@qdrant/js-client-rest@1.20.0':
+    resolution: {integrity: sha512-NhvW4z3rbxYc1e+ksHci5hE8vNBpbi5YoB7z3dzaVcskM2el7O/exNg5fclAN+G5MXn/TRx2Rcie8YTXo2YQdg==}
+    engines: {node: '>=22.0.0'}
+    peerDependencies:
+      typescript: '>=4.7'
+
+  '@qdrant/openapi-typescript-fetch@1.2.6':
+    resolution: {integrity: sha512-oQG/FejNpItrxRHoyctYvT3rwGZOnK4jr3JdppO/c78ktDvkWiPXPHNsrDf33K9sZdRb6PR7gi4noIapu5q4HA==}
+    engines: {node: '>=18.0.0', pnpm: '>=8'}
 
   '@radix-ui/primitive@1.1.3':
     resolution: {integrity: sha512-JTF99U/6XIjCBo0wqkU5sK10glYe27MRRsfwoiq5zzOEZLHU3A3KCMa5X/azekYRCJ0HlwI0crAXS/5dEHTzDg==}
@@ -28056,6 +28072,14 @@ snapshots:
       '@opentelemetry/api': 1.9.1
       tdigest: 0.1.3
 
+  '@qdrant/js-client-rest@1.20.0(typescript@6.0.3)':
+    dependencies:
+      '@qdrant/openapi-typescript-fetch': 1.2.6
+      typescript: 6.0.3
+      undici: 7.30.2
+
+  '@qdrant/openapi-typescript-fetch@1.2.6': {}
+
   '@radix-ui/primitive@1.1.3': {}
 
   '@radix-ui/primitive@1.1.7': {}
@@ -31224,19 +31248,6 @@ snapshots:
       vitest: 5.1.1(@opentelemetry/api@1.9.1)(@types/node@26.6.4)(@vitest/browser-playwright@5.1.1)(@vitest/coverage-v8@5.1.1)(@vitest/ui@5.1.1)(jsdom@30.1.3(@noble/hashes@2.4.0))(vite@8.3.5(@types/node@26.6.4)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.1(supports-color@10.2.2))(sass-embedded@1.108.2)(sass@1.108.2)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1))
     optionalDependencies:
       '@vitest/browser': 5.1.1(vite@8.3.5(@types/node@26.6.4)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.1(supports-color@10.2.2))(sass-embedded@1.108.2)(sass@1.108.2)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1))(vitest@5.1.1)
-
-  '@vitest/coverage-v8@5.1.1(vitest@5.1.1)':
-    dependencies:
-      '@bcoe/v8-coverage': 1.0.2
-      '@vitest/istanbul-lib-coverage': 2.1.0
-      '@vitest/istanbul-lib-report': 2.1.0
-      ast-v8-to-istanbul: 1.0.7
-      magicast: 0.5.5
-      obug: 3.0.0
-      std-env: 4.3.0
-      tinyrainbow: 3.2.0
-      vitest: 5.1.1(@opentelemetry/api@1.9.1)(@types/node@26.6.4)(@vitest/browser-playwright@5.1.1)(@vitest/coverage-v8@5.1.1)(@vitest/ui@5.1.1)(jsdom@30.1.3(@noble/hashes@2.4.0))(vite@8.3.5(@types/node@26.6.4)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.1(supports-color@10.2.2))(sass-embedded@1.104.1)(sass@1.104.1)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1))
-    optional: true
 
   '@vitest/expect@3.2.4':
     dependencies:
@@ -42833,7 +42844,7 @@ snapshots:
       '@opentelemetry/api': 1.9.1
       '@types/node': 26.6.4
       '@vitest/browser-playwright': 5.1.1(playwright@1.64.0)(vite@8.3.5(@types/node@26.6.4)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.1(supports-color@10.2.2))(sass-embedded@1.104.1)(sass@1.104.1)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1))(vitest@5.1.1)
-      '@vitest/coverage-v8': 5.1.1(vitest@5.1.1)
+      '@vitest/coverage-v8': 5.1.1(@vitest/browser@5.1.1)(vitest@5.1.1)
       '@vitest/ui': 5.1.1(vitest@5.1.1)
       jsdom: 30.1.3(@noble/hashes@2.4.0)
     transitivePeerDependencies:

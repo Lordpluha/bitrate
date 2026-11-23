@@ -118,6 +118,15 @@ COPY --from=build --chown=bitrateapi:nodejs /app/apps/api/dist ./apps/api/dist
 # The target of apps/api/node_modules/@bitrate/converter — see the prod-dependencies stage.
 # Copied whole so any version the hoisted install nested under it comes along.
 COPY --from=prod-dependencies --chown=bitrateapi:nodejs /app/packages/converter ./packages/converter
+# The support assistant core (ADR-0074): an ESM workspace package the API loads at runtime.
+# Its package.json resolves the `exports`; the build stage compiled its dist.
+COPY --from=prod-dependencies --chown=bitrateapi:nodejs /app/packages/support-core/package.json ./packages/support-core/package.json
+COPY --from=build --chown=bitrateapi:nodejs /app/packages/support-core/dist ./packages/support-core/dist
+# Knowledge sources the API indexes into Qdrant on start (ADR-0075): every help article and the
+# published legal texts allowlisted in legal-knowledge-sources.ts, never the legal drafts.
+COPY --chown=bitrateapi:nodejs apps/docs/docs/help ./apps/api/knowledge/help
+COPY --chown=bitrateapi:nodejs apps/docs/docs/legal/privacy-policy.md apps/docs/docs/legal/terms-of-use.md ./apps/api/knowledge/legal/
+ENV SUPPORT_KNOWLEDGE_DIR=/app/apps/api/knowledge
 # `task prod:migrate` runs `prisma migrate deploy` in a throwaway container from this image, so
 # the migrations have to be here even though generation happened upstream.
 COPY --chown=bitrateapi:nodejs apps/api/prisma ./apps/api/prisma
