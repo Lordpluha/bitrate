@@ -124,10 +124,70 @@ model PromotionPlanStep {
   body        String
   state       PromotionStepState @default(SUGGESTED)
   /// False once the artist edits the text; drives the "Created with AI" marker.
-  aiGenerated Boolean            @default(true)
-  updatedAt   DateTime           @updatedAt @db.Timestamptz(3)
+  aiGenerated  Boolean               @default(true)
+  /// Post drafts of a POST step; null until the artist asks for them.
+  postsStatus  PromotionGenerationStatus?
+  /// Message key when `postsStatus` is FAILED.
+  postsFailure String?
+  updatedAt    DateTime              @updatedAt @db.Timestamptz(3)
 
-  plan PromotionPlan @relation(fields: [planId], references: [id], onDelete: Cascade)
+  plan  PromotionPlan   @relation(fields: [planId], references: [id], onDelete: Cascade)
+  posts PromotionPost[]
 
   @@index([planId, position])
+}
+
+enum PromotionGenerationStatus {
+  GENERATING
+  READY
+  FAILED
+}
+
+/// The English master of one post for one channel (spec D-7, D-14). Translations derive from
+/// it; `revision` grows with every edit so a translation knows which master it was made from.
+model PromotionPost {
+  id          String           @id @default(uuid(7)) @db.Uuid
+  stepId      String           @db.Uuid
+  channel     PromotionChannel
+  text        String
+  hashtags    String[]
+  aiGenerated Boolean          @default(true)
+  revision    Int              @default(1)
+  updatedAt   DateTime         @updatedAt @db.Timestamptz(3)
+
+  step         PromotionPlanStep          @relation(fields: [stepId], references: [id], onDelete: Cascade)
+  translations PromotionPostTranslation[]
+
+  @@unique([stepId, channel])
+}
+
+enum PromotionTranslationState {
+  TRANSLATING
+  /// A machine translation the artist has not changed.
+  MACHINE
+  /// The artist changed the translation; never overwritten automatically (spec D-7.1).
+  EDITED
+  /// The English master changed after this translation was made.
+  STALE
+  FAILED
+}
+
+/// A post in another language, reviewed by the artist (spec D-20).
+model PromotionPostTranslation {
+  id             String                    @id @default(uuid(7)) @db.Uuid
+  postId         String                    @db.Uuid
+  /// BCP 47 language: `uk` or `pl` for now.
+  language       String                    @db.VarChar(8)
+  text           String                    @default("")
+  state          PromotionTranslationState @default(TRANSLATING)
+  aiGenerated    Boolean                   @default(true)
+  /// 1 good, -1 needs work; the quality signal for the translation model.
+  rating         Int?
+  /// The master `revision` this translation was made from.
+  sourceRevision Int
+  updatedAt      DateTime                  @updatedAt @db.Timestamptz(3)
+
+  post PromotionPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@unique([postId, language])
 }

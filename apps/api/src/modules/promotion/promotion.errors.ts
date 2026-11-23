@@ -11,10 +11,17 @@ export const PROMOTION_ERRORS = {
   GENERATION_UNAVAILABLE: 'errors.promotion.generation_unavailable',
   /** Stored on a FAILED plan: the output failed its checks twice. */
   GENERATION_REJECTED: 'errors.promotion.generation_rejected',
+  STEP_NOT_POST: 'errors.promotion.step_not_post',
+  STEP_CLOSED: 'errors.promotion.step_closed',
+  POSTS_GENERATING: 'errors.promotion.posts_generating',
+  POST_NOT_FOUND: 'errors.promotion.post_not_found',
+  TRANSLATION_NOT_FOUND: 'errors.promotion.translation_not_found',
+  TRANSLATION_BUSY: 'errors.promotion.translation_busy',
 } as const
 
 export const PROMOTION_VALIDATION = {
   CONTACT_DETAILS: 'validation.promotion.contact_details',
   DUPLICATE_CHANNELS: 'validation.promotion.duplicate_channels',
   EDIT_EMPTY: 'validation.promotion.edit_empty',
+  POST_TOO_LONG: 'validation.promotion.post_too_long',
 } as const

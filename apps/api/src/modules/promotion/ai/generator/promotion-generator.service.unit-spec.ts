@@ -113,6 +113,20 @@ describe('PromotionGenerator', () => {
     ])
   })
 
+  it("regenerates when the caller's own check finds a problem", async () => {
+    const primary = scripted(caption('Afterglow.'), caption('Afterglow arrives.'))
+    const result = await generator(new Map([[PRIMARY.id, primary]]), {
+      primary: PRIMARY,
+      fallback: null,
+    }).generate({
+      ...request,
+      check: (output) =>
+        output.caption.includes('arrives') ? [] : [{ kind: 'term', value: 'arrives' }],
+    })
+    expect(result.output.caption).toBe('Afterglow arrives.')
+    expect(outcomes()).toEqual([`${PRIMARY.id}:REJECTED_UNGROUNDED`, `${PRIMARY.id}:SUCCEEDED`])
+  })
+
   it('treats output that does not match the schema as a rejected attempt', async () => {
     const primary = scripted('not json at all', caption('Afterglow arrives.'))
     const result = await generator(new Map([[PRIMARY.id, primary]]), {

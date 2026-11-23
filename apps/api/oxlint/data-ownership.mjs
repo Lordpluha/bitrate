@@ -26,6 +26,8 @@ export const DATA_OWNERS = {
   artistPromotionProfile: ['promotion'],
   promotionPlan: ['promotion'],
   promotionPlanStep: ['promotion'],
+  promotionPost: ['promotion'],
+  promotionPostTranslation: ['promotion'],
 
   staff: ['admin-auth', 'admin/staff'],
   staffSession: ['admin-auth'],

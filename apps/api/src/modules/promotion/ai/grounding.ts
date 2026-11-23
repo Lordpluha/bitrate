@@ -4,7 +4,16 @@
  * is reported, and the caller regenerates once before surfacing an error.
  */
 
-type UngroundedKind = 'number' | 'year' | 'rank' | 'url' | 'email' | 'handle' | 'achievement'
+type UngroundedKind =
+  | 'number'
+  | 'year'
+  | 'rank'
+  | 'url'
+  | 'email'
+  | 'handle'
+  | 'achievement'
+  /** A glossary term the output dropped or translated (checked by the caller). */
+  | 'term'
 
 export interface UngroundedClaim {
   kind: UngroundedKind
