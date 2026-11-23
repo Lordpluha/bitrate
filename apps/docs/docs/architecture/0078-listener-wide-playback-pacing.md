@@ -1,4 +1,4 @@
-# ADR-0072: Listener-wide playback pacing, per-user session throttling and pacing without Redis
+# ADR-0078: Listener-wide playback pacing, per-user session throttling and pacing without Redis
 
 Status: Accepted — supersedes "Redis outage (D18)" of [ADR-0067](./0067-playback-sessions.md)
 

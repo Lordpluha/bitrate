@@ -229,7 +229,7 @@ describe('PlaybackSessionService', () => {
     expect(metrics.recordPlaybackSessionDegraded).toHaveBeenCalled()
   })
 
-  describe('listener-wide budget (ADR-0072)', () => {
+  describe('listener-wide budget (ADR-0078)', () => {
     const fill = async (trackId: string, fragments: number) => {
       const session = await service.authorize((await open(trackId)).token, trackId)
       for (let fragment = 0; fragment < fragments; fragment++) {
@@ -284,7 +284,7 @@ describe('PlaybackSessionService', () => {
     })
   })
 
-  describe('pacing while Redis is down (ADR-0072)', () => {
+  describe('pacing while Redis is down (ADR-0078)', () => {
     const signed = (trackId: string, userId = 'user-1') =>
       createPlaybackToken(
         { sessionId: `session-${trackId}`, userId, trackId, expiresInSeconds: 600 },

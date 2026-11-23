@@ -13,7 +13,7 @@ function isTrackedUser(value: unknown): value is TrackedUser {
 }
 
 /**
- * Throttles a route per signed-in user instead of per address (ADR-0072), on top of the global
+ * Throttles a route per signed-in user instead of per address (ADR-0078), on top of the global
  * per-address `ThrottlerGuard`, so one account cannot multiply a limit by rotating addresses. It
  * must run after the auth guard that sets `req.user`; without a user it counts by address.
  */
