@@ -1,7 +1,20 @@
 import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common'
 import { PrismaPg } from '@prisma/adapter-pg'
-import { PrismaClient } from '@prisma/client'
+import { type Prisma, PrismaClient } from '@prisma/client'
 import { Pool } from 'pg'
+
+/**
+ * Columns no query returns unless it selects them explicitly. `Track.audioUrl` is the master's
+ * storage key: ingest and processing select it, but it must never reach a response (#522).
+ *
+ * Applied at runtime only. Passing it as `PrismaClient`'s type argument would also narrow the
+ * result types, but it blows up type instantiation across the deep transaction mocks in specs.
+ * So the generated types still list `audioUrl` on a query without `select` — read it only with
+ * `select: { audioUrl: true }`, as every current reader does.
+ */
+export const PRISMA_GLOBAL_OMIT = {
+  track: { audioUrl: true },
+} as const satisfies Prisma.GlobalOmitConfig
 
 /**
  * The application's Prisma client. Extending `PrismaClient` exposes every model delegate
@@ -20,7 +33,7 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
     const pool = new Pool({
       connectionString: process.env.DATABASE_URL,
     })
-    super({ adapter: new PrismaPg(pool) })
+    super({ adapter: new PrismaPg(pool), omit: PRISMA_GLOBAL_OMIT })
     this.pool = pool
   }
 

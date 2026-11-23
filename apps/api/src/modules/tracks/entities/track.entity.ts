@@ -1,8 +1,11 @@
 import { ApiHideProperty, ApiProperty } from '@nestjs/swagger'
 import type { Track } from '@prisma/client'
 
-/** Represents the track entity. */
-export class TrackEntity implements Track {
+/**
+ * Represents the track entity as listeners receive it. `audioUrl` (the master's storage key) is
+ * omitted globally by `PrismaService` and never part of a response (#522).
+ */
+export class TrackEntity implements Omit<Track, 'audioUrl'> {
   @ApiHideProperty()
   moderationBlockedAt: Date | null
 
@@ -13,10 +16,6 @@ export class TrackEntity implements Track {
   /** The title value. */
   @ApiProperty()
   title: string
-
-  /** The audio url value. */
-  @ApiProperty()
-  audioUrl: string
 
   /** The cover value. */
   @ApiProperty({ nullable: true })

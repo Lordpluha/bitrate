@@ -7,6 +7,8 @@ import {
   Body,
   Controller,
   Get,
+  HttpException,
+  HttpStatus,
   Logger,
   Param,
   ParseIntPipe,
@@ -29,12 +31,18 @@ import {
   TrackManifestEntity,
   TrackManifestRenditionEntity,
 } from '../entities'
+import { PLAYBACK_ERRORS } from '../errors'
+import { PlaybackAbuseError } from './playback-abuse'
 import { PlaybackPacingError } from './playback-session.service'
 import { TrackPlaybackService } from './track-playback.service'
 import { UnsatisfiableRangeError } from './track-playback.types'
 
-/** Rendition bytes never change, so they can be cached for a long time. */
-const IMMUTABLE_CACHE_CONTROL = 'private, max-age=31536000, immutable, no-transform'
+/**
+ * Rendition bytes are never stored by the browser or a proxy (#522 D3): a year-long cache kept
+ * whole cleartext renditions on disk, a ready-made file outside any play session. The player
+ * buffers what it needs in memory.
+ */
+const RENDITION_CACHE_CONTROL = 'private, no-store, no-transform'
 
 const logger = new Logger('TrackPlaybackController')
 
@@ -82,16 +90,25 @@ export class TrackPlaybackController {
   @UserAuth()
   @Throttle({ default: { ttl: 60_000, limit: 120 } })
   @Post(':id/play-sessions')
-  openPlaySession(
+  async openPlaySession(
     @Param('id', ParseUUIDPipe) id: TrackEntity['id'],
     @CurrentUser() user: UserEntity,
     @Body(new ZodValidationPipe(OpenPlaySessionSchema)) dto: OpenPlaySessionDto,
+    @Res({ passthrough: true }) res: Response,
   ) {
-    return this.trackPlaybackService.openSession({
-      trackId: id,
-      userId: user.id,
-      ...(dto?.deviceId ? { deviceId: dto.deviceId } : {}),
-    })
+    try {
+      return await this.trackPlaybackService.openSession({
+        trackId: id,
+        userId: user.id,
+        ...(dto?.deviceId ? { deviceId: dto.deviceId } : {}),
+      })
+    } catch (error) {
+      if (error instanceof PlaybackAbuseError) {
+        res.set('Retry-After', String(error.retryAfterSeconds))
+        throw new HttpException(PLAYBACK_ERRORS.TOO_MANY_TRACKS, HttpStatus.TOO_MANY_REQUESTS)
+      }
+      throw error
+    }
   }
 
   /** Authorised by the session token alone (D9): a native `<audio>` cannot refresh a cookie. */
@@ -127,7 +144,7 @@ export class TrackPlaybackController {
 
     sendRangeStream(res, rendition, {
       'Content-Length': String(rendition.contentLength),
-      'Cache-Control': IMMUTABLE_CACHE_CONTROL,
+      'Cache-Control': RENDITION_CACHE_CONTROL,
     })
   }
 }

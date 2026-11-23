@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, jest } from '@jest/globals'
 import { ForbiddenException } from '@nestjs/common'
 import { CHARGE_LISTENER_BUCKET_SCRIPT, chargeListenerBucket } from './listener-bucket'
+import { PlaybackAbuseError } from './playback-abuse'
 import { PlaybackPacingError, PlaybackSessionService } from './playback-session.service'
 import { createPlaybackToken } from './playback-token'
 
@@ -80,6 +81,54 @@ class FakeRedis {
     return this.reply(() => [...(this.sets.get(key) ?? [])])
   }
 
+  zsets = new Map<string, Map<string, number>>()
+
+  zadd(key: string, score: number, member: string) {
+    return this.reply(() => {
+      const zset = this.zsets.get(key) ?? new Map<string, number>()
+      const added = zset.has(member) ? 0 : 1
+      zset.set(member, score)
+      this.zsets.set(key, zset)
+      return added
+    })
+  }
+
+  zremrangebyscore(key: string, min: number | string, max: number | string) {
+    return this.reply(() => {
+      const zset = this.zsets.get(key)
+      if (!zset) return 0
+      const low = min === '-inf' ? Number.NEGATIVE_INFINITY : Number(min)
+      const high = Number(max)
+      let removed = 0
+      for (const [member, score] of zset) {
+        if (score >= low && score <= high) {
+          zset.delete(member)
+          removed++
+        }
+      }
+      return removed
+    })
+  }
+
+  zcard(key: string) {
+    return this.reply(() => this.zsets.get(key)?.size ?? 0)
+  }
+
+  zscore(key: string, member: string) {
+    return this.reply(() => {
+      const score = this.zsets.get(key)?.get(member)
+      return score === undefined ? null : String(score)
+    })
+  }
+
+  /** Only the `zrange key 0 0` form the service uses: the lowest-scored member. */
+  zrange(key: string, _start: string, _stop: string) {
+    return this.reply(() => {
+      const lowest = [...(this.zsets.get(key) ?? [])].sort((a, b) => a[1] - b[1])[0]
+      return lowest ? [lowest[0]] : []
+    })
+  }
+
   del(...keys: string[]) {
     return this.reply(() => {
       for (const key of keys) {
@@ -120,13 +169,13 @@ const config = { getOrThrow: () => SECRET }
 
 describe('PlaybackSessionService', () => {
   let redis: FakeRedis
-  let metrics: { recordPlaybackSessionDegraded: jest.Mock }
+  let metrics: { recordPlaybackSessionDegraded: jest.Mock; recordPlaybackAbuse: jest.Mock }
   let service: PlaybackSessionService
 
   beforeEach(() => {
     jest.useRealTimers()
     redis = new FakeRedis()
-    metrics = { recordPlaybackSessionDegraded: jest.fn() }
+    metrics = { recordPlaybackSessionDegraded: jest.fn(), recordPlaybackAbuse: jest.fn() }
     service = new PlaybackSessionService(redis as never, config as never, metrics as never)
   })
 
@@ -334,6 +383,57 @@ describe('PlaybackSessionService', () => {
 
       await expect(service.charge(session, 10_000)).rejects.toBeInstanceOf(PlaybackPacingError)
       expect(metrics.recordPlaybackSessionDegraded).toHaveBeenCalledWith('charge')
+    })
+  })
+
+  describe('suspicious activity (#522 D5)', () => {
+    const openTracks = async (from: number, count: number) => {
+      for (let index = from; index < from + count; index++) await open(`track-${index}`)
+    }
+
+    it('flags a listener who starts more than 40 different tracks in ten minutes, without blocking', async () => {
+      jest.useFakeTimers({ now: new Date('2026-11-10T12:00:00Z') })
+      await openTracks(0, 40)
+      // Replaying the same tracks is not new activity.
+      await openTracks(0, 10)
+      expect(metrics.recordPlaybackAbuse).not.toHaveBeenCalled()
+
+      await openTracks(40, 5)
+
+      expect(metrics.recordPlaybackAbuse).toHaveBeenCalledTimes(1)
+      expect(metrics.recordPlaybackAbuse).toHaveBeenCalledWith('suspicious')
+    })
+
+    it('refuses sessions beyond 120 different tracks in ten minutes with a retry delay', async () => {
+      jest.useFakeTimers({ now: new Date('2026-11-10T12:00:00Z') })
+      await openTracks(0, 120)
+
+      const refusal = await open('track-120').catch((error: unknown) => error)
+
+      expect(refusal).toBeInstanceOf(PlaybackAbuseError)
+      expect((refusal as PlaybackAbuseError).retryAfterSeconds).toBeGreaterThan(0)
+      expect((refusal as PlaybackAbuseError).retryAfterSeconds).toBeLessThanOrEqual(600)
+      expect(metrics.recordPlaybackAbuse).toHaveBeenCalledWith('blocked')
+      // A track already in the window still opens: resuming is not new activity.
+      await expect(open('track-5')).resolves.toMatchObject({ token: expect.any(String) })
+    })
+
+    it('forgets tracks once they leave the ten-minute window', async () => {
+      jest.useFakeTimers({ now: new Date('2026-11-10T12:00:00Z') })
+      await openTracks(0, 120)
+
+      jest.setSystemTime(new Date('2026-11-10T12:10:01Z'))
+
+      await expect(open('track-120')).resolves.toMatchObject({ token: expect.any(String) })
+    })
+
+    it('counts listeners separately', async () => {
+      jest.useFakeTimers({ now: new Date('2026-11-10T12:00:00Z') })
+      await openTracks(0, 120)
+
+      await expect(
+        service.open({ userId: 'user-2', trackId: 'track-500', durationMs: 180_000 }),
+      ).resolves.toMatchObject({ token: expect.any(String) })
     })
   })
 })
