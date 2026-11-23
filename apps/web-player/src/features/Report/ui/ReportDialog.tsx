@@ -103,7 +103,7 @@ export const ReportDialog = ({
         <label className="mt-5 block text-sm font-semibold text-foreground">
           Reason
           <select
-            className="mt-2 h-11 w-full rounded border border-border bg-surface px-3 text-foreground outline-none focus:border-white"
+            className="mt-2 h-11 w-full rounded border border-border bg-surface px-3 text-foreground outline-hidden focus:border-white"
             onChange={(event) =>
               setReason(event.target.value as (typeof REPORT_REASONS)[number])
             }
@@ -120,7 +120,7 @@ export const ReportDialog = ({
         <label className="mt-4 block text-sm font-semibold text-foreground">
           Details (optional)
           <textarea
-            className="mt-2 min-h-28 w-full resize-y rounded border border-border bg-surface p-3 text-foreground outline-none focus:border-white"
+            className="mt-2 min-h-28 w-full resize-y rounded border border-border bg-surface p-3 text-foreground outline-hidden focus:border-white"
             maxLength={2000}
             onChange={(event) => setDetails(event.target.value)}
             value={details}

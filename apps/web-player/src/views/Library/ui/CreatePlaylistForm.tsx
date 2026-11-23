@@ -60,7 +60,7 @@ export const CreatePlaylistForm = ({
       <h2 className="text-base font-semibold">{t('library.newPlaylist')}</h2>
       <input
         aria-label={t('library.playlistTitle')}
-        className="h-10 rounded-md border border-border bg-background px-3 text-sm text-foreground outline-none placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring"
+        className="h-10 rounded-md border border-border bg-background px-3 text-sm text-foreground outline-hidden placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring"
         maxLength={80}
         onChange={(event) => setTitle(event.target.value)}
         placeholder={t('library.playlistTitle')}
@@ -69,7 +69,7 @@ export const CreatePlaylistForm = ({
       />
       <textarea
         aria-label={t('playlist.description')}
-        className="min-h-20 rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground outline-none placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring"
+        className="min-h-20 rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground outline-hidden placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring"
         maxLength={240}
         onChange={(event) => setDescription(event.target.value)}
         placeholder={t('library.descriptionPlaceholder')}

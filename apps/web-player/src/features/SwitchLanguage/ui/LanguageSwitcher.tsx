@@ -28,9 +28,11 @@ export const LanguageSwitcher = ({ className }: LanguageSwitcherProps) => {
     >
       {localeLabels.map(({ label, value }) => {
         const isActive = value === language
+        const code = value.toUpperCase()
         return (
           <Button
-            aria-label={label}
+            /** Starts with the visible code, so speech input can say it (WCAG 2.5.3). */
+            aria-label={`${code} ${label}`}
             aria-pressed={isActive}
             className={cn(
               'h-8 min-w-10 px-2.5 text-xs font-semibold',
@@ -44,7 +46,7 @@ export const LanguageSwitcher = ({ className }: LanguageSwitcherProps) => {
             type="button"
             variant={isActive ? 'secondary' : 'outline'}
           >
-            {value.toUpperCase()}
+            {code}
           </Button>
         )
       })}

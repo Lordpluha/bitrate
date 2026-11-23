@@ -112,7 +112,7 @@ Screens must be confirmed against the received designs before each item starts.
 ---
 
 ## v0.7.0-monitoring-admin-panel-diagrams
-- [x] Prometheus, Grafana and Loki in the preprod stack ([ADR-0044](../architecture/0044-observability-stack-prometheus-grafana.md), [ADR-0046](../architecture/0046-loki-log-aggregation.md)); prod is deliberately excluded
+- [x] Prometheus, Grafana and Loki in the dev stack ([ADR-0044](../architecture/0044-observability-stack-prometheus-grafana.md), [ADR-0046](../architecture/0046-loki-log-aggregation.md)); prod is deliberately excluded
 - [ ] Metrics and logging gaps: `status_class` labels, `bitrate_api_` prefix, body redaction, request-id correlation (#172, #173)
 - [ ] Instrument Prisma, Redis, BullMQ and the audio pipeline (#174)
 - [ ] Grafana alert rules and purpose-built dashboards (#177); observability stack in prod (#175)

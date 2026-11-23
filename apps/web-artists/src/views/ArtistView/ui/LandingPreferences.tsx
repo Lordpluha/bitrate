@@ -47,7 +47,7 @@ export function LandingPreferences() {
       >
         <PopoverTrigger asChild>
           <button
-            aria-label={`${t('settings.language.label')}: ${localeLabels.find((option) => option.value === locale)?.label}`}
+            aria-label={`${locale.toUpperCase()}, ${t('settings.language.label')}: ${localeLabels.find((option) => option.value === locale)?.label}`}
             className="artist-landing-preference-trigger artist-landing-language-trigger"
             type="button"
           >

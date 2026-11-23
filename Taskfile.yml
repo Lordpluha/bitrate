@@ -1,7 +1,7 @@
 version: '3'
 
 vars:
-  # The dev/preprod stacks ask for no env file. Every variable in them is declared with a
+  # The dev stack asks for no env file. Every variable in them is declared with a
   # `:-default`, so they come up on a clean checkout. `--env-file .env` used to be passed
   # here; compose treats a missing --env-file as a hard error, so once the repository stopped
   # carrying a root .env that flag made every task below fail before it started.
@@ -10,11 +10,11 @@ vars:
   # default (`POSTGRES_PORT=5433 task infra:up`). Per-app .env files under apps/* configure
   # an app run natively; deploy and CI values come from GitHub environment secrets.
   #
-  # Day-to-day Docker environment despite the "preprod" file name: api,
-  # web-player, web-artists, admin and the infra services, plus the
-  # profile-gated mobile/desktop/docs/nginx. `dev:*`, `db:*`, `shell:*` and
-  # `mobile:*`/`desktop:*` all target this file.
-  DC_DEV: docker compose -f infra/docker-compose.preprod.yaml
+  # One compose file for local development. DC_DEV adds the `apps` profile — api, worker,
+  # admin-api, web-player, web-artists and admin in containers on top of the infra
+  # services; mobile/desktop/docs/nginx/observability stay behind their own profiles.
+  # `dev:*`, `db:*`, `shell:*` and `mobile:*`/`desktop:*` all use it.
+  DC_DEV: docker compose -f infra/docker-compose.dev.yaml --profile apps
   # prod KEEPS --env-file, and that is not an inconsistency. It defaults nothing on purpose
   # (DOMAIN, DATABASE_URL, JWT_SECRET, POSTGRES_*, REDIS_PASSWORD, WEB_HOST, NEXT_PUBLIC_*),
   # and it never runs from a developer checkout: deploy_reusable.yml renders those values
@@ -23,7 +23,8 @@ vars:
   # on the target host, not a repository file. Dropping --env-file here would make compose
   # look for infra/.env, find nothing, and fail every production deploy.
   DC_PROD: docker compose --env-file .env -f infra/docker-compose.prod.yaml
-  # Infrastructure only — no application containers. Used by `infra:*`.
+  # The same file without a profile: infrastructure only, for apps run natively with
+  # `pnpm dev`. Used by `infra:*`.
   DC_INFRA: docker compose -f infra/docker-compose.dev.yaml
 
 tasks:
@@ -508,3 +509,77 @@ tasks:
       - cmd: echo "  Admin   -> http://localhost:3005"
       - cmd: echo "  Mail    -> http://localhost:8025"
       - cmd: echo "  Swagger -> http://localhost:3000/swagger"
+
+  k8s:cluster:
+    desc: Create the local k3d cluster
+    cmds:
+      - k3d cluster create --config infra/k8s/k3d.yaml
+
+  k8s:build:
+    desc: Build app images for the local cluster and import them
+    cmds:
+      - docker build -f apps/api/Dockerfile --target production -t bitrate/api:dev .
+      - >-
+        docker build -f apps/web-player/Dockerfile --target production
+        --build-arg NEXT_PUBLIC_API_URL=http://api.bitrate.localhost
+        --build-arg NEXT_PUBLIC_SITE_URL=http://bitrate.localhost
+        --build-arg API_URL=http://api:3000
+        -t bitrate/web-player:dev .
+      - >-
+        docker build -f apps/web-artists/Dockerfile --target production
+        --build-arg VITE_API_URL=http://api.bitrate.localhost
+        --build-arg VITE_PLAYER_URL=http://bitrate.localhost
+        -t bitrate/web-artists:dev .
+      - >-
+        docker build -f apps/admin/Dockerfile --target production
+        --build-arg NG_APP_API_URL=http://admin.bitrate.localhost
+        -t bitrate/admin:dev .
+      - k3d image import -m direct bitrate/api:dev bitrate/web-player:dev bitrate/web-artists:dev bitrate/admin:dev -c bitrate
+
+  k8s:up:
+    desc: Apply the manifests to the local cluster
+    cmds:
+      - kubectl apply -k infra/k8s
+
+  k8s:restart:
+    desc: Restart app pods after a rebuild
+    cmds:
+      - kubectl -n bitrate rollout restart deployment api worker admin-api web-player web-artists admin
+
+  k8s:down:
+    desc: Delete the local cluster with all its data
+    cmds:
+      - k3d cluster delete bitrate
+
+  k8s:backup:secret:
+    desc: Create or update the backup-env Secret from infra/k8s/backup/.env
+    cmds:
+      - >-
+        kubectl -n bitrate create secret generic backup-env
+        --from-env-file=infra/k8s/backup/.env --dry-run=client -o yaml
+        | kubectl apply -f -
+
+  k8s:backup:local:
+    desc: Point backups at a local S3 stand-in for R2 (k3d only)
+    cmds:
+      - kubectl apply -f infra/k8s/backup/local-r2.yaml
+      - >-
+        kubectl -n bitrate create secret generic backup-env
+        --from-literal=BACKUP_S3_ENDPOINT=http://local-r2:8080
+        --from-literal=BACKUP_S3_BUCKET=bitrate-backups
+        --from-literal=BACKUP_S3_PROVIDER=Rclone
+        --from-literal=BACKUP_S3_ACCESS_KEY=local-backup
+        --from-literal=BACKUP_S3_SECRET_KEY=local-backup-secret
+        --from-literal=RESTIC_PASSWORD=local-only-not-a-secret
+        --dry-run=client -o yaml | kubectl apply -f -
+      - kubectl -n bitrate rollout status deployment/local-r2 --timeout=120s
+
+  k8s:backup:run:
+    desc: "Run a backup CronJob now (JOB=backup-postgres | backup-audio | backup-verify)"
+    requires:
+      vars: [JOB]
+    cmds:
+      - kubectl -n bitrate delete job {{.JOB}}-manual --ignore-not-found
+      - kubectl -n bitrate create job {{.JOB}}-manual --from=cronjob/{{.JOB}}
+      - kubectl -n bitrate wait --for=condition=complete job/{{.JOB}}-manual --timeout=30m
+      - kubectl -n bitrate logs job/{{.JOB}}-manual --all-containers

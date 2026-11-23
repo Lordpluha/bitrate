@@ -147,7 +147,7 @@ export function LandingWorkspaceReplica({
                 aria-current={activeTab === item.id ? 'page' : undefined}
                 aria-label={item.label}
                 className={cn(
-                  'artist-workspace-nav-item flex cursor-pointer items-center gap-3 rounded-lg border border-transparent text-left text-text-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
+                  'artist-workspace-nav-item flex cursor-pointer items-center gap-3 rounded-lg border border-transparent text-left text-text-secondary focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring',
                   activeTab === item.id && 'artist-workspace-nav-selected',
                 )}
                 data-nav-item=""

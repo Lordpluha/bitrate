@@ -110,13 +110,16 @@ describe('landing calls to action', () => {
     )
   })
 
-  it('offers a guest one-step Google sign-up in the hero, behind the consent box', () => {
+  it('keeps social sign-in and its consent box off the hero; they live on the auth screens', () => {
     render(withQuery(<SceneSignal signedIn={false} stats={null} />))
     expect(
-      screen.getByRole('button', { name: 'Continue with Google' }),
-    ).toBeDisabled()
+      screen.queryByRole('button', { name: 'Continue with Google' }),
+    ).not.toBeInTheDocument()
     expect(
-      screen.getByRole('checkbox', { name: /at least 16 years old/i }),
-    ).not.toBeChecked()
+      screen.queryByRole('link', { name: 'Continue with Google' }),
+    ).not.toBeInTheDocument()
+    expect(
+      screen.queryByRole('checkbox', { name: /at least 16 years old/i }),
+    ).not.toBeInTheDocument()
   })
 })

@@ -126,7 +126,7 @@ const TECH: readonly TechRow[] = [
     label: 'Vitest',
     role: 'team.tech_tests',
     path: 'apps/web-player/tests',
-    bg: 'amber-500',
+    bg: 'amber-700',
   },
 ]
 

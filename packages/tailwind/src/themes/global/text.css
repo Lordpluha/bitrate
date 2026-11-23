@@ -13,14 +13,23 @@
   --color-text: var(--color-white);
   /* Secondary text — subtitles, metadata rows, list captions. */
   --color-text-secondary: var(--color-neutral-400);
-  /* Subdued text — helper copy and inactive icons. */
-  --color-text-subdued: var(--color-neutral-500);
+  /* Subdued text — helper copy and inactive icons. Not neutral-500: that is 4.0:1 on the
+     background and 3.0:1 on neutral-800, below WCAG AA; this stays at least 4.7:1 on every dark
+     and dim surface while sitting a step below `text-secondary`. */
+  --color-text-subdued: #8b93a1;
   /* Lowest-emphasis text. */
   --color-text-muted: var(--color-neutral-600);
+  /* The brand purple as text or an icon on the page's own surfaces (links, active labels).
+     Not `primary`: purple-500 is 3.0–3.4:1 on dark surfaces, below WCAG AA for text;
+     purple-400 is at least 5.4:1. `primary` stays the fill colour. */
+  --color-text-brand: var(--color-purple-400);
   /* Text color written on an inverted surface — see `contrast` below. */
   --color-text-contrast: #000000;
   /* Inverted surface color, the background `text-contrast` is written on. */
   --color-contrast: #ffffff;
+  /* Lower-emphasis text on the inverted `contrast` surface, e.g. a field's floating label;
+     at least 4.5:1 against `contrast` in every theme. */
+  --color-text-contrast-subdued: var(--color-neutral-500);
   /* Faint divider/border, one step softer than `border` (base.css). */
   --color-border-subtle: var(--color-neutral-900);
 }
@@ -34,7 +43,9 @@
   --color-text-secondary: #4a5462;
   --color-text-subdued: #5f6a78;
   --color-text-muted: #6b7480;
+  --color-text-brand: var(--color-purple-500);
   --color-text-contrast: #ffffff;
   --color-contrast: #2a3038;
+  --color-text-contrast-subdued: var(--color-grey-400);
   --color-border-subtle: #e8ebef;
 }

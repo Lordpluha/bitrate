@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: worker
+  namespace: bitrate
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: worker
+  template:
+    metadata:
+      labels:
+        app: worker
+    spec:
+      enableServiceLinks: false
+      terminationGracePeriodSeconds: 660
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        runAsGroup: 1001
+        seccompProfile: { type: RuntimeDefault }
+      containers:
+        - name: worker
+          image: bitrate/api:dev
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities: { drop: [ALL] }
+          command: ["node", "apps/api/dist/src/main.worker.js"]
+          envFrom:
+            - secretRef:
+                name: bitrate-env
+          env:
+            - name: AUDIO_PROCESSING_WORKER_ENABLED
+              value: "true"
+            - name: AUDIO_SCRATCH_ROOT
+              value: /app/worker-tmp
+            - name: S3_SOCKET_TIMEOUT_MS
+              value: "120000"
+          livenessProbe:
+            httpGet:
+              path: /health/live
+              port: 9101
+            initialDelaySeconds: 40
+            periodSeconds: 30
+          resources:
+            requests: { cpu: 250m, memory: 512Mi }
+            limits: { cpu: "2", memory: 1Gi }
+          volumeMounts:
+            - name: scratch
+              mountPath: /app/worker-tmp
+            - { name: tmp, mountPath: /tmp }
+      volumes:
+        - name: scratch
+          emptyDir: {}
+        - { name: tmp, emptyDir: {} }

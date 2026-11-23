@@ -34,7 +34,7 @@ export const RegistrationPasswordStep = ({
   const { t, tMessage } = useI18n()
   const legalLink = (href: string, label: string) => (
     <a
-      className="text-primary hover:opacity-70"
+      className="text-text-brand underline underline-offset-2 hover:opacity-70"
       href={href}
       rel="noopener noreferrer"
       target="_blank"

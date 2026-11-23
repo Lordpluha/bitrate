@@ -45,6 +45,9 @@ on:
       turbo-token:
         description: Turbo remote cache token for the turbo build inside the Dockerfile
         required: false
+      sentry-auth-token:
+        description: Sentry token the Dockerfile uses to upload source maps
+        required: false
 
 permissions:
   contents: read
@@ -56,13 +59,24 @@ env:
   REGISTRY: ghcr.io
   IMAGE_PREFIX: lordpluha/${{ github.event.repository.name }}
 
-  # `next build` inlines NEXT_PUBLIC_* into the client bundle, so this value is what the
-  # published image talks to forever — a server-side env var cannot correct it later. This
-  # build passed no build arg at all before, which left the ARG empty and the bundle
-  # pointing at apps/web-artists/env.schema.ts's http://localhost:3000 default. The
-  # repository declares no Actions variables, so the fallback is the value that applies;
-  # `vars.*` stays as the override hook for forks and a future staging environment.
+  # `vite build` inlines VITE_* into the client bundle, so these values are what the published
+  # image uses forever — a server-side env var cannot correct them later. A missing build arg
+  # used to ship the source's localhost fallbacks (the production portal linked albums to
+  # http://localhost:3001); the Dockerfile now refuses to build without real HTTPS origins. The
+  # repository declares no Actions variables, so the fallbacks are the values that apply;
+  # `vars.*` stays as the override hook for forks and a future staging environment. The names
+  # are the deployment's shared ones, mapped to this app's VITE_ names in the build args.
   BUILD_NEXT_PUBLIC_API_URL: ${{ vars.NEXT_PUBLIC_API_URL || 'https://api.bitrate.me' }}
+  BUILD_NEXT_PUBLIC_SITE_URL: ${{ vars.NEXT_PUBLIC_SITE_URL || 'https://bitrate.me' }}
+
+  # Sentry (`artists` project). The DSN is inlined into the client bundle by `vite build`, so it
+  # is fixed at image build time like the URL above, and the Dockerfile carries it into the
+  # runtime image for the SSR server. A DSN is public — it ships in every bundle — so, as with
+  # the URL, the fallback is the real value: the repository declares no Actions variables, and an
+  # empty `vars.*` reference is exactly how web-player's production image ended up reporting
+  # nothing. SENTRY_AUTH_TOKEN is a secret and only enables the source map upload.
+  BUILD_VITE_SENTRY_DSN: ${{ vars.VITE_SENTRY_DSN || 'https://2a00fbe7db2f0b8ac693e0f1f865334b@o4512027079213056.ingest.de.sentry.io/4512474689044560' }}
+  BUILD_VITE_SENTRY_ENVIRONMENT: ${{ vars.VITE_SENTRY_ENVIRONMENT || 'production' }}
 
 jobs:
   web-artists-checks:
@@ -148,8 +162,13 @@ jobs:
           cache-to: ${{ inputs.cache-to-registry && format('type=registry,ref={0}/{1}/cache/web-artists:buildcache,mode=max,compression=zstd,ignore-error=true', env.REGISTRY, env.IMAGE_PREFIX) || '' }}
           secrets: |
             turbo_token=${{ secrets.turbo-token }}
+            sentry_auth_token=${{ secrets.sentry-auth-token }}
           build-args: |
             VITE_API_URL=${{ env.BUILD_NEXT_PUBLIC_API_URL }}
+            VITE_PLAYER_URL=${{ env.BUILD_NEXT_PUBLIC_SITE_URL }}
+            VITE_SENTRY_DSN=${{ env.BUILD_VITE_SENTRY_DSN }}
+            VITE_SENTRY_ENVIRONMENT=${{ env.BUILD_VITE_SENTRY_ENVIRONMENT }}
+            SENTRY_RELEASE=${{ github.sha }}
           target: production
 
       - name: Resolve image reference for scanning

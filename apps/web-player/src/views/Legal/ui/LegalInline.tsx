@@ -28,7 +28,7 @@ export const LegalInline = ({ text }: LegalInlineProps) => {
       nodes.push(
         findLegalDocument({ slug }) ? (
           <Link
-            className="text-primary underline hover:opacity-70"
+            className="text-text-brand underline hover:opacity-70"
             href={ROUTES.legal(slug)}
             key={match.index}
           >

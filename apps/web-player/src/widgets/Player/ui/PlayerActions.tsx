@@ -100,7 +100,7 @@ export const PlayerActions = ({
         )}
       </button>
       <div className="group relative flex h-3.5 w-21.5 shrink-0 items-center">
-        <div className="relative h-0.75 w-full rounded-full bg-progress-track">
+        <div className="relative h-0.75 w-full rounded-full bg-progress-track forced-colors:hidden">
           <div
             className="absolute inset-y-0 left-0 rounded-full bg-primary"
             style={{ width: `${volume * 100}%` }}
@@ -110,7 +110,10 @@ export const PlayerActions = ({
         </div>
         <input
           aria-label={t('player.volume')}
-          className="absolute inset-0 size-full cursor-pointer opacity-0"
+          aria-valuetext={t('player.volumeValue', {
+            percent: Math.round(volume * 100),
+          })}
+          className="absolute inset-0 size-full cursor-pointer opacity-0 forced-colors:opacity-100"
           max="1"
           min="0"
           onChange={handleVolumeChange}
