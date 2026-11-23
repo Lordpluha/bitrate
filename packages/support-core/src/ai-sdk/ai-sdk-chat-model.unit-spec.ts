@@ -1,15 +1,10 @@
 import type { LanguageModelV4StreamPart } from '@ai-sdk/provider'
-import { convertArrayToReadableStream, MockEmbeddingModelV4, MockLanguageModelV4 } from 'ai/test'
+import { convertArrayToReadableStream, MockLanguageModelV4 } from 'ai/test'
 import { describe, expect, it } from 'vitest'
 import type { ChatStepEvent, ChatStepInput } from '../ports.js'
-import { SUPPORT_TOOLS } from '../prompts.js'
-import {
-  aiSdkChatModel,
-  aiSdkEmbedder,
-  createSupportModels,
-  SupportModelConfigError,
-  SupportModelError,
-} from './index.js'
+import { SUPPORT_TOOLS } from '../prompts/support-tools.js'
+import { aiSdkChatModel } from './ai-sdk-chat-model.js'
+import { SupportModelError } from './support-model-error.js'
 
 const usage = {
   inputTokens: { total: 12, noCache: 12, cacheRead: 0, cacheWrite: 0 },
@@ -50,6 +45,13 @@ async function collect(events: AsyncIterable<ChatStepEvent>) {
   return out
 }
 
+const toolCall = (toolName: string, input: unknown): LanguageModelV4StreamPart => ({
+  type: 'tool-call',
+  toolCallId: 'c2',
+  toolName,
+  input: JSON.stringify(input),
+})
+
 describe('aiSdkChatModel', () => {
   it('streams text and tool calls of one step, with usage', async () => {
     const model = mockModel([
@@ -58,12 +60,7 @@ describe('aiSdkChatModel', () => {
       { type: 'text-delta', id: 't1', delta: 'Let me ' },
       { type: 'text-delta', id: 't1', delta: 'check.' },
       { type: 'text-end', id: 't1' },
-      {
-        type: 'tool-call',
-        toolCallId: 'c2',
-        toolName: 'handoff_to_operator',
-        input: JSON.stringify({ reason: 'needs a person' }),
-      },
+      toolCall('handoff_to_operator', { reason: 'needs a person' }),
       { type: 'finish', usage, finishReason: { unified: 'tool-calls', raw: undefined } },
     ])
 
@@ -83,12 +80,7 @@ describe('aiSdkChatModel', () => {
 
   it('sends the system prompt, history with tool results, tools and tool choice', async () => {
     const model = mockModel([
-      {
-        type: 'tool-call',
-        toolCallId: 'c2',
-        toolName: 'search_knowledge',
-        input: JSON.stringify({ query: 'delete account' }),
-      },
+      toolCall('search_knowledge', { query: 'delete account' }),
       { type: 'finish', usage, finishReason: { unified: 'tool-calls', raw: undefined } },
     ])
 
@@ -117,54 +109,5 @@ describe('aiSdkChatModel', () => {
     await expect(collect(aiSdkChatModel(model, 'mock:mock-model').step(input))).rejects.toThrow(
       SupportModelError,
     )
-  })
-})
-
-describe('aiSdkEmbedder', () => {
-  it('returns one vector per text, in order', async () => {
-    const model = new MockEmbeddingModelV4({
-      doEmbed: async ({ values }) => ({
-        embeddings: values.map((value) => [value.length, 0.5]),
-        warnings: [],
-      }),
-    })
-
-    const vectors = await aiSdkEmbedder(model, 'mock:embed').embed(['a', 'abc'])
-
-    expect(vectors).toEqual([
-      [1, 0.5],
-      [3, 0.5],
-    ])
-  })
-})
-
-describe('createSupportModels (AC-6)', () => {
-  const models = createSupportModels({ anthropicApiKey: 'test', openaiApiKey: 'test' })
-
-  it('resolves models of different providers from provider:model ids', () => {
-    expect(models.chatModel('anthropic:claude-haiku-5-5')).toMatchObject({
-      provider: 'anthropic',
-      modelId: 'claude-haiku-5-5',
-    })
-    expect(models.chatModel('openai:gpt-5.5-mini')).toMatchObject({
-      provider: 'openai',
-      modelId: 'gpt-5.5-mini',
-    })
-    expect(models.embedder('openai:text-embedding-3-small')).toMatchObject({
-      provider: 'openai',
-      modelId: 'text-embedding-3-small',
-    })
-  })
-
-  it('rejects malformed ids and unconfigured providers with a clear error', () => {
-    expect(() => models.chatModel('claude-haiku-5-5')).toThrow(SupportModelConfigError)
-    expect(() => models.chatModel('mistral:large')).toThrow(/anthropic, openai/)
-    expect(() => models.embedder('anthropic:')).toThrow(SupportModelConfigError)
-  })
-
-  it('only offers providers that have an API key', () => {
-    const anthropicOnly = createSupportModels({ anthropicApiKey: 'test' })
-
-    expect(() => anthropicOnly.embedder('openai:text-embedding-3-small')).toThrow(/not configured/)
   })
 })

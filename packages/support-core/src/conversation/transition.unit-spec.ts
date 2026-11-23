@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { InvalidTransitionError, transition } from './state-machine.js'
+import { InvalidTransitionError } from './invalid-transition-error.js'
+import { transition } from './transition.js'
 
 describe('conversation state machine', () => {
   it('hands a bot conversation to an operator', () => {

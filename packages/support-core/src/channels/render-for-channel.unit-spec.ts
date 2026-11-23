@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { CHANNEL_MESSAGE_LIMITS, renderForChannel } from './render.js'
+import { CHANNEL_MESSAGE_LIMITS } from './limits.js'
+import { renderForChannel } from './render-for-channel.js'
 
 const answer = {
   text: '## Delete\n\nEmail **us** at [support](https://bitrate.me/help) with `Delete my account`.\n\n- Step <one> & two',

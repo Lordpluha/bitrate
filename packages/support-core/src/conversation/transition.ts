@@ -1,7 +1,6 @@
-import type { ConversationState } from './domain.js'
-
-/** Something that happens to a conversation. */
-export type ConversationEvent = 'user-message' | 'handoff' | 'operator-reply' | 'resolve'
+import type { ConversationState } from '../domain.js'
+import type { ConversationEvent } from './conversation-event.js'
+import { InvalidTransitionError } from './invalid-transition-error.js'
 
 const TRANSITIONS: Record<
   ConversationState,
@@ -15,16 +14,6 @@ const TRANSITIONS: Record<
   },
   operator: { 'user-message': 'operator', 'operator-reply': 'operator', resolve: 'resolved' },
   resolved: { 'user-message': 'bot' },
-}
-
-export class InvalidTransitionError extends Error {
-  constructor(
-    readonly from: ConversationState,
-    readonly event: ConversationEvent,
-  ) {
-    super(`Conversation in state "${from}" cannot accept "${event}"`)
-    this.name = 'InvalidTransitionError'
-  }
 }
 
 /** The state after `event`; throws `InvalidTransitionError` when the event is not allowed. */
