@@ -100,7 +100,7 @@ Stored per artist; each field can be overridden for one generation.
 - **Follower message.** The existing `NEW_RELEASE` notification (`releasePublished` job, one
   per album) gains an optional artist message. AI drafts it, and it is sent only if the artist
   approved it before the release went live. Without approval the notification is unchanged.
-- **Countdown.** An approved `COUNTDOWN` step shows a "coming on {date}" tile on the artist's
+- **Countdown.** An approved `COUNTDOWN` step shows a `coming on <date>` tile on the artist's
   page in `web-player` until the release goes live. It shows no unpublished track data
   beyond title and cover.
 
@@ -251,7 +251,7 @@ and run through `.claude/scripts/run-heavy.py`.
    requirement was revised on 2026-11-23 (D-5.4): Claude is called through Anthropic's own API,
    Mistral is the fallback, and DeepL API Pro is allowed. Still open before rollout (step 10):
    switch on Mistral's training opt-out, and add the enabled providers, with the countries
-   where they process data, to the sub-processor list in the [privacy policy](../legal/privacy-policy.md).
+   where they process data, to the sub-processor list in the privacy policy (`legal/privacy-policy.md`, published at bitrate.me/legal/privacy).
 3. **Eval bake-off.** 15–20 release fixtures (synthetic plus the owner's real releases),
    a runner script outside the production app, and an automatic grader (schema, grounding,
    glossary, length, LLM judge). Run only after the owner approves the budget. The resulting

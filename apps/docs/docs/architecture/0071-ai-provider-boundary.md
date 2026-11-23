@@ -40,7 +40,7 @@ artist page (name, bio, genres, track titles), and Bitrate serves EU users.
   Configuration validation at boot rejects any provider not on the approved list. Requests carry
   only the fields the task needs, taken from the artist's public profile and release metadata:
   never email addresses, listener data or payment data. Every enabled provider is listed as a
-  sub-processor in the [privacy policy](../legal/privacy-policy.md), with the country where it
+  sub-processor in the privacy policy (`legal/privacy-policy.md`, published at bitrate.me/legal/privacy), with the country where it
   processes data.
 - **Asynchronous by default.** Generation runs as BullMQ jobs on an `ai` queue in the worker
   service ([ADR-0049](./0049-transcode-worker-process-boundary.md)), never inside an HTTP
