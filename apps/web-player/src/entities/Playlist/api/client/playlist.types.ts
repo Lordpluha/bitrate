@@ -2,7 +2,7 @@ import type { ApiSchemas } from '@bitrate/contracts'
 import type { ApiTrack } from '@shared/api/track'
 
 type PlaylistEntity = ApiSchemas['PlaylistEntity']
-export type PlaylistTrack = ApiTrack
+type PlaylistTrack = ApiTrack
 
 export type PlaylistWithTracks = PlaylistEntity & {
   tracks: PlaylistTrack[]
