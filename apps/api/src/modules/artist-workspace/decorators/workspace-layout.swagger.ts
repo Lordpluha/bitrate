@@ -22,7 +22,7 @@ export function SaveWorkspaceLayoutSwagger() {
     ApiOperation({
       summary: "Replace the artist's tile layout for a workspace page",
       description:
-        'The list is the whole layout: order, width (1–12 columns), optional height (1–12 rows) and visibility of every tile. Legacy S/M/L layouts remain supported; explicit columns takes precedence.',
+        'The list is the whole layout: width (1–12 columns), optional height (1–12 rows), optional grid position (x 0–11, y 0–199, with x + columns ≤ 12) and visibility of every tile. Layouts without positions remain valid and are read in display order; legacy S/M/L presets apply when columns is absent.',
     }),
     PageParam,
     ApiBody({ type: SaveWorkspaceLayoutDto }),

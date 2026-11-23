@@ -28,6 +28,7 @@
     progress={player.seekProgress}
     step="1"
     value={player.currentTime}
+    valueText={player.labels.seekValue(formatTime(player.currentTime), formatTime(player.duration))}
     variant="seek"
   />
   {#if variant === 'full'}

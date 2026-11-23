@@ -1,6 +1,7 @@
 import type { AppConfig } from '@common/config'
 import { LegalAcceptanceRequiredError } from '@common/legal'
 import { beforeEach, describe, expect, it, jest } from '@jest/globals'
+import { OAuthSignInError } from '@modules/auth-core'
 import type { TokenService } from '@modules/tokens/token.service'
 import type { ConfigService } from '@nestjs/config'
 import type { Response } from 'express'
@@ -118,5 +119,76 @@ describe('UsersOAuthController legal acceptance', () => {
     expect(res.redirect).toHaveBeenCalledWith(
       'https://users.example.com/login?error=legal_acceptance_required',
     )
+  })
+})
+
+describe('UsersOAuthController failures', () => {
+  let controller: UsersOAuthController
+  let oauthService: jest.Mocked<OAuthService>
+
+  beforeEach(() => {
+    oauthService = makeOAuthServiceMock()
+    controller = new UsersOAuthController(oauthService, makeTokenServiceMock(), makeConfigMock())
+  })
+
+  const callback = (res: Response, code?: string, providerError?: string) =>
+    controller.googleCallback(
+      code as string,
+      'state',
+      { cookies: { oauth_state: 'state' } } as never,
+      res,
+      providerError,
+    )
+
+  it('sends the browser back to login when the provider is not configured', () => {
+    oauthService.getFacebookAuthUrl.mockImplementation(() => {
+      throw new OAuthSignInError('unavailable', 'Facebook OAuth is not configured')
+    })
+    const res = makeResponse()
+
+    controller.facebookAuth(res)
+
+    expect(res.redirect).toHaveBeenCalledWith(
+      'https://users.example.com/login?error=oauth_unavailable',
+    )
+  })
+
+  it('treats a callback without a code as a sign-in the listener cancelled', async () => {
+    const res = makeResponse()
+
+    await callback(res, undefined, 'access_denied')
+
+    expect(oauthService.handleGoogleCallback).not.toHaveBeenCalled()
+    expect(res.clearCookie).toHaveBeenCalledWith('oauth_state')
+    expect(res.clearCookie).toHaveBeenCalledWith('oauth_accept')
+    expect(res.redirect).toHaveBeenCalledWith(
+      'https://users.example.com/login?error=oauth_cancelled',
+    )
+  })
+
+  it.each([
+    ['account_exists'],
+    ['email_missing'],
+    ['email_unverified'],
+    ['exchange_failed'],
+    ['account_unavailable'],
+  ] as const)('explains a %s failure on the login page', async (reason) => {
+    oauthService.handleGoogleCallback.mockRejectedValue(new OAuthSignInError(reason, reason))
+    const res = makeResponse()
+
+    await callback(res, 'code')
+
+    expect(res.redirect).toHaveBeenCalledWith(
+      `https://users.example.com/login?error=oauth_${reason}`,
+    )
+  })
+
+  it('never shows an unexpected error as raw JSON', async () => {
+    oauthService.handleGoogleCallback.mockRejectedValue(new Error('database is down'))
+    const res = makeResponse()
+
+    await expect(callback(res, 'code')).resolves.not.toThrow()
+
+    expect(res.redirect).toHaveBeenCalledWith('https://users.example.com/login?error=oauth_failed')
   })
 })

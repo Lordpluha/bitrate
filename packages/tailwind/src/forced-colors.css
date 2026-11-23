@@ -1,0 +1,46 @@
+/**
+ * Forced colours (Windows High Contrast and similar), WCAG 1.4.11 and 2.4.7.
+ *
+ * In `forced-colors: active` the browser replaces every colour with a short system palette and
+ * drops box-shadows, so a state shown only by a tinted background or a `ring-*` (a box-shadow)
+ * disappears. These rules give those states an outline in system colours instead. They apply
+ * only in forced-colours mode and change nothing for anyone else.
+ *
+ * Focus itself is covered by `outline-hidden` (Tailwind v4), which the apps use instead of
+ * `outline-none`: it leaves a transparent outline that the system paints in forced colours.
+ */
+@layer base {
+  @media (forced-colors: active) {
+    /** Selected, current and pressed states that are otherwise only a background tint. */
+    [aria-current]:not([aria-current="false"]),
+    [aria-selected="true"],
+    [aria-pressed="true"],
+    [aria-checked="true"]:not(input),
+    [data-state="active"],
+    [data-state="checked"],
+    [data-selected],
+    [data-highlighted] {
+      outline: 2px solid Highlight;
+      outline-offset: -2px;
+    }
+
+    /** Focus drawn with a ring (box-shadow) only: give it a real outline. */
+    :focus-visible {
+      outline: 2px solid Highlight;
+      outline-offset: 2px;
+    }
+
+    /** Native range inputs styled with `appearance: none` lose their track and thumb. */
+    input[type="range"] {
+      appearance: auto;
+      forced-color-adjust: auto;
+    }
+
+    /** Disabled controls fade with opacity, which forced colours keep; name the state in colour too. */
+    :disabled,
+    [aria-disabled="true"] {
+      color: GrayText;
+      border-color: GrayText;
+    }
+  }
+}

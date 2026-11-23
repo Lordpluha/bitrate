@@ -1,5 +1,5 @@
 /**
- * Listener-wide pacing (ADR-0072): however many sessions and tracks a listener opens, together
+ * Listener-wide pacing (ADR-0078): however many sessions and tracks a listener opens, together
  * they receive audio no faster than {@link LISTENER_CONCURRENT_STREAMS} real-time streams plus a
  * {@link LISTENER_BURST_MS} burst. It is a leaky bucket: each charge adds its audio, the level
  * drains at the stream rate, and a charge that would overflow the burst is refused.

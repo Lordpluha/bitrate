@@ -33,7 +33,7 @@ const sessionKey = (sessionId: string) => `playback:session:${sessionId}`
 const userSessionsKey = (userId: string) => `playback:user:${userId}`
 /** One pacing budget per listener and track, so opening more sessions buys no extra audio. */
 const budgetKey = (userId: string, trackId: string) => `playback:budget:${userId}:${trackId}`
-/** One bucket per listener across every track (ADR-0072); revocation keeps it. */
+/** One bucket per listener across every track (ADR-0078); revocation keeps it. */
 const listenerBucketKey = (userId: string) => `playback:listener:${userId}`
 
 /** Input for {@link PlaybackSessionService.open}. */
@@ -63,7 +63,7 @@ export type AuthorizedPlaybackSession = {
 /**
  * Playback sessions (ADR-0065 stage 2): a signed token per play, a Redis record that keeps it
  * revocable, and real-time pacing against a budget the listener's sessions for a track share,
- * capped across tracks by a listener-wide bucket (ADR-0072). While Redis is unreachable a validly
+ * capped across tracks by a listener-wide bucket (ADR-0078). While Redis is unreachable a validly
  * signed, unexpired token still plays (D18) and is paced in memory; revocation resumes with Redis.
  */
 @Injectable()
@@ -173,7 +173,7 @@ export class PlaybackSessionService {
   /**
    * Counts `audioMs` against the listener's budget for the track and refuses it when that budget
    * would be more than {@link PACING_ALLOWANCE_MS} ahead of the time since its first session
-   * opened (D16), or when the listener's bucket across all tracks would overflow (ADR-0072).
+   * opened (D16), or when the listener's bucket across all tracks would overflow (ADR-0078).
    * Fails closed: a session revoked mid-stream stops being served. Without Redis the same rules
    * run in this process's memory.
    * @throws PlaybackPacingError with the seconds until the request would fit.

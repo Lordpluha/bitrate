@@ -60,8 +60,10 @@ export const usePlayerElementSync = ({
         one: t('player.disableRepeat'),
       },
       seek: t('player.seek'),
+      seekValue: (elapsed, total) => t('player.seekValue', { elapsed, total }),
       unmute: t('player.unmute'),
       volume: t('player.volume'),
+      volumeValue: (percent) => t('player.volumeValue', { percent }),
     }),
     [t],
   )

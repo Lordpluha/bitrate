@@ -222,7 +222,7 @@ export function VerifyEmailForm({ token, email, next }: VerifyEmailFormProps) {
         </>
       )}
       <Link
-        className="mt-6 block text-center text-lg font-semibold underline underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        className="mt-6 block text-center text-lg font-semibold underline underline-offset-4 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring"
         search={{ next }}
         to={ROUTES.auth.login}
       >

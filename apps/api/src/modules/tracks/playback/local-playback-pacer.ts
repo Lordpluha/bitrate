@@ -27,8 +27,8 @@ function remember<V>(map: Map<string, V>, key: string, value: V): void {
 }
 
 /**
- * The pacing rules of ADR-0067 (per track) and ADR-0072 (per listener) kept in this process's
- * memory, used while Redis is unreachable (ADR-0072 D4). Each API replica paces on its own, so a
+ * The pacing rules of ADR-0067 (per track) and ADR-0078 (per listener) kept in this process's
+ * memory, used while Redis is unreachable (ADR-0078). Each API replica paces on its own, so a
  * listener spread over N replicas gets at most N times the budget — bounded, unlike before.
  */
 export class LocalPlaybackPacer {

@@ -16,6 +16,7 @@ export class ArtistNotificationEntity {
       'RELEASE_RELEASED',
       'PUBLISH_FAILED',
       'DELIVERY_LIVE',
+      'RELEASE_CHANGES_DECIDED',
     ],
     enumName: 'ArtistNotificationKind',
   })
@@ -35,6 +36,12 @@ export class ArtistNotificationEntity {
 
   @ApiProperty({ enum: DeliveryDestination, enumName: 'DeliveryDestination', required: false })
   destination?: DeliveryDestination
+
+  @ApiProperty({ required: false, minimum: 0, description: 'Set for RELEASE_CHANGES_DECIDED' })
+  approvedCount?: number
+
+  @ApiProperty({ required: false, minimum: 0, description: 'Set for RELEASE_CHANGES_DECIDED' })
+  rejectedCount?: number
 
   @ApiProperty({ type: String, format: 'date-time' })
   at: Date

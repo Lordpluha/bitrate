@@ -13,6 +13,6 @@ export class HlmTabsContent {
   public readonly contentFor = input.required<string>({ alias: 'hlmTabsContent' })
 
   constructor() {
-    classes(() => 'flex-1 text-sm outline-none')
+    classes(() => 'flex-1 text-sm outline-hidden')
   }
 }

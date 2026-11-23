@@ -172,7 +172,7 @@ export const WithButtons: Story = {
           <Popover>
             <PopoverTrigger asChild>
               <InputGroupAddon>
-                <InputGroupButton variant="secondary" size="icon-xs">
+                <InputGroupButton variant="secondary" size="icon-xs" aria-label="Connection info">
                   <Info />
                 </InputGroupButton>
               </InputGroupAddon>
@@ -183,9 +183,14 @@ export const WithButtons: Story = {
             </PopoverContent>
           </Popover>
           <InputGroupAddon className="text-muted-foreground pl-1.5">https://</InputGroupAddon>
-          <InputGroupInput id="input-secure-19" />
+          <InputGroupInput id="input-secure-19" aria-label="Website address" />
           <InputGroupAddon align="inline-end">
-            <InputGroupButton onClick={() => setIsFavorite(!isFavorite)} size="icon-xs">
+            <InputGroupButton
+              onClick={() => setIsFavorite(!isFavorite)}
+              size="icon-xs"
+              aria-label="Favourite"
+              aria-pressed={isFavorite}
+            >
               <Star
                 data-favorite={isFavorite}
                 className="data-[favorite=true]:fill-blue-600 data-[favorite=true]:stroke-blue-600"
@@ -285,10 +290,10 @@ export const WithTextarea: Story = {
               <Code />
               script.js
             </InputGroupText>
-            <InputGroupButton className="ml-auto" size="icon-xs">
+            <InputGroupButton className="ml-auto" size="icon-xs" aria-label="Refresh">
               <RefreshCcw />
             </InputGroupButton>
-            <InputGroupButton variant="ghost" size="icon-xs">
+            <InputGroupButton variant="ghost" size="icon-xs" aria-label="Copy">
               <Copy />
             </InputGroupButton>
           </InputGroupAddon>
@@ -302,6 +307,10 @@ export const WithTextarea: Story = {
  * Show loading indicators while processing input.
  */
 export const WithSpinner: Story = {
+  /** Every group here is disabled, and inactive controls are exempt from WCAG 1.4.3 contrast. */
+  parameters: {
+    a11y: { config: { rules: [{ id: 'color-contrast', enabled: false }] } },
+  },
   render: (args) => (
     <div className="grid w-full max-w-sm gap-4">
       <InputGroup {...args} data-disabled>

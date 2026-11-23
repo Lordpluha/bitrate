@@ -57,7 +57,7 @@ export const LibraryMobileControls = ({
       </div>
       <div
         className={cn(
-          'absolute inset-x-0 top-3 z-10 flex h-12 items-center rounded-md bg-surface px-3 transition-[opacity,transform] duration-200',
+          'absolute inset-x-0 top-3 z-10 flex h-12 items-center rounded-md bg-surface px-3 transition-[opacity,transform] duration-200 has-[input:focus-visible]:ring-2 has-[input:focus-visible]:ring-ring',
           isSearchVisible
             ? 'pointer-events-auto translate-y-0 opacity-100'
             : 'pointer-events-none -translate-y-1 opacity-0',
@@ -70,7 +70,7 @@ export const LibraryMobileControls = ({
         />
         <input
           aria-label={t('library.search')}
-          className="h-full min-w-0 flex-1 bg-transparent px-3 text-sm text-foreground outline-none"
+          className="h-full min-w-0 flex-1 bg-transparent px-3 text-sm text-foreground outline-hidden"
           onBlur={() => setIsSearchOpen(false)}
           onChange={(event) => onChange({ query: event.target.value })}
           onFocus={() => setIsSearchOpen(true)}

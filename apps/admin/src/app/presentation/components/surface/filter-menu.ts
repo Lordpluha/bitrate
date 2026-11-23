@@ -48,7 +48,7 @@ const BELOW: ConnectedPosition[] = [
       >
         @for (option of options(); track option.value) {
           <button
-            class="flex h-9 w-full items-center justify-between gap-2 rounded-[10px] px-2.5 text-left text-[0.8125rem] outline-none hover:bg-glass-hover focus-visible:bg-glass-hover"
+            class="flex h-9 w-full items-center justify-between gap-2 rounded-[10px] px-2.5 text-left text-[0.8125rem] outline-hidden hover:bg-glass-hover focus-visible:bg-glass-hover"
             [class.font-semibold]="option.value === value()"
             [class.text-accent]="option.value === value()"
             type="button"

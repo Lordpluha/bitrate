@@ -76,10 +76,10 @@ export const Default: Story = {
 export const Orientation: Story = {
   render: (args) => (
     <ButtonGroup {...args}>
-      <Button variant="outline" size="icon">
+      <Button variant="outline" size="icon" aria-label="Add">
         <PlusIcon />
       </Button>
-      <Button variant="outline" size="icon">
+      <Button variant="outline" size="icon" aria-label="More options">
         <MoreHorizontalIcon />
       </Button>
     </ButtonGroup>
@@ -149,7 +149,7 @@ export const Split: Story = {
     <ButtonGroup>
       <Button variant="secondary">Button</Button>
       <ButtonGroupSeparator />
-      <Button size="icon" variant="secondary">
+      <Button size="icon" variant="secondary" aria-label="Add">
         <PlusIcon />
       </Button>
     </ButtonGroup>
@@ -181,7 +181,7 @@ export const WithInputGroup: Story = {
       <TooltipProvider>
         <ButtonGroup className="[--radius:9999rem]">
           <ButtonGroup>
-            <Button variant="outline" size="icon">
+            <Button variant="outline" size="icon" aria-label="Add attachment">
               <PlusIcon />
             </Button>
           </ButtonGroup>
@@ -200,6 +200,7 @@ export const WithInputGroup: Story = {
                       data-active={voiceEnabled}
                       className="data-[active=true]:bg-amber-100 data-[active=true]:text-amber-700 dark:data-[active=true]:bg-amber-800 dark:data-[active=true]:text-amber-100"
                       aria-pressed={voiceEnabled}
+                      aria-label="Voice mode"
                     >
                       <AudioLinesIcon />
                     </InputGroupButton>
@@ -224,7 +225,7 @@ export const WithDropdownMenu: Story = {
       <Button variant="outline">Follow</Button>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="outline" className="!pl-2">
+          <Button variant="outline" className="!pl-2" aria-label="More follow options">
             <ChevronDownIcon />
           </Button>
         </DropdownMenuTrigger>
@@ -261,7 +262,9 @@ export const WithSelect: Story = {
       <ButtonGroup>
         <ButtonGroup>
           <Select value={currency} onValueChange={(v) => setCurrency(v ?? '')}>
-            <SelectTrigger className="font-mono">{currency}</SelectTrigger>
+            <SelectTrigger className="font-mono" aria-label="Currency">
+              {currency}
+            </SelectTrigger>
             <SelectContent className="min-w-24">
               {CURRENCIES.map((currency) => (
                 <SelectItem key={currency.value} value={currency.value}>

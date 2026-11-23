@@ -77,9 +77,13 @@ export const LandingHeader = ({ signedIn }: LandingHeaderProps) => {
         </a>
         <Popover onOpenChange={setLangOpen} open={langOpen}>
           <PopoverTrigger
-            aria-label={c('chrome.language_current', {
-              language: currentLabel,
-            })}
+            /** Starts with the visible code, so speech input can say it (WCAG 2.5.3). */
+            aria-label={`${locale.toUpperCase()}, ${c(
+              'chrome.language_current',
+              {
+                language: currentLabel,
+              },
+            )}`}
             className={lc('top-lang')}
           >
             <Globe aria-hidden="true" className={lc('top-lang-globe')} />

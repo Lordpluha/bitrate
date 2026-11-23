@@ -13,16 +13,16 @@
   --color-success-foreground: var(--color-black);
   /* Error status color. Same value as `destructive` (base.css) — see the note there. */
   --color-error: var(--color-red-500);
-  /* Text on an error surface. */
-  --color-error-foreground: var(--color-white);
+  /* Text on the solid error fill. Black: white on red-500 is 3.76:1, below WCAG AA. */
+  --color-error-foreground: var(--color-black);
   /* Warning status color. */
   --color-warning: var(--color-amber-500);
   /* Text on a warning surface. */
   --color-warning-foreground: var(--color-black);
   /* Informational status color. */
   --color-info: var(--color-blue-500);
-  /* Text on an info surface. */
-  --color-info-foreground: var(--color-white);
+  /* Text on the solid info fill. Black: white on blue-500 is 3.68:1, below WCAG AA. */
+  --color-info-foreground: var(--color-black);
 
   /* Status callout triads — a tinted surface, its border and the readable text written on it
      (alerts, release-status cards). `*-foreground` above is text on the solid status fill;
@@ -46,11 +46,13 @@
  */
 :root.light {
   --color-success: var(--color-green-600);
-  --color-success-foreground: var(--color-white);
+  /* Black: white on green-600 is 3.77:1, below WCAG AA. */
+  --color-success-foreground: var(--color-black);
   --color-error: var(--color-red-600);
   --color-error-foreground: var(--color-white);
   --color-warning: var(--color-amber-600);
-  --color-warning-foreground: var(--color-white);
+  /* Black: white on amber-600 is 3.19:1, below WCAG AA. */
+  --color-warning-foreground: var(--color-black);
   --color-info: var(--color-blue-600);
   --color-info-foreground: var(--color-white);
   --color-success-text: var(--color-green-800);

@@ -17,34 +17,34 @@ the Polish digital-consent age (16) are the baseline.
 
 | Draft | Applies to |
 |---|---|
-| [Terms of Use](./terms-of-use.md) | web-player, web-artists |
-| [Privacy Policy](./privacy-policy.md) | web-player, web-artists |
+| [Terms of Use](./terms-of-use.md) — **published** | web-player, web-artists |
+| [Privacy Policy](./privacy-policy.md) — **published** | web-player, web-artists |
 | [Community Guidelines](./community-guidelines.md) | web-player, web-artists |
 | [Complaints and reports](./complaints.md) | web-player, web-artists |
 | [Copyright and notice-and-action](./copyright-notice-and-action.md) | web-player, web-artists |
 | [Artist Agreement](./artist-agreement.md) | web-artists only |
 
-## Placeholders
+## Operator details
 
-Operator details do not exist yet, so every draft uses the same placeholders. Replace them in one
-pass when the operator is established.
+The operator details are filled in across every document: Vladyslav Tesliuk, Warsaw, Poland, a
+private individual; contact `tesluakevlad@gmail.com`. Every effective date is 1 October 2026, the
+value of the stored `legalVersion` (`apps/api/src/common/legal.ts`), so no user has to accept the
+documents again. Bump both together when a revision must be re-accepted.
 
-| Placeholder | Meaning |
-|---|---|
-| `[[OPERATOR_NAME]]` | Legal name of the operator (the data controller) |
-| `[[OPERATOR_ADDRESS]]` | Registered address |
-| `[[OPERATOR_REGISTRATION]]` | Company or business registration number |
-| `[[LEGAL_CONTACT_EMAIL]]` | Single contact address for legal and privacy requests (one constant in the apps) |
-| `[[GOVERNING_LAW]]` | Governing law and courts; Poland is the working assumption |
-| `[[RETENTION_*]]` | Retention periods that are not yet decided (see open items) |
-| `[[EFFECTIVE_DATE]]` | Date of the revision; also the value of the stored `legalVersion` |
+The Privacy Policy and the Terms of Use are published without the draft banner, because Google's
+and Meta's sign-in reviews read both on the home-page domain. The Terms are governed by Polish law,
+and their liability clause (8.2) keeps every limit EU consumer law requires; it was written without
+counsel and is the first clause to have reviewed. Every other document stays a draft and keeps its
+remaining placeholders and the clauses marked for counsel.
 
 ## Open items a lawyer or the founder must settle
 
-- **Retention periods.** No retention policy exists; `AuditLog`, `ListeningHistory` and logged IP
-  addresses currently grow without limit. The Privacy Policy cannot be finalised until periods are chosen.
-- **Session Replay.** Sentry Replay is enabled with no consent gate. The Privacy Policy draft describes it
-  as it is today; the decision to disable it or gate it behind consent belongs to #178.
+- **Retention enforcement.** The Privacy Policy now states retention periods (account data 30 days
+  after deletion, audit logs 12 months, moderation records 3 years). Nothing deletes `AuditLog` rows
+  or logged IP addresses after 12 months yet; a cleanup job must make the stated period true.
+- **Session Replay.** Kept on (10% of sessions, every session with an error) on the basis of
+  legitimate interest, with Sentry's default masking of all text and input. A consent gate stays an
+  option under #178.
 - **Erasure, access and portability.** The policy promises GDPR rights that the product does not yet
   implement (see Gate 1 in the roadmap). Wording must match what is actually offered at release time.
 - **Artist Agreement.** The roadmap places this at Gate 3 and marks it as the contract worth paying counsel

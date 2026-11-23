@@ -172,7 +172,6 @@ export const LandingHero = () => {
             return (
               <button
                 aria-controls="studio-preview-panel"
-                aria-label={`${tab.step} ${t(tab.label)}`}
                 aria-selected={isActive}
                 className="artist-landing-dock-pill artist-magnetic-item inline-flex cursor-pointer items-center gap-2 rounded-full px-3.5 py-2 text-sm font-medium text-text-secondary hover:text-foreground"
                 data-active={isActive ? 'true' : undefined}

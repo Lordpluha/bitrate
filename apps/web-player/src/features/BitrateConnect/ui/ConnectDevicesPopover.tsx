@@ -89,7 +89,7 @@ export const ConnectDevicesPopover = ({
                       aria-hidden="true"
                       className={
                         device.isActive
-                          ? 'text-primary'
+                          ? 'text-text-brand'
                           : 'text-muted-foreground'
                       }
                       size={20}

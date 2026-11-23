@@ -51,7 +51,7 @@ export const ProfileFollowsSection = ({
           {data.data.map((person) => (
             <li className="min-w-0" key={person.id}>
               <Link
-                className="flex w-20 flex-col items-center gap-1.5 rounded-md text-center outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className="flex w-20 flex-col items-center gap-1.5 rounded-md text-center outline-hidden focus-visible:ring-2 focus-visible:ring-ring"
                 href={ROUTES.user(person.username)}
               >
                 <span className="relative block size-16 overflow-hidden rounded-full bg-surface">
