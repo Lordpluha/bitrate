@@ -7,10 +7,11 @@
  * (:root.light) and Dim (:root.dim, inheriting Dark) themes, and writes them into
  * every design library as `--<role>` variables on its `Mode` theme axis — so `bg-card` in code and
  * `$ds:--card` in a design are the same value by construction. There are two libraries, each with
- * its own components: bitrate.lib.pen (`ds`) for the player, landing and artist designs, and
- * admin.lib.pen (`admin`) for the admin console — the admin design system is separate. A role
- * whose CSS value is a bare
- * `var(--color-x)` stays a `$--x` alias, so the design keeps the code's alias chain.
+ * its own components: bitrate.lib.pen (`ds`) for the player, landing and artist designs,
+ * admin.lib.pen (`admin`) for the admin console, and artist.lib.pen (`artist`) for the artist
+ * workspace designs rebuilt on the shipped living-workspace look. The artist library also carries
+ * the artist workspace's component roles (scripts/lib/artist-pen-tokens.mjs). A role whose CSS
+ * value is a bare `var(--color-x)` stays a `$--x` alias, so the design keeps the code's alias chain.
  *
  *   node scripts/sync-pen-tokens.mjs           write the library
  *   node scripts/sync-pen-tokens.mjs --check   fail on drift, unknown `$ds:` references, or
@@ -28,6 +29,7 @@
  */
 import { readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join, relative } from 'node:path'
+import { artistVariables } from './lib/artist-pen-tokens.mjs'
 import { HEX, isTransparent, parseHex, ROOT, rgbToOklab } from './lib/pen-colour.mjs'
 
 const THEMES_ENTRY = join(ROOT, 'packages/tailwind/src/themes.css')
@@ -37,6 +39,14 @@ const LIBRARIES = [
     file: 'pencil/web-admin-design/design-system/admin.lib.pen',
     alias: 'admin',
     scope: /^pencil\/web-admin-design\//,
+  },
+  /* artist workspace designs that import `artist`; the other artist pages still import `ds` */
+  {
+    file: 'pencil/web-artist-design/design-system/artist.lib.pen',
+    alias: 'artist',
+    scope: /^pencil\/web-artist-design\//,
+    byImport: true,
+    artistRoles: true,
   },
   {
     file: 'pencil/web-player-design/design-system/bitrate.lib.pen',
@@ -67,12 +77,15 @@ function collectCss(file, seen = new Set()) {
 function parseDeclarations(css) {
   const decls = { Dark: {}, Light: {}, Dim: {} }
   const clean = css.replace(/\/\*[\s\S]*?\*\//g, '')
-  for (const [, selector, body] of clean.matchAll(
-    /(@theme(?:\s+inline)?|:root\.light|:root\.dim)\s*\{([^}]*)\}/g,
+  /* a selector list (`:root.light, :root.dim { … }`) sets each of its themes */
+  for (const [, selectors, body] of clean.matchAll(
+    /((?:@theme(?:\s+inline)?|:root\.light|:root\.dim)(?:\s*,\s*(?::root\.light|:root\.dim))*)\s*\{([^}]*)\}/g,
   )) {
-    const theme = SELECTORS[selector.replace(/\s+inline$/, '')]
-    for (const [, name, value] of body.matchAll(/--color-([a-z0-9-]+)\s*:\s*([^;]+);/g)) {
-      decls[theme][name] = value.trim()
+    for (const selector of selectors.split(',').map((s) => s.trim())) {
+      const theme = SELECTORS[selector.replace(/\s+inline$/, '')]
+      for (const [, name, value] of body.matchAll(/--color-([a-z0-9-]+)\s*:\s*([^;]+);/g)) {
+        decls[theme][name] = value.trim()
+      }
     }
   }
   return decls
@@ -195,8 +208,7 @@ function componentRoles() {
   return names
 }
 
-function buildVariables() {
-  const decls = parseDeclarations(collectCss(THEMES_ENTRY))
+function buildVariables(decls) {
   const internal = componentRoles()
   const roles = Object.keys(decls.Dark).filter((r) => !internal.has(r))
   const variables = {}
@@ -310,12 +322,26 @@ function scanDesign(file, libraryNames, refPattern) {
   }
 }
 
+/** The libraries a design imports (alias → path), read before choosing the library it is checked against. */
+const importsOf = (path) => JSON.parse(readFileSync(path, 'utf8')).imports ?? {}
+
 /* ---------- main ---------- */
 
 const check = process.argv.includes('--check')
-const generated = buildVariables()
+const decls = parseDeclarations(collectCss(THEMES_ENTRY))
+const shared = buildVariables(decls)
 const libs = LIBRARIES.map((l) => {
   const path = join(ROOT, l.file)
+  const generated = l.artistRoles
+    ? {
+        ...shared,
+        ...artistVariables(ROOT, {
+          resolve: (theme, value) => resolveColor(decls, theme, value, ['artist']),
+          toHex,
+          exported: Object.keys(shared),
+        }),
+      }
+    : shared
   const doc = JSON.parse(readFileSync(path, 'utf8'))
   const current = doc.variables ?? {}
   const designOnly = Object.keys(current).filter(
@@ -323,18 +349,18 @@ const libs = LIBRARIES.map((l) => {
   )
   const names = new Set(Object.keys(generated).concat(Object.keys(current)))
   for (const name of designOnly) names.delete(name)
-  return { ...l, path, doc, current, designOnly, names }
+  return { ...l, path, doc, current, designOnly, names, generated }
 })
 
 if (!check) {
   for (const lib of libs) {
     const next = {}
     for (const [name, v] of Object.entries(lib.current)) if (v.type !== 'color') next[name] = v
-    Object.assign(next, generated)
+    Object.assign(next, lib.generated)
     lib.doc.themes = { ...lib.doc.themes, Mode: THEMES }
     lib.doc.variables = next
     writeFileSync(lib.path, JSON.stringify(lib.doc, null, 2))
-    console.log(`✅ ${lib.file}: ${Object.keys(generated).length} colour variables from code`)
+    console.log(`✅ ${lib.file}: ${Object.keys(lib.generated).length} variables from code`)
     if (lib.designOnly.length)
       console.log(`   removed design-only colours: ${lib.designOnly.join(', ')}`)
   }
@@ -343,8 +369,8 @@ if (!check) {
 
 const problems = []
 for (const lib of libs) {
-  const drift = Object.keys(generated).filter(
-    (k) => JSON.stringify(lib.current[k]?.value) !== JSON.stringify(generated[k].value),
+  const drift = Object.keys(lib.generated).filter(
+    (k) => JSON.stringify(lib.current[k]?.value) !== JSON.stringify(lib.generated[k].value),
   )
   if (drift.length)
     problems.push(`${lib.file} drifted from code for ${drift.length} role(s): ${drift.join(', ')}`)
@@ -355,7 +381,11 @@ for (const lib of libs) {
 const designs = [...penFiles(DESIGNS)].filter((path) => !ARCHIVED.test(relative(ROOT, path)))
 for (const path of designs) {
   const file = relative(ROOT, path)
-  const lib = libs.find((l) => l.scope.test(file))
+  const lib = libs.find(
+    (l) =>
+      l.scope.test(file) &&
+      (!l.byImport || path === l.path || importsOf(path)[l.alias] !== undefined),
+  )
   const isLibrary = path === lib.path
   const alias = lib.alias
   const pattern = isLibrary ? /^\$(--[a-z0-9-]+)$/ : new RegExp(`^\\$${alias}:(--[a-z0-9-]+)$`)
