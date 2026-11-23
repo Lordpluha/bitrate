@@ -28,6 +28,7 @@ import {
   releaseReadinessSelect,
   releaseWorkspaceSelect,
 } from './orm'
+import { acceptsChanges } from './release-change-rules'
 import { lockOwnedDraft } from './release-draft-lock'
 import { readinessFromRecord, releaseReadiness } from './release-readiness'
 import { type CreditedArtist, creditArtistAlone } from './release-solo-credit'
@@ -307,6 +308,8 @@ function toWorkspaceView(release: ReleaseWorkspaceRecord, readinessRecord: Readi
     // Published tracks are catalogue copies of the drafts, so they are not counted twice.
     trackCount: Math.max(_count.trackDrafts, _count.tracks),
     participantCount: _count.contributors,
+    acceptsChanges: acceptsChanges(summary),
+    hasPendingChanges: _count.changes > 0,
   }
 }
 

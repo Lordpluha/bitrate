@@ -1,4 +1,4 @@
-# ADR-0071: AI calls go through one provider boundary, routed by task, under a DPA with no training
+# ADR-0076: AI calls go through one provider boundary, routed by task, under a DPA with no training
 
 Status: Proposed
 

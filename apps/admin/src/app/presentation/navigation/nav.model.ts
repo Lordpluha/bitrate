@@ -96,6 +96,13 @@ export const NAV_SECTIONS: readonly NavSection[] = [
       },
       {
         kind: 'link',
+        path: '/release-changes',
+        label: 'nav.releaseChanges',
+        icon: 'lucideFilePen',
+        permission: 'releases:read',
+      },
+      {
+        kind: 'link',
         path: '/catalog',
         label: 'nav.catalog',
         icon: 'lucideAudioLines',

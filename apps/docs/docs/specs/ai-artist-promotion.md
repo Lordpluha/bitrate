@@ -3,7 +3,7 @@
 Status: **Approved, not started.** Decisions agreed with the product owner in a planning
 interview between 2026-11-10 and 2026-11-19 (see [Decisions and approval](#decisions-and-approval));
 the owner confirmed the implementation plan on 2026-11-19. Architecture:
-[ADR-0071](../architecture/0071-ai-provider-boundary.md) (Proposed).
+[ADR-0076](../architecture/0076-ai-provider-boundary.md) (Proposed).
 
 ## Goal and boundaries
 
@@ -117,7 +117,7 @@ Stored per artist; each field can be overridden for one generation.
   [law roadmap](../strategy/law-roadmap.md)). Nothing is published or sent without the
   artist's per-item approval.
 
-### AI platform (provider boundary, ADR-0071)
+### AI platform (provider boundary, ADR-0076)
 
 - One `AiProvider` interface in `apps/api/src/infra/ai/`; no provider SDK call outside its adapters, and none
   in a controller. Calls are routed **by task**, from configuration:
@@ -130,7 +130,7 @@ Stored per artist; each field can be overridden for one generation.
   | D | Moderation, validation, classification | Claude Haiku 5.5 | Mistral Small 4 |
 
 - **Providers need a DPA and no training on data**
-  ([ADR-0071](../architecture/0071-ai-provider-boundary.md)). EU-region processing is preferred,
+  ([ADR-0076](../architecture/0076-ai-provider-boundary.md)). EU-region processing is preferred,
   not required: Claude is called through Anthropic's own API (processing in the US, under a DPA
   with SCCs). Requests carry only public profile and release fields. Mistral is the fallback with
   training opted out. DeepL API Pro is an allowed translation alternative, and translation uses
@@ -245,9 +245,9 @@ The owner confirmed the implementation plan below on 2026-11-19.
 Each step is one PR into `develop` unless noted. Checks are scoped to the touched workspace
 and run through `.claude/scripts/run-heavy.py`.
 
-1. **ADR-0071: AI provider boundary.** Task routing, approved providers, `AiUsage` accounting,
+1. **ADR-0076: AI provider boundary.** Task routing, approved providers, `AiUsage` accounting,
    the composition boundary, and the lint rule against direct SDK imports. Docs only.
-2. **Provider due diligence** (no code). **Done 2026-11-20**, recorded in ADR-0071. The
+2. **Provider due diligence** (no code). **Done 2026-11-20**, recorded in ADR-0076. The
    requirement was revised on 2026-11-23 (D-5.4): Claude is called through Anthropic's own API,
    Mistral is the fallback, and DeepL API Pro is allowed. Still open before rollout (step 10):
    switch on Mistral's training opt-out, and add the enabled providers, with the countries

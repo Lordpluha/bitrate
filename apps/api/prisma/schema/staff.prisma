@@ -28,10 +28,11 @@ model Staff {
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 
-  role      Role           @relation(fields: [roleId], references: [id])
-  sessions  StaffSession[]
-  auditLogs AuditLog[]
+  role           Role            @relation(fields: [roleId], references: [id])
+  sessions       StaffSession[]
+  auditLogs      AuditLog[]
   releaseReviews ReleaseReview[]
+  releaseChanges ReleaseChange[]
 
   @@index([deletedAt])
   @@index([roleId])
