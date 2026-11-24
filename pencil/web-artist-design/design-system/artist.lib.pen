@@ -9388,23 +9388,13 @@
                         {
                           "type": "frame",
                           "id": "hAM0zn",
-                          "name": "Trail",
+                          "name": "Slot",
+                          "layout": "horizontal",
                           "gap": 8,
-                          "alignItems": "center",
                           "width": 180,
-                          "children": [
-                            {
-                              "type": "frame",
-                              "id": "hKXMPN",
-                              "name": "Slot",
-                              "layout": "horizontal",
-                              "gap": 8,
-                              "width": "fit_content",
-                              "slot": [],
-                              "alignItems": "center",
-                              "children": []
-                            }
-                          ]
+                          "slot": [],
+                          "alignItems": "center",
+                          "children": []
                         }
                       ],
                       "reusable": true
@@ -15796,11 +15786,15 @@
                             {
                               "type": "text",
                               "id": "F1So60",
-                              "name": "Welcome back!",
+                              "name": "Title",
                               "content": "Welcome back!",
                               "fontSize": 26,
                               "fill": "$--artist-foreground",
                               "fontWeight": "500",
+                              "textAlign": "center",
+                              "width": "fill_container",
+                              "textGrowth": "fixed-width",
+                              "lineHeight": 1.5,
                               "fontFamily": "$--font-sans"
                             },
                             {
@@ -20576,7 +20570,7 @@
                           "width": "fill_container",
                           "descendants": {
                             "WwKBYL": {
-                              "width": 520
+                              "width": "fill_container"
                             }
                           }
                         }
@@ -23040,7 +23034,53 @@
                               "gap": 4,
                               "width": "fill_container",
                               "slot": [],
-                              "children": []
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "T41Ndk",
+                                  "ref": "eNXmbM",
+                                  "name": "Nav / Dashboard",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "it6GEx": {
+                                      "icon": "layout-dashboard"
+                                    },
+                                    "9i1hx0": {
+                                      "content": "Dashboard"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "27JNn4",
+                                  "ref": "KtFzWg",
+                                  "name": "Nav / Music",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "MM6ReF": {
+                                      "icon": "music-2"
+                                    },
+                                    "JsvkSB": {
+                                      "content": "Music"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "9zglFz",
+                                  "ref": "KtFzWg",
+                                  "name": "Nav / Distribution",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "MM6ReF": {
+                                      "icon": "send"
+                                    },
+                                    "JsvkSB": {
+                                      "content": "Distribution"
+                                    }
+                                  }
+                                }
+                              ]
                             },
                             {
                               "type": "frame",
@@ -23050,7 +23090,23 @@
                               "gap": 4,
                               "width": "fill_container",
                               "slot": [],
-                              "children": []
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "SzFDCk",
+                                  "ref": "6NZ8NQ",
+                                  "name": "Nav / English",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "wU47I0": {
+                                      "icon": "globe"
+                                    },
+                                    "n1Vqlv": {
+                                      "content": "English"
+                                    }
+                                  }
+                                }
+                              ]
                             }
                           ]
                         },
@@ -23062,7 +23118,23 @@
                           "gap": 12,
                           "width": "fill_container",
                           "slot": [],
-                          "children": []
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "tcMD98",
+                              "ref": "Cs2YMp",
+                              "name": "Account",
+                              "width": "fill_container",
+                              "descendants": {
+                                "HYiOPW": {
+                                  "content": "Mira Sol"
+                                },
+                                "IovBNM": {
+                                  "content": "Artist account"
+                                }
+                              }
+                            }
+                          ]
                         }
                       ],
                       "reusable": true
@@ -23093,7 +23165,7 @@
                       "layout": "vertical",
                       "gap": 0,
                       "width": 248,
-                      "height": 900,
+                      "height": 1000,
                       "padding": [
                         16,
                         12,
@@ -23384,7 +23456,7 @@
                       "layout": "vertical",
                       "gap": 0,
                       "width": 80,
-                      "height": 900,
+                      "height": 1000,
                       "padding": [
                         16,
                         12,
@@ -24149,6 +24221,14 @@
                               "children": []
                             }
                           ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "EHaGjd",
+                          "name": "Min height",
+                          "width": 1,
+                          "height": 900,
+                          "children": []
                         }
                       ],
                       "reusable": true

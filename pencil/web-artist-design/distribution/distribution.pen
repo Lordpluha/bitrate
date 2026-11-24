@@ -3287,50 +3287,87 @@
                           "type": "frame",
                           "id": "DJ017x",
                           "name": "Legend",
+                          "layout": "vertical",
                           "gap": 6,
-                          "alignItems": "center",
+                          "width": "fill_container",
                           "children": [
                             {
-                              "type": "ref",
+                              "type": "frame",
                               "id": "9azuKA",
-                              "ref": "artist:mANGPX",
-                              "name": "Legend / Not connected"
+                              "name": "Legend line 1",
+                              "gap": 6,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "98CtaY",
+                                  "ref": "artist:mANGPX",
+                                  "name": "Legend / Not connected"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "kw6ATd",
+                                  "ref": "artist:uWhN1j",
+                                  "name": "Legend / Live"
+                                }
+                              ]
                             },
                             {
-                              "type": "ref",
+                              "type": "frame",
                               "id": "6xDnkV",
-                              "ref": "artist:uWhN1j",
-                              "name": "Legend / Live"
+                              "name": "Legend line 2",
+                              "gap": 6,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "Elku9P",
+                                  "ref": "artist:hJxMI6",
+                                  "name": "Legend / Pending"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "zvAWVI",
+                                  "ref": "artist:RAApxD",
+                                  "name": "Legend / Failed"
+                                }
+                              ]
                             },
                             {
-                              "type": "ref",
+                              "type": "frame",
                               "id": "95JoCC",
-                              "ref": "artist:hJxMI6",
-                              "name": "Legend / Pending"
+                              "name": "Legend line 3",
+                              "gap": 6,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "365Q5R",
+                                  "ref": "artist:rpQR9c",
+                                  "name": "Legend / Taken down"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "6avnHz",
+                                  "ref": "artist:kx6PCs",
+                                  "name": "Legend / Unavailable"
+                                }
+                              ]
                             },
                             {
-                              "type": "ref",
+                              "type": "frame",
                               "id": "cJhtpE",
-                              "ref": "artist:RAApxD",
-                              "name": "Legend / Failed"
-                            },
-                            {
-                              "type": "ref",
-                              "id": "Neuhtq",
-                              "ref": "artist:rpQR9c",
-                              "name": "Legend / Taken down"
-                            },
-                            {
-                              "type": "ref",
-                              "id": "K01Blt",
-                              "ref": "artist:kx6PCs",
-                              "name": "Legend / Unavailable"
-                            },
-                            {
-                              "type": "ref",
-                              "id": "3HjFCR",
-                              "ref": "artist:pitgVr",
-                              "name": "Legend / Not in plan"
+                              "name": "Legend line 4",
+                              "gap": 6,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "2yVooF",
+                                  "ref": "artist:pitgVr",
+                                  "name": "Legend / Not in plan"
+                                }
+                              ]
                             }
                           ]
                         }
@@ -4485,20 +4522,30 @@
                           "type": "frame",
                           "id": "S0dk4y",
                           "name": "Legend",
+                          "layout": "vertical",
                           "gap": 6,
-                          "alignItems": "center",
+                          "width": "fill_container",
                           "children": [
                             {
-                              "type": "ref",
+                              "type": "frame",
                               "id": "4Xg5OY",
-                              "ref": "artist:mANGPX",
-                              "name": "Legend / Not connected"
-                            },
-                            {
-                              "type": "ref",
-                              "id": "9sYOZl",
-                              "ref": "artist:pitgVr",
-                              "name": "Legend / Not in plan"
+                              "name": "Legend line 1",
+                              "gap": 6,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "gFoKj8",
+                                  "ref": "artist:mANGPX",
+                                  "name": "Legend / Not connected"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "dVTfQU",
+                                  "ref": "artist:pitgVr",
+                                  "name": "Legend / Not in plan"
+                                }
+                              ]
                             }
                           ]
                         }

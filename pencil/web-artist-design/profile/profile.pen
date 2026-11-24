@@ -2685,38 +2685,48 @@
                   "type": "frame",
                   "id": "JYidf9",
                   "name": "Actions",
+                  "layout": "vertical",
                   "gap": 12,
-                  "alignItems": "center",
                   "width": "fill_container",
-                  "justifyContent": "end",
                   "children": [
                     {
-                      "type": "ref",
+                      "type": "frame",
                       "id": "fxBJwr",
-                      "ref": "artist:HtMQw9",
-                      "name": "Button / Discard changes",
-                      "descendants": {
-                        "artist:wKSako": {
-                          "content": "Discard changes"
+                      "name": "Buttons",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "justifyContent": "end",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "144qiM",
+                          "ref": "artist:HtMQw9",
+                          "name": "Button / Discard changes",
+                          "descendants": {
+                            "artist:wKSako": {
+                              "content": "Discard changes"
+                            },
+                            "artist:DyTdif": {
+                              "enabled": false
+                            }
+                          }
                         },
-                        "artist:DyTdif": {
-                          "enabled": false
+                        {
+                          "type": "ref",
+                          "id": "0RDTn7",
+                          "ref": "artist:WHXSr6",
+                          "name": "Button / Save profile",
+                          "descendants": {
+                            "artist:vg489O": {
+                              "content": "Save profile"
+                            },
+                            "artist:wAdYtR": {
+                              "enabled": false
+                            }
+                          }
                         }
-                      }
-                    },
-                    {
-                      "type": "ref",
-                      "id": "qN6xgj",
-                      "ref": "artist:WHXSr6",
-                      "name": "Button / Save profile",
-                      "descendants": {
-                        "artist:vg489O": {
-                          "content": "Save profile"
-                        },
-                        "artist:wAdYtR": {
-                          "enabled": false
-                        }
-                      }
+                      ]
                     }
                   ]
                 },
@@ -4055,38 +4065,48 @@
                   "type": "frame",
                   "id": "dYyVFz",
                   "name": "Actions",
+                  "layout": "vertical",
                   "gap": 12,
-                  "alignItems": "center",
                   "width": "fill_container",
-                  "justifyContent": "end",
                   "children": [
                     {
-                      "type": "ref",
+                      "type": "frame",
                       "id": "fq1URN",
-                      "ref": "artist:HtMQw9",
-                      "name": "Button / Discard changes",
-                      "descendants": {
-                        "artist:wKSako": {
-                          "content": "Discard changes"
+                      "name": "Buttons",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "justifyContent": "end",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "xN75p3",
+                          "ref": "artist:HtMQw9",
+                          "name": "Button / Discard changes",
+                          "descendants": {
+                            "artist:wKSako": {
+                              "content": "Discard changes"
+                            },
+                            "artist:DyTdif": {
+                              "enabled": false
+                            }
+                          }
                         },
-                        "artist:DyTdif": {
-                          "enabled": false
+                        {
+                          "type": "ref",
+                          "id": "CnLWnv",
+                          "ref": "artist:WHXSr6",
+                          "name": "Button / Saving…",
+                          "descendants": {
+                            "artist:vg489O": {
+                              "content": "Saving…"
+                            },
+                            "artist:wAdYtR": {
+                              "enabled": false
+                            }
+                          }
                         }
-                      }
-                    },
-                    {
-                      "type": "ref",
-                      "id": "klf3sw",
-                      "ref": "artist:WHXSr6",
-                      "name": "Button / Saving…",
-                      "descendants": {
-                        "artist:vg489O": {
-                          "content": "Saving…"
-                        },
-                        "artist:wAdYtR": {
-                          "enabled": false
-                        }
-                      }
+                      ]
                     }
                   ]
                 },
@@ -5432,45 +5452,57 @@
                   "type": "frame",
                   "id": "kc8WIg",
                   "name": "Actions",
+                  "layout": "vertical",
                   "gap": 12,
-                  "alignItems": "center",
                   "width": "fill_container",
-                  "justifyContent": "end",
                   "children": [
                     {
                       "type": "ref",
                       "id": "Cy7N7j",
                       "ref": "artist:C5Ih8u",
                       "name": "Profile saved.",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
                       "content": "Profile saved."
                     },
                     {
-                      "type": "ref",
+                      "type": "frame",
                       "id": "xeycyB",
-                      "ref": "artist:HtMQw9",
-                      "name": "Button / Discard changes",
-                      "descendants": {
-                        "artist:wKSako": {
-                          "content": "Discard changes"
+                      "name": "Buttons",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "justifyContent": "end",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "3HPdoU",
+                          "ref": "artist:HtMQw9",
+                          "name": "Button / Discard changes",
+                          "descendants": {
+                            "artist:wKSako": {
+                              "content": "Discard changes"
+                            },
+                            "artist:DyTdif": {
+                              "enabled": false
+                            }
+                          }
                         },
-                        "artist:DyTdif": {
-                          "enabled": false
+                        {
+                          "type": "ref",
+                          "id": "8udEIq",
+                          "ref": "artist:WHXSr6",
+                          "name": "Button / Save profile",
+                          "descendants": {
+                            "artist:vg489O": {
+                              "content": "Save profile"
+                            },
+                            "artist:wAdYtR": {
+                              "enabled": false
+                            }
+                          }
                         }
-                      }
-                    },
-                    {
-                      "type": "ref",
-                      "id": "w5FKHJ",
-                      "ref": "artist:WHXSr6",
-                      "name": "Button / Save profile",
-                      "descendants": {
-                        "artist:vg489O": {
-                          "content": "Save profile"
-                        },
-                        "artist:wAdYtR": {
-                          "enabled": false
-                        }
-                      }
+                      ]
                     }
                   ]
                 },
@@ -6809,38 +6841,48 @@
                   "type": "frame",
                   "id": "WiYzw5",
                   "name": "Actions",
+                  "layout": "vertical",
                   "gap": 12,
-                  "alignItems": "center",
                   "width": "fill_container",
-                  "justifyContent": "end",
                   "children": [
                     {
-                      "type": "ref",
+                      "type": "frame",
                       "id": "2Kt4mb",
-                      "ref": "artist:HtMQw9",
-                      "name": "Button / Discard changes",
-                      "descendants": {
-                        "artist:wKSako": {
-                          "content": "Discard changes"
+                      "name": "Buttons",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "justifyContent": "end",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "eLpjJC",
+                          "ref": "artist:HtMQw9",
+                          "name": "Button / Discard changes",
+                          "descendants": {
+                            "artist:wKSako": {
+                              "content": "Discard changes"
+                            },
+                            "artist:DyTdif": {
+                              "enabled": false
+                            }
+                          }
                         },
-                        "artist:DyTdif": {
-                          "enabled": false
+                        {
+                          "type": "ref",
+                          "id": "dI6i2L",
+                          "ref": "artist:WHXSr6",
+                          "name": "Button / Save profile",
+                          "descendants": {
+                            "artist:vg489O": {
+                              "content": "Save profile"
+                            },
+                            "artist:wAdYtR": {
+                              "enabled": false
+                            }
+                          }
                         }
-                      }
-                    },
-                    {
-                      "type": "ref",
-                      "id": "5lg6eA",
-                      "ref": "artist:WHXSr6",
-                      "name": "Button / Save profile",
-                      "descendants": {
-                        "artist:vg489O": {
-                          "content": "Save profile"
-                        },
-                        "artist:wAdYtR": {
-                          "enabled": false
-                        }
-                      }
+                      ]
                     }
                   ]
                 },
@@ -8192,45 +8234,57 @@
                   "type": "frame",
                   "id": "yaY7TK",
                   "name": "Actions",
+                  "layout": "vertical",
                   "gap": 12,
-                  "alignItems": "center",
                   "width": "fill_container",
-                  "justifyContent": "end",
                   "children": [
                     {
                       "type": "ref",
                       "id": "iRqLEm",
                       "ref": "artist:3eatV3",
                       "name": "Check the highlighted fields",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
                       "content": "Check the highlighted fields, then try again."
                     },
                     {
-                      "type": "ref",
+                      "type": "frame",
                       "id": "b73Jl4",
-                      "ref": "artist:HtMQw9",
-                      "name": "Button / Discard changes",
-                      "descendants": {
-                        "artist:wKSako": {
-                          "content": "Discard changes"
+                      "name": "Buttons",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "justifyContent": "end",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "N62gC5",
+                          "ref": "artist:HtMQw9",
+                          "name": "Button / Discard changes",
+                          "descendants": {
+                            "artist:wKSako": {
+                              "content": "Discard changes"
+                            },
+                            "artist:DyTdif": {
+                              "enabled": false
+                            }
+                          }
                         },
-                        "artist:DyTdif": {
-                          "enabled": false
+                        {
+                          "type": "ref",
+                          "id": "SWrTWu",
+                          "ref": "artist:WHXSr6",
+                          "name": "Button / Save profile",
+                          "descendants": {
+                            "artist:vg489O": {
+                              "content": "Save profile"
+                            },
+                            "artist:wAdYtR": {
+                              "enabled": false
+                            }
+                          }
                         }
-                      }
-                    },
-                    {
-                      "type": "ref",
-                      "id": "aToOvZ",
-                      "ref": "artist:WHXSr6",
-                      "name": "Button / Save profile",
-                      "descendants": {
-                        "artist:vg489O": {
-                          "content": "Save profile"
-                        },
-                        "artist:wAdYtR": {
-                          "enabled": false
-                        }
-                      }
+                      ]
                     }
                   ]
                 },
@@ -9575,38 +9629,48 @@
                   "type": "frame",
                   "id": "Qw1Xhr",
                   "name": "Actions",
+                  "layout": "vertical",
                   "gap": 12,
-                  "alignItems": "center",
                   "width": "fill_container",
-                  "justifyContent": "end",
                   "children": [
                     {
-                      "type": "ref",
+                      "type": "frame",
                       "id": "QqdC49",
-                      "ref": "artist:HtMQw9",
-                      "name": "Button / Discard changes",
-                      "descendants": {
-                        "artist:wKSako": {
-                          "content": "Discard changes"
+                      "name": "Buttons",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "justifyContent": "end",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "q8K239",
+                          "ref": "artist:HtMQw9",
+                          "name": "Button / Discard changes",
+                          "descendants": {
+                            "artist:wKSako": {
+                              "content": "Discard changes"
+                            },
+                            "artist:DyTdif": {
+                              "enabled": false
+                            }
+                          }
                         },
-                        "artist:DyTdif": {
-                          "enabled": false
+                        {
+                          "type": "ref",
+                          "id": "tICAmD",
+                          "ref": "artist:WHXSr6",
+                          "name": "Button / Save profile",
+                          "descendants": {
+                            "artist:vg489O": {
+                              "content": "Save profile"
+                            },
+                            "artist:wAdYtR": {
+                              "enabled": false
+                            }
+                          }
                         }
-                      }
-                    },
-                    {
-                      "type": "ref",
-                      "id": "LXZNxz",
-                      "ref": "artist:WHXSr6",
-                      "name": "Button / Save profile",
-                      "descendants": {
-                        "artist:vg489O": {
-                          "content": "Save profile"
-                        },
-                        "artist:wAdYtR": {
-                          "enabled": false
-                        }
-                      }
+                      ]
                     }
                   ]
                 },
@@ -10958,45 +11022,57 @@
                   "type": "frame",
                   "id": "dtzZKs",
                   "name": "Actions",
+                  "layout": "vertical",
                   "gap": 12,
-                  "alignItems": "center",
                   "width": "fill_container",
-                  "justifyContent": "end",
                   "children": [
                     {
                       "type": "ref",
                       "id": "lGxCsi",
                       "ref": "artist:3eatV3",
                       "name": "Choose a JPEG, PNG or WebP i",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
                       "content": "Choose a JPEG, PNG or WebP image up to 10 MB."
                     },
                     {
-                      "type": "ref",
+                      "type": "frame",
                       "id": "gs6gNB",
-                      "ref": "artist:HtMQw9",
-                      "name": "Button / Discard changes",
-                      "descendants": {
-                        "artist:wKSako": {
-                          "content": "Discard changes"
+                      "name": "Buttons",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "justifyContent": "end",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "Clj984",
+                          "ref": "artist:HtMQw9",
+                          "name": "Button / Discard changes",
+                          "descendants": {
+                            "artist:wKSako": {
+                              "content": "Discard changes"
+                            },
+                            "artist:DyTdif": {
+                              "enabled": false
+                            }
+                          }
                         },
-                        "artist:DyTdif": {
-                          "enabled": false
+                        {
+                          "type": "ref",
+                          "id": "zR7T8G",
+                          "ref": "artist:WHXSr6",
+                          "name": "Button / Save profile",
+                          "descendants": {
+                            "artist:vg489O": {
+                              "content": "Save profile"
+                            },
+                            "artist:wAdYtR": {
+                              "enabled": false
+                            }
+                          }
                         }
-                      }
-                    },
-                    {
-                      "type": "ref",
-                      "id": "j8oNOX",
-                      "ref": "artist:WHXSr6",
-                      "name": "Button / Save profile",
-                      "descendants": {
-                        "artist:vg489O": {
-                          "content": "Save profile"
-                        },
-                        "artist:wAdYtR": {
-                          "enabled": false
-                        }
-                      }
+                      ]
                     }
                   ]
                 },
@@ -12342,45 +12418,57 @@
                   "type": "frame",
                   "id": "NPSmCS",
                   "name": "Actions",
+                  "layout": "vertical",
                   "gap": 12,
-                  "alignItems": "center",
                   "width": "fill_container",
-                  "justifyContent": "end",
                   "children": [
                     {
                       "type": "ref",
                       "id": "BUZ8zO",
                       "ref": "artist:3eatV3",
                       "name": "Your profile changed since t",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
                       "content": "Your profile changed since this page loaded. Your entries are kept; reload the page to see the latest version."
                     },
                     {
-                      "type": "ref",
+                      "type": "frame",
                       "id": "E0hGNg",
-                      "ref": "artist:HtMQw9",
-                      "name": "Button / Discard changes",
-                      "descendants": {
-                        "artist:wKSako": {
-                          "content": "Discard changes"
+                      "name": "Buttons",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "justifyContent": "end",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "sR1Fp8",
+                          "ref": "artist:HtMQw9",
+                          "name": "Button / Discard changes",
+                          "descendants": {
+                            "artist:wKSako": {
+                              "content": "Discard changes"
+                            },
+                            "artist:DyTdif": {
+                              "enabled": false
+                            }
+                          }
                         },
-                        "artist:DyTdif": {
-                          "enabled": false
+                        {
+                          "type": "ref",
+                          "id": "fV6jRC",
+                          "ref": "artist:WHXSr6",
+                          "name": "Button / Save profile",
+                          "descendants": {
+                            "artist:vg489O": {
+                              "content": "Save profile"
+                            },
+                            "artist:wAdYtR": {
+                              "enabled": false
+                            }
+                          }
                         }
-                      }
-                    },
-                    {
-                      "type": "ref",
-                      "id": "lrAqHF",
-                      "ref": "artist:WHXSr6",
-                      "name": "Button / Save profile",
-                      "descendants": {
-                        "artist:vg489O": {
-                          "content": "Save profile"
-                        },
-                        "artist:wAdYtR": {
-                          "enabled": false
-                        }
-                      }
+                      ]
                     }
                   ]
                 },
@@ -13726,45 +13814,57 @@
                   "type": "frame",
                   "id": "fa3DTz",
                   "name": "Actions",
+                  "layout": "vertical",
                   "gap": 12,
-                  "alignItems": "center",
                   "width": "fill_container",
-                  "justifyContent": "end",
                   "children": [
                     {
                       "type": "ref",
                       "id": "FJTTik",
                       "ref": "artist:3eatV3",
                       "name": "Could not confirm your profi",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
                       "content": "Could not confirm your profile was saved. Reload the page before trying again."
                     },
                     {
-                      "type": "ref",
+                      "type": "frame",
                       "id": "IcVgS1",
-                      "ref": "artist:HtMQw9",
-                      "name": "Button / Discard changes",
-                      "descendants": {
-                        "artist:wKSako": {
-                          "content": "Discard changes"
+                      "name": "Buttons",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "justifyContent": "end",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "KDNprk",
+                          "ref": "artist:HtMQw9",
+                          "name": "Button / Discard changes",
+                          "descendants": {
+                            "artist:wKSako": {
+                              "content": "Discard changes"
+                            },
+                            "artist:DyTdif": {
+                              "enabled": false
+                            }
+                          }
                         },
-                        "artist:DyTdif": {
-                          "enabled": false
+                        {
+                          "type": "ref",
+                          "id": "RPkFuq",
+                          "ref": "artist:WHXSr6",
+                          "name": "Button / Save profile",
+                          "descendants": {
+                            "artist:vg489O": {
+                              "content": "Save profile"
+                            },
+                            "artist:wAdYtR": {
+                              "enabled": false
+                            }
+                          }
                         }
-                      }
-                    },
-                    {
-                      "type": "ref",
-                      "id": "HNKEim",
-                      "ref": "artist:WHXSr6",
-                      "name": "Button / Save profile",
-                      "descendants": {
-                        "artist:vg489O": {
-                          "content": "Save profile"
-                        },
-                        "artist:wAdYtR": {
-                          "enabled": false
-                        }
-                      }
+                      ]
                     }
                   ]
                 },
