@@ -1,53 +1,28 @@
+import { colorThemes, fontSize, fontWeight, spacing } from './tokens.gen'
+
 /**
- * Below are the colors that are used in the app. The colors are defined in the light and dark mode.
- * There are many other ways to style your app. For example, [Nativewind](https://www.nativewind.dev/), [Tamagui](https://tamagui.dev/), [unistyles](https://reactnativeunistyles.vercel.app), etc.
+ * Theme values bridged from `packages/tailwind/src` — one palette, three themes (dark is the
+ * default, light and dim mirror `:root.light` / `:root.dim`). Never hard-code a hex in a
+ * component; read a role through `useTheme()` instead.
  */
+export { colorThemes, spacing }
 
-import { Platform } from 'react-native'
+export type ThemeName = keyof typeof colorThemes
+export type ColorName = keyof typeof colorThemes.dark
+export type ThemeColors = Record<ColorName, string>
 
-const tintColorLight = '#0a7ea4'
-const tintColorDark = '#fff'
+/** Text presets — the web typography scale picked for a phone screen. */
+export const typography = {
+  display: { fontSize: fontSize['3xl'], fontWeight: fontWeight.black, lineHeight: 36 },
+  title: { fontSize: fontSize['2xl'], fontWeight: fontWeight.bold, lineHeight: 30 },
+  heading: { fontSize: fontSize.lg, fontWeight: fontWeight.bold, lineHeight: 24 },
+  body: { fontSize: fontSize.base, fontWeight: fontWeight.normal, lineHeight: 22 },
+  bodyStrong: { fontSize: fontSize.base, fontWeight: fontWeight.semibold, lineHeight: 22 },
+  caption: { fontSize: fontSize.sm, fontWeight: fontWeight.normal, lineHeight: 18 },
+  label: { fontSize: fontSize.xs, fontWeight: fontWeight.semibold, lineHeight: 16 },
+} as const
 
-export const Colors = {
-  light: {
-    text: '#11181C',
-    background: '#fff',
-    tint: tintColorLight,
-    icon: '#687076',
-    tabIconDefault: '#687076',
-    tabIconSelected: tintColorLight,
-  },
-  dark: {
-    text: '#ECEDEE',
-    background: '#151718',
-    tint: tintColorDark,
-    icon: '#9BA1A6',
-    tabIconDefault: '#9BA1A6',
-    tabIconSelected: tintColorDark,
-  },
-}
+export type TypographyVariant = keyof typeof typography
 
-export const Fonts = Platform.select({
-  ios: {
-    /** iOS `UIFontDescriptorSystemDesignDefault` */
-    sans: 'system-ui',
-    /** iOS `UIFontDescriptorSystemDesignSerif` */
-    serif: 'ui-serif',
-    /** iOS `UIFontDescriptorSystemDesignRounded` */
-    rounded: 'ui-rounded',
-    /** iOS `UIFontDescriptorSystemDesignMonospaced` */
-    mono: 'ui-monospace',
-  },
-  default: {
-    sans: 'normal',
-    serif: 'serif',
-    rounded: 'normal',
-    mono: 'monospace',
-  },
-  web: {
-    sans: "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
-    serif: "Georgia, 'Times New Roman', serif",
-    rounded: "'SF Pro Rounded', 'Hiragino Maru Gothic ProN', Meiryo, 'MS PGothic', sans-serif",
-    mono: "SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
-  },
-})
+/** Minimum touch target, in points (WCAG / platform HIG). */
+export const MIN_TOUCH_TARGET = 44

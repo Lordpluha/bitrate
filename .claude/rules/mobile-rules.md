@@ -14,11 +14,10 @@ metadata:
 Read before writing any file in `apps/mobile/`. Pair with the `expo` skill, which covers the
 framework mechanics; this file is project law.
 
-## Status: scaffolded, not started
+## Status: bootstrapped (epic #225)
 
-`apps/mobile` is the Expo starter template plus this repo's naming (roadmap v0.5.0, per
-`PRODUCT.md`). It has **no domain code yet** — no API client, no state layer, no design-token
-bridge, no tests. Treat what is there as a starting point, not as convention to imitate.
+`apps/mobile` has its conventions (#226): API client, state layer, design-token bridge, i18n and
+Jest. Screens arrive with #227–#229; the app's README "Conventions" table summarises the rules.
 
 **Propose, don't improvise silently.** When a task needs a convention this app has not
 established, say so in your report and state the convention you chose. The next agent
@@ -49,20 +48,22 @@ and React hook correctness. Component size, props and effects prompt review unde
 ```
 apps/mobile/
   app/            expo-router routes — a file here IS a route
-    _layout.tsx   root navigator
-    (tabs)/       route group: grouping without a URL segment
-    modal.tsx
+    _layout.tsx   providers
   components/     shared components; components/ui/ for primitives
   hooks/          use-*.ts
-  constants/      theme.ts
+  constants/      theme.ts + tokens.gen.ts
+  lib/            logic without UI: api/, i18n/, preferences/
+  scripts/tokens/ design-token bridge generator
 ```
+
+Keep files small: one exported function or component per file, under 200 lines.
 
 **File naming here is `kebab-case`**, not PascalCase — `themed-text.tsx`, `use-color-scheme.ts`.
 That contradicts `.claude/rules/typescript.md`'s React-component naming, and the Expo
 convention wins inside this app. Match the existing files; do not half-migrate.
 
 Platform-specific variants use the extension suffix Expo resolves automatically:
-`icon-symbol.ios.tsx`, `use-color-scheme.web.ts`. Do not hand-roll `Platform.OS` branching
+`use-color-scheme.web.ts`. Do not hand-roll `Platform.OS` branching
 where a `.ios`/`.android`/`.web` file is the idiom.
 
 ## Path alias
@@ -90,19 +91,23 @@ import { useColorScheme } from '@/hooks/use-color-scheme'
 ## Styling and tokens
 
 React Native `StyleSheet`, flexbox only, `flexDirection` defaults to `column`, no cascade.
-Theme values live in `constants/theme.ts` and are read through `useThemeColor`.
+Theme values live in `constants/theme.ts` and are read through `useTheme()`.
 
-There is **no bridge to the design tokens yet** (the token roles in `packages/tailwind/src/`). Until one exists, extend
-`constants/theme.ts` rather than scattering raw hex literals through components, and flag in
-your report that the bridge is still missing.
+Colours come from the design-token bridge: `pnpm --filter @bitrate/mobile tokens` regenerates
+`constants/tokens.gen.ts` from `packages/tailwind/src` (Dark default, Light, Dim — one
+palette). Never edit the generated file or write a hex in a component; read roles with
+`useTheme()`. A missing role is added to `scripts/tokens/color-roles.ts` (or to the tailwind
+sources first). `tokens:check` fails CI on drift.
 
 ## API access
 
 Types come from `@bitrate/contracts`. Do not hand-write a duplicate response shape, and do
 not import `@bitrate/ui-react`.
 
-No API client exists in this app yet. When one is needed, propose its shape before building
-it — this is exactly the kind of convention that must be decided once.
+Use the one client, `api` from `lib/api/client.ts` (openapi-fetch + the 401 refresh
+middleware). Session cookies stay in the native cookie store; never read or store a token.
+Queries are `queryOptions` factories in `lib/<domain>/…-query.ts` with keys from
+one keys module per domain. A response the contract leaves untyped is validated with zod.
 
 ## Accessibility
 
@@ -117,11 +122,11 @@ pnpm --filter @bitrate/mobile start
 pnpm --filter @bitrate/mobile ios | android | web
 pnpm --filter @bitrate/mobile lint                 # eslint-config-expo, NOT Biome
 pnpm --filter @bitrate/mobile check-types          # tsc --noEmit
+pnpm --filter @bitrate/mobile test:unit            # Jest (jest-expo), *.unit-spec.ts(x)
+pnpm --filter @bitrate/mobile tokens:check
 ```
 
-**There is no test setup in this app.** `check-types` and `lint` (via `eslint-config-expo`)
-both exist; say plainly that tests did not run rather than claiming a mechanical pass that
-did not happen. EAS builds
+EAS builds
 (`build:dev:*`, `build:prod:*`) and store submission are the user's to run.
 
 ## Related

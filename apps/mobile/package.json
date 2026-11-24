@@ -5,7 +5,6 @@
   "private": true,
   "scripts": {
     "start": "expo start",
-    "reset-project": "node ./scripts/reset-project.js",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
@@ -20,24 +19,27 @@
     "build:preview": "eas build --platform all --profile preview",
     "build:prod": "eas build --platform all --profile production",
     "build": "pnpm export",
-    "check-types": "tsc --noEmit"
+    "check-types": "tsc --noEmit",
+    "test:unit": "jest --maxWorkers=2",
+    "tokens": "tsx scripts/tokens/generate-tokens.ts",
+    "tokens:check": "tsx scripts/tokens/generate-tokens.ts --check"
   },
   "dependencies": {
+    "@bitrate/contracts": "workspace:*",
     "@expo/dom-webview": "~58.0.2",
     "@expo/metro-runtime": "~58.0.16",
-    "@expo/vector-icons": "^15.1.1",
+    "@react-native-async-storage/async-storage": "2.2.0",
+    "@tanstack/react-query": "^5.104.1",
     "expo": "~58.0.21",
     "expo-constants": "~58.0.14",
     "expo-font": "~58.0.11",
-    "expo-haptics": "~58.0.7",
-    "expo-image": "~58.0.18",
     "expo-linking": "~58.0.15",
     "expo-router": "~58.0.29",
     "expo-splash-screen": "~58.0.12",
     "expo-status-bar": "~58.0.4",
     "expo-symbols": "~58.0.4",
     "expo-system-ui": "~58.0.7",
-    "expo-web-browser": "~58.1.0",
+    "openapi-fetch": "^0.17.0",
     "react": "19.3.1",
     "react-dom": "19.3.1",
     "react-native": "0.88.1",
@@ -46,13 +48,30 @@
     "react-native-safe-area-context": "~5.11.1",
     "react-native-screens": "~4.30.1",
     "react-native-web": "~0.21.4",
-    "react-native-worklets": "0.14.0"
+    "react-native-worklets": "0.14.0",
+    "zustand": "^5.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.29.0",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^26.6.4",
     "@types/react": "~19.3.0",
     "eslint": "^9.39.4",
     "eslint-config-expo": "~58.0.4",
+    "jest-expo": "~58.0.15",
+    "tsx": "^4.23.15",
     "typescript": "~6.0.3"
+  },
+  "jest": {
+    "preset": "jest-expo",
+    "testMatch": [
+      "**/*.unit-spec.ts?(x)"
+    ],
+    "setupFiles": [
+      "./jest.setup.ts"
+    ],
+    "transformIgnorePatterns": [
+      "node_modules/(?!(?:.pnpm/)?((jest-)?react-native|@react-native(-community)?|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@sentry/react-native|native-base|react-native-svg|@bitrate/.*))"
+    ]
   }
 }
