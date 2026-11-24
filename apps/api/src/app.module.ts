@@ -11,6 +11,7 @@ import { MeModule } from '@modules/me/me.module'
 import { ModerationModule } from '@modules/moderation/moderation.module'
 import { NotificationsModule } from '@modules/notifications/notifications.module'
 import { PlaylistsModule } from '@modules/playlists/playlists.module'
+import { PromotionModule } from '@modules/promotion'
 import { RecommendationsModule } from '@modules/recommendations/recommendations.module'
 import { ReleasePublishingModule, ReleasesModule } from '@modules/releases'
 import { SearchModule } from '@modules/search/search.module'
@@ -44,6 +45,7 @@ import { AppCoreModule } from './app-core.module'
     ReleasePublishingModule,
     SupportKnowledgeModule,
     SupportChatModule,
+    PromotionModule,
     ArtistProfileModule,
     ArtistWorkspaceModule,
     ModerationModule,

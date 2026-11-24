@@ -1,58 +1,167 @@
 {
   "version": "2.20",
   "imports": {
-    "ds": "../../web-player-design/design-system/bitrate.lib.pen"
+    "artist": "../design-system/artist.lib.pen"
   },
   "children": [
     {
       "type": "frame",
-      "id": "MmWmNv",
+      "id": "cpjzmu",
       "name": "Artist / Not found / Desktop / Dark",
       "width": 1440,
       "height": 900,
-      "clip": true,
       "layout": "vertical",
-      "justifyContent": "center",
-      "alignItems": "center",
-      "gap": 20,
-      "padding": 24,
-      "fill": "$ds:--background",
-      "children": [
+      "clip": true,
+      "fill": [
         {
-          "type": "ref",
-          "id": "eqHdSf",
-          "ref": "ds:J95vY0",
-          "name": "Logo/Lockup"
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
         },
         {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
           "type": "frame",
-          "id": "j845xp",
-          "name": "State Area",
+          "id": "eJdGnY",
+          "name": "Page",
+          "layout": "vertical",
+          "gap": 24,
           "width": "fill_container",
+          "padding": [
+            72,
+            48,
+            96,
+            48
+          ],
+          "alignItems": "center",
           "height": "fill_container",
           "justifyContent": "center",
-          "alignItems": "center",
-          "layout": "vertical",
           "children": [
             {
-              "type": "ref",
-              "id": "fxYZey",
-              "ref": "ds:UacIqy",
-              "name": "State / This page doesn't exist",
-              "descendants": {
-                "ds:QTS6fY": {
-                  "icon": "compass"
+              "type": "frame",
+              "id": "GDBKdC",
+              "name": "Message",
+              "layout": "vertical",
+              "gap": 8,
+              "width": "fill_container",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "G3kC4e",
+                  "ref": "artist:yjiPHo",
+                  "name": "404",
+                  "textAlign": "center",
+                  "content": "404"
                 },
-                "ds:LaYbWr": {
+                {
+                  "type": "ref",
+                  "id": "DCcACY",
+                  "ref": "artist:MgMQ2L",
+                  "name": "This page doesn't exist",
+                  "textAlign": "center",
                   "content": "This page doesn't exist"
                 },
-                "ds:IowS15": {
+                {
+                  "type": "ref",
+                  "id": "ADW6yP",
+                  "ref": "artist:C5Ih8u",
+                  "name": "The link may be out of date,",
+                  "textAlign": "center",
                   "content": "The link may be out of date, or the address mistyped."
-                },
-                "ds:PKR600/ds:NVe7y": {
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "NUrs3Q",
+              "ref": "artist:WHXSr6",
+              "name": "Button / Back to Bitrate for Artists",
+              "descendants": {
+                "artist:vg489O": {
                   "content": "Back to Bitrate for Artists"
                 },
-                "ds:Sk1EVh": {
+                "artist:wAdYtR": {
                   "enabled": false
                 }
               }
@@ -63,59 +172,168 @@
       "x": 0,
       "y": 0,
       "theme": {
-        "ds:Mode": "Dark"
+        "artist:Mode": "Dark"
       },
-      "context": "unknown route — Artist-site 404."
+      "context": "* (any unknown path) — Static page: it loads nothing, so it has no loading, empty or error states of its own."
     },
     {
       "type": "frame",
-      "id": "4PmPJq",
+      "id": "4iMYms",
       "name": "Artist / Not found / Desktop / Light",
       "width": 1440,
       "height": 900,
-      "clip": true,
       "layout": "vertical",
-      "justifyContent": "center",
-      "alignItems": "center",
-      "gap": 20,
-      "padding": 24,
-      "fill": "$ds:--background",
-      "children": [
+      "clip": true,
+      "fill": [
         {
-          "type": "ref",
-          "id": "YM6aqn",
-          "ref": "ds:J95vY0",
-          "name": "Logo/Lockup"
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
         },
         {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
           "type": "frame",
-          "id": "EjWcWF",
-          "name": "State Area",
+          "id": "KcMVkc",
+          "name": "Page",
+          "layout": "vertical",
+          "gap": 24,
           "width": "fill_container",
+          "padding": [
+            72,
+            48,
+            96,
+            48
+          ],
+          "alignItems": "center",
           "height": "fill_container",
           "justifyContent": "center",
-          "alignItems": "center",
-          "layout": "vertical",
           "children": [
             {
-              "type": "ref",
-              "id": "U2paW2",
-              "ref": "ds:UacIqy",
-              "name": "State / This page doesn't exist",
-              "descendants": {
-                "ds:QTS6fY": {
-                  "icon": "compass"
+              "type": "frame",
+              "id": "W6RPOe",
+              "name": "Message",
+              "layout": "vertical",
+              "gap": 8,
+              "width": "fill_container",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "GQN7Sf",
+                  "ref": "artist:yjiPHo",
+                  "name": "404",
+                  "textAlign": "center",
+                  "content": "404"
                 },
-                "ds:LaYbWr": {
+                {
+                  "type": "ref",
+                  "id": "vMlshN",
+                  "ref": "artist:MgMQ2L",
+                  "name": "This page doesn't exist",
+                  "textAlign": "center",
                   "content": "This page doesn't exist"
                 },
-                "ds:IowS15": {
+                {
+                  "type": "ref",
+                  "id": "QNop97",
+                  "ref": "artist:C5Ih8u",
+                  "name": "The link may be out of date,",
+                  "textAlign": "center",
                   "content": "The link may be out of date, or the address mistyped."
-                },
-                "ds:PKR600/ds:NVe7y": {
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "VcDL0h",
+              "ref": "artist:WHXSr6",
+              "name": "Button / Back to Bitrate for Artists",
+              "descendants": {
+                "artist:vg489O": {
                   "content": "Back to Bitrate for Artists"
                 },
-                "ds:Sk1EVh": {
+                "artist:wAdYtR": {
                   "enabled": false
                 }
               }
@@ -126,59 +344,168 @@
       "x": 1540,
       "y": 0,
       "theme": {
-        "ds:Mode": "Light"
+        "artist:Mode": "Light"
       },
-      "context": "unknown route — Artist-site 404."
+      "context": "* (any unknown path) — Static page: it loads nothing, so it has no loading, empty or error states of its own."
     },
     {
       "type": "frame",
-      "id": "fUU39e",
+      "id": "48D6Oy",
       "name": "Artist / Not found / Desktop / Dim",
       "width": 1440,
       "height": 900,
-      "clip": true,
       "layout": "vertical",
-      "justifyContent": "center",
-      "alignItems": "center",
-      "gap": 20,
-      "padding": 24,
-      "fill": "$ds:--background",
-      "children": [
+      "clip": true,
+      "fill": [
         {
-          "type": "ref",
-          "id": "bAxBPK",
-          "ref": "ds:J95vY0",
-          "name": "Logo/Lockup"
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
         },
         {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
           "type": "frame",
-          "id": "djJsSd",
-          "name": "State Area",
+          "id": "2RLeJh",
+          "name": "Page",
+          "layout": "vertical",
+          "gap": 24,
           "width": "fill_container",
+          "padding": [
+            72,
+            48,
+            96,
+            48
+          ],
+          "alignItems": "center",
           "height": "fill_container",
           "justifyContent": "center",
-          "alignItems": "center",
-          "layout": "vertical",
           "children": [
             {
-              "type": "ref",
-              "id": "hd7w49",
-              "ref": "ds:UacIqy",
-              "name": "State / This page doesn't exist",
-              "descendants": {
-                "ds:QTS6fY": {
-                  "icon": "compass"
+              "type": "frame",
+              "id": "g26hSx",
+              "name": "Message",
+              "layout": "vertical",
+              "gap": 8,
+              "width": "fill_container",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "SMHllv",
+                  "ref": "artist:yjiPHo",
+                  "name": "404",
+                  "textAlign": "center",
+                  "content": "404"
                 },
-                "ds:LaYbWr": {
+                {
+                  "type": "ref",
+                  "id": "PdcKc8",
+                  "ref": "artist:MgMQ2L",
+                  "name": "This page doesn't exist",
+                  "textAlign": "center",
                   "content": "This page doesn't exist"
                 },
-                "ds:IowS15": {
+                {
+                  "type": "ref",
+                  "id": "OwqL2q",
+                  "ref": "artist:C5Ih8u",
+                  "name": "The link may be out of date,",
+                  "textAlign": "center",
                   "content": "The link may be out of date, or the address mistyped."
-                },
-                "ds:PKR600/ds:NVe7y": {
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "3F2FB7",
+              "ref": "artist:WHXSr6",
+              "name": "Button / Back to Bitrate for Artists",
+              "descendants": {
+                "artist:vg489O": {
                   "content": "Back to Bitrate for Artists"
                 },
-                "ds:Sk1EVh": {
+                "artist:wAdYtR": {
                   "enabled": false
                 }
               }
@@ -189,63 +516,177 @@
       "x": 3080,
       "y": 0,
       "theme": {
-        "ds:Mode": "Dim"
+        "artist:Mode": "Dim"
       },
-      "context": "unknown route — Artist-site 404."
+      "context": "* (any unknown path) — Static page: it loads nothing, so it has no loading, empty or error states of its own."
     },
     {
       "type": "frame",
-      "id": "Ft3edX",
+      "id": "sjhcqc",
       "name": "Artist / Not found / Mobile / Dark",
       "width": 390,
       "height": 844,
-      "clip": true,
       "layout": "vertical",
-      "justifyContent": "center",
-      "alignItems": "center",
-      "gap": 20,
-      "padding": 24,
-      "fill": "$ds:--background",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
       "children": [
         {
           "type": "ref",
-          "id": "Bbb3Co",
-          "ref": "ds:J95vY0",
-          "name": "Logo/Lockup"
+          "id": "W9n5KG",
+          "ref": "artist:mA2OOT",
+          "name": "Status Bar"
         },
         {
           "type": "frame",
-          "id": "xzhgTY",
-          "name": "State Area",
+          "id": "3td8ce",
+          "name": "Page",
+          "layout": "vertical",
+          "gap": 16,
           "width": "fill_container",
+          "padding": [
+            16,
+            16,
+            40,
+            16
+          ],
+          "alignItems": "center",
           "height": "fill_container",
           "justifyContent": "center",
-          "alignItems": "center",
-          "layout": "vertical",
           "children": [
             {
-              "type": "ref",
-              "id": "DFdfuG",
-              "ref": "ds:UacIqy",
-              "name": "State / This page doesn't exist",
-              "descendants": {
-                "ds:QTS6fY": {
-                  "icon": "compass"
+              "type": "frame",
+              "id": "DCT621",
+              "name": "Message",
+              "layout": "vertical",
+              "gap": 8,
+              "width": "fill_container",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "1f4IiI",
+                  "ref": "artist:yjiPHo",
+                  "name": "404",
+                  "textAlign": "center",
+                  "content": "404"
                 },
-                "ds:LaYbWr": {
+                {
+                  "type": "ref",
+                  "id": "Ww42sq",
+                  "ref": "artist:MgMQ2L",
+                  "name": "This page doesn't exist",
+                  "textAlign": "center",
                   "content": "This page doesn't exist"
                 },
-                "ds:IowS15": {
+                {
+                  "type": "ref",
+                  "id": "haj4Sr",
+                  "ref": "artist:C5Ih8u",
+                  "name": "The link may be out of date,",
+                  "textAlign": "center",
                   "content": "The link may be out of date, or the address mistyped."
-                },
-                "ds:PKR600/ds:NVe7y": {
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "Omt2Vr",
+              "ref": "artist:WHXSr6",
+              "name": "Button / Back to Bitrate for Artists",
+              "descendants": {
+                "artist:vg489O": {
                   "content": "Back to Bitrate for Artists"
                 },
-                "ds:Sk1EVh": {
+                "artist:wAdYtR": {
                   "enabled": false
                 }
-              },
-              "width": "fill_container"
+              }
             }
           ]
         }
@@ -253,9 +694,365 @@
       "x": 4620,
       "y": 0,
       "theme": {
-        "ds:Mode": "Dark"
+        "artist:Mode": "Dark"
       },
-      "context": "unknown route — Artist-site 404."
+      "context": "* (any unknown path) — Static page: it loads nothing, so it has no loading, empty or error states of its own."
+    },
+    {
+      "type": "frame",
+      "id": "CHwyyT",
+      "name": "Artist / Not found / Mobile / Light",
+      "width": 390,
+      "height": 844,
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "2KCidq",
+          "ref": "artist:mA2OOT",
+          "name": "Status Bar"
+        },
+        {
+          "type": "frame",
+          "id": "ZfRU9h",
+          "name": "Page",
+          "layout": "vertical",
+          "gap": 16,
+          "width": "fill_container",
+          "padding": [
+            16,
+            16,
+            40,
+            16
+          ],
+          "alignItems": "center",
+          "height": "fill_container",
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "xv7I1o",
+              "name": "Message",
+              "layout": "vertical",
+              "gap": 8,
+              "width": "fill_container",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "BmTjfq",
+                  "ref": "artist:yjiPHo",
+                  "name": "404",
+                  "textAlign": "center",
+                  "content": "404"
+                },
+                {
+                  "type": "ref",
+                  "id": "EvXR16",
+                  "ref": "artist:MgMQ2L",
+                  "name": "This page doesn't exist",
+                  "textAlign": "center",
+                  "content": "This page doesn't exist"
+                },
+                {
+                  "type": "ref",
+                  "id": "DMtDut",
+                  "ref": "artist:C5Ih8u",
+                  "name": "The link may be out of date,",
+                  "textAlign": "center",
+                  "content": "The link may be out of date, or the address mistyped."
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "Chebvc",
+              "ref": "artist:WHXSr6",
+              "name": "Button / Back to Bitrate for Artists",
+              "descendants": {
+                "artist:vg489O": {
+                  "content": "Back to Bitrate for Artists"
+                },
+                "artist:wAdYtR": {
+                  "enabled": false
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 5110,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Light"
+      },
+      "context": "* (any unknown path) — Static page: it loads nothing, so it has no loading, empty or error states of its own."
+    },
+    {
+      "type": "frame",
+      "id": "KNMKOK",
+      "name": "Artist / Not found / Mobile / Dim",
+      "width": 390,
+      "height": 844,
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "SKUMsv",
+          "ref": "artist:mA2OOT",
+          "name": "Status Bar"
+        },
+        {
+          "type": "frame",
+          "id": "Xvv8wZ",
+          "name": "Page",
+          "layout": "vertical",
+          "gap": 16,
+          "width": "fill_container",
+          "padding": [
+            16,
+            16,
+            40,
+            16
+          ],
+          "alignItems": "center",
+          "height": "fill_container",
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "7WC3Hv",
+              "name": "Message",
+              "layout": "vertical",
+              "gap": 8,
+              "width": "fill_container",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "HgC7dL",
+                  "ref": "artist:yjiPHo",
+                  "name": "404",
+                  "textAlign": "center",
+                  "content": "404"
+                },
+                {
+                  "type": "ref",
+                  "id": "EsKf9A",
+                  "ref": "artist:MgMQ2L",
+                  "name": "This page doesn't exist",
+                  "textAlign": "center",
+                  "content": "This page doesn't exist"
+                },
+                {
+                  "type": "ref",
+                  "id": "HB0I4E",
+                  "ref": "artist:C5Ih8u",
+                  "name": "The link may be out of date,",
+                  "textAlign": "center",
+                  "content": "The link may be out of date, or the address mistyped."
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "gbSRYd",
+              "ref": "artist:WHXSr6",
+              "name": "Button / Back to Bitrate for Artists",
+              "descendants": {
+                "artist:vg489O": {
+                  "content": "Back to Bitrate for Artists"
+                },
+                "artist:wAdYtR": {
+                  "enabled": false
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 5600,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Dim"
+      },
+      "context": "* (any unknown path) — Static page: it loads nothing, so it has no loading, empty or error states of its own."
     }
   ]
 }

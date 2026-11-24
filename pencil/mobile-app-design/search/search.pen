@@ -1,0 +1,2510 @@
+{
+  "version": "2.20",
+  "imports": {
+    "ds": "../../web-player-design/design-system/bitrate.lib.pen"
+  },
+  "children": [
+    {
+      "type": "frame",
+      "id": "uqzHd8",
+      "name": "Mobile / Search / Mobile / Dark",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "YR7VBO",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "TgTz2Z",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            12,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "ref",
+              "id": "FstQVV",
+              "ref": "ds:UDBbv",
+              "name": "Input / night",
+              "width": "fill_container",
+              "descendants": {
+                "ds:MHjg8": {
+                  "enabled": false
+                },
+                "ds:kB4hd": {
+                  "content": "night"
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "IoUpIQ",
+              "name": "Filter Scroller",
+              "width": 374,
+              "clip": true,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "Gz6t8k",
+                  "name": "Filter Scroller Row",
+                  "gap": 12,
+                  "alignItems": "start",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "GrH7Qd",
+                      "name": "Chips",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "6Sj5DC",
+                          "ref": "ds:AdNrrb",
+                          "name": "Chip/Active",
+                          "descendants": {
+                            "ds:cUY4Fi": {
+                              "content": "All"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "VlBSYC",
+                          "ref": "ds:LUcTan",
+                          "name": "Chip/Default",
+                          "descendants": {
+                            "ds:lXs2ja": {
+                              "content": "Tracks"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "auMJug",
+                          "ref": "ds:LUcTan",
+                          "name": "Chip/Default",
+                          "descendants": {
+                            "ds:lXs2ja": {
+                              "content": "Artists"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "7aVl45",
+                          "ref": "ds:LUcTan",
+                          "name": "Chip/Default",
+                          "descendants": {
+                            "ds:lXs2ja": {
+                              "content": "Albums"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "MX0JvV",
+                          "ref": "ds:LUcTan",
+                          "name": "Chip/Default",
+                          "descendants": {
+                            "ds:lXs2ja": {
+                              "content": "Playlists"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "plX7JH",
+              "ref": "ds:fLuqjC",
+              "name": "Text/H4",
+              "content": "Top result"
+            },
+            {
+              "type": "ref",
+              "id": "kOH0vQ",
+              "ref": "ds:x4Fixv",
+              "name": "Surface/Panel",
+              "width": "fill_container",
+              "gap": 10,
+              "descendants": {
+                "ds:xhr0E3": {
+                  "type": "frame",
+                  "id": "l5PcSE",
+                  "name": "Panel Content",
+                  "layout": "vertical",
+                  "gap": 10,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "1nZtuh",
+                      "ref": "ds:awAtR9",
+                      "name": "Media/Cover Large",
+                      "width": 96,
+                      "height": 96,
+                      "fill": {
+                        "type": "image",
+                        "url": "../../web-player-design/design-system/assets/albums/album-night-signal.webp",
+                        "mode": "cover"
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Y0NqYH",
+                      "ref": "ds:Qjj2NE",
+                      "name": "Text/H3",
+                      "content": "Night Signal"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "3ssScu",
+                      "ref": "ds:C5Ih8u",
+                      "name": "Text/Muted",
+                      "content": "Mira Sol"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "JV0ymU",
+              "ref": "ds:zVqAJC",
+              "name": "Section Header",
+              "descendants": {
+                "ds:zBZfky": {
+                  "content": "Tracks"
+                },
+                "ds:uyhHlD": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "OmqsyO",
+              "ref": "ds:Y2h8VV",
+              "name": "Track / Night Signal",
+              "width": "fill_container",
+              "descendants": {
+                "ds:fjPYf": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../../web-player-design/design-system/assets/albums/album-night-signal.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:RJ2go": {
+                  "content": "Night Signal"
+                },
+                "ds:rFh9q": {
+                  "content": "Mira Sol"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "LhMZBv",
+              "ref": "ds:Y2h8VV",
+              "name": "Track / Late Signal",
+              "width": "fill_container",
+              "descendants": {
+                "ds:fjPYf": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../../web-player-design/design-system/assets/albums/album-echoes-in-motion.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:RJ2go": {
+                  "content": "Late Signal"
+                },
+                "ds:rFh9q": {
+                  "content": "Lumen Choir"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "GnIz8x",
+              "ref": "ds:Y2h8VV",
+              "name": "Track / Night drive",
+              "width": "fill_container",
+              "descendants": {
+                "ds:fjPYf": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../../web-player-design/design-system/assets/albums/album-static-lines.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:RJ2go": {
+                  "content": "Night drive"
+                },
+                "ds:rFh9q": {
+                  "content": "Kite Harbor"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "3ECjEu",
+              "ref": "ds:zVqAJC",
+              "name": "Section Header",
+              "descendants": {
+                "ds:zBZfky": {
+                  "content": "Artists"
+                },
+                "ds:uyhHlD": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "8G5knC",
+              "name": "Artist Scroller",
+              "width": 374,
+              "clip": true,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "K5s91s",
+                  "name": "Artist Scroller Row",
+                  "gap": 12,
+                  "alignItems": "start",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "ilhSb7",
+                      "ref": "ds:jjufD",
+                      "name": "Artist / Mira Sol",
+                      "width": 120,
+                      "height": "fit_content",
+                      "descendants": {
+                        "ds:S3S303": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../../web-player-design/design-system/assets/avatars/avatar2.jpg",
+                            "mode": "cover"
+                          },
+                          "width": 92,
+                          "height": 92,
+                          "cornerRadius": 46
+                        },
+                        "ds:N0I3i": {
+                          "content": "Mira Sol"
+                        },
+                        "ds:Q4aRkj": {
+                          "content": "Artist"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "f6p7vP",
+                      "ref": "ds:jjufD",
+                      "name": "Artist / Night Owls",
+                      "width": 120,
+                      "height": "fit_content",
+                      "descendants": {
+                        "ds:S3S303": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../../web-player-design/design-system/assets/avatars/avatar3.jpg",
+                            "mode": "cover"
+                          },
+                          "width": 92,
+                          "height": 92,
+                          "cornerRadius": 46
+                        },
+                        "ds:N0I3i": {
+                          "content": "Night Owls"
+                        },
+                        "ds:Q4aRkj": {
+                          "content": "Artist"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "emvxVE",
+              "ref": "ds:zVqAJC",
+              "name": "Section Header",
+              "descendants": {
+                "ds:zBZfky": {
+                  "content": "Albums"
+                },
+                "ds:uyhHlD": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "13b8IC",
+              "ref": "ds:Y2h8VV",
+              "name": "Track / Night Signal",
+              "width": "fill_container",
+              "descendants": {
+                "ds:fjPYf": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../../web-player-design/design-system/assets/albums/album-night-signal.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:RJ2go": {
+                  "content": "Night Signal"
+                },
+                "ds:rFh9q": {
+                  "content": "Album · Mira Sol"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "iOSh8V",
+              "ref": "ds:zVqAJC",
+              "name": "Section Header",
+              "descendants": {
+                "ds:zBZfky": {
+                  "content": "Playlists"
+                },
+                "ds:uyhHlD": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "hEjbq6",
+              "ref": "ds:Y2h8VV",
+              "name": "Track / Night drive",
+              "width": "fill_container",
+              "descendants": {
+                "ds:fjPYf": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../../web-player-design/design-system/assets/albums/album-drift-control.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:RJ2go": {
+                  "content": "Night drive"
+                },
+                "ds:rFh9q": {
+                  "content": "Playlist · maya"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "Q4GZM9",
+          "name": "Island Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16,
+            18,
+            16
+          ],
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "cxmEbL",
+              "ref": "ds:DrlRuW",
+              "name": "Mobile/Island",
+              "width": "fill_container",
+              "descendants": {
+                "ds:1e7Yju": {
+                  "fill": "$ds:--secondary"
+                },
+                "ds:nFyVbQ": {
+                  "fill": "$ds:--foreground"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 0,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "app (tabs)/search — Search: input debounced 300 ms, chips map to the `types` query param; results grouped by type."
+    },
+    {
+      "type": "frame",
+      "id": "o7gVtt",
+      "name": "Mobile / Search / Mobile / Light",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "eRkl9i",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "f1TjZN",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            12,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "ref",
+              "id": "nKY15P",
+              "ref": "ds:UDBbv",
+              "name": "Input / night",
+              "width": "fill_container",
+              "descendants": {
+                "ds:MHjg8": {
+                  "enabled": false
+                },
+                "ds:kB4hd": {
+                  "content": "night"
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "ApK8Qs",
+              "name": "Filter Scroller",
+              "width": 374,
+              "clip": true,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "u8Nos1",
+                  "name": "Filter Scroller Row",
+                  "gap": 12,
+                  "alignItems": "start",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "ybCwWC",
+                      "name": "Chips",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "cmL0mN",
+                          "ref": "ds:AdNrrb",
+                          "name": "Chip/Active",
+                          "descendants": {
+                            "ds:cUY4Fi": {
+                              "content": "All"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "9h24tw",
+                          "ref": "ds:LUcTan",
+                          "name": "Chip/Default",
+                          "descendants": {
+                            "ds:lXs2ja": {
+                              "content": "Tracks"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "8oU8l4",
+                          "ref": "ds:LUcTan",
+                          "name": "Chip/Default",
+                          "descendants": {
+                            "ds:lXs2ja": {
+                              "content": "Artists"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "XUp53a",
+                          "ref": "ds:LUcTan",
+                          "name": "Chip/Default",
+                          "descendants": {
+                            "ds:lXs2ja": {
+                              "content": "Albums"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "yyKiVh",
+                          "ref": "ds:LUcTan",
+                          "name": "Chip/Default",
+                          "descendants": {
+                            "ds:lXs2ja": {
+                              "content": "Playlists"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "DVcTHL",
+              "ref": "ds:fLuqjC",
+              "name": "Text/H4",
+              "content": "Top result"
+            },
+            {
+              "type": "ref",
+              "id": "EHQ6lX",
+              "ref": "ds:x4Fixv",
+              "name": "Surface/Panel",
+              "width": "fill_container",
+              "gap": 10,
+              "descendants": {
+                "ds:xhr0E3": {
+                  "type": "frame",
+                  "id": "VTdyuC",
+                  "name": "Panel Content",
+                  "layout": "vertical",
+                  "gap": 10,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "dhXUy5",
+                      "ref": "ds:awAtR9",
+                      "name": "Media/Cover Large",
+                      "width": 96,
+                      "height": 96,
+                      "fill": {
+                        "type": "image",
+                        "url": "../../web-player-design/design-system/assets/albums/album-night-signal.webp",
+                        "mode": "cover"
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "k1nRpZ",
+                      "ref": "ds:Qjj2NE",
+                      "name": "Text/H3",
+                      "content": "Night Signal"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "16TlYk",
+                      "ref": "ds:C5Ih8u",
+                      "name": "Text/Muted",
+                      "content": "Mira Sol"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "JwEKce",
+              "ref": "ds:zVqAJC",
+              "name": "Section Header",
+              "descendants": {
+                "ds:zBZfky": {
+                  "content": "Tracks"
+                },
+                "ds:uyhHlD": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "U4CmQJ",
+              "ref": "ds:Y2h8VV",
+              "name": "Track / Night Signal",
+              "width": "fill_container",
+              "descendants": {
+                "ds:fjPYf": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../../web-player-design/design-system/assets/albums/album-night-signal.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:RJ2go": {
+                  "content": "Night Signal"
+                },
+                "ds:rFh9q": {
+                  "content": "Mira Sol"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "V9ACg0",
+              "ref": "ds:Y2h8VV",
+              "name": "Track / Late Signal",
+              "width": "fill_container",
+              "descendants": {
+                "ds:fjPYf": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../../web-player-design/design-system/assets/albums/album-echoes-in-motion.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:RJ2go": {
+                  "content": "Late Signal"
+                },
+                "ds:rFh9q": {
+                  "content": "Lumen Choir"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "Ym7hkA",
+              "ref": "ds:Y2h8VV",
+              "name": "Track / Night drive",
+              "width": "fill_container",
+              "descendants": {
+                "ds:fjPYf": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../../web-player-design/design-system/assets/albums/album-static-lines.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:RJ2go": {
+                  "content": "Night drive"
+                },
+                "ds:rFh9q": {
+                  "content": "Kite Harbor"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "VcGmDc",
+              "ref": "ds:zVqAJC",
+              "name": "Section Header",
+              "descendants": {
+                "ds:zBZfky": {
+                  "content": "Artists"
+                },
+                "ds:uyhHlD": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "QrzZiA",
+              "name": "Artist Scroller",
+              "width": 374,
+              "clip": true,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "0wEGKy",
+                  "name": "Artist Scroller Row",
+                  "gap": 12,
+                  "alignItems": "start",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "ePVA7L",
+                      "ref": "ds:jjufD",
+                      "name": "Artist / Mira Sol",
+                      "width": 120,
+                      "height": "fit_content",
+                      "descendants": {
+                        "ds:S3S303": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../../web-player-design/design-system/assets/avatars/avatar2.jpg",
+                            "mode": "cover"
+                          },
+                          "width": 92,
+                          "height": 92,
+                          "cornerRadius": 46
+                        },
+                        "ds:N0I3i": {
+                          "content": "Mira Sol"
+                        },
+                        "ds:Q4aRkj": {
+                          "content": "Artist"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "jgCv7r",
+                      "ref": "ds:jjufD",
+                      "name": "Artist / Night Owls",
+                      "width": 120,
+                      "height": "fit_content",
+                      "descendants": {
+                        "ds:S3S303": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../../web-player-design/design-system/assets/avatars/avatar3.jpg",
+                            "mode": "cover"
+                          },
+                          "width": 92,
+                          "height": 92,
+                          "cornerRadius": 46
+                        },
+                        "ds:N0I3i": {
+                          "content": "Night Owls"
+                        },
+                        "ds:Q4aRkj": {
+                          "content": "Artist"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "y2w4pS",
+              "ref": "ds:zVqAJC",
+              "name": "Section Header",
+              "descendants": {
+                "ds:zBZfky": {
+                  "content": "Albums"
+                },
+                "ds:uyhHlD": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "vgl9G3",
+              "ref": "ds:Y2h8VV",
+              "name": "Track / Night Signal",
+              "width": "fill_container",
+              "descendants": {
+                "ds:fjPYf": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../../web-player-design/design-system/assets/albums/album-night-signal.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:RJ2go": {
+                  "content": "Night Signal"
+                },
+                "ds:rFh9q": {
+                  "content": "Album · Mira Sol"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "sB1QE4",
+              "ref": "ds:zVqAJC",
+              "name": "Section Header",
+              "descendants": {
+                "ds:zBZfky": {
+                  "content": "Playlists"
+                },
+                "ds:uyhHlD": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "jdRWoR",
+              "ref": "ds:Y2h8VV",
+              "name": "Track / Night drive",
+              "width": "fill_container",
+              "descendants": {
+                "ds:fjPYf": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../../web-player-design/design-system/assets/albums/album-drift-control.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:RJ2go": {
+                  "content": "Night drive"
+                },
+                "ds:rFh9q": {
+                  "content": "Playlist · maya"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "iqfyw2",
+          "name": "Island Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16,
+            18,
+            16
+          ],
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "kYkCwF",
+              "ref": "ds:DrlRuW",
+              "name": "Mobile/Island",
+              "width": "fill_container",
+              "descendants": {
+                "ds:1e7Yju": {
+                  "fill": "$ds:--secondary"
+                },
+                "ds:nFyVbQ": {
+                  "fill": "$ds:--foreground"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 490,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Light"
+      },
+      "context": "app (tabs)/search — Search: input debounced 300 ms, chips map to the `types` query param; results grouped by type."
+    },
+    {
+      "type": "frame",
+      "id": "KDWrnW",
+      "name": "Mobile / Search / Mobile / Dim",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "Adn04E",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "z44Ddz",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            12,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "ref",
+              "id": "Bluitn",
+              "ref": "ds:UDBbv",
+              "name": "Input / night",
+              "width": "fill_container",
+              "descendants": {
+                "ds:MHjg8": {
+                  "enabled": false
+                },
+                "ds:kB4hd": {
+                  "content": "night"
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "En69Jf",
+              "name": "Filter Scroller",
+              "width": 374,
+              "clip": true,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "qDjUpH",
+                  "name": "Filter Scroller Row",
+                  "gap": 12,
+                  "alignItems": "start",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "QUaepn",
+                      "name": "Chips",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "iSAI23",
+                          "ref": "ds:AdNrrb",
+                          "name": "Chip/Active",
+                          "descendants": {
+                            "ds:cUY4Fi": {
+                              "content": "All"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "lOsYTm",
+                          "ref": "ds:LUcTan",
+                          "name": "Chip/Default",
+                          "descendants": {
+                            "ds:lXs2ja": {
+                              "content": "Tracks"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "ohmdBZ",
+                          "ref": "ds:LUcTan",
+                          "name": "Chip/Default",
+                          "descendants": {
+                            "ds:lXs2ja": {
+                              "content": "Artists"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "l3UnrT",
+                          "ref": "ds:LUcTan",
+                          "name": "Chip/Default",
+                          "descendants": {
+                            "ds:lXs2ja": {
+                              "content": "Albums"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "Wy2o02",
+                          "ref": "ds:LUcTan",
+                          "name": "Chip/Default",
+                          "descendants": {
+                            "ds:lXs2ja": {
+                              "content": "Playlists"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "lYm0Dj",
+              "ref": "ds:fLuqjC",
+              "name": "Text/H4",
+              "content": "Top result"
+            },
+            {
+              "type": "ref",
+              "id": "wcunji",
+              "ref": "ds:x4Fixv",
+              "name": "Surface/Panel",
+              "width": "fill_container",
+              "gap": 10,
+              "descendants": {
+                "ds:xhr0E3": {
+                  "type": "frame",
+                  "id": "9HP9C5",
+                  "name": "Panel Content",
+                  "layout": "vertical",
+                  "gap": 10,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "1iSqy8",
+                      "ref": "ds:awAtR9",
+                      "name": "Media/Cover Large",
+                      "width": 96,
+                      "height": 96,
+                      "fill": {
+                        "type": "image",
+                        "url": "../../web-player-design/design-system/assets/albums/album-night-signal.webp",
+                        "mode": "cover"
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "cibtSJ",
+                      "ref": "ds:Qjj2NE",
+                      "name": "Text/H3",
+                      "content": "Night Signal"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "dhQZpF",
+                      "ref": "ds:C5Ih8u",
+                      "name": "Text/Muted",
+                      "content": "Mira Sol"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "VXjYr5",
+              "ref": "ds:zVqAJC",
+              "name": "Section Header",
+              "descendants": {
+                "ds:zBZfky": {
+                  "content": "Tracks"
+                },
+                "ds:uyhHlD": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "0Q1guY",
+              "ref": "ds:Y2h8VV",
+              "name": "Track / Night Signal",
+              "width": "fill_container",
+              "descendants": {
+                "ds:fjPYf": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../../web-player-design/design-system/assets/albums/album-night-signal.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:RJ2go": {
+                  "content": "Night Signal"
+                },
+                "ds:rFh9q": {
+                  "content": "Mira Sol"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "FrsYXg",
+              "ref": "ds:Y2h8VV",
+              "name": "Track / Late Signal",
+              "width": "fill_container",
+              "descendants": {
+                "ds:fjPYf": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../../web-player-design/design-system/assets/albums/album-echoes-in-motion.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:RJ2go": {
+                  "content": "Late Signal"
+                },
+                "ds:rFh9q": {
+                  "content": "Lumen Choir"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "Qk0hhx",
+              "ref": "ds:Y2h8VV",
+              "name": "Track / Night drive",
+              "width": "fill_container",
+              "descendants": {
+                "ds:fjPYf": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../../web-player-design/design-system/assets/albums/album-static-lines.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:RJ2go": {
+                  "content": "Night drive"
+                },
+                "ds:rFh9q": {
+                  "content": "Kite Harbor"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "ben0Uf",
+              "ref": "ds:zVqAJC",
+              "name": "Section Header",
+              "descendants": {
+                "ds:zBZfky": {
+                  "content": "Artists"
+                },
+                "ds:uyhHlD": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "cvPUaI",
+              "name": "Artist Scroller",
+              "width": 374,
+              "clip": true,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "A6NS1c",
+                  "name": "Artist Scroller Row",
+                  "gap": 12,
+                  "alignItems": "start",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "AW0jJx",
+                      "ref": "ds:jjufD",
+                      "name": "Artist / Mira Sol",
+                      "width": 120,
+                      "height": "fit_content",
+                      "descendants": {
+                        "ds:S3S303": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../../web-player-design/design-system/assets/avatars/avatar2.jpg",
+                            "mode": "cover"
+                          },
+                          "width": 92,
+                          "height": 92,
+                          "cornerRadius": 46
+                        },
+                        "ds:N0I3i": {
+                          "content": "Mira Sol"
+                        },
+                        "ds:Q4aRkj": {
+                          "content": "Artist"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "vfdI0D",
+                      "ref": "ds:jjufD",
+                      "name": "Artist / Night Owls",
+                      "width": 120,
+                      "height": "fit_content",
+                      "descendants": {
+                        "ds:S3S303": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../../web-player-design/design-system/assets/avatars/avatar3.jpg",
+                            "mode": "cover"
+                          },
+                          "width": 92,
+                          "height": 92,
+                          "cornerRadius": 46
+                        },
+                        "ds:N0I3i": {
+                          "content": "Night Owls"
+                        },
+                        "ds:Q4aRkj": {
+                          "content": "Artist"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "6Slx3U",
+              "ref": "ds:zVqAJC",
+              "name": "Section Header",
+              "descendants": {
+                "ds:zBZfky": {
+                  "content": "Albums"
+                },
+                "ds:uyhHlD": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "9wSXon",
+              "ref": "ds:Y2h8VV",
+              "name": "Track / Night Signal",
+              "width": "fill_container",
+              "descendants": {
+                "ds:fjPYf": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../../web-player-design/design-system/assets/albums/album-night-signal.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:RJ2go": {
+                  "content": "Night Signal"
+                },
+                "ds:rFh9q": {
+                  "content": "Album · Mira Sol"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "ssjA6B",
+              "ref": "ds:zVqAJC",
+              "name": "Section Header",
+              "descendants": {
+                "ds:zBZfky": {
+                  "content": "Playlists"
+                },
+                "ds:uyhHlD": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "p3ISc6",
+              "ref": "ds:Y2h8VV",
+              "name": "Track / Night drive",
+              "width": "fill_container",
+              "descendants": {
+                "ds:fjPYf": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../../web-player-design/design-system/assets/albums/album-drift-control.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:RJ2go": {
+                  "content": "Night drive"
+                },
+                "ds:rFh9q": {
+                  "content": "Playlist · maya"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "wMg5cD",
+          "name": "Island Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16,
+            18,
+            16
+          ],
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "ubMxk9",
+              "ref": "ds:DrlRuW",
+              "name": "Mobile/Island",
+              "width": "fill_container",
+              "descendants": {
+                "ds:1e7Yju": {
+                  "fill": "$ds:--secondary"
+                },
+                "ds:nFyVbQ": {
+                  "fill": "$ds:--foreground"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 980,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dim"
+      },
+      "context": "app (tabs)/search — Search: input debounced 300 ms, chips map to the `types` query param; results grouped by type."
+    },
+    {
+      "type": "frame",
+      "id": "ArCuXE",
+      "name": "Mobile / Search / Prompt (empty query) / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "OFXend",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "DyYfes",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            12,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "ref",
+              "id": "1Oug0D",
+              "ref": "ds:UDBbv",
+              "name": "Input / What do you want to listen to?",
+              "width": "fill_container",
+              "descendants": {
+                "ds:MHjg8": {
+                  "enabled": false
+                },
+                "ds:kB4hd": {
+                  "content": "What do you want to listen to?"
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "Wf3xfT",
+              "name": "Filter Scroller",
+              "width": 374,
+              "clip": true,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "mf78Z7",
+                  "name": "Filter Scroller Row",
+                  "gap": 12,
+                  "alignItems": "start",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "uAL2ce",
+                      "name": "Chips",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "sFTIgT",
+                          "ref": "ds:AdNrrb",
+                          "name": "Chip/Active",
+                          "descendants": {
+                            "ds:cUY4Fi": {
+                              "content": "All"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "pAzWRM",
+                          "ref": "ds:LUcTan",
+                          "name": "Chip/Default",
+                          "descendants": {
+                            "ds:lXs2ja": {
+                              "content": "Tracks"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "kVc8Ng",
+                          "ref": "ds:LUcTan",
+                          "name": "Chip/Default",
+                          "descendants": {
+                            "ds:lXs2ja": {
+                              "content": "Artists"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "9LSPJZ",
+                          "ref": "ds:LUcTan",
+                          "name": "Chip/Default",
+                          "descendants": {
+                            "ds:lXs2ja": {
+                              "content": "Albums"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "8KDmOV",
+                          "ref": "ds:LUcTan",
+                          "name": "Chip/Default",
+                          "descendants": {
+                            "ds:lXs2ja": {
+                              "content": "Playlists"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "ZYNoac",
+              "name": "State Area",
+              "width": "fill_container",
+              "height": "fill_container",
+              "justifyContent": "center",
+              "alignItems": "center",
+              "layout": "vertical",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "nd7B1c",
+                  "ref": "ds:UacIqy",
+                  "name": "State / Find your next favourite",
+                  "descendants": {
+                    "ds:QTS6fY": {
+                      "icon": "search"
+                    },
+                    "ds:LaYbWr": {
+                      "content": "Find your next favourite"
+                    },
+                    "ds:IowS15": {
+                      "content": "Search for tracks, artists, albums and playlists."
+                    },
+                    "ds:PKR600": {
+                      "enabled": false
+                    },
+                    "ds:Sk1EVh": {
+                      "enabled": false
+                    }
+                  },
+                  "width": "fill_container"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "Wnqz3R",
+          "name": "Island Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16,
+            18,
+            16
+          ],
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "QTZXo6",
+              "ref": "ds:DrlRuW",
+              "name": "Mobile/Island",
+              "width": "fill_container",
+              "descendants": {
+                "ds:1e7Yju": {
+                  "fill": "$ds:--secondary"
+                },
+                "ds:nFyVbQ": {
+                  "fill": "$ds:--foreground"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 1470,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "app (tabs)/search — Search: input debounced 300 ms, chips map to the `types` query param; results grouped by type. · no desktop frame: native phone app (apps/mobile) — there is no desktop layout"
+    },
+    {
+      "type": "frame",
+      "id": "qOraP4",
+      "name": "Mobile / Search / Loading / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "iqKIhU",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "fh8a7z",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            12,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "ref",
+              "id": "PzF39J",
+              "ref": "ds:UDBbv",
+              "name": "Input / night",
+              "width": "fill_container",
+              "descendants": {
+                "ds:MHjg8": {
+                  "enabled": false
+                },
+                "ds:kB4hd": {
+                  "content": "night"
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "SO9sK3",
+              "name": "Filter Scroller",
+              "width": 374,
+              "clip": true,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "4bVmb5",
+                  "name": "Filter Scroller Row",
+                  "gap": 12,
+                  "alignItems": "start",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "YMJ7Ol",
+                      "name": "Chips",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "aAhyAQ",
+                          "ref": "ds:AdNrrb",
+                          "name": "Chip/Active",
+                          "descendants": {
+                            "ds:cUY4Fi": {
+                              "content": "All"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "1YEOMm",
+                          "ref": "ds:LUcTan",
+                          "name": "Chip/Default",
+                          "descendants": {
+                            "ds:lXs2ja": {
+                              "content": "Tracks"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "kXMMrn",
+                          "ref": "ds:LUcTan",
+                          "name": "Chip/Default",
+                          "descendants": {
+                            "ds:lXs2ja": {
+                              "content": "Artists"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "dLyHRM",
+                          "ref": "ds:LUcTan",
+                          "name": "Chip/Default",
+                          "descendants": {
+                            "ds:lXs2ja": {
+                              "content": "Albums"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "wSYYQf",
+                          "ref": "ds:LUcTan",
+                          "name": "Chip/Default",
+                          "descendants": {
+                            "ds:lXs2ja": {
+                              "content": "Playlists"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "N65NDs",
+              "name": "Loading",
+              "layout": "vertical",
+              "gap": 24,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "DoOeyw",
+                  "ref": "ds:Jjegi",
+                  "name": "Skeleton",
+                  "width": 140,
+                  "height": 28
+                },
+                {
+                  "type": "frame",
+                  "id": "MtHXhY",
+                  "name": "Skeleton Rows",
+                  "layout": "vertical",
+                  "gap": 16,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "KsspI0",
+                      "ref": "ds:Gq2CrB",
+                      "name": "Skeleton/Track Row Mobile",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "JualNR",
+                      "ref": "ds:Gq2CrB",
+                      "name": "Skeleton/Track Row Mobile",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "E51a5O",
+                      "ref": "ds:Gq2CrB",
+                      "name": "Skeleton/Track Row Mobile",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "tVbuwQ",
+                      "ref": "ds:Gq2CrB",
+                      "name": "Skeleton/Track Row Mobile",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "sPcfol",
+                      "ref": "ds:Gq2CrB",
+                      "name": "Skeleton/Track Row Mobile",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "pzXAy6",
+                      "ref": "ds:Gq2CrB",
+                      "name": "Skeleton/Track Row Mobile",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "m7yxYU",
+                      "ref": "ds:Gq2CrB",
+                      "name": "Skeleton/Track Row Mobile",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "9UKmQP",
+                      "ref": "ds:Gq2CrB",
+                      "name": "Skeleton/Track Row Mobile",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "6uPscY",
+                      "ref": "ds:Gq2CrB",
+                      "name": "Skeleton/Track Row Mobile",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "3TM4wk",
+                      "ref": "ds:Gq2CrB",
+                      "name": "Skeleton/Track Row Mobile",
+                      "width": "fill_container"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "ccRoQB",
+          "name": "Island Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16,
+            18,
+            16
+          ],
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "kiqxE5",
+              "ref": "ds:DrlRuW",
+              "name": "Mobile/Island",
+              "width": "fill_container",
+              "descendants": {
+                "ds:1e7Yju": {
+                  "fill": "$ds:--secondary"
+                },
+                "ds:nFyVbQ": {
+                  "fill": "$ds:--foreground"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 1960,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "app (tabs)/search — Search: input debounced 300 ms, chips map to the `types` query param; results grouped by type. · no desktop frame: native phone app (apps/mobile) — there is no desktop layout"
+    },
+    {
+      "type": "frame",
+      "id": "wVkirr",
+      "name": "Mobile / Search / Tracks filter / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "gw5qJt",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "lJjMyR",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            12,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "ref",
+              "id": "ZXwmGF",
+              "ref": "ds:UDBbv",
+              "name": "Input / night",
+              "width": "fill_container",
+              "descendants": {
+                "ds:MHjg8": {
+                  "enabled": false
+                },
+                "ds:kB4hd": {
+                  "content": "night"
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "c1q3YT",
+              "name": "Filter Scroller",
+              "width": 374,
+              "clip": true,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "wPQiVr",
+                  "name": "Filter Scroller Row",
+                  "gap": 12,
+                  "alignItems": "start",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "IAxiWd",
+                      "name": "Chips",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "UGg8Wn",
+                          "ref": "ds:LUcTan",
+                          "name": "Chip/Default",
+                          "descendants": {
+                            "ds:lXs2ja": {
+                              "content": "All"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "RNy7JI",
+                          "ref": "ds:AdNrrb",
+                          "name": "Chip/Active",
+                          "descendants": {
+                            "ds:cUY4Fi": {
+                              "content": "Tracks"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "OQ4jd5",
+                          "ref": "ds:LUcTan",
+                          "name": "Chip/Default",
+                          "descendants": {
+                            "ds:lXs2ja": {
+                              "content": "Artists"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "BigdOE",
+                          "ref": "ds:LUcTan",
+                          "name": "Chip/Default",
+                          "descendants": {
+                            "ds:lXs2ja": {
+                              "content": "Albums"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "eC9kv7",
+                          "ref": "ds:LUcTan",
+                          "name": "Chip/Default",
+                          "descendants": {
+                            "ds:lXs2ja": {
+                              "content": "Playlists"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "fwvLLA",
+              "ref": "ds:Y2h8VV",
+              "name": "Track / Night Signal",
+              "width": "fill_container",
+              "descendants": {
+                "ds:fjPYf": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../../web-player-design/design-system/assets/albums/album-night-signal.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:RJ2go": {
+                  "content": "Night Signal"
+                },
+                "ds:rFh9q": {
+                  "content": "Mira Sol"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "iC2rsy",
+              "ref": "ds:Y2h8VV",
+              "name": "Track / Late Signal",
+              "width": "fill_container",
+              "descendants": {
+                "ds:fjPYf": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../../web-player-design/design-system/assets/albums/album-echoes-in-motion.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:RJ2go": {
+                  "content": "Late Signal"
+                },
+                "ds:rFh9q": {
+                  "content": "Lumen Choir"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "jRjHUa",
+              "ref": "ds:Y2h8VV",
+              "name": "Track / Night drive",
+              "width": "fill_container",
+              "descendants": {
+                "ds:fjPYf": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../../web-player-design/design-system/assets/albums/album-static-lines.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:RJ2go": {
+                  "content": "Night drive"
+                },
+                "ds:rFh9q": {
+                  "content": "Kite Harbor"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "mByMAW",
+          "name": "Island Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16,
+            18,
+            16
+          ],
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "AmI728",
+              "ref": "ds:DrlRuW",
+              "name": "Mobile/Island",
+              "width": "fill_container",
+              "descendants": {
+                "ds:1e7Yju": {
+                  "fill": "$ds:--secondary"
+                },
+                "ds:nFyVbQ": {
+                  "fill": "$ds:--foreground"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 2450,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "app (tabs)/search — Search: input debounced 300 ms, chips map to the `types` query param; results grouped by type. · no desktop frame: native phone app (apps/mobile) — there is no desktop layout"
+    },
+    {
+      "type": "frame",
+      "id": "13Y7DE",
+      "name": "Mobile / Search / No results / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "fgQMbo",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "qo4qAw",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            12,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "ref",
+              "id": "UyaL0U",
+              "ref": "ds:UDBbv",
+              "name": "Input / nightx",
+              "width": "fill_container",
+              "descendants": {
+                "ds:MHjg8": {
+                  "enabled": false
+                },
+                "ds:kB4hd": {
+                  "content": "nightx"
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "RktHvs",
+              "name": "Filter Scroller",
+              "width": 374,
+              "clip": true,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "j6WPaM",
+                  "name": "Filter Scroller Row",
+                  "gap": 12,
+                  "alignItems": "start",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "bbUClN",
+                      "name": "Chips",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "hPWcJM",
+                          "ref": "ds:AdNrrb",
+                          "name": "Chip/Active",
+                          "descendants": {
+                            "ds:cUY4Fi": {
+                              "content": "All"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "kunLve",
+                          "ref": "ds:LUcTan",
+                          "name": "Chip/Default",
+                          "descendants": {
+                            "ds:lXs2ja": {
+                              "content": "Tracks"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "jVOJn0",
+                          "ref": "ds:LUcTan",
+                          "name": "Chip/Default",
+                          "descendants": {
+                            "ds:lXs2ja": {
+                              "content": "Artists"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "esBe2d",
+                          "ref": "ds:LUcTan",
+                          "name": "Chip/Default",
+                          "descendants": {
+                            "ds:lXs2ja": {
+                              "content": "Albums"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "bRZhu7",
+                          "ref": "ds:LUcTan",
+                          "name": "Chip/Default",
+                          "descendants": {
+                            "ds:lXs2ja": {
+                              "content": "Playlists"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "OP7x1S",
+              "name": "State Area",
+              "width": "fill_container",
+              "height": "fill_container",
+              "justifyContent": "center",
+              "alignItems": "center",
+              "layout": "vertical",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "ODOFk5",
+                  "ref": "ds:UacIqy",
+                  "name": "State / No results for “nightx”",
+                  "descendants": {
+                    "ds:QTS6fY": {
+                      "icon": "search-x"
+                    },
+                    "ds:LaYbWr": {
+                      "content": "No results for “nightx”"
+                    },
+                    "ds:IowS15": {
+                      "content": "Check the spelling or try another word."
+                    },
+                    "ds:PKR600": {
+                      "enabled": false
+                    },
+                    "ds:Sk1EVh": {
+                      "enabled": false
+                    }
+                  },
+                  "width": "fill_container"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "vbX2nT",
+          "name": "Island Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16,
+            18,
+            16
+          ],
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "93JSEh",
+              "ref": "ds:DrlRuW",
+              "name": "Mobile/Island",
+              "width": "fill_container",
+              "descendants": {
+                "ds:1e7Yju": {
+                  "fill": "$ds:--secondary"
+                },
+                "ds:nFyVbQ": {
+                  "fill": "$ds:--foreground"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 2940,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "app (tabs)/search — Search: input debounced 300 ms, chips map to the `types` query param; results grouped by type. · no desktop frame: native phone app (apps/mobile) — there is no desktop layout"
+    },
+    {
+      "type": "frame",
+      "id": "01Mlb9",
+      "name": "Mobile / Search / Error / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "uFaXPW",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "jEf5bJ",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            12,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "ref",
+              "id": "rtgSGm",
+              "ref": "ds:UDBbv",
+              "name": "Input / night",
+              "width": "fill_container",
+              "descendants": {
+                "ds:MHjg8": {
+                  "enabled": false
+                },
+                "ds:kB4hd": {
+                  "content": "night"
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "omODk0",
+              "name": "Filter Scroller",
+              "width": 374,
+              "clip": true,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "u6DDiJ",
+                  "name": "Filter Scroller Row",
+                  "gap": 12,
+                  "alignItems": "start",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "WKHCY3",
+                      "name": "Chips",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "0Dvv53",
+                          "ref": "ds:AdNrrb",
+                          "name": "Chip/Active",
+                          "descendants": {
+                            "ds:cUY4Fi": {
+                              "content": "All"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "XynnNi",
+                          "ref": "ds:LUcTan",
+                          "name": "Chip/Default",
+                          "descendants": {
+                            "ds:lXs2ja": {
+                              "content": "Tracks"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "ETMn1S",
+                          "ref": "ds:LUcTan",
+                          "name": "Chip/Default",
+                          "descendants": {
+                            "ds:lXs2ja": {
+                              "content": "Artists"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "LPD7TS",
+                          "ref": "ds:LUcTan",
+                          "name": "Chip/Default",
+                          "descendants": {
+                            "ds:lXs2ja": {
+                              "content": "Albums"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "6ej8Uo",
+                          "ref": "ds:LUcTan",
+                          "name": "Chip/Default",
+                          "descendants": {
+                            "ds:lXs2ja": {
+                              "content": "Playlists"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "H8vaEh",
+              "name": "State Area",
+              "width": "fill_container",
+              "height": "fill_container",
+              "justifyContent": "center",
+              "alignItems": "center",
+              "layout": "vertical",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "hVh8O2",
+                  "ref": "ds:LQ8GwL",
+                  "name": "State / Search isn't available right now.",
+                  "descendants": {
+                    "ds:zG3uZd": {
+                      "icon": "triangle-alert"
+                    },
+                    "ds:ATKZVK": {
+                      "content": "Search isn't available right now."
+                    },
+                    "ds:h7OAoY": {
+                      "enabled": false
+                    },
+                    "ds:ydkfG5/ds:NVe7y": {
+                      "content": "Try again"
+                    },
+                    "ds:voqjVU": {
+                      "enabled": false
+                    }
+                  },
+                  "width": "fill_container"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "AlQ983",
+          "name": "Island Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16,
+            18,
+            16
+          ],
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "qrfftZ",
+              "ref": "ds:DrlRuW",
+              "name": "Mobile/Island",
+              "width": "fill_container",
+              "descendants": {
+                "ds:1e7Yju": {
+                  "fill": "$ds:--secondary"
+                },
+                "ds:nFyVbQ": {
+                  "fill": "$ds:--foreground"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 3430,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "app (tabs)/search — Search: input debounced 300 ms, chips map to the `types` query param; results grouped by type. · no desktop frame: native phone app (apps/mobile) — there is no desktop layout"
+    }
+  ]
+}

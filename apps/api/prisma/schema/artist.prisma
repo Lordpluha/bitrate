@@ -73,6 +73,9 @@ model Artist {
   likedBy   UserLikedArtist[]
   followers UserFollowedArtist[]
 
+  aiUsage          AiUsage[]
+  promotionProfile ArtistPromotionProfile?
+
   @@index([monthlyListeners(sort: Desc)])
   @@index([deletedAt])
 }

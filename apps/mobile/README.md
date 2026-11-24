@@ -4,9 +4,12 @@ React Native + Expo mobile app for Bitrate. Runs on Android, iOS, and web (via r
 
 ## Stack
 
-- **Expo SDK 57** + **React Native 0.86** + **React 19**
+- **Expo SDK 58** + **React Native 0.88** + **React 19**
 - **expo-router** — file-based routing (`app/` directory)
-- **React Navigation** — bottom tabs + stack navigation
+- **React Navigation** — tabs drawn as the floating Mobile Island + stack navigation
+- **TanStack Query** (server state) + **Zustand** (player and preferences)
+- **openapi-fetch** typed against `@bitrate/contracts`
+- **react-native-track-player** — native playback (web build uses an `<audio>` element)
 - **react-native-reanimated 4** + **react-native-gesture-handler** — animations
 - **expo-image** — optimized image rendering
 - **EAS Build** — cloud builds for Android (APK/AAB) and iOS (IPA)
@@ -50,16 +53,41 @@ pnpm web
 ## Project Structure
 
 ```
-app/                  — expo-router pages (file-based routing)
-  (tabs)/             — bottom tab screens
-  _layout.tsx         — root layout
-  modal.tsx           — modal screen
-assets/               — fonts, images, icons
-components/           — shared UI components
-constants/            — colors, config constants
-hooks/                — custom React hooks
-scripts/              — utility scripts
+app/                  — expo-router routes (a file is a route)
+  _layout.tsx         — providers; AppNavigator guards routes by session
+  (auth)/             — login, two-factor, register, forgot/reset password
+  (app)/              — signed-in tabs: index (Home), search, library, liked-songs, profile
+  now-playing.tsx     — full-screen player (modal)
+components/           — screen parts; components/ui/ holds the primitives
+constants/            — theme.ts + tokens.gen.ts (bridged design tokens)
+hooks/                — use-*.ts React hooks
+lib/                  — logic without UI: api/, auth/, catalog/, player/, i18n/, preferences/
+scripts/tokens/       — the design-token bridge generator
 ```
+
+## Conventions
+
+| Concern | Choice |
+|---|---|
+| API | `lib/api/client.ts` — one openapi-fetch client typed by `@bitrate/contracts`; a middleware refreshes the session on 401 once and replays the request. Untyped responses are validated with zod in `lib/catalog/schemas`. |
+| Session | The API's httpOnly cookies live in the platform cookie store (`credentials: include`); the app never reads a token. `GET /auth/me` answers "signed in?"; `Stack.Protected` routes `(app)` / `(auth)`. |
+| State | Server data in TanStack Query (`lib/*/…-query.ts`); the player queue and UI preferences in Zustand. |
+| Tokens | `pnpm tokens` regenerates `constants/tokens.gen.ts` from `packages/tailwind/src` (Dark default, Light, Dim). `pnpm tokens:check` fails on drift (CI runs it). Read colours with `useTheme()`. |
+| Player | `lib/player/player-store.ts` owns the queue; the engine (`lib/player/engine/index.ts` native RNTP, `index.web.ts` web) plays one track at a time from a play-session URL (`/tracks/:id/cmaf/:bitrate?t=`). Encrypted (ClearKey) renditions are skipped. |
+| i18n | `lib/i18n/messages/{en,uk,pl}` — the web player's locales; a unit test keeps the catalogs' keys equal. |
+| Tests | Jest (`jest-expo`), files `*.unit-spec.ts(x)`: `pnpm test:unit`. |
+
+## Environment
+
+Copy `.env.example` to `.env`. `EXPO_PUBLIC_API_URL` defaults to `http://localhost:3000`; an
+Android emulator needs `http://10.0.2.2:3000`, a phone your machine's LAN address.
+
+## Development build (required for playback)
+
+`react-native-track-player` is a native module, so playback does not run in Expo Go. Build a
+development client once (`pnpm build:dev:android` / `pnpm build:dev:ios`, or `npx expo run:android`
+with a local SDK) and start Metro with `pnpm start`. The web build (`pnpm web`) plays through an
+`<audio>` element and needs no native build.
 
 ## EAS Build
 

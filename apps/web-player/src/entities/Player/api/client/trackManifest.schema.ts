@@ -23,6 +23,14 @@ const renditionSchema = z
     size: positiveInteger,
     initRange: inclusiveRangeSchema,
     fragments: z.array(fragmentSchema).min(1),
+    /** CENC `cbcs` under the track's content key (ADR-0077); null for a clear rendition. */
+    encryption: z
+      .object({
+        scheme: z.literal('cbcs'),
+        keyId: z.string().regex(/^[0-9a-f]{32}$/),
+      })
+      .nullable()
+      .optional(),
   })
   .check((context) => {
     const rendition = context.value
@@ -102,19 +110,24 @@ export const trackManifestSchema = z
     }
 
     const reference = manifest.renditions[0]
-    const seenBitrates = new Set<number>()
+    /** A bitrate may appear twice once a track is encrypted: clear, then encrypted (ADR-0077). */
+    const identity = (rendition: { bitrate: number; encryption?: unknown }) =>
+      `${rendition.bitrate}:${rendition.encryption ? 'encrypted' : 'clear'}`
+    const rank = (rendition: { bitrate: number; encryption?: unknown }) =>
+      rendition.bitrate * 2 + (rendition.encryption ? 1 : 0)
+    const seenRenditions = new Set<string>()
     for (const [renditionIndex, rendition] of manifest.renditions.entries()) {
-      if (seenBitrates.has(rendition.bitrate)) {
-        fail('Rendition bitrates must be unique', [
+      if (seenRenditions.has(identity(rendition))) {
+        fail('Rendition bitrates must be unique per encryption', [
           'renditions',
           renditionIndex,
           'bitrate',
         ])
       }
-      seenBitrates.add(rendition.bitrate)
+      seenRenditions.add(identity(rendition))
 
       const previousRendition = manifest.renditions[renditionIndex - 1]
-      if (previousRendition && rendition.bitrate <= previousRendition.bitrate) {
+      if (previousRendition && rank(rendition) <= rank(previousRendition)) {
         fail('Renditions must be ordered by increasing bitrate', [
           'renditions',
           renditionIndex,

@@ -1,163 +1,105 @@
 ---
 name: Bitrate for Artists — Pencil
-description: Visual system for static Bitrate artist-workspace designs.
-colors:
-  color-primary: "#7C3AED"
-  color-accent: "#A78BFA"
-  color-background: "#0B0D12"
-  color-card: "#151923"
-  color-border: "#2A303C"
-  color-text: "#FFFFFF"
-  color-text-secondary: "#9CA3AF"
-typography:
-  body:
-    fontFamily: Poppins
-  label:
-    fontFamily: Poppins
-    fontSize: "14px"
-    fontWeight: 600
-rounded:
-  card: "12px"
-spacing:
-  stack: "16px"
-  section: "24px"
-components:
-  button-primary:
-    backgroundColor: "{colors.color-primary}"
-    textColor: "{colors.color-text}"
-    typography: "{typography.label}"
-    height: "44px"
-    padding: "0px 18px"
-  card:
-    backgroundColor: "{colors.color-card}"
-    rounded: "{rounded.card}"
+description: The living-workspace design system of apps/web-artists and how the artist page designs are built on it.
 ---
 
-# Design System: Bitrate for Artists — Pencil
+# Bitrate for Artists — Pencil designs
 
-## Overview
+The artist designs draw the shipped `apps/web-artists` look, the **living workspace**: a diagonal
+canvas with three blurred brand washes (the aurora), translucent glass panels, a glass sidebar and
+header, the gradient purple primary action and Poppins type. Older flat concepts are kept under
+`archive/` for reference only.
 
-**Creative North Star: Inherited Bitrate System**
+## Library
 
-A calm production workspace with neutral structure, recognizable purple actions, explicit status,
-and a clear next step. Artwork and music-production imagery carry personality; the interface helps
-the artist manage work without competing with the music.
+`design-system/artist.lib.pen`, imported by every page as `artist`. Pages paint only through its
+components; colours are `$artist:--<role>` variables and themes use the library's Mode axis:
+`theme: { "artist:Mode": "Dark" | "Light" | "Dim" }`.
 
-This document describes the system used by the static designs in this directory. It is not a new
-brand identity and it is not proof of implemented behavior. `web-artist.pen` is the source of truth
-for variables, masters, instances, layouts, and annotations. Dim is the primary neutral theme;
-dark is the higher-contrast alternative; light is the bright alternative.
+- **Tokens come from code.** `pnpm design:tokens` (`scripts/sync-pen-tokens.mjs`) writes the shared
+  roles plus `themes/components/artist-workspace.css` into the library: `--color-artist-*` →
+  `--artist-*`, `--shadow-artist-*` → `--artist-shadow-*`, numeric `--artist-*` (glass opacity) →
+  number variables. A missing colour is a code change first.
+- **Components are generated.** `scripts/pencil-pages/artist-lib.mjs` (parts in
+  `scripts/pencil-pages/artist-ws/lib-*.mjs`) builds the library and `registry-artist.json` (ids and
+  overridable parts). Never edit the library by hand: add a component to its generator, regenerate,
+  then use it. Every component appears on the library page in one section — foundations, actions
+  and status, forms, bento tiles and rows, states, release workspace (header, `Release/Stages`, the
+  promotion pages' five-stage `Release/Stepper`), public pages, workspace pages, release stages,
+  account and insights, shell.
 
-Key characteristics:
+## Pages
 
-- Neutral surfaces and disciplined purple actions.
-- One coherent type hierarchy and moderate information density.
-- Status always includes a readable label; absent data is stated explicitly.
-- Mobile preserves content, decision order, and the next action.
-- Demo data and unavailable integrations are labelled honestly.
+One folder per route: `<page>/<page>.pen`, all generated from `scripts/pencil-pages/pages/artist/`.
 
-See [web-artist.md](web-artist.md) for screen inventory, product logic, and QA status.
+| Page | Route | Module |
+| --- | --- | --- |
+| `landing` | `/` | public |
+| `login` | `/login` (incl. 2FA step, `?addAccount`, `?error=`) | public |
+| `registration` | `/registration` (two steps) | public |
+| `forgot-password`, `reset-password` | `/forgot-password`, `/reset-password?token=` | public |
+| `verify-email` | `/verify-email` | public |
+| `legal` | `/legal/$slug` | public |
+| `not-found`, `session-error` | any unknown path; failed session check | public |
+| `dashboard` | `/dashboard` | workspace |
+| `music` | `/dashboard/music` | workspace |
+| `distribution` | `/dashboard/distribution` | workspace |
+| `release-draft`, `release-review`, `release-deliver`, `release-launch` | `/dashboard/music/$releaseId?step=` | release |
+| `analytics` | `/dashboard/analytics` | insights |
+| `profile`, `settings` | `/dashboard/profile`, `/dashboard/settings` | account |
+| `workspace-search`, `notifications`, `account-switcher`, `mobile-menu` | overlays on every `/dashboard` page | overlays |
+| `release-promotion`, `promotion-post`, `promotion-profile`, `promotion-overview` | planned | promotion |
 
-## Colors
+## States
 
-- **Primary:** `color-primary` for the main action and active selection;
-  `color-accent` for supporting links and secondary emphasis.
-- **Neutral:** `color-background` for the canvas, `color-card` for panels,
-  `color-border` for structure, `color-text` for primary content, and
-  `color-text-secondary` for metadata.
-- **Semantic:** success, warning, error, and information use the corresponding semantic variables
-  defined in the `.pen` source.
+Each file holds the desktop page in Dark, Light and Dim, then the phone page in Dark, Light and Dim
+(in that order), then every state the code renders once, in Dark, as a desktop + phone pair (`apps/docs/docs/brand/design.md` § 21): loading skeletons, errors
+with their retry, empty and first-use, not found / unavailable, validation and submission, locks,
+and every dialog, menu and popover the page opens. A state that exists on one side only (Customize
+mode, the phone menu drawer) is drawn on that side and says why in its frame context.
 
-**Status rule:** communicate state through a label and, when useful, an icon. Color reinforces the
-message but never carries it alone.
+- **Layout.** Public pages sit on the canvas without the shell. Workspace pages are bento tiles on
+  the 12-column grid (73 px columns, 64 px rows, 20 px gaps) in the default order of the code's tile
+  configs, stacked on phones. Overlays and dialogs are drawn in flow over the page they open on.
+- **Content is the code's.** English copy from `apps/web-artists/src/shared/i18n/messages/en/`; demo
+  data from the views that show it (landing previews, legal documents, dashboard and analytics
+  previews) and a small demo catalogue in `pages/artist/workspace/demo.mjs`.
+- **Only instances.** Every visible element is a library instance; a page adds layout-only flex frames
+  and content overrides (text, cover images). The screen frame itself carries the canvas + aurora
+  fill. Film grain, the landing's spotlight beams and grid, and motion are not drawn.
 
-## Typography
+## Design ahead of code
 
-Poppins is the inherited interface family for this neutral source. Hierarchy runs from page title
-to release title, section title, body, label, and metadata. Button labels use stronger weight.
-Exact display sizes and weights remain in the Pencil variables and masters; this file does not
-create a second global scale.
+The designs follow the `apps/web-artists` code, except where an audit found a bug: there the design
+shows the correct behaviour and the code is aligned to it later. Paths are under
+`apps/web-artists/src/`.
 
-All interface copy, component names, annotations, and product-logic notes are English. Language
-selection in a static mockup does not imply runtime localization.
+| # | Design | Code to align |
+|---|---|---|
+| 1 | Login card: "Forgot password?" link between the password field and Continue (to `/forgot-password`); "Back to login" on forgot-password and reset-password | `features/login/ui/LoginForm.tsx`; `features/forgot-password/ui/ForgotPasswordForm.tsx`, `features/reset-password/ui/ResetPasswordForm.tsx` |
+| 2 | Reset password, empty confirmation: "Please confirm your password" | `ResetPasswordForm.tsx:15` shows the field label; add the message key to `shared/i18n/messages/en/auth.ts` |
+| 3 | Registration rules: the unmet ring is visible in every theme (secondary text colour) | `features/registration/ui/PasswordRequirements.tsx:14` |
+| 4 | Release deliver: "Bitrate review approved" is done for Ready, Scheduled, Publishing and Released | `widgets/ReleaseDelivery/ui/ReleaseDeliveryPanel.tsx:91`: `approved` covers only READY/RELEASED |
+| 5 | Dashboard "Layout not loaded": the `layout.error.load` alert above the tiles, with Try again | `features/workspace-layout/model/useCustomizableLayout.ts` does not expose the load error |
+| 6 | "Don't have an account? Sign up." / "Already have an account? Log in." stay on one line | `LoginForm.tsx:174`, `features/registration/ui/RegistrationEmailStep.tsx:54` break them with `<br/>` |
 
-## Layout
+## Regenerating
 
-- Desktop separates persistent navigation, top bar, primary workspace, and supporting context.
-- Use a wider primary column when one task owns the page; supporting cards must not compete with
-  the main action.
-- Mobile uses a single decision-oriented column and a modal navigation panel.
-- Tables become labelled rows or cards while retaining status, dates, ownership, and actions.
-- Filters, active sorting, applied scope, reset, and pagination remain visible around the result.
-- Images and media crop inside their containers and never create horizontal overflow.
-- Intermediate breakpoints must be verified in the implemented application.
+```sh
+node scripts/pencil-pages/artist-lib.mjs pencil/web-artist-design/design-system/artist.lib.pen scripts/pencil-pages/registry-artist.json
+node scripts/sync-pen-tokens.mjs                # writes the code's colours into the library
+node scripts/pencil-pages/run-artist.mjs pencil/web-artist-design [page …]
+node scripts/sync-pen-tokens.mjs --check        # tokens, instances-only and flex rules
+```
 
-## Elevation and depth
+`pnpm design:pages` runs every library and page generator. Node ids are stable hashes, so an
+unchanged page regenerates byte for byte. After changing a `.pen` on disk, reload the Pencil editor
+before editing through the MCP.
 
-Create hierarchy through surface tone, one-pixel borders, spacing, and local contrast before using
-shadow. Large navigation regions, tab bars, and page containers should not appear to float above
-the product. Overlays may use a scrim and focused elevation, but must define close, Escape,
-click-away, focus-return, and scroll-lock behavior for implementation.
+## Archive
 
-## Shapes
-
-- Cards use the shared `rounded.card` radius.
-- Primary actions may use a pill shape when consistent with the component master.
-- Artwork and inserted imagery are clipped by their content bounds.
-- Straight separators support scan-heavy tables and lists.
-- Control radii come from masters rather than being inferred from individual screens.
-
-## Components
-
-- **Primary button:** one dominant action per decision context. A global action becomes secondary
-  when a local task already owns the primary emphasis.
-- **Secondary button:** outline or neutral surface for reversible or supporting actions.
-- **Status chip:** semantic label with consistent icon, padding, and vertical alignment.
-- **Card:** groups one task or one coherent set of information; it is not a generic decorative tile.
-- **Tabs:** centered labels, balanced padding, clear active state, and no layout jump.
-- **Table/list:** stable columns on desktop, labelled rows on mobile, and lifecycle-aware actions.
-- **Form field:** required, optional, read-only, focused, invalid, saving, and saved states are
-  distinct before the user enters data.
-- **Upload:** ready, drag-active, uploading, processing, complete, and recoverable-error states.
-- **Modal/sheet:** names the exact object and consequence; destructive confirmation remains separate
-  from routine actions.
-- **Search:** keeps query and scope visible and distinguishes selected preview from navigation.
-- **Notification:** includes event, object, time, state, and next action.
-- **Media insert:** explains music or production context and must not reduce content contrast.
-
-## Responsive behavior
-
-- Keep the same information and next action across desktop and mobile.
-- Recompose rather than scale down.
-- Use full-width mobile actions only when they improve the decision path.
-- Keep safe touch targets and visible focus requirements in the implementation handoff.
-- Do not place text over a busy image without a controlled fade or solid reading surface.
-
-## Accessibility and integrity
-
-- Target WCAG 2.2 AA in implementation.
-- Never rely on color alone.
-- Preserve keyboard order and visible focus.
-- Respect reduced motion.
-- Use real labels and accessible names for icon-only controls.
-- Distinguish zero, no data, delayed data, and load error.
-- Distinguish draft save, internal review, approval, Bitrate publication, and external delivery.
-- Never present illustrative numbers, people, integrations, or AI output as live product data.
-
-## Do and do not
-
-Do:
-
-- Reuse variables, component masters, and original brand assets from the `.pen` source.
-- Preserve content hierarchy and status meaning during adaptation.
-- Label demo and unavailable states.
-- Keep music imagery specific to the screen's task.
-- Verify the implementation separately from the static design.
-
-Do not:
-
-- Replace the neutral workspace with an undifferentiated neon scene.
-- Invent provider limits, legal promises, performance data, or revenue.
-- Use the same decorative image across unrelated screens.
-- Treat static hover/focus examples as proof of runtime accessibility.
-- Apply one theme's literal values to another theme.
+`archive/` is skipped by the checks. `archive/concepts/` holds pages with no screen in code (the old
+release wizard, tabbed settings, delivery and profile concepts, …), `archive/campaign-concepts/` the
+earlier campaign ideas, `archive/landing-design/` the previous landing concept and
+`archive/impeccable-dark/` / `archive/impeccable-white/` the outdated Impeccable design settings. Every
+web-artists design lives under `pencil/web-artist-design/`, one folder per page.

@@ -16,13 +16,17 @@ import type {
   TrackManifest,
 } from '../../contract'
 import {
+  browserKeySystemAccess,
   canPlayThroughMse,
   capBitrate,
   getMaxStreamBitrate,
   pickStartBitrate,
   playerLog,
+  probeClearKeyCbcs,
   readRememberedThroughput,
   StreamLoader,
+  selectPlayableRenditions,
+  startClearKeySession,
 } from '../cmaf'
 import { shouldDelayInitialPlayback, shouldPrefetchNextTrack } from './network'
 
@@ -108,6 +112,8 @@ export class SlotPlayer {
   /** The listener's manual rendition, carried over to the tracks that follow; `null` is Auto. */
   private pinnedBitrate: number | null = null
   private destroyed = false
+  /** ClearKey `cbcs` access, probed once on the first encrypted track (ADR-0077). */
+  private keySystemAccess: Promise<MediaKeySystemAccess | null> | null = null
 
   constructor(input: SlotPlayerInput) {
     this.input = input
@@ -389,7 +395,7 @@ export class SlotPlayer {
     }
 
     let fellBack = false
-    const fallBackFromCmaf = (manifest: TrackManifest) => {
+    const fallBackFromCmaf = (manifest: TrackManifest | null) => {
       if (fellBack || slot.key !== key) return
       fellBack = true
       this.input.streaming.positions?.save(key, media.currentTime)
@@ -398,7 +404,7 @@ export class SlotPlayer {
       slot.bitrate = null
       if (!isPrefetch && this.active === index) this.pendingPlay = true
       this.restoreOnMetadata(slot, source)
-      if (!this.attachNative(slot, source, manifest, stopPlayback)) stopPlayback()
+      if (!(manifest && this.attachNative(slot, source, manifest, stopPlayback))) stopPlayback()
     }
 
     void this.input.streaming
@@ -407,11 +413,32 @@ export class SlotPlayer {
         /** A newer track claimed this slot while the manifest was loading. */
         if (slot.key !== key) return
         /** No manifest means the track cannot play yet: there is no other format to try. */
-        const attached =
-          manifest !== null &&
-          (this.attachCmaf(slot, source, manifest, isPrefetch, () => fallBackFromCmaf(manifest)) ||
-            this.attachNative(slot, source, manifest, stopPlayback))
-        if (!attached) stopPlayback()
+        if (manifest === null) {
+          stopPlayback()
+          return
+        }
+        /** Encrypted ladder through EME when possible; the clear rendition otherwise and natively. */
+        const attach = (access: MediaKeySystemAccess | null) => {
+          if (slot.key !== key) return
+          const cmaf = selectPlayableRenditions(manifest, access !== null)
+          const clear = selectPlayableRenditions(manifest, false)
+          const attached =
+            (cmaf !== null &&
+              this.attachCmaf(
+                slot,
+                source,
+                cmaf,
+                isPrefetch,
+                () => fallBackFromCmaf(clear),
+                access,
+              )) ||
+            (clear !== null && this.attachNative(slot, source, clear, stopPlayback))
+          if (!attached) stopPlayback()
+        }
+        /** A clear track attaches in this same turn, as before encryption existed. */
+        const probing = this.clearKeyAccessFor(manifest)
+        if (probing === null) attach(null)
+        else void probing.then(attach, () => attach(null))
       })
       .catch(stopPlayback)
 
@@ -452,12 +479,42 @@ export class SlotPlayer {
     return capBitrate({ bitrate: start, manifest, maxBitrate: getMaxStreamBitrate() })
   }
 
+  /**
+   * ClearKey `cbcs` access when the manifest is encrypted and the host can request licences
+   * (probed once per player, ADR-0077); `null`, without waiting, when there is nothing to decrypt.
+   */
+  private clearKeyAccessFor(manifest: TrackManifest): Promise<MediaKeySystemAccess | null> | null {
+    const encrypted = manifest.renditions.some((rendition) => rendition.encryption)
+    if (!(encrypted && this.input.streaming.requestLicense)) return null
+    this.keySystemAccess ??= probeClearKeyCbcs(browserKeySystemAccess())
+    return this.keySystemAccess
+  }
+
+  /** The ClearKey session opener for an encrypted manifest, or `undefined` for a clear one. */
+  private keyPreparation(
+    trackId: string,
+    manifest: TrackManifest,
+    access: MediaKeySystemAccess | null,
+  ): ((audio: HTMLAudioElement) => Promise<MediaKeySession>) | undefined {
+    const keyId = manifest.renditions.find((rendition) => rendition.encryption)?.encryption?.keyId
+    const { requestLicense } = this.input.streaming
+    if (!(access && keyId && requestLicense)) return undefined
+    return (audio) =>
+      startClearKeySession({
+        media: audio,
+        access,
+        keyId,
+        requestLicense: (message) => requestLicense({ trackId, message }),
+      })
+  }
+
   private attachCmaf(
     slot: Slot,
     source: BitratePlayerSource,
     manifest: TrackManifest,
     isPrefetch: boolean,
     onFatalError: () => void,
+    keyAccess: MediaKeySystemAccess | null = null,
   ): boolean {
     const { key, trackId } = source
     if (!canPlayThroughMse(manifest)) {
@@ -470,7 +527,9 @@ export class SlotPlayer {
       trackId,
     })
 
+    const prepareKeys = this.keyPreparation(trackId, manifest, keyAccess)
     const loader = new StreamLoader({
+      ...(prepareKeys ? { prepareKeys } : {}),
       audio: slot.media,
       label: isPrefetch ? 'префетч' : 'актив',
       manifest,
@@ -484,6 +543,7 @@ export class SlotPlayer {
           expectedSize: rendition.size,
           range,
           signal,
+          ...(rendition.encryption ? { encrypted: true } : {}),
         })
       },
       onBitrateChange: (bitrate) => {

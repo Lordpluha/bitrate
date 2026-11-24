@@ -1,0 +1,155 @@
+// Floating workspace pieces: the phone menu drawer (DashboardMobileMenu: brand and close, the
+// "Artist workspace" sections, preferences and the account with sign out) and the now-playing island
+// (NowPlayingIsland: spinning cover, title, equaliser, play/pause and close; expanded with the seek bar).
+import { C, Col, F, I, id, Row, T } from '../kit.mjs'
+import { artistPaint } from './paint.mjs'
+
+/** Adds the phone menu drawer and the now-playing island to the library. */
+export function addIsland(lib) {
+  const { comp, part, add, slot, use } = lib
+  const paint = artistPaint()
+  const wrap = { width: 'fill_container', textGrowth: 'fixed-width' }
+  /* sample rows for the library page; the menu screen fills every slot itself */
+  const navSample = (key, icon, label) =>
+    use(
+      key,
+      { name: `Nav / ${label}`, width: 'fill_container' },
+      { icon: { icon }, label: { content: label } },
+    )
+  add(
+    comp(
+      'Mobile/Drawer',
+      Col(
+        {
+          name: 'Menu Drawer',
+          width: 320,
+          height: 844,
+          gap: 0,
+          padding: [12, 12, 20, 12],
+          ...paint.sheet(),
+        },
+        [
+          Row(
+            {
+              name: 'Top',
+              width: 'fill_container',
+              gap: 12,
+              padding: [12, 12, 40, 12],
+              alignItems: 'start',
+            },
+            [
+              use('Logo/Lockup', { name: 'Lockup' }),
+              F({ name: 'Space', width: 'fill_container', height: 1 }),
+              use('Button/Icon', { name: 'Close' }, { icon: { icon: 'x' } }),
+            ],
+          ),
+          Col({ name: 'Sections', gap: 16, width: 'fill_container', height: 'fill_container' }, [
+            T('ARTIST WORKSPACE', { fontSize: 10, letterSpacing: 1, fill: C.artistTextSecondary }),
+            slot('nav', { gap: 4 }, [
+              navSample('Nav/Item Active', 'layout-dashboard', 'Dashboard'),
+              navSample('Nav/Item', 'music-2', 'Music'),
+              navSample('Nav/Item', 'send', 'Distribution'),
+            ]),
+            slot('prefs', { gap: 4 }, [navSample('Nav/Preference', 'globe', 'English')]),
+          ]),
+          slot('account', { gap: 12 }, [
+            use(
+              'Nav/Account',
+              { name: 'Account', width: 'fill_container' },
+              { name: { content: 'Mira Sol' }, email: { content: 'Artist account' } },
+            ),
+          ]),
+        ],
+      ),
+    ),
+  )
+  const eq = () =>
+    Row(
+      { name: 'Equaliser', gap: 2, height: 16, alignItems: 'end' },
+      [6, 14, 9, 12].map((h, i) =>
+        F({ name: `Bar ${i + 1}`, width: 3, height: h, cornerRadius: 1, fill: C.artistIcon }),
+      ),
+    )
+  for (const expanded of [false, true])
+    add(
+      comp(
+        `Island/Now Playing${expanded ? ' Expanded' : ''}`,
+        Col(
+          {
+            name: 'Now Playing',
+            width: 360,
+            gap: 10,
+            padding: [8, 8, 8, 8],
+            cornerRadius: expanded ? 22 : 30,
+            ...paint.sheet(),
+          },
+          [
+            Row({ name: 'Row', width: 'fill_container', gap: 10 }, [
+              part('cover', use('Cover', { name: 'Cover', cornerRadius: 22 })),
+              Col({ name: 'Text', gap: 0, width: 'fill_container' }, [
+                part(
+                  'title',
+                  T('Night Signal', {
+                    fontSize: 12,
+                    fontWeight: '500',
+                    fill: C.artistForeground,
+                    ...wrap,
+                  }),
+                ),
+                part(
+                  'subtitle',
+                  T('Mira Sol', { fontSize: 11, fill: C.artistTextSecondary, ...wrap }),
+                ),
+              ]),
+              eq(),
+              Row(
+                {
+                  name: 'Toggle',
+                  width: 36,
+                  height: 36,
+                  cornerRadius: 18,
+                  justifyContent: 'center',
+                  ...paint.action(),
+                },
+                [part('toggle', I('pause', { width: 15, height: 15, fill: C.primaryForeground }))],
+              ),
+              I('x', { width: 16, height: 16, fill: C.artistTextSecondary }),
+            ]),
+            ...(expanded
+              ? [
+                  Col({ name: 'More', gap: 6, width: 'fill_container', padding: [0, 8, 6, 8] }, [
+                    /* Waveform seek: the played part in the accent, the rest muted */
+                    {
+                      type: 'path',
+                      id: id(),
+                      name: 'Waveform',
+                      width: 'fill_container',
+                      height: 28,
+                      viewBox: [0, 0, 288, 28],
+                      geometry: Array.from({ length: 48 }, (_, i) => {
+                        const h =
+                          4 + Math.round(10 * Math.abs(Math.sin(i * 0.7) * Math.cos(i * 0.23)))
+                        return `M${i * 6 + 1} ${14 - h} V${14 + h}`
+                      }).join(' '),
+                      stroke: C.artistIcon,
+                      strokeWidth: 2,
+                      strokeLinecap: 'round',
+                    },
+                    Row({ name: 'Meta', width: 'fill_container', gap: 10 }, [
+                      part('time', T('1:12 / 3:42', { fontSize: 11, fill: C.artistTextSecondary })),
+                      part(
+                        'link',
+                        T('Open release', { fontSize: 11, fontWeight: '500', fill: C.artistIcon }),
+                      ),
+                      F({ name: 'Space', width: 'fill_container', height: 1 }),
+                      I('volume-2', { width: 15, height: 15, fill: C.artistTextSecondary }),
+                      use('Progress', { name: 'Volume', width: 72 }, { bar: { width: 54 } }),
+                    ]),
+                  ]),
+                ]
+              : []),
+          ],
+        ),
+      ),
+    )
+}

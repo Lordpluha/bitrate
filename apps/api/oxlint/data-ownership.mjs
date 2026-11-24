@@ -22,6 +22,12 @@ export const DATA_OWNERS = {
   artistSession: ['artists-auth'],
   artistAccountLink: ['artists-auth'],
   artistWorkspaceLayout: ['artist-workspace'],
+  aiUsage: ['promotion'],
+  artistPromotionProfile: ['promotion'],
+  promotionPlan: ['promotion'],
+  promotionPlanStep: ['promotion'],
+  promotionPost: ['promotion'],
+  promotionPostTranslation: ['promotion'],
 
   staff: ['admin-auth', 'admin/staff'],
   staffSession: ['admin-auth'],
