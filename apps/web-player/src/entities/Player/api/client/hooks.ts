@@ -11,11 +11,15 @@ export type FetchRenditionRangeInput = {
   expectedSize: number
   range: readonly [number, number]
   signal: AbortSignal
+  /** The `cbcs`-encrypted rendition of this bitrate (ADR-0077). */
+  encrypted?: boolean
 }
 
 export type GetRenditionUrlInput = {
   trackId: string
   bitrate: number
+  /** The encrypted rendition; without it the API serves the clear one (ADR-0077). */
+  encrypted?: boolean
 }
 
 /**
@@ -23,11 +27,15 @@ export type GetRenditionUrlInput = {
  * (ADR-0067): fragment ranges are read from it, and a browser without MSE plays it
  * through `<audio>`.
  */
-export const getRenditionUrl = ({ trackId, bitrate }: GetRenditionUrlInput) =>
+export const getRenditionUrl = ({
+  trackId,
+  bitrate,
+  encrypted,
+}: GetRenditionUrlInput) =>
   getApiUrl(
     `/api/v1/tracks/${trackId}/cmaf/${bitrate}?t=${encodeURIComponent(
       playSessionToken({ trackId }) ?? '',
-    )}`,
+    )}${encrypted ? '&encrypted=1' : ''}`,
   )
 
 /** Wait when a 429 names no usable `Retry-After`. */
@@ -104,6 +112,7 @@ export const fetchRenditionRange = async ({
   expectedSize,
   range,
   signal,
+  encrypted,
 }: FetchRenditionRangeInput): Promise<ArrayBuffer> => {
   const [rangeStart, rangeEnd] = range
   if (
@@ -128,7 +137,11 @@ export const fetchRenditionRange = async ({
   let response: Response
   while (true) {
     response = await fetchWithAuthRefresh(
-      getRenditionUrl({ bitrate, trackId }),
+      getRenditionUrl({
+        bitrate,
+        trackId,
+        ...(encrypted ? { encrypted } : {}),
+      }),
       {
         headers: { Range: `bytes=${range[0]}-${range[1]}` },
         signal,
