@@ -376,8 +376,10 @@ Examples:
 Reusable components should reduce both engineering complexity and cognitive inconsistency.
 
 Designs are assembled, not invented. Every element of a screen design is an instance of a
-component from the design-system library (`pencil/web-player-design/design-system/bitrate.lib.pen`,
-imported by every design file). A screen adds only layout and real content — text and artwork.
+component from its app's design-system library: `pencil/web-player-design/design-system/bitrate.lib.pen`
+for the web player and its landing, `pencil/web-artist-design/design-system/artist.lib.pen` for the
+artist workspace and `pencil/web-admin-design/design-system/admin.lib.pen` for the admin console. A
+screen adds only layout and real content — text and artwork.
 When a screen needs something the library does not have, the component is added to the library
 first and then used, so the design system and the screens never drift apart.
 

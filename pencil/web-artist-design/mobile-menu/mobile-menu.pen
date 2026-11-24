@@ -1,0 +1,1706 @@
+{
+  "version": "2.20",
+  "imports": {
+    "artist": "../design-system/artist.lib.pen"
+  },
+  "children": [
+    {
+      "type": "frame",
+      "id": "kvgDvG",
+      "name": "Artist / Mobile menu / Desktop / Dark",
+      "width": 1440,
+      "height": "fit_content",
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "oQDeym",
+          "ref": "artist:EoFzgK",
+          "name": "Shell",
+          "width": 1440,
+          "descendants": {
+            "artist:wUJe6Y": {
+              "type": "ref",
+              "id": "bGO5L1",
+              "ref": "artist:X4FVsP",
+              "name": "Sidebar",
+              "height": "fill_container",
+              "descendants": {
+                "artist:4cpIVe": {
+                  "type": "ref",
+                  "id": "bWzk2R",
+                  "ref": "artist:AUNgmB",
+                  "name": "Nav / Dashboard",
+                  "descendants": {
+                    "artist:i1qxD6": {
+                      "icon": "layout-dashboard"
+                    }
+                  }
+                },
+                "artist:vxqXX1/artist:wU47I0": {
+                  "icon": "moon"
+                }
+              }
+            },
+            "artist:Ni7iI8/artist:qAqwpx": {
+              "content": "Dashboard"
+            },
+            "artist:Ni7iI8/artist:ZD0P3t/artist:vg489O": {
+              "content": "Create release"
+            },
+            "artist:Ni7iI8/artist:ZD0P3t/artist:wAdYtR": {
+              "icon": "plus"
+            },
+            "artist:QNgR6T": {
+              "type": "frame",
+              "id": "jdeITy",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 20,
+              "width": "fill_container",
+              "padding": [
+                36,
+                48,
+                48,
+                48
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "rboDVH",
+                  "name": "Page Heading",
+                  "gap": 16,
+                  "alignItems": "end",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "VCDbTF",
+                      "name": "Text",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "pIKnjs",
+                          "ref": "artist:MgMQ2L",
+                          "name": "Dashboard",
+                          "content": "Dashboard"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "muInKd",
+                          "ref": "artist:C5Ih8u",
+                          "name": "Everything you need for your",
+                          "width": "fill_container",
+                          "textGrowth": "fixed-width",
+                          "content": "Everything you need for your next release."
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 0,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Dark"
+      },
+      "context": "drawer from the header menu button on every /dashboard page (below 991px) — The phone and tablet navigation. Choosing a section closes the drawer; Escape or a tap outside closes it too."
+    },
+    {
+      "type": "frame",
+      "id": "SvsCVz",
+      "name": "Artist / Mobile menu / Desktop / Light",
+      "width": 1440,
+      "height": "fit_content",
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "c90rw0",
+          "ref": "artist:EoFzgK",
+          "name": "Shell",
+          "width": 1440,
+          "descendants": {
+            "artist:wUJe6Y": {
+              "type": "ref",
+              "id": "zTKFao",
+              "ref": "artist:X4FVsP",
+              "name": "Sidebar",
+              "height": "fill_container",
+              "descendants": {
+                "artist:4cpIVe": {
+                  "type": "ref",
+                  "id": "7W2Pjx",
+                  "ref": "artist:AUNgmB",
+                  "name": "Nav / Dashboard",
+                  "descendants": {
+                    "artist:i1qxD6": {
+                      "icon": "layout-dashboard"
+                    }
+                  }
+                },
+                "artist:vxqXX1/artist:wU47I0": {
+                  "icon": "sun"
+                }
+              }
+            },
+            "artist:Ni7iI8/artist:qAqwpx": {
+              "content": "Dashboard"
+            },
+            "artist:Ni7iI8/artist:ZD0P3t/artist:vg489O": {
+              "content": "Create release"
+            },
+            "artist:Ni7iI8/artist:ZD0P3t/artist:wAdYtR": {
+              "icon": "plus"
+            },
+            "artist:QNgR6T": {
+              "type": "frame",
+              "id": "VEnl2V",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 20,
+              "width": "fill_container",
+              "padding": [
+                36,
+                48,
+                48,
+                48
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "veR651",
+                  "name": "Page Heading",
+                  "gap": 16,
+                  "alignItems": "end",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "PQIdAy",
+                      "name": "Text",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "rbHI09",
+                          "ref": "artist:MgMQ2L",
+                          "name": "Dashboard",
+                          "content": "Dashboard"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "uDcbHa",
+                          "ref": "artist:C5Ih8u",
+                          "name": "Everything you need for your",
+                          "width": "fill_container",
+                          "textGrowth": "fixed-width",
+                          "content": "Everything you need for your next release."
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 1540,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Light"
+      },
+      "context": "drawer from the header menu button on every /dashboard page (below 991px) — The phone and tablet navigation. Choosing a section closes the drawer; Escape or a tap outside closes it too."
+    },
+    {
+      "type": "frame",
+      "id": "kvNZ2C",
+      "name": "Artist / Mobile menu / Desktop / Dim",
+      "width": 1440,
+      "height": "fit_content",
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "uJyIhf",
+          "ref": "artist:EoFzgK",
+          "name": "Shell",
+          "width": 1440,
+          "descendants": {
+            "artist:wUJe6Y": {
+              "type": "ref",
+              "id": "zD7OuQ",
+              "ref": "artist:X4FVsP",
+              "name": "Sidebar",
+              "height": "fill_container",
+              "descendants": {
+                "artist:4cpIVe": {
+                  "type": "ref",
+                  "id": "f1AyOm",
+                  "ref": "artist:AUNgmB",
+                  "name": "Nav / Dashboard",
+                  "descendants": {
+                    "artist:i1qxD6": {
+                      "icon": "layout-dashboard"
+                    }
+                  }
+                },
+                "artist:vxqXX1/artist:wU47I0": {
+                  "icon": "eclipse"
+                }
+              }
+            },
+            "artist:Ni7iI8/artist:qAqwpx": {
+              "content": "Dashboard"
+            },
+            "artist:Ni7iI8/artist:ZD0P3t/artist:vg489O": {
+              "content": "Create release"
+            },
+            "artist:Ni7iI8/artist:ZD0P3t/artist:wAdYtR": {
+              "icon": "plus"
+            },
+            "artist:QNgR6T": {
+              "type": "frame",
+              "id": "ZWdyLP",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 20,
+              "width": "fill_container",
+              "padding": [
+                36,
+                48,
+                48,
+                48
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "bADtA1",
+                  "name": "Page Heading",
+                  "gap": 16,
+                  "alignItems": "end",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "V9ZKGM",
+                      "name": "Text",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "ZZwNND",
+                          "ref": "artist:MgMQ2L",
+                          "name": "Dashboard",
+                          "content": "Dashboard"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "cRQNHF",
+                          "ref": "artist:C5Ih8u",
+                          "name": "Everything you need for your",
+                          "width": "fill_container",
+                          "textGrowth": "fixed-width",
+                          "content": "Everything you need for your next release."
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 3080,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Dim"
+      },
+      "context": "drawer from the header menu button on every /dashboard page (below 991px) — The phone and tablet navigation. Choosing a section closes the drawer; Escape or a tap outside closes it too."
+    },
+    {
+      "type": "frame",
+      "id": "wtRbxh",
+      "name": "Artist / Mobile menu / Mobile / Dark",
+      "width": 390,
+      "height": "fit_content",
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "clVIDZ",
+          "ref": "artist:8H12ea",
+          "name": "Shell",
+          "width": 390,
+          "descendants": {
+            "artist:SIErRw": {
+              "type": "frame",
+              "id": "ZaA9Ap",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 16,
+              "width": "fill_container",
+              "padding": [
+                12,
+                16,
+                40,
+                16
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "FKESGL",
+                  "name": "Page Heading",
+                  "gap": 16,
+                  "alignItems": "end",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "NrhLPR",
+                      "name": "Text",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "rvmnXg",
+                          "ref": "artist:MgMQ2L",
+                          "name": "Dashboard",
+                          "content": "Dashboard"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "wZASB5",
+                          "ref": "artist:C5Ih8u",
+                          "name": "Everything you need for your",
+                          "width": "fill_container",
+                          "textGrowth": "fixed-width",
+                          "content": "Everything you need for your next release."
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 4620,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Dark"
+      },
+      "context": "drawer from the header menu button on every /dashboard page (below 991px) — The phone and tablet navigation. Choosing a section closes the drawer; Escape or a tap outside closes it too."
+    },
+    {
+      "type": "frame",
+      "id": "kzQ32F",
+      "name": "Artist / Mobile menu / Mobile / Light",
+      "width": 390,
+      "height": "fit_content",
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "8ajpPl",
+          "ref": "artist:8H12ea",
+          "name": "Shell",
+          "width": 390,
+          "descendants": {
+            "artist:SIErRw": {
+              "type": "frame",
+              "id": "vme57q",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 16,
+              "width": "fill_container",
+              "padding": [
+                12,
+                16,
+                40,
+                16
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "3OXjRN",
+                  "name": "Page Heading",
+                  "gap": 16,
+                  "alignItems": "end",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "nuoogd",
+                      "name": "Text",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "7XDScz",
+                          "ref": "artist:MgMQ2L",
+                          "name": "Dashboard",
+                          "content": "Dashboard"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "imPQyq",
+                          "ref": "artist:C5Ih8u",
+                          "name": "Everything you need for your",
+                          "width": "fill_container",
+                          "textGrowth": "fixed-width",
+                          "content": "Everything you need for your next release."
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 5110,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Light"
+      },
+      "context": "drawer from the header menu button on every /dashboard page (below 991px) — The phone and tablet navigation. Choosing a section closes the drawer; Escape or a tap outside closes it too."
+    },
+    {
+      "type": "frame",
+      "id": "SWg37h",
+      "name": "Artist / Mobile menu / Mobile / Dim",
+      "width": 390,
+      "height": "fit_content",
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "CbcY65",
+          "ref": "artist:8H12ea",
+          "name": "Shell",
+          "width": 390,
+          "descendants": {
+            "artist:SIErRw": {
+              "type": "frame",
+              "id": "rtKNqD",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 16,
+              "width": "fill_container",
+              "padding": [
+                12,
+                16,
+                40,
+                16
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "xdNLh2",
+                  "name": "Page Heading",
+                  "gap": 16,
+                  "alignItems": "end",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "dAyvfm",
+                      "name": "Text",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "lt51S7",
+                          "ref": "artist:MgMQ2L",
+                          "name": "Dashboard",
+                          "content": "Dashboard"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "oDm4H3",
+                          "ref": "artist:C5Ih8u",
+                          "name": "Everything you need for your",
+                          "width": "fill_container",
+                          "textGrowth": "fixed-width",
+                          "content": "Everything you need for your next release."
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 5600,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Dim"
+      },
+      "context": "drawer from the header menu button on every /dashboard page (below 991px) — The phone and tablet navigation. Choosing a section closes the drawer; Escape or a tap outside closes it too."
+    },
+    {
+      "type": "frame",
+      "id": "CglrNe",
+      "name": "Artist / Mobile menu / Open / Mobile",
+      "width": 390,
+      "height": 844,
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "gtAKtB",
+          "ref": "artist:mA2OOT",
+          "name": "Status Bar"
+        },
+        {
+          "type": "ref",
+          "id": "fUVThv",
+          "ref": "artist:ZCG9b5",
+          "name": "Menu Drawer",
+          "height": 797,
+          "descendants": {
+            "artist:LgKd6T": {
+              "type": "frame",
+              "id": "UqJO4s",
+              "name": "Nav",
+              "layout": "vertical",
+              "gap": 4,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "awPhIi",
+                  "ref": "artist:eNXmbM",
+                  "name": "Nav / Dashboard",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:it6GEx": {
+                      "icon": "layout-dashboard"
+                    },
+                    "artist:9i1hx0": {
+                      "content": "Dashboard"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "1yXEfD",
+                  "ref": "artist:KtFzWg",
+                  "name": "Nav / Music",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:MM6ReF": {
+                      "icon": "music-2"
+                    },
+                    "artist:JsvkSB": {
+                      "content": "Music"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "ghwiaH",
+                  "ref": "artist:KtFzWg",
+                  "name": "Nav / Distribution",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:MM6ReF": {
+                      "icon": "send"
+                    },
+                    "artist:JsvkSB": {
+                      "content": "Distribution"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "dj8R4C",
+                  "ref": "artist:KtFzWg",
+                  "name": "Nav / Promotion",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:MM6ReF": {
+                      "icon": "megaphone"
+                    },
+                    "artist:JsvkSB": {
+                      "content": "Promotion"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "w2UutD",
+                  "ref": "artist:KtFzWg",
+                  "name": "Nav / Analytics",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:MM6ReF": {
+                      "icon": "chart-no-axes-combined"
+                    },
+                    "artist:JsvkSB": {
+                      "content": "Analytics"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "lwEllp",
+                  "ref": "artist:KtFzWg",
+                  "name": "Nav / Profile",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:MM6ReF": {
+                      "icon": "user-round"
+                    },
+                    "artist:JsvkSB": {
+                      "content": "Profile"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "CN6sG9",
+                  "ref": "artist:KtFzWg",
+                  "name": "Nav / Settings",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:MM6ReF": {
+                      "icon": "settings-2"
+                    },
+                    "artist:JsvkSB": {
+                      "content": "Settings"
+                    }
+                  }
+                }
+              ]
+            },
+            "artist:uEoPNC": {
+              "type": "frame",
+              "id": "Ye3me5",
+              "name": "Prefs",
+              "layout": "vertical",
+              "gap": 4,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "SZV6qq",
+                  "ref": "artist:6NZ8NQ",
+                  "name": "Pref / English",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:wU47I0": {
+                      "icon": "globe"
+                    },
+                    "artist:n1Vqlv": {
+                      "content": "English"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "RkRsVV",
+                  "ref": "artist:6NZ8NQ",
+                  "name": "Pref / Dark",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:wU47I0": {
+                      "icon": "moon"
+                    },
+                    "artist:n1Vqlv": {
+                      "content": "Dark"
+                    }
+                  }
+                }
+              ]
+            },
+            "artist:fI8eas": {
+              "type": "frame",
+              "id": "q9tyYc",
+              "name": "Account",
+              "layout": "vertical",
+              "gap": 12,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "qHQe3X",
+                  "ref": "artist:C5Ih8u",
+                  "name": "Help & support",
+                  "content": "Help & support"
+                },
+                {
+                  "type": "ref",
+                  "id": "nxcwP8",
+                  "ref": "artist:Cs2YMp",
+                  "name": "Account",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:HYiOPW": {
+                      "content": "Mira Sol"
+                    },
+                    "artist:IovBNM": {
+                      "content": "Artist account"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 6090,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Dark"
+      },
+      "context": "drawer from the header menu button on every /dashboard page (below 991px) — The phone and tablet navigation. Choosing a section closes the drawer; Escape or a tap outside closes it too. · no desktop frame: the drawer exists below the desktop breakpoint only"
+    },
+    {
+      "type": "frame",
+      "id": "ijhJTO",
+      "name": "Artist / Mobile menu / Open on Music / Mobile",
+      "width": 390,
+      "height": 844,
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "M0eubA",
+          "ref": "artist:mA2OOT",
+          "name": "Status Bar"
+        },
+        {
+          "type": "ref",
+          "id": "RoMEKr",
+          "ref": "artist:ZCG9b5",
+          "name": "Menu Drawer",
+          "height": 797,
+          "descendants": {
+            "artist:LgKd6T": {
+              "type": "frame",
+              "id": "oyzmLE",
+              "name": "Nav",
+              "layout": "vertical",
+              "gap": 4,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "CguVd5",
+                  "ref": "artist:KtFzWg",
+                  "name": "Nav / Dashboard",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:MM6ReF": {
+                      "icon": "layout-dashboard"
+                    },
+                    "artist:JsvkSB": {
+                      "content": "Dashboard"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "zQG8em",
+                  "ref": "artist:eNXmbM",
+                  "name": "Nav / Music",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:it6GEx": {
+                      "icon": "music-2"
+                    },
+                    "artist:9i1hx0": {
+                      "content": "Music"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "iOrZJO",
+                  "ref": "artist:KtFzWg",
+                  "name": "Nav / Distribution",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:MM6ReF": {
+                      "icon": "send"
+                    },
+                    "artist:JsvkSB": {
+                      "content": "Distribution"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "jhNIhL",
+                  "ref": "artist:KtFzWg",
+                  "name": "Nav / Promotion",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:MM6ReF": {
+                      "icon": "megaphone"
+                    },
+                    "artist:JsvkSB": {
+                      "content": "Promotion"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "I4NCa7",
+                  "ref": "artist:KtFzWg",
+                  "name": "Nav / Analytics",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:MM6ReF": {
+                      "icon": "chart-no-axes-combined"
+                    },
+                    "artist:JsvkSB": {
+                      "content": "Analytics"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "FpDUUI",
+                  "ref": "artist:KtFzWg",
+                  "name": "Nav / Profile",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:MM6ReF": {
+                      "icon": "user-round"
+                    },
+                    "artist:JsvkSB": {
+                      "content": "Profile"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "CDsbuo",
+                  "ref": "artist:KtFzWg",
+                  "name": "Nav / Settings",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:MM6ReF": {
+                      "icon": "settings-2"
+                    },
+                    "artist:JsvkSB": {
+                      "content": "Settings"
+                    }
+                  }
+                }
+              ]
+            },
+            "artist:uEoPNC": {
+              "type": "frame",
+              "id": "Yg4PbO",
+              "name": "Prefs",
+              "layout": "vertical",
+              "gap": 4,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "OI6UWE",
+                  "ref": "artist:6NZ8NQ",
+                  "name": "Pref / English",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:wU47I0": {
+                      "icon": "globe"
+                    },
+                    "artist:n1Vqlv": {
+                      "content": "English"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "RPat8u",
+                  "ref": "artist:6NZ8NQ",
+                  "name": "Pref / Dark",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:wU47I0": {
+                      "icon": "moon"
+                    },
+                    "artist:n1Vqlv": {
+                      "content": "Dark"
+                    }
+                  }
+                }
+              ]
+            },
+            "artist:fI8eas": {
+              "type": "frame",
+              "id": "44Eejt",
+              "name": "Account",
+              "layout": "vertical",
+              "gap": 12,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "yUbqQf",
+                  "ref": "artist:C5Ih8u",
+                  "name": "Help & support",
+                  "content": "Help & support"
+                },
+                {
+                  "type": "ref",
+                  "id": "nFyY11",
+                  "ref": "artist:Cs2YMp",
+                  "name": "Account",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:HYiOPW": {
+                      "content": "Mira Sol"
+                    },
+                    "artist:IovBNM": {
+                      "content": "Artist account"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 6580,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Dark"
+      },
+      "context": "drawer from the header menu button on every /dashboard page (below 991px) — The phone and tablet navigation. Choosing a section closes the drawer; Escape or a tap outside closes it too. · no desktop frame: the drawer exists below the desktop breakpoint only"
+    }
+  ]
+}

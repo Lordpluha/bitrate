@@ -1,0 +1,17 @@
+export const enCommon = {
+  'common.tryAgain': 'Try again',
+  'common.connected': 'Connected to Bitrate',
+  'common.loading': 'Loading…',
+  'common.back': 'Back',
+  'common.close': 'Close',
+  'common.error.title': 'Something went wrong',
+  'common.error.network': "Can't reach Bitrate. Check your connection and try again.",
+  'common.error.rateLimited': 'Too many requests. Wait a moment and try again.',
+  'common.notFound.title': "This screen doesn't exist",
+  'common.notFound.description': 'The link may be broken or the content was removed.',
+  'common.goHome': 'Go to Home',
+  'nav.home': 'Home',
+  'nav.search': 'Search',
+  'nav.library': 'Library',
+  'nav.profile': 'Profile',
+}

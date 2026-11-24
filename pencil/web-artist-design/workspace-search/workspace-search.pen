@@ -1,0 +1,4000 @@
+{
+  "version": "2.20",
+  "imports": {
+    "artist": "../design-system/artist.lib.pen"
+  },
+  "children": [
+    {
+      "type": "frame",
+      "id": "e9T2Sr",
+      "name": "Artist / Workspace search / Desktop / Dark",
+      "width": 1440,
+      "height": "fit_content",
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "6gUMSA",
+          "ref": "artist:EoFzgK",
+          "name": "Shell",
+          "width": 1440,
+          "descendants": {
+            "artist:wUJe6Y/artist:s6OYk6": {
+              "type": "ref",
+              "id": "j0aj4X",
+              "ref": "artist:eNXmbM",
+              "name": "Nav / Dashboard",
+              "descendants": {
+                "artist:it6GEx": {
+                  "icon": "layout-dashboard"
+                },
+                "artist:9i1hx0": {
+                  "content": "Dashboard"
+                }
+              }
+            },
+            "artist:wUJe6Y/artist:9iS34v/artist:wU47I0": {
+              "icon": "moon"
+            },
+            "artist:wUJe6Y/artist:9iS34v/artist:n1Vqlv": {
+              "content": "Dark"
+            },
+            "artist:Ni7iI8/artist:qAqwpx": {
+              "content": "Dashboard"
+            },
+            "artist:Ni7iI8/artist:ZD0P3t/artist:vg489O": {
+              "content": "Create release"
+            },
+            "artist:Ni7iI8/artist:ZD0P3t/artist:wAdYtR": {
+              "icon": "plus"
+            },
+            "artist:QNgR6T": {
+              "type": "frame",
+              "id": "X6pPjl",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 20,
+              "width": "fill_container",
+              "padding": [
+                36,
+                48,
+                48,
+                48
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "F4wrLC",
+                  "name": "Modal Layer",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "center",
+                  "padding": [
+                    24,
+                    0
+                  ],
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "ZAkEHZ",
+                      "ref": "artist:WLRzpO",
+                      "name": "Modal / Search workspace",
+                      "width": 560,
+                      "descendants": {
+                        "artist:asYxoc": {
+                          "content": "Search workspace"
+                        },
+                        "artist:7AUcJz": {
+                          "type": "frame",
+                          "id": "YswEg4",
+                          "name": "Body",
+                          "layout": "vertical",
+                          "gap": 14,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "WIECH4",
+                              "ref": "artist:WF9JLk",
+                              "name": "Query",
+                              "width": "fill_container",
+                              "descendants": {
+                                "artist:hqy5Gf": {
+                                  "content": "Search releases, tracks and sections…"
+                                }
+                              }
+                            },
+                            {
+                              "type": "frame",
+                              "id": "VnqOjN",
+                              "name": "Group / Sections",
+                              "layout": "vertical",
+                              "gap": 4,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "jw5V9k",
+                                  "ref": "artist:yjiPHo",
+                                  "name": "SECTIONS",
+                                  "content": "SECTIONS"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "qWdpOW",
+                                  "ref": "artist:7vIpty",
+                                  "name": "Result / Dashboard",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:35TI3I": {
+                                      "icon": "search"
+                                    },
+                                    "artist:e5L29H": {
+                                      "content": "Dashboard"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "7rQIQP",
+                                  "ref": "artist:7vIpty",
+                                  "name": "Result / Music",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:35TI3I": {
+                                      "icon": "search"
+                                    },
+                                    "artist:e5L29H": {
+                                      "content": "Music"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "2QE2BD",
+                                  "ref": "artist:7vIpty",
+                                  "name": "Result / Distribution",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:35TI3I": {
+                                      "icon": "search"
+                                    },
+                                    "artist:e5L29H": {
+                                      "content": "Distribution"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "rDCPBL",
+                                  "ref": "artist:7vIpty",
+                                  "name": "Result / Analytics",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:35TI3I": {
+                                      "icon": "search"
+                                    },
+                                    "artist:e5L29H": {
+                                      "content": "Analytics"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "sKKHOK",
+                                  "ref": "artist:7vIpty",
+                                  "name": "Result / Profile",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:35TI3I": {
+                                      "icon": "search"
+                                    },
+                                    "artist:e5L29H": {
+                                      "content": "Profile"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "t7vuEp",
+                                  "ref": "artist:7vIpty",
+                                  "name": "Result / Settings",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:35TI3I": {
+                                      "icon": "search"
+                                    },
+                                    "artist:e5L29H": {
+                                      "content": "Settings"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        "artist:a5ERhu": {
+                          "enabled": false
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 0,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Dark"
+      },
+      "context": "overlay on every /dashboard page — Modal over the workspace. Results link to the section, the release workspace or the track in Music; sections show the search icon, releases a disc and tracks a note, as in WorkspaceSearch."
+    },
+    {
+      "type": "frame",
+      "id": "4Mb3rL",
+      "name": "Artist / Workspace search / Desktop / Light",
+      "width": 1440,
+      "height": "fit_content",
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "U8LpJy",
+          "ref": "artist:EoFzgK",
+          "name": "Shell",
+          "width": 1440,
+          "descendants": {
+            "artist:wUJe6Y/artist:s6OYk6": {
+              "type": "ref",
+              "id": "ZdlyM2",
+              "ref": "artist:eNXmbM",
+              "name": "Nav / Dashboard",
+              "descendants": {
+                "artist:it6GEx": {
+                  "icon": "layout-dashboard"
+                },
+                "artist:9i1hx0": {
+                  "content": "Dashboard"
+                }
+              }
+            },
+            "artist:wUJe6Y/artist:9iS34v/artist:wU47I0": {
+              "icon": "sun"
+            },
+            "artist:wUJe6Y/artist:9iS34v/artist:n1Vqlv": {
+              "content": "Light"
+            },
+            "artist:Ni7iI8/artist:qAqwpx": {
+              "content": "Dashboard"
+            },
+            "artist:Ni7iI8/artist:ZD0P3t/artist:vg489O": {
+              "content": "Create release"
+            },
+            "artist:Ni7iI8/artist:ZD0P3t/artist:wAdYtR": {
+              "icon": "plus"
+            },
+            "artist:QNgR6T": {
+              "type": "frame",
+              "id": "3hA786",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 20,
+              "width": "fill_container",
+              "padding": [
+                36,
+                48,
+                48,
+                48
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "zonQWW",
+                  "name": "Modal Layer",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "center",
+                  "padding": [
+                    24,
+                    0
+                  ],
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "3BOYrT",
+                      "ref": "artist:WLRzpO",
+                      "name": "Modal / Search workspace",
+                      "width": 560,
+                      "descendants": {
+                        "artist:asYxoc": {
+                          "content": "Search workspace"
+                        },
+                        "artist:7AUcJz": {
+                          "type": "frame",
+                          "id": "8VQwVf",
+                          "name": "Body",
+                          "layout": "vertical",
+                          "gap": 14,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "6rIozw",
+                              "ref": "artist:WF9JLk",
+                              "name": "Query",
+                              "width": "fill_container",
+                              "descendants": {
+                                "artist:hqy5Gf": {
+                                  "content": "Search releases, tracks and sections…"
+                                }
+                              }
+                            },
+                            {
+                              "type": "frame",
+                              "id": "biH0At",
+                              "name": "Group / Sections",
+                              "layout": "vertical",
+                              "gap": 4,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "v34kPI",
+                                  "ref": "artist:yjiPHo",
+                                  "name": "SECTIONS",
+                                  "content": "SECTIONS"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "I6hyv4",
+                                  "ref": "artist:7vIpty",
+                                  "name": "Result / Dashboard",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:35TI3I": {
+                                      "icon": "search"
+                                    },
+                                    "artist:e5L29H": {
+                                      "content": "Dashboard"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "LCNG9t",
+                                  "ref": "artist:7vIpty",
+                                  "name": "Result / Music",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:35TI3I": {
+                                      "icon": "search"
+                                    },
+                                    "artist:e5L29H": {
+                                      "content": "Music"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "QQgbu2",
+                                  "ref": "artist:7vIpty",
+                                  "name": "Result / Distribution",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:35TI3I": {
+                                      "icon": "search"
+                                    },
+                                    "artist:e5L29H": {
+                                      "content": "Distribution"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "R8rVmy",
+                                  "ref": "artist:7vIpty",
+                                  "name": "Result / Analytics",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:35TI3I": {
+                                      "icon": "search"
+                                    },
+                                    "artist:e5L29H": {
+                                      "content": "Analytics"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "2hDQwF",
+                                  "ref": "artist:7vIpty",
+                                  "name": "Result / Profile",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:35TI3I": {
+                                      "icon": "search"
+                                    },
+                                    "artist:e5L29H": {
+                                      "content": "Profile"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "7rwvuZ",
+                                  "ref": "artist:7vIpty",
+                                  "name": "Result / Settings",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:35TI3I": {
+                                      "icon": "search"
+                                    },
+                                    "artist:e5L29H": {
+                                      "content": "Settings"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        "artist:a5ERhu": {
+                          "enabled": false
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 1540,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Light"
+      },
+      "context": "overlay on every /dashboard page — Modal over the workspace. Results link to the section, the release workspace or the track in Music; sections show the search icon, releases a disc and tracks a note, as in WorkspaceSearch."
+    },
+    {
+      "type": "frame",
+      "id": "u9dGbk",
+      "name": "Artist / Workspace search / Desktop / Dim",
+      "width": 1440,
+      "height": "fit_content",
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "i0MzfG",
+          "ref": "artist:EoFzgK",
+          "name": "Shell",
+          "width": 1440,
+          "descendants": {
+            "artist:wUJe6Y/artist:s6OYk6": {
+              "type": "ref",
+              "id": "BZzFDd",
+              "ref": "artist:eNXmbM",
+              "name": "Nav / Dashboard",
+              "descendants": {
+                "artist:it6GEx": {
+                  "icon": "layout-dashboard"
+                },
+                "artist:9i1hx0": {
+                  "content": "Dashboard"
+                }
+              }
+            },
+            "artist:wUJe6Y/artist:9iS34v/artist:wU47I0": {
+              "icon": "eclipse"
+            },
+            "artist:wUJe6Y/artist:9iS34v/artist:n1Vqlv": {
+              "content": "Dim"
+            },
+            "artist:Ni7iI8/artist:qAqwpx": {
+              "content": "Dashboard"
+            },
+            "artist:Ni7iI8/artist:ZD0P3t/artist:vg489O": {
+              "content": "Create release"
+            },
+            "artist:Ni7iI8/artist:ZD0P3t/artist:wAdYtR": {
+              "icon": "plus"
+            },
+            "artist:QNgR6T": {
+              "type": "frame",
+              "id": "bl3C1i",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 20,
+              "width": "fill_container",
+              "padding": [
+                36,
+                48,
+                48,
+                48
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "9chJFl",
+                  "name": "Modal Layer",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "center",
+                  "padding": [
+                    24,
+                    0
+                  ],
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "zCYSBq",
+                      "ref": "artist:WLRzpO",
+                      "name": "Modal / Search workspace",
+                      "width": 560,
+                      "descendants": {
+                        "artist:asYxoc": {
+                          "content": "Search workspace"
+                        },
+                        "artist:7AUcJz": {
+                          "type": "frame",
+                          "id": "mm8Fvk",
+                          "name": "Body",
+                          "layout": "vertical",
+                          "gap": 14,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "oWqEYx",
+                              "ref": "artist:WF9JLk",
+                              "name": "Query",
+                              "width": "fill_container",
+                              "descendants": {
+                                "artist:hqy5Gf": {
+                                  "content": "Search releases, tracks and sections…"
+                                }
+                              }
+                            },
+                            {
+                              "type": "frame",
+                              "id": "lqJSa2",
+                              "name": "Group / Sections",
+                              "layout": "vertical",
+                              "gap": 4,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "Dqov7o",
+                                  "ref": "artist:yjiPHo",
+                                  "name": "SECTIONS",
+                                  "content": "SECTIONS"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "Gr3aT1",
+                                  "ref": "artist:7vIpty",
+                                  "name": "Result / Dashboard",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:35TI3I": {
+                                      "icon": "search"
+                                    },
+                                    "artist:e5L29H": {
+                                      "content": "Dashboard"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "FIYoh9",
+                                  "ref": "artist:7vIpty",
+                                  "name": "Result / Music",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:35TI3I": {
+                                      "icon": "search"
+                                    },
+                                    "artist:e5L29H": {
+                                      "content": "Music"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "ALr4pu",
+                                  "ref": "artist:7vIpty",
+                                  "name": "Result / Distribution",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:35TI3I": {
+                                      "icon": "search"
+                                    },
+                                    "artist:e5L29H": {
+                                      "content": "Distribution"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "xIF6ad",
+                                  "ref": "artist:7vIpty",
+                                  "name": "Result / Analytics",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:35TI3I": {
+                                      "icon": "search"
+                                    },
+                                    "artist:e5L29H": {
+                                      "content": "Analytics"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "E15O2R",
+                                  "ref": "artist:7vIpty",
+                                  "name": "Result / Profile",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:35TI3I": {
+                                      "icon": "search"
+                                    },
+                                    "artist:e5L29H": {
+                                      "content": "Profile"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "llnc82",
+                                  "ref": "artist:7vIpty",
+                                  "name": "Result / Settings",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:35TI3I": {
+                                      "icon": "search"
+                                    },
+                                    "artist:e5L29H": {
+                                      "content": "Settings"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        "artist:a5ERhu": {
+                          "enabled": false
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 3080,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Dim"
+      },
+      "context": "overlay on every /dashboard page — Modal over the workspace. Results link to the section, the release workspace or the track in Music; sections show the search icon, releases a disc and tracks a note, as in WorkspaceSearch."
+    },
+    {
+      "type": "frame",
+      "id": "0hhuQX",
+      "name": "Artist / Workspace search / Mobile / Dark",
+      "width": 390,
+      "height": "fit_content",
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "cDdYGH",
+          "ref": "artist:8H12ea",
+          "name": "Shell",
+          "width": 390,
+          "descendants": {
+            "artist:SIErRw": {
+              "type": "frame",
+              "id": "Vbf5NZ",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 16,
+              "width": "fill_container",
+              "padding": [
+                12,
+                16,
+                40,
+                16
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "hioKa0",
+                  "name": "Modal Layer",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "center",
+                  "padding": 0,
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "BD3zPl",
+                      "ref": "artist:WLRzpO",
+                      "name": "Modal / Search workspace",
+                      "width": "fill_container",
+                      "descendants": {
+                        "artist:asYxoc": {
+                          "content": "Search workspace"
+                        },
+                        "artist:7AUcJz": {
+                          "type": "frame",
+                          "id": "YYZYY3",
+                          "name": "Body",
+                          "layout": "vertical",
+                          "gap": 14,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "YzSPrs",
+                              "ref": "artist:WF9JLk",
+                              "name": "Query",
+                              "width": "fill_container",
+                              "descendants": {
+                                "artist:hqy5Gf": {
+                                  "content": "Search releases, tracks and sections…"
+                                }
+                              }
+                            },
+                            {
+                              "type": "frame",
+                              "id": "1wZdrE",
+                              "name": "Group / Sections",
+                              "layout": "vertical",
+                              "gap": 4,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "xsZiBY",
+                                  "ref": "artist:yjiPHo",
+                                  "name": "SECTIONS",
+                                  "content": "SECTIONS"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "I4hHgd",
+                                  "ref": "artist:7vIpty",
+                                  "name": "Result / Dashboard",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:35TI3I": {
+                                      "icon": "search"
+                                    },
+                                    "artist:e5L29H": {
+                                      "content": "Dashboard"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "J1YzL1",
+                                  "ref": "artist:7vIpty",
+                                  "name": "Result / Music",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:35TI3I": {
+                                      "icon": "search"
+                                    },
+                                    "artist:e5L29H": {
+                                      "content": "Music"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "MTwxNq",
+                                  "ref": "artist:7vIpty",
+                                  "name": "Result / Distribution",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:35TI3I": {
+                                      "icon": "search"
+                                    },
+                                    "artist:e5L29H": {
+                                      "content": "Distribution"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "bYY2K3",
+                                  "ref": "artist:7vIpty",
+                                  "name": "Result / Analytics",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:35TI3I": {
+                                      "icon": "search"
+                                    },
+                                    "artist:e5L29H": {
+                                      "content": "Analytics"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "kWYAMJ",
+                                  "ref": "artist:7vIpty",
+                                  "name": "Result / Profile",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:35TI3I": {
+                                      "icon": "search"
+                                    },
+                                    "artist:e5L29H": {
+                                      "content": "Profile"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "nxcuY4",
+                                  "ref": "artist:7vIpty",
+                                  "name": "Result / Settings",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:35TI3I": {
+                                      "icon": "search"
+                                    },
+                                    "artist:e5L29H": {
+                                      "content": "Settings"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        "artist:a5ERhu": {
+                          "enabled": false
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 4620,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Dark"
+      },
+      "context": "overlay on every /dashboard page — Modal over the workspace. Results link to the section, the release workspace or the track in Music; sections show the search icon, releases a disc and tracks a note, as in WorkspaceSearch."
+    },
+    {
+      "type": "frame",
+      "id": "8RpOEV",
+      "name": "Artist / Workspace search / Mobile / Light",
+      "width": 390,
+      "height": "fit_content",
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "02HhQh",
+          "ref": "artist:8H12ea",
+          "name": "Shell",
+          "width": 390,
+          "descendants": {
+            "artist:SIErRw": {
+              "type": "frame",
+              "id": "hfXVxB",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 16,
+              "width": "fill_container",
+              "padding": [
+                12,
+                16,
+                40,
+                16
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "thTwcO",
+                  "name": "Modal Layer",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "center",
+                  "padding": 0,
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "RU2Zru",
+                      "ref": "artist:WLRzpO",
+                      "name": "Modal / Search workspace",
+                      "width": "fill_container",
+                      "descendants": {
+                        "artist:asYxoc": {
+                          "content": "Search workspace"
+                        },
+                        "artist:7AUcJz": {
+                          "type": "frame",
+                          "id": "IdxaxD",
+                          "name": "Body",
+                          "layout": "vertical",
+                          "gap": 14,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "Mk1DUh",
+                              "ref": "artist:WF9JLk",
+                              "name": "Query",
+                              "width": "fill_container",
+                              "descendants": {
+                                "artist:hqy5Gf": {
+                                  "content": "Search releases, tracks and sections…"
+                                }
+                              }
+                            },
+                            {
+                              "type": "frame",
+                              "id": "J496g6",
+                              "name": "Group / Sections",
+                              "layout": "vertical",
+                              "gap": 4,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "3PcxkO",
+                                  "ref": "artist:yjiPHo",
+                                  "name": "SECTIONS",
+                                  "content": "SECTIONS"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "8z5wzf",
+                                  "ref": "artist:7vIpty",
+                                  "name": "Result / Dashboard",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:35TI3I": {
+                                      "icon": "search"
+                                    },
+                                    "artist:e5L29H": {
+                                      "content": "Dashboard"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "R67oph",
+                                  "ref": "artist:7vIpty",
+                                  "name": "Result / Music",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:35TI3I": {
+                                      "icon": "search"
+                                    },
+                                    "artist:e5L29H": {
+                                      "content": "Music"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "0jgf7z",
+                                  "ref": "artist:7vIpty",
+                                  "name": "Result / Distribution",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:35TI3I": {
+                                      "icon": "search"
+                                    },
+                                    "artist:e5L29H": {
+                                      "content": "Distribution"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "pshQuQ",
+                                  "ref": "artist:7vIpty",
+                                  "name": "Result / Analytics",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:35TI3I": {
+                                      "icon": "search"
+                                    },
+                                    "artist:e5L29H": {
+                                      "content": "Analytics"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "suqJwE",
+                                  "ref": "artist:7vIpty",
+                                  "name": "Result / Profile",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:35TI3I": {
+                                      "icon": "search"
+                                    },
+                                    "artist:e5L29H": {
+                                      "content": "Profile"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "9fqEJh",
+                                  "ref": "artist:7vIpty",
+                                  "name": "Result / Settings",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:35TI3I": {
+                                      "icon": "search"
+                                    },
+                                    "artist:e5L29H": {
+                                      "content": "Settings"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        "artist:a5ERhu": {
+                          "enabled": false
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 5110,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Light"
+      },
+      "context": "overlay on every /dashboard page — Modal over the workspace. Results link to the section, the release workspace or the track in Music; sections show the search icon, releases a disc and tracks a note, as in WorkspaceSearch."
+    },
+    {
+      "type": "frame",
+      "id": "SuN64i",
+      "name": "Artist / Workspace search / Mobile / Dim",
+      "width": 390,
+      "height": "fit_content",
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "yeSFDu",
+          "ref": "artist:8H12ea",
+          "name": "Shell",
+          "width": 390,
+          "descendants": {
+            "artist:SIErRw": {
+              "type": "frame",
+              "id": "3IuTql",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 16,
+              "width": "fill_container",
+              "padding": [
+                12,
+                16,
+                40,
+                16
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "HCP0fv",
+                  "name": "Modal Layer",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "center",
+                  "padding": 0,
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "LvIHEF",
+                      "ref": "artist:WLRzpO",
+                      "name": "Modal / Search workspace",
+                      "width": "fill_container",
+                      "descendants": {
+                        "artist:asYxoc": {
+                          "content": "Search workspace"
+                        },
+                        "artist:7AUcJz": {
+                          "type": "frame",
+                          "id": "ksO2w3",
+                          "name": "Body",
+                          "layout": "vertical",
+                          "gap": 14,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "2iRsSu",
+                              "ref": "artist:WF9JLk",
+                              "name": "Query",
+                              "width": "fill_container",
+                              "descendants": {
+                                "artist:hqy5Gf": {
+                                  "content": "Search releases, tracks and sections…"
+                                }
+                              }
+                            },
+                            {
+                              "type": "frame",
+                              "id": "Riqykr",
+                              "name": "Group / Sections",
+                              "layout": "vertical",
+                              "gap": 4,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "zOGmvI",
+                                  "ref": "artist:yjiPHo",
+                                  "name": "SECTIONS",
+                                  "content": "SECTIONS"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "uJCFeV",
+                                  "ref": "artist:7vIpty",
+                                  "name": "Result / Dashboard",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:35TI3I": {
+                                      "icon": "search"
+                                    },
+                                    "artist:e5L29H": {
+                                      "content": "Dashboard"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "BM8CxQ",
+                                  "ref": "artist:7vIpty",
+                                  "name": "Result / Music",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:35TI3I": {
+                                      "icon": "search"
+                                    },
+                                    "artist:e5L29H": {
+                                      "content": "Music"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "EZATEH",
+                                  "ref": "artist:7vIpty",
+                                  "name": "Result / Distribution",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:35TI3I": {
+                                      "icon": "search"
+                                    },
+                                    "artist:e5L29H": {
+                                      "content": "Distribution"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "f3Dz7L",
+                                  "ref": "artist:7vIpty",
+                                  "name": "Result / Analytics",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:35TI3I": {
+                                      "icon": "search"
+                                    },
+                                    "artist:e5L29H": {
+                                      "content": "Analytics"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "aHdHsH",
+                                  "ref": "artist:7vIpty",
+                                  "name": "Result / Profile",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:35TI3I": {
+                                      "icon": "search"
+                                    },
+                                    "artist:e5L29H": {
+                                      "content": "Profile"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "v6Rt1U",
+                                  "ref": "artist:7vIpty",
+                                  "name": "Result / Settings",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:35TI3I": {
+                                      "icon": "search"
+                                    },
+                                    "artist:e5L29H": {
+                                      "content": "Settings"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        "artist:a5ERhu": {
+                          "enabled": false
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 5600,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Dim"
+      },
+      "context": "overlay on every /dashboard page — Modal over the workspace. Results link to the section, the release workspace or the track in Music; sections show the search icon, releases a disc and tracks a note, as in WorkspaceSearch."
+    },
+    {
+      "type": "frame",
+      "id": "w8Ltpi",
+      "name": "Artist / Workspace search / Results / Desktop",
+      "width": 1440,
+      "height": "fit_content",
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "eHiyeC",
+          "ref": "artist:EoFzgK",
+          "name": "Shell",
+          "width": 1440,
+          "descendants": {
+            "artist:wUJe6Y/artist:s6OYk6": {
+              "type": "ref",
+              "id": "f0fYUL",
+              "ref": "artist:eNXmbM",
+              "name": "Nav / Dashboard",
+              "descendants": {
+                "artist:it6GEx": {
+                  "icon": "layout-dashboard"
+                },
+                "artist:9i1hx0": {
+                  "content": "Dashboard"
+                }
+              }
+            },
+            "artist:wUJe6Y/artist:9iS34v/artist:wU47I0": {
+              "icon": "moon"
+            },
+            "artist:wUJe6Y/artist:9iS34v/artist:n1Vqlv": {
+              "content": "Dark"
+            },
+            "artist:Ni7iI8/artist:qAqwpx": {
+              "content": "Dashboard"
+            },
+            "artist:Ni7iI8/artist:ZD0P3t/artist:vg489O": {
+              "content": "Create release"
+            },
+            "artist:Ni7iI8/artist:ZD0P3t/artist:wAdYtR": {
+              "icon": "plus"
+            },
+            "artist:QNgR6T": {
+              "type": "frame",
+              "id": "1hbwoi",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 20,
+              "width": "fill_container",
+              "padding": [
+                36,
+                48,
+                48,
+                48
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "lmfp2s",
+                  "name": "Modal Layer",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "center",
+                  "padding": [
+                    24,
+                    0
+                  ],
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "XDU7aE",
+                      "ref": "artist:WLRzpO",
+                      "name": "Modal / Search workspace",
+                      "width": 560,
+                      "descendants": {
+                        "artist:asYxoc": {
+                          "content": "Search workspace"
+                        },
+                        "artist:7AUcJz": {
+                          "type": "frame",
+                          "id": "cgfXH2",
+                          "name": "Body",
+                          "layout": "vertical",
+                          "gap": 14,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "AUfmc8",
+                              "ref": "artist:WF9JLk",
+                              "name": "Query",
+                              "width": "fill_container",
+                              "descendants": {
+                                "artist:hqy5Gf": {
+                                  "content": "night"
+                                }
+                              }
+                            },
+                            {
+                              "type": "frame",
+                              "id": "v8aEA8",
+                              "name": "Group / Releases",
+                              "layout": "vertical",
+                              "gap": 4,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "X3VV5p",
+                                  "ref": "artist:yjiPHo",
+                                  "name": "RELEASES",
+                                  "content": "RELEASES"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "YLbP8R",
+                                  "ref": "artist:7vIpty",
+                                  "name": "Result / Night Signal",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:35TI3I": {
+                                      "icon": "disc-3"
+                                    },
+                                    "artist:e5L29H": {
+                                      "content": "Night Signal"
+                                    }
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "c20zl2",
+                              "name": "Group / Tracks",
+                              "layout": "vertical",
+                              "gap": 4,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "agdh82",
+                                  "ref": "artist:yjiPHo",
+                                  "name": "TRACKS",
+                                  "content": "TRACKS"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "7HAbmA",
+                                  "ref": "artist:7vIpty",
+                                  "name": "Result / Night Signal",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:35TI3I": {
+                                      "icon": "music-2"
+                                    },
+                                    "artist:e5L29H": {
+                                      "content": "Night Signal"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        "artist:a5ERhu": {
+                          "enabled": false
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 6090,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Dark"
+      },
+      "context": "overlay on every /dashboard page — Modal over the workspace. Results link to the section, the release workspace or the track in Music; sections show the search icon, releases a disc and tracks a note, as in WorkspaceSearch."
+    },
+    {
+      "type": "frame",
+      "id": "GoJMqr",
+      "name": "Artist / Workspace search / Results / Mobile",
+      "width": 390,
+      "height": "fit_content",
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "yfBbNb",
+          "ref": "artist:8H12ea",
+          "name": "Shell",
+          "width": 390,
+          "descendants": {
+            "artist:SIErRw": {
+              "type": "frame",
+              "id": "5qvNdf",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 16,
+              "width": "fill_container",
+              "padding": [
+                12,
+                16,
+                40,
+                16
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "ZN96l6",
+                  "name": "Modal Layer",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "center",
+                  "padding": 0,
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "hYZgiM",
+                      "ref": "artist:WLRzpO",
+                      "name": "Modal / Search workspace",
+                      "width": "fill_container",
+                      "descendants": {
+                        "artist:asYxoc": {
+                          "content": "Search workspace"
+                        },
+                        "artist:7AUcJz": {
+                          "type": "frame",
+                          "id": "ET9Gkw",
+                          "name": "Body",
+                          "layout": "vertical",
+                          "gap": 14,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "8MQVlm",
+                              "ref": "artist:WF9JLk",
+                              "name": "Query",
+                              "width": "fill_container",
+                              "descendants": {
+                                "artist:hqy5Gf": {
+                                  "content": "night"
+                                }
+                              }
+                            },
+                            {
+                              "type": "frame",
+                              "id": "39qVXV",
+                              "name": "Group / Releases",
+                              "layout": "vertical",
+                              "gap": 4,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "FqcbNq",
+                                  "ref": "artist:yjiPHo",
+                                  "name": "RELEASES",
+                                  "content": "RELEASES"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "K6aaKv",
+                                  "ref": "artist:7vIpty",
+                                  "name": "Result / Night Signal",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:35TI3I": {
+                                      "icon": "disc-3"
+                                    },
+                                    "artist:e5L29H": {
+                                      "content": "Night Signal"
+                                    }
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "KiekOZ",
+                              "name": "Group / Tracks",
+                              "layout": "vertical",
+                              "gap": 4,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "QSljKW",
+                                  "ref": "artist:yjiPHo",
+                                  "name": "TRACKS",
+                                  "content": "TRACKS"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "N9FlTr",
+                                  "ref": "artist:7vIpty",
+                                  "name": "Result / Night Signal",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:35TI3I": {
+                                      "icon": "music-2"
+                                    },
+                                    "artist:e5L29H": {
+                                      "content": "Night Signal"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        "artist:a5ERhu": {
+                          "enabled": false
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 7630,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Dark"
+      },
+      "context": "overlay on every /dashboard page — Modal over the workspace. Results link to the section, the release workspace or the track in Music; sections show the search icon, releases a disc and tracks a note, as in WorkspaceSearch."
+    },
+    {
+      "type": "frame",
+      "id": "8hF1Cq",
+      "name": "Artist / Workspace search / Section match / Desktop",
+      "width": 1440,
+      "height": "fit_content",
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "IQAqmk",
+          "ref": "artist:EoFzgK",
+          "name": "Shell",
+          "width": 1440,
+          "descendants": {
+            "artist:wUJe6Y/artist:s6OYk6": {
+              "type": "ref",
+              "id": "dTKxNY",
+              "ref": "artist:eNXmbM",
+              "name": "Nav / Dashboard",
+              "descendants": {
+                "artist:it6GEx": {
+                  "icon": "layout-dashboard"
+                },
+                "artist:9i1hx0": {
+                  "content": "Dashboard"
+                }
+              }
+            },
+            "artist:wUJe6Y/artist:9iS34v/artist:wU47I0": {
+              "icon": "moon"
+            },
+            "artist:wUJe6Y/artist:9iS34v/artist:n1Vqlv": {
+              "content": "Dark"
+            },
+            "artist:Ni7iI8/artist:qAqwpx": {
+              "content": "Dashboard"
+            },
+            "artist:Ni7iI8/artist:ZD0P3t/artist:vg489O": {
+              "content": "Create release"
+            },
+            "artist:Ni7iI8/artist:ZD0P3t/artist:wAdYtR": {
+              "icon": "plus"
+            },
+            "artist:QNgR6T": {
+              "type": "frame",
+              "id": "1emqlK",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 20,
+              "width": "fill_container",
+              "padding": [
+                36,
+                48,
+                48,
+                48
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "rDkbzh",
+                  "name": "Modal Layer",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "center",
+                  "padding": [
+                    24,
+                    0
+                  ],
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "39SVFf",
+                      "ref": "artist:WLRzpO",
+                      "name": "Modal / Search workspace",
+                      "width": 560,
+                      "descendants": {
+                        "artist:asYxoc": {
+                          "content": "Search workspace"
+                        },
+                        "artist:7AUcJz": {
+                          "type": "frame",
+                          "id": "AYDXAO",
+                          "name": "Body",
+                          "layout": "vertical",
+                          "gap": 14,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "w6tncB",
+                              "ref": "artist:WF9JLk",
+                              "name": "Query",
+                              "width": "fill_container",
+                              "descendants": {
+                                "artist:hqy5Gf": {
+                                  "content": "mu"
+                                }
+                              }
+                            },
+                            {
+                              "type": "frame",
+                              "id": "pCeH9R",
+                              "name": "Group / Sections",
+                              "layout": "vertical",
+                              "gap": 4,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "z8pLiu",
+                                  "ref": "artist:yjiPHo",
+                                  "name": "SECTIONS",
+                                  "content": "SECTIONS"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "CtLyq2",
+                                  "ref": "artist:7vIpty",
+                                  "name": "Result / Music",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:35TI3I": {
+                                      "icon": "search"
+                                    },
+                                    "artist:e5L29H": {
+                                      "content": "Music"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        "artist:a5ERhu": {
+                          "enabled": false
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 8120,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Dark"
+      },
+      "context": "overlay on every /dashboard page — Modal over the workspace. Results link to the section, the release workspace or the track in Music; sections show the search icon, releases a disc and tracks a note, as in WorkspaceSearch."
+    },
+    {
+      "type": "frame",
+      "id": "oy75vR",
+      "name": "Artist / Workspace search / Section match / Mobile",
+      "width": 390,
+      "height": "fit_content",
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "MBUBe9",
+          "ref": "artist:8H12ea",
+          "name": "Shell",
+          "width": 390,
+          "descendants": {
+            "artist:SIErRw": {
+              "type": "frame",
+              "id": "pyhjNK",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 16,
+              "width": "fill_container",
+              "padding": [
+                12,
+                16,
+                40,
+                16
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "ZIXbie",
+                  "name": "Modal Layer",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "center",
+                  "padding": 0,
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "NGVxup",
+                      "ref": "artist:WLRzpO",
+                      "name": "Modal / Search workspace",
+                      "width": "fill_container",
+                      "descendants": {
+                        "artist:asYxoc": {
+                          "content": "Search workspace"
+                        },
+                        "artist:7AUcJz": {
+                          "type": "frame",
+                          "id": "KTletO",
+                          "name": "Body",
+                          "layout": "vertical",
+                          "gap": 14,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "CDIBJu",
+                              "ref": "artist:WF9JLk",
+                              "name": "Query",
+                              "width": "fill_container",
+                              "descendants": {
+                                "artist:hqy5Gf": {
+                                  "content": "mu"
+                                }
+                              }
+                            },
+                            {
+                              "type": "frame",
+                              "id": "zlvLo4",
+                              "name": "Group / Sections",
+                              "layout": "vertical",
+                              "gap": 4,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "NsxamI",
+                                  "ref": "artist:yjiPHo",
+                                  "name": "SECTIONS",
+                                  "content": "SECTIONS"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "Qs31RA",
+                                  "ref": "artist:7vIpty",
+                                  "name": "Result / Music",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:35TI3I": {
+                                      "icon": "search"
+                                    },
+                                    "artist:e5L29H": {
+                                      "content": "Music"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        "artist:a5ERhu": {
+                          "enabled": false
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 9660,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Dark"
+      },
+      "context": "overlay on every /dashboard page — Modal over the workspace. Results link to the section, the release workspace or the track in Music; sections show the search icon, releases a disc and tracks a note, as in WorkspaceSearch."
+    },
+    {
+      "type": "frame",
+      "id": "cKq6C1",
+      "name": "Artist / Workspace search / Searching / Desktop",
+      "width": 1440,
+      "height": "fit_content",
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "AWatZc",
+          "ref": "artist:EoFzgK",
+          "name": "Shell",
+          "width": 1440,
+          "descendants": {
+            "artist:wUJe6Y/artist:s6OYk6": {
+              "type": "ref",
+              "id": "rZRVtv",
+              "ref": "artist:eNXmbM",
+              "name": "Nav / Dashboard",
+              "descendants": {
+                "artist:it6GEx": {
+                  "icon": "layout-dashboard"
+                },
+                "artist:9i1hx0": {
+                  "content": "Dashboard"
+                }
+              }
+            },
+            "artist:wUJe6Y/artist:9iS34v/artist:wU47I0": {
+              "icon": "moon"
+            },
+            "artist:wUJe6Y/artist:9iS34v/artist:n1Vqlv": {
+              "content": "Dark"
+            },
+            "artist:Ni7iI8/artist:qAqwpx": {
+              "content": "Dashboard"
+            },
+            "artist:Ni7iI8/artist:ZD0P3t/artist:vg489O": {
+              "content": "Create release"
+            },
+            "artist:Ni7iI8/artist:ZD0P3t/artist:wAdYtR": {
+              "icon": "plus"
+            },
+            "artist:QNgR6T": {
+              "type": "frame",
+              "id": "lDjwCl",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 20,
+              "width": "fill_container",
+              "padding": [
+                36,
+                48,
+                48,
+                48
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "31RBgD",
+                  "name": "Modal Layer",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "center",
+                  "padding": [
+                    24,
+                    0
+                  ],
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "fuqMQl",
+                      "ref": "artist:WLRzpO",
+                      "name": "Modal / Search workspace",
+                      "width": 560,
+                      "descendants": {
+                        "artist:asYxoc": {
+                          "content": "Search workspace"
+                        },
+                        "artist:7AUcJz": {
+                          "type": "frame",
+                          "id": "CRS224",
+                          "name": "Body",
+                          "layout": "vertical",
+                          "gap": 14,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "0ywFQM",
+                              "ref": "artist:WF9JLk",
+                              "name": "Query",
+                              "width": "fill_container",
+                              "descendants": {
+                                "artist:hqy5Gf": {
+                                  "content": "nigh"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "NJ5tiM",
+                              "ref": "artist:C5Ih8u",
+                              "name": "Searching…",
+                              "width": "fill_container",
+                              "textGrowth": "fixed-width",
+                              "content": "Searching…"
+                            }
+                          ]
+                        },
+                        "artist:a5ERhu": {
+                          "enabled": false
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 10150,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Dark"
+      },
+      "context": "overlay on every /dashboard page — Modal over the workspace. Results link to the section, the release workspace or the track in Music; sections show the search icon, releases a disc and tracks a note, as in WorkspaceSearch."
+    },
+    {
+      "type": "frame",
+      "id": "yEY0sQ",
+      "name": "Artist / Workspace search / Searching / Mobile",
+      "width": 390,
+      "height": "fit_content",
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "uz0FZV",
+          "ref": "artist:8H12ea",
+          "name": "Shell",
+          "width": 390,
+          "descendants": {
+            "artist:SIErRw": {
+              "type": "frame",
+              "id": "PQNQYn",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 16,
+              "width": "fill_container",
+              "padding": [
+                12,
+                16,
+                40,
+                16
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "dWLfme",
+                  "name": "Modal Layer",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "center",
+                  "padding": 0,
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "hXVt5T",
+                      "ref": "artist:WLRzpO",
+                      "name": "Modal / Search workspace",
+                      "width": "fill_container",
+                      "descendants": {
+                        "artist:asYxoc": {
+                          "content": "Search workspace"
+                        },
+                        "artist:7AUcJz": {
+                          "type": "frame",
+                          "id": "AHJgcN",
+                          "name": "Body",
+                          "layout": "vertical",
+                          "gap": 14,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "QV6BJr",
+                              "ref": "artist:WF9JLk",
+                              "name": "Query",
+                              "width": "fill_container",
+                              "descendants": {
+                                "artist:hqy5Gf": {
+                                  "content": "nigh"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "FnyWJZ",
+                              "ref": "artist:C5Ih8u",
+                              "name": "Searching…",
+                              "width": "fill_container",
+                              "textGrowth": "fixed-width",
+                              "content": "Searching…"
+                            }
+                          ]
+                        },
+                        "artist:a5ERhu": {
+                          "enabled": false
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 11690,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Dark"
+      },
+      "context": "overlay on every /dashboard page — Modal over the workspace. Results link to the section, the release workspace or the track in Music; sections show the search icon, releases a disc and tracks a note, as in WorkspaceSearch."
+    },
+    {
+      "type": "frame",
+      "id": "vtVm93",
+      "name": "Artist / Workspace search / Nothing found / Desktop",
+      "width": 1440,
+      "height": "fit_content",
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "t6T5Nn",
+          "ref": "artist:EoFzgK",
+          "name": "Shell",
+          "width": 1440,
+          "descendants": {
+            "artist:wUJe6Y/artist:s6OYk6": {
+              "type": "ref",
+              "id": "O86VWt",
+              "ref": "artist:eNXmbM",
+              "name": "Nav / Dashboard",
+              "descendants": {
+                "artist:it6GEx": {
+                  "icon": "layout-dashboard"
+                },
+                "artist:9i1hx0": {
+                  "content": "Dashboard"
+                }
+              }
+            },
+            "artist:wUJe6Y/artist:9iS34v/artist:wU47I0": {
+              "icon": "moon"
+            },
+            "artist:wUJe6Y/artist:9iS34v/artist:n1Vqlv": {
+              "content": "Dark"
+            },
+            "artist:Ni7iI8/artist:qAqwpx": {
+              "content": "Dashboard"
+            },
+            "artist:Ni7iI8/artist:ZD0P3t/artist:vg489O": {
+              "content": "Create release"
+            },
+            "artist:Ni7iI8/artist:ZD0P3t/artist:wAdYtR": {
+              "icon": "plus"
+            },
+            "artist:QNgR6T": {
+              "type": "frame",
+              "id": "6EJuXk",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 20,
+              "width": "fill_container",
+              "padding": [
+                36,
+                48,
+                48,
+                48
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "smC4mw",
+                  "name": "Modal Layer",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "center",
+                  "padding": [
+                    24,
+                    0
+                  ],
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "OcDaWc",
+                      "ref": "artist:WLRzpO",
+                      "name": "Modal / Search workspace",
+                      "width": 560,
+                      "descendants": {
+                        "artist:asYxoc": {
+                          "content": "Search workspace"
+                        },
+                        "artist:7AUcJz": {
+                          "type": "frame",
+                          "id": "7i2BCL",
+                          "name": "Body",
+                          "layout": "vertical",
+                          "gap": 14,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "N6wSKo",
+                              "ref": "artist:WF9JLk",
+                              "name": "Query",
+                              "width": "fill_container",
+                              "descendants": {
+                                "artist:hqy5Gf": {
+                                  "content": "lullaby"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "OlMfuy",
+                              "ref": "artist:C5Ih8u",
+                              "name": "Nothing matches your search.",
+                              "width": "fill_container",
+                              "textGrowth": "fixed-width",
+                              "content": "Nothing matches your search."
+                            }
+                          ]
+                        },
+                        "artist:a5ERhu": {
+                          "enabled": false
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 12180,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Dark"
+      },
+      "context": "overlay on every /dashboard page — Modal over the workspace. Results link to the section, the release workspace or the track in Music; sections show the search icon, releases a disc and tracks a note, as in WorkspaceSearch."
+    },
+    {
+      "type": "frame",
+      "id": "VDkAUd",
+      "name": "Artist / Workspace search / Nothing found / Mobile",
+      "width": 390,
+      "height": "fit_content",
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "zo7OTO",
+          "ref": "artist:8H12ea",
+          "name": "Shell",
+          "width": 390,
+          "descendants": {
+            "artist:SIErRw": {
+              "type": "frame",
+              "id": "8NRMMX",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 16,
+              "width": "fill_container",
+              "padding": [
+                12,
+                16,
+                40,
+                16
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "GAQo2j",
+                  "name": "Modal Layer",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "center",
+                  "padding": 0,
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "8SlC0e",
+                      "ref": "artist:WLRzpO",
+                      "name": "Modal / Search workspace",
+                      "width": "fill_container",
+                      "descendants": {
+                        "artist:asYxoc": {
+                          "content": "Search workspace"
+                        },
+                        "artist:7AUcJz": {
+                          "type": "frame",
+                          "id": "JNY6ov",
+                          "name": "Body",
+                          "layout": "vertical",
+                          "gap": 14,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "1IMhl8",
+                              "ref": "artist:WF9JLk",
+                              "name": "Query",
+                              "width": "fill_container",
+                              "descendants": {
+                                "artist:hqy5Gf": {
+                                  "content": "lullaby"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "YnQxGu",
+                              "ref": "artist:C5Ih8u",
+                              "name": "Nothing matches your search.",
+                              "width": "fill_container",
+                              "textGrowth": "fixed-width",
+                              "content": "Nothing matches your search."
+                            }
+                          ]
+                        },
+                        "artist:a5ERhu": {
+                          "enabled": false
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 13720,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Dark"
+      },
+      "context": "overlay on every /dashboard page — Modal over the workspace. Results link to the section, the release workspace or the track in Music; sections show the search icon, releases a disc and tracks a note, as in WorkspaceSearch."
+    },
+    {
+      "type": "frame",
+      "id": "sOVdbn",
+      "name": "Artist / Workspace search / Unavailable / Desktop",
+      "width": 1440,
+      "height": "fit_content",
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "A7VzsJ",
+          "ref": "artist:EoFzgK",
+          "name": "Shell",
+          "width": 1440,
+          "descendants": {
+            "artist:wUJe6Y/artist:s6OYk6": {
+              "type": "ref",
+              "id": "nl5qBN",
+              "ref": "artist:eNXmbM",
+              "name": "Nav / Dashboard",
+              "descendants": {
+                "artist:it6GEx": {
+                  "icon": "layout-dashboard"
+                },
+                "artist:9i1hx0": {
+                  "content": "Dashboard"
+                }
+              }
+            },
+            "artist:wUJe6Y/artist:9iS34v/artist:wU47I0": {
+              "icon": "moon"
+            },
+            "artist:wUJe6Y/artist:9iS34v/artist:n1Vqlv": {
+              "content": "Dark"
+            },
+            "artist:Ni7iI8/artist:qAqwpx": {
+              "content": "Dashboard"
+            },
+            "artist:Ni7iI8/artist:ZD0P3t/artist:vg489O": {
+              "content": "Create release"
+            },
+            "artist:Ni7iI8/artist:ZD0P3t/artist:wAdYtR": {
+              "icon": "plus"
+            },
+            "artist:QNgR6T": {
+              "type": "frame",
+              "id": "DGP7bg",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 20,
+              "width": "fill_container",
+              "padding": [
+                36,
+                48,
+                48,
+                48
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "tnyoBz",
+                  "name": "Modal Layer",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "center",
+                  "padding": [
+                    24,
+                    0
+                  ],
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "NGIib1",
+                      "ref": "artist:WLRzpO",
+                      "name": "Modal / Search workspace",
+                      "width": 560,
+                      "descendants": {
+                        "artist:asYxoc": {
+                          "content": "Search workspace"
+                        },
+                        "artist:7AUcJz": {
+                          "type": "frame",
+                          "id": "M33coj",
+                          "name": "Body",
+                          "layout": "vertical",
+                          "gap": 14,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "0cXfPy",
+                              "ref": "artist:WF9JLk",
+                              "name": "Query",
+                              "width": "fill_container",
+                              "descendants": {
+                                "artist:hqy5Gf": {
+                                  "content": "night"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "Xrt1rx",
+                              "ref": "artist:C5Ih8u",
+                              "name": "Search is unavailable right ",
+                              "width": "fill_container",
+                              "textGrowth": "fixed-width",
+                              "content": "Search is unavailable right now."
+                            }
+                          ]
+                        },
+                        "artist:a5ERhu": {
+                          "enabled": false
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 14210,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Dark"
+      },
+      "context": "overlay on every /dashboard page — Modal over the workspace. Results link to the section, the release workspace or the track in Music; sections show the search icon, releases a disc and tracks a note, as in WorkspaceSearch."
+    },
+    {
+      "type": "frame",
+      "id": "ubf2WZ",
+      "name": "Artist / Workspace search / Unavailable / Mobile",
+      "width": 390,
+      "height": "fit_content",
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "4tqt3g",
+          "ref": "artist:8H12ea",
+          "name": "Shell",
+          "width": 390,
+          "descendants": {
+            "artist:SIErRw": {
+              "type": "frame",
+              "id": "dCHyOY",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 16,
+              "width": "fill_container",
+              "padding": [
+                12,
+                16,
+                40,
+                16
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "j74FHR",
+                  "name": "Modal Layer",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "center",
+                  "padding": 0,
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "9Bq8vJ",
+                      "ref": "artist:WLRzpO",
+                      "name": "Modal / Search workspace",
+                      "width": "fill_container",
+                      "descendants": {
+                        "artist:asYxoc": {
+                          "content": "Search workspace"
+                        },
+                        "artist:7AUcJz": {
+                          "type": "frame",
+                          "id": "yaocOx",
+                          "name": "Body",
+                          "layout": "vertical",
+                          "gap": 14,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "wdlDWU",
+                              "ref": "artist:WF9JLk",
+                              "name": "Query",
+                              "width": "fill_container",
+                              "descendants": {
+                                "artist:hqy5Gf": {
+                                  "content": "night"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "rbsotK",
+                              "ref": "artist:C5Ih8u",
+                              "name": "Search is unavailable right ",
+                              "width": "fill_container",
+                              "textGrowth": "fixed-width",
+                              "content": "Search is unavailable right now."
+                            }
+                          ]
+                        },
+                        "artist:a5ERhu": {
+                          "enabled": false
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 15750,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Dark"
+      },
+      "context": "overlay on every /dashboard page — Modal over the workspace. Results link to the section, the release workspace or the track in Music; sections show the search icon, releases a disc and tracks a note, as in WorkspaceSearch."
+    }
+  ]
+}
