@@ -1,4 +1,5 @@
 import { SupportChat, type SupportChatLabels } from '@bitrate/ui-react'
+import { useAuthContext } from '@shared/hooks'
 import { useI18n } from '@shared/i18n'
 import { useSupportChat } from '../model/useSupportChat'
 
@@ -13,7 +14,8 @@ export function SupportChatWidget() {
 
 function EnabledSupportChat() {
   const { t, locale } = useI18n()
-  const chat = useSupportChat(locale)
+  const { artist } = useAuthContext()
+  const chat = useSupportChat(locale, artist?.id ?? 'guest')
   const labels: SupportChatLabels = {
     open: t('support.open'),
     close: t('support.close'),

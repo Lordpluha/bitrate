@@ -12,7 +12,7 @@ import {
 } from '@bitrate/support-core/client'
 import { fetchWithAuthRefresh } from '@shared/api/client'
 import type { Locale } from '@shared/i18n'
-import { useCallback, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
   clearSupportSession,
   readSupportSession,
@@ -25,13 +25,15 @@ const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, '') ?? ''
 /** Input of {@link useSupportChat}. */
 export interface UseSupportChatInput {
   locale: Locale
+  /** The signed-in user's id, or `guest`; another owner never sees this conversation. */
+  owner: string
 }
 
 /**
  * The listener's support chat: restores the saved conversation when the panel first opens,
  * starts one with the first message, and streams each reply into the chat state.
  */
-export function useSupportChat({ locale }: UseSupportChatInput) {
+export function useSupportChat({ locale, owner }: UseSupportChatInput) {
   const client = useMemo(
     () =>
       createSupportClient({ baseUrl: apiBaseUrl, fetch: fetchWithAuthRefresh }),
@@ -41,6 +43,15 @@ export function useSupportChat({ locale }: UseSupportChatInput) {
   const session = useRef<SupportSession | undefined>(undefined)
   const restored = useRef(false)
 
+  /** Sign-out or another account on this browser: drop the previous owner's chat. */
+  useEffect(() => {
+    if (session.current && session.current.owner !== owner) {
+      session.current = undefined
+      restored.current = false
+      setState(EMPTY_CHAT_STATE)
+    }
+  }, [owner])
+
   const forget = useCallback(() => {
     session.current = undefined
     clearSupportSession()
@@ -49,7 +60,7 @@ export function useSupportChat({ locale }: UseSupportChatInput) {
   const restore = useCallback(async () => {
     if (restored.current) return
     restored.current = true
-    session.current = readSupportSession()
+    session.current = readSupportSession({ owner })
     if (!session.current) return
     try {
       setState(
@@ -61,7 +72,7 @@ export function useSupportChat({ locale }: UseSupportChatInput) {
       /** Deleted after 90 days, or the account changed: the next message starts a new one. */
       forget()
     }
-  }, [client, forget])
+  }, [client, forget, owner])
 
   const send = useCallback(
     async (text: string) => {
@@ -71,8 +82,8 @@ export function useSupportChat({ locale }: UseSupportChatInput) {
           const started = await client.start('listener', locale)
           const { id } = started.conversation
           session.current = started.token
-            ? { id, token: started.token }
-            : { id }
+            ? { id, token: started.token, owner }
+            : { id, owner }
           saveSupportSession({ session: session.current })
         }
         const { id, token } = session.current
@@ -86,7 +97,7 @@ export function useSupportChat({ locale }: UseSupportChatInput) {
         setState((current) => failSupportTurn(current, status))
       }
     },
-    [client, locale, forget],
+    [client, locale, forget, owner],
   )
 
   return { ...state, send, restore }

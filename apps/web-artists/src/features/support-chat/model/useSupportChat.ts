@@ -10,7 +10,7 @@ import {
 } from '@bitrate/support-core/client'
 import { apiBaseUrl } from '@shared/api/fetchClient'
 import type { Locale } from '@shared/i18n'
-import { useCallback, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
   clearSupportSession,
   readSupportSession,
@@ -22,11 +22,20 @@ import {
  * The artist's support chat: restores the saved conversation when the panel first opens,
  * starts one with the first message, and streams each reply into the chat state.
  */
-export function useSupportChat(locale: Locale) {
+export function useSupportChat(locale: Locale, owner: string) {
   const client = useMemo(() => createSupportClient({ baseUrl: apiBaseUrl }), [])
   const [state, setState] = useState<SupportChatState>(EMPTY_CHAT_STATE)
   const session = useRef<SupportSession | undefined>(undefined)
   const restored = useRef(false)
+
+  // Sign-out or another account on this browser: drop the previous owner's chat.
+  useEffect(() => {
+    if (session.current && session.current.owner !== owner) {
+      session.current = undefined
+      restored.current = false
+      setState(EMPTY_CHAT_STATE)
+    }
+  }, [owner])
 
   const forget = useCallback(() => {
     session.current = undefined
@@ -36,7 +45,7 @@ export function useSupportChat(locale: Locale) {
   const restore = useCallback(async () => {
     if (restored.current) return
     restored.current = true
-    session.current = readSupportSession()
+    session.current = readSupportSession(owner)
     if (!session.current) return
     try {
       setState(
@@ -48,7 +57,7 @@ export function useSupportChat(locale: Locale) {
       // Deleted after 90 days: the next message starts a new conversation.
       forget()
     }
-  }, [client, forget])
+  }, [client, forget, owner])
 
   const send = useCallback(
     async (text: string) => {
@@ -58,8 +67,8 @@ export function useSupportChat(locale: Locale) {
           const started = await client.start('artist', locale)
           const { id } = started.conversation
           session.current = started.token
-            ? { id, token: started.token }
-            : { id }
+            ? { id, token: started.token, owner }
+            : { id, owner }
           saveSupportSession(session.current)
         }
         const { id, token } = session.current
@@ -73,7 +82,7 @@ export function useSupportChat(locale: Locale) {
         setState((current) => failSupportTurn(current, status))
       }
     },
-    [client, locale, forget],
+    [client, locale, forget, owner],
   )
 
   return { ...state, send, restore }
