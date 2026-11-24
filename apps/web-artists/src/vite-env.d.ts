@@ -10,6 +10,8 @@ interface ImportMetaEnv {
    * arg), because Vite only exposes `VITE_`-prefixed variables to client code.
    */
   readonly VITE_API_URL?: string
+  /** `true` shows the support chat (#572); off until the Privacy Policy names its providers. */
+  readonly VITE_SUPPORT_CHAT_ENABLED?: string
   /**
    * Public address of the Bitrate player, used for links to a released album. Deployments map
    * the player's `NEXT_PUBLIC_SITE_URL` to it, like `VITE_API_URL` above.

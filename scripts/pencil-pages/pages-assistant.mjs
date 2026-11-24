@@ -57,6 +57,15 @@ const CONVO = (busy) => [
   !busy &&
     Row({ gap: 8 }, [Button('Open Bitrate for Artists', 'outline', { icon: 'arrow-up-right' })]),
 ]
+const ASKED = [
+  msg('When do payouts arrive?', true),
+  msg(
+    'Payouts arrive within 10 working days after the month ends.\nSources: Payouts · Plans',
+    false,
+  ),
+  msg('It is the 19th and mine has not come. I want to talk to a person.', true),
+  msg('I passed this to the team. An operator will reply here.', false),
+]
 const ERR = () => [
   msg('How do I release a single?', true),
   msg('I could not reach the docs right now. Try again in a moment.', false),
@@ -89,7 +98,7 @@ export const assistant = {
   title: 'AI assistant',
   route: 'system — floating assistant on every page outside /main',
   context:
-    'Bottom-right button on the landing, auth, legal, verify, 404, error and offline pages (not inside the player). It expands into a 380×540 chat on desktop and a full-screen sheet on phones. While a request runs a thinking orb shows the phase: searching the docs, then composing. Answers cite Bitrate docs; never ask for passwords or payment data.',
+    'Bottom-right button on the landing, auth, legal, verify, 404, error and offline pages of web-player (not inside the player, where it would cover the player bar) and on every page of the artist portal. It expands into a 380×540 chat on desktop and a full-screen sheet on phones. While a request runs a thinking orb shows the phase: searching the docs, then composing. Answers cite the help centre under the reply. When the assistant cannot help it hands the chat to the Bitrate team: the status line says an operator will reply, and their replies arrive in the same chat. Never ask for passwords or payment data. Behind NEXT_PUBLIC_SUPPORT_CHAT_ENABLED / VITE_SUPPORT_CHAT_ENABLED until launch (#572).',
   desktop: () => dock('Assistant', panel(WELCOME(), 380, 540), true),
   mobile: () => sheet('Assistant', WELCOME()),
   states: [
@@ -112,6 +121,24 @@ export const assistant = {
     ),
     S('Conversation', () => CONVO(false)),
     S('Searching', () => CONVO(true), 'Searching the docs…'),
+    S('Answer with sources', () => ASKED.slice(0, 2)),
+    S('Waiting for an operator', () => ASKED, 'An operator will reply here as soon as possible.'),
+    S(
+      'Operator replied',
+      () => [
+        ...ASKED,
+        msg(
+          'Bitrate team: your payout left on the 18th and reaches your card within two days.',
+          false,
+        ),
+      ],
+      'An operator will reply here as soon as possible.',
+    ),
+    S(
+      'Limit reached',
+      () => [msg('How do I release a single?', true)],
+      'Too many messages. Wait a moment and try again.',
+    ),
     S('Error', ERR, 'Unavailable right now'),
     S(
       'Offline',

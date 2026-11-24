@@ -2,6 +2,7 @@
 
 import { Toaster } from '@bitrate/ui-react'
 import { useSettingsPersistence, useSettingsStore } from '@entities/Settings'
+import { SupportChatWidget } from '@features/SupportChat'
 import { shouldRetryApiQuery } from '@shared/api/errors'
 import { showApiErrorToast, showApiSuccessToast } from '@shared/api/feedback'
 import { ThemeProvider } from '@shared/contexts'
@@ -73,6 +74,7 @@ export const Provider = ({ children }: PropsWithChildren) => {
         <ThemeProvider>
           <Toaster />
           <ServiceWorkerRegistration />
+          <SupportChatWidget />
           {children}
         </ThemeProvider>
       </I18nProvider>
