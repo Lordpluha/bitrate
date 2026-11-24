@@ -152,7 +152,7 @@ export function addDraft(lib) {
             use(
               'Progress',
               { name: 'Total', width: 'fill_container' },
-              { bar: { width: complete ? 520 : 225 } },
+              { bar: { width: complete ? 'fill_container' : 225 } },
             ),
           ),
         ]),

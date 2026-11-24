@@ -115,6 +115,8 @@ export function addShell(lib, nav) {
           part('header', use('Header', { name: 'Header', width: 'fill_container' })),
           slot('content', { gap: 20, padding: [36, 48, 48, 48] }),
         ]),
+        /* a desktop screen is at least 900px tall: short pages (loading, error, empty) keep the sidebar whole */
+        F({ name: 'Min height', width: 1, height: 900 }),
       ]),
     ),
     comp(

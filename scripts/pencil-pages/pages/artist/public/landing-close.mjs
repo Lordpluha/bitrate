@@ -13,7 +13,7 @@ const TRACKS = [
 
 /** The listening and finale section builders bound to the screen helpers `ui`. */
 export function landingClose(ui) {
-  const { W, Tx, Row, Col, fill, Tabs, St, KV, TableRow } = ui
+  const { W, Tx, Row, Col, fill, Tabs, St, KV } = ui
   const heading = landingHeading(ui)
   /* ListeningResponse: the chart card (Plays beside the period switch), the "Most played" record
      spotlight with the audience panel, and the top tracks */
@@ -95,7 +95,7 @@ export function landingClose(ui) {
               right: { enabled: false },
               body: fill(
                 'Body',
-                TRACKS.map(([title, plays], i) => TableRow(`0${i + 1} ${title}`, plays, '')),
+                TRACKS.map(([title, plays], i) => KV(`0${i + 1}  ${title}`, plays)),
               ),
             },
           ),

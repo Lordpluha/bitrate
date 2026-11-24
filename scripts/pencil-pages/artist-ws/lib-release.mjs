@@ -110,16 +110,20 @@ export function addRelease(lib) {
                   }),
                 ),
                 part('nextDesc', small('4 suggested steps are waiting for your approval.', wrap)),
-                Row({ name: 'Action', padding: [8, 0, 0, 0] }, [
-                  part(
-                    'nextButton',
-                    use(
-                      'Button/Primary',
-                      { name: 'Next' },
-                      { icon: { icon: 'arrow-right' }, label: { content: 'Open plan' } },
+                /* `nextAction` switches the whole button row off when there is nothing to press */
+                part(
+                  'nextAction',
+                  Row({ name: 'Action', padding: [8, 0, 0, 0] }, [
+                    part(
+                      'nextButton',
+                      use(
+                        'Button/Primary',
+                        { name: 'Next' },
+                        { icon: { icon: 'arrow-right' }, label: { content: 'Open plan' } },
+                      ),
                     ),
-                  ),
-                ]),
+                  ]),
+                ),
               ],
             ),
           ),

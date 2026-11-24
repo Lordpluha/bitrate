@@ -13,7 +13,7 @@ export function releasePromotionKit(ui, frames) {
     nextDesc: { content: desc },
     ...(button
       ? { 'nextButton.label': { content: button }, 'nextButton.icon': { icon } }
-      : { nextButton: { enabled: false } }),
+      : { nextAction: { enabled: false } }),
   })
   const review = next(
     'Approve 4 suggested steps',

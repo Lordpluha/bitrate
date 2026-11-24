@@ -9,6 +9,13 @@ export function addIsland(lib) {
   const { comp, part, add, slot, use } = lib
   const paint = artistPaint()
   const wrap = { width: 'fill_container', textGrowth: 'fixed-width' }
+  /* sample rows for the library page; the menu screen fills every slot itself */
+  const navSample = (key, icon, label) =>
+    use(
+      key,
+      { name: `Nav / ${label}`, width: 'fill_container' },
+      { icon: { icon }, label: { content: label } },
+    )
   add(
     comp(
       'Mobile/Drawer',
@@ -38,10 +45,20 @@ export function addIsland(lib) {
           ),
           Col({ name: 'Sections', gap: 16, width: 'fill_container', height: 'fill_container' }, [
             T('ARTIST WORKSPACE', { fontSize: 10, letterSpacing: 1, fill: C.artistTextSecondary }),
-            slot('nav', { gap: 4 }),
-            slot('prefs', { gap: 4 }),
+            slot('nav', { gap: 4 }, [
+              navSample('Nav/Item Active', 'layout-dashboard', 'Dashboard'),
+              navSample('Nav/Item', 'music-2', 'Music'),
+              navSample('Nav/Item', 'send', 'Distribution'),
+            ]),
+            slot('prefs', { gap: 4 }, [navSample('Nav/Preference', 'globe', 'English')]),
           ]),
-          slot('account', { gap: 12 }),
+          slot('account', { gap: 12 }, [
+            use(
+              'Nav/Account',
+              { name: 'Account', width: 'fill_container' },
+              { name: { content: 'Mira Sol' }, email: { content: 'Artist account' } },
+            ),
+          ]),
         ],
       ),
     ),

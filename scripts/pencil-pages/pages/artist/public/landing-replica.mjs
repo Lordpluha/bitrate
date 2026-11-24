@@ -4,7 +4,7 @@
 
 /** The replica builder bound to the screen helpers `ui`: `(m, tab) → window`. */
 export function landingReplica(ui) {
-  const { W, Tx, Row, Col, Tile, KV, St, Stats, TableRow } = ui
+  const { W, Tx, Row, Col, Tile, KV, St, Stats } = ui
   const pair = (m, nodes) =>
     (m ? Col : Row)({ name: 'Tiles', width: 'fill_container', gap: 20, alignItems: 'start' }, nodes)
   const workspace = (m) => [
@@ -80,9 +80,9 @@ export function landingReplica(ui) {
         ]),
     W('Chart/Area', { name: 'Plays per day', width: 'fill_container' }),
     Tile('Top tracks', 'list-music', [
-      TableRow('Night Signal', '6,420', '2,180'),
-      TableRow('Echoes in Motion', '4,890', '1,640'),
-      TableRow('Afterglow', '3,510', '1,120'),
+      KV('Night Signal', '6,420 · 2,180'),
+      KV('Echoes in Motion', '4,890 · 1,640'),
+      KV('Afterglow', '3,510 · 1,120'),
     ]),
   ]
   const tabs = [workspace, dashboard, analytics]
@@ -99,6 +99,7 @@ export function landingReplica(ui) {
       'Landing/Window',
       { name: 'Studio Window', width: m ? 'fill_container' : 1120 },
       {
+        ...(m ? { sidebarPanel: { enabled: false } } : {}),
         sidebar: m
           ? { enabled: false }
           : ui.fill(

@@ -68,17 +68,21 @@ export function createLibrary() {
       o[`${partName}.${p}`] = `${o[partName]}/${pid}`
   }
   /** A frame a screen replaces with its own content. */
-  const slot = (p, o = {}) =>
+  /** A slot part; `sample` children show the library page what a screen puts there. */
+  const slot = (p, o = {}, sample = []) =>
     part(
       p,
-      F({
-        name: 'Slot',
-        layout: 'vertical',
-        gap: 12,
-        width: 'fill_container',
-        slot: [],
-        ...o,
-      }),
+      F(
+        {
+          name: 'Slot',
+          layout: 'vertical',
+          gap: 12,
+          width: 'fill_container',
+          slot: [],
+          ...o,
+        },
+        sample,
+      ),
     )
   /** Stable ids for the library page's own layout frames (components keep theirs). */
   const stampPage = (root) => {

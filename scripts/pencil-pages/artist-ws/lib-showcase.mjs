@@ -24,9 +24,13 @@ export function addShowcase(lib) {
           ...paint.releaseGlass(),
         },
         [
-          Col({ name: 'Sidebar', width: 210, gap: 0, padding: 16, ...paint.hairline('right') }, [
-            slot('sidebar', { gap: 8 }),
-          ]),
+          /* `sidebarPanel` is switched off on phones (the replica has no sidebar there) */
+          part(
+            'sidebarPanel',
+            Col({ name: 'Sidebar', width: 210, gap: 0, padding: 16, ...paint.hairline('right') }, [
+              slot('sidebar', { gap: 8 }),
+            ]),
+          ),
           Col({ name: 'Main', gap: 0, width: 'fill_container' }, [
             Row(
               { name: 'Header', width: 'fill_container', padding: [14, 20], ...paint.hairline() },

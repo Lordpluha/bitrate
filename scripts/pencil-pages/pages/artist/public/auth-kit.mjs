@@ -16,7 +16,9 @@ export function authKit(ui) {
       { name: 'Auth Card', width: m ? 'fill_container' : 440 },
       {
         ...(plain ? { head: { alignItems: 'start' }, logo: { enabled: false } } : {}),
-        title: title ? { content: title } : { enabled: false },
+        title: title
+          ? { content: title, ...(plain ? { textAlign: 'left' } : {}) }
+          : { enabled: false },
         desc: desc ? { content: desc } : { enabled: false },
         body: fill('Body', body.flat(), { gap: 14 }),
       },

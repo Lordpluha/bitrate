@@ -17,19 +17,22 @@ const TOP = [
 
 /** Analytics tile builders bound to the screen helpers `ui`. */
 export function analyticsTiles(ui) {
-  const { W, Tx, P, Row, Col, inline } = ui
+  const { W, Tx, P, Row, Col, inline, KV } = ui
   const tile = dashboardTile(ui)
-  const tableRow = (name, cells) =>
-    W(
-      'Table/Row',
-      { name, width: 'fill_container' },
-      {
-        c1: { content: cells[0] },
-        c2: { content: cells[1] },
-        c3: cells[2] ? { content: cells[2] } : { enabled: false },
-        trail: { enabled: false },
-      },
-    )
+  /* a phone tile (no grid size) is too narrow for the table columns: label · value rows instead */
+  const tableRow = (name, cells, m) =>
+    m
+      ? KV(cells[0], cells.slice(1).filter(Boolean).join(' · '))
+      : W(
+          'Table/Row',
+          { name, width: 'fill_container' },
+          {
+            c1: { content: cells[0] },
+            c2: { content: cells[1] },
+            c3: cells[2] ? { content: cells[2] } : { enabled: false },
+            trail: { enabled: false },
+          },
+        )
   const plays = (c, table = false) =>
     tile(
       'Plays',
@@ -69,17 +72,21 @@ export function analyticsTiles(ui) {
         Tx('Link', 'Show as table'),
         ...(table
           ? [
-              W(
-                'Table/Header',
-                { name: 'Header', width: 'fill_container' },
-                {
-                  c1: { content: 'DAY (UTC)' },
-                  c2: { content: 'PLAYS' },
-                  c3: { enabled: false },
-                  c4: { enabled: false },
-                },
-              ),
-              ...DAYS.map((d) => tableRow(`Day / ${d[0]}`, d)),
+              ...(!c.width
+                ? []
+                : [
+                    W(
+                      'Table/Header',
+                      { name: 'Header', width: 'fill_container' },
+                      {
+                        c1: { content: 'DAY (UTC)' },
+                        c2: { content: 'PLAYS' },
+                        c3: { enabled: false },
+                        c4: { enabled: false },
+                      },
+                    ),
+                  ]),
+              ...DAYS.map((d) => tableRow(`Day / ${d[0]}`, d, !c.width)),
             ]
           : []),
       ],
@@ -117,17 +124,21 @@ export function analyticsTiles(ui) {
       'Top tracks',
       'list-music',
       [
-        W(
-          'Table/Header',
-          { name: 'Header', width: 'fill_container' },
-          {
-            c1: { content: 'TRACK' },
-            c2: { content: 'PLAYS' },
-            c3: { content: 'LISTENERS' },
-            c4: { enabled: false },
-          },
-        ),
-        ...TOP.map((r) => tableRow(`Top / ${r[0]}`, r)),
+        ...(!c.width
+          ? []
+          : [
+              W(
+                'Table/Header',
+                { name: 'Header', width: 'fill_container' },
+                {
+                  c1: { content: 'TRACK' },
+                  c2: { content: 'PLAYS' },
+                  c3: { content: 'LISTENERS' },
+                  c4: { enabled: false },
+                },
+              ),
+            ]),
+        ...TOP.map((r) => tableRow(`Top / ${r[0]}`, r, !c.width)),
         Row({ name: 'Footer', width: 'fill_container', justifyContent: 'space_between' }, [
           Tx('Muted', '1–3 of 3'),
           W('Page/Item Active', { name: 'Page 1' }),

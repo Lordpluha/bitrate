@@ -77,12 +77,26 @@ export function profileForm(ui) {
       ),
     )
   /* `o.status` / `o.error`: the inline text before the buttons */
-  const actions = (o) =>
-    Row({ name: 'Actions', gap: 12, width: 'fill_container', justifyContent: 'end' }, [
-      ...(o.error ? [Tx('Error', o.error)] : o.saved ? [Tx('Muted', 'Profile saved.')] : []),
-      Btn('Discard changes', 'Ghost'),
-      Btn(o.busy ? 'Saving…' : 'Save profile', 'Primary'),
-    ])
+  const note = (o) =>
+    o.error ? [P('Error', o.error)] : o.saved ? [P('Muted', 'Profile saved.')] : []
+  const buttons = (o) => [
+    Btn('Discard changes', 'Ghost'),
+    Btn(o.busy ? 'Saving…' : 'Save profile', 'Primary'),
+  ]
+  /* on a phone the save message wraps on its own line above the buttons */
+  const actions = (o, m) =>
+    m
+      ? Col({ name: 'Actions', gap: 12, width: 'fill_container' }, [
+          ...note(o),
+          Row(
+            { name: 'Buttons', gap: 12, width: 'fill_container', justifyContent: 'end' },
+            buttons(o),
+          ),
+        ])
+      : Row({ name: 'Actions', gap: 12, width: 'fill_container', justifyContent: 'end' }, [
+          ...(o.error ? [Tx('Error', o.error)] : o.saved ? [Tx('Muted', 'Profile saved.')] : []),
+          ...buttons(o),
+        ])
   const editor = (m, o = {}) => [
     card(m, o),
     m
@@ -91,7 +105,7 @@ export function profileForm(ui) {
           Col({ name: 'Details column', width: 640 }, [details(m, o)]),
           Col({ name: 'Links column', width: 'fill_container' }, [links()]),
         ]),
-    actions(o),
+    actions(o, m),
   ]
   const compilations = () =>
     Tile('Compilations', 'library', [

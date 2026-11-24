@@ -52,7 +52,16 @@ export function releaseLaunchPage(ui, frames) {
     ],
     admin: () => [P('Body', 'Bitrate took this release offline. Contact support to discuss it.')],
   }
-  const links = (live) => [
+  const linkActions = (live) =>
+    live
+      ? [
+          St('Ready', 'Available'),
+          Btn('Copy link', 'Compact Outline'),
+          Btn('Open in player', 'Compact Outline', 'external-link'),
+        ]
+      : [St('Neutral', 'Not live'), k.locked('Copy link')]
+  /* on a phone the actions sit under the link text instead of squeezing it */
+  const links = (live, m) => [
     W('Divider', { name: 'Divider', width: 'fill_container' }),
     P('Body Strong', 'Release links'),
     P('Muted', 'Availability is shown per destination; missing links are never implied.'),
@@ -63,18 +72,10 @@ export function releaseLaunchPage(ui, frames) {
         icon: { icon: 'link-2' },
         title: { content: 'Bitrate' },
         meta: { content: live ? 'Primary release page' : 'Published when the release goes live' },
-        trail: inline(
-          'Trail',
-          live
-            ? [
-                St('Ready', 'Available'),
-                Btn('Copy link', 'Compact Outline'),
-                Btn('Open in player', 'Compact Outline', 'external-link'),
-              ]
-            : [St('Neutral', 'Not live'), k.locked('Copy link')],
-        ),
+        trail: m ? { enabled: false } : inline('Trail', linkActions(live)),
       },
     ),
+    ...(m ? [Row({ name: 'Link actions', gap: 8, alignItems: 'center' }, linkActions(live))] : []),
   ]
   const next = (live) =>
     k.tile('What happens next', 'sparkles', [
@@ -111,7 +112,7 @@ export function releaseLaunchPage(ui, frames) {
           : []),
         k.columns(
           m,
-          [k.tile('Bitrate publication', 'rocket', [...PUBLICATION[kind](o), ...links(live)])],
+          [k.tile('Bitrate publication', 'rocket', [...PUBLICATION[kind](o), ...links(live, m)])],
           [next(live)],
         ),
       ],

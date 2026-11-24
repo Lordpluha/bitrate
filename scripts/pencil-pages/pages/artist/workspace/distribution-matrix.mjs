@@ -51,6 +51,17 @@ export function distributionMatrix(ui) {
               ),
             },
           )
+  /* the legend wraps: two cells per line on a phone, one line on desktop */
+  const legend = (m, states) => {
+    const cellsOf = (list) => list.map((s) => W(`Cell/${s}`, { name: `Legend / ${s}` }))
+    if (!m) return Row({ name: 'Legend', gap: 6 }, cellsOf(states))
+    const lines = []
+    for (let i = 0; i < states.length; i += 2) lines.push(states.slice(i, i + 2))
+    return Col(
+      { name: 'Legend', gap: 6 },
+      lines.map((line, i) => Row({ name: `Legend line ${i + 1}`, gap: 6 }, cellsOf(line))),
+    )
+  }
   return (m, rows) => {
     const shown = [...new Set(rows.flatMap((r) => r[5]))].filter((s) => s !== 'Not in plan')
     return W(
@@ -65,10 +76,7 @@ export function distributionMatrix(ui) {
           [
             ...(m ? [] : [W('Matrix/Header', { name: 'Header', width: 'fill_container' })]),
             ...rows.map(row(m)),
-            Row(
-              { name: 'Legend', gap: 6 },
-              [...shown, 'Not in plan'].map((s) => W(`Cell/${s}`, { name: `Legend / ${s}` })),
-            ),
+            legend(m, [...shown, 'Not in plan']),
           ],
           { gap: 0 },
         ),

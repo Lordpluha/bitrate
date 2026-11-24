@@ -116,7 +116,10 @@ export function creditDialogs(ui, k) {
             over ? 'Split/Total Short' : 'Split/Total',
             { name: 'Total', width: 'fill_container' },
             over
-              ? { label: { content: 'Master total 105 of 100%' }, 'bar.bar': { width: 440 } }
+              ? {
+                  label: { content: 'Master total 105 of 100%' },
+                  'bar.bar': { width: 'fill_container' },
+                }
               : { label: { content: 'Master total 100 of 100%' } },
           ),
           ...(over

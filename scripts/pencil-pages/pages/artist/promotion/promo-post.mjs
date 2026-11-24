@@ -80,10 +80,15 @@ export function postBlocks(ui, frames) {
       Check(true, 'Within the Instagram length limit'),
       Check(true, 'Names and hashtags kept in translations'),
     ])
+  const back = () => Btn('Back to the plan', 'Ghost', 'arrow-left')
+  /* on a phone the back link stacks above the title instead of sharing its row */
   const postHead = (m, channel = 0) => [
-    frames.pageHead('Announce the release date', 'T−21 · Sep 05 · Post for Afterglow', [
-      Btn('Back to the plan', 'Ghost', 'arrow-left'),
-    ]),
+    ...(m ? [back()] : []),
+    frames.pageHead(
+      'Announce the release date',
+      'T−21 · Sep 05 · Post for Afterglow',
+      m ? [] : [back()],
+    ),
     Row({ name: 'Post State' }, [AI(), St('Ready', 'Approved', 'circle-check')]),
     Tabs(m ? [...CHANNELS.slice(0, 3), 'Shorts'] : CHANNELS, channel),
   ]

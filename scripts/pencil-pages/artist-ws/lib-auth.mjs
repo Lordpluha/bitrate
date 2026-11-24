@@ -44,7 +44,14 @@ export function addAuth(lib, root) {
               part('logo', use('Logo/Mark', { name: 'Mark' })),
               part(
                 'title',
-                T('Welcome back!', { fontSize: 26, fontWeight: '500', fill: C.artistForeground }),
+                T('Welcome back!', {
+                  name: 'Title',
+                  fontSize: 26,
+                  fontWeight: '500',
+                  fill: C.artistForeground,
+                  textAlign: 'center',
+                  ...wrap,
+                }),
               ),
               part(
                 'desc',

@@ -31,7 +31,7 @@ export function addNav(lib) {
         {
           name: 'Sidebar',
           width: rail ? 80 : 248,
-          height: 900,
+          height: 1000,
           gap: 0,
           padding: [16, 12, 20, 12],
           ...(rail ? { alignItems: 'center' } : {}),

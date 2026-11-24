@@ -125,14 +125,14 @@ export function dashboardTiles(ui) {
         Row({ name: 'Numbers', gap: 20, width: 'fill_container', alignItems: 'start' }, [
           Col({ name: 'Figures', gap: 12, width: 'fill_container' }, [
             Row(
-              { name: 'Counts', gap: 32 },
+              { name: 'Counts', gap: 32, width: 'fill_container' },
               [
                 ['Releases', '4'],
                 ['Tracks', '6'],
               ].map(([label, value]) =>
                 W(
                   'Stat/First',
-                  { name: `Stat / ${label}` },
+                  { name: `Stat / ${label}`, width: 'fill_container' },
                   {
                     label: { content: label },
                     value: { content: value },

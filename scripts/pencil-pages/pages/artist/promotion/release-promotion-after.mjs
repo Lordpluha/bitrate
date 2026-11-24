@@ -90,11 +90,22 @@ export function releasePromotionStatesAfter(ui, frames, kit) {
                     '84 / 280 characters · Sent once, with the new-release notification',
                   ),
                   Check(false, 'Approve before Sep 26, 18:00 UTC to include it'),
-                  Row({ name: 'Actions' }, [
-                    Btn('Approve message', 'Primary', 'check'),
-                    Btn('Regenerate', 'Ghost', 'refresh-cw'),
-                    Btn('Reject', 'Ghost', 'x'),
-                  ]),
+                  /* on a phone approval takes its own line above the secondary actions */
+                  ...(m
+                    ? [
+                        Btn('Approve message', 'Primary', 'check', { width: 'fill_container' }),
+                        Row({ name: 'Actions' }, [
+                          Btn('Regenerate', 'Ghost', 'refresh-cw'),
+                          Btn('Reject', 'Ghost', 'x'),
+                        ]),
+                      ]
+                    : [
+                        Row({ name: 'Actions' }, [
+                          Btn('Approve message', 'Primary', 'check'),
+                          Btn('Regenerate', 'Ghost', 'refresh-cw'),
+                          Btn('Reject', 'Ghost', 'x'),
+                        ]),
+                      ]),
                   Tx('Caption', 'Without approval, followers get the standard notification only.'),
                 ],
                 { right: [AI()] },
