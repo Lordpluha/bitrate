@@ -1,16 +1,19 @@
 import MainLayout from '@app/main/layout'
 import { ROUTES } from '@shared/routes'
 import { createRoute, Outlet } from '@tanstack/react-router'
-import { rootRoute } from './rootRoute'
+import { requireSession } from '../session/requireSession'
 import { type ScreenComponent, ScreenErrorComponent } from './errorComponents'
+import { rootRoute } from './rootRoute'
 
 /**
  * The player shell — header, library, Now Playing and the player bar — is web-player's own
- * `app/main/layout.tsx`, reused as-is so both surfaces share one shell.
+ * `app/main/layout.tsx`, reused as-is so both surfaces share one shell. Signed-out visitors
+ * never reach it: the guard sends them to login first, as web-player's `proxy.ts` does.
  */
 export const mainRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/main',
+  beforeLoad: requireSession,
   component: () => (
     <MainLayout>
       <Outlet />
