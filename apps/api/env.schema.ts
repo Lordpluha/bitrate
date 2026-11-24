@@ -139,6 +139,20 @@ export const envSchema = z
      * `apps/api/knowledge`; in development the API reads `apps/docs/docs` directly.
      */
     SUPPORT_KNOWLEDGE_DIR: z.string().min(1).default('../docs/docs'),
+    // AI promotion (ADR-0076). Off by default; when on, every task route is checked at startup.
+    PROMOTION_AI_ENABLED: booleanFromEnv.default(false),
+    MISTRAL_API_KEY: z.string().min(1).optional(),
+    /** `provider:model` per task; an empty fallback means none. Defaults come from the spec. */
+    PROMOTION_MODEL_PLAN: z.string().default('anthropic:claude-sonnet-5-5'),
+    PROMOTION_MODEL_PLAN_FALLBACK: z.string().default('mistral:mistral-large-4'),
+    PROMOTION_MODEL_COPY: z.string().default('anthropic:claude-sonnet-5-5'),
+    PROMOTION_MODEL_COPY_FALLBACK: z.string().default('mistral:mistral-large-4'),
+    PROMOTION_MODEL_TRANSLATE: z.string().default('anthropic:claude-haiku-5-5'),
+    PROMOTION_MODEL_TRANSLATE_FALLBACK: z.string().default('mistral:mistral-small-4'),
+    PROMOTION_MODEL_CHECK: z.string().default('anthropic:claude-haiku-5-5'),
+    PROMOTION_MODEL_CHECK_FALLBACK: z.string().default('mistral:mistral-small-4'),
+    /** Monthly AI allowance per artist in US dollars (Free plan; spec D-5.5). */
+    PROMOTION_AI_MONTHLY_LIMIT_USD: z.coerce.number().positive().max(1_000).default(2),
 
     // CDN
     // CDN_URL: z.string().url().optional(),
