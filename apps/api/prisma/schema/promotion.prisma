@@ -1,0 +1,133 @@
+/// What happened to one model call, for quotas and for spotting a model that fails often.
+enum AiCallOutcome {
+  SUCCEEDED
+  /// The provider failed (network, overload, refusal); a fallback may have run instead.
+  FAILED
+  /// The output did not match its schema.
+  REJECTED_SCHEMA
+  /// The output stated facts absent from the generation context (spec AC-5).
+  REJECTED_UNGROUNDED
+}
+
+/// One billed model call (ADR-0076). Quotas sum `costMicroUsd` per artist per calendar month
+/// (UTC), so every call is written, including failed ones the provider still billed.
+model AiUsage {
+  id                String        @id @default(uuid(7)) @db.Uuid
+  artistId          String        @db.Uuid
+  /// The product feature that made the call; `promotion` for now.
+  feature           String
+  /// `plan`, `copy`, `translate` or `check` (ADR-0076 task routing).
+  task              String
+  provider          String
+  model             String
+  inputTokens       Int
+  cachedInputTokens Int           @default(0)
+  outputTokens      Int
+  /// Whole micro-dollars (US$ 1 = 1,000,000); integer so sums stay exact.
+  costMicroUsd      Int
+  outcome           AiCallOutcome
+  createdAt         DateTime      @default(now()) @db.Timestamptz(3)
+
+  artist Artist @relation(fields: [artistId], references: [id], onDelete: Cascade)
+
+  @@index([artistId, createdAt])
+}
+
+enum PromotionGoal {
+  STREAMS
+  FOLLOWERS
+  BUZZ
+}
+
+enum PromotionChannel {
+  INSTAGRAM
+  TIKTOK
+  TELEGRAM
+  YOUTUBE_SHORTS
+}
+
+/// What an artist tells AI once; each plan generation reads it (spec D-10).
+model ArtistPromotionProfile {
+  artistId      String             @id @db.Uuid
+  goal          PromotionGoal
+  channels      PromotionChannel[]
+  weeklyHours   Int
+  /// ISO 3166-1 alpha-2 codes of the main audience.
+  countries     String[]
+  audience      String?
+  /// Up to three words that describe how the artist writes.
+  voiceWords    String[]
+  /// Up to three posts the artist wrote; checked for contact details, never published.
+  voiceExamples String[]
+  updatedAt     DateTime           @updatedAt @db.Timestamptz(3)
+
+  artist Artist @relation(fields: [artistId], references: [id], onDelete: Cascade)
+}
+
+enum PromotionPlanStatus {
+  GENERATING
+  READY
+  FAILED
+}
+
+/// One version of a release's promotion plan (spec D-13). A regeneration creates the next
+/// version and copies the steps the artist already approved, edited or finished.
+model PromotionPlan {
+  id        String              @id @default(uuid(7)) @db.Uuid
+  releaseId String              @db.Uuid
+  version   Int
+  status    PromotionPlanStatus @default(GENERATING)
+  /// `provider:model` that produced the suggested steps; null until generated.
+  model     String?
+  /// Message key of the failure when `status` is FAILED.
+  failure   String?
+  createdAt DateTime            @default(now()) @db.Timestamptz(3)
+
+  release Release             @relation(fields: [releaseId], references: [id], onDelete: Cascade)
+  steps   PromotionPlanStep[]
+
+  @@unique([releaseId, version])
+}
+
+enum PromotionStepPhase {
+  PRE
+  LAUNCH
+  POST
+}
+
+enum PromotionStepKind {
+  POST
+  FOLLOWER_MESSAGE
+  COUNTDOWN
+  ACTION
+}
+
+enum PromotionStepState {
+  SUGGESTED
+  APPROVED
+  EDITED
+  REJECTED
+  DONE
+}
+
+/// A dated step of a plan, tracked on its own (spec D-21). The date is never stored: it is
+/// the release's `scheduledAt` plus `offsetDays`, so moving the release moves every step.
+model PromotionPlanStep {
+  id          String             @id @default(uuid(7)) @db.Uuid
+  planId      String             @db.Uuid
+  position    Int
+  offsetDays  Int
+  phase       PromotionStepPhase
+  kind        PromotionStepKind
+  channels    PromotionChannel[]
+  title       String
+  body        String
+  state       PromotionStepState @default(SUGGESTED)
+  /// False once the artist edits the text; drives the "Created with AI" marker.
+  aiGenerated Boolean            @default(true)
+  updatedAt   DateTime           @updatedAt @db.Timestamptz(3)
+
+  plan PromotionPlan @relation(fields: [planId], references: [id], onDelete: Cascade)
+
+  @@index([planId, position])
+}

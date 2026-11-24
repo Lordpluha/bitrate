@@ -1,0 +1,6 @@
+export { GetAiAllowanceSwagger } from './get-ai-allowance.swagger'
+export { GetPromotionPlanSwagger } from './get-promotion-plan.swagger'
+export { GetPromotionProfileSwagger } from './get-promotion-profile.swagger'
+export { RequestPromotionPlanSwagger } from './request-promotion-plan.swagger'
+export { SavePromotionProfileSwagger } from './save-promotion-profile.swagger'
+export { UpdatePromotionStepSwagger } from './update-promotion-step.swagger'

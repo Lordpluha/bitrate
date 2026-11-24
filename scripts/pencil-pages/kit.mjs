@@ -257,7 +257,8 @@ const prune = (nodes) => {
 }
 /**
  * Writes pencil/web-player-design/<dir>/<dir>.pen: the desktop page in Dark, Light and Dim, the
- * mobile page, then every screen state as a desktop + mobile pair, laid out left to right.
+ * mobile page, then every screen state as a desktop + mobile pair, laid out left to right. A spec
+ * without `desktop` (the native app) is phone-only: its mobile page is placed in all three themes.
  * Returns the written file and the number of frames placed in it.
  */
 export function writePage(root, dir, spec) {
@@ -278,12 +279,18 @@ export function writePage(root, dir, spec) {
     frames.push(n)
     x += n.width + 100
   }
-  /* a desktop that takes the theme draws each edition itself (e.g. a theme switch showing its value) */
-  const d = desktop('Dark')
-  place(d, 'Dark', 'Desktop / Dark')
-  place(desktop.length ? desktop('Light') : d, 'Light', 'Desktop / Light')
-  place(desktop.length ? desktop('Dim') : d, 'Dim', 'Desktop / Dim')
-  if (mobile) place(mobile(), 'Dark', 'Mobile / Dark')
+  if (desktop) {
+    /* a desktop that takes the theme draws each edition itself (e.g. a theme switch showing its value) */
+    const d = desktop('Dark')
+    place(d, 'Dark', 'Desktop / Dark')
+    place(desktop.length ? desktop('Light') : d, 'Light', 'Desktop / Light')
+    place(desktop.length ? desktop('Dim') : d, 'Dim', 'Desktop / Dim')
+    if (mobile) place(mobile(), 'Dark', 'Mobile / Dark')
+  } else {
+    /* phone-only pages (the native app): the mobile page carries the three themes itself */
+    const m = mobile()
+    for (const theme of ['Dark', 'Light', 'Dim']) place(m, theme, `Mobile / ${theme}`)
+  }
   for (const [label, fn, theme = 'Dark'] of extra) place(fn(), theme, label)
   for (const st of states) {
     if (st.desktop)

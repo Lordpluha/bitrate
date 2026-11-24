@@ -30,6 +30,11 @@ export type StreamLoaderInput = StreamLoaderTunables & {
   onUnsupported?: () => void
   onError?: (error: Error) => void
   onBitrateChange?: (bitrate: number) => void
+  /**
+   * Opens the track's ClearKey session for an encrypted manifest (ADR-0077). Runs alongside
+   * MediaSource setup; a rejection fails `start()`, so the caller can fall back to clear audio.
+   */
+  prepareKeys?: (audio: HTMLAudioElement) => Promise<MediaKeySession>
 }
 
 /**
@@ -50,6 +55,7 @@ export class StreamLoader {
   private mediaSource: MediaSource | null = null
   private objectUrl: string | null = null
   private fillTimer: ReturnType<typeof setInterval> | null = null
+  private keySession: MediaKeySession | null = null
   private label: string
   private destroyed = false
 
@@ -121,16 +127,24 @@ export class StreamLoader {
     const rendition = selectRendition(manifest, this.selector.bitrate)
     if (!rendition) return
 
+    const keysReady = this.input.prepareKeys?.(audio)
     const { mediaSource, objectUrl } = attachMediaSource(audio)
     this.mediaSource = mediaSource
     this.objectUrl = objectUrl
 
-    await waitForMediaSourceOpen(
-      mediaSource,
-      this.lifecycleController.signal,
-      this.sourceOpenTimeoutMs,
-    )
-    if (this.destroyed) return
+    const [, keySession] = await Promise.all([
+      waitForMediaSourceOpen(
+        mediaSource,
+        this.lifecycleController.signal,
+        this.sourceOpenTimeoutMs,
+      ),
+      keysReady,
+    ])
+    this.keySession = keySession ?? null
+    if (this.destroyed) {
+      void this.keySession?.close().catch(() => undefined)
+      return
+    }
 
     const sourceBuffer = openAudioSourceBuffer({
       mediaSource,
@@ -158,6 +172,8 @@ export class StreamLoader {
     audio.removeEventListener('seeking', this.handleSeeking)
 
     if (this.objectUrl) URL.revokeObjectURL(this.objectUrl)
+    void this.keySession?.close().catch(() => undefined)
+    this.keySession = null
 
     this.mediaSource = null
     this.objectUrl = null

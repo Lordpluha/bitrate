@@ -41,6 +41,70 @@ describe('trackManifestSchema', () => {
     expect(trackManifestSchema.safeParse(validManifest()).success).toBe(true)
   })
 
+  describe('encrypted renditions (ADR-0077)', () => {
+    const keyId = '0123456789abcdef0123456789abcdef'
+    const encryptedTrack = () => {
+      const manifest = validManifest()
+      const [clear, high] = manifest.renditions
+      return {
+        ...manifest,
+        renditions: [
+          { ...clear, encryption: null },
+          { ...clear, encryption: { scheme: 'cbcs', keyId } },
+          { ...high, encryption: { scheme: 'cbcs', keyId } },
+        ],
+      }
+    }
+
+    it('keeps the encryption of each rendition, a clear and an encrypted one per bitrate', () => {
+      const parsed = trackManifestSchema.parse(encryptedTrack())
+
+      expect(
+        parsed.renditions.map((rendition) => rendition.encryption),
+      ).toEqual([null, { scheme: 'cbcs', keyId }, { scheme: 'cbcs', keyId }])
+    })
+
+    it('still rejects two renditions of one bitrate with the same encryption', () => {
+      const manifest = encryptedTrack()
+      const [first, second] = manifest.renditions
+
+      expect(
+        trackManifestSchema.safeParse({
+          ...manifest,
+          renditions: [first, first, second],
+        }).success,
+      ).toBe(false)
+    })
+
+    it('rejects an encrypted rendition listed before the clear one of its bitrate', () => {
+      const manifest = encryptedTrack()
+      const [clear, encrypted, high] = manifest.renditions
+
+      expect(
+        trackManifestSchema.safeParse({
+          ...manifest,
+          renditions: [encrypted, clear, high],
+        }).success,
+      ).toBe(false)
+    })
+
+    it('rejects a key id that is not 128-bit hex', () => {
+      const manifest = encryptedTrack()
+      const [clear, encrypted, high] = manifest.renditions
+
+      expect(
+        trackManifestSchema.safeParse({
+          ...manifest,
+          renditions: [
+            clear,
+            { ...encrypted, encryption: { scheme: 'cbcs', keyId: 'x' } },
+            high,
+          ],
+        }).success,
+      ).toBe(false)
+    })
+  })
+
   it.each([
     [
       'unsupported version',
