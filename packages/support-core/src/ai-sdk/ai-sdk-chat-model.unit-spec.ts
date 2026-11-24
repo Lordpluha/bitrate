@@ -100,6 +100,24 @@ describe('aiSdkChatModel', () => {
     ])
   })
 
+  it('passes the reasoning effort to Anthropic models only', async () => {
+    const finish: LanguageModelV4StreamPart = {
+      type: 'finish',
+      usage,
+      finishReason: { unified: 'tool-calls', raw: undefined },
+    }
+    const anthropic = mockModel([toolCall('search_knowledge', { query: 'x' }), finish])
+    const other = mockModel([toolCall('search_knowledge', { query: 'x' }), finish])
+
+    await collect(
+      aiSdkChatModel(anthropic, 'anthropic:claude-haiku-5-5', { effort: 'low' }).step(input),
+    )
+    await collect(aiSdkChatModel(other, 'openai:gpt-5.5-mini', { effort: 'low' }).step(input))
+
+    expect(anthropic.doStreamCalls[0]?.providerOptions?.anthropic).toMatchObject({ effort: 'low' })
+    expect(other.doStreamCalls[0]?.providerOptions?.anthropic).toBeUndefined()
+  })
+
   it('throws a SupportModelError when the provider stream fails', async () => {
     const model = mockModel([
       { type: 'error', error: new Error('overloaded') },

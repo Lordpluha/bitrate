@@ -11,6 +11,7 @@ const rendition: ManifestRendition = {
   bitrate: 128,
   codec: 'mp4a.40.2',
   size: 4000,
+  encryption: null,
   initRange: [0, 708],
   fragments: [
     [0, 480_000, 800, 1100],

@@ -7,6 +7,7 @@ import {
   Body,
   Controller,
   Get,
+  HttpCode,
   HttpException,
   HttpStatus,
   Logger,
@@ -23,8 +24,16 @@ import { ApiExtraModels, ApiTags } from '@nestjs/swagger'
 import { Throttle } from '@nestjs/throttler'
 import type { Request, Response } from 'express'
 import { ZodValidationPipe } from 'nestjs-zod'
-import { OpenPlaySessionSwagger, StreamTrackRenditionSwagger } from '../decorators'
+import {
+  OpenPlaySessionSwagger,
+  RequestTrackLicenseSwagger,
+  StreamTrackRenditionSwagger,
+} from '../decorators'
 import { type OpenPlaySessionDto, OpenPlaySessionSchema } from '../dtos/open-play-session.dto'
+import {
+  type TrackLicenseRequestDto,
+  TrackLicenseRequestSchema,
+} from '../dtos/track-license-request.dto'
 import {
   PlaySessionEntity,
   type TrackEntity,
@@ -34,6 +43,7 @@ import {
 import { PLAYBACK_ERRORS } from '../errors'
 import { PlaybackAbuseError } from './playback-abuse'
 import { PlaybackPacingError } from './playback-session.service'
+import { TrackLicenseService } from './track-license.service'
 import { TrackPlaybackService } from './track-playback.service'
 import { UnsatisfiableRangeError } from './track-playback.types'
 
@@ -82,7 +92,10 @@ function sendRangeStream(
 @ApiTags('Tracks')
 @Controller({ path: 'tracks', version: '1' })
 export class TrackPlaybackController {
-  constructor(private trackPlaybackService: TrackPlaybackService) {}
+  constructor(
+    private trackPlaybackService: TrackPlaybackService,
+    private trackLicenseService: TrackLicenseService,
+  ) {}
 
   @OpenPlaySessionSwagger()
   // Above @UserAuth: decorators apply bottom-up, so the auth guard runs first and sets req.user.
@@ -119,6 +132,7 @@ export class TrackPlaybackController {
     @Param('id', ParseUUIDPipe) id: TrackEntity['id'],
     @Param('bitrate', ParseIntPipe) bitrate: number,
     @Query('t') token: string | undefined,
+    @Query('encrypted') encrypted: string | undefined,
     @Req() req: Request,
     @Res() res: Response,
   ) {
@@ -129,6 +143,7 @@ export class TrackPlaybackController {
         bitrate,
         rangeHeader: req.headers.range,
         token,
+        encrypted: encrypted === '1',
       })
     } catch (error) {
       if (error instanceof UnsatisfiableRangeError) {
@@ -146,5 +161,20 @@ export class TrackPlaybackController {
       'Content-Length': String(rendition.contentLength),
       'Cache-Control': RENDITION_CACHE_CONTROL,
     })
+  }
+
+  /** Authorised by the session token alone, like the renditions it unlocks (ADR-0077). */
+  @RequestTrackLicenseSwagger()
+  @Throttle({ default: { ttl: 60_000, limit: 120 } })
+  @HttpCode(200)
+  @Post(':id/license')
+  requestLicense(
+    @Param('id', ParseUUIDPipe) id: TrackEntity['id'],
+    @Query('t') token: string | undefined,
+    @Body(new ZodValidationPipe(TrackLicenseRequestSchema)) dto: TrackLicenseRequestDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    res.set('Cache-Control', 'no-store')
+    return this.trackLicenseService.license({ trackId: id, token, kids: dto.kids })
   }
 }

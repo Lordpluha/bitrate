@@ -83,6 +83,21 @@ describe('TracksController (e2e)', () => {
       .expect(401)
   })
 
+  it('POST /tracks/:id/license should return 403 without a playback session token (ADR-0077)', async () => {
+    await request(app.getHttpServer())
+      .post('/tracks/f47ac10b-58cc-4372-a567-0e02b2c3d479/license')
+      .send({ kids: ['ASNFZ4mrze8BI0VniavN7w'], type: 'temporary' })
+      .expect(403)
+  })
+
+  it('POST /tracks/:id/license should return 400 for a malformed licence request', async () => {
+    await request(app.getHttpServer())
+      .post('/tracks/f47ac10b-58cc-4372-a567-0e02b2c3d479/license')
+      .query({ t: 'forged.token' })
+      .send({ kids: ['not a key id'] })
+      .expect(400)
+  })
+
   it('GET /tracks/:id/cmaf/:bitrate should return 403 without a playback session token', async () => {
     await request(app.getHttpServer())
       .get('/tracks/f47ac10b-58cc-4372-a567-0e02b2c3d479/cmaf/192')

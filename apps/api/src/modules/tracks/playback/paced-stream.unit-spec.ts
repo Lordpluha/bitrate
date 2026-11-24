@@ -10,6 +10,7 @@ const segments = renditionSegments(
     bitrate: 128,
     codec: 'mp4a.40.2',
     size: 2100,
+    encryption: null,
     initRange: [0, 99],
     fragments: [
       [0, 480_000, 100, 1000],
