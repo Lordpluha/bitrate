@@ -1,4 +1,4 @@
-/** The listener's support conversation, kept in the browser so a reload finds it again. */
+/** The listener's support conversation, kept for this browser session: a reload finds it, closing the tab ends it. */
 export interface SupportSession {
   id: string
   /** Guest access token; absent when the conversation belongs to the signed-in listener. */
@@ -27,7 +27,7 @@ export function readSupportSession({
   owner,
 }: ReadSupportSessionInput): SupportSession | undefined {
   try {
-    const value: unknown = JSON.parse(localStorage.getItem(KEY) ?? 'null')
+    const value: unknown = JSON.parse(sessionStorage.getItem(KEY) ?? 'null')
     if (
       typeof value !== 'object' ||
       value === null ||
@@ -47,10 +47,10 @@ export function readSupportSession({
   }
 }
 
-/** Saves the session; without storage the conversation simply lasts until the page closes. */
+/** Saves the session; without storage it lasts until the page closes. */
 export function saveSupportSession({ session }: SaveSupportSessionInput): void {
   try {
-    localStorage.setItem(KEY, JSON.stringify(session))
+    sessionStorage.setItem(KEY, JSON.stringify(session))
   } catch {
     /** Storage blocked: nothing else depends on it. */
   }
@@ -59,7 +59,7 @@ export function saveSupportSession({ session }: SaveSupportSessionInput): void {
 /** Forgets the session, so the next message starts a new conversation. */
 export function clearSupportSession(): void {
   try {
-    localStorage.removeItem(KEY)
+    sessionStorage.removeItem(KEY)
   } catch {
     /** Storage blocked: there is nothing to clear. */
   }
