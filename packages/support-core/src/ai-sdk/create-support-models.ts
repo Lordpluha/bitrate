@@ -4,6 +4,7 @@ import type { ProviderV4 } from '@ai-sdk/provider'
 import type { ChatModel, Embedder } from '../ports.js'
 import { aiSdkChatModel } from './ai-sdk-chat-model.js'
 import { aiSdkEmbedder } from './ai-sdk-embedder.js'
+import type { ChatModelOptions } from './chat-model-options.js'
 import { parseModelId } from './parse-model-id.js'
 import { SupportModelConfigError } from './support-model-config-error.js'
 
@@ -13,7 +14,7 @@ export interface SupportModelKeys {
 }
 
 export interface SupportModels {
-  chatModel(id: string): ChatModel
+  chatModel(id: string, options?: ChatModelOptions): ChatModel
   embedder(id: string): Embedder
 }
 
@@ -43,11 +44,12 @@ export function createSupportModels(keys: SupportModelKeys): SupportModels {
   }
 
   return {
-    chatModel(id) {
+    chatModel(id, options) {
       const { provider, modelId } = providerFor(id)
       return aiSdkChatModel(
         resolveModel(() => provider.languageModel(modelId), id),
         id,
+        options,
       )
     },
     embedder(id) {

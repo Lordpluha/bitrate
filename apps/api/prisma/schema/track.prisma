@@ -84,6 +84,7 @@ model Track {
   updatedAt DateTime @default(now()) @updatedAt
 
   audioFiles            TrackFile[]
+  contentKey            TrackContentKey?
   processingAttemptsLog TrackProcessingAttempt[]
   albums                AlbumTrack[]
   releases              ReleaseTrack[]
@@ -124,12 +125,31 @@ model TrackFile {
   // [[startTicks, durationTicks, offset, length], ...] — one entry per fragment.
   fragments      Json
 
+  // CENC `cbcs` under the track's content key (ADR-0077). An unencrypted rendition sits beside
+  // the encrypted ones for clients without ClearKey `cbcs`.
+  encrypted Boolean @default(false)
+
   createdAt DateTime @default(now())
 
   track Track @relation(fields: [trackId], references: [id], onDelete: Cascade)
 
-  @@unique([trackId, format, bitrate])
+  @@unique([trackId, format, bitrate, encrypted])
   @@index([format])
+}
+
+/// The content key of a track's encrypted renditions (ADR-0077). Replaced in the same
+/// transaction that publishes a new generation's files, so key and files always match.
+/// The key is stored only wrapped (AES-256-GCM under PLAYBACK_KEY_ENCRYPTION_KEY).
+model TrackContentKey {
+  trackId    String   @id @db.Uuid
+  /// 128-bit key id, lowercase hex; also written into the renditions' `tenc`.
+  keyId      String
+  wrappedKey Bytes
+  iv         Bytes
+  authTag    Bytes
+  createdAt  DateTime @default(now())
+
+  track Track @relation(fields: [trackId], references: [id], onDelete: Cascade)
 }
 
 // One row per BullMQ attempt of the audio-processing pipeline. Successes are compact;

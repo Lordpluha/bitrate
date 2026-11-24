@@ -7,6 +7,9 @@ import {
   Body,
   Controller,
   Get,
+  HttpCode,
+  HttpException,
+  HttpStatus,
   Logger,
   Param,
   ParseIntPipe,
@@ -21,20 +24,35 @@ import { ApiExtraModels, ApiTags } from '@nestjs/swagger'
 import { Throttle } from '@nestjs/throttler'
 import type { Request, Response } from 'express'
 import { ZodValidationPipe } from 'nestjs-zod'
-import { OpenPlaySessionSwagger, StreamTrackRenditionSwagger } from '../decorators'
+import {
+  OpenPlaySessionSwagger,
+  RequestTrackLicenseSwagger,
+  StreamTrackRenditionSwagger,
+} from '../decorators'
 import { type OpenPlaySessionDto, OpenPlaySessionSchema } from '../dtos/open-play-session.dto'
+import {
+  type TrackLicenseRequestDto,
+  TrackLicenseRequestSchema,
+} from '../dtos/track-license-request.dto'
 import {
   PlaySessionEntity,
   type TrackEntity,
   TrackManifestEntity,
   TrackManifestRenditionEntity,
 } from '../entities'
+import { PLAYBACK_ERRORS } from '../errors'
+import { PlaybackAbuseError } from './playback-abuse'
 import { PlaybackPacingError } from './playback-session.service'
+import { TrackLicenseService } from './track-license.service'
 import { TrackPlaybackService } from './track-playback.service'
 import { UnsatisfiableRangeError } from './track-playback.types'
 
-/** Rendition bytes never change, so they can be cached for a long time. */
-const IMMUTABLE_CACHE_CONTROL = 'private, max-age=31536000, immutable, no-transform'
+/**
+ * Rendition bytes are never stored by the browser or a proxy (#522 D3): a year-long cache kept
+ * whole cleartext renditions on disk, a ready-made file outside any play session. The player
+ * buffers what it needs in memory.
+ */
+const RENDITION_CACHE_CONTROL = 'private, no-store, no-transform'
 
 const logger = new Logger('TrackPlaybackController')
 
@@ -74,7 +92,10 @@ function sendRangeStream(
 @ApiTags('Tracks')
 @Controller({ path: 'tracks', version: '1' })
 export class TrackPlaybackController {
-  constructor(private trackPlaybackService: TrackPlaybackService) {}
+  constructor(
+    private trackPlaybackService: TrackPlaybackService,
+    private trackLicenseService: TrackLicenseService,
+  ) {}
 
   @OpenPlaySessionSwagger()
   // Above @UserAuth: decorators apply bottom-up, so the auth guard runs first and sets req.user.
@@ -82,16 +103,25 @@ export class TrackPlaybackController {
   @UserAuth()
   @Throttle({ default: { ttl: 60_000, limit: 120 } })
   @Post(':id/play-sessions')
-  openPlaySession(
+  async openPlaySession(
     @Param('id', ParseUUIDPipe) id: TrackEntity['id'],
     @CurrentUser() user: UserEntity,
     @Body(new ZodValidationPipe(OpenPlaySessionSchema)) dto: OpenPlaySessionDto,
+    @Res({ passthrough: true }) res: Response,
   ) {
-    return this.trackPlaybackService.openSession({
-      trackId: id,
-      userId: user.id,
-      ...(dto?.deviceId ? { deviceId: dto.deviceId } : {}),
-    })
+    try {
+      return await this.trackPlaybackService.openSession({
+        trackId: id,
+        userId: user.id,
+        ...(dto?.deviceId ? { deviceId: dto.deviceId } : {}),
+      })
+    } catch (error) {
+      if (error instanceof PlaybackAbuseError) {
+        res.set('Retry-After', String(error.retryAfterSeconds))
+        throw new HttpException(PLAYBACK_ERRORS.TOO_MANY_TRACKS, HttpStatus.TOO_MANY_REQUESTS)
+      }
+      throw error
+    }
   }
 
   /** Authorised by the session token alone (D9): a native `<audio>` cannot refresh a cookie. */
@@ -102,6 +132,7 @@ export class TrackPlaybackController {
     @Param('id', ParseUUIDPipe) id: TrackEntity['id'],
     @Param('bitrate', ParseIntPipe) bitrate: number,
     @Query('t') token: string | undefined,
+    @Query('encrypted') encrypted: string | undefined,
     @Req() req: Request,
     @Res() res: Response,
   ) {
@@ -112,6 +143,7 @@ export class TrackPlaybackController {
         bitrate,
         rangeHeader: req.headers.range,
         token,
+        encrypted: encrypted === '1',
       })
     } catch (error) {
       if (error instanceof UnsatisfiableRangeError) {
@@ -127,7 +159,22 @@ export class TrackPlaybackController {
 
     sendRangeStream(res, rendition, {
       'Content-Length': String(rendition.contentLength),
-      'Cache-Control': IMMUTABLE_CACHE_CONTROL,
+      'Cache-Control': RENDITION_CACHE_CONTROL,
     })
+  }
+
+  /** Authorised by the session token alone, like the renditions it unlocks (ADR-0077). */
+  @RequestTrackLicenseSwagger()
+  @Throttle({ default: { ttl: 60_000, limit: 120 } })
+  @HttpCode(200)
+  @Post(':id/license')
+  requestLicense(
+    @Param('id', ParseUUIDPipe) id: TrackEntity['id'],
+    @Query('t') token: string | undefined,
+    @Body(new ZodValidationPipe(TrackLicenseRequestSchema)) dto: TrackLicenseRequestDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    res.set('Cache-Control', 'no-store')
+    return this.trackLicenseService.license({ trackId: id, token, kids: dto.kids })
   }
 }
