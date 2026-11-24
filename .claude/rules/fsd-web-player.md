@@ -26,7 +26,7 @@ app → views → widgets → features → entities → shared
 | `app/` | Next.js App Router — `layout.tsx`, `page.tsx`, `_provider.tsx`, route groups, global providers |
 | `views/` | Full-page view compositions — assemble widgets and features for one route. No business logic. |
 | `widgets/` | Self-contained page sections used across multiple views: `Header`, `Player`, `LeftSidebar`, `RightSidebar` |
-| `features/` | User interactions and the UI that triggers them: `Album`, `Playlist`, `AuthModal`, `Track`, `User`, `SwitchTheme` |
+| `features/` | User interactions and the UI that triggers them: `Album`, `Playlist`, `Login`, `Track`, `User`, `SwitchTheme` |
 | `entities/` | Domain objects — data shapes, query hooks, Zustand stores, API calls |
 | `shared/` | Tech-agnostic: `api/`, `hooks/`, `store/`, `ui/`, `routes/`, `constants/`, `validation/` |
 

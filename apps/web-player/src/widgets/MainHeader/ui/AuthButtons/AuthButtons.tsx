@@ -1,56 +1,34 @@
 'use client'
 
 import { Button } from '@bitrate/ui-react'
-import { LoginModal, SignUpModal } from '@features/AuthModal'
-import { useState } from 'react'
+import { ROUTES } from '@shared/routes'
+import Link from 'next/link'
 import { useI18n } from '@/shared/i18n'
 
+/**
+ * Sign up / Log in for a visitor without a session: links to the designed full-screen auth
+ * pages, the same destinations as the landing header.
+ */
 export const AuthButtons = () => {
   const { t } = useI18n()
-  const [loginOpen, setLoginOpen] = useState(false)
-  const [signUpOpen, setSignUpOpen] = useState(false)
-
-  const openLogin = () => {
-    setSignUpOpen(false)
-    setLoginOpen(true)
-  }
-
-  const openSignUp = () => {
-    setLoginOpen(false)
-    setSignUpOpen(true)
-  }
 
   return (
-    <>
-      <div className="flex items-center xl:gap-8 flex-row space-y-4 xl:space-y-0">
-        <Button
-          className="text-base font-semibold text-foreground xl:justify-center justify-start py-3 rounded-full h-12 min-w-25"
-          onClick={openSignUp}
-          variant="ghost"
-        >
-          {t('auth.signUp')}
-        </Button>
+    <div className="flex items-center xl:gap-8 flex-row space-y-4 xl:space-y-0">
+      <Button
+        asChild
+        className="text-base font-semibold text-foreground xl:justify-center justify-start py-3 rounded-full h-12 min-w-25"
+        variant="ghost"
+      >
+        <Link href={ROUTES.auth.registration}>{t('auth.signUp')}</Link>
+      </Button>
 
-        <Button
-          className="px-8 py-3 rounded-full font-bold text-base h-12 min-w-25 xl:justify-center justify-start"
-          onClick={openLogin}
-          variant="default"
-        >
-          {t('profile.logIn')}
-        </Button>
-      </div>
-
-      <LoginModal
-        isOpen={loginOpen}
-        onOpenChange={setLoginOpen}
-        onSwitchToSignUp={openSignUp}
-      />
-
-      <SignUpModal
-        isOpen={signUpOpen}
-        onOpenChange={setSignUpOpen}
-        onSwitchToLogin={openLogin}
-      />
-    </>
+      <Button
+        asChild
+        className="px-8 py-3 rounded-full font-bold text-base h-12 min-w-25 xl:justify-center justify-start"
+        variant="default"
+      >
+        <Link href={ROUTES.auth.login}>{t('profile.logIn')}</Link>
+      </Button>
+    </div>
   )
 }
