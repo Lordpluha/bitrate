@@ -15,7 +15,11 @@ export type PublishTrackFilesInput = {
   cmafPackage: PreparedCmafPackage
 }
 
-/** Replaces the CMAF rows of one track, including each rendition's byte index. */
+/**
+ * Replaces the CMAF rows of one track, including each rendition's byte index. A rendition is
+ * identified by its bitrate and whether it is encrypted (ADR-0077), so rows of the previous
+ * generation that this one does not have are deleted pair by pair.
+ */
 async function replaceCmafFiles(
   tx: Prisma.TransactionClient,
   trackId: string,
@@ -25,7 +29,9 @@ async function replaceCmafFiles(
     where: {
       trackId,
       format: CMAF_FORMAT,
-      bitrate: { notIn: cmafPackage.renditions.map((rendition) => rendition.bitrate) },
+      NOT: {
+        OR: cmafPackage.renditions.map(({ bitrate, encrypted }) => ({ bitrate, encrypted })),
+      },
     },
   })
 
@@ -39,14 +45,46 @@ async function replaceCmafFiles(
       fragments: rendition.fragments,
     }
 
+    const identity = {
+      trackId,
+      format: CMAF_FORMAT,
+      bitrate: rendition.bitrate,
+      encrypted: rendition.encrypted,
+    }
     await tx.trackFile.upsert({
-      where: {
-        trackId_format_bitrate: { trackId, format: CMAF_FORMAT, bitrate: rendition.bitrate },
-      },
+      where: { trackId_format_bitrate_encrypted: identity },
       update: payload,
-      create: { trackId, format: CMAF_FORMAT, bitrate: rendition.bitrate, ...payload },
+      create: { ...identity, ...payload },
     })
   }
+}
+
+/**
+ * Points the track at this generation's content key, or removes the previous one when this
+ * generation is unencrypted, in the transaction that publishes the files — so a listener never
+ * gets a key that does not match the renditions (ADR-0077).
+ */
+async function replaceContentKey(
+  tx: Prisma.TransactionClient,
+  trackId: string,
+  contentKey: PreparedCmafPackage['contentKey'],
+) {
+  if (!contentKey) {
+    await tx.trackContentKey.deleteMany({ where: { trackId } })
+    return
+  }
+  const { keyId, wrappedKey, iv, authTag } = contentKey
+  const row = {
+    keyId,
+    wrappedKey: new Uint8Array(wrappedKey),
+    iv: new Uint8Array(iv),
+    authTag: new Uint8Array(authTag),
+  }
+  await tx.trackContentKey.upsert({
+    where: { trackId },
+    update: row,
+    create: { trackId, ...row },
+  })
 }
 
 /**
@@ -65,6 +103,7 @@ export async function publishTrackFiles({
 }: PublishTrackFilesInput): Promise<void> {
   await prisma.$transaction(async (tx) => {
     await replaceCmafFiles(tx, trackId, cmafPackage)
+    await replaceContentKey(tx, trackId, cmafPackage.contentKey)
 
     const published = await tx.track.updateMany({
       where: { id: trackId, audioUrl: sourceFileName },

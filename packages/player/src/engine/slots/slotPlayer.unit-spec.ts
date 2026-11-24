@@ -131,6 +131,29 @@ describe('SlotPlayer', () => {
     expect(media[0].getAttribute('src')).toBe('https://api.test/tracks/t1/cmaf/128')
   })
 
+  it('plays only a clear rendition natively for an encrypted track (ADR-0077)', async () => {
+    const keyId = '0123456789abcdef0123456789abcdef'
+    const encryptedTrack: TrackManifest = {
+      ...cmafManifest,
+      renditions: [
+        { ...cmafManifest.renditions[0]!, bitrate: 128, encryption: { scheme: 'cbcs', keyId } },
+        { ...cmafManifest.renditions[0]!, bitrate: 192, encryption: null },
+        { ...cmafManifest.renditions[0]!, bitrate: 320, encryption: { scheme: 'cbcs', keyId } },
+      ],
+    }
+    const { media, player } = setup({
+      streaming: {
+        resolveManifest: vi.fn(async () => encryptedTrack),
+        requestLicense: vi.fn(async () => new ArrayBuffer(0)),
+      },
+    })
+
+    player.setSource(source('k1', 't1'))
+    await settle()
+
+    expect(media[0].getAttribute('src')).toBe('https://api.test/tracks/t1/cmaf/192')
+  })
+
   it('stops with a fatal error when a track has no manifest yet', async () => {
     const { handlers, media, player } = setup({
       streaming: { resolveManifest: vi.fn(async () => null) },

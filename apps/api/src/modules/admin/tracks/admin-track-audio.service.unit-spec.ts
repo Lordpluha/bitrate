@@ -47,6 +47,8 @@ describe('AdminTrackAudioService', () => {
           where: expect.objectContaining({
             trackId,
             format: 'cmaf',
+            // Staff preview has no key: never an encrypted rendition (ADR-0077).
+            encrypted: false,
             track: { processingStatus: 'READY' },
           }),
           orderBy: { bitrate: 'desc' },

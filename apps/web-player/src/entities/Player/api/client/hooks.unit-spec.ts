@@ -50,6 +50,26 @@ describe('getRenditionUrl', () => {
     )
   })
 
+  it('asks for the encrypted rendition only when told to (ADR-0077)', async () => {
+    expect(
+      getRenditionUrl({ bitrate: 192, encrypted: true, trackId: 'track-id' }),
+    ).toMatch(/\/cmaf\/192\?t=token-1&encrypted=1$/)
+
+    fetchWithAuthRefresh.mockResolvedValue(response(206, [1, 2, 3]))
+    await fetchRenditionRange({
+      bitrate: 128,
+      encrypted: true,
+      expectedSize: 10,
+      range: [2, 4],
+      signal: new AbortController().signal,
+      trackId: 'track-id',
+    })
+    expect(fetchWithAuthRefresh).toHaveBeenCalledWith(
+      expect.stringMatching(/&encrypted=1$/),
+      expect.anything(),
+    )
+  })
+
   it('is the same file, with the same token, the fragment ranges are read from', async () => {
     fetchWithAuthRefresh.mockResolvedValue(response(206, [1, 2, 3]))
 

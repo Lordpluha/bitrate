@@ -196,6 +196,30 @@
           }
         }
       }
+    },
+    {
+      "includes": ["src/**/*.ts", "!src/modules/promotion/ai/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "paths": {
+                  "ai": "Model calls go through src/modules/promotion/ai (ADR-0076).",
+                  "ai/test": "Model calls go through src/modules/promotion/ai (ADR-0076)."
+                },
+                "patterns": [
+                  {
+                    "group": ["@ai-sdk/*"],
+                    "message": "Provider packages are imported only in src/modules/promotion/ai (ADR-0076)."
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
     }
   ],
   "assist": {

@@ -1,191 +1,338 @@
 {
   "version": "2.20",
   "imports": {
-    "ds": "../../web-player-design/design-system/bitrate.lib.pen"
+    "artist": "../design-system/artist.lib.pen"
   },
   "children": [
     {
       "type": "frame",
-      "id": "6xPrz3",
+      "id": "VAkVPS",
       "name": "Artist / Legal / Desktop / Dark",
       "width": 1440,
-      "height": 1100,
-      "clip": true,
+      "height": "fit_content",
       "layout": "vertical",
-      "justifyContent": "center",
-      "alignItems": "center",
-      "gap": 20,
-      "padding": 24,
-      "fill": "$ds:--background",
-      "children": [
+      "clip": true,
+      "fill": [
         {
-          "type": "ref",
-          "id": "Hdo9iA",
-          "ref": "ds:h25UaM",
-          "name": "Public Header"
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
         },
         {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
           "type": "frame",
-          "id": "y9RiCx",
-          "name": "Column",
+          "id": "PqWa5V",
+          "name": "Page",
           "layout": "vertical",
-          "gap": 16,
-          "width": 760,
+          "gap": 24,
+          "width": "fill_container",
+          "padding": [
+            72,
+            48,
+            96,
+            48
+          ],
+          "alignItems": "center",
           "children": [
             {
-              "type": "ref",
-              "id": "6N8Jbo",
-              "ref": "ds:cFuiSI",
-              "name": "Alert/Warning",
-              "descendants": {
-                "ds:3d5wsO": {
-                  "content": "Draft — pending legal review. This draft covers only the hosting licence needed for uploads today."
+              "type": "frame",
+              "id": "TFnk4U",
+              "name": "Article",
+              "layout": "vertical",
+              "gap": 24,
+              "width": 768,
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "jYq2gw",
+                  "ref": "artist:94lOqw",
+                  "name": "Terms of Use",
+                  "content": "Terms of Use"
+                },
+                {
+                  "type": "frame",
+                  "id": "uS5MSC",
+                  "name": "Lead-in",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "Usvag5",
+                      "ref": "artist:ZOLJKu",
+                      "name": "Effective date: 1 October 20",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "Effective date: 1 October 2026"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "T75OEE",
+                      "ref": "artist:ZOLJKu",
+                      "name": "These Terms of Use (\"Terms\")",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "These Terms of Use (\"Terms\") govern your use of Bitrate, a music streaming and publishing service operated by Vladyslav Tesliuk, Warsaw, Poland, a private individual (\"Bitrate\", \"we\", \"us\"). Contact: tesluakevlad@gmail.com."
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "zDBmc2",
+                  "name": "1. Acceptance and eligibility",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "t1mfHU",
+                      "ref": "artist:RoXXJv",
+                      "name": "1. Acceptance and eligibilit",
+                      "content": "1. Acceptance and eligibility"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "uER4a9",
+                      "ref": "artist:ZOLJKu",
+                      "name": "1.1 By creating an account o",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "1.1 By creating an account or using Bitrate you agree to these Terms and the Community Guidelines, and you confirm that you have read the Privacy Policy."
+                    },
+                    {
+                      "type": "ref",
+                      "id": "rD70T9",
+                      "ref": "artist:ZOLJKu",
+                      "name": "1.2 You must be at least 16 ",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "1.2 You must be at least 16 years old. If you are younger you may not create an account or use the service."
+                    },
+                    {
+                      "type": "ref",
+                      "id": "qLJnsj",
+                      "ref": "artist:ZOLJKu",
+                      "name": "1.3 If you use Bitrate on be",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "1.3 If you use Bitrate on behalf of an organisation, you confirm you may bind it to these Terms."
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "CkVgHL",
+                  "name": "2. Your account",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "iCPFPv",
+                      "ref": "artist:RoXXJv",
+                      "name": "2. Your account",
+                      "content": "2. Your account"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "pa2UEx",
+                      "ref": "artist:ZOLJKu",
+                      "name": "2.1 Provide accurate informa",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "2.1 Provide accurate information and keep your credentials secure. You are responsible for activity on your account."
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Euamxf",
+                      "ref": "artist:ZOLJKu",
+                      "name": "2.2 Tell us promptly at tesl",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "2.2 Tell us promptly at tesluakevlad@gmail.com if you suspect unauthorised access."
+                    },
+                    {
+                      "type": "ref",
+                      "id": "BJwv8g",
+                      "ref": "artist:ZOLJKu",
+                      "name": "2.3 We may limit or lock an ",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "2.3 We may limit or lock an account after repeated failed sign-in attempts to protect it."
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "HvXArD",
+                  "name": "3. The service",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "ra3nPT",
+                      "ref": "artist:RoXXJv",
+                      "name": "3. The service",
+                      "content": "3. The service"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "kOZFSV",
+                      "ref": "artist:ZOLJKu",
+                      "name": "3.1 Listeners may stream mus",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "3.1 Listeners may stream music, build playlists, follow artists and use related features."
+                    },
+                    {
+                      "type": "ref",
+                      "id": "DXkF3V",
+                      "ref": "artist:ZOLJKu",
+                      "name": "3.2 Artists may upload and p",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "3.2 Artists may upload and publish their own recordings under the Artist Agreement."
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "S6OSBh",
+                  "ref": "artist:2xutCo",
+                  "name": "Divider",
+                  "width": "fill_container"
+                },
+                {
+                  "type": "frame",
+                  "id": "T3mb6B",
+                  "name": "Other documents",
+                  "gap": 16,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "rYTBgo",
+                      "ref": "artist:pZcyuZ",
+                      "name": "Privacy Policy",
+                      "content": "Privacy Policy"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "ugWTs4",
+                      "ref": "artist:pZcyuZ",
+                      "name": "Community Guidelines",
+                      "content": "Community Guidelines"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "bnIjqm",
+                      "ref": "artist:pZcyuZ",
+                      "name": "Complaints and reports",
+                      "content": "Complaints and reports"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "6C3bne",
+                      "ref": "artist:pZcyuZ",
+                      "name": "Copyright and notice-and-act",
+                      "content": "Copyright and notice-and-action"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "xJKCHO",
+                      "ref": "artist:pZcyuZ",
+                      "name": "Artist Agreement",
+                      "content": "Artist Agreement"
+                    }
+                  ]
                 }
-              }
-            },
-            {
-              "type": "ref",
-              "id": "Yboh9V",
-              "ref": "ds:yjiPHo",
-              "name": "Text/Eyebrow",
-              "content": "LEGAL"
-            },
-            {
-              "type": "ref",
-              "id": "xRKhRc",
-              "ref": "ds:MgMQ2L",
-              "name": "Text/H1",
-              "content": "Artist Agreement"
-            },
-            {
-              "type": "ref",
-              "id": "diWVH2",
-              "ref": "ds:Qjj2NE",
-              "name": "Text/H3",
-              "content": "1. What Bitrate is"
-            },
-            {
-              "type": "ref",
-              "id": "5jVQ7H",
-              "ref": "ds:XDvNAD",
-              "name": "Text/Paragraph",
-              "textGrowth": "fixed-width",
-              "width": "fill_container",
-              "content": "Bitrate is a service you use to host and share your music. Bitrate is not a record label, publisher or manager and does not acquire ownership of your recordings or compositions."
-            },
-            {
-              "type": "ref",
-              "id": "RfLg2W",
-              "ref": "ds:Qjj2NE",
-              "name": "Text/H3",
-              "content": "2. Your content and warranties"
-            },
-            {
-              "type": "ref",
-              "id": "noGcFj",
-              "ref": "ds:XDvNAD",
-              "name": "Text/Paragraph",
-              "textGrowth": "fixed-width",
-              "width": "fill_container",
-              "content": "2.1 \"Your Content\" means audio, artwork, titles and metadata you upload."
-            },
-            {
-              "type": "ref",
-              "id": "hPFMNX",
-              "ref": "ds:fLuqjC",
-              "name": "Text/H4",
-              "content": "3. Licence to Bitrate"
-            },
-            {
-              "type": "ref",
-              "id": "9kpYWA",
-              "ref": "ds:fLuqjC",
-              "name": "Text/H4",
-              "content": "4. Removal and disputes"
-            },
-            {
-              "type": "ref",
-              "id": "2PuoBH",
-              "ref": "ds:fLuqjC",
-              "name": "Text/H4",
-              "content": "5. Indemnity"
-            },
-            {
-              "type": "ref",
-              "id": "tASjKA",
-              "ref": "ds:fLuqjC",
-              "name": "Text/H4",
-              "content": "6. Payments"
-            },
-            {
-              "type": "ref",
-              "id": "QVa3JZ",
-              "ref": "ds:fLuqjC",
-              "name": "Text/H4",
-              "content": "7. Term and termination"
-            },
-            {
-              "type": "ref",
-              "id": "dmSAgq",
-              "ref": "ds:fLuqjC",
-              "name": "Text/H4",
-              "content": "8. Governing law"
-            },
-            {
-              "type": "ref",
-              "id": "LSatke",
-              "ref": "ds:fLuqjC",
-              "name": "Text/H4",
-              "content": "9. Contact"
-            },
-            {
-              "type": "ref",
-              "id": "7DzfRC",
-              "ref": "ds:RlxQk",
-              "name": "Divider",
-              "width": "fill_container"
-            },
-            {
-              "type": "ref",
-              "id": "tHvq9H",
-              "ref": "ds:SOt7Oe",
-              "name": "Text/Body Strong",
-              "content": "Other legal documents"
-            },
-            {
-              "type": "ref",
-              "id": "hxEx59",
-              "ref": "ds:LSzB6i",
-              "name": "Text/Link",
-              "content": "Terms of Use"
-            },
-            {
-              "type": "ref",
-              "id": "FwJipy",
-              "ref": "ds:LSzB6i",
-              "name": "Text/Link",
-              "content": "Privacy Policy"
-            },
-            {
-              "type": "ref",
-              "id": "BoJuuq",
-              "ref": "ds:LSzB6i",
-              "name": "Text/Link",
-              "content": "Community Guidelines"
-            },
-            {
-              "type": "ref",
-              "id": "YQoX6Q",
-              "ref": "ds:LSzB6i",
-              "name": "Text/Link",
-              "content": "Complaints"
-            },
-            {
-              "type": "ref",
-              "id": "mrQFWv",
-              "ref": "ds:LSzB6i",
-              "name": "Text/Link",
-              "content": "Copyright"
+              ]
             }
           ]
         }
@@ -193,192 +340,339 @@
       "x": 0,
       "y": 0,
       "theme": {
-        "ds:Mode": "Dark"
+        "artist:Mode": "Dark"
       },
-      "context": "/legal/$slug — terms, artist-agreement, privacy, community, complaints, copyright — One template for every legal document; shown with the Artist Agreement."
+      "context": "/legal/$slug (terms, privacy, community, complaints, copyright, artist-agreement) — Static documents bundled with the app: no loading or empty states. Drafts are noindex and carry the draft banner."
     },
     {
       "type": "frame",
-      "id": "uM6BLb",
+      "id": "zkWGvm",
       "name": "Artist / Legal / Desktop / Light",
       "width": 1440,
-      "height": 1100,
-      "clip": true,
+      "height": "fit_content",
       "layout": "vertical",
-      "justifyContent": "center",
-      "alignItems": "center",
-      "gap": 20,
-      "padding": 24,
-      "fill": "$ds:--background",
-      "children": [
+      "clip": true,
+      "fill": [
         {
-          "type": "ref",
-          "id": "iPqpcV",
-          "ref": "ds:h25UaM",
-          "name": "Public Header"
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
         },
         {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
           "type": "frame",
-          "id": "2Sq82y",
-          "name": "Column",
+          "id": "5P6Loa",
+          "name": "Page",
           "layout": "vertical",
-          "gap": 16,
-          "width": 760,
+          "gap": 24,
+          "width": "fill_container",
+          "padding": [
+            72,
+            48,
+            96,
+            48
+          ],
+          "alignItems": "center",
           "children": [
             {
-              "type": "ref",
-              "id": "Ceqqvb",
-              "ref": "ds:cFuiSI",
-              "name": "Alert/Warning",
-              "descendants": {
-                "ds:3d5wsO": {
-                  "content": "Draft — pending legal review. This draft covers only the hosting licence needed for uploads today."
+              "type": "frame",
+              "id": "tzEApi",
+              "name": "Article",
+              "layout": "vertical",
+              "gap": 24,
+              "width": 768,
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "N8I7s2",
+                  "ref": "artist:94lOqw",
+                  "name": "Terms of Use",
+                  "content": "Terms of Use"
+                },
+                {
+                  "type": "frame",
+                  "id": "KwyvfN",
+                  "name": "Lead-in",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "uhHtAp",
+                      "ref": "artist:ZOLJKu",
+                      "name": "Effective date: 1 October 20",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "Effective date: 1 October 2026"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "pcatDX",
+                      "ref": "artist:ZOLJKu",
+                      "name": "These Terms of Use (\"Terms\")",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "These Terms of Use (\"Terms\") govern your use of Bitrate, a music streaming and publishing service operated by Vladyslav Tesliuk, Warsaw, Poland, a private individual (\"Bitrate\", \"we\", \"us\"). Contact: tesluakevlad@gmail.com."
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "3tiunK",
+                  "name": "1. Acceptance and eligibility",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "LyuelQ",
+                      "ref": "artist:RoXXJv",
+                      "name": "1. Acceptance and eligibilit",
+                      "content": "1. Acceptance and eligibility"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "O6JkZG",
+                      "ref": "artist:ZOLJKu",
+                      "name": "1.1 By creating an account o",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "1.1 By creating an account or using Bitrate you agree to these Terms and the Community Guidelines, and you confirm that you have read the Privacy Policy."
+                    },
+                    {
+                      "type": "ref",
+                      "id": "vz28VH",
+                      "ref": "artist:ZOLJKu",
+                      "name": "1.2 You must be at least 16 ",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "1.2 You must be at least 16 years old. If you are younger you may not create an account or use the service."
+                    },
+                    {
+                      "type": "ref",
+                      "id": "G3ZxnS",
+                      "ref": "artist:ZOLJKu",
+                      "name": "1.3 If you use Bitrate on be",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "1.3 If you use Bitrate on behalf of an organisation, you confirm you may bind it to these Terms."
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "6IADf1",
+                  "name": "2. Your account",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "W4vpVB",
+                      "ref": "artist:RoXXJv",
+                      "name": "2. Your account",
+                      "content": "2. Your account"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "JBQ2oG",
+                      "ref": "artist:ZOLJKu",
+                      "name": "2.1 Provide accurate informa",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "2.1 Provide accurate information and keep your credentials secure. You are responsible for activity on your account."
+                    },
+                    {
+                      "type": "ref",
+                      "id": "2jYcgB",
+                      "ref": "artist:ZOLJKu",
+                      "name": "2.2 Tell us promptly at tesl",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "2.2 Tell us promptly at tesluakevlad@gmail.com if you suspect unauthorised access."
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Z1SXJn",
+                      "ref": "artist:ZOLJKu",
+                      "name": "2.3 We may limit or lock an ",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "2.3 We may limit or lock an account after repeated failed sign-in attempts to protect it."
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "9YrGnO",
+                  "name": "3. The service",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "Dd8oHf",
+                      "ref": "artist:RoXXJv",
+                      "name": "3. The service",
+                      "content": "3. The service"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "OTSdjL",
+                      "ref": "artist:ZOLJKu",
+                      "name": "3.1 Listeners may stream mus",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "3.1 Listeners may stream music, build playlists, follow artists and use related features."
+                    },
+                    {
+                      "type": "ref",
+                      "id": "TyieJw",
+                      "ref": "artist:ZOLJKu",
+                      "name": "3.2 Artists may upload and p",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "3.2 Artists may upload and publish their own recordings under the Artist Agreement."
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "2Sokf7",
+                  "ref": "artist:2xutCo",
+                  "name": "Divider",
+                  "width": "fill_container"
+                },
+                {
+                  "type": "frame",
+                  "id": "53V4oe",
+                  "name": "Other documents",
+                  "gap": 16,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "x87eJe",
+                      "ref": "artist:pZcyuZ",
+                      "name": "Privacy Policy",
+                      "content": "Privacy Policy"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "EV08BM",
+                      "ref": "artist:pZcyuZ",
+                      "name": "Community Guidelines",
+                      "content": "Community Guidelines"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "l5lYJF",
+                      "ref": "artist:pZcyuZ",
+                      "name": "Complaints and reports",
+                      "content": "Complaints and reports"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "uMIbIS",
+                      "ref": "artist:pZcyuZ",
+                      "name": "Copyright and notice-and-act",
+                      "content": "Copyright and notice-and-action"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "VPJmH8",
+                      "ref": "artist:pZcyuZ",
+                      "name": "Artist Agreement",
+                      "content": "Artist Agreement"
+                    }
+                  ]
                 }
-              }
-            },
-            {
-              "type": "ref",
-              "id": "R8tHSa",
-              "ref": "ds:yjiPHo",
-              "name": "Text/Eyebrow",
-              "content": "LEGAL"
-            },
-            {
-              "type": "ref",
-              "id": "8BQ7pi",
-              "ref": "ds:MgMQ2L",
-              "name": "Text/H1",
-              "content": "Artist Agreement"
-            },
-            {
-              "type": "ref",
-              "id": "VA8577",
-              "ref": "ds:Qjj2NE",
-              "name": "Text/H3",
-              "content": "1. What Bitrate is"
-            },
-            {
-              "type": "ref",
-              "id": "xZpCeG",
-              "ref": "ds:XDvNAD",
-              "name": "Text/Paragraph",
-              "textGrowth": "fixed-width",
-              "width": "fill_container",
-              "content": "Bitrate is a service you use to host and share your music. Bitrate is not a record label, publisher or manager and does not acquire ownership of your recordings or compositions."
-            },
-            {
-              "type": "ref",
-              "id": "GMexqy",
-              "ref": "ds:Qjj2NE",
-              "name": "Text/H3",
-              "content": "2. Your content and warranties"
-            },
-            {
-              "type": "ref",
-              "id": "GsCTJJ",
-              "ref": "ds:XDvNAD",
-              "name": "Text/Paragraph",
-              "textGrowth": "fixed-width",
-              "width": "fill_container",
-              "content": "2.1 \"Your Content\" means audio, artwork, titles and metadata you upload."
-            },
-            {
-              "type": "ref",
-              "id": "6iNoMo",
-              "ref": "ds:fLuqjC",
-              "name": "Text/H4",
-              "content": "3. Licence to Bitrate"
-            },
-            {
-              "type": "ref",
-              "id": "yeLaRA",
-              "ref": "ds:fLuqjC",
-              "name": "Text/H4",
-              "content": "4. Removal and disputes"
-            },
-            {
-              "type": "ref",
-              "id": "HZoWuk",
-              "ref": "ds:fLuqjC",
-              "name": "Text/H4",
-              "content": "5. Indemnity"
-            },
-            {
-              "type": "ref",
-              "id": "owfUog",
-              "ref": "ds:fLuqjC",
-              "name": "Text/H4",
-              "content": "6. Payments"
-            },
-            {
-              "type": "ref",
-              "id": "oapjsZ",
-              "ref": "ds:fLuqjC",
-              "name": "Text/H4",
-              "content": "7. Term and termination"
-            },
-            {
-              "type": "ref",
-              "id": "KtcsRs",
-              "ref": "ds:fLuqjC",
-              "name": "Text/H4",
-              "content": "8. Governing law"
-            },
-            {
-              "type": "ref",
-              "id": "wjZJhC",
-              "ref": "ds:fLuqjC",
-              "name": "Text/H4",
-              "content": "9. Contact"
-            },
-            {
-              "type": "ref",
-              "id": "StJLD8",
-              "ref": "ds:RlxQk",
-              "name": "Divider",
-              "width": "fill_container"
-            },
-            {
-              "type": "ref",
-              "id": "5i56ap",
-              "ref": "ds:SOt7Oe",
-              "name": "Text/Body Strong",
-              "content": "Other legal documents"
-            },
-            {
-              "type": "ref",
-              "id": "uPwTCs",
-              "ref": "ds:LSzB6i",
-              "name": "Text/Link",
-              "content": "Terms of Use"
-            },
-            {
-              "type": "ref",
-              "id": "RFmi3Q",
-              "ref": "ds:LSzB6i",
-              "name": "Text/Link",
-              "content": "Privacy Policy"
-            },
-            {
-              "type": "ref",
-              "id": "CpccmH",
-              "ref": "ds:LSzB6i",
-              "name": "Text/Link",
-              "content": "Community Guidelines"
-            },
-            {
-              "type": "ref",
-              "id": "FPWeCU",
-              "ref": "ds:LSzB6i",
-              "name": "Text/Link",
-              "content": "Complaints"
-            },
-            {
-              "type": "ref",
-              "id": "c9LZNq",
-              "ref": "ds:LSzB6i",
-              "name": "Text/Link",
-              "content": "Copyright"
+              ]
             }
           ]
         }
@@ -386,192 +680,339 @@
       "x": 1540,
       "y": 0,
       "theme": {
-        "ds:Mode": "Light"
+        "artist:Mode": "Light"
       },
-      "context": "/legal/$slug — terms, artist-agreement, privacy, community, complaints, copyright — One template for every legal document; shown with the Artist Agreement."
+      "context": "/legal/$slug (terms, privacy, community, complaints, copyright, artist-agreement) — Static documents bundled with the app: no loading or empty states. Drafts are noindex and carry the draft banner."
     },
     {
       "type": "frame",
-      "id": "UttSjB",
+      "id": "naAlmx",
       "name": "Artist / Legal / Desktop / Dim",
       "width": 1440,
-      "height": 1100,
-      "clip": true,
+      "height": "fit_content",
       "layout": "vertical",
-      "justifyContent": "center",
-      "alignItems": "center",
-      "gap": 20,
-      "padding": 24,
-      "fill": "$ds:--background",
-      "children": [
+      "clip": true,
+      "fill": [
         {
-          "type": "ref",
-          "id": "4EbVxt",
-          "ref": "ds:h25UaM",
-          "name": "Public Header"
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
         },
         {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
           "type": "frame",
-          "id": "KuRb6z",
-          "name": "Column",
+          "id": "TuzRHc",
+          "name": "Page",
           "layout": "vertical",
-          "gap": 16,
-          "width": 760,
+          "gap": 24,
+          "width": "fill_container",
+          "padding": [
+            72,
+            48,
+            96,
+            48
+          ],
+          "alignItems": "center",
           "children": [
             {
-              "type": "ref",
-              "id": "TWvxpB",
-              "ref": "ds:cFuiSI",
-              "name": "Alert/Warning",
-              "descendants": {
-                "ds:3d5wsO": {
-                  "content": "Draft — pending legal review. This draft covers only the hosting licence needed for uploads today."
+              "type": "frame",
+              "id": "hVODFW",
+              "name": "Article",
+              "layout": "vertical",
+              "gap": 24,
+              "width": 768,
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "pqVNxL",
+                  "ref": "artist:94lOqw",
+                  "name": "Terms of Use",
+                  "content": "Terms of Use"
+                },
+                {
+                  "type": "frame",
+                  "id": "uryPYZ",
+                  "name": "Lead-in",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "o2eVun",
+                      "ref": "artist:ZOLJKu",
+                      "name": "Effective date: 1 October 20",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "Effective date: 1 October 2026"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "bRabXo",
+                      "ref": "artist:ZOLJKu",
+                      "name": "These Terms of Use (\"Terms\")",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "These Terms of Use (\"Terms\") govern your use of Bitrate, a music streaming and publishing service operated by Vladyslav Tesliuk, Warsaw, Poland, a private individual (\"Bitrate\", \"we\", \"us\"). Contact: tesluakevlad@gmail.com."
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "dzzXgf",
+                  "name": "1. Acceptance and eligibility",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "vjvupi",
+                      "ref": "artist:RoXXJv",
+                      "name": "1. Acceptance and eligibilit",
+                      "content": "1. Acceptance and eligibility"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "sN0yH3",
+                      "ref": "artist:ZOLJKu",
+                      "name": "1.1 By creating an account o",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "1.1 By creating an account or using Bitrate you agree to these Terms and the Community Guidelines, and you confirm that you have read the Privacy Policy."
+                    },
+                    {
+                      "type": "ref",
+                      "id": "LCW2II",
+                      "ref": "artist:ZOLJKu",
+                      "name": "1.2 You must be at least 16 ",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "1.2 You must be at least 16 years old. If you are younger you may not create an account or use the service."
+                    },
+                    {
+                      "type": "ref",
+                      "id": "OXVQzX",
+                      "ref": "artist:ZOLJKu",
+                      "name": "1.3 If you use Bitrate on be",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "1.3 If you use Bitrate on behalf of an organisation, you confirm you may bind it to these Terms."
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "myELal",
+                  "name": "2. Your account",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "266ZKy",
+                      "ref": "artist:RoXXJv",
+                      "name": "2. Your account",
+                      "content": "2. Your account"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "X8Wgec",
+                      "ref": "artist:ZOLJKu",
+                      "name": "2.1 Provide accurate informa",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "2.1 Provide accurate information and keep your credentials secure. You are responsible for activity on your account."
+                    },
+                    {
+                      "type": "ref",
+                      "id": "U0czVM",
+                      "ref": "artist:ZOLJKu",
+                      "name": "2.2 Tell us promptly at tesl",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "2.2 Tell us promptly at tesluakevlad@gmail.com if you suspect unauthorised access."
+                    },
+                    {
+                      "type": "ref",
+                      "id": "LB8yw2",
+                      "ref": "artist:ZOLJKu",
+                      "name": "2.3 We may limit or lock an ",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "2.3 We may limit or lock an account after repeated failed sign-in attempts to protect it."
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "72hoKY",
+                  "name": "3. The service",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "X9FpSo",
+                      "ref": "artist:RoXXJv",
+                      "name": "3. The service",
+                      "content": "3. The service"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "44jQ7E",
+                      "ref": "artist:ZOLJKu",
+                      "name": "3.1 Listeners may stream mus",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "3.1 Listeners may stream music, build playlists, follow artists and use related features."
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Znic56",
+                      "ref": "artist:ZOLJKu",
+                      "name": "3.2 Artists may upload and p",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "3.2 Artists may upload and publish their own recordings under the Artist Agreement."
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "avgZml",
+                  "ref": "artist:2xutCo",
+                  "name": "Divider",
+                  "width": "fill_container"
+                },
+                {
+                  "type": "frame",
+                  "id": "RJtGZs",
+                  "name": "Other documents",
+                  "gap": 16,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "t7ecY4",
+                      "ref": "artist:pZcyuZ",
+                      "name": "Privacy Policy",
+                      "content": "Privacy Policy"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "oa2wzM",
+                      "ref": "artist:pZcyuZ",
+                      "name": "Community Guidelines",
+                      "content": "Community Guidelines"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "rr9Cqi",
+                      "ref": "artist:pZcyuZ",
+                      "name": "Complaints and reports",
+                      "content": "Complaints and reports"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "wwQh8m",
+                      "ref": "artist:pZcyuZ",
+                      "name": "Copyright and notice-and-act",
+                      "content": "Copyright and notice-and-action"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "7vcDoE",
+                      "ref": "artist:pZcyuZ",
+                      "name": "Artist Agreement",
+                      "content": "Artist Agreement"
+                    }
+                  ]
                 }
-              }
-            },
-            {
-              "type": "ref",
-              "id": "aHx9FV",
-              "ref": "ds:yjiPHo",
-              "name": "Text/Eyebrow",
-              "content": "LEGAL"
-            },
-            {
-              "type": "ref",
-              "id": "E4N3ma",
-              "ref": "ds:MgMQ2L",
-              "name": "Text/H1",
-              "content": "Artist Agreement"
-            },
-            {
-              "type": "ref",
-              "id": "vzvEiv",
-              "ref": "ds:Qjj2NE",
-              "name": "Text/H3",
-              "content": "1. What Bitrate is"
-            },
-            {
-              "type": "ref",
-              "id": "WdkDi6",
-              "ref": "ds:XDvNAD",
-              "name": "Text/Paragraph",
-              "textGrowth": "fixed-width",
-              "width": "fill_container",
-              "content": "Bitrate is a service you use to host and share your music. Bitrate is not a record label, publisher or manager and does not acquire ownership of your recordings or compositions."
-            },
-            {
-              "type": "ref",
-              "id": "ixH9W6",
-              "ref": "ds:Qjj2NE",
-              "name": "Text/H3",
-              "content": "2. Your content and warranties"
-            },
-            {
-              "type": "ref",
-              "id": "U9AG8W",
-              "ref": "ds:XDvNAD",
-              "name": "Text/Paragraph",
-              "textGrowth": "fixed-width",
-              "width": "fill_container",
-              "content": "2.1 \"Your Content\" means audio, artwork, titles and metadata you upload."
-            },
-            {
-              "type": "ref",
-              "id": "m4rn4n",
-              "ref": "ds:fLuqjC",
-              "name": "Text/H4",
-              "content": "3. Licence to Bitrate"
-            },
-            {
-              "type": "ref",
-              "id": "uHgh5w",
-              "ref": "ds:fLuqjC",
-              "name": "Text/H4",
-              "content": "4. Removal and disputes"
-            },
-            {
-              "type": "ref",
-              "id": "5zT9r5",
-              "ref": "ds:fLuqjC",
-              "name": "Text/H4",
-              "content": "5. Indemnity"
-            },
-            {
-              "type": "ref",
-              "id": "ut9RMg",
-              "ref": "ds:fLuqjC",
-              "name": "Text/H4",
-              "content": "6. Payments"
-            },
-            {
-              "type": "ref",
-              "id": "kaPUiK",
-              "ref": "ds:fLuqjC",
-              "name": "Text/H4",
-              "content": "7. Term and termination"
-            },
-            {
-              "type": "ref",
-              "id": "9gp2UM",
-              "ref": "ds:fLuqjC",
-              "name": "Text/H4",
-              "content": "8. Governing law"
-            },
-            {
-              "type": "ref",
-              "id": "QamnN8",
-              "ref": "ds:fLuqjC",
-              "name": "Text/H4",
-              "content": "9. Contact"
-            },
-            {
-              "type": "ref",
-              "id": "znzn4U",
-              "ref": "ds:RlxQk",
-              "name": "Divider",
-              "width": "fill_container"
-            },
-            {
-              "type": "ref",
-              "id": "BxSWg5",
-              "ref": "ds:SOt7Oe",
-              "name": "Text/Body Strong",
-              "content": "Other legal documents"
-            },
-            {
-              "type": "ref",
-              "id": "q6ywHx",
-              "ref": "ds:LSzB6i",
-              "name": "Text/Link",
-              "content": "Terms of Use"
-            },
-            {
-              "type": "ref",
-              "id": "yNyTGk",
-              "ref": "ds:LSzB6i",
-              "name": "Text/Link",
-              "content": "Privacy Policy"
-            },
-            {
-              "type": "ref",
-              "id": "hDxdE7",
-              "ref": "ds:LSzB6i",
-              "name": "Text/Link",
-              "content": "Community Guidelines"
-            },
-            {
-              "type": "ref",
-              "id": "VJiXLY",
-              "ref": "ds:LSzB6i",
-              "name": "Text/Link",
-              "content": "Complaints"
-            },
-            {
-              "type": "ref",
-              "id": "ytF2jo",
-              "ref": "ds:LSzB6i",
-              "name": "Text/Link",
-              "content": "Copyright"
+              ]
             }
           ]
         }
@@ -579,199 +1020,346 @@
       "x": 3080,
       "y": 0,
       "theme": {
-        "ds:Mode": "Dim"
+        "artist:Mode": "Dim"
       },
-      "context": "/legal/$slug — terms, artist-agreement, privacy, community, complaints, copyright — One template for every legal document; shown with the Artist Agreement."
+      "context": "/legal/$slug (terms, privacy, community, complaints, copyright, artist-agreement) — Static documents bundled with the app: no loading or empty states. Drafts are noindex and carry the draft banner."
     },
     {
       "type": "frame",
-      "id": "UEimoc",
+      "id": "RDZsVw",
       "name": "Artist / Legal / Mobile / Dark",
       "width": 390,
-      "height": 844,
-      "clip": true,
+      "height": "fit_content",
       "layout": "vertical",
-      "fill": "$ds:--background",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
       "children": [
         {
           "type": "ref",
-          "id": "5s8S5v",
-          "ref": "ds:xBZUrc",
-          "name": "Mobile/Status Bar",
-          "width": "fill_container"
+          "id": "fBqJk5",
+          "ref": "artist:mA2OOT",
+          "name": "Status Bar"
         },
         {
           "type": "frame",
-          "id": "QaoB7M",
-          "name": "Form",
+          "id": "qrHssh",
+          "name": "Page",
           "layout": "vertical",
-          "gap": 22,
+          "gap": 16,
           "width": "fill_container",
           "padding": [
-            20,
-            20
+            16,
+            16,
+            40,
+            16
           ],
+          "alignItems": "center",
           "children": [
             {
-              "type": "ref",
-              "id": "3ZfzZa",
-              "ref": "ds:J95vY0",
-              "name": "Logo/Lockup"
-            },
-            {
-              "type": "ref",
-              "id": "F2qc6w",
-              "ref": "ds:cFuiSI",
-              "name": "Alert/Warning",
-              "descendants": {
-                "ds:3d5wsO": {
-                  "content": "Draft — pending legal review. This draft covers only the hosting licence needed for uploads today."
+              "type": "frame",
+              "id": "EOdc6D",
+              "name": "Article",
+              "layout": "vertical",
+              "gap": 24,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "s8vcoA",
+                  "ref": "artist:94lOqw",
+                  "name": "Terms of Use",
+                  "content": "Terms of Use"
+                },
+                {
+                  "type": "frame",
+                  "id": "vBCBWf",
+                  "name": "Lead-in",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "LhsvRf",
+                      "ref": "artist:ZOLJKu",
+                      "name": "Effective date: 1 October 20",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "Effective date: 1 October 2026"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Wl32hq",
+                      "ref": "artist:ZOLJKu",
+                      "name": "These Terms of Use (\"Terms\")",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "These Terms of Use (\"Terms\") govern your use of Bitrate, a music streaming and publishing service operated by Vladyslav Tesliuk, Warsaw, Poland, a private individual (\"Bitrate\", \"we\", \"us\"). Contact: tesluakevlad@gmail.com."
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "QUaiI2",
+                  "name": "1. Acceptance and eligibility",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "0wCGUo",
+                      "ref": "artist:RoXXJv",
+                      "name": "1. Acceptance and eligibilit",
+                      "content": "1. Acceptance and eligibility"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Pg8wnP",
+                      "ref": "artist:ZOLJKu",
+                      "name": "1.1 By creating an account o",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "1.1 By creating an account or using Bitrate you agree to these Terms and the Community Guidelines, and you confirm that you have read the Privacy Policy."
+                    },
+                    {
+                      "type": "ref",
+                      "id": "8jlfmO",
+                      "ref": "artist:ZOLJKu",
+                      "name": "1.2 You must be at least 16 ",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "1.2 You must be at least 16 years old. If you are younger you may not create an account or use the service."
+                    },
+                    {
+                      "type": "ref",
+                      "id": "5FJDCi",
+                      "ref": "artist:ZOLJKu",
+                      "name": "1.3 If you use Bitrate on be",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "1.3 If you use Bitrate on behalf of an organisation, you confirm you may bind it to these Terms."
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "L2rsk5",
+                  "name": "2. Your account",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "vM32Tt",
+                      "ref": "artist:RoXXJv",
+                      "name": "2. Your account",
+                      "content": "2. Your account"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "wdaJEM",
+                      "ref": "artist:ZOLJKu",
+                      "name": "2.1 Provide accurate informa",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "2.1 Provide accurate information and keep your credentials secure. You are responsible for activity on your account."
+                    },
+                    {
+                      "type": "ref",
+                      "id": "f4fj9K",
+                      "ref": "artist:ZOLJKu",
+                      "name": "2.2 Tell us promptly at tesl",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "2.2 Tell us promptly at tesluakevlad@gmail.com if you suspect unauthorised access."
+                    },
+                    {
+                      "type": "ref",
+                      "id": "qYUfel",
+                      "ref": "artist:ZOLJKu",
+                      "name": "2.3 We may limit or lock an ",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "2.3 We may limit or lock an account after repeated failed sign-in attempts to protect it."
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "MIyL0i",
+                  "name": "3. The service",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "QeQULp",
+                      "ref": "artist:RoXXJv",
+                      "name": "3. The service",
+                      "content": "3. The service"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Jl0FNq",
+                      "ref": "artist:ZOLJKu",
+                      "name": "3.1 Listeners may stream mus",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "3.1 Listeners may stream music, build playlists, follow artists and use related features."
+                    },
+                    {
+                      "type": "ref",
+                      "id": "uML8DK",
+                      "ref": "artist:ZOLJKu",
+                      "name": "3.2 Artists may upload and p",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "3.2 Artists may upload and publish their own recordings under the Artist Agreement."
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "TMCFbI",
+                  "ref": "artist:2xutCo",
+                  "name": "Divider",
+                  "width": "fill_container"
+                },
+                {
+                  "type": "frame",
+                  "id": "UXQFBK",
+                  "name": "Other documents",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "Y6lZlA",
+                      "ref": "artist:pZcyuZ",
+                      "name": "Privacy Policy",
+                      "content": "Privacy Policy"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "3TYFf7",
+                      "ref": "artist:pZcyuZ",
+                      "name": "Community Guidelines",
+                      "content": "Community Guidelines"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "88joAg",
+                      "ref": "artist:pZcyuZ",
+                      "name": "Complaints and reports",
+                      "content": "Complaints and reports"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "1e1d0o",
+                      "ref": "artist:pZcyuZ",
+                      "name": "Copyright and notice-and-act",
+                      "content": "Copyright and notice-and-action"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "ERpyR5",
+                      "ref": "artist:pZcyuZ",
+                      "name": "Artist Agreement",
+                      "content": "Artist Agreement"
+                    }
+                  ]
                 }
-              }
-            },
-            {
-              "type": "ref",
-              "id": "syTWdw",
-              "ref": "ds:yjiPHo",
-              "name": "Text/Eyebrow",
-              "content": "LEGAL"
-            },
-            {
-              "type": "ref",
-              "id": "rkENhG",
-              "ref": "ds:MgMQ2L",
-              "name": "Text/H1",
-              "content": "Artist Agreement"
-            },
-            {
-              "type": "ref",
-              "id": "SPRdEV",
-              "ref": "ds:Qjj2NE",
-              "name": "Text/H3",
-              "content": "1. What Bitrate is"
-            },
-            {
-              "type": "ref",
-              "id": "bT4iQf",
-              "ref": "ds:XDvNAD",
-              "name": "Text/Paragraph",
-              "textGrowth": "fixed-width",
-              "width": "fill_container",
-              "content": "Bitrate is a service you use to host and share your music. Bitrate is not a record label, publisher or manager and does not acquire ownership of your recordings or compositions."
-            },
-            {
-              "type": "ref",
-              "id": "mU4j7J",
-              "ref": "ds:Qjj2NE",
-              "name": "Text/H3",
-              "content": "2. Your content and warranties"
-            },
-            {
-              "type": "ref",
-              "id": "utDrH3",
-              "ref": "ds:XDvNAD",
-              "name": "Text/Paragraph",
-              "textGrowth": "fixed-width",
-              "width": "fill_container",
-              "content": "2.1 \"Your Content\" means audio, artwork, titles and metadata you upload."
-            },
-            {
-              "type": "ref",
-              "id": "zex6CR",
-              "ref": "ds:fLuqjC",
-              "name": "Text/H4",
-              "content": "3. Licence to Bitrate"
-            },
-            {
-              "type": "ref",
-              "id": "yZ7Mcf",
-              "ref": "ds:fLuqjC",
-              "name": "Text/H4",
-              "content": "4. Removal and disputes"
-            },
-            {
-              "type": "ref",
-              "id": "igNfvk",
-              "ref": "ds:fLuqjC",
-              "name": "Text/H4",
-              "content": "5. Indemnity"
-            },
-            {
-              "type": "ref",
-              "id": "fS9ypt",
-              "ref": "ds:fLuqjC",
-              "name": "Text/H4",
-              "content": "6. Payments"
-            },
-            {
-              "type": "ref",
-              "id": "AUpdzZ",
-              "ref": "ds:fLuqjC",
-              "name": "Text/H4",
-              "content": "7. Term and termination"
-            },
-            {
-              "type": "ref",
-              "id": "XrBjpk",
-              "ref": "ds:fLuqjC",
-              "name": "Text/H4",
-              "content": "8. Governing law"
-            },
-            {
-              "type": "ref",
-              "id": "yQMSa5",
-              "ref": "ds:fLuqjC",
-              "name": "Text/H4",
-              "content": "9. Contact"
-            },
-            {
-              "type": "ref",
-              "id": "jUYNZ7",
-              "ref": "ds:RlxQk",
-              "name": "Divider",
-              "width": "fill_container"
-            },
-            {
-              "type": "ref",
-              "id": "qA9QAx",
-              "ref": "ds:SOt7Oe",
-              "name": "Text/Body Strong",
-              "content": "Other legal documents"
-            },
-            {
-              "type": "ref",
-              "id": "XbsaZe",
-              "ref": "ds:LSzB6i",
-              "name": "Text/Link",
-              "content": "Terms of Use"
-            },
-            {
-              "type": "ref",
-              "id": "avU8rA",
-              "ref": "ds:LSzB6i",
-              "name": "Text/Link",
-              "content": "Privacy Policy"
-            },
-            {
-              "type": "ref",
-              "id": "jQiKFF",
-              "ref": "ds:LSzB6i",
-              "name": "Text/Link",
-              "content": "Community Guidelines"
-            },
-            {
-              "type": "ref",
-              "id": "kXFkC9",
-              "ref": "ds:LSzB6i",
-              "name": "Text/Link",
-              "content": "Complaints"
-            },
-            {
-              "type": "ref",
-              "id": "iNRKgx",
-              "ref": "ds:LSzB6i",
-              "name": "Text/Link",
-              "content": "Copyright"
+              ]
             }
           ]
         }
@@ -779,9 +1367,3080 @@
       "x": 4620,
       "y": 0,
       "theme": {
-        "ds:Mode": "Dark"
+        "artist:Mode": "Dark"
       },
-      "context": "/legal/$slug — terms, artist-agreement, privacy, community, complaints, copyright — One template for every legal document; shown with the Artist Agreement."
+      "context": "/legal/$slug (terms, privacy, community, complaints, copyright, artist-agreement) — Static documents bundled with the app: no loading or empty states. Drafts are noindex and carry the draft banner."
+    },
+    {
+      "type": "frame",
+      "id": "rMMP27",
+      "name": "Artist / Legal / Mobile / Light",
+      "width": 390,
+      "height": "fit_content",
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "vxBjHq",
+          "ref": "artist:mA2OOT",
+          "name": "Status Bar"
+        },
+        {
+          "type": "frame",
+          "id": "EzqQOU",
+          "name": "Page",
+          "layout": "vertical",
+          "gap": 16,
+          "width": "fill_container",
+          "padding": [
+            16,
+            16,
+            40,
+            16
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "cHoGzs",
+              "name": "Article",
+              "layout": "vertical",
+              "gap": 24,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "EllT5V",
+                  "ref": "artist:94lOqw",
+                  "name": "Terms of Use",
+                  "content": "Terms of Use"
+                },
+                {
+                  "type": "frame",
+                  "id": "JL5x64",
+                  "name": "Lead-in",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "7dnePz",
+                      "ref": "artist:ZOLJKu",
+                      "name": "Effective date: 1 October 20",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "Effective date: 1 October 2026"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "kY0Iiy",
+                      "ref": "artist:ZOLJKu",
+                      "name": "These Terms of Use (\"Terms\")",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "These Terms of Use (\"Terms\") govern your use of Bitrate, a music streaming and publishing service operated by Vladyslav Tesliuk, Warsaw, Poland, a private individual (\"Bitrate\", \"we\", \"us\"). Contact: tesluakevlad@gmail.com."
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "Yj9GFD",
+                  "name": "1. Acceptance and eligibility",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "CWX80f",
+                      "ref": "artist:RoXXJv",
+                      "name": "1. Acceptance and eligibilit",
+                      "content": "1. Acceptance and eligibility"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "pasfbK",
+                      "ref": "artist:ZOLJKu",
+                      "name": "1.1 By creating an account o",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "1.1 By creating an account or using Bitrate you agree to these Terms and the Community Guidelines, and you confirm that you have read the Privacy Policy."
+                    },
+                    {
+                      "type": "ref",
+                      "id": "I7wcPc",
+                      "ref": "artist:ZOLJKu",
+                      "name": "1.2 You must be at least 16 ",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "1.2 You must be at least 16 years old. If you are younger you may not create an account or use the service."
+                    },
+                    {
+                      "type": "ref",
+                      "id": "FPDaPv",
+                      "ref": "artist:ZOLJKu",
+                      "name": "1.3 If you use Bitrate on be",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "1.3 If you use Bitrate on behalf of an organisation, you confirm you may bind it to these Terms."
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "VhiBSg",
+                  "name": "2. Your account",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "f5SQju",
+                      "ref": "artist:RoXXJv",
+                      "name": "2. Your account",
+                      "content": "2. Your account"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "gbR1mc",
+                      "ref": "artist:ZOLJKu",
+                      "name": "2.1 Provide accurate informa",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "2.1 Provide accurate information and keep your credentials secure. You are responsible for activity on your account."
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Z0O6gZ",
+                      "ref": "artist:ZOLJKu",
+                      "name": "2.2 Tell us promptly at tesl",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "2.2 Tell us promptly at tesluakevlad@gmail.com if you suspect unauthorised access."
+                    },
+                    {
+                      "type": "ref",
+                      "id": "c3iLYX",
+                      "ref": "artist:ZOLJKu",
+                      "name": "2.3 We may limit or lock an ",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "2.3 We may limit or lock an account after repeated failed sign-in attempts to protect it."
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "0DM4AD",
+                  "name": "3. The service",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "GHYMJL",
+                      "ref": "artist:RoXXJv",
+                      "name": "3. The service",
+                      "content": "3. The service"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "DrpFss",
+                      "ref": "artist:ZOLJKu",
+                      "name": "3.1 Listeners may stream mus",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "3.1 Listeners may stream music, build playlists, follow artists and use related features."
+                    },
+                    {
+                      "type": "ref",
+                      "id": "maR27D",
+                      "ref": "artist:ZOLJKu",
+                      "name": "3.2 Artists may upload and p",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "3.2 Artists may upload and publish their own recordings under the Artist Agreement."
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "5GwGM3",
+                  "ref": "artist:2xutCo",
+                  "name": "Divider",
+                  "width": "fill_container"
+                },
+                {
+                  "type": "frame",
+                  "id": "4fetOI",
+                  "name": "Other documents",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "mNf5PV",
+                      "ref": "artist:pZcyuZ",
+                      "name": "Privacy Policy",
+                      "content": "Privacy Policy"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "pKR989",
+                      "ref": "artist:pZcyuZ",
+                      "name": "Community Guidelines",
+                      "content": "Community Guidelines"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "sjSs5Q",
+                      "ref": "artist:pZcyuZ",
+                      "name": "Complaints and reports",
+                      "content": "Complaints and reports"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "pjjO4B",
+                      "ref": "artist:pZcyuZ",
+                      "name": "Copyright and notice-and-act",
+                      "content": "Copyright and notice-and-action"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "0Ybiz3",
+                      "ref": "artist:pZcyuZ",
+                      "name": "Artist Agreement",
+                      "content": "Artist Agreement"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "x": 5110,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Light"
+      },
+      "context": "/legal/$slug (terms, privacy, community, complaints, copyright, artist-agreement) — Static documents bundled with the app: no loading or empty states. Drafts are noindex and carry the draft banner."
+    },
+    {
+      "type": "frame",
+      "id": "1un4wf",
+      "name": "Artist / Legal / Mobile / Dim",
+      "width": 390,
+      "height": "fit_content",
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "vZMoiq",
+          "ref": "artist:mA2OOT",
+          "name": "Status Bar"
+        },
+        {
+          "type": "frame",
+          "id": "y7XHmd",
+          "name": "Page",
+          "layout": "vertical",
+          "gap": 16,
+          "width": "fill_container",
+          "padding": [
+            16,
+            16,
+            40,
+            16
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "qOe509",
+              "name": "Article",
+              "layout": "vertical",
+              "gap": 24,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "UGeTzh",
+                  "ref": "artist:94lOqw",
+                  "name": "Terms of Use",
+                  "content": "Terms of Use"
+                },
+                {
+                  "type": "frame",
+                  "id": "TSImey",
+                  "name": "Lead-in",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "XrNUeQ",
+                      "ref": "artist:ZOLJKu",
+                      "name": "Effective date: 1 October 20",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "Effective date: 1 October 2026"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "YQ0n3d",
+                      "ref": "artist:ZOLJKu",
+                      "name": "These Terms of Use (\"Terms\")",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "These Terms of Use (\"Terms\") govern your use of Bitrate, a music streaming and publishing service operated by Vladyslav Tesliuk, Warsaw, Poland, a private individual (\"Bitrate\", \"we\", \"us\"). Contact: tesluakevlad@gmail.com."
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "OVJZVH",
+                  "name": "1. Acceptance and eligibility",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "clPrKx",
+                      "ref": "artist:RoXXJv",
+                      "name": "1. Acceptance and eligibilit",
+                      "content": "1. Acceptance and eligibility"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "93tsVN",
+                      "ref": "artist:ZOLJKu",
+                      "name": "1.1 By creating an account o",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "1.1 By creating an account or using Bitrate you agree to these Terms and the Community Guidelines, and you confirm that you have read the Privacy Policy."
+                    },
+                    {
+                      "type": "ref",
+                      "id": "499rZO",
+                      "ref": "artist:ZOLJKu",
+                      "name": "1.2 You must be at least 16 ",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "1.2 You must be at least 16 years old. If you are younger you may not create an account or use the service."
+                    },
+                    {
+                      "type": "ref",
+                      "id": "TQpFwZ",
+                      "ref": "artist:ZOLJKu",
+                      "name": "1.3 If you use Bitrate on be",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "1.3 If you use Bitrate on behalf of an organisation, you confirm you may bind it to these Terms."
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "D9LeqT",
+                  "name": "2. Your account",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "rKWzFO",
+                      "ref": "artist:RoXXJv",
+                      "name": "2. Your account",
+                      "content": "2. Your account"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "qUViQ8",
+                      "ref": "artist:ZOLJKu",
+                      "name": "2.1 Provide accurate informa",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "2.1 Provide accurate information and keep your credentials secure. You are responsible for activity on your account."
+                    },
+                    {
+                      "type": "ref",
+                      "id": "HJ4krx",
+                      "ref": "artist:ZOLJKu",
+                      "name": "2.2 Tell us promptly at tesl",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "2.2 Tell us promptly at tesluakevlad@gmail.com if you suspect unauthorised access."
+                    },
+                    {
+                      "type": "ref",
+                      "id": "KVDgeT",
+                      "ref": "artist:ZOLJKu",
+                      "name": "2.3 We may limit or lock an ",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "2.3 We may limit or lock an account after repeated failed sign-in attempts to protect it."
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "CSSmnJ",
+                  "name": "3. The service",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "Q1CcBw",
+                      "ref": "artist:RoXXJv",
+                      "name": "3. The service",
+                      "content": "3. The service"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "VU5O4v",
+                      "ref": "artist:ZOLJKu",
+                      "name": "3.1 Listeners may stream mus",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "3.1 Listeners may stream music, build playlists, follow artists and use related features."
+                    },
+                    {
+                      "type": "ref",
+                      "id": "eJM7C5",
+                      "ref": "artist:ZOLJKu",
+                      "name": "3.2 Artists may upload and p",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "3.2 Artists may upload and publish their own recordings under the Artist Agreement."
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "zlHnCt",
+                  "ref": "artist:2xutCo",
+                  "name": "Divider",
+                  "width": "fill_container"
+                },
+                {
+                  "type": "frame",
+                  "id": "wT9M2S",
+                  "name": "Other documents",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "4NZ46O",
+                      "ref": "artist:pZcyuZ",
+                      "name": "Privacy Policy",
+                      "content": "Privacy Policy"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Zz58BS",
+                      "ref": "artist:pZcyuZ",
+                      "name": "Community Guidelines",
+                      "content": "Community Guidelines"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Y2lf2o",
+                      "ref": "artist:pZcyuZ",
+                      "name": "Complaints and reports",
+                      "content": "Complaints and reports"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "NM5N2P",
+                      "ref": "artist:pZcyuZ",
+                      "name": "Copyright and notice-and-act",
+                      "content": "Copyright and notice-and-action"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "IdwbpE",
+                      "ref": "artist:pZcyuZ",
+                      "name": "Artist Agreement",
+                      "content": "Artist Agreement"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "x": 5600,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Dim"
+      },
+      "context": "/legal/$slug (terms, privacy, community, complaints, copyright, artist-agreement) — Static documents bundled with the app: no loading or empty states. Drafts are noindex and carry the draft banner."
+    },
+    {
+      "type": "frame",
+      "id": "nnDpJI",
+      "name": "Artist / Legal / Table / Desktop",
+      "width": 1440,
+      "height": "fit_content",
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "frame",
+          "id": "BQ7PU3",
+          "name": "Page",
+          "layout": "vertical",
+          "gap": 24,
+          "width": "fill_container",
+          "padding": [
+            72,
+            48,
+            96,
+            48
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "bHC8R8",
+              "name": "Article",
+              "layout": "vertical",
+              "gap": 24,
+              "width": 768,
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "RAoJef",
+                  "ref": "artist:94lOqw",
+                  "name": "Privacy Policy",
+                  "content": "Privacy Policy"
+                },
+                {
+                  "type": "frame",
+                  "id": "0iXH8w",
+                  "name": "3. What we collect, why, and on what legal basis",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "aXAQHA",
+                      "ref": "artist:RoXXJv",
+                      "name": "3. What we collect, why, and",
+                      "content": "3. What we collect, why, and on what legal basis"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "7jATYz",
+                      "name": "Table",
+                      "layout": "vertical",
+                      "gap": 0,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "NwGMIU",
+                          "ref": "artist:NuofJe",
+                          "name": "Header",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:HKXxbG": {
+                              "content": "Data"
+                            },
+                            "artist:S09Jd8": {
+                              "content": "Purpose",
+                              "width": 220
+                            },
+                            "artist:XReXAm": {
+                              "content": "Legal basis (GDPR Art. 6)",
+                              "width": 170
+                            },
+                            "artist:YLxwjg": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "QzmF4F",
+                          "ref": "artist:0nFJkJ",
+                          "name": "Row / Email, username, pas",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:idqVqd": {
+                              "content": "Email, username, password hash, avatar, profile description, interface language"
+                            },
+                            "artist:fZBfUq": {
+                              "content": "Create and run your account, send service emails (verification, password reset)",
+                              "width": 220
+                            },
+                            "artist:e7JkAO": {
+                              "content": "Contract (6(1)(b))",
+                              "width": 170
+                            },
+                            "artist:hAM0zn": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "xR22ar",
+                          "ref": "artist:0nFJkJ",
+                          "name": "Row / Two-factor secret (i",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:idqVqd": {
+                              "content": "Two-factor secret (if you enable 2FA), sessions and device records"
+                            },
+                            "artist:fZBfUq": {
+                              "content": "Secure sign-in, keep you signed in, show your devices",
+                              "width": 220
+                            },
+                            "artist:e7JkAO": {
+                              "content": "Contract; legitimate interest in security (6(1)(f))",
+                              "width": 170
+                            },
+                            "artist:hAM0zn": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "uZjiwo",
+                          "ref": "artist:0nFJkJ",
+                          "name": "Row / Sign-in identity fro",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:idqVqd": {
+                              "content": "Sign-in identity from Google or Facebook (provider account id, email, name)"
+                            },
+                            "artist:fZBfUq": {
+                              "content": "Sign in with a social account (see section 4)",
+                              "width": 220
+                            },
+                            "artist:e7JkAO": {
+                              "content": "Contract",
+                              "width": 170
+                            },
+                            "artist:hAM0zn": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "TYOeih",
+                          "ref": "artist:0nFJkJ",
+                          "name": "Row / Playlists, likes, fo",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:idqVqd": {
+                              "content": "Playlists, likes, follows, notifications"
+                            },
+                            "artist:fZBfUq": {
+                              "content": "Provide the features you use",
+                              "width": 220
+                            },
+                            "artist:e7JkAO": {
+                              "content": "Contract",
+                              "width": 170
+                            },
+                            "artist:hAM0zn": {
+                              "enabled": false
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "3gTILU",
+                  "ref": "artist:2xutCo",
+                  "name": "Divider",
+                  "width": "fill_container"
+                },
+                {
+                  "type": "frame",
+                  "id": "8LuEZW",
+                  "name": "Other documents",
+                  "gap": 16,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "s2aheg",
+                      "ref": "artist:pZcyuZ",
+                      "name": "Terms of Use",
+                      "content": "Terms of Use"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "tZWsBh",
+                      "ref": "artist:pZcyuZ",
+                      "name": "Community Guidelines",
+                      "content": "Community Guidelines"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "MIn3DY",
+                      "ref": "artist:pZcyuZ",
+                      "name": "Complaints and reports",
+                      "content": "Complaints and reports"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "JaBjqW",
+                      "ref": "artist:pZcyuZ",
+                      "name": "Copyright and notice-and-act",
+                      "content": "Copyright and notice-and-action"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Kf8rWx",
+                      "ref": "artist:pZcyuZ",
+                      "name": "Artist Agreement",
+                      "content": "Artist Agreement"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "x": 6090,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Dark"
+      },
+      "context": "/legal/$slug (terms, privacy, community, complaints, copyright, artist-agreement) — Static documents bundled with the app: no loading or empty states. Drafts are noindex and carry the draft banner."
+    },
+    {
+      "type": "frame",
+      "id": "BFzj7w",
+      "name": "Artist / Legal / Table / Mobile",
+      "width": 390,
+      "height": "fit_content",
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "vhFca8",
+          "ref": "artist:mA2OOT",
+          "name": "Status Bar"
+        },
+        {
+          "type": "frame",
+          "id": "w0wD5a",
+          "name": "Page",
+          "layout": "vertical",
+          "gap": 16,
+          "width": "fill_container",
+          "padding": [
+            16,
+            16,
+            40,
+            16
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "KYUdcf",
+              "name": "Article",
+              "layout": "vertical",
+              "gap": 24,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "Y1MeeR",
+                  "ref": "artist:94lOqw",
+                  "name": "Privacy Policy",
+                  "content": "Privacy Policy"
+                },
+                {
+                  "type": "frame",
+                  "id": "V9Rp3Q",
+                  "name": "3. What we collect, why, and on what legal basis",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "nZXMoO",
+                      "ref": "artist:RoXXJv",
+                      "name": "3. What we collect, why, and",
+                      "content": "3. What we collect, why, and on what legal basis"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "qk7zbh",
+                      "name": "Scroll",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "clip": true,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "4BckxY",
+                          "name": "Table",
+                          "layout": "vertical",
+                          "gap": 0,
+                          "width": 640,
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "ar9qRy",
+                              "ref": "artist:NuofJe",
+                              "name": "Header",
+                              "width": "fill_container",
+                              "descendants": {
+                                "artist:HKXxbG": {
+                                  "content": "Data"
+                                },
+                                "artist:S09Jd8": {
+                                  "content": "Purpose",
+                                  "width": 220
+                                },
+                                "artist:XReXAm": {
+                                  "content": "Legal basis (GDPR Art. 6)",
+                                  "width": 170
+                                },
+                                "artist:YLxwjg": {
+                                  "enabled": false
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "7y6ZFw",
+                              "ref": "artist:0nFJkJ",
+                              "name": "Row / Email, username, pas",
+                              "width": "fill_container",
+                              "descendants": {
+                                "artist:idqVqd": {
+                                  "content": "Email, username, password hash, avatar, profile description, interface language"
+                                },
+                                "artist:fZBfUq": {
+                                  "content": "Create and run your account, send service emails (verification, password reset)",
+                                  "width": 220
+                                },
+                                "artist:e7JkAO": {
+                                  "content": "Contract (6(1)(b))",
+                                  "width": 170
+                                },
+                                "artist:hAM0zn": {
+                                  "enabled": false
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "ObzWCC",
+                              "ref": "artist:0nFJkJ",
+                              "name": "Row / Two-factor secret (i",
+                              "width": "fill_container",
+                              "descendants": {
+                                "artist:idqVqd": {
+                                  "content": "Two-factor secret (if you enable 2FA), sessions and device records"
+                                },
+                                "artist:fZBfUq": {
+                                  "content": "Secure sign-in, keep you signed in, show your devices",
+                                  "width": 220
+                                },
+                                "artist:e7JkAO": {
+                                  "content": "Contract; legitimate interest in security (6(1)(f))",
+                                  "width": 170
+                                },
+                                "artist:hAM0zn": {
+                                  "enabled": false
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "VsY7uS",
+                              "ref": "artist:0nFJkJ",
+                              "name": "Row / Sign-in identity fro",
+                              "width": "fill_container",
+                              "descendants": {
+                                "artist:idqVqd": {
+                                  "content": "Sign-in identity from Google or Facebook (provider account id, email, name)"
+                                },
+                                "artist:fZBfUq": {
+                                  "content": "Sign in with a social account (see section 4)",
+                                  "width": 220
+                                },
+                                "artist:e7JkAO": {
+                                  "content": "Contract",
+                                  "width": 170
+                                },
+                                "artist:hAM0zn": {
+                                  "enabled": false
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "gibqsF",
+                              "ref": "artist:0nFJkJ",
+                              "name": "Row / Playlists, likes, fo",
+                              "width": "fill_container",
+                              "descendants": {
+                                "artist:idqVqd": {
+                                  "content": "Playlists, likes, follows, notifications"
+                                },
+                                "artist:fZBfUq": {
+                                  "content": "Provide the features you use",
+                                  "width": 220
+                                },
+                                "artist:e7JkAO": {
+                                  "content": "Contract",
+                                  "width": 170
+                                },
+                                "artist:hAM0zn": {
+                                  "enabled": false
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "SijVak",
+                  "ref": "artist:2xutCo",
+                  "name": "Divider",
+                  "width": "fill_container"
+                },
+                {
+                  "type": "frame",
+                  "id": "JCewHU",
+                  "name": "Other documents",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "JoWHRP",
+                      "ref": "artist:pZcyuZ",
+                      "name": "Terms of Use",
+                      "content": "Terms of Use"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "EpLJY0",
+                      "ref": "artist:pZcyuZ",
+                      "name": "Community Guidelines",
+                      "content": "Community Guidelines"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "HtaztI",
+                      "ref": "artist:pZcyuZ",
+                      "name": "Complaints and reports",
+                      "content": "Complaints and reports"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "MP3iNo",
+                      "ref": "artist:pZcyuZ",
+                      "name": "Copyright and notice-and-act",
+                      "content": "Copyright and notice-and-action"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "nND245",
+                      "ref": "artist:pZcyuZ",
+                      "name": "Artist Agreement",
+                      "content": "Artist Agreement"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "x": 7630,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Dark"
+      },
+      "context": "/legal/$slug (terms, privacy, community, complaints, copyright, artist-agreement) — Static documents bundled with the app: no loading or empty states. Drafts are noindex and carry the draft banner."
+    },
+    {
+      "type": "frame",
+      "id": "HRE4v9",
+      "name": "Artist / Legal / Draft document / Desktop",
+      "width": 1440,
+      "height": "fit_content",
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "frame",
+          "id": "fZmVwQ",
+          "name": "Page",
+          "layout": "vertical",
+          "gap": 24,
+          "width": "fill_container",
+          "padding": [
+            72,
+            48,
+            96,
+            48
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "hJjAo1",
+              "name": "Article",
+              "layout": "vertical",
+              "gap": 24,
+              "width": 768,
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "RCtOqC",
+                  "ref": "artist:Vufrvc",
+                  "name": "Notice",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:z7fR9s": {
+                      "content": "Draft — pending legal review. Text in [[double brackets]] is not filled in yet."
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "U2p6bK",
+                  "ref": "artist:94lOqw",
+                  "name": "Community Guidelines",
+                  "content": "Community Guidelines"
+                },
+                {
+                  "type": "frame",
+                  "id": "RDbNTf",
+                  "name": "Lead-in",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "l4VGt2",
+                      "ref": "artist:ZOLJKu",
+                      "name": "Effective date: 1 October 20",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "Effective date: 1 October 2026"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "ws5nAX",
+                      "ref": "artist:ZOLJKu",
+                      "name": "Bitrate is a place for music",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "Bitrate is a place for music and the people who make and enjoy it. These guidelines explain what is and is not allowed. They form part of the Terms of Use."
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "O1etED",
+                  "name": "What we expect",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "6amFCw",
+                      "ref": "artist:RoXXJv",
+                      "name": "What we expect",
+                      "content": "What we expect"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "1MzTAX",
+                      "name": "List",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "TGqeV7",
+                          "ref": "artist:8rolWx",
+                          "name": "Item",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:PQHD3U": {
+                              "content": "Upload only music and audio you have the right to share."
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "YteKz5",
+                          "ref": "artist:8rolWx",
+                          "name": "Item",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:PQHD3U": {
+                              "content": "Be honest about who you are and what you publish: no impersonation, no misleading titles or artwork."
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "Hao1mu",
+                          "ref": "artist:8rolWx",
+                          "name": "Item",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:PQHD3U": {
+                              "content": "Mark explicit content correctly."
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "S6tRyZ",
+                          "ref": "artist:8rolWx",
+                          "name": "Item",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:PQHD3U": {
+                              "content": "Treat other people with respect."
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "LkHPN2",
+                  "ref": "artist:2xutCo",
+                  "name": "Divider",
+                  "width": "fill_container"
+                },
+                {
+                  "type": "frame",
+                  "id": "On23BN",
+                  "name": "Other documents",
+                  "gap": 16,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "ALbdgU",
+                      "ref": "artist:pZcyuZ",
+                      "name": "Terms of Use",
+                      "content": "Terms of Use"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "rwM7s1",
+                      "ref": "artist:pZcyuZ",
+                      "name": "Privacy Policy",
+                      "content": "Privacy Policy"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "GShbT0",
+                      "ref": "artist:pZcyuZ",
+                      "name": "Complaints and reports",
+                      "content": "Complaints and reports"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "D2AHd9",
+                      "ref": "artist:pZcyuZ",
+                      "name": "Copyright and notice-and-act",
+                      "content": "Copyright and notice-and-action"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "W9ApT0",
+                      "ref": "artist:pZcyuZ",
+                      "name": "Artist Agreement",
+                      "content": "Artist Agreement"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "x": 8120,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Dark"
+      },
+      "context": "/legal/$slug (terms, privacy, community, complaints, copyright, artist-agreement) — Static documents bundled with the app: no loading or empty states. Drafts are noindex and carry the draft banner."
+    },
+    {
+      "type": "frame",
+      "id": "lbPxyL",
+      "name": "Artist / Legal / Draft document / Mobile",
+      "width": 390,
+      "height": "fit_content",
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "jZtKR4",
+          "ref": "artist:mA2OOT",
+          "name": "Status Bar"
+        },
+        {
+          "type": "frame",
+          "id": "ewhZW5",
+          "name": "Page",
+          "layout": "vertical",
+          "gap": 16,
+          "width": "fill_container",
+          "padding": [
+            16,
+            16,
+            40,
+            16
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "4q88WR",
+              "name": "Article",
+              "layout": "vertical",
+              "gap": 24,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "w4MfM5",
+                  "ref": "artist:Vufrvc",
+                  "name": "Notice",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:z7fR9s": {
+                      "content": "Draft — pending legal review. Text in [[double brackets]] is not filled in yet."
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "nHXIeS",
+                  "ref": "artist:94lOqw",
+                  "name": "Community Guidelines",
+                  "content": "Community Guidelines"
+                },
+                {
+                  "type": "frame",
+                  "id": "EvLqew",
+                  "name": "Lead-in",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "40Byxz",
+                      "ref": "artist:ZOLJKu",
+                      "name": "Effective date: 1 October 20",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "Effective date: 1 October 2026"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "9TzZ3W",
+                      "ref": "artist:ZOLJKu",
+                      "name": "Bitrate is a place for music",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "Bitrate is a place for music and the people who make and enjoy it. These guidelines explain what is and is not allowed. They form part of the Terms of Use."
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "DoXFSf",
+                  "name": "What we expect",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "fcjBMR",
+                      "ref": "artist:RoXXJv",
+                      "name": "What we expect",
+                      "content": "What we expect"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "iGXaLX",
+                      "name": "List",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "Isj7sd",
+                          "ref": "artist:8rolWx",
+                          "name": "Item",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:PQHD3U": {
+                              "content": "Upload only music and audio you have the right to share."
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "NNxHhl",
+                          "ref": "artist:8rolWx",
+                          "name": "Item",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:PQHD3U": {
+                              "content": "Be honest about who you are and what you publish: no impersonation, no misleading titles or artwork."
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "Orq6dM",
+                          "ref": "artist:8rolWx",
+                          "name": "Item",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:PQHD3U": {
+                              "content": "Mark explicit content correctly."
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "L8HR4U",
+                          "ref": "artist:8rolWx",
+                          "name": "Item",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:PQHD3U": {
+                              "content": "Treat other people with respect."
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "U9CDjM",
+                  "ref": "artist:2xutCo",
+                  "name": "Divider",
+                  "width": "fill_container"
+                },
+                {
+                  "type": "frame",
+                  "id": "JAxApS",
+                  "name": "Other documents",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "xpfS1l",
+                      "ref": "artist:pZcyuZ",
+                      "name": "Terms of Use",
+                      "content": "Terms of Use"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "sYWGnL",
+                      "ref": "artist:pZcyuZ",
+                      "name": "Privacy Policy",
+                      "content": "Privacy Policy"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Jekx81",
+                      "ref": "artist:pZcyuZ",
+                      "name": "Complaints and reports",
+                      "content": "Complaints and reports"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "M2EN2s",
+                      "ref": "artist:pZcyuZ",
+                      "name": "Copyright and notice-and-act",
+                      "content": "Copyright and notice-and-action"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "RezEsa",
+                      "ref": "artist:pZcyuZ",
+                      "name": "Artist Agreement",
+                      "content": "Artist Agreement"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "x": 9660,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Dark"
+      },
+      "context": "/legal/$slug (terms, privacy, community, complaints, copyright, artist-agreement) — Static documents bundled with the app: no loading or empty states. Drafts are noindex and carry the draft banner."
+    },
+    {
+      "type": "frame",
+      "id": "8Q1vgq",
+      "name": "Artist / Legal / Note block / Desktop",
+      "width": 1440,
+      "height": "fit_content",
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "frame",
+          "id": "0P1z88",
+          "name": "Page",
+          "layout": "vertical",
+          "gap": 24,
+          "width": "fill_container",
+          "padding": [
+            72,
+            48,
+            96,
+            48
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "GfNz7A",
+              "name": "Article",
+              "layout": "vertical",
+              "gap": 24,
+              "width": 768,
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "WJl23S",
+                  "ref": "artist:Vufrvc",
+                  "name": "Notice",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:z7fR9s": {
+                      "content": "Draft — pending legal review. Text in [[double brackets]] is not filled in yet."
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "VrczAV",
+                  "ref": "artist:94lOqw",
+                  "name": "Complaints and reports",
+                  "content": "Complaints and reports"
+                },
+                {
+                  "type": "frame",
+                  "id": "Qt4vvR",
+                  "name": "Notes",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "mwubfP",
+                      "ref": "artist:RoXXJv",
+                      "name": "Notes",
+                      "content": "Notes"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "jL1koq",
+                      "ref": "artist:Vufrvc",
+                      "name": "Note",
+                      "width": "fill_container",
+                      "descendants": {
+                        "artist:z7fR9s": {
+                          "content": "A web form and an in-app report option for tracks, albums and accounts are planned; today the in-app option covers playlists only."
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "FcZmjO",
+                  "ref": "artist:2xutCo",
+                  "name": "Divider",
+                  "width": "fill_container"
+                },
+                {
+                  "type": "frame",
+                  "id": "Aoo6pJ",
+                  "name": "Other documents",
+                  "gap": 16,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "oC8tXu",
+                      "ref": "artist:pZcyuZ",
+                      "name": "Terms of Use",
+                      "content": "Terms of Use"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "vaxDzb",
+                      "ref": "artist:pZcyuZ",
+                      "name": "Privacy Policy",
+                      "content": "Privacy Policy"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "KgUxgm",
+                      "ref": "artist:pZcyuZ",
+                      "name": "Community Guidelines",
+                      "content": "Community Guidelines"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "HFtUVr",
+                      "ref": "artist:pZcyuZ",
+                      "name": "Copyright and notice-and-act",
+                      "content": "Copyright and notice-and-action"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "KKvKp4",
+                      "ref": "artist:pZcyuZ",
+                      "name": "Artist Agreement",
+                      "content": "Artist Agreement"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "x": 10150,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Dark"
+      },
+      "context": "/legal/$slug (terms, privacy, community, complaints, copyright, artist-agreement) — Static documents bundled with the app: no loading or empty states. Drafts are noindex and carry the draft banner."
+    },
+    {
+      "type": "frame",
+      "id": "uc1IV8",
+      "name": "Artist / Legal / Note block / Mobile",
+      "width": 390,
+      "height": "fit_content",
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "il6r4H",
+          "ref": "artist:mA2OOT",
+          "name": "Status Bar"
+        },
+        {
+          "type": "frame",
+          "id": "fYr2N4",
+          "name": "Page",
+          "layout": "vertical",
+          "gap": 16,
+          "width": "fill_container",
+          "padding": [
+            16,
+            16,
+            40,
+            16
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "LZjRdb",
+              "name": "Article",
+              "layout": "vertical",
+              "gap": 24,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "3ch5l4",
+                  "ref": "artist:Vufrvc",
+                  "name": "Notice",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:z7fR9s": {
+                      "content": "Draft — pending legal review. Text in [[double brackets]] is not filled in yet."
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "6WXxJE",
+                  "ref": "artist:94lOqw",
+                  "name": "Complaints and reports",
+                  "content": "Complaints and reports"
+                },
+                {
+                  "type": "frame",
+                  "id": "NdQkHy",
+                  "name": "Notes",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "FCMhAQ",
+                      "ref": "artist:RoXXJv",
+                      "name": "Notes",
+                      "content": "Notes"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "ADJMgr",
+                      "ref": "artist:Vufrvc",
+                      "name": "Note",
+                      "width": "fill_container",
+                      "descendants": {
+                        "artist:z7fR9s": {
+                          "content": "A web form and an in-app report option for tracks, albums and accounts are planned; today the in-app option covers playlists only."
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "Ygkw3N",
+                  "ref": "artist:2xutCo",
+                  "name": "Divider",
+                  "width": "fill_container"
+                },
+                {
+                  "type": "frame",
+                  "id": "H3lNbw",
+                  "name": "Other documents",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "n3oavF",
+                      "ref": "artist:pZcyuZ",
+                      "name": "Terms of Use",
+                      "content": "Terms of Use"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "qjoHTu",
+                      "ref": "artist:pZcyuZ",
+                      "name": "Privacy Policy",
+                      "content": "Privacy Policy"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "p0UFxi",
+                      "ref": "artist:pZcyuZ",
+                      "name": "Community Guidelines",
+                      "content": "Community Guidelines"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "mZ0Yh9",
+                      "ref": "artist:pZcyuZ",
+                      "name": "Copyright and notice-and-act",
+                      "content": "Copyright and notice-and-action"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "hX14pz",
+                      "ref": "artist:pZcyuZ",
+                      "name": "Artist Agreement",
+                      "content": "Artist Agreement"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "x": 11690,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Dark"
+      },
+      "context": "/legal/$slug (terms, privacy, community, complaints, copyright, artist-agreement) — Static documents bundled with the app: no loading or empty states. Drafts are noindex and carry the draft banner."
+    },
+    {
+      "type": "frame",
+      "id": "fRH4lt",
+      "name": "Artist / Legal / Not in English / Desktop",
+      "width": 1440,
+      "height": "fit_content",
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "frame",
+          "id": "Hxu7v7",
+          "name": "Page",
+          "layout": "vertical",
+          "gap": 24,
+          "width": "fill_container",
+          "padding": [
+            72,
+            48,
+            96,
+            48
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "vKUVN5",
+              "name": "Article",
+              "layout": "vertical",
+              "gap": 24,
+              "width": 768,
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "FdtMYe",
+                  "ref": "artist:Vufrvc",
+                  "name": "Notice",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:z7fR9s": {
+                      "content": "Draft — pending legal review. Text in [[double brackets]] is not filled in yet. This document is available in English only."
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "ITGH4q",
+                  "ref": "artist:94lOqw",
+                  "name": "Community Guidelines",
+                  "content": "Community Guidelines"
+                },
+                {
+                  "type": "frame",
+                  "id": "FmV4FI",
+                  "name": "Lead-in",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "lHT7hR",
+                      "ref": "artist:ZOLJKu",
+                      "name": "Effective date: 1 October 20",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "Effective date: 1 October 2026"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "w2Yudd",
+                      "ref": "artist:ZOLJKu",
+                      "name": "Bitrate is a place for music",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "Bitrate is a place for music and the people who make and enjoy it. These guidelines explain what is and is not allowed. They form part of the Terms of Use."
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "yEdfAw",
+                  "name": "What we expect",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "6Iz9dr",
+                      "ref": "artist:RoXXJv",
+                      "name": "What we expect",
+                      "content": "What we expect"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "193R6x",
+                      "name": "List",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "JkSCnE",
+                          "ref": "artist:8rolWx",
+                          "name": "Item",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:PQHD3U": {
+                              "content": "Upload only music and audio you have the right to share."
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "OCQ0RR",
+                          "ref": "artist:8rolWx",
+                          "name": "Item",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:PQHD3U": {
+                              "content": "Be honest about who you are and what you publish: no impersonation, no misleading titles or artwork."
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "xM2T4R",
+                          "ref": "artist:8rolWx",
+                          "name": "Item",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:PQHD3U": {
+                              "content": "Mark explicit content correctly."
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "ISDiF1",
+                          "ref": "artist:8rolWx",
+                          "name": "Item",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:PQHD3U": {
+                              "content": "Treat other people with respect."
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "zhrVjH",
+                  "ref": "artist:2xutCo",
+                  "name": "Divider",
+                  "width": "fill_container"
+                },
+                {
+                  "type": "frame",
+                  "id": "CS8Epk",
+                  "name": "Other documents",
+                  "gap": 16,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "AFN9eX",
+                      "ref": "artist:pZcyuZ",
+                      "name": "Terms of Use",
+                      "content": "Terms of Use"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "rJVEIl",
+                      "ref": "artist:pZcyuZ",
+                      "name": "Privacy Policy",
+                      "content": "Privacy Policy"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "GE0juV",
+                      "ref": "artist:pZcyuZ",
+                      "name": "Complaints and reports",
+                      "content": "Complaints and reports"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "DM0htG",
+                      "ref": "artist:pZcyuZ",
+                      "name": "Copyright and notice-and-act",
+                      "content": "Copyright and notice-and-action"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "WbaGZ5",
+                      "ref": "artist:pZcyuZ",
+                      "name": "Artist Agreement",
+                      "content": "Artist Agreement"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "x": 12180,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Dark"
+      },
+      "context": "/legal/$slug (terms, privacy, community, complaints, copyright, artist-agreement) — Static documents bundled with the app: no loading or empty states. Drafts are noindex and carry the draft banner."
+    },
+    {
+      "type": "frame",
+      "id": "XNDGtf",
+      "name": "Artist / Legal / Not in English / Mobile",
+      "width": 390,
+      "height": "fit_content",
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "DRa1d5",
+          "ref": "artist:mA2OOT",
+          "name": "Status Bar"
+        },
+        {
+          "type": "frame",
+          "id": "yEoXtO",
+          "name": "Page",
+          "layout": "vertical",
+          "gap": 16,
+          "width": "fill_container",
+          "padding": [
+            16,
+            16,
+            40,
+            16
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "QARAMR",
+              "name": "Article",
+              "layout": "vertical",
+              "gap": 24,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "sD8Tso",
+                  "ref": "artist:Vufrvc",
+                  "name": "Notice",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:z7fR9s": {
+                      "content": "Draft — pending legal review. Text in [[double brackets]] is not filled in yet. This document is available in English only."
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "jKEmBc",
+                  "ref": "artist:94lOqw",
+                  "name": "Community Guidelines",
+                  "content": "Community Guidelines"
+                },
+                {
+                  "type": "frame",
+                  "id": "AvvVpj",
+                  "name": "Lead-in",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "0yKWHs",
+                      "ref": "artist:ZOLJKu",
+                      "name": "Effective date: 1 October 20",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "Effective date: 1 October 2026"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "5bEaXz",
+                      "ref": "artist:ZOLJKu",
+                      "name": "Bitrate is a place for music",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "Bitrate is a place for music and the people who make and enjoy it. These guidelines explain what is and is not allowed. They form part of the Terms of Use."
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "vRHFy6",
+                  "name": "What we expect",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "foNnd7",
+                      "ref": "artist:RoXXJv",
+                      "name": "What we expect",
+                      "content": "What we expect"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "iqWXiq",
+                      "name": "List",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "K9fYJL",
+                          "ref": "artist:8rolWx",
+                          "name": "Item",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:PQHD3U": {
+                              "content": "Upload only music and audio you have the right to share."
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "PAOQ0r",
+                          "ref": "artist:8rolWx",
+                          "name": "Item",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:PQHD3U": {
+                              "content": "Be honest about who you are and what you publish: no impersonation, no misleading titles or artwork."
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "QBRTGD",
+                          "ref": "artist:8rolWx",
+                          "name": "Item",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:PQHD3U": {
+                              "content": "Mark explicit content correctly."
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "NyPF7c",
+                          "ref": "artist:8rolWx",
+                          "name": "Item",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:PQHD3U": {
+                              "content": "Treat other people with respect."
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "MSF3gC",
+                  "ref": "artist:2xutCo",
+                  "name": "Divider",
+                  "width": "fill_container"
+                },
+                {
+                  "type": "frame",
+                  "id": "BmyPXM",
+                  "name": "Other documents",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "tHngv8",
+                      "ref": "artist:pZcyuZ",
+                      "name": "Terms of Use",
+                      "content": "Terms of Use"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "oAXpsL",
+                      "ref": "artist:pZcyuZ",
+                      "name": "Privacy Policy",
+                      "content": "Privacy Policy"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "J0q7BU",
+                      "ref": "artist:pZcyuZ",
+                      "name": "Complaints and reports",
+                      "content": "Complaints and reports"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "MxsUEU",
+                      "ref": "artist:pZcyuZ",
+                      "name": "Copyright and notice-and-act",
+                      "content": "Copyright and notice-and-action"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "RE9xqG",
+                      "ref": "artist:pZcyuZ",
+                      "name": "Artist Agreement",
+                      "content": "Artist Agreement"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "x": 13720,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Dark"
+      },
+      "context": "/legal/$slug (terms, privacy, community, complaints, copyright, artist-agreement) — Static documents bundled with the app: no loading or empty states. Drafts are noindex and carry the draft banner."
     }
   ]
 }
