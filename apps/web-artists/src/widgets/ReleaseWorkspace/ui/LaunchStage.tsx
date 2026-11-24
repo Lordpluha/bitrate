@@ -4,6 +4,7 @@ import { PublishRelease } from '@features/publish-release'
 import { useI18n } from '@shared/i18n'
 import { PLAYER_ROUTES } from '@shared/routes/routes'
 import { LockedButton, PanelIcon } from '@shared/ui'
+import { Link } from '@tanstack/react-router'
 import {
   ExternalLink,
   Link2,
@@ -16,10 +17,16 @@ import {
 interface LaunchStageProps {
   artistId: string
   release: ReleaseWorkspace
+  /** AI promotion is on for the artist: the promotion row opens the Promotion stage. */
+  promotion?: boolean
 }
 
 /** Stage 5: publication on Bitrate and what follows it. Only Bitrate publication is shown as done. */
-export function LaunchStage({ artistId, release }: LaunchStageProps) {
+export function LaunchStage({
+  artistId,
+  release,
+  promotion = false,
+}: LaunchStageProps) {
   const live = release.status === 'RELEASED'
   const { t } = useI18n()
   const notLive = t('workspace.launch.notLive')
@@ -92,7 +99,7 @@ export function LaunchStage({ artistId, release }: LaunchStageProps) {
               </span>
             </span>
           </li>
-          <li data-state="soon">
+          <li data-state={promotion ? 'ready' : 'soon'}>
             <span className="artist-release-next-icon">
               <Megaphone aria-hidden="true" />
             </span>
@@ -102,9 +109,21 @@ export function LaunchStage({ artistId, release }: LaunchStageProps) {
               </span>
               <span>{t('workspace.launch.optional')}</span>
             </span>
-            <span className="artist-release-chip">
-              {t('workspace.launch.soon')}
-            </span>
+            {promotion ? (
+              <Button asChild size="sm" variant="outline">
+                <Link
+                  params={{ releaseId: release.id }}
+                  search={{ step: 'promotion' }}
+                  to="/dashboard/music/$releaseId"
+                >
+                  {t('promotion.step.openPlan')}
+                </Link>
+              </Button>
+            ) : (
+              <span className="artist-release-chip">
+                {t('workspace.launch.soon')}
+              </span>
+            )}
           </li>
         </ol>
         <p className="artist-release-footnote">

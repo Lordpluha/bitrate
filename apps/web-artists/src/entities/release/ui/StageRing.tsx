@@ -3,8 +3,8 @@ import { useI18n } from '@shared/i18n'
 import type { ReleaseSummary } from '../model/release.schema'
 import {
   currentStage,
+  releasePipeline,
   releaseStageLabels,
-  releaseStages,
   stageProgress,
 } from '../model/stages'
 
@@ -26,20 +26,20 @@ export function StageRing({ status, className }: StageRingProps) {
   const { t } = useI18n()
   const progress = stageProgress(status)
   const current = currentStage(status)
-  const index = releaseStages.indexOf(current) + 1
-  const segment = CIRCUMFERENCE / releaseStages.length
+  const index = releasePipeline.indexOf(current) + 1
+  const segment = CIRCUMFERENCE / releasePipeline.length
   return (
     <div
       aria-label={t('release.ring.label', {
         stage: t(releaseStageLabels[current]),
         index,
-        total: releaseStages.length,
+        total: releasePipeline.length,
       })}
       className={cn('artist-stage-ring', className)}
       role="img"
     >
       <svg aria-hidden="true" viewBox="0 0 120 120">
-        {releaseStages.map((stage, position) => (
+        {releasePipeline.map((stage, position) => (
           <circle
             cx="60"
             cy="60"
@@ -56,7 +56,7 @@ export function StageRing({ status, className }: StageRingProps) {
       </svg>
       <span aria-hidden="true" className="artist-stage-ring-centre">
         <b>
-          {index}/{releaseStages.length}
+          {index}/{releasePipeline.length}
         </b>
         <span>{t(releaseStageLabels[current])}</span>
       </span>

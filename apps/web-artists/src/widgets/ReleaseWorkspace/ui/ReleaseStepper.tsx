@@ -17,13 +17,16 @@ interface ReleaseStepperProps {
   active: ReleaseStage
   /** Page controls at the end of the bar, such as Customize on the Draft stage. */
   actions?: ReactNode
+  /** The stages to show; promotion is left out for artists without it. */
+  stages?: readonly ReleaseStage[]
 }
 
-/** The five release stages as navigation, each showing where it stands. */
+/** The release stages as navigation, each showing where it stands. */
 export function ReleaseStepper({
   release,
   active,
   actions,
+  stages = releaseStages,
 }: ReleaseStepperProps) {
   const progress = stageProgress(release.status)
   const { t } = useI18n()
@@ -31,7 +34,7 @@ export function ReleaseStepper({
     <div className="artist-release-stepper">
       <nav aria-label={t('workspace.stages')}>
         <ol>
-          {releaseStages.map((stage, index) => {
+          {stages.map((stage, index) => {
             const state = progress[stage]
             return (
               <li data-state={state} key={stage}>
@@ -52,7 +55,7 @@ export function ReleaseStepper({
                     {t(stageProgressLabels[state])}
                   </span>
                 </Link>
-                {index < releaseStages.length - 1 && (
+                {index < stages.length - 1 && (
                   <span
                     aria-hidden="true"
                     className="artist-release-step-line"

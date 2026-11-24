@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest'
-import { currentStage, stageProgress } from './stages'
+import {
+  currentStage,
+  releasePipeline,
+  releaseStages,
+  stageProgress,
+} from './stages'
 
 describe('release stages', () => {
   it.each([
@@ -20,6 +25,7 @@ describe('release stages', () => {
       review: 'upcoming',
       deliver: 'upcoming',
       launch: 'upcoming',
+      promotion: 'optional',
     })
   })
 
@@ -37,6 +43,7 @@ describe('release stages', () => {
       review: 'complete',
       deliver: 'optional',
       launch: 'current',
+      promotion: 'optional',
     })
   })
 
@@ -46,6 +53,19 @@ describe('release stages', () => {
       review: 'complete',
       deliver: 'complete',
       launch: 'current',
+      promotion: 'optional',
     })
+  })
+
+  it.each(['DRAFT', 'SUBMITTED', 'READY', 'RELEASED'] as const)(
+    'keeps promotion optional for a %s release',
+    (status) => {
+      expect(stageProgress(status).promotion).toBe('optional')
+    },
+  )
+
+  it('counts only the required stages in the pipeline', () => {
+    expect(releasePipeline).toEqual(['draft', 'review', 'deliver', 'launch'])
+    expect(releaseStages.at(-1)).toBe('promotion')
   })
 })

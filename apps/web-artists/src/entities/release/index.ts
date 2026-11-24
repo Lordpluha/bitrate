@@ -90,7 +90,9 @@ export {
 export { releaseRoadmap } from './model/roadmap'
 export {
   currentStage,
+  type PipelineStage,
   type ReleaseStage,
+  releasePipeline,
   releaseStageLabels,
   releaseStages,
   stageProgress,

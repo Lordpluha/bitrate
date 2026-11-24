@@ -1,7 +1,10 @@
 import { Button } from '@bitrate/ui-react'
+import { useAiAllowance } from '@entities/promotion'
 import {
   currentStage,
   type ReleaseStage,
+  releasePipeline,
+  releaseStages,
   useReleaseWorkspace,
 } from '@entities/release'
 import { ReleaseTitleEditor } from '@features/edit-release'
@@ -9,8 +12,9 @@ import { ReleaseChangesPanel } from '@features/propose-release-changes'
 import { useI18n } from '@shared/i18n'
 import { ROUTES } from '@shared/routes/routes'
 import { PageSkeleton } from '@shared/ui'
-import { Link } from '@tanstack/react-router'
+import { Link, useNavigate } from '@tanstack/react-router'
 import { ReleaseDeliveryPanel } from '@widgets/ReleaseDelivery'
+import { PromotionStage } from '@widgets/ReleasePromotion'
 import {
   DraftStage,
   LaunchStage,
@@ -28,14 +32,27 @@ interface ReleaseWorkspaceViewProps {
   releaseId: string
   /** The stage named in the URL; without one the release opens on its current stage. */
   step?: ReleaseStage
+  /** The promotion POST step whose drafts are open. */
+  postStepId?: string
 }
 
 export function ReleaseWorkspaceView({
   artistId,
   releaseId,
   step,
+  postStepId,
 }: ReleaseWorkspaceViewProps) {
   const query = useReleaseWorkspace(artistId, releaseId)
+  const allowance = useAiAllowance(artistId)
+  const navigate = useNavigate()
+  const stages = allowance.data?.enabled ? releaseStages : releasePipeline
+  const openPosts = (post: string | undefined) =>
+    navigate({
+      to: '/dashboard/music/$releaseId',
+      params: { releaseId },
+      search: { step: 'promotion', post },
+      resetScroll: false,
+    })
   const { t, tMessage } = useI18n()
   const [saved, setSaved] = useState(false)
   const [dialog, setDialog] = useState<WorkspaceAction | null>(null)
@@ -97,7 +114,11 @@ export function ReleaseWorkspaceView({
               />
             }
           />
-          <ReleaseStepper active={stage ?? 'draft'} release={query.data} />
+          <ReleaseStepper
+            active={stage ?? 'draft'}
+            release={query.data}
+            stages={stages}
+          />
           {stage === 'draft' && (
             <DraftStage
               artistId={artistId}
@@ -116,7 +137,19 @@ export function ReleaseWorkspaceView({
             />
           )}
           {stage === 'launch' && (
-            <LaunchStage artistId={artistId} release={query.data} />
+            <LaunchStage
+              artistId={artistId}
+              promotion={allowance.data?.enabled === true}
+              release={query.data}
+            />
+          )}
+          {stage === 'promotion' && (
+            <PromotionStage
+              artistId={artistId}
+              onOpenPosts={(post) => void openPosts(post)}
+              postStepId={postStepId}
+              release={query.data}
+            />
           )}
           {query.data.acceptsChanges && (
             <ReleaseChangesPanel
