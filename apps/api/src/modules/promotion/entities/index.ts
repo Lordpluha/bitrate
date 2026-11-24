@@ -1,4 +1,5 @@
 export { AiAllowanceEntity } from './ai-allowance.entity'
+export { PromotionCalendarEntryEntity } from './promotion-calendar-entry.entity'
 export { PromotionPlanEntity } from './promotion-plan.entity'
 export { PromotionPostEntity } from './promotion-post.entity'
 export { PromotionProfileEntity } from './promotion-profile.entity'

@@ -45,4 +45,14 @@ export class PromotionStepEntity {
 
   @ApiProperty({ description: 'False once the artist edited the text' })
   aiGenerated: boolean
+
+  @ApiProperty({ description: 'A new suggestion for this step is being written' })
+  regenerating: boolean
+
+  @ApiProperty({
+    type: String,
+    nullable: true,
+    description: 'Message key of the last failed regeneration; the old text was kept',
+  })
+  regenerationFailure: string | null
 }

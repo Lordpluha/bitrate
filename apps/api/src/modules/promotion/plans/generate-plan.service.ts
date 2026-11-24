@@ -5,6 +5,8 @@ import {
   PromotionModelUnavailableError,
   PromotionOutputRejectedError,
 } from '../ai/generator'
+import { PromotionEventsService } from '../events'
+import { InputModerationService } from '../moderation'
 import { PROMOTION_ERRORS } from '../promotion.errors'
 import {
   buildPlanRequest,
@@ -12,27 +14,15 @@ import {
   PLAN_SYSTEM_PROMPT,
   PlanOutputSchema,
   planText,
+  RELEASE_CONTEXT_SELECT,
+  toReleaseFacts,
 } from './generation'
 
 /** Everything a plan generation reads, in one query. */
 const PLAN_SOURCE_SELECT = {
   status: true,
   steps: { select: { offsetDays: true, kind: true, title: true }, orderBy: { position: 'asc' } },
-  release: {
-    select: {
-      title: true,
-      type: true,
-      scheduledAt: true,
-      deletedAt: true,
-      territories: { select: { countryCode: true } },
-      trackDrafts: {
-        where: { deletedAt: null },
-        orderBy: { position: 'asc' },
-        select: { title: true, genres: { select: { genre: { select: { name: true } } } } },
-      },
-      owner: { select: { id: true, username: true, bio: true, promotionProfile: true } },
-    },
-  },
+  release: { select: RELEASE_CONTEXT_SELECT },
 } as const
 
 /** Job body: fills a GENERATING plan version from the model and settles it READY or FAILED. */
@@ -43,6 +33,8 @@ export class GeneratePlanService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly generator: PromotionGenerator,
+    private readonly moderation: InputModerationService,
+    private readonly events: PromotionEventsService,
   ) {}
 
   async generate(planId: string): Promise<void> {
@@ -57,22 +49,17 @@ export class GeneratePlanService {
       await this.fail(planId, PROMOTION_ERRORS.GENERATION_UNAVAILABLE)
       return
     }
-    const drafts = release.trackDrafts
     const { prompt, facts } = buildPlanRequest(
-      {
-        title: release.title,
-        type: release.type,
-        scheduledAt: release.scheduledAt,
-        trackTitles: drafts.map((draft) => draft.title),
-        genres: [...new Set(drafts.flatMap((d) => d.genres.map((g) => g.genre.name)))],
-        territories: release.territories.map((t) => t.countryCode),
-        artistName: release.owner.username,
-        bio: release.owner.bio,
-      },
+      toReleaseFacts(release, release.scheduledAt),
       profile,
       plan.steps,
     )
     try {
+      const artistWrote = [profile.audience, ...profile.voiceExamples]
+      if (!(await this.moderation.isAllowed(release.owner.id, artistWrote))) {
+        await this.fail(planId, PROMOTION_ERRORS.INPUT_REJECTED)
+        return
+      }
       const result = await this.generator.generate({
         artistId: release.owner.id,
         task: 'plan',
@@ -90,6 +77,9 @@ export class GeneratePlanService {
           data: { status: 'READY', model: result.model },
         }),
       ])
+      await this.events.record(release.owner.id, 'promotion.plan.generated', planId, {
+        steps: rows.length,
+      })
     } catch (error: unknown) {
       if (error instanceof PromotionModelUnavailableError) {
         await this.fail(planId, PROMOTION_ERRORS.GENERATION_UNAVAILABLE)

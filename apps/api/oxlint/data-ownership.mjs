@@ -28,6 +28,7 @@ export const DATA_OWNERS = {
   promotionPlanStep: ['promotion'],
   promotionPost: ['promotion'],
   promotionPostTranslation: ['promotion'],
+  promotionEvent: ['promotion'],
 
   staff: ['admin-auth', 'admin/staff'],
   staffSession: ['admin-auth'],

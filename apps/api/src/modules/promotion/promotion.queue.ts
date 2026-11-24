@@ -10,6 +10,8 @@ export const PROMOTION_JOBS = {
   GENERATE_POSTS: 'generate-posts',
   /** Fills a TRANSLATING translation of a post. */
   TRANSLATE_POST: 'translate-post',
+  /** Rewrites one SUGGESTED step, optionally with the artist's hint. */
+  REGENERATE_STEP: 'regenerate-step',
 } as const
 
 const generatePlanJobSchema = z.object({ planId: z.uuid() })
@@ -23,6 +25,13 @@ export const parseGeneratePostsJob = (data: unknown) => generatePostsJobSchema.s
 const translatePostJobSchema = z.object({ translationId: z.uuid() })
 export type TranslatePostJob = z.infer<typeof translatePostJobSchema>
 export const parseTranslatePostJob = (data: unknown) => translatePostJobSchema.safeParse(data)
+
+const regenerateStepJobSchema = z.object({
+  stepId: z.uuid(),
+  hint: z.string().max(200).optional(),
+})
+export type RegenerateStepJob = z.infer<typeof regenerateStepJobSchema>
+export const parseRegenerateStepJob = (data: unknown) => regenerateStepJobSchema.safeParse(data)
 
 /**
  * Provider failures and rejected output are settled inside the job (the plan becomes FAILED),

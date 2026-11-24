@@ -22,6 +22,7 @@ export const buildArtist = (overrides: Partial<ArtistEntity> = {}): ArtistEntity
   socials: null,
   deletedAt: null,
   locale: 'en',
+  promotionEnabled: false,
   legalVersion: null,
   legalAcceptedAt: null,
   artistAgreementVersion: null,

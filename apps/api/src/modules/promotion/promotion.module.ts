@@ -4,18 +4,25 @@ import { TokensModule } from '@modules/tokens/tokens.module'
 import { BullModule } from '@nestjs/bullmq'
 import { Module } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
+import { PromotionAccessService, PromotionEnabledGuard } from './access'
 import { createPromotionModels, PROMOTION_MODELS, PromotionGenerator } from './ai/generator'
 import { readPromotionModelConfig } from './ai/routing'
+import { PromotionCalendarService } from './calendar'
+import { PromotionEventsService } from './events'
+import { InputModerationService } from './moderation'
 import {
   GeneratePlanService,
   PlanViewService,
+  RegenerateStepService,
   RequestPlanService,
+  RequestStepRegenerationService,
   UpdateStepService,
 } from './plans'
 import {
   GeneratePostsService,
   LlmTranslator,
   PostsViewService,
+  RecordPostActionService,
   RequestPostsService,
   RequestTranslationService,
   RunTranslationService,
@@ -83,6 +90,14 @@ const DEFAULT_MONTHLY_LIMIT_USD = 2
     UpdateTranslationService,
     LlmTranslator,
     { provide: TRANSLATOR, useExisting: LlmTranslator },
+    RecordPostActionService,
+    RequestStepRegenerationService,
+    RegenerateStepService,
+    PromotionCalendarService,
+    PromotionEventsService,
+    InputModerationService,
+    PromotionAccessService,
+    PromotionEnabledGuard,
     PromotionConsumer,
   ],
   exports: [PromotionGenerator, AiQuotaService],
