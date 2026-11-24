@@ -48,6 +48,7 @@ describe('AI promotion (e2e)', () => {
   })
 
   afterEach(async () => {
+    if (!prisma) return
     await prisma.release.deleteMany({ where: { ownerArtistId: { in: artists } } })
     await prisma.artistSession.deleteMany({ where: { artistId: { in: artists } } })
     await prisma.artist.deleteMany({ where: { id: { in: artists } } })

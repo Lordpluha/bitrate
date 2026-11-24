@@ -1,7 +1,9 @@
 import { appConfigs } from '@common/config'
 import { API_RATE_LIMITS } from '@common/config/rate-limit.config'
 import { CacheModule } from '@infra/cache/cache.module'
+import { ObservabilityModule } from '@infra/observability/observability.module'
 import { PrismaService } from '@infra/prisma/prisma.service'
+import { StorageModule } from '@infra/storage/storage.module'
 import { ArtistsAuthModule } from '@modules/artists-auth/artists-auth.module'
 import { PROMOTION_MODELS, type PromotionModels } from '@modules/promotion/ai/generator'
 import { parseModelRef } from '@modules/promotion/ai/routing'
@@ -32,6 +34,8 @@ import { envSchema } from '../../env.schema'
     }),
     ThrottlerModule.forRoot({ throttlers: API_RATE_LIMITS }),
     CacheModule,
+    StorageModule,
+    ObservabilityModule,
     ArtistsAuthModule,
     PromotionModule,
   ],
