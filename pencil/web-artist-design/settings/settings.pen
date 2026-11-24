@@ -4861,6 +4861,2390 @@
     },
     {
       "type": "frame",
+      "id": "dihN7x",
+      "name": "Artist / Settings / Mobile / Light",
+      "width": 390,
+      "height": "fit_content",
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "bXFymZ",
+          "ref": "artist:8H12ea",
+          "name": "Shell",
+          "width": 390,
+          "descendants": {
+            "artist:SIErRw": {
+              "type": "frame",
+              "id": "OlETr0",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 16,
+              "width": "fill_container",
+              "padding": [
+                12,
+                16,
+                40,
+                16
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "IOkvxO",
+                  "name": "Page Heading",
+                  "gap": 16,
+                  "alignItems": "end",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "4wLBM9",
+                      "name": "Text",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "01bXLc",
+                          "ref": "artist:MgMQ2L",
+                          "name": "Settings",
+                          "content": "Settings"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "3jmyp2",
+                          "ref": "artist:C5Ih8u",
+                          "name": "Your account, security and w",
+                          "width": "fill_container",
+                          "textGrowth": "fixed-width",
+                          "content": "Your account, security and workspace preferences."
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "x35snO",
+                  "name": "Panels",
+                  "layout": "vertical",
+                  "gap": 16,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "nLL6vw",
+                      "ref": "artist:RmrVkN",
+                      "name": "Tile / Account",
+                      "width": "fill_container",
+                      "descendants": {
+                        "artist:BxRdiD": {
+                          "icon": "user-round"
+                        },
+                        "artist:EZZdAr": {
+                          "content": "Account"
+                        },
+                        "artist:lICt0a": {
+                          "enabled": false
+                        },
+                        "artist:02kI8m": {
+                          "type": "frame",
+                          "id": "XnGnJ3",
+                          "name": "Body",
+                          "layout": "vertical",
+                          "gap": 12,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "rFzwAL",
+                              "name": "Email",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "RMYpEh",
+                                  "name": "Label",
+                                  "layout": "vertical",
+                                  "gap": 2,
+                                  "width": "fill_container",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "xCy1Pk",
+                                      "ref": "artist:PiqhAO",
+                                      "name": "Sign-in email",
+                                      "width": "fill_container",
+                                      "textGrowth": "fixed-width",
+                                      "content": "Sign-in email"
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "AvfOaU",
+                                      "ref": "artist:P2oa0L",
+                                      "name": "mira@nightsignal.fm",
+                                      "width": "fill_container",
+                                      "textGrowth": "fixed-width",
+                                      "content": "mira@nightsignal.fm"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "S6y3tS",
+                                  "ref": "artist:gGZXg7",
+                                  "name": "Verified",
+                                  "width": 24,
+                                  "descendants": {
+                                    "artist:BJt2Mo": {
+                                      "enabled": false
+                                    }
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "uhjJi0",
+                              "name": "Handle",
+                              "layout": "vertical",
+                              "gap": 2,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "CLtMKE",
+                                  "ref": "artist:PiqhAO",
+                                  "name": "Public handle",
+                                  "width": "fill_container",
+                                  "textGrowth": "fixed-width",
+                                  "content": "Public handle"
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "DS1UNQ",
+                                  "name": "Value",
+                                  "gap": 10,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "l3ePFe",
+                                      "ref": "artist:P2oa0L",
+                                      "name": "@mirasol",
+                                      "content": "@mirasol"
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "uQh0Aq",
+                                      "ref": "artist:pZcyuZ",
+                                      "name": "Edit profile",
+                                      "content": "Edit profile"
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "mMnnFG",
+                      "ref": "artist:RmrVkN",
+                      "name": "Tile / Security",
+                      "width": "fill_container",
+                      "descendants": {
+                        "artist:BxRdiD": {
+                          "icon": "shield"
+                        },
+                        "artist:EZZdAr": {
+                          "content": "Security"
+                        },
+                        "artist:lICt0a": {
+                          "enabled": false
+                        },
+                        "artist:02kI8m": {
+                          "type": "frame",
+                          "id": "gqkHPG",
+                          "name": "Body",
+                          "layout": "vertical",
+                          "gap": 12,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "Mz7t47",
+                              "name": "Two-factor",
+                              "gap": 12,
+                              "alignItems": "center",
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "Csv7hw",
+                                  "ref": "artist:frVTtE",
+                                  "name": "Shield off",
+                                  "width": 24,
+                                  "descendants": {
+                                    "artist:cwpJf5": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "xbeJbH",
+                                  "name": "Text",
+                                  "layout": "vertical",
+                                  "gap": 2,
+                                  "width": "fill_container",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "PXvQaF",
+                                      "ref": "artist:SOt7Oe",
+                                      "name": "Two-factor sign-in",
+                                      "content": "Two-factor sign-in"
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "UYHZKI",
+                                      "ref": "artist:C5Ih8u",
+                                      "name": "Off. Add a second step to pr",
+                                      "width": "fill_container",
+                                      "textGrowth": "fixed-width",
+                                      "content": "Off. Add a second step to protect your releases."
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "i86XlM",
+                                  "ref": "artist:b74brg",
+                                  "name": "Button / Set up",
+                                  "descendants": {
+                                    "artist:wUlRtb": {
+                                      "content": "Set up"
+                                    },
+                                    "artist:lPAI5m": {
+                                      "enabled": false
+                                    }
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "type": "ref",
+                              "id": "P5RLN3",
+                              "ref": "artist:2xutCo",
+                              "name": "Divider",
+                              "width": "fill_container"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "SKsWqv",
+                              "ref": "artist:SOt7Oe",
+                              "name": "Password",
+                              "content": "Password"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "P2DaDm",
+                              "ref": "artist:C5Ih8u",
+                              "name": "We email you a link to choos",
+                              "width": "fill_container",
+                              "textGrowth": "fixed-width",
+                              "content": "We email you a link to choose a new password."
+                            },
+                            {
+                              "type": "ref",
+                              "id": "qfBRRB",
+                              "ref": "artist:b74brg",
+                              "name": "Button / Send reset link",
+                              "descendants": {
+                                "artist:wUlRtb": {
+                                  "content": "Send reset link"
+                                },
+                                "artist:lPAI5m": {
+                                  "enabled": false
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "tdFznQ",
+                              "ref": "artist:2xutCo",
+                              "name": "Divider",
+                              "width": "fill_container"
+                            },
+                            {
+                              "type": "frame",
+                              "id": "MVwvYR",
+                              "name": "Devices head",
+                              "gap": 12,
+                              "alignItems": "center",
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "alvJFk",
+                                  "name": "Text",
+                                  "layout": "vertical",
+                                  "gap": 2,
+                                  "width": "fill_container",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "m1w14S",
+                                      "ref": "artist:SOt7Oe",
+                                      "name": "Signed-in devices",
+                                      "content": "Signed-in devices"
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "l5jHxO",
+                                      "ref": "artist:C5Ih8u",
+                                      "name": "Sign out anywhere you no lon",
+                                      "width": "fill_container",
+                                      "textGrowth": "fixed-width",
+                                      "content": "Sign out anywhere you no longer use or do not recognise."
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "XF59Lr",
+                                  "ref": "artist:b74brg",
+                                  "name": "Button / Sign out other devices",
+                                  "descendants": {
+                                    "artist:wUlRtb": {
+                                      "content": "Sign out other devices"
+                                    },
+                                    "artist:lPAI5m": {
+                                      "enabled": false
+                                    }
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "type": "ref",
+                              "id": "JQdOgt",
+                              "ref": "artist:DLYjdX",
+                              "name": "Device / Chrome on macOS",
+                              "width": "fill_container",
+                              "descendants": {
+                                "artist:5BO4S3": {
+                                  "icon": "monitor"
+                                },
+                                "artist:8jH6ot": {
+                                  "content": "Chrome on macOS"
+                                },
+                                "artist:fxbPpI": {
+                                  "content": "This device · active now"
+                                },
+                                "artist:3BbVd7": {
+                                  "enabled": false
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "qgDqIw",
+                              "ref": "artist:mW9KJG",
+                              "name": "Device / Safari on iOS",
+                              "width": "fill_container",
+                              "descendants": {
+                                "artist:WMHhuw": {
+                                  "icon": "smartphone"
+                                },
+                                "artist:XEn280": {
+                                  "content": "Safari on iOS"
+                                },
+                                "artist:2wQstt": {
+                                  "content": "Last active Nov 21, 2026"
+                                },
+                                "artist:0A3yqB": {
+                                  "type": "frame",
+                                  "id": "DBdBYw",
+                                  "name": "Trail",
+                                  "gap": 8,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "djWvKp",
+                                      "ref": "artist:spoluO",
+                                      "name": "Button / Sign out",
+                                      "descendants": {
+                                        "artist:degIxI": {
+                                          "content": "Sign out"
+                                        },
+                                        "artist:gE2vVp": {
+                                          "enabled": false
+                                        }
+                                      }
+                                    }
+                                  ]
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "h1zMzj",
+                              "ref": "artist:mW9KJG",
+                              "name": "Device / Firefox on Windows",
+                              "width": "fill_container",
+                              "descendants": {
+                                "artist:WMHhuw": {
+                                  "icon": "monitor"
+                                },
+                                "artist:XEn280": {
+                                  "content": "Firefox on Windows"
+                                },
+                                "artist:2wQstt": {
+                                  "content": "Signed in Oct 30, 2026"
+                                },
+                                "artist:0A3yqB": {
+                                  "type": "frame",
+                                  "id": "SCEodE",
+                                  "name": "Trail",
+                                  "gap": 8,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "43LmD6",
+                                      "ref": "artist:spoluO",
+                                      "name": "Button / Sign out",
+                                      "descendants": {
+                                        "artist:degIxI": {
+                                          "content": "Sign out"
+                                        },
+                                        "artist:gE2vVp": {
+                                          "enabled": false
+                                        }
+                                      }
+                                    }
+                                  ]
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "zgk4Tk",
+                              "ref": "artist:spoluO",
+                              "name": "Button / Show all devices (4)",
+                              "descendants": {
+                                "artist:degIxI": {
+                                  "content": "Show all devices (4)"
+                                },
+                                "artist:gE2vVp": {
+                                  "enabled": false
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "DCy0yK",
+                      "ref": "artist:RmrVkN",
+                      "name": "Tile / Appearance",
+                      "width": "fill_container",
+                      "descendants": {
+                        "artist:BxRdiD": {
+                          "icon": "palette"
+                        },
+                        "artist:EZZdAr": {
+                          "content": "Appearance"
+                        },
+                        "artist:lICt0a": {
+                          "enabled": false
+                        },
+                        "artist:02kI8m": {
+                          "type": "frame",
+                          "id": "HImNUM",
+                          "name": "Body",
+                          "layout": "vertical",
+                          "gap": 12,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "b6SIov",
+                              "name": "Theme",
+                              "gap": 12,
+                              "alignItems": "center",
+                              "width": "fill_container",
+                              "justifyContent": "space_between",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "XerDtH",
+                                  "name": "Text",
+                                  "layout": "vertical",
+                                  "gap": 2,
+                                  "width": "fill_container",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "RtebUl",
+                                      "ref": "artist:SOt7Oe",
+                                      "name": "Theme",
+                                      "content": "Theme"
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "O6eVG3",
+                                      "ref": "artist:PiqhAO",
+                                      "name": "Colours of the workspace",
+                                      "width": "fill_container",
+                                      "textGrowth": "fixed-width",
+                                      "content": "Colours of the workspace"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "8fMG6p",
+                                  "ref": "artist:hCymSg",
+                                  "name": "Tabs",
+                                  "descendants": {
+                                    "artist:3WDvs4": {
+                                      "type": "frame",
+                                      "id": "8DjBS3",
+                                      "name": "Items",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "4hOxLW",
+                                          "ref": "artist:MSnEq6",
+                                          "name": "Tab / Light",
+                                          "descendants": {
+                                            "artist:YoFuvg": {
+                                              "content": "Light"
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "1w9L8F",
+                                          "ref": "artist:Vrjhec",
+                                          "name": "Tab / Dark",
+                                          "descendants": {
+                                            "artist:NyZfC6": {
+                                              "content": "Dark"
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "0rZ583",
+                                          "ref": "artist:MSnEq6",
+                                          "name": "Tab / Dim",
+                                          "descendants": {
+                                            "artist:YoFuvg": {
+                                              "content": "Dim"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "6HRl3B",
+                              "name": "Density",
+                              "gap": 12,
+                              "alignItems": "center",
+                              "width": "fill_container",
+                              "justifyContent": "space_between",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "CdoCFG",
+                                  "name": "Text",
+                                  "layout": "vertical",
+                                  "gap": 2,
+                                  "width": "fill_container",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "ioS3TA",
+                                      "ref": "artist:SOt7Oe",
+                                      "name": "Density",
+                                      "content": "Density"
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "jiTOLK",
+                                      "ref": "artist:PiqhAO",
+                                      "name": "Compact fits more on screen",
+                                      "width": "fill_container",
+                                      "textGrowth": "fixed-width",
+                                      "content": "Compact fits more on screen"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "zmjaC0",
+                                  "ref": "artist:hCymSg",
+                                  "name": "Tabs",
+                                  "descendants": {
+                                    "artist:3WDvs4": {
+                                      "type": "frame",
+                                      "id": "xIHGgG",
+                                      "name": "Items",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "zlW8dW",
+                                          "ref": "artist:Vrjhec",
+                                          "name": "Tab / Comfortable",
+                                          "descendants": {
+                                            "artist:NyZfC6": {
+                                              "content": "Comfortable"
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "Gn095j",
+                                          "ref": "artist:MSnEq6",
+                                          "name": "Tab / Compact",
+                                          "descendants": {
+                                            "artist:YoFuvg": {
+                                              "content": "Compact"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "npXTKw",
+                              "name": "Motion",
+                              "gap": 12,
+                              "alignItems": "center",
+                              "width": "fill_container",
+                              "justifyContent": "space_between",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "R67dZF",
+                                  "name": "Text",
+                                  "layout": "vertical",
+                                  "gap": 2,
+                                  "width": "fill_container",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "XevYpw",
+                                      "ref": "artist:SOt7Oe",
+                                      "name": "Motion",
+                                      "content": "Motion"
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "0Iv4y6",
+                                      "ref": "artist:PiqhAO",
+                                      "name": "Reduced turns animations off",
+                                      "width": "fill_container",
+                                      "textGrowth": "fixed-width",
+                                      "content": "Reduced turns animations off"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "WRJcFM",
+                                  "ref": "artist:hCymSg",
+                                  "name": "Tabs",
+                                  "descendants": {
+                                    "artist:3WDvs4": {
+                                      "type": "frame",
+                                      "id": "Aono6V",
+                                      "name": "Items",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "ka5XvR",
+                                          "ref": "artist:Vrjhec",
+                                          "name": "Tab / System",
+                                          "descendants": {
+                                            "artist:NyZfC6": {
+                                              "content": "System"
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "7Gye20",
+                                          "ref": "artist:MSnEq6",
+                                          "name": "Tab / Reduced",
+                                          "descendants": {
+                                            "artist:YoFuvg": {
+                                              "content": "Reduced"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "type": "ref",
+                              "id": "qjYATz",
+                              "ref": "artist:PiqhAO",
+                              "name": "Saved in this browser only.",
+                              "width": "fill_container",
+                              "textGrowth": "fixed-width",
+                              "content": "Saved in this browser only."
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Gw4sQP",
+                      "ref": "artist:RmrVkN",
+                      "name": "Tile / Language",
+                      "width": "fill_container",
+                      "descendants": {
+                        "artist:BxRdiD": {
+                          "icon": "globe"
+                        },
+                        "artist:EZZdAr": {
+                          "content": "Language"
+                        },
+                        "artist:lICt0a": {
+                          "enabled": false
+                        },
+                        "artist:02kI8m": {
+                          "type": "frame",
+                          "id": "s1FxHo",
+                          "name": "Body",
+                          "layout": "vertical",
+                          "gap": 12,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "m5NoEd",
+                              "ref": "artist:ebsrY2",
+                              "name": "Field / Interface language",
+                              "width": "fill_container",
+                              "descendants": {
+                                "artist:G8meip": {
+                                  "content": "Interface language"
+                                },
+                                "artist:ZMo1QE": {
+                                  "content": "English"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "hH6nK8",
+                              "ref": "artist:PiqhAO",
+                              "name": "Saved to your account, so yo",
+                              "width": "fill_container",
+                              "textGrowth": "fixed-width",
+                              "content": "Saved to your account, so your other devices follow it."
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "L8MEl8",
+                      "ref": "artist:RmrVkN",
+                      "name": "Tile / Notifications",
+                      "width": "fill_container",
+                      "descendants": {
+                        "artist:BxRdiD": {
+                          "icon": "bell"
+                        },
+                        "artist:EZZdAr": {
+                          "content": "Notifications"
+                        },
+                        "artist:lICt0a": {
+                          "enabled": false
+                        },
+                        "artist:02kI8m": {
+                          "type": "frame",
+                          "id": "b8fFLJ",
+                          "name": "Body",
+                          "layout": "vertical",
+                          "gap": 12,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "ffQQia",
+                              "name": "Head",
+                              "gap": 12,
+                              "alignItems": "center",
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "hFDIBk",
+                                  "ref": "artist:yjiPHo",
+                                  "name": "CATEGORY",
+                                  "width": "fill_container",
+                                  "textGrowth": "fixed-width",
+                                  "content": "CATEGORY"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "mn1D0w",
+                                  "ref": "artist:yjiPHo",
+                                  "name": "IN-APP",
+                                  "width": 80,
+                                  "textGrowth": "fixed-width",
+                                  "textAlign": "center",
+                                  "content": "IN-APP"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "1sj0A8",
+                                  "ref": "artist:yjiPHo",
+                                  "name": "EMAIL",
+                                  "width": 80,
+                                  "textGrowth": "fixed-width",
+                                  "textAlign": "center",
+                                  "content": "EMAIL"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "efrFag",
+                                  "ref": "artist:yjiPHo",
+                                  "name": "PUSH",
+                                  "width": 80,
+                                  "textGrowth": "fixed-width",
+                                  "textAlign": "center",
+                                  "content": "PUSH"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "ref",
+                              "id": "i762H0",
+                              "ref": "artist:28XlM5",
+                              "name": "Channels / Bitrate review",
+                              "width": "fill_container",
+                              "descendants": {
+                                "artist:cBGI3w": {
+                                  "content": "Bitrate review"
+                                },
+                                "artist:hTGlGK": {
+                                  "content": "Submissions, approvals and requested changes"
+                                },
+                                "artist:dbwUZZ": {
+                                  "type": "frame",
+                                  "id": "7XTZf0",
+                                  "name": "Cell",
+                                  "gap": 8,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "LY7eTd",
+                                      "ref": "artist:IvHRzl",
+                                      "name": "In-app"
+                                    }
+                                  ]
+                                },
+                                "artist:avV5l8": {
+                                  "type": "frame",
+                                  "id": "PIruBs",
+                                  "name": "Cell",
+                                  "gap": 8,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "JXLL0Q",
+                                      "ref": "artist:PiqhAO",
+                                      "name": "Not sent yet",
+                                      "content": "Not sent yet"
+                                    }
+                                  ]
+                                },
+                                "artist:fKTEQp": {
+                                  "type": "frame",
+                                  "id": "YKo4xG",
+                                  "name": "Cell",
+                                  "gap": 8,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "S7fJI6",
+                                      "ref": "artist:PiqhAO",
+                                      "name": "Not sent yet",
+                                      "content": "Not sent yet"
+                                    }
+                                  ]
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "3QZfd8",
+                              "ref": "artist:28XlM5",
+                              "name": "Channels / Delivery and release",
+                              "width": "fill_container",
+                              "descendants": {
+                                "artist:cBGI3w": {
+                                  "content": "Delivery and release"
+                                },
+                                "artist:hTGlGK": {
+                                  "content": "Stores going live, failed deliveries and releases"
+                                },
+                                "artist:dbwUZZ": {
+                                  "type": "frame",
+                                  "id": "YDtfAX",
+                                  "name": "Cell",
+                                  "gap": 8,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "i8mihu",
+                                      "ref": "artist:EEfwo8",
+                                      "name": "In-app"
+                                    }
+                                  ]
+                                },
+                                "artist:avV5l8": {
+                                  "type": "frame",
+                                  "id": "47lxC4",
+                                  "name": "Cell",
+                                  "gap": 8,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "mq9hdR",
+                                      "ref": "artist:PiqhAO",
+                                      "name": "Not sent yet",
+                                      "content": "Not sent yet"
+                                    }
+                                  ]
+                                },
+                                "artist:fKTEQp": {
+                                  "type": "frame",
+                                  "id": "FSAcJT",
+                                  "name": "Cell",
+                                  "gap": 8,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "7fIyfr",
+                                      "ref": "artist:PiqhAO",
+                                      "name": "Not sent yet",
+                                      "content": "Not sent yet"
+                                    }
+                                  ]
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "YzYsXb",
+                              "ref": "artist:PiqhAO",
+                              "name": "Switched-off categories leav",
+                              "width": "fill_container",
+                              "textGrowth": "fixed-width",
+                              "content": "Switched-off categories leave the notification center. Anything that needs action still shows on your dashboard. Account and security emails are always sent."
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "GJrbqp",
+                      "ref": "artist:RmrVkN",
+                      "name": "Tile / Danger zone",
+                      "width": "fill_container",
+                      "descendants": {
+                        "artist:BxRdiD": {
+                          "icon": "triangle-alert"
+                        },
+                        "artist:EZZdAr": {
+                          "content": "Danger zone"
+                        },
+                        "artist:lICt0a": {
+                          "enabled": false
+                        },
+                        "artist:02kI8m": {
+                          "type": "frame",
+                          "id": "Qn3Qsi",
+                          "name": "Body",
+                          "layout": "vertical",
+                          "gap": 12,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "o8FA6H",
+                              "ref": "artist:SOt7Oe",
+                              "name": "Delete account",
+                              "content": "Delete account"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "rarPOb",
+                              "ref": "artist:C5Ih8u",
+                              "name": "Removes your artist account ",
+                              "width": "fill_container",
+                              "textGrowth": "fixed-width",
+                              "content": "Removes your artist account from Bitrate and signs you out."
+                            },
+                            {
+                              "type": "ref",
+                              "id": "K65nQr",
+                              "ref": "artist:tZL23p",
+                              "name": "Button / Delete account",
+                              "descendants": {
+                                "artist:ciSEwh": {
+                                  "content": "Delete account"
+                                },
+                                "artist:ZXzRgY": {
+                                  "enabled": false
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 5110,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Light"
+      },
+      "context": "/dashboard/settings — One page of panels, no tabs. Appearance is saved in this browser; language follows the account."
+    },
+    {
+      "type": "frame",
+      "id": "rOl3bx",
+      "name": "Artist / Settings / Mobile / Dim",
+      "width": 390,
+      "height": "fit_content",
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "nEvMLh",
+          "ref": "artist:8H12ea",
+          "name": "Shell",
+          "width": 390,
+          "descendants": {
+            "artist:SIErRw": {
+              "type": "frame",
+              "id": "aTnLpc",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 16,
+              "width": "fill_container",
+              "padding": [
+                12,
+                16,
+                40,
+                16
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "4p9F5G",
+                  "name": "Page Heading",
+                  "gap": 16,
+                  "alignItems": "end",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "qqsmtf",
+                      "name": "Text",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "01FSkT",
+                          "ref": "artist:MgMQ2L",
+                          "name": "Settings",
+                          "content": "Settings"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "XQ9Pku",
+                          "ref": "artist:C5Ih8u",
+                          "name": "Your account, security and w",
+                          "width": "fill_container",
+                          "textGrowth": "fixed-width",
+                          "content": "Your account, security and workspace preferences."
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "12H43Z",
+                  "name": "Panels",
+                  "layout": "vertical",
+                  "gap": 16,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "FsYsnv",
+                      "ref": "artist:RmrVkN",
+                      "name": "Tile / Account",
+                      "width": "fill_container",
+                      "descendants": {
+                        "artist:BxRdiD": {
+                          "icon": "user-round"
+                        },
+                        "artist:EZZdAr": {
+                          "content": "Account"
+                        },
+                        "artist:lICt0a": {
+                          "enabled": false
+                        },
+                        "artist:02kI8m": {
+                          "type": "frame",
+                          "id": "tpIwPK",
+                          "name": "Body",
+                          "layout": "vertical",
+                          "gap": 12,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "DCbKKC",
+                              "name": "Email",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "HxJzDZ",
+                                  "name": "Label",
+                                  "layout": "vertical",
+                                  "gap": 2,
+                                  "width": "fill_container",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "Te8L3G",
+                                      "ref": "artist:PiqhAO",
+                                      "name": "Sign-in email",
+                                      "width": "fill_container",
+                                      "textGrowth": "fixed-width",
+                                      "content": "Sign-in email"
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "6qG65w",
+                                      "ref": "artist:P2oa0L",
+                                      "name": "mira@nightsignal.fm",
+                                      "width": "fill_container",
+                                      "textGrowth": "fixed-width",
+                                      "content": "mira@nightsignal.fm"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "EleyMg",
+                                  "ref": "artist:gGZXg7",
+                                  "name": "Verified",
+                                  "width": 24,
+                                  "descendants": {
+                                    "artist:BJt2Mo": {
+                                      "enabled": false
+                                    }
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "Q3dLii",
+                              "name": "Handle",
+                              "layout": "vertical",
+                              "gap": 2,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "oIDIen",
+                                  "ref": "artist:PiqhAO",
+                                  "name": "Public handle",
+                                  "width": "fill_container",
+                                  "textGrowth": "fixed-width",
+                                  "content": "Public handle"
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "jKJIJX",
+                                  "name": "Value",
+                                  "gap": 10,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "7F7kmI",
+                                      "ref": "artist:P2oa0L",
+                                      "name": "@mirasol",
+                                      "content": "@mirasol"
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "8ibk3Q",
+                                      "ref": "artist:pZcyuZ",
+                                      "name": "Edit profile",
+                                      "content": "Edit profile"
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "IAyALi",
+                      "ref": "artist:RmrVkN",
+                      "name": "Tile / Security",
+                      "width": "fill_container",
+                      "descendants": {
+                        "artist:BxRdiD": {
+                          "icon": "shield"
+                        },
+                        "artist:EZZdAr": {
+                          "content": "Security"
+                        },
+                        "artist:lICt0a": {
+                          "enabled": false
+                        },
+                        "artist:02kI8m": {
+                          "type": "frame",
+                          "id": "SSmNTa",
+                          "name": "Body",
+                          "layout": "vertical",
+                          "gap": 12,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "mtsqLU",
+                              "name": "Two-factor",
+                              "gap": 12,
+                              "alignItems": "center",
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "SGNSjR",
+                                  "ref": "artist:frVTtE",
+                                  "name": "Shield off",
+                                  "width": 24,
+                                  "descendants": {
+                                    "artist:cwpJf5": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "Vwc6PT",
+                                  "name": "Text",
+                                  "layout": "vertical",
+                                  "gap": 2,
+                                  "width": "fill_container",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "3xLI2v",
+                                      "ref": "artist:SOt7Oe",
+                                      "name": "Two-factor sign-in",
+                                      "content": "Two-factor sign-in"
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "c1xuot",
+                                      "ref": "artist:C5Ih8u",
+                                      "name": "Off. Add a second step to pr",
+                                      "width": "fill_container",
+                                      "textGrowth": "fixed-width",
+                                      "content": "Off. Add a second step to protect your releases."
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "0Xze40",
+                                  "ref": "artist:b74brg",
+                                  "name": "Button / Set up",
+                                  "descendants": {
+                                    "artist:wUlRtb": {
+                                      "content": "Set up"
+                                    },
+                                    "artist:lPAI5m": {
+                                      "enabled": false
+                                    }
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "type": "ref",
+                              "id": "j6uvFi",
+                              "ref": "artist:2xutCo",
+                              "name": "Divider",
+                              "width": "fill_container"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "gwJJws",
+                              "ref": "artist:SOt7Oe",
+                              "name": "Password",
+                              "content": "Password"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "lJGjQp",
+                              "ref": "artist:C5Ih8u",
+                              "name": "We email you a link to choos",
+                              "width": "fill_container",
+                              "textGrowth": "fixed-width",
+                              "content": "We email you a link to choose a new password."
+                            },
+                            {
+                              "type": "ref",
+                              "id": "g94p44",
+                              "ref": "artist:b74brg",
+                              "name": "Button / Send reset link",
+                              "descendants": {
+                                "artist:wUlRtb": {
+                                  "content": "Send reset link"
+                                },
+                                "artist:lPAI5m": {
+                                  "enabled": false
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "dxLzBY",
+                              "ref": "artist:2xutCo",
+                              "name": "Divider",
+                              "width": "fill_container"
+                            },
+                            {
+                              "type": "frame",
+                              "id": "WDLbKF",
+                              "name": "Devices head",
+                              "gap": 12,
+                              "alignItems": "center",
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "iz9KJi",
+                                  "name": "Text",
+                                  "layout": "vertical",
+                                  "gap": 2,
+                                  "width": "fill_container",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "yUXHnn",
+                                      "ref": "artist:SOt7Oe",
+                                      "name": "Signed-in devices",
+                                      "content": "Signed-in devices"
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "DjOkzn",
+                                      "ref": "artist:C5Ih8u",
+                                      "name": "Sign out anywhere you no lon",
+                                      "width": "fill_container",
+                                      "textGrowth": "fixed-width",
+                                      "content": "Sign out anywhere you no longer use or do not recognise."
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "fQZzwB",
+                                  "ref": "artist:b74brg",
+                                  "name": "Button / Sign out other devices",
+                                  "descendants": {
+                                    "artist:wUlRtb": {
+                                      "content": "Sign out other devices"
+                                    },
+                                    "artist:lPAI5m": {
+                                      "enabled": false
+                                    }
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "type": "ref",
+                              "id": "XerQJq",
+                              "ref": "artist:DLYjdX",
+                              "name": "Device / Chrome on macOS",
+                              "width": "fill_container",
+                              "descendants": {
+                                "artist:5BO4S3": {
+                                  "icon": "monitor"
+                                },
+                                "artist:8jH6ot": {
+                                  "content": "Chrome on macOS"
+                                },
+                                "artist:fxbPpI": {
+                                  "content": "This device · active now"
+                                },
+                                "artist:3BbVd7": {
+                                  "enabled": false
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "4tmAyg",
+                              "ref": "artist:mW9KJG",
+                              "name": "Device / Safari on iOS",
+                              "width": "fill_container",
+                              "descendants": {
+                                "artist:WMHhuw": {
+                                  "icon": "smartphone"
+                                },
+                                "artist:XEn280": {
+                                  "content": "Safari on iOS"
+                                },
+                                "artist:2wQstt": {
+                                  "content": "Last active Nov 21, 2026"
+                                },
+                                "artist:0A3yqB": {
+                                  "type": "frame",
+                                  "id": "1jYQhl",
+                                  "name": "Trail",
+                                  "gap": 8,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "jnD6wK",
+                                      "ref": "artist:spoluO",
+                                      "name": "Button / Sign out",
+                                      "descendants": {
+                                        "artist:degIxI": {
+                                          "content": "Sign out"
+                                        },
+                                        "artist:gE2vVp": {
+                                          "enabled": false
+                                        }
+                                      }
+                                    }
+                                  ]
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "Z4NXuT",
+                              "ref": "artist:mW9KJG",
+                              "name": "Device / Firefox on Windows",
+                              "width": "fill_container",
+                              "descendants": {
+                                "artist:WMHhuw": {
+                                  "icon": "monitor"
+                                },
+                                "artist:XEn280": {
+                                  "content": "Firefox on Windows"
+                                },
+                                "artist:2wQstt": {
+                                  "content": "Signed in Oct 30, 2026"
+                                },
+                                "artist:0A3yqB": {
+                                  "type": "frame",
+                                  "id": "8GjEXc",
+                                  "name": "Trail",
+                                  "gap": 8,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "QBn7ux",
+                                      "ref": "artist:spoluO",
+                                      "name": "Button / Sign out",
+                                      "descendants": {
+                                        "artist:degIxI": {
+                                          "content": "Sign out"
+                                        },
+                                        "artist:gE2vVp": {
+                                          "enabled": false
+                                        }
+                                      }
+                                    }
+                                  ]
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "jSl5Ax",
+                              "ref": "artist:spoluO",
+                              "name": "Button / Show all devices (4)",
+                              "descendants": {
+                                "artist:degIxI": {
+                                  "content": "Show all devices (4)"
+                                },
+                                "artist:gE2vVp": {
+                                  "enabled": false
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "pL6ub7",
+                      "ref": "artist:RmrVkN",
+                      "name": "Tile / Appearance",
+                      "width": "fill_container",
+                      "descendants": {
+                        "artist:BxRdiD": {
+                          "icon": "palette"
+                        },
+                        "artist:EZZdAr": {
+                          "content": "Appearance"
+                        },
+                        "artist:lICt0a": {
+                          "enabled": false
+                        },
+                        "artist:02kI8m": {
+                          "type": "frame",
+                          "id": "BLgdkp",
+                          "name": "Body",
+                          "layout": "vertical",
+                          "gap": 12,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "ljcCNT",
+                              "name": "Theme",
+                              "gap": 12,
+                              "alignItems": "center",
+                              "width": "fill_container",
+                              "justifyContent": "space_between",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "jN32Os",
+                                  "name": "Text",
+                                  "layout": "vertical",
+                                  "gap": 2,
+                                  "width": "fill_container",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "rTgAzq",
+                                      "ref": "artist:SOt7Oe",
+                                      "name": "Theme",
+                                      "content": "Theme"
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "wDhBnM",
+                                      "ref": "artist:PiqhAO",
+                                      "name": "Colours of the workspace",
+                                      "width": "fill_container",
+                                      "textGrowth": "fixed-width",
+                                      "content": "Colours of the workspace"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "m58Upm",
+                                  "ref": "artist:hCymSg",
+                                  "name": "Tabs",
+                                  "descendants": {
+                                    "artist:3WDvs4": {
+                                      "type": "frame",
+                                      "id": "GhX1Sd",
+                                      "name": "Items",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "spqn2C",
+                                          "ref": "artist:MSnEq6",
+                                          "name": "Tab / Light",
+                                          "descendants": {
+                                            "artist:YoFuvg": {
+                                              "content": "Light"
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "hpB3tV",
+                                          "ref": "artist:Vrjhec",
+                                          "name": "Tab / Dark",
+                                          "descendants": {
+                                            "artist:NyZfC6": {
+                                              "content": "Dark"
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "CG8Ohm",
+                                          "ref": "artist:MSnEq6",
+                                          "name": "Tab / Dim",
+                                          "descendants": {
+                                            "artist:YoFuvg": {
+                                              "content": "Dim"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "m2yMw5",
+                              "name": "Density",
+                              "gap": 12,
+                              "alignItems": "center",
+                              "width": "fill_container",
+                              "justifyContent": "space_between",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "iMQzXS",
+                                  "name": "Text",
+                                  "layout": "vertical",
+                                  "gap": 2,
+                                  "width": "fill_container",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "IKn3Fh",
+                                      "ref": "artist:SOt7Oe",
+                                      "name": "Density",
+                                      "content": "Density"
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "FsBIyc",
+                                      "ref": "artist:PiqhAO",
+                                      "name": "Compact fits more on screen",
+                                      "width": "fill_container",
+                                      "textGrowth": "fixed-width",
+                                      "content": "Compact fits more on screen"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "7VJZ6o",
+                                  "ref": "artist:hCymSg",
+                                  "name": "Tabs",
+                                  "descendants": {
+                                    "artist:3WDvs4": {
+                                      "type": "frame",
+                                      "id": "bO1bdR",
+                                      "name": "Items",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "ZTMJzo",
+                                          "ref": "artist:Vrjhec",
+                                          "name": "Tab / Comfortable",
+                                          "descendants": {
+                                            "artist:NyZfC6": {
+                                              "content": "Comfortable"
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "8YhYO5",
+                                          "ref": "artist:MSnEq6",
+                                          "name": "Tab / Compact",
+                                          "descendants": {
+                                            "artist:YoFuvg": {
+                                              "content": "Compact"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "5g9UIG",
+                              "name": "Motion",
+                              "gap": 12,
+                              "alignItems": "center",
+                              "width": "fill_container",
+                              "justifyContent": "space_between",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "j0o98s",
+                                  "name": "Text",
+                                  "layout": "vertical",
+                                  "gap": 2,
+                                  "width": "fill_container",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "DzVQOQ",
+                                      "ref": "artist:SOt7Oe",
+                                      "name": "Motion",
+                                      "content": "Motion"
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "OtbZWY",
+                                      "ref": "artist:PiqhAO",
+                                      "name": "Reduced turns animations off",
+                                      "width": "fill_container",
+                                      "textGrowth": "fixed-width",
+                                      "content": "Reduced turns animations off"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "glITyZ",
+                                  "ref": "artist:hCymSg",
+                                  "name": "Tabs",
+                                  "descendants": {
+                                    "artist:3WDvs4": {
+                                      "type": "frame",
+                                      "id": "iqlJVB",
+                                      "name": "Items",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "Aq5J6O",
+                                          "ref": "artist:Vrjhec",
+                                          "name": "Tab / System",
+                                          "descendants": {
+                                            "artist:NyZfC6": {
+                                              "content": "System"
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "x5IZeS",
+                                          "ref": "artist:MSnEq6",
+                                          "name": "Tab / Reduced",
+                                          "descendants": {
+                                            "artist:YoFuvg": {
+                                              "content": "Reduced"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "type": "ref",
+                              "id": "gTzSBt",
+                              "ref": "artist:PiqhAO",
+                              "name": "Saved in this browser only.",
+                              "width": "fill_container",
+                              "textGrowth": "fixed-width",
+                              "content": "Saved in this browser only."
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "CBzBnR",
+                      "ref": "artist:RmrVkN",
+                      "name": "Tile / Language",
+                      "width": "fill_container",
+                      "descendants": {
+                        "artist:BxRdiD": {
+                          "icon": "globe"
+                        },
+                        "artist:EZZdAr": {
+                          "content": "Language"
+                        },
+                        "artist:lICt0a": {
+                          "enabled": false
+                        },
+                        "artist:02kI8m": {
+                          "type": "frame",
+                          "id": "ylsLqt",
+                          "name": "Body",
+                          "layout": "vertical",
+                          "gap": 12,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "2fGwQc",
+                              "ref": "artist:ebsrY2",
+                              "name": "Field / Interface language",
+                              "width": "fill_container",
+                              "descendants": {
+                                "artist:G8meip": {
+                                  "content": "Interface language"
+                                },
+                                "artist:ZMo1QE": {
+                                  "content": "English"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "Pr5zH1",
+                              "ref": "artist:PiqhAO",
+                              "name": "Saved to your account, so yo",
+                              "width": "fill_container",
+                              "textGrowth": "fixed-width",
+                              "content": "Saved to your account, so your other devices follow it."
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "1kQ3sC",
+                      "ref": "artist:RmrVkN",
+                      "name": "Tile / Notifications",
+                      "width": "fill_container",
+                      "descendants": {
+                        "artist:BxRdiD": {
+                          "icon": "bell"
+                        },
+                        "artist:EZZdAr": {
+                          "content": "Notifications"
+                        },
+                        "artist:lICt0a": {
+                          "enabled": false
+                        },
+                        "artist:02kI8m": {
+                          "type": "frame",
+                          "id": "djJjVb",
+                          "name": "Body",
+                          "layout": "vertical",
+                          "gap": 12,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "Dp9ULF",
+                              "name": "Head",
+                              "gap": 12,
+                              "alignItems": "center",
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "NxyU4t",
+                                  "ref": "artist:yjiPHo",
+                                  "name": "CATEGORY",
+                                  "width": "fill_container",
+                                  "textGrowth": "fixed-width",
+                                  "content": "CATEGORY"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "W6AogV",
+                                  "ref": "artist:yjiPHo",
+                                  "name": "IN-APP",
+                                  "width": 80,
+                                  "textGrowth": "fixed-width",
+                                  "textAlign": "center",
+                                  "content": "IN-APP"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "ZXHE6m",
+                                  "ref": "artist:yjiPHo",
+                                  "name": "EMAIL",
+                                  "width": 80,
+                                  "textGrowth": "fixed-width",
+                                  "textAlign": "center",
+                                  "content": "EMAIL"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "61Qfoa",
+                                  "ref": "artist:yjiPHo",
+                                  "name": "PUSH",
+                                  "width": 80,
+                                  "textGrowth": "fixed-width",
+                                  "textAlign": "center",
+                                  "content": "PUSH"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "ref",
+                              "id": "AH3nvQ",
+                              "ref": "artist:28XlM5",
+                              "name": "Channels / Bitrate review",
+                              "width": "fill_container",
+                              "descendants": {
+                                "artist:cBGI3w": {
+                                  "content": "Bitrate review"
+                                },
+                                "artist:hTGlGK": {
+                                  "content": "Submissions, approvals and requested changes"
+                                },
+                                "artist:dbwUZZ": {
+                                  "type": "frame",
+                                  "id": "JAFa4I",
+                                  "name": "Cell",
+                                  "gap": 8,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "TcDRXZ",
+                                      "ref": "artist:IvHRzl",
+                                      "name": "In-app"
+                                    }
+                                  ]
+                                },
+                                "artist:avV5l8": {
+                                  "type": "frame",
+                                  "id": "tOuAdZ",
+                                  "name": "Cell",
+                                  "gap": 8,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "jfi7Iu",
+                                      "ref": "artist:PiqhAO",
+                                      "name": "Not sent yet",
+                                      "content": "Not sent yet"
+                                    }
+                                  ]
+                                },
+                                "artist:fKTEQp": {
+                                  "type": "frame",
+                                  "id": "oxdvx2",
+                                  "name": "Cell",
+                                  "gap": 8,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "IQkq4J",
+                                      "ref": "artist:PiqhAO",
+                                      "name": "Not sent yet",
+                                      "content": "Not sent yet"
+                                    }
+                                  ]
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "BPw8BT",
+                              "ref": "artist:28XlM5",
+                              "name": "Channels / Delivery and release",
+                              "width": "fill_container",
+                              "descendants": {
+                                "artist:cBGI3w": {
+                                  "content": "Delivery and release"
+                                },
+                                "artist:hTGlGK": {
+                                  "content": "Stores going live, failed deliveries and releases"
+                                },
+                                "artist:dbwUZZ": {
+                                  "type": "frame",
+                                  "id": "YCtaeX",
+                                  "name": "Cell",
+                                  "gap": 8,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "yz33fH",
+                                      "ref": "artist:EEfwo8",
+                                      "name": "In-app"
+                                    }
+                                  ]
+                                },
+                                "artist:avV5l8": {
+                                  "type": "frame",
+                                  "id": "sdfaI8",
+                                  "name": "Cell",
+                                  "gap": 8,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "Qcd8ez",
+                                      "ref": "artist:PiqhAO",
+                                      "name": "Not sent yet",
+                                      "content": "Not sent yet"
+                                    }
+                                  ]
+                                },
+                                "artist:fKTEQp": {
+                                  "type": "frame",
+                                  "id": "zODze1",
+                                  "name": "Cell",
+                                  "gap": 8,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "rWGXLH",
+                                      "ref": "artist:PiqhAO",
+                                      "name": "Not sent yet",
+                                      "content": "Not sent yet"
+                                    }
+                                  ]
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "EmwiBq",
+                              "ref": "artist:PiqhAO",
+                              "name": "Switched-off categories leav",
+                              "width": "fill_container",
+                              "textGrowth": "fixed-width",
+                              "content": "Switched-off categories leave the notification center. Anything that needs action still shows on your dashboard. Account and security emails are always sent."
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "2JGFVx",
+                      "ref": "artist:RmrVkN",
+                      "name": "Tile / Danger zone",
+                      "width": "fill_container",
+                      "descendants": {
+                        "artist:BxRdiD": {
+                          "icon": "triangle-alert"
+                        },
+                        "artist:EZZdAr": {
+                          "content": "Danger zone"
+                        },
+                        "artist:lICt0a": {
+                          "enabled": false
+                        },
+                        "artist:02kI8m": {
+                          "type": "frame",
+                          "id": "oZEUoQ",
+                          "name": "Body",
+                          "layout": "vertical",
+                          "gap": 12,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "c1TQR9",
+                              "ref": "artist:SOt7Oe",
+                              "name": "Delete account",
+                              "content": "Delete account"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "90yljG",
+                              "ref": "artist:C5Ih8u",
+                              "name": "Removes your artist account ",
+                              "width": "fill_container",
+                              "textGrowth": "fixed-width",
+                              "content": "Removes your artist account from Bitrate and signs you out."
+                            },
+                            {
+                              "type": "ref",
+                              "id": "QZZ2l6",
+                              "ref": "artist:tZL23p",
+                              "name": "Button / Delete account",
+                              "descendants": {
+                                "artist:ciSEwh": {
+                                  "content": "Delete account"
+                                },
+                                "artist:ZXzRgY": {
+                                  "enabled": false
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 5600,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Dim"
+      },
+      "context": "/dashboard/settings — One page of panels, no tabs. Appearance is saved in this browser; language follows the account."
+    },
+    {
+      "type": "frame",
       "id": "UVbz6i",
       "name": "Artist / Settings / Email not verified / Desktop",
       "width": 1440,
@@ -6073,7 +8457,7 @@
           }
         }
       ],
-      "x": 5110,
+      "x": 6090,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -7265,7 +9649,7 @@
           }
         }
       ],
-      "x": 6650,
+      "x": 7630,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -8486,7 +10870,7 @@
           }
         }
       ],
-      "x": 7140,
+      "x": 8120,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -9678,7 +12062,7 @@
           }
         }
       ],
-      "x": 8680,
+      "x": 9660,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -10982,7 +13366,7 @@
           }
         }
       ],
-      "x": 9170,
+      "x": 10150,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -12257,7 +14641,7 @@
           }
         }
       ],
-      "x": 10710,
+      "x": 11690,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -13561,7 +15945,7 @@
           }
         }
       ],
-      "x": 11200,
+      "x": 12180,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -14836,7 +17220,7 @@
           }
         }
       ],
-      "x": 12740,
+      "x": 13720,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -16140,7 +18524,7 @@
           }
         }
       ],
-      "x": 13230,
+      "x": 14210,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -17415,7 +19799,7 @@
           }
         }
       ],
-      "x": 14770,
+      "x": 15750,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -18636,7 +21020,7 @@
           }
         }
       ],
-      "x": 15260,
+      "x": 16240,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -19828,7 +22212,7 @@
           }
         }
       ],
-      "x": 16800,
+      "x": 17780,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -21090,7 +23474,7 @@
           }
         }
       ],
-      "x": 17290,
+      "x": 18270,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -22323,7 +24707,7 @@
           }
         }
       ],
-      "x": 18830,
+      "x": 19810,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -23544,7 +25928,7 @@
           }
         }
       ],
-      "x": 19320,
+      "x": 20300,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -24736,7 +27120,7 @@
           }
         }
       ],
-      "x": 20860,
+      "x": 21840,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -25957,7 +28341,7 @@
           }
         }
       ],
-      "x": 21350,
+      "x": 22330,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -27149,7 +29533,7 @@
           }
         }
       ],
-      "x": 22890,
+      "x": 23870,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -28370,7 +30754,7 @@
           }
         }
       ],
-      "x": 23380,
+      "x": 24360,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -29562,7 +31946,7 @@
           }
         }
       ],
-      "x": 24920,
+      "x": 25900,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -30824,7 +33208,7 @@
           }
         }
       ],
-      "x": 25410,
+      "x": 26390,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -32057,7 +34441,7 @@
           }
         }
       ],
-      "x": 26950,
+      "x": 27930,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -33170,7 +35554,7 @@
           }
         }
       ],
-      "x": 27440,
+      "x": 28420,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -34254,7 +36638,7 @@
           }
         }
       ],
-      "x": 28980,
+      "x": 29960,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -35381,7 +37765,7 @@
           }
         }
       ],
-      "x": 29470,
+      "x": 30450,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -36479,7 +38863,7 @@
           }
         }
       ],
-      "x": 31010,
+      "x": 31990,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -37527,7 +39911,7 @@
           }
         }
       ],
-      "x": 31500,
+      "x": 32480,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -38546,7 +40930,7 @@
           }
         }
       ],
-      "x": 33040,
+      "x": 34020,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -39608,7 +41992,7 @@
           }
         }
       ],
-      "x": 33530,
+      "x": 34510,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -40641,7 +43025,7 @@
           }
         }
       ],
-      "x": 35070,
+      "x": 36050,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -41862,7 +44246,7 @@
           }
         }
       ],
-      "x": 35560,
+      "x": 36540,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -43054,7 +45438,7 @@
           }
         }
       ],
-      "x": 37100,
+      "x": 38080,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -44275,7 +46659,7 @@
           }
         }
       ],
-      "x": 37590,
+      "x": 38570,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -45467,7 +47851,7 @@
           }
         }
       ],
-      "x": 39130,
+      "x": 40110,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -46688,7 +49072,7 @@
           }
         }
       ],
-      "x": 39620,
+      "x": 40600,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -47880,7 +50264,7 @@
           }
         }
       ],
-      "x": 41160,
+      "x": 42140,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -48175,7 +50559,7 @@
           }
         }
       ],
-      "x": 41650,
+      "x": 42630,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -48438,7 +50822,7 @@
           }
         }
       ],
-      "x": 43190,
+      "x": 44170,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -48732,7 +51116,7 @@
           }
         }
       ],
-      "x": 43680,
+      "x": 44660,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -48994,7 +51378,7 @@
           }
         }
       ],
-      "x": 45220,
+      "x": 46200,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -49288,7 +51672,7 @@
           }
         }
       ],
-      "x": 45710,
+      "x": 46690,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -49550,7 +51934,7 @@
           }
         }
       ],
-      "x": 47250,
+      "x": 48230,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -49758,7 +52142,7 @@
           }
         }
       ],
-      "x": 47740,
+      "x": 48720,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -49944,7 +52328,7 @@
           }
         }
       ],
-      "x": 49280,
+      "x": 50260,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -50161,7 +52545,7 @@
           }
         }
       ],
-      "x": 49770,
+      "x": 50750,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -50349,7 +52733,7 @@
           }
         }
       ],
-      "x": 51310,
+      "x": 52290,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"

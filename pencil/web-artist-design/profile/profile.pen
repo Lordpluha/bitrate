@@ -2804,6 +2804,1348 @@
     },
     {
       "type": "frame",
+      "id": "jib8Jl",
+      "name": "Artist / Profile / Mobile / Light",
+      "width": 390,
+      "height": "fit_content",
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "JIulrd",
+          "ref": "artist:8H12ea",
+          "name": "Shell",
+          "width": 390,
+          "descendants": {
+            "artist:SIErRw": {
+              "type": "frame",
+              "id": "Q4l7ip",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 16,
+              "width": "fill_container",
+              "padding": [
+                12,
+                16,
+                40,
+                16
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "saZsfg",
+                  "name": "Page Heading",
+                  "gap": 16,
+                  "alignItems": "end",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "QzIfKY",
+                      "name": "Text",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "KLBV8v",
+                          "ref": "artist:MgMQ2L",
+                          "name": "Profile",
+                          "content": "Profile"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "HRZbTJ",
+                          "ref": "artist:C5Ih8u",
+                          "name": "How listeners see you on Bit",
+                          "width": "fill_container",
+                          "textGrowth": "fixed-width",
+                          "content": "How listeners see you on Bitrate."
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "ncNrYw",
+                  "ref": "artist:ZMP1V9",
+                  "name": "Profile card",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:piTcFF": {
+                      "content": "@mirasol"
+                    },
+                    "artist:X3Qonc": {
+                      "content": "Synth-pop from Warsaw. New single Night Signal out December 12."
+                    },
+                    "artist:WWFIIm": {
+                      "type": "frame",
+                      "id": "jCpv48",
+                      "name": "Links",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "Fbie3d",
+                          "ref": "artist:pNFm7N",
+                          "name": "Link / Website",
+                          "descendants": {
+                            "artist:NqMlte": {
+                              "content": "Website"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "SKvSC1",
+                          "ref": "artist:pNFm7N",
+                          "name": "Link / Instagram",
+                          "descendants": {
+                            "artist:NqMlte": {
+                              "content": "Instagram"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "VkQerm",
+                          "ref": "artist:pNFm7N",
+                          "name": "Link / YouTube",
+                          "descendants": {
+                            "artist:NqMlte": {
+                              "content": "YouTube"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "YXSI2D",
+                          "ref": "artist:pNFm7N",
+                          "name": "Link / SoundCloud",
+                          "descendants": {
+                            "artist:NqMlte": {
+                              "content": "SoundCloud"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    "artist:dl71AI": {
+                      "type": "frame",
+                      "id": "ghiLqx",
+                      "name": "Images",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": "fill_container",
+                      "padding": [
+                        0,
+                        20,
+                        20,
+                        20
+                      ],
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "mOX1bK",
+                          "ref": "artist:d45qQR",
+                          "name": "Profile photo",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:idxgup": {
+                              "type": "frame",
+                              "id": "mm5MN4",
+                              "name": "Action",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "IQDnEv",
+                                  "ref": "artist:b74brg",
+                                  "name": "Button / Replace",
+                                  "descendants": {
+                                    "artist:wUlRtb": {
+                                      "content": "Replace"
+                                    },
+                                    "artist:lPAI5m": {
+                                      "icon": "upload"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "jdcZf5",
+                          "ref": "artist:kAftKE",
+                          "name": "Header image",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:p4N5BS": {
+                              "type": "frame",
+                              "id": "4TUsuB",
+                              "name": "Action",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "kkxBYY",
+                                  "ref": "artist:b74brg",
+                                  "name": "Button / Replace",
+                                  "descendants": {
+                                    "artist:wUlRtb": {
+                                      "content": "Replace"
+                                    },
+                                    "artist:lPAI5m": {
+                                      "icon": "upload"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "mKb1iC",
+                  "name": "Form",
+                  "layout": "vertical",
+                  "gap": 16,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "igtBcQ",
+                      "ref": "artist:RmrVkN",
+                      "name": "Tile / Details",
+                      "width": "fill_container",
+                      "descendants": {
+                        "artist:BxRdiD": {
+                          "icon": "id-card"
+                        },
+                        "artist:EZZdAr": {
+                          "content": "Details"
+                        },
+                        "artist:lICt0a": {
+                          "enabled": false
+                        },
+                        "artist:02kI8m": {
+                          "type": "frame",
+                          "id": "ANkIgc",
+                          "name": "Body",
+                          "layout": "vertical",
+                          "gap": 12,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "2ELo2i",
+                              "name": "Handle and country",
+                              "layout": "vertical",
+                              "gap": 20,
+                              "width": "fill_container",
+                              "alignItems": "start",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "M28sPl",
+                                  "name": "Handle",
+                                  "layout": "vertical",
+                                  "gap": 4,
+                                  "width": "fill_container",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "IYYhX9",
+                                      "ref": "artist:GR7MEs",
+                                      "name": "Field / Handle",
+                                      "width": "fill_container",
+                                      "descendants": {
+                                        "artist:WUGlOw": {
+                                          "content": "Handle"
+                                        },
+                                        "artist:5RhsjI": {
+                                          "content": "mirasol"
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "HtQ35u",
+                                      "ref": "artist:PiqhAO",
+                                      "name": "Shown as @handle on your pub",
+                                      "width": "fill_container",
+                                      "textGrowth": "fixed-width",
+                                      "content": "Shown as @handle on your public page."
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "TwaSkL",
+                                  "ref": "artist:ebsrY2",
+                                  "name": "Field / Country",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:G8meip": {
+                                      "content": "Country"
+                                    },
+                                    "artist:ZMo1QE": {
+                                      "content": "Poland"
+                                    }
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "type": "ref",
+                              "id": "X56FB8",
+                              "ref": "artist:unXtOl",
+                              "name": "Field / Bio",
+                              "width": "fill_container",
+                              "descendants": {
+                                "artist:6UoLnz": {
+                                  "content": "Bio"
+                                },
+                                "artist:T19Gp1": {
+                                  "content": "Synth-pop from Warsaw. New single Night Signal out December 12."
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "fmB8kB",
+                      "ref": "artist:RmrVkN",
+                      "name": "Tile / Links",
+                      "width": "fill_container",
+                      "descendants": {
+                        "artist:BxRdiD": {
+                          "icon": "link-2"
+                        },
+                        "artist:EZZdAr": {
+                          "content": "Links"
+                        },
+                        "artist:lICt0a": {
+                          "enabled": false
+                        },
+                        "artist:02kI8m": {
+                          "type": "frame",
+                          "id": "Z1ghu1",
+                          "name": "Body",
+                          "layout": "vertical",
+                          "gap": 12,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "VOpWKb",
+                              "ref": "artist:aSpnl8",
+                              "name": "Link / Website",
+                              "width": "fill_container",
+                              "descendants": {
+                                "artist:OYsRWS": {
+                                  "icon": "globe"
+                                },
+                                "artist:VpV4kv": {
+                                  "content": "Website"
+                                },
+                                "artist:ZYvhWA": {
+                                  "content": "https://mirasol.fm"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "46KxB8",
+                              "ref": "artist:aSpnl8",
+                              "name": "Link / Instagram",
+                              "width": "fill_container",
+                              "descendants": {
+                                "artist:OYsRWS": {
+                                  "icon": "instagram"
+                                },
+                                "artist:VpV4kv": {
+                                  "content": "Instagram"
+                                },
+                                "artist:ZYvhWA": {
+                                  "content": "https://instagram.com/mirasol"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "7eV1ai",
+                              "ref": "artist:aSpnl8",
+                              "name": "Link / X",
+                              "width": "fill_container",
+                              "descendants": {
+                                "artist:OYsRWS": {
+                                  "icon": "twitter"
+                                },
+                                "artist:VpV4kv": {
+                                  "content": "X"
+                                },
+                                "artist:ZYvhWA": {
+                                  "content": "https://"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "cBsmU2",
+                              "ref": "artist:aSpnl8",
+                              "name": "Link / YouTube",
+                              "width": "fill_container",
+                              "descendants": {
+                                "artist:OYsRWS": {
+                                  "icon": "youtube"
+                                },
+                                "artist:VpV4kv": {
+                                  "content": "YouTube"
+                                },
+                                "artist:ZYvhWA": {
+                                  "content": "https://youtube.com/@mirasol"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "d6sgxi",
+                              "ref": "artist:aSpnl8",
+                              "name": "Link / TikTok",
+                              "width": "fill_container",
+                              "descendants": {
+                                "artist:OYsRWS": {
+                                  "icon": "music-2"
+                                },
+                                "artist:VpV4kv": {
+                                  "content": "TikTok"
+                                },
+                                "artist:ZYvhWA": {
+                                  "content": "https://"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "oYfSjk",
+                              "ref": "artist:aSpnl8",
+                              "name": "Link / SoundCloud",
+                              "width": "fill_container",
+                              "descendants": {
+                                "artist:OYsRWS": {
+                                  "icon": "cloud"
+                                },
+                                "artist:VpV4kv": {
+                                  "content": "SoundCloud"
+                                },
+                                "artist:ZYvhWA": {
+                                  "content": "https://soundcloud.com/mirasol"
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "bbmFaU",
+                  "name": "Actions",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "rYkFc9",
+                      "name": "Buttons",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "justifyContent": "end",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "5BqhsN",
+                          "ref": "artist:HtMQw9",
+                          "name": "Button / Discard changes",
+                          "descendants": {
+                            "artist:wKSako": {
+                              "content": "Discard changes"
+                            },
+                            "artist:DyTdif": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "iWwEgq",
+                          "ref": "artist:WHXSr6",
+                          "name": "Button / Save profile",
+                          "descendants": {
+                            "artist:vg489O": {
+                              "content": "Save profile"
+                            },
+                            "artist:wAdYtR": {
+                              "enabled": false
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "6xVCPu",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / Compilations",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "icon": "library"
+                    },
+                    "artist:EZZdAr": {
+                      "content": "Compilations"
+                    },
+                    "artist:lICt0a": {
+                      "enabled": false
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "KIffoH",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "qroTJC",
+                          "ref": "artist:C5Ih8u",
+                          "name": "Bring your released tracks t",
+                          "width": "fill_container",
+                          "textGrowth": "fixed-width",
+                          "content": "Bring your released tracks together in a new collection, from a Best Of to a selection of favourites."
+                        },
+                        {
+                          "type": "ref",
+                          "id": "nnPaZZ",
+                          "ref": "artist:PiqhAO",
+                          "name": "Original recordings, listeni",
+                          "width": "fill_container",
+                          "textGrowth": "fixed-width",
+                          "content": "Original recordings, listening history and likes stay with your tracks."
+                        },
+                        {
+                          "type": "ref",
+                          "id": "iR6sq5",
+                          "ref": "artist:WHXSr6",
+                          "name": "Button / Create compilation",
+                          "descendants": {
+                            "artist:vg489O": {
+                              "content": "Create compilation"
+                            },
+                            "artist:wAdYtR": {
+                              "enabled": false
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 5110,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Light"
+      },
+      "context": "/dashboard/profile — The public artist page as listeners see it, edited in place; the preview shows unsaved changes."
+    },
+    {
+      "type": "frame",
+      "id": "riFEhW",
+      "name": "Artist / Profile / Mobile / Dim",
+      "width": 390,
+      "height": "fit_content",
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "HIZXKD",
+          "ref": "artist:8H12ea",
+          "name": "Shell",
+          "width": 390,
+          "descendants": {
+            "artist:SIErRw": {
+              "type": "frame",
+              "id": "uWdUni",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 16,
+              "width": "fill_container",
+              "padding": [
+                12,
+                16,
+                40,
+                16
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "4yrJiQ",
+                  "name": "Page Heading",
+                  "gap": 16,
+                  "alignItems": "end",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "SFFJLi",
+                      "name": "Text",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "KWLV6O",
+                          "ref": "artist:MgMQ2L",
+                          "name": "Profile",
+                          "content": "Profile"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "xvLi2a",
+                          "ref": "artist:C5Ih8u",
+                          "name": "How listeners see you on Bit",
+                          "width": "fill_container",
+                          "textGrowth": "fixed-width",
+                          "content": "How listeners see you on Bitrate."
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "9aGauD",
+                  "ref": "artist:ZMP1V9",
+                  "name": "Profile card",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:piTcFF": {
+                      "content": "@mirasol"
+                    },
+                    "artist:X3Qonc": {
+                      "content": "Synth-pop from Warsaw. New single Night Signal out December 12."
+                    },
+                    "artist:WWFIIm": {
+                      "type": "frame",
+                      "id": "VrX35Y",
+                      "name": "Links",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "JT3pyX",
+                          "ref": "artist:pNFm7N",
+                          "name": "Link / Website",
+                          "descendants": {
+                            "artist:NqMlte": {
+                              "content": "Website"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "ObTwrD",
+                          "ref": "artist:pNFm7N",
+                          "name": "Link / Instagram",
+                          "descendants": {
+                            "artist:NqMlte": {
+                              "content": "Instagram"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "x60YAe",
+                          "ref": "artist:pNFm7N",
+                          "name": "Link / YouTube",
+                          "descendants": {
+                            "artist:NqMlte": {
+                              "content": "YouTube"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "GziAPw",
+                          "ref": "artist:pNFm7N",
+                          "name": "Link / SoundCloud",
+                          "descendants": {
+                            "artist:NqMlte": {
+                              "content": "SoundCloud"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    "artist:dl71AI": {
+                      "type": "frame",
+                      "id": "SSsM80",
+                      "name": "Images",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": "fill_container",
+                      "padding": [
+                        0,
+                        20,
+                        20,
+                        20
+                      ],
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "uGfe7D",
+                          "ref": "artist:d45qQR",
+                          "name": "Profile photo",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:idxgup": {
+                              "type": "frame",
+                              "id": "A9IWDu",
+                              "name": "Action",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "mWvGfN",
+                                  "ref": "artist:b74brg",
+                                  "name": "Button / Replace",
+                                  "descendants": {
+                                    "artist:wUlRtb": {
+                                      "content": "Replace"
+                                    },
+                                    "artist:lPAI5m": {
+                                      "icon": "upload"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "xMDbfX",
+                          "ref": "artist:kAftKE",
+                          "name": "Header image",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:p4N5BS": {
+                              "type": "frame",
+                              "id": "eBD3oy",
+                              "name": "Action",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "GV5L4L",
+                                  "ref": "artist:b74brg",
+                                  "name": "Button / Replace",
+                                  "descendants": {
+                                    "artist:wUlRtb": {
+                                      "content": "Replace"
+                                    },
+                                    "artist:lPAI5m": {
+                                      "icon": "upload"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "cbpFY4",
+                  "name": "Form",
+                  "layout": "vertical",
+                  "gap": 16,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "6B0FWN",
+                      "ref": "artist:RmrVkN",
+                      "name": "Tile / Details",
+                      "width": "fill_container",
+                      "descendants": {
+                        "artist:BxRdiD": {
+                          "icon": "id-card"
+                        },
+                        "artist:EZZdAr": {
+                          "content": "Details"
+                        },
+                        "artist:lICt0a": {
+                          "enabled": false
+                        },
+                        "artist:02kI8m": {
+                          "type": "frame",
+                          "id": "iyi3Lo",
+                          "name": "Body",
+                          "layout": "vertical",
+                          "gap": 12,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "KJHBer",
+                              "name": "Handle and country",
+                              "layout": "vertical",
+                              "gap": 20,
+                              "width": "fill_container",
+                              "alignItems": "start",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "8jzxVn",
+                                  "name": "Handle",
+                                  "layout": "vertical",
+                                  "gap": 4,
+                                  "width": "fill_container",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "CvKx30",
+                                      "ref": "artist:GR7MEs",
+                                      "name": "Field / Handle",
+                                      "width": "fill_container",
+                                      "descendants": {
+                                        "artist:WUGlOw": {
+                                          "content": "Handle"
+                                        },
+                                        "artist:5RhsjI": {
+                                          "content": "mirasol"
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "HFLkvT",
+                                      "ref": "artist:PiqhAO",
+                                      "name": "Shown as @handle on your pub",
+                                      "width": "fill_container",
+                                      "textGrowth": "fixed-width",
+                                      "content": "Shown as @handle on your public page."
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "5ANqxb",
+                                  "ref": "artist:ebsrY2",
+                                  "name": "Field / Country",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:G8meip": {
+                                      "content": "Country"
+                                    },
+                                    "artist:ZMo1QE": {
+                                      "content": "Poland"
+                                    }
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "type": "ref",
+                              "id": "PSGpbu",
+                              "ref": "artist:unXtOl",
+                              "name": "Field / Bio",
+                              "width": "fill_container",
+                              "descendants": {
+                                "artist:6UoLnz": {
+                                  "content": "Bio"
+                                },
+                                "artist:T19Gp1": {
+                                  "content": "Synth-pop from Warsaw. New single Night Signal out December 12."
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "9PhxGO",
+                      "ref": "artist:RmrVkN",
+                      "name": "Tile / Links",
+                      "width": "fill_container",
+                      "descendants": {
+                        "artist:BxRdiD": {
+                          "icon": "link-2"
+                        },
+                        "artist:EZZdAr": {
+                          "content": "Links"
+                        },
+                        "artist:lICt0a": {
+                          "enabled": false
+                        },
+                        "artist:02kI8m": {
+                          "type": "frame",
+                          "id": "lLB0i8",
+                          "name": "Body",
+                          "layout": "vertical",
+                          "gap": 12,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "36WaYC",
+                              "ref": "artist:aSpnl8",
+                              "name": "Link / Website",
+                              "width": "fill_container",
+                              "descendants": {
+                                "artist:OYsRWS": {
+                                  "icon": "globe"
+                                },
+                                "artist:VpV4kv": {
+                                  "content": "Website"
+                                },
+                                "artist:ZYvhWA": {
+                                  "content": "https://mirasol.fm"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "8aXQap",
+                              "ref": "artist:aSpnl8",
+                              "name": "Link / Instagram",
+                              "width": "fill_container",
+                              "descendants": {
+                                "artist:OYsRWS": {
+                                  "icon": "instagram"
+                                },
+                                "artist:VpV4kv": {
+                                  "content": "Instagram"
+                                },
+                                "artist:ZYvhWA": {
+                                  "content": "https://instagram.com/mirasol"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "Rjnlsv",
+                              "ref": "artist:aSpnl8",
+                              "name": "Link / X",
+                              "width": "fill_container",
+                              "descendants": {
+                                "artist:OYsRWS": {
+                                  "icon": "twitter"
+                                },
+                                "artist:VpV4kv": {
+                                  "content": "X"
+                                },
+                                "artist:ZYvhWA": {
+                                  "content": "https://"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "O2f95d",
+                              "ref": "artist:aSpnl8",
+                              "name": "Link / YouTube",
+                              "width": "fill_container",
+                              "descendants": {
+                                "artist:OYsRWS": {
+                                  "icon": "youtube"
+                                },
+                                "artist:VpV4kv": {
+                                  "content": "YouTube"
+                                },
+                                "artist:ZYvhWA": {
+                                  "content": "https://youtube.com/@mirasol"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "966Bb2",
+                              "ref": "artist:aSpnl8",
+                              "name": "Link / TikTok",
+                              "width": "fill_container",
+                              "descendants": {
+                                "artist:OYsRWS": {
+                                  "icon": "music-2"
+                                },
+                                "artist:VpV4kv": {
+                                  "content": "TikTok"
+                                },
+                                "artist:ZYvhWA": {
+                                  "content": "https://"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "cbPYAr",
+                              "ref": "artist:aSpnl8",
+                              "name": "Link / SoundCloud",
+                              "width": "fill_container",
+                              "descendants": {
+                                "artist:OYsRWS": {
+                                  "icon": "cloud"
+                                },
+                                "artist:VpV4kv": {
+                                  "content": "SoundCloud"
+                                },
+                                "artist:ZYvhWA": {
+                                  "content": "https://soundcloud.com/mirasol"
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "7cHXaz",
+                  "name": "Actions",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "ZKUR3c",
+                      "name": "Buttons",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "justifyContent": "end",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "plKBHE",
+                          "ref": "artist:HtMQw9",
+                          "name": "Button / Discard changes",
+                          "descendants": {
+                            "artist:wKSako": {
+                              "content": "Discard changes"
+                            },
+                            "artist:DyTdif": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "u3LFos",
+                          "ref": "artist:WHXSr6",
+                          "name": "Button / Save profile",
+                          "descendants": {
+                            "artist:vg489O": {
+                              "content": "Save profile"
+                            },
+                            "artist:wAdYtR": {
+                              "enabled": false
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "IDakCe",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / Compilations",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "icon": "library"
+                    },
+                    "artist:EZZdAr": {
+                      "content": "Compilations"
+                    },
+                    "artist:lICt0a": {
+                      "enabled": false
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "oFWz5d",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "eXfoFd",
+                          "ref": "artist:C5Ih8u",
+                          "name": "Bring your released tracks t",
+                          "width": "fill_container",
+                          "textGrowth": "fixed-width",
+                          "content": "Bring your released tracks together in a new collection, from a Best Of to a selection of favourites."
+                        },
+                        {
+                          "type": "ref",
+                          "id": "hDkpRy",
+                          "ref": "artist:PiqhAO",
+                          "name": "Original recordings, listeni",
+                          "width": "fill_container",
+                          "textGrowth": "fixed-width",
+                          "content": "Original recordings, listening history and likes stay with your tracks."
+                        },
+                        {
+                          "type": "ref",
+                          "id": "iUscnl",
+                          "ref": "artist:WHXSr6",
+                          "name": "Button / Create compilation",
+                          "descendants": {
+                            "artist:vg489O": {
+                              "content": "Create compilation"
+                            },
+                            "artist:wAdYtR": {
+                              "enabled": false
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 5600,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Dim"
+      },
+      "context": "/dashboard/profile — The public artist page as listeners see it, edited in place; the preview shows unsaved changes."
+    },
+    {
+      "type": "frame",
       "id": "bMyUnF",
       "name": "Artist / Profile / Saving / Desktop",
       "width": 1440,
@@ -3504,7 +4846,7 @@
           }
         }
       ],
-      "x": 5110,
+      "x": 6090,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -4175,7 +5517,7 @@
           }
         }
       ],
-      "x": 6650,
+      "x": 7630,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -4891,7 +6233,7 @@
           }
         }
       ],
-      "x": 7140,
+      "x": 8120,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -5571,7 +6913,7 @@
           }
         }
       ],
-      "x": 8680,
+      "x": 9660,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -6280,7 +7622,7 @@
           }
         }
       ],
-      "x": 9170,
+      "x": 10150,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -6951,7 +8293,7 @@
           }
         }
       ],
-      "x": 10710,
+      "x": 11690,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -7670,7 +9012,7 @@
           }
         }
       ],
-      "x": 11200,
+      "x": 12180,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -8353,7 +9695,7 @@
           }
         }
       ],
-      "x": 12740,
+      "x": 13720,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -9065,7 +10407,7 @@
           }
         }
       ],
-      "x": 13230,
+      "x": 14210,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -9739,7 +11081,7 @@
           }
         }
       ],
-      "x": 14770,
+      "x": 15750,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -10458,7 +11800,7 @@
           }
         }
       ],
-      "x": 15260,
+      "x": 16240,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -11141,7 +12483,7 @@
           }
         }
       ],
-      "x": 16800,
+      "x": 17780,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -11857,7 +13199,7 @@
           }
         }
       ],
-      "x": 17290,
+      "x": 18270,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -12537,7 +13879,7 @@
           }
         }
       ],
-      "x": 18830,
+      "x": 19810,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -13253,7 +14595,7 @@
           }
         }
       ],
-      "x": 19320,
+      "x": 20300,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -13933,7 +15275,7 @@
           }
         }
       ],
-      "x": 20860,
+      "x": 21840,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -14141,7 +15483,7 @@
           }
         }
       ],
-      "x": 21350,
+      "x": 22330,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -14327,7 +15669,7 @@
           }
         }
       ],
-      "x": 22890,
+      "x": 23870,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -14544,7 +15886,7 @@
           }
         }
       ],
-      "x": 23380,
+      "x": 24360,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -14732,7 +16074,7 @@
           }
         }
       ],
-      "x": 24920,
+      "x": 25900,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"

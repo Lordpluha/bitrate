@@ -4711,6 +4711,2300 @@
     },
     {
       "type": "frame",
+      "id": "D6lftX",
+      "name": "Artist / Release promotion plan / Mobile / Light",
+      "width": 390,
+      "height": "fit_content",
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "rAOtiA",
+          "ref": "artist:8H12ea",
+          "name": "Shell",
+          "width": 390,
+          "descendants": {
+            "artist:SIErRw": {
+              "type": "frame",
+              "id": "iCMYpL",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 16,
+              "width": "fill_container",
+              "padding": [
+                12,
+                16,
+                40,
+                16
+              ],
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "sGr6ro",
+                  "ref": "artist:3i5VmQ",
+                  "name": "Release Header",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:v26Lkv": {
+                      "content": "Approve 4 suggested steps"
+                    },
+                    "artist:KhPSdx": {
+                      "content": "Approved steps appear in your promotion calendar."
+                    },
+                    "artist:l2GFpx/artist:vg489O": {
+                      "content": "Review steps"
+                    },
+                    "artist:l2GFpx/artist:wAdYtR": {
+                      "icon": "arrow-right"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "pOTUHZ",
+                  "ref": "artist:pUL0y0",
+                  "name": "Stepper",
+                  "width": "fill_container"
+                },
+                {
+                  "type": "frame",
+                  "id": "mGxzsf",
+                  "name": "Plan Intro",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "4KUUEW",
+                      "ref": "artist:rlyek4",
+                      "name": "Status / Created with AI",
+                      "descendants": {
+                        "artist:EyHeXW": {
+                          "content": "Created with AI"
+                        },
+                        "artist:HCevJf": {
+                          "icon": "sparkles"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "1AzciM",
+                      "ref": "artist:LUaCU2",
+                      "name": "Status / Version 2",
+                      "descendants": {
+                        "artist:mtpREt": {
+                          "content": "Version 2"
+                        },
+                        "artist:jPj56V": {
+                          "icon": "history"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "K8kcVK",
+                      "ref": "artist:PiqhAO",
+                      "name": "From your release details an",
+                      "content": "From your release details and promotion profile · Sep 01"
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "r99tNM",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / Before release · 4 weeks",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "icon": "hourglass"
+                    },
+                    "artist:EZZdAr": {
+                      "content": "Before release · 4 weeks"
+                    },
+                    "artist:lICt0a": {
+                      "type": "frame",
+                      "id": "dXebO8",
+                      "name": "Right",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "VqxPp0",
+                          "ref": "artist:LUaCU2",
+                          "name": "Status / Phase 1",
+                          "descendants": {
+                            "artist:mtpREt": {
+                              "content": "Phase 1"
+                            },
+                            "artist:jPj56V": {
+                              "icon": "flag"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "XkY6u0",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "xeMhjH",
+                          "name": "Step / T−21 · Sep 05 — Announce",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "rwgtLL",
+                              "ref": "artist:YRn8Rs",
+                              "name": "Row / T−21 · Sep 05 — Announce",
+                              "width": "fill_container",
+                              "descendants": {
+                                "artist:2zzQC7": {
+                                  "content": "T−21 · Sep 05 — Announce the release date"
+                                },
+                                "artist:9L7bOG": {
+                                  "content": "Post · Instagram, Telegram"
+                                },
+                                "artist:Drnpbz": {
+                                  "enabled": false
+                                }
+                              }
+                            },
+                            {
+                              "type": "frame",
+                              "id": "sS8fdQ",
+                              "name": "Step actions",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "oKR1TD",
+                                  "ref": "artist:fSHiZY",
+                                  "name": "Status / Approved",
+                                  "descendants": {
+                                    "artist:wuogNV": {
+                                      "content": "Approved"
+                                    },
+                                    "artist:rFgkM6": {
+                                      "icon": "circle-check"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "bvkTf6",
+                                  "ref": "artist:spoluO",
+                                  "name": "Button / Open post",
+                                  "descendants": {
+                                    "artist:degIxI": {
+                                      "content": "Open post"
+                                    },
+                                    "artist:gE2vVp": {
+                                      "icon": "arrow-up-right"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "AqIAMV",
+                          "name": "Step / T−14 · Sep 12 — Start th",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "QUSW3p",
+                              "ref": "artist:YRn8Rs",
+                              "name": "Row / T−14 · Sep 12 — Start th",
+                              "width": "fill_container",
+                              "descendants": {
+                                "artist:2zzQC7": {
+                                  "content": "T−14 · Sep 12 — Start the countdown on your artist page"
+                                },
+                                "artist:9L7bOG": {
+                                  "content": "Bitrate · Countdown tile until the release goes live"
+                                },
+                                "artist:Drnpbz": {
+                                  "enabled": false
+                                }
+                              }
+                            },
+                            {
+                              "type": "frame",
+                              "id": "Dt9rnT",
+                              "name": "Step actions",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "lKde2F",
+                                  "ref": "artist:fSHiZY",
+                                  "name": "Status / Approved",
+                                  "descendants": {
+                                    "artist:wuogNV": {
+                                      "content": "Approved"
+                                    },
+                                    "artist:rFgkM6": {
+                                      "icon": "circle-check"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "hxs3TF",
+                          "name": "Step / T−7 · Sep 19 — Share a 1",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "vqprWB",
+                              "ref": "artist:YRn8Rs",
+                              "name": "Row / T−7 · Sep 19 — Share a 1",
+                              "width": "fill_container",
+                              "descendants": {
+                                "artist:2zzQC7": {
+                                  "content": "T−7 · Sep 19 — Share a 15-second hook from Afterglow"
+                                },
+                                "artist:9L7bOG": {
+                                  "content": "Post · TikTok, YouTube Shorts"
+                                },
+                                "artist:Drnpbz": {
+                                  "enabled": false
+                                }
+                              }
+                            },
+                            {
+                              "type": "frame",
+                              "id": "EH1Zfy",
+                              "name": "Step actions",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "qTCLua",
+                                  "ref": "artist:rlyek4",
+                                  "name": "Status / Suggested",
+                                  "descendants": {
+                                    "artist:EyHeXW": {
+                                      "content": "Suggested"
+                                    },
+                                    "artist:HCevJf": {
+                                      "icon": "sparkles"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "lnvxzZ",
+                                  "ref": "artist:xgByBm",
+                                  "name": "Button / Approve",
+                                  "descendants": {
+                                    "artist:MOhLvR": {
+                                      "content": "Approve"
+                                    },
+                                    "artist:zC8Bc6": {
+                                      "icon": "check"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "cDLd4O",
+                          "name": "Step / T−3 · Sep 23 — Send the ",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "8yHAtl",
+                              "ref": "artist:YRn8Rs",
+                              "name": "Row / T−3 · Sep 23 — Send the ",
+                              "width": "fill_container",
+                              "descendants": {
+                                "artist:2zzQC7": {
+                                  "content": "T−3 · Sep 23 — Send the track to three music channel hosts you know"
+                                },
+                                "artist:9L7bOG": {
+                                  "content": "Action · Off-platform · Edited by you"
+                                },
+                                "artist:Drnpbz": {
+                                  "enabled": false
+                                }
+                              }
+                            },
+                            {
+                              "type": "frame",
+                              "id": "5jy3x2",
+                              "name": "Step actions",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "xdKXDo",
+                                  "ref": "artist:DASsL1",
+                                  "name": "Status / Edited",
+                                  "descendants": {
+                                    "artist:skfP8C": {
+                                      "content": "Edited"
+                                    },
+                                    "artist:lFiFfh": {
+                                      "icon": "pencil"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "majnw5",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / Release day",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "icon": "rocket"
+                    },
+                    "artist:EZZdAr": {
+                      "content": "Release day"
+                    },
+                    "artist:lICt0a": {
+                      "type": "frame",
+                      "id": "iIXCfx",
+                      "name": "Right",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "QH8IzK",
+                          "ref": "artist:LUaCU2",
+                          "name": "Status / Phase 2",
+                          "descendants": {
+                            "artist:mtpREt": {
+                              "content": "Phase 2"
+                            },
+                            "artist:jPj56V": {
+                              "icon": "flag"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "imIBg4",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "AELJIQ",
+                          "name": "Step / T0 · Sep 26 — Message yo",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "AS4pAU",
+                              "ref": "artist:YRn8Rs",
+                              "name": "Row / T0 · Sep 26 — Message yo",
+                              "width": "fill_container",
+                              "descendants": {
+                                "artist:2zzQC7": {
+                                  "content": "T0 · Sep 26 — Message your followers on Bitrate"
+                                },
+                                "artist:9L7bOG": {
+                                  "content": "Bitrate · Sent once, with the new-release notification"
+                                },
+                                "artist:Drnpbz": {
+                                  "enabled": false
+                                }
+                              }
+                            },
+                            {
+                              "type": "frame",
+                              "id": "pL1oHd",
+                              "name": "Step actions",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "3K5wre",
+                                  "ref": "artist:rlyek4",
+                                  "name": "Status / Suggested",
+                                  "descendants": {
+                                    "artist:EyHeXW": {
+                                      "content": "Suggested"
+                                    },
+                                    "artist:HCevJf": {
+                                      "icon": "sparkles"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "WX2t1X",
+                                  "ref": "artist:xgByBm",
+                                  "name": "Button / Review message",
+                                  "descendants": {
+                                    "artist:MOhLvR": {
+                                      "content": "Review message"
+                                    },
+                                    "artist:zC8Bc6": {
+                                      "enabled": false
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "v5nsqY",
+                          "name": "Step / T0 · Sep 26 — Post the r",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "FQAryy",
+                              "ref": "artist:YRn8Rs",
+                              "name": "Row / T0 · Sep 26 — Post the r",
+                              "width": "fill_container",
+                              "descendants": {
+                                "artist:2zzQC7": {
+                                  "content": "T0 · Sep 26 — Post the release link"
+                                },
+                                "artist:9L7bOG": {
+                                  "content": "Post · Instagram, TikTok, Telegram, YouTube Shorts"
+                                },
+                                "artist:Drnpbz": {
+                                  "enabled": false
+                                }
+                              }
+                            },
+                            {
+                              "type": "frame",
+                              "id": "ISOMc5",
+                              "name": "Step actions",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "syVVLj",
+                                  "ref": "artist:rlyek4",
+                                  "name": "Status / Suggested",
+                                  "descendants": {
+                                    "artist:EyHeXW": {
+                                      "content": "Suggested"
+                                    },
+                                    "artist:HCevJf": {
+                                      "icon": "sparkles"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "fvLPNd",
+                                  "ref": "artist:xgByBm",
+                                  "name": "Button / Approve",
+                                  "descendants": {
+                                    "artist:MOhLvR": {
+                                      "content": "Approve"
+                                    },
+                                    "artist:zC8Bc6": {
+                                      "icon": "check"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "jzok7E",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / After release · 4 weeks",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "icon": "trending-up"
+                    },
+                    "artist:EZZdAr": {
+                      "content": "After release · 4 weeks"
+                    },
+                    "artist:lICt0a": {
+                      "type": "frame",
+                      "id": "3IOc0h",
+                      "name": "Right",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "b4Ietp",
+                          "ref": "artist:LUaCU2",
+                          "name": "Status / Phase 3",
+                          "descendants": {
+                            "artist:mtpREt": {
+                              "content": "Phase 3"
+                            },
+                            "artist:jPj56V": {
+                              "icon": "flag"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "x68JNR",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "p5LYnI",
+                          "name": "Step / T+3 · Sep 29 — Thank lis",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "7vQvR3",
+                              "ref": "artist:YRn8Rs",
+                              "name": "Row / T+3 · Sep 29 — Thank lis",
+                              "width": "fill_container",
+                              "descendants": {
+                                "artist:2zzQC7": {
+                                  "content": "T+3 · Sep 29 — Thank listeners and share a lyric line"
+                                },
+                                "artist:9L7bOG": {
+                                  "content": "Post · Instagram, Telegram"
+                                },
+                                "artist:Drnpbz": {
+                                  "enabled": false
+                                }
+                              }
+                            },
+                            {
+                              "type": "frame",
+                              "id": "imCOnJ",
+                              "name": "Step actions",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "MyCL5S",
+                                  "ref": "artist:rlyek4",
+                                  "name": "Status / Suggested",
+                                  "descendants": {
+                                    "artist:EyHeXW": {
+                                      "content": "Suggested"
+                                    },
+                                    "artist:HCevJf": {
+                                      "icon": "sparkles"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "JCCvgH",
+                                  "ref": "artist:xgByBm",
+                                  "name": "Button / Approve",
+                                  "descendants": {
+                                    "artist:MOhLvR": {
+                                      "content": "Approve"
+                                    },
+                                    "artist:zC8Bc6": {
+                                      "icon": "check"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "kcrg8V",
+                          "name": "Step / T+14 · Oct 10 — Pitch Af",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "MuSvIg",
+                              "ref": "artist:YRn8Rs",
+                              "name": "Row / T+14 · Oct 10 — Pitch Af",
+                              "width": "fill_container",
+                              "descendants": {
+                                "artist:2zzQC7": {
+                                  "content": "T+14 · Oct 10 — Pitch Afterglow to playlist curators"
+                                },
+                                "artist:9L7bOG": {
+                                  "content": "Action · Rejected by you · Kept for your plan history"
+                                },
+                                "artist:Drnpbz": {
+                                  "enabled": false
+                                }
+                              }
+                            },
+                            {
+                              "type": "frame",
+                              "id": "Ft5QPh",
+                              "name": "Step actions",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "1xRpgn",
+                                  "ref": "artist:LUaCU2",
+                                  "name": "Status / Rejected",
+                                  "descendants": {
+                                    "artist:mtpREt": {
+                                      "content": "Rejected"
+                                    },
+                                    "artist:jPj56V": {
+                                      "icon": "circle-x"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "2N5mcV",
+                  "ref": "artist:ernseT",
+                  "name": "Tile / Plan summary",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:cg8tcb": {
+                      "icon": "list-checks"
+                    },
+                    "artist:3RHJS9": {
+                      "content": "Plan summary"
+                    },
+                    "artist:iFLpY7": {
+                      "enabled": false
+                    },
+                    "artist:zzs1rB": {
+                      "type": "frame",
+                      "id": "hruboU",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "1DcVdH",
+                          "ref": "artist:8A3JLw",
+                          "name": "KV / Release date",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:uAX8Tb": {
+                              "content": "Release date"
+                            },
+                            "artist:zlG4cw": {
+                              "content": "Sep 26, 2026"
+                            },
+                            "artist:Cc68qY": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "aGQ8wz",
+                          "ref": "artist:8A3JLw",
+                          "name": "KV / Steps",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:uAX8Tb": {
+                              "content": "Steps"
+                            },
+                            "artist:zlG4cw": {
+                              "content": "8 · 3 approved · 1 rejected"
+                            },
+                            "artist:Cc68qY": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "dqqyrS",
+                          "ref": "artist:8A3JLw",
+                          "name": "KV / Awaiting you",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:uAX8Tb": {
+                              "content": "Awaiting you"
+                            },
+                            "artist:zlG4cw": {
+                              "enabled": false
+                            },
+                            "artist:Cc68qY": {
+                              "type": "frame",
+                              "id": "IPC5Kb",
+                              "name": "Trail",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "GdOQTs",
+                                  "ref": "artist:rlyek4",
+                                  "name": "Status / 4 suggested",
+                                  "descendants": {
+                                    "artist:EyHeXW": {
+                                      "content": "4 suggested"
+                                    },
+                                    "artist:HCevJf": {
+                                      "icon": "sparkles"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "i4ccfF",
+                          "ref": "artist:C4EcUr",
+                          "name": "Button / Regenerate suggested steps",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:rkJ43y": {
+                              "content": "Regenerate suggested steps"
+                            },
+                            "artist:uH2LRF": {
+                              "icon": "refresh-cw"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "jDX0jo",
+                          "ref": "artist:PiqhAO",
+                          "name": "Regenerating replaces only s",
+                          "width": "fill_container",
+                          "textGrowth": "fixed-width",
+                          "content": "Regenerating replaces only suggested steps. Approved and edited steps stay."
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "3MQ1HU",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / Promotion profile",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "icon": "id-card"
+                    },
+                    "artist:EZZdAr": {
+                      "content": "Promotion profile"
+                    },
+                    "artist:lICt0a": {
+                      "enabled": false
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "NXFZPW",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "JS6Eqx",
+                          "ref": "artist:8A3JLw",
+                          "name": "KV / Goal",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:uAX8Tb": {
+                              "content": "Goal"
+                            },
+                            "artist:zlG4cw": {
+                              "content": "Pre-release buzz"
+                            },
+                            "artist:Cc68qY": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "MMLcwt",
+                          "ref": "artist:8A3JLw",
+                          "name": "KV / Channels",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:uAX8Tb": {
+                              "content": "Channels"
+                            },
+                            "artist:zlG4cw": {
+                              "content": "Instagram · TikTok · Telegram · Shorts"
+                            },
+                            "artist:Cc68qY": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "HU5uEk",
+                          "ref": "artist:8A3JLw",
+                          "name": "KV / Weekly time",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:uAX8Tb": {
+                              "content": "Weekly time"
+                            },
+                            "artist:zlG4cw": {
+                              "content": "3 hours"
+                            },
+                            "artist:Cc68qY": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "E6pXgt",
+                          "ref": "artist:8A3JLw",
+                          "name": "KV / Voice",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:uAX8Tb": {
+                              "content": "Voice"
+                            },
+                            "artist:zlG4cw": {
+                              "content": "Calm · direct · warm"
+                            },
+                            "artist:Cc68qY": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "DwkhuP",
+                          "ref": "artist:HtMQw9",
+                          "name": "Button / Edit for this release",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:wKSako": {
+                              "content": "Edit for this release"
+                            },
+                            "artist:DyTdif": {
+                              "icon": "pencil"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "aKRojV",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / AI allowance",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "icon": "gauge"
+                    },
+                    "artist:EZZdAr": {
+                      "content": "AI allowance"
+                    },
+                    "artist:lICt0a": {
+                      "enabled": false
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "wWvFc7",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "MWb4JU",
+                          "ref": "artist:8A3JLw",
+                          "name": "KV / This month",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:uAX8Tb": {
+                              "content": "This month"
+                            },
+                            "artist:zlG4cw": {
+                              "content": "$0.42 of $2.00"
+                            },
+                            "artist:Cc68qY": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "J68bzq",
+                          "ref": "artist:2cqK5i",
+                          "name": "Progress",
+                          "descendants": {
+                            "artist:WwKBYL": {
+                              "width": 66
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "sqPDG2",
+                          "ref": "artist:PiqhAO",
+                          "name": "Free plan · Resets Oct 1",
+                          "content": "Free plan · Resets Oct 1"
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "5Y9mDk",
+                  "ref": "artist:sgF75m",
+                  "name": "Alert / Nothing is published for",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxWcZz": {
+                      "content": "Nothing is published for you"
+                    },
+                    "artist:EHxm9r": {
+                      "content": "Every step needs your approval. Bitrate never posts to your social accounts."
+                    },
+                    "artist:otoXgv": {
+                      "enabled": false
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 5110,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Light"
+      },
+      "context": "planned — /dashboard/music/$releaseId?step=promotion — AI plan from T−28 to T+28 around the release date; every step is approved, edited or rejected by the artist. Release workspace look: cover-tinted header, stepper on the Promotion stage, bento tiles on the 12-column grid. Spec: ai-artist-promotion."
+    },
+    {
+      "type": "frame",
+      "id": "VKuNyY",
+      "name": "Artist / Release promotion plan / Mobile / Dim",
+      "width": 390,
+      "height": "fit_content",
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "F9BP9I",
+          "ref": "artist:8H12ea",
+          "name": "Shell",
+          "width": 390,
+          "descendants": {
+            "artist:SIErRw": {
+              "type": "frame",
+              "id": "WdB3DX",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 16,
+              "width": "fill_container",
+              "padding": [
+                12,
+                16,
+                40,
+                16
+              ],
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "MT3UVd",
+                  "ref": "artist:3i5VmQ",
+                  "name": "Release Header",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:v26Lkv": {
+                      "content": "Approve 4 suggested steps"
+                    },
+                    "artist:KhPSdx": {
+                      "content": "Approved steps appear in your promotion calendar."
+                    },
+                    "artist:l2GFpx/artist:vg489O": {
+                      "content": "Review steps"
+                    },
+                    "artist:l2GFpx/artist:wAdYtR": {
+                      "icon": "arrow-right"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "B3Lxdh",
+                  "ref": "artist:pUL0y0",
+                  "name": "Stepper",
+                  "width": "fill_container"
+                },
+                {
+                  "type": "frame",
+                  "id": "UrCRwc",
+                  "name": "Plan Intro",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "0cAGXP",
+                      "ref": "artist:rlyek4",
+                      "name": "Status / Created with AI",
+                      "descendants": {
+                        "artist:EyHeXW": {
+                          "content": "Created with AI"
+                        },
+                        "artist:HCevJf": {
+                          "icon": "sparkles"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "P0nvP4",
+                      "ref": "artist:LUaCU2",
+                      "name": "Status / Version 2",
+                      "descendants": {
+                        "artist:mtpREt": {
+                          "content": "Version 2"
+                        },
+                        "artist:jPj56V": {
+                          "icon": "history"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "6bxCXp",
+                      "ref": "artist:PiqhAO",
+                      "name": "From your release details an",
+                      "content": "From your release details and promotion profile · Sep 01"
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "R48nmM",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / Before release · 4 weeks",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "icon": "hourglass"
+                    },
+                    "artist:EZZdAr": {
+                      "content": "Before release · 4 weeks"
+                    },
+                    "artist:lICt0a": {
+                      "type": "frame",
+                      "id": "1yWAde",
+                      "name": "Right",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "xI7nGF",
+                          "ref": "artist:LUaCU2",
+                          "name": "Status / Phase 1",
+                          "descendants": {
+                            "artist:mtpREt": {
+                              "content": "Phase 1"
+                            },
+                            "artist:jPj56V": {
+                              "icon": "flag"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "1lnthv",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "LTUIsg",
+                          "name": "Step / T−21 · Sep 05 — Announce",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "l3byJr",
+                              "ref": "artist:YRn8Rs",
+                              "name": "Row / T−21 · Sep 05 — Announce",
+                              "width": "fill_container",
+                              "descendants": {
+                                "artist:2zzQC7": {
+                                  "content": "T−21 · Sep 05 — Announce the release date"
+                                },
+                                "artist:9L7bOG": {
+                                  "content": "Post · Instagram, Telegram"
+                                },
+                                "artist:Drnpbz": {
+                                  "enabled": false
+                                }
+                              }
+                            },
+                            {
+                              "type": "frame",
+                              "id": "ucx9hu",
+                              "name": "Step actions",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "OsWjQv",
+                                  "ref": "artist:fSHiZY",
+                                  "name": "Status / Approved",
+                                  "descendants": {
+                                    "artist:wuogNV": {
+                                      "content": "Approved"
+                                    },
+                                    "artist:rFgkM6": {
+                                      "icon": "circle-check"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "J63668",
+                                  "ref": "artist:spoluO",
+                                  "name": "Button / Open post",
+                                  "descendants": {
+                                    "artist:degIxI": {
+                                      "content": "Open post"
+                                    },
+                                    "artist:gE2vVp": {
+                                      "icon": "arrow-up-right"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "K05P0c",
+                          "name": "Step / T−14 · Sep 12 — Start th",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "gY0kEJ",
+                              "ref": "artist:YRn8Rs",
+                              "name": "Row / T−14 · Sep 12 — Start th",
+                              "width": "fill_container",
+                              "descendants": {
+                                "artist:2zzQC7": {
+                                  "content": "T−14 · Sep 12 — Start the countdown on your artist page"
+                                },
+                                "artist:9L7bOG": {
+                                  "content": "Bitrate · Countdown tile until the release goes live"
+                                },
+                                "artist:Drnpbz": {
+                                  "enabled": false
+                                }
+                              }
+                            },
+                            {
+                              "type": "frame",
+                              "id": "dMvqEN",
+                              "name": "Step actions",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "vFSTar",
+                                  "ref": "artist:fSHiZY",
+                                  "name": "Status / Approved",
+                                  "descendants": {
+                                    "artist:wuogNV": {
+                                      "content": "Approved"
+                                    },
+                                    "artist:rFgkM6": {
+                                      "icon": "circle-check"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "N7htd2",
+                          "name": "Step / T−7 · Sep 19 — Share a 1",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "vk7KAQ",
+                              "ref": "artist:YRn8Rs",
+                              "name": "Row / T−7 · Sep 19 — Share a 1",
+                              "width": "fill_container",
+                              "descendants": {
+                                "artist:2zzQC7": {
+                                  "content": "T−7 · Sep 19 — Share a 15-second hook from Afterglow"
+                                },
+                                "artist:9L7bOG": {
+                                  "content": "Post · TikTok, YouTube Shorts"
+                                },
+                                "artist:Drnpbz": {
+                                  "enabled": false
+                                }
+                              }
+                            },
+                            {
+                              "type": "frame",
+                              "id": "yDv7YI",
+                              "name": "Step actions",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "YcPuAV",
+                                  "ref": "artist:rlyek4",
+                                  "name": "Status / Suggested",
+                                  "descendants": {
+                                    "artist:EyHeXW": {
+                                      "content": "Suggested"
+                                    },
+                                    "artist:HCevJf": {
+                                      "icon": "sparkles"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "1uVhZp",
+                                  "ref": "artist:xgByBm",
+                                  "name": "Button / Approve",
+                                  "descendants": {
+                                    "artist:MOhLvR": {
+                                      "content": "Approve"
+                                    },
+                                    "artist:zC8Bc6": {
+                                      "icon": "check"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "Q06HcM",
+                          "name": "Step / T−3 · Sep 23 — Send the ",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "MMsMHh",
+                              "ref": "artist:YRn8Rs",
+                              "name": "Row / T−3 · Sep 23 — Send the ",
+                              "width": "fill_container",
+                              "descendants": {
+                                "artist:2zzQC7": {
+                                  "content": "T−3 · Sep 23 — Send the track to three music channel hosts you know"
+                                },
+                                "artist:9L7bOG": {
+                                  "content": "Action · Off-platform · Edited by you"
+                                },
+                                "artist:Drnpbz": {
+                                  "enabled": false
+                                }
+                              }
+                            },
+                            {
+                              "type": "frame",
+                              "id": "PaGDV0",
+                              "name": "Step actions",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "z3FM2d",
+                                  "ref": "artist:DASsL1",
+                                  "name": "Status / Edited",
+                                  "descendants": {
+                                    "artist:skfP8C": {
+                                      "content": "Edited"
+                                    },
+                                    "artist:lFiFfh": {
+                                      "icon": "pencil"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "syBXFu",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / Release day",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "icon": "rocket"
+                    },
+                    "artist:EZZdAr": {
+                      "content": "Release day"
+                    },
+                    "artist:lICt0a": {
+                      "type": "frame",
+                      "id": "28lMjs",
+                      "name": "Right",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "QAwKvz",
+                          "ref": "artist:LUaCU2",
+                          "name": "Status / Phase 2",
+                          "descendants": {
+                            "artist:mtpREt": {
+                              "content": "Phase 2"
+                            },
+                            "artist:jPj56V": {
+                              "icon": "flag"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "eWWrAa",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "EF723f",
+                          "name": "Step / T0 · Sep 26 — Message yo",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "IC3O5J",
+                              "ref": "artist:YRn8Rs",
+                              "name": "Row / T0 · Sep 26 — Message yo",
+                              "width": "fill_container",
+                              "descendants": {
+                                "artist:2zzQC7": {
+                                  "content": "T0 · Sep 26 — Message your followers on Bitrate"
+                                },
+                                "artist:9L7bOG": {
+                                  "content": "Bitrate · Sent once, with the new-release notification"
+                                },
+                                "artist:Drnpbz": {
+                                  "enabled": false
+                                }
+                              }
+                            },
+                            {
+                              "type": "frame",
+                              "id": "FGq1LS",
+                              "name": "Step actions",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "NJcpqM",
+                                  "ref": "artist:rlyek4",
+                                  "name": "Status / Suggested",
+                                  "descendants": {
+                                    "artist:EyHeXW": {
+                                      "content": "Suggested"
+                                    },
+                                    "artist:HCevJf": {
+                                      "icon": "sparkles"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "Q2qSe8",
+                                  "ref": "artist:xgByBm",
+                                  "name": "Button / Review message",
+                                  "descendants": {
+                                    "artist:MOhLvR": {
+                                      "content": "Review message"
+                                    },
+                                    "artist:zC8Bc6": {
+                                      "enabled": false
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "tzvCtU",
+                          "name": "Step / T0 · Sep 26 — Post the r",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "5HwIml",
+                              "ref": "artist:YRn8Rs",
+                              "name": "Row / T0 · Sep 26 — Post the r",
+                              "width": "fill_container",
+                              "descendants": {
+                                "artist:2zzQC7": {
+                                  "content": "T0 · Sep 26 — Post the release link"
+                                },
+                                "artist:9L7bOG": {
+                                  "content": "Post · Instagram, TikTok, Telegram, YouTube Shorts"
+                                },
+                                "artist:Drnpbz": {
+                                  "enabled": false
+                                }
+                              }
+                            },
+                            {
+                              "type": "frame",
+                              "id": "0iMWyq",
+                              "name": "Step actions",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "4okS5r",
+                                  "ref": "artist:rlyek4",
+                                  "name": "Status / Suggested",
+                                  "descendants": {
+                                    "artist:EyHeXW": {
+                                      "content": "Suggested"
+                                    },
+                                    "artist:HCevJf": {
+                                      "icon": "sparkles"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "1k6uOp",
+                                  "ref": "artist:xgByBm",
+                                  "name": "Button / Approve",
+                                  "descendants": {
+                                    "artist:MOhLvR": {
+                                      "content": "Approve"
+                                    },
+                                    "artist:zC8Bc6": {
+                                      "icon": "check"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "fHPbln",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / After release · 4 weeks",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "icon": "trending-up"
+                    },
+                    "artist:EZZdAr": {
+                      "content": "After release · 4 weeks"
+                    },
+                    "artist:lICt0a": {
+                      "type": "frame",
+                      "id": "RxzrvT",
+                      "name": "Right",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "1ET8gV",
+                          "ref": "artist:LUaCU2",
+                          "name": "Status / Phase 3",
+                          "descendants": {
+                            "artist:mtpREt": {
+                              "content": "Phase 3"
+                            },
+                            "artist:jPj56V": {
+                              "icon": "flag"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "3rjw8H",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "7hcxKx",
+                          "name": "Step / T+3 · Sep 29 — Thank lis",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "DeC1gL",
+                              "ref": "artist:YRn8Rs",
+                              "name": "Row / T+3 · Sep 29 — Thank lis",
+                              "width": "fill_container",
+                              "descendants": {
+                                "artist:2zzQC7": {
+                                  "content": "T+3 · Sep 29 — Thank listeners and share a lyric line"
+                                },
+                                "artist:9L7bOG": {
+                                  "content": "Post · Instagram, Telegram"
+                                },
+                                "artist:Drnpbz": {
+                                  "enabled": false
+                                }
+                              }
+                            },
+                            {
+                              "type": "frame",
+                              "id": "IE9waL",
+                              "name": "Step actions",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "u4euut",
+                                  "ref": "artist:rlyek4",
+                                  "name": "Status / Suggested",
+                                  "descendants": {
+                                    "artist:EyHeXW": {
+                                      "content": "Suggested"
+                                    },
+                                    "artist:HCevJf": {
+                                      "icon": "sparkles"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "jNNyFW",
+                                  "ref": "artist:xgByBm",
+                                  "name": "Button / Approve",
+                                  "descendants": {
+                                    "artist:MOhLvR": {
+                                      "content": "Approve"
+                                    },
+                                    "artist:zC8Bc6": {
+                                      "icon": "check"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "cKEPrv",
+                          "name": "Step / T+14 · Oct 10 — Pitch Af",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "2dlIO2",
+                              "ref": "artist:YRn8Rs",
+                              "name": "Row / T+14 · Oct 10 — Pitch Af",
+                              "width": "fill_container",
+                              "descendants": {
+                                "artist:2zzQC7": {
+                                  "content": "T+14 · Oct 10 — Pitch Afterglow to playlist curators"
+                                },
+                                "artist:9L7bOG": {
+                                  "content": "Action · Rejected by you · Kept for your plan history"
+                                },
+                                "artist:Drnpbz": {
+                                  "enabled": false
+                                }
+                              }
+                            },
+                            {
+                              "type": "frame",
+                              "id": "RdpGLL",
+                              "name": "Step actions",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "VHUPwo",
+                                  "ref": "artist:LUaCU2",
+                                  "name": "Status / Rejected",
+                                  "descendants": {
+                                    "artist:mtpREt": {
+                                      "content": "Rejected"
+                                    },
+                                    "artist:jPj56V": {
+                                      "icon": "circle-x"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "wShFsA",
+                  "ref": "artist:ernseT",
+                  "name": "Tile / Plan summary",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:cg8tcb": {
+                      "icon": "list-checks"
+                    },
+                    "artist:3RHJS9": {
+                      "content": "Plan summary"
+                    },
+                    "artist:iFLpY7": {
+                      "enabled": false
+                    },
+                    "artist:zzs1rB": {
+                      "type": "frame",
+                      "id": "JdNmtp",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "x7C7R7",
+                          "ref": "artist:8A3JLw",
+                          "name": "KV / Release date",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:uAX8Tb": {
+                              "content": "Release date"
+                            },
+                            "artist:zlG4cw": {
+                              "content": "Sep 26, 2026"
+                            },
+                            "artist:Cc68qY": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "yvq6sR",
+                          "ref": "artist:8A3JLw",
+                          "name": "KV / Steps",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:uAX8Tb": {
+                              "content": "Steps"
+                            },
+                            "artist:zlG4cw": {
+                              "content": "8 · 3 approved · 1 rejected"
+                            },
+                            "artist:Cc68qY": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "hW2qKY",
+                          "ref": "artist:8A3JLw",
+                          "name": "KV / Awaiting you",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:uAX8Tb": {
+                              "content": "Awaiting you"
+                            },
+                            "artist:zlG4cw": {
+                              "enabled": false
+                            },
+                            "artist:Cc68qY": {
+                              "type": "frame",
+                              "id": "mMjz28",
+                              "name": "Trail",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "28CCmm",
+                                  "ref": "artist:rlyek4",
+                                  "name": "Status / 4 suggested",
+                                  "descendants": {
+                                    "artist:EyHeXW": {
+                                      "content": "4 suggested"
+                                    },
+                                    "artist:HCevJf": {
+                                      "icon": "sparkles"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "sE6mMI",
+                          "ref": "artist:C4EcUr",
+                          "name": "Button / Regenerate suggested steps",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:rkJ43y": {
+                              "content": "Regenerate suggested steps"
+                            },
+                            "artist:uH2LRF": {
+                              "icon": "refresh-cw"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "9TvcJ8",
+                          "ref": "artist:PiqhAO",
+                          "name": "Regenerating replaces only s",
+                          "width": "fill_container",
+                          "textGrowth": "fixed-width",
+                          "content": "Regenerating replaces only suggested steps. Approved and edited steps stay."
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "vShCu2",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / Promotion profile",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "icon": "id-card"
+                    },
+                    "artist:EZZdAr": {
+                      "content": "Promotion profile"
+                    },
+                    "artist:lICt0a": {
+                      "enabled": false
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "92nDgc",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "77eFHS",
+                          "ref": "artist:8A3JLw",
+                          "name": "KV / Goal",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:uAX8Tb": {
+                              "content": "Goal"
+                            },
+                            "artist:zlG4cw": {
+                              "content": "Pre-release buzz"
+                            },
+                            "artist:Cc68qY": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "grcwz3",
+                          "ref": "artist:8A3JLw",
+                          "name": "KV / Channels",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:uAX8Tb": {
+                              "content": "Channels"
+                            },
+                            "artist:zlG4cw": {
+                              "content": "Instagram · TikTok · Telegram · Shorts"
+                            },
+                            "artist:Cc68qY": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "jIymT6",
+                          "ref": "artist:8A3JLw",
+                          "name": "KV / Weekly time",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:uAX8Tb": {
+                              "content": "Weekly time"
+                            },
+                            "artist:zlG4cw": {
+                              "content": "3 hours"
+                            },
+                            "artist:Cc68qY": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "q8HA05",
+                          "ref": "artist:8A3JLw",
+                          "name": "KV / Voice",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:uAX8Tb": {
+                              "content": "Voice"
+                            },
+                            "artist:zlG4cw": {
+                              "content": "Calm · direct · warm"
+                            },
+                            "artist:Cc68qY": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "t3etbW",
+                          "ref": "artist:HtMQw9",
+                          "name": "Button / Edit for this release",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:wKSako": {
+                              "content": "Edit for this release"
+                            },
+                            "artist:DyTdif": {
+                              "icon": "pencil"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "4PxhsN",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / AI allowance",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "icon": "gauge"
+                    },
+                    "artist:EZZdAr": {
+                      "content": "AI allowance"
+                    },
+                    "artist:lICt0a": {
+                      "enabled": false
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "UyB06K",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "gFYvv7",
+                          "ref": "artist:8A3JLw",
+                          "name": "KV / This month",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:uAX8Tb": {
+                              "content": "This month"
+                            },
+                            "artist:zlG4cw": {
+                              "content": "$0.42 of $2.00"
+                            },
+                            "artist:Cc68qY": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "jY9yju",
+                          "ref": "artist:2cqK5i",
+                          "name": "Progress",
+                          "descendants": {
+                            "artist:WwKBYL": {
+                              "width": 66
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "EZm07O",
+                          "ref": "artist:PiqhAO",
+                          "name": "Free plan · Resets Oct 1",
+                          "content": "Free plan · Resets Oct 1"
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "9KiFri",
+                  "ref": "artist:sgF75m",
+                  "name": "Alert / Nothing is published for",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxWcZz": {
+                      "content": "Nothing is published for you"
+                    },
+                    "artist:EHxm9r": {
+                      "content": "Every step needs your approval. Bitrate never posts to your social accounts."
+                    },
+                    "artist:otoXgv": {
+                      "enabled": false
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 5600,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Dim"
+      },
+      "context": "planned — /dashboard/music/$releaseId?step=promotion — AI plan from T−28 to T+28 around the release date; every step is approved, edited or rejected by the artist. Release workspace look: cover-tinted header, stepper on the Promotion stage, bento tiles on the 12-column grid. Spec: ai-artist-promotion."
+    },
+    {
+      "type": "frame",
       "id": "OpvUc1",
       "name": "Artist / Release promotion plan / No promotion profile / Desktop",
       "width": 1440,
@@ -4929,7 +7223,7 @@
           }
         }
       ],
-      "x": 5110,
+      "x": 6090,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -5128,7 +7422,7 @@
           }
         }
       ],
-      "x": 6650,
+      "x": 7630,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -5428,7 +7722,7 @@
           }
         }
       ],
-      "x": 7140,
+      "x": 8120,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -5700,7 +7994,7 @@
           }
         }
       ],
-      "x": 8680,
+      "x": 9660,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -6169,7 +8463,7 @@
           }
         }
       ],
-      "x": 9170,
+      "x": 10150,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -6579,7 +8873,7 @@
           }
         }
       ],
-      "x": 10710,
+      "x": 11690,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -6843,7 +9137,7 @@
           }
         }
       ],
-      "x": 11200,
+      "x": 12180,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -7048,7 +9342,7 @@
           }
         }
       ],
-      "x": 12740,
+      "x": 13720,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -7275,7 +9569,7 @@
           }
         }
       ],
-      "x": 13230,
+      "x": 14210,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -7474,7 +9768,7 @@
           }
         }
       ],
-      "x": 14770,
+      "x": 15750,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -8402,7 +10696,7 @@
           }
         }
       ],
-      "x": 15260,
+      "x": 16240,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -9375,7 +11669,7 @@
           }
         }
       ],
-      "x": 16800,
+      "x": 17780,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -10221,7 +12515,7 @@
           }
         }
       ],
-      "x": 17290,
+      "x": 18270,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -11004,7 +13298,7 @@
           }
         }
       ],
-      "x": 18830,
+      "x": 19810,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -11486,7 +13780,7 @@
           }
         }
       ],
-      "x": 19320,
+      "x": 20300,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -11910,7 +14204,7 @@
           }
         }
       ],
-      "x": 20860,
+      "x": 21840,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -12981,7 +15275,7 @@
           }
         }
       ],
-      "x": 21350,
+      "x": 22330,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -14013,7 +16307,7 @@
           }
         }
       ],
-      "x": 22890,
+      "x": 23870,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"

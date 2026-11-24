@@ -47,7 +47,8 @@ paths:
   web player and landing, `pencil/web-artist-design/<page>/<page>.pen` for the artist workspace,
   `pencil/web-admin-design/<page>/<page>.pen` for the admin console (`apps/admin`). Each file
   holds the desktop page in Dark, Light and Dim, the mobile page, then every state as a
-  desktop + mobile pair.
+  desktop + mobile pair. Artist files draw the mobile page in Dark, Light and Dim too (ordered
+  Desktop/Dark, /Light, /Dim, Mobile/Dark, /Light, /Dim); their states stay once each, in Dark.
 - The library is one flex root ("Bitrate Design System") with Components, Foundations and
   Product-pattern rows; page blocks live on "00E • Page Blocks".
 - The admin console is separate: its designs import only its own design system,

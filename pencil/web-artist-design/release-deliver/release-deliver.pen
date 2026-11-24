@@ -3307,6 +3307,1562 @@
     },
     {
       "type": "frame",
+      "id": "35zyWX",
+      "name": "Artist / Release — Deliver / Mobile / Light",
+      "width": 390,
+      "height": "fit_content",
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "j6CqjU",
+          "ref": "artist:8H12ea",
+          "name": "Shell",
+          "width": 390,
+          "descendants": {
+            "artist:SIErRw": {
+              "type": "frame",
+              "id": "mIy9GY",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 16,
+              "width": "fill_container",
+              "padding": [
+                12,
+                16,
+                40,
+                16
+              ],
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "cVlXbH",
+                  "ref": "artist:pZcyuZ",
+                  "name": "Back to music",
+                  "content": "Back to music"
+                },
+                {
+                  "type": "ref",
+                  "id": "9HhcYo",
+                  "ref": "artist:3i5VmQ",
+                  "name": "Release Header",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:9VATYo": {
+                      "fill": {
+                        "type": "image",
+                        "url": "../../web-player-design/design-system/assets/albums/album-night-signal.webp",
+                        "mode": "cover"
+                      }
+                    },
+                    "artist:sDexPU": {
+                      "content": "Night Signal"
+                    },
+                    "artist:ppaWQZ": {
+                      "content": "Mira Sol · Single · 2 tracks"
+                    },
+                    "artist:YPrwtY": {
+                      "type": "ref",
+                      "id": "D9DvLm",
+                      "ref": "artist:fSHiZY",
+                      "name": "Status / Ready",
+                      "descendants": {
+                        "artist:wuogNV": {
+                          "content": "Ready"
+                        },
+                        "artist:rFgkM6": {
+                          "icon": "circle-check"
+                        }
+                      }
+                    },
+                    "artist:98bElk": {
+                      "type": "frame",
+                      "id": "nkiC9O",
+                      "name": "Countdown",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "TCquXQ",
+                          "ref": "artist:64DlLz",
+                          "name": "Countdown"
+                        }
+                      ]
+                    },
+                    "artist:v26Lkv": {
+                      "content": "Publish on Bitrate"
+                    },
+                    "artist:KhPSdx": {
+                      "content": "Approved by Bitrate. Publish when you are ready."
+                    },
+                    "artist:l2GFpx/artist:vg489O": {
+                      "content": "Open launch"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "OJtQra",
+                  "ref": "artist:3MLJnC",
+                  "name": "Stepper",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:dmJtwL": {
+                      "type": "ref",
+                      "id": "FQyfvS",
+                      "ref": "artist:wJ1MxK",
+                      "name": "Step / Draft",
+                      "descendants": {
+                        "artist:PlYAAX": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    "artist:pVFGWy": {
+                      "type": "ref",
+                      "id": "WGQ1Mc",
+                      "ref": "artist:wJ1MxK",
+                      "name": "Step / Review",
+                      "descendants": {
+                        "artist:PlYAAX": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    "artist:8xRVMN": {
+                      "type": "ref",
+                      "id": "QrPdEw",
+                      "ref": "artist:U9Khj8",
+                      "name": "Line"
+                    },
+                    "artist:xFbfUz": {
+                      "type": "ref",
+                      "id": "E4dodb",
+                      "ref": "artist:SXWEyU",
+                      "name": "Step / Deliver",
+                      "descendants": {
+                        "artist:BRTa78": {
+                          "enabled": false
+                        },
+                        "artist:Y1bt34": {
+                          "content": "3"
+                        }
+                      }
+                    },
+                    "artist:sz4Zdv": {
+                      "type": "ref",
+                      "id": "wT9CjG",
+                      "ref": "artist:U9Khj8",
+                      "name": "Line"
+                    },
+                    "artist:vCRs52": {
+                      "type": "ref",
+                      "id": "KYBsHM",
+                      "ref": "artist:HpcQmo",
+                      "name": "Step / Launch",
+                      "descendants": {
+                        "artist:sHNwKv": {
+                          "content": "Launch"
+                        },
+                        "artist:LlXoM9": {
+                          "content": "4"
+                        }
+                      }
+                    },
+                    "artist:sKFrPn": {
+                      "type": "ref",
+                      "id": "fSIslG",
+                      "ref": "artist:UwhrWM",
+                      "name": "Line"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "TITkoh",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / Territories",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "icon": "globe"
+                    },
+                    "artist:EZZdAr": {
+                      "content": "Territories"
+                    },
+                    "artist:lICt0a": {
+                      "enabled": false
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "Z0yNRd",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "nhNWPf",
+                          "ref": "artist:C5Ih8u",
+                          "name": "When and where the release g",
+                          "width": "fill_container",
+                          "textGrowth": "fixed-width",
+                          "content": "When and where the release goes out. It stays a plan until a distribution partner delivers it."
+                        },
+                        {
+                          "type": "ref",
+                          "id": "qbcYD3",
+                          "ref": "artist:gGZXg7",
+                          "name": "Check / Territories",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:BJt2Mo": {
+                              "content": "Territories"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "n609QA",
+                          "ref": "artist:RoXXJv",
+                          "name": "Worldwide",
+                          "content": "Worldwide"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "k9hgyN",
+                          "ref": "artist:PiqhAO",
+                          "name": "Countries where listeners ca",
+                          "width": "fill_container",
+                          "textGrowth": "fixed-width",
+                          "content": "Countries where listeners can find it. Change them in the delivery plan."
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "iz8fIT",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / Destinations",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "icon": "store"
+                    },
+                    "artist:EZZdAr": {
+                      "content": "Destinations"
+                    },
+                    "artist:lICt0a": {
+                      "type": "frame",
+                      "id": "MSr3Me",
+                      "name": "Right",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "0DNabR",
+                          "ref": "artist:PiqhAO",
+                          "name": "4 of 6 planned",
+                          "content": "4 of 6 planned"
+                        }
+                      ]
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "4vWflO",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "MSC2VH",
+                          "ref": "artist:nLCBGb",
+                          "name": "Patchbay",
+                          "width": "fill_container",
+                          "height": 120,
+                          "fill": {
+                            "type": "image",
+                            "url": "../../../apps/web-artists/public/artwork/releases/state-patchbay-v1.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "LwZIOX",
+                          "ref": "artist:btxbWm",
+                          "name": "Store / Spotify",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:uDxyD4": {
+                              "content": "Spotify"
+                            },
+                            "artist:r4KsSa": {
+                              "content": "In the plan"
+                            },
+                            "artist:TSYCED": {
+                              "type": "frame",
+                              "id": "cJshbN",
+                              "name": "Trail",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "wiC3bQ",
+                                  "ref": "artist:WcSzPr",
+                                  "name": "Availability",
+                                  "descendants": {
+                                    "artist:3oD2k6": {
+                                      "content": "Not connected"
+                                    },
+                                    "artist:8sj0Ew": {
+                                      "icon": "radio"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "IYf5UP",
+                          "ref": "artist:btxbWm",
+                          "name": "Store / Apple Music",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:uDxyD4": {
+                              "content": "Apple Music"
+                            },
+                            "artist:r4KsSa": {
+                              "content": "In the plan"
+                            },
+                            "artist:TSYCED": {
+                              "type": "frame",
+                              "id": "Tyk1lG",
+                              "name": "Trail",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "D2HeEt",
+                                  "ref": "artist:WcSzPr",
+                                  "name": "Availability",
+                                  "descendants": {
+                                    "artist:3oD2k6": {
+                                      "content": "Not connected"
+                                    },
+                                    "artist:8sj0Ew": {
+                                      "icon": "radio"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "vPImSq",
+                          "ref": "artist:btxbWm",
+                          "name": "Store / YouTube Music",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:uDxyD4": {
+                              "content": "YouTube Music"
+                            },
+                            "artist:r4KsSa": {
+                              "content": "In the plan"
+                            },
+                            "artist:TSYCED": {
+                              "type": "frame",
+                              "id": "YXJdUc",
+                              "name": "Trail",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "mGDiUJ",
+                                  "ref": "artist:WcSzPr",
+                                  "name": "Availability",
+                                  "descendants": {
+                                    "artist:3oD2k6": {
+                                      "content": "Not connected"
+                                    },
+                                    "artist:8sj0Ew": {
+                                      "icon": "radio"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "azfPCQ",
+                          "ref": "artist:KhwGr8",
+                          "name": "Store / Amazon Music",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:Ny0bzb": {
+                              "content": "Amazon Music"
+                            },
+                            "artist:IiC8Gz": {
+                              "content": "Not in the plan"
+                            },
+                            "artist:k6hFPl": {
+                              "type": "frame",
+                              "id": "cx3CqM",
+                              "name": "Trail",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "OFIUHR",
+                                  "ref": "artist:WcSzPr",
+                                  "name": "Availability",
+                                  "descendants": {
+                                    "artist:3oD2k6": {
+                                      "content": "Not connected"
+                                    },
+                                    "artist:8sj0Ew": {
+                                      "icon": "radio"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "7jLANA",
+                          "ref": "artist:btxbWm",
+                          "name": "Store / Deezer",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:uDxyD4": {
+                              "content": "Deezer"
+                            },
+                            "artist:r4KsSa": {
+                              "content": "In the plan"
+                            },
+                            "artist:TSYCED": {
+                              "type": "frame",
+                              "id": "YGxV5A",
+                              "name": "Trail",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "AvTUxY",
+                                  "ref": "artist:WcSzPr",
+                                  "name": "Availability",
+                                  "descendants": {
+                                    "artist:3oD2k6": {
+                                      "content": "Not connected"
+                                    },
+                                    "artist:8sj0Ew": {
+                                      "icon": "radio"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "2DBdNB",
+                          "ref": "artist:KhwGr8",
+                          "name": "Store / TIDAL",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:Ny0bzb": {
+                              "content": "TIDAL"
+                            },
+                            "artist:IiC8Gz": {
+                              "content": "Not in the plan"
+                            },
+                            "artist:k6hFPl": {
+                              "type": "frame",
+                              "id": "aTcS3l",
+                              "name": "Trail",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "wqabbx",
+                                  "ref": "artist:WcSzPr",
+                                  "name": "Availability",
+                                  "descendants": {
+                                    "artist:3oD2k6": {
+                                      "content": "Not connected"
+                                    },
+                                    "artist:8sj0Ew": {
+                                      "icon": "radio"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "dU7mWE",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / Before you continue",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "icon": "list-checks"
+                    },
+                    "artist:EZZdAr": {
+                      "content": "Before you continue"
+                    },
+                    "artist:lICt0a": {
+                      "enabled": false
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "JnXFzk",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "h71rSM",
+                          "ref": "artist:gGZXg7",
+                          "name": "Check / Bitrate review approved",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:BJt2Mo": {
+                              "content": "Bitrate review approved"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "s1xeHa",
+                          "ref": "artist:gGZXg7",
+                          "name": "Check / Premiere Dec 12, 2026, 1",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:BJt2Mo": {
+                              "content": "Premiere Dec 12, 2026, 18:00 UTC"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "tWaoHG",
+                          "ref": "artist:gGZXg7",
+                          "name": "Check / Spotify, Apple Music, Yo",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:BJt2Mo": {
+                              "content": "Spotify, Apple Music, YouTube Music, Deezer · Worldwide"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "ys4ghw",
+                          "ref": "artist:yjiPHo",
+                          "name": "NEXT ACTION",
+                          "content": "NEXT ACTION"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "TSz9ud",
+                          "ref": "artist:P2oa0L",
+                          "name": "Delivery starts once a distr",
+                          "width": "fill_container",
+                          "textGrowth": "fixed-width",
+                          "content": "Delivery starts once a distribution partner is connected."
+                        },
+                        {
+                          "type": "ref",
+                          "id": "6jHQjI",
+                          "ref": "artist:WHXSr6",
+                          "name": "Button / Edit delivery plan",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:vg489O": {
+                              "content": "Edit delivery plan"
+                            },
+                            "artist:wAdYtR": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "9lLkMN",
+                          "ref": "artist:a93bIj",
+                          "name": "Honest",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:hX01P8": {
+                              "content": "Nothing has been sent. Saving this plan does not send the release to any external platform."
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "aab2Hs",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / Danger zone",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "enabled": false
+                    },
+                    "artist:EZZdAr": {
+                      "content": "Danger zone"
+                    },
+                    "artist:lICt0a": {
+                      "enabled": false
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "4kRwHK",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "qUYOVb",
+                          "ref": "artist:C5Ih8u",
+                          "name": "Delete this release from you",
+                          "width": "fill_container",
+                          "textGrowth": "fixed-width",
+                          "content": "Delete this release from your workspace and the player. Recordings used by another release remain available. This cannot be undone."
+                        },
+                        {
+                          "type": "ref",
+                          "id": "tL4wzF",
+                          "ref": "artist:tZL23p",
+                          "name": "Button / Delete release",
+                          "descendants": {
+                            "artist:ciSEwh": {
+                              "content": "Delete release"
+                            },
+                            "artist:ZXzRgY": {
+                              "icon": "trash-2"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 5110,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Light"
+      },
+      "context": "/dashboard/music/$releaseId?step=deliver — Stores and territories for the release. No distribution partner is connected yet, so saving the plan sends nothing; \"Bitrate review approved\" is ticked for Ready and Released only, as the code does."
+    },
+    {
+      "type": "frame",
+      "id": "NU8AJT",
+      "name": "Artist / Release — Deliver / Mobile / Dim",
+      "width": 390,
+      "height": "fit_content",
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "187UV6",
+          "ref": "artist:8H12ea",
+          "name": "Shell",
+          "width": 390,
+          "descendants": {
+            "artist:SIErRw": {
+              "type": "frame",
+              "id": "A7jslX",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 16,
+              "width": "fill_container",
+              "padding": [
+                12,
+                16,
+                40,
+                16
+              ],
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "IawImN",
+                  "ref": "artist:pZcyuZ",
+                  "name": "Back to music",
+                  "content": "Back to music"
+                },
+                {
+                  "type": "ref",
+                  "id": "NLDV8d",
+                  "ref": "artist:3i5VmQ",
+                  "name": "Release Header",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:9VATYo": {
+                      "fill": {
+                        "type": "image",
+                        "url": "../../web-player-design/design-system/assets/albums/album-night-signal.webp",
+                        "mode": "cover"
+                      }
+                    },
+                    "artist:sDexPU": {
+                      "content": "Night Signal"
+                    },
+                    "artist:ppaWQZ": {
+                      "content": "Mira Sol · Single · 2 tracks"
+                    },
+                    "artist:YPrwtY": {
+                      "type": "ref",
+                      "id": "FIv3bO",
+                      "ref": "artist:fSHiZY",
+                      "name": "Status / Ready",
+                      "descendants": {
+                        "artist:wuogNV": {
+                          "content": "Ready"
+                        },
+                        "artist:rFgkM6": {
+                          "icon": "circle-check"
+                        }
+                      }
+                    },
+                    "artist:98bElk": {
+                      "type": "frame",
+                      "id": "RHZhlI",
+                      "name": "Countdown",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "BA0Hhx",
+                          "ref": "artist:64DlLz",
+                          "name": "Countdown"
+                        }
+                      ]
+                    },
+                    "artist:v26Lkv": {
+                      "content": "Publish on Bitrate"
+                    },
+                    "artist:KhPSdx": {
+                      "content": "Approved by Bitrate. Publish when you are ready."
+                    },
+                    "artist:l2GFpx/artist:vg489O": {
+                      "content": "Open launch"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "2OtVaH",
+                  "ref": "artist:3MLJnC",
+                  "name": "Stepper",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:dmJtwL": {
+                      "type": "ref",
+                      "id": "xU1leM",
+                      "ref": "artist:wJ1MxK",
+                      "name": "Step / Draft",
+                      "descendants": {
+                        "artist:PlYAAX": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    "artist:pVFGWy": {
+                      "type": "ref",
+                      "id": "SYcL6l",
+                      "ref": "artist:wJ1MxK",
+                      "name": "Step / Review",
+                      "descendants": {
+                        "artist:PlYAAX": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    "artist:8xRVMN": {
+                      "type": "ref",
+                      "id": "iP6Fgm",
+                      "ref": "artist:U9Khj8",
+                      "name": "Line"
+                    },
+                    "artist:xFbfUz": {
+                      "type": "ref",
+                      "id": "ihUaXa",
+                      "ref": "artist:SXWEyU",
+                      "name": "Step / Deliver",
+                      "descendants": {
+                        "artist:BRTa78": {
+                          "enabled": false
+                        },
+                        "artist:Y1bt34": {
+                          "content": "3"
+                        }
+                      }
+                    },
+                    "artist:sz4Zdv": {
+                      "type": "ref",
+                      "id": "sVTG6Q",
+                      "ref": "artist:U9Khj8",
+                      "name": "Line"
+                    },
+                    "artist:vCRs52": {
+                      "type": "ref",
+                      "id": "cKIKmQ",
+                      "ref": "artist:HpcQmo",
+                      "name": "Step / Launch",
+                      "descendants": {
+                        "artist:sHNwKv": {
+                          "content": "Launch"
+                        },
+                        "artist:LlXoM9": {
+                          "content": "4"
+                        }
+                      }
+                    },
+                    "artist:sKFrPn": {
+                      "type": "ref",
+                      "id": "HyNSdt",
+                      "ref": "artist:UwhrWM",
+                      "name": "Line"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "ZCKC55",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / Territories",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "icon": "globe"
+                    },
+                    "artist:EZZdAr": {
+                      "content": "Territories"
+                    },
+                    "artist:lICt0a": {
+                      "enabled": false
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "9baDnh",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "peVPkV",
+                          "ref": "artist:C5Ih8u",
+                          "name": "When and where the release g",
+                          "width": "fill_container",
+                          "textGrowth": "fixed-width",
+                          "content": "When and where the release goes out. It stays a plan until a distribution partner delivers it."
+                        },
+                        {
+                          "type": "ref",
+                          "id": "k3D5FA",
+                          "ref": "artist:gGZXg7",
+                          "name": "Check / Territories",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:BJt2Mo": {
+                              "content": "Territories"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "FZuZRt",
+                          "ref": "artist:RoXXJv",
+                          "name": "Worldwide",
+                          "content": "Worldwide"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "IzK0pJ",
+                          "ref": "artist:PiqhAO",
+                          "name": "Countries where listeners ca",
+                          "width": "fill_container",
+                          "textGrowth": "fixed-width",
+                          "content": "Countries where listeners can find it. Change them in the delivery plan."
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "0t2GBp",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / Destinations",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "icon": "store"
+                    },
+                    "artist:EZZdAr": {
+                      "content": "Destinations"
+                    },
+                    "artist:lICt0a": {
+                      "type": "frame",
+                      "id": "IIUvsr",
+                      "name": "Right",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "EvzEtJ",
+                          "ref": "artist:PiqhAO",
+                          "name": "4 of 6 planned",
+                          "content": "4 of 6 planned"
+                        }
+                      ]
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "MquaUO",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "a22kEK",
+                          "ref": "artist:nLCBGb",
+                          "name": "Patchbay",
+                          "width": "fill_container",
+                          "height": 120,
+                          "fill": {
+                            "type": "image",
+                            "url": "../../../apps/web-artists/public/artwork/releases/state-patchbay-v1.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "d8eqkw",
+                          "ref": "artist:btxbWm",
+                          "name": "Store / Spotify",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:uDxyD4": {
+                              "content": "Spotify"
+                            },
+                            "artist:r4KsSa": {
+                              "content": "In the plan"
+                            },
+                            "artist:TSYCED": {
+                              "type": "frame",
+                              "id": "GJWE9a",
+                              "name": "Trail",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "k0V58s",
+                                  "ref": "artist:WcSzPr",
+                                  "name": "Availability",
+                                  "descendants": {
+                                    "artist:3oD2k6": {
+                                      "content": "Not connected"
+                                    },
+                                    "artist:8sj0Ew": {
+                                      "icon": "radio"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "ugWEB6",
+                          "ref": "artist:btxbWm",
+                          "name": "Store / Apple Music",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:uDxyD4": {
+                              "content": "Apple Music"
+                            },
+                            "artist:r4KsSa": {
+                              "content": "In the plan"
+                            },
+                            "artist:TSYCED": {
+                              "type": "frame",
+                              "id": "xZhEx7",
+                              "name": "Trail",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "jBkg1i",
+                                  "ref": "artist:WcSzPr",
+                                  "name": "Availability",
+                                  "descendants": {
+                                    "artist:3oD2k6": {
+                                      "content": "Not connected"
+                                    },
+                                    "artist:8sj0Ew": {
+                                      "icon": "radio"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "tnCtpS",
+                          "ref": "artist:btxbWm",
+                          "name": "Store / YouTube Music",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:uDxyD4": {
+                              "content": "YouTube Music"
+                            },
+                            "artist:r4KsSa": {
+                              "content": "In the plan"
+                            },
+                            "artist:TSYCED": {
+                              "type": "frame",
+                              "id": "K2yz7H",
+                              "name": "Trail",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "cBeLq6",
+                                  "ref": "artist:WcSzPr",
+                                  "name": "Availability",
+                                  "descendants": {
+                                    "artist:3oD2k6": {
+                                      "content": "Not connected"
+                                    },
+                                    "artist:8sj0Ew": {
+                                      "icon": "radio"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "u39lGf",
+                          "ref": "artist:KhwGr8",
+                          "name": "Store / Amazon Music",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:Ny0bzb": {
+                              "content": "Amazon Music"
+                            },
+                            "artist:IiC8Gz": {
+                              "content": "Not in the plan"
+                            },
+                            "artist:k6hFPl": {
+                              "type": "frame",
+                              "id": "cRti1Z",
+                              "name": "Trail",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "4b053c",
+                                  "ref": "artist:WcSzPr",
+                                  "name": "Availability",
+                                  "descendants": {
+                                    "artist:3oD2k6": {
+                                      "content": "Not connected"
+                                    },
+                                    "artist:8sj0Ew": {
+                                      "icon": "radio"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "xP5Igp",
+                          "ref": "artist:btxbWm",
+                          "name": "Store / Deezer",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:uDxyD4": {
+                              "content": "Deezer"
+                            },
+                            "artist:r4KsSa": {
+                              "content": "In the plan"
+                            },
+                            "artist:TSYCED": {
+                              "type": "frame",
+                              "id": "0FFk8u",
+                              "name": "Trail",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "gfUkyi",
+                                  "ref": "artist:WcSzPr",
+                                  "name": "Availability",
+                                  "descendants": {
+                                    "artist:3oD2k6": {
+                                      "content": "Not connected"
+                                    },
+                                    "artist:8sj0Ew": {
+                                      "icon": "radio"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "CzO3U6",
+                          "ref": "artist:KhwGr8",
+                          "name": "Store / TIDAL",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:Ny0bzb": {
+                              "content": "TIDAL"
+                            },
+                            "artist:IiC8Gz": {
+                              "content": "Not in the plan"
+                            },
+                            "artist:k6hFPl": {
+                              "type": "frame",
+                              "id": "KKRlDB",
+                              "name": "Trail",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "84mLUv",
+                                  "ref": "artist:WcSzPr",
+                                  "name": "Availability",
+                                  "descendants": {
+                                    "artist:3oD2k6": {
+                                      "content": "Not connected"
+                                    },
+                                    "artist:8sj0Ew": {
+                                      "icon": "radio"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "5VIVyj",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / Before you continue",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "icon": "list-checks"
+                    },
+                    "artist:EZZdAr": {
+                      "content": "Before you continue"
+                    },
+                    "artist:lICt0a": {
+                      "enabled": false
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "lAvWz8",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "PPFBkX",
+                          "ref": "artist:gGZXg7",
+                          "name": "Check / Bitrate review approved",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:BJt2Mo": {
+                              "content": "Bitrate review approved"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "SL01qL",
+                          "ref": "artist:gGZXg7",
+                          "name": "Check / Premiere Dec 12, 2026, 1",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:BJt2Mo": {
+                              "content": "Premiere Dec 12, 2026, 18:00 UTC"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "Dk7jlQ",
+                          "ref": "artist:gGZXg7",
+                          "name": "Check / Spotify, Apple Music, Yo",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:BJt2Mo": {
+                              "content": "Spotify, Apple Music, YouTube Music, Deezer · Worldwide"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "yLteGR",
+                          "ref": "artist:yjiPHo",
+                          "name": "NEXT ACTION",
+                          "content": "NEXT ACTION"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "VU3XXg",
+                          "ref": "artist:P2oa0L",
+                          "name": "Delivery starts once a distr",
+                          "width": "fill_container",
+                          "textGrowth": "fixed-width",
+                          "content": "Delivery starts once a distribution partner is connected."
+                        },
+                        {
+                          "type": "ref",
+                          "id": "YtI5Md",
+                          "ref": "artist:WHXSr6",
+                          "name": "Button / Edit delivery plan",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:vg489O": {
+                              "content": "Edit delivery plan"
+                            },
+                            "artist:wAdYtR": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "XhUUhj",
+                          "ref": "artist:a93bIj",
+                          "name": "Honest",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:hX01P8": {
+                              "content": "Nothing has been sent. Saving this plan does not send the release to any external platform."
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "8Sbpww",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / Danger zone",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "enabled": false
+                    },
+                    "artist:EZZdAr": {
+                      "content": "Danger zone"
+                    },
+                    "artist:lICt0a": {
+                      "enabled": false
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "MwQLF7",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "wJfXtX",
+                          "ref": "artist:C5Ih8u",
+                          "name": "Delete this release from you",
+                          "width": "fill_container",
+                          "textGrowth": "fixed-width",
+                          "content": "Delete this release from your workspace and the player. Recordings used by another release remain available. This cannot be undone."
+                        },
+                        {
+                          "type": "ref",
+                          "id": "v9pqRw",
+                          "ref": "artist:tZL23p",
+                          "name": "Button / Delete release",
+                          "descendants": {
+                            "artist:ciSEwh": {
+                              "content": "Delete release"
+                            },
+                            "artist:ZXzRgY": {
+                              "icon": "trash-2"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 5600,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Dim"
+      },
+      "context": "/dashboard/music/$releaseId?step=deliver — Stores and territories for the release. No distribution partner is connected yet, so saving the plan sends nothing; \"Bitrate review approved\" is ticked for Ready and Released only, as the code does."
+    },
+    {
+      "type": "frame",
       "id": "o1GOXG",
       "name": "Artist / Release — Deliver / No stores planned / Desktop",
       "width": 1440,
@@ -4139,7 +5695,7 @@
           }
         }
       ],
-      "x": 5110,
+      "x": 6090,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -4917,7 +6473,7 @@
           }
         }
       ],
-      "x": 6650,
+      "x": 7630,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -5764,7 +7320,7 @@
           }
         }
       ],
-      "x": 7140,
+      "x": 8120,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -6548,7 +8104,7 @@
           }
         }
       ],
-      "x": 8680,
+      "x": 9660,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -7392,7 +8948,7 @@
           }
         }
       ],
-      "x": 9170,
+      "x": 10150,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -8173,7 +9729,7 @@
           }
         }
       ],
-      "x": 10710,
+      "x": 11690,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -9017,7 +10573,7 @@
           }
         }
       ],
-      "x": 11200,
+      "x": 12180,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -9798,7 +11354,7 @@
           }
         }
       ],
-      "x": 12740,
+      "x": 13720,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -10639,7 +12195,7 @@
           }
         }
       ],
-      "x": 13230,
+      "x": 14210,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -11417,7 +12973,7 @@
           }
         }
       ],
-      "x": 14770,
+      "x": 15750,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -12338,7 +13894,7 @@
           }
         }
       ],
-      "x": 15260,
+      "x": 16240,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -13196,7 +14752,7 @@
           }
         }
       ],
-      "x": 16800,
+      "x": 17780,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -13590,7 +15146,7 @@
           }
         }
       ],
-      "x": 17290,
+      "x": 18270,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -13944,7 +15500,7 @@
           }
         }
       ],
-      "x": 18830,
+      "x": 19810,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -14352,7 +15908,7 @@
           }
         }
       ],
-      "x": 19320,
+      "x": 20300,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -14720,7 +16276,7 @@
           }
         }
       ],
-      "x": 20860,
+      "x": 21840,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -15241,7 +16797,7 @@
           }
         }
       ],
-      "x": 21350,
+      "x": 22330,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -15719,7 +17275,7 @@
           }
         }
       ],
-      "x": 22890,
+      "x": 23870,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -16283,7 +17839,7 @@
           }
         }
       ],
-      "x": 23380,
+      "x": 24360,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -16804,7 +18360,7 @@
           }
         }
       ],
-      "x": 24920,
+      "x": 25900,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -17379,7 +18935,7 @@
           }
         }
       ],
-      "x": 25410,
+      "x": 26390,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -17911,7 +19467,7 @@
           }
         }
       ],
-      "x": 26950,
+      "x": 27930,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -18432,7 +19988,7 @@
           }
         }
       ],
-      "x": 27440,
+      "x": 28420,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -18910,7 +20466,7 @@
           }
         }
       ],
-      "x": 28980,
+      "x": 29960,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -19443,7 +20999,7 @@
           }
         }
       ],
-      "x": 29470,
+      "x": 30450,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -19933,7 +21489,7 @@
           }
         }
       ],
-      "x": 31010,
+      "x": 31990,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -20466,7 +22022,7 @@
           }
         }
       ],
-      "x": 31500,
+      "x": 32480,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -20956,7 +22512,7 @@
           }
         }
       ],
-      "x": 33040,
+      "x": 34020,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"

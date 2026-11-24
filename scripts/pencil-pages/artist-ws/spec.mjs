@@ -1,5 +1,5 @@
 // A page spec for writePage (kit.mjs): the desktop page in each theme (the sidebar's theme preference
-// shows the theme), the phone page, then every state as a desktop + phone pair.
+// shows the theme), the phone page in the same themes, then every state as a desktop + phone pair.
 
 /**
  * `build(m)` returns the content nodes (`m` is true on a phone); each state is

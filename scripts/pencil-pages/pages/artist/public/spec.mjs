@@ -1,5 +1,5 @@
 // A page spec for writePage (kit.mjs) on the public frames: the desktop page in Dark, Light and Dim,
-// the phone page, then every state as a desktop + phone pair.
+// the phone page in the same three themes, then every state as a desktop + phone pair.
 
 /**
  * `meta` holds title, route, context and the frame options (`layout`); `build(m, theme)` returns the
@@ -11,7 +11,7 @@ export function publicSpec(frames, meta, build, states = []) {
   return {
     ...rest,
     desktop: (theme) => frames.desktop(build(false, theme), layout),
-    mobile: () => frames.mobile(build(true, 'Dark'), layout),
+    mobile: (theme = 'Dark') => frames.mobile(build(true, theme), layout),
     states: states.map(([label, stateBuild, stateLayout = layout, only]) => ({
       label,
       reason: only?.reason,

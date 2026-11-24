@@ -3275,6 +3275,1480 @@
     },
     {
       "type": "frame",
+      "id": "KxxozI",
+      "name": "Artist / Analytics / Mobile / Light",
+      "width": 390,
+      "height": "fit_content",
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "GdAfU8",
+          "ref": "artist:8H12ea",
+          "name": "Shell",
+          "width": 390,
+          "descendants": {
+            "artist:SIErRw": {
+              "type": "frame",
+              "id": "B6WuGi",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 16,
+              "width": "fill_container",
+              "padding": [
+                12,
+                16,
+                40,
+                16
+              ],
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "PmlPbZ",
+                  "ref": "artist:ZqiZXM",
+                  "name": "Hero",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:5uVeAv": {
+                      "type": "frame",
+                      "id": "AFW0F6",
+                      "name": "Content",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "aetHZ5",
+                          "ref": "artist:nLCBGb",
+                          "name": "Artwork",
+                          "width": "fill_container",
+                          "height": 72,
+                          "fill": {
+                            "type": "image",
+                            "url": "../../../apps/web-artists/public/artwork/analytics/analytics-spectrum.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        {
+                          "type": "frame",
+                          "id": "dfEJAQ",
+                          "name": "Heading",
+                          "layout": "vertical",
+                          "gap": 12,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "lGtG4B",
+                              "name": "Text",
+                              "layout": "vertical",
+                              "gap": 4,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "Hm0oAZ",
+                                  "ref": "artist:MgMQ2L",
+                                  "name": "Analytics",
+                                  "content": "Analytics"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "GiJ8oT",
+                                  "ref": "artist:C5Ih8u",
+                                  "name": "Plays and listeners on Bitra",
+                                  "width": "fill_container",
+                                  "textGrowth": "fixed-width",
+                                  "content": "Plays and listeners on Bitrate, by UTC day."
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "wYbwiE",
+                              "name": "Controls",
+                              "gap": 12,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "W6RNoX",
+                                  "ref": "artist:hCymSg",
+                                  "name": "Tabs",
+                                  "descendants": {
+                                    "artist:3WDvs4": {
+                                      "type": "frame",
+                                      "id": "aLsCjW",
+                                      "name": "Items",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "83JWeR",
+                                          "ref": "artist:MSnEq6",
+                                          "name": "Tab / 7 days",
+                                          "descendants": {
+                                            "artist:YoFuvg": {
+                                              "content": "7 days"
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "dtHvWa",
+                                          "ref": "artist:Vrjhec",
+                                          "name": "Tab / 28 days",
+                                          "descendants": {
+                                            "artist:NyZfC6": {
+                                              "content": "28 days"
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "gi9Tga",
+                                          "ref": "artist:MSnEq6",
+                                          "name": "Tab / 90 days",
+                                          "descendants": {
+                                            "artist:YoFuvg": {
+                                              "content": "90 days"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "SQRnHo",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / Plays",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "icon": "headphones"
+                    },
+                    "artist:EZZdAr": {
+                      "content": "Plays"
+                    },
+                    "artist:lICt0a": {
+                      "enabled": false
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "U3KayY",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "wy8UTF",
+                          "ref": "artist:iAdtxu",
+                          "name": "Plays",
+                          "descendants": {
+                            "artist:dZL7qM": {
+                              "content": "Plays"
+                            },
+                            "artist:oDPrX4": {
+                              "content": "14,820"
+                            },
+                            "artist:wWItkz": {
+                              "content": "32% vs previous period"
+                            }
+                          }
+                        },
+                        {
+                          "type": "frame",
+                          "id": "tAuU8B",
+                          "name": "Chart",
+                          "layout": "vertical",
+                          "gap": 4,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "dMezbD",
+                              "name": "Peak",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "width": "fill_container",
+                              "padding": [
+                                0,
+                                0,
+                                0,
+                                230
+                              ],
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "j0a97U",
+                                  "ref": "artist:rlyek4",
+                                  "name": "Peak",
+                                  "descendants": {
+                                    "artist:EyHeXW": {
+                                      "content": "1,210"
+                                    },
+                                    "artist:HCevJf": {
+                                      "icon": "triangle"
+                                    }
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "type": "ref",
+                              "id": "ipsNii",
+                              "ref": "artist:7Vicx7",
+                              "name": "Plays per day",
+                              "width": "fill_container"
+                            },
+                            {
+                              "type": "frame",
+                              "id": "XhbHXb",
+                              "name": "Axis",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "width": "fill_container",
+                              "justifyContent": "space_between",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "jyouTZ",
+                                  "ref": "artist:PiqhAO",
+                                  "name": "Oct 26",
+                                  "content": "Oct 26"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "cumN2c",
+                                  "ref": "artist:PiqhAO",
+                                  "name": "Nov 22",
+                                  "content": "Nov 22"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "oC7Hzc",
+                          "ref": "artist:LSzB6i",
+                          "name": "Show as table",
+                          "content": "Show as table"
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "DAPeR0",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / Highlights",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "icon": "sparkles"
+                    },
+                    "artist:EZZdAr": {
+                      "content": "Highlights"
+                    },
+                    "artist:lICt0a": {
+                      "enabled": false
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "zuGD7L",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "DuthE4",
+                          "ref": "artist:mb7Oe1",
+                          "name": "Stat / Listeners",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:4uUZsX": {
+                              "icon": "users"
+                            },
+                            "artist:j9lAlO": {
+                              "content": "Listeners"
+                            },
+                            "artist:mlyW8r": {
+                              "content": "4,390"
+                            },
+                            "artist:jaBVsL": {
+                              "content": "22% vs previous period"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "Gu2OEo",
+                          "ref": "artist:mb7Oe1",
+                          "name": "Stat / Average plays per listener",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:4uUZsX": {
+                              "icon": "repeat"
+                            },
+                            "artist:j9lAlO": {
+                              "content": "Average plays per listener"
+                            },
+                            "artist:mlyW8r": {
+                              "content": "3.4"
+                            },
+                            "artist:jaBVsL": {
+                              "content": "Total plays divided by unique listeners for the selected period."
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "nrqwAB",
+                          "ref": "artist:mb7Oe1",
+                          "name": "Stat / Best day",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:4uUZsX": {
+                              "icon": "flame"
+                            },
+                            "artist:j9lAlO": {
+                              "content": "Best day"
+                            },
+                            "artist:mlyW8r": {
+                              "content": "Nov 21"
+                            },
+                            "artist:jaBVsL": {
+                              "content": "1,210 plays"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "M5z49S",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / Top tracks",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "icon": "list-music"
+                    },
+                    "artist:EZZdAr": {
+                      "content": "Top tracks"
+                    },
+                    "artist:lICt0a": {
+                      "enabled": false
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "UopEoT",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "iqh3cI",
+                          "ref": "artist:8A3JLw",
+                          "name": "KV / 1. Night Signal",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:uAX8Tb": {
+                              "content": "1. Night Signal"
+                            },
+                            "artist:zlG4cw": {
+                              "content": "6,420 · 2,180"
+                            },
+                            "artist:Cc68qY": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "7mX40q",
+                          "ref": "artist:8A3JLw",
+                          "name": "KV / 2. Echoes in Motion",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:uAX8Tb": {
+                              "content": "2. Echoes in Motion"
+                            },
+                            "artist:zlG4cw": {
+                              "content": "4,890 · 1,640"
+                            },
+                            "artist:Cc68qY": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "oPHxqe",
+                          "ref": "artist:8A3JLw",
+                          "name": "KV / 3. Afterglow",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:uAX8Tb": {
+                              "content": "3. Afterglow"
+                            },
+                            "artist:zlG4cw": {
+                              "content": "3,510 · 1,120"
+                            },
+                            "artist:Cc68qY": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "frame",
+                          "id": "nXTY46",
+                          "name": "Footer",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "D1i5g5",
+                              "ref": "artist:C5Ih8u",
+                              "name": "1–3 of 3",
+                              "content": "1–3 of 3"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "IXqAm8",
+                              "ref": "artist:Cic4Sr",
+                              "name": "Page 1"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "dszuTD",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / Other services",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "icon": "radio-tower"
+                    },
+                    "artist:EZZdAr": {
+                      "content": "Other services"
+                    },
+                    "artist:lICt0a": {
+                      "enabled": false
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "naRiKz",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "33dDUr",
+                          "ref": "artist:8A3JLw",
+                          "name": "Source / Spotify",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:uAX8Tb": {
+                              "content": "Spotify"
+                            },
+                            "artist:zlG4cw": {
+                              "enabled": false
+                            },
+                            "artist:Cc68qY": {
+                              "type": "frame",
+                              "id": "KNZyhq",
+                              "name": "Trail",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "iaazaO",
+                                  "ref": "artist:WcSzPr",
+                                  "name": "Not connected",
+                                  "descendants": {
+                                    "artist:3oD2k6": {
+                                      "content": "Not connected"
+                                    },
+                                    "artist:8sj0Ew": {
+                                      "icon": "radio"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "Yu55tZ",
+                          "ref": "artist:8A3JLw",
+                          "name": "Source / Apple Music",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:uAX8Tb": {
+                              "content": "Apple Music"
+                            },
+                            "artist:zlG4cw": {
+                              "enabled": false
+                            },
+                            "artist:Cc68qY": {
+                              "type": "frame",
+                              "id": "1rilrU",
+                              "name": "Trail",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "plgA8J",
+                                  "ref": "artist:WcSzPr",
+                                  "name": "Not connected",
+                                  "descendants": {
+                                    "artist:3oD2k6": {
+                                      "content": "Not connected"
+                                    },
+                                    "artist:8sj0Ew": {
+                                      "icon": "radio"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "1aeyR9",
+                          "ref": "artist:8A3JLw",
+                          "name": "Source / YouTube Music",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:uAX8Tb": {
+                              "content": "YouTube Music"
+                            },
+                            "artist:zlG4cw": {
+                              "enabled": false
+                            },
+                            "artist:Cc68qY": {
+                              "type": "frame",
+                              "id": "wcmBs6",
+                              "name": "Trail",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "ySeWi2",
+                                  "ref": "artist:WcSzPr",
+                                  "name": "Not connected",
+                                  "descendants": {
+                                    "artist:3oD2k6": {
+                                      "content": "Not connected"
+                                    },
+                                    "artist:8sj0Ew": {
+                                      "icon": "radio"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "6czU6i",
+                          "ref": "artist:PiqhAO",
+                          "name": "No figures are shown for ser",
+                          "width": "fill_container",
+                          "textGrowth": "fixed-width",
+                          "content": "No figures are shown for services that are not connected."
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "euucTi",
+                  "ref": "artist:PiqhAO",
+                  "name": "Source: Bitrate playback by ",
+                  "width": "fill_container",
+                  "textGrowth": "fixed-width",
+                  "content": "Source: Bitrate playback by signed-in listeners. Read Nov 24, 2026, 06:00 UTC."
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 5110,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Light"
+      },
+      "context": "/dashboard/analytics?days=7|28|90 — Plays and listeners on Bitrate only; other services are shown as not connected rather than zero."
+    },
+    {
+      "type": "frame",
+      "id": "asGaP2",
+      "name": "Artist / Analytics / Mobile / Dim",
+      "width": 390,
+      "height": "fit_content",
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "etneCK",
+          "ref": "artist:8H12ea",
+          "name": "Shell",
+          "width": 390,
+          "descendants": {
+            "artist:SIErRw": {
+              "type": "frame",
+              "id": "VsjHbB",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 16,
+              "width": "fill_container",
+              "padding": [
+                12,
+                16,
+                40,
+                16
+              ],
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "pJBV3K",
+                  "ref": "artist:ZqiZXM",
+                  "name": "Hero",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:5uVeAv": {
+                      "type": "frame",
+                      "id": "eIXL6N",
+                      "name": "Content",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "ep9DuA",
+                          "ref": "artist:nLCBGb",
+                          "name": "Artwork",
+                          "width": "fill_container",
+                          "height": 72,
+                          "fill": {
+                            "type": "image",
+                            "url": "../../../apps/web-artists/public/artwork/analytics/analytics-spectrum.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        {
+                          "type": "frame",
+                          "id": "9mHjjP",
+                          "name": "Heading",
+                          "layout": "vertical",
+                          "gap": 12,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "JGSP5T",
+                              "name": "Text",
+                              "layout": "vertical",
+                              "gap": 4,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "x5tHAX",
+                                  "ref": "artist:MgMQ2L",
+                                  "name": "Analytics",
+                                  "content": "Analytics"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "CjqswO",
+                                  "ref": "artist:C5Ih8u",
+                                  "name": "Plays and listeners on Bitra",
+                                  "width": "fill_container",
+                                  "textGrowth": "fixed-width",
+                                  "content": "Plays and listeners on Bitrate, by UTC day."
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "MhGiMZ",
+                              "name": "Controls",
+                              "gap": 12,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "yOBOF7",
+                                  "ref": "artist:hCymSg",
+                                  "name": "Tabs",
+                                  "descendants": {
+                                    "artist:3WDvs4": {
+                                      "type": "frame",
+                                      "id": "ujRoP7",
+                                      "name": "Items",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "yKvIi1",
+                                          "ref": "artist:MSnEq6",
+                                          "name": "Tab / 7 days",
+                                          "descendants": {
+                                            "artist:YoFuvg": {
+                                              "content": "7 days"
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "t5ifs1",
+                                          "ref": "artist:Vrjhec",
+                                          "name": "Tab / 28 days",
+                                          "descendants": {
+                                            "artist:NyZfC6": {
+                                              "content": "28 days"
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "aa1sMB",
+                                          "ref": "artist:MSnEq6",
+                                          "name": "Tab / 90 days",
+                                          "descendants": {
+                                            "artist:YoFuvg": {
+                                              "content": "90 days"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "CGMyE3",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / Plays",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "icon": "headphones"
+                    },
+                    "artist:EZZdAr": {
+                      "content": "Plays"
+                    },
+                    "artist:lICt0a": {
+                      "enabled": false
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "YY09BP",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "Is4Cj1",
+                          "ref": "artist:iAdtxu",
+                          "name": "Plays",
+                          "descendants": {
+                            "artist:dZL7qM": {
+                              "content": "Plays"
+                            },
+                            "artist:oDPrX4": {
+                              "content": "14,820"
+                            },
+                            "artist:wWItkz": {
+                              "content": "32% vs previous period"
+                            }
+                          }
+                        },
+                        {
+                          "type": "frame",
+                          "id": "xOYnzP",
+                          "name": "Chart",
+                          "layout": "vertical",
+                          "gap": 4,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "t4i4K7",
+                              "name": "Peak",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "width": "fill_container",
+                              "padding": [
+                                0,
+                                0,
+                                0,
+                                230
+                              ],
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "pJCCSF",
+                                  "ref": "artist:rlyek4",
+                                  "name": "Peak",
+                                  "descendants": {
+                                    "artist:EyHeXW": {
+                                      "content": "1,210"
+                                    },
+                                    "artist:HCevJf": {
+                                      "icon": "triangle"
+                                    }
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "type": "ref",
+                              "id": "owYkfD",
+                              "ref": "artist:7Vicx7",
+                              "name": "Plays per day",
+                              "width": "fill_container"
+                            },
+                            {
+                              "type": "frame",
+                              "id": "JjgBJ9",
+                              "name": "Axis",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "width": "fill_container",
+                              "justifyContent": "space_between",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "DkuWgS",
+                                  "ref": "artist:PiqhAO",
+                                  "name": "Oct 26",
+                                  "content": "Oct 26"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "IlnlbU",
+                                  "ref": "artist:PiqhAO",
+                                  "name": "Nov 22",
+                                  "content": "Nov 22"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "Mu18eK",
+                          "ref": "artist:LSzB6i",
+                          "name": "Show as table",
+                          "content": "Show as table"
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "Fqd5QJ",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / Highlights",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "icon": "sparkles"
+                    },
+                    "artist:EZZdAr": {
+                      "content": "Highlights"
+                    },
+                    "artist:lICt0a": {
+                      "enabled": false
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "PSejIm",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "dCdv8z",
+                          "ref": "artist:mb7Oe1",
+                          "name": "Stat / Listeners",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:4uUZsX": {
+                              "icon": "users"
+                            },
+                            "artist:j9lAlO": {
+                              "content": "Listeners"
+                            },
+                            "artist:mlyW8r": {
+                              "content": "4,390"
+                            },
+                            "artist:jaBVsL": {
+                              "content": "22% vs previous period"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "m5SkrC",
+                          "ref": "artist:mb7Oe1",
+                          "name": "Stat / Average plays per listener",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:4uUZsX": {
+                              "icon": "repeat"
+                            },
+                            "artist:j9lAlO": {
+                              "content": "Average plays per listener"
+                            },
+                            "artist:mlyW8r": {
+                              "content": "3.4"
+                            },
+                            "artist:jaBVsL": {
+                              "content": "Total plays divided by unique listeners for the selected period."
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "pYEZSK",
+                          "ref": "artist:mb7Oe1",
+                          "name": "Stat / Best day",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:4uUZsX": {
+                              "icon": "flame"
+                            },
+                            "artist:j9lAlO": {
+                              "content": "Best day"
+                            },
+                            "artist:mlyW8r": {
+                              "content": "Nov 21"
+                            },
+                            "artist:jaBVsL": {
+                              "content": "1,210 plays"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "KkJxB6",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / Top tracks",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "icon": "list-music"
+                    },
+                    "artist:EZZdAr": {
+                      "content": "Top tracks"
+                    },
+                    "artist:lICt0a": {
+                      "enabled": false
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "4RVojC",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "ITpdvz",
+                          "ref": "artist:8A3JLw",
+                          "name": "KV / 1. Night Signal",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:uAX8Tb": {
+                              "content": "1. Night Signal"
+                            },
+                            "artist:zlG4cw": {
+                              "content": "6,420 · 2,180"
+                            },
+                            "artist:Cc68qY": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "F3DUmC",
+                          "ref": "artist:8A3JLw",
+                          "name": "KV / 2. Echoes in Motion",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:uAX8Tb": {
+                              "content": "2. Echoes in Motion"
+                            },
+                            "artist:zlG4cw": {
+                              "content": "4,890 · 1,640"
+                            },
+                            "artist:Cc68qY": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "CqTeKZ",
+                          "ref": "artist:8A3JLw",
+                          "name": "KV / 3. Afterglow",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:uAX8Tb": {
+                              "content": "3. Afterglow"
+                            },
+                            "artist:zlG4cw": {
+                              "content": "3,510 · 1,120"
+                            },
+                            "artist:Cc68qY": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "frame",
+                          "id": "FgAaUB",
+                          "name": "Footer",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "7g8aOT",
+                              "ref": "artist:C5Ih8u",
+                              "name": "1–3 of 3",
+                              "content": "1–3 of 3"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "iXA6NC",
+                              "ref": "artist:Cic4Sr",
+                              "name": "Page 1"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "LhPGEs",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / Other services",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "icon": "radio-tower"
+                    },
+                    "artist:EZZdAr": {
+                      "content": "Other services"
+                    },
+                    "artist:lICt0a": {
+                      "enabled": false
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "P7a3fA",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "xlaUOg",
+                          "ref": "artist:8A3JLw",
+                          "name": "Source / Spotify",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:uAX8Tb": {
+                              "content": "Spotify"
+                            },
+                            "artist:zlG4cw": {
+                              "enabled": false
+                            },
+                            "artist:Cc68qY": {
+                              "type": "frame",
+                              "id": "K3WmER",
+                              "name": "Trail",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "ax2POa",
+                                  "ref": "artist:WcSzPr",
+                                  "name": "Not connected",
+                                  "descendants": {
+                                    "artist:3oD2k6": {
+                                      "content": "Not connected"
+                                    },
+                                    "artist:8sj0Ew": {
+                                      "icon": "radio"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "ADs1Je",
+                          "ref": "artist:8A3JLw",
+                          "name": "Source / Apple Music",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:uAX8Tb": {
+                              "content": "Apple Music"
+                            },
+                            "artist:zlG4cw": {
+                              "enabled": false
+                            },
+                            "artist:Cc68qY": {
+                              "type": "frame",
+                              "id": "7NLdil",
+                              "name": "Trail",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "v25rdL",
+                                  "ref": "artist:WcSzPr",
+                                  "name": "Not connected",
+                                  "descendants": {
+                                    "artist:3oD2k6": {
+                                      "content": "Not connected"
+                                    },
+                                    "artist:8sj0Ew": {
+                                      "icon": "radio"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "lskrFO",
+                          "ref": "artist:8A3JLw",
+                          "name": "Source / YouTube Music",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:uAX8Tb": {
+                              "content": "YouTube Music"
+                            },
+                            "artist:zlG4cw": {
+                              "enabled": false
+                            },
+                            "artist:Cc68qY": {
+                              "type": "frame",
+                              "id": "ET14uP",
+                              "name": "Trail",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "sqsHTF",
+                                  "ref": "artist:WcSzPr",
+                                  "name": "Not connected",
+                                  "descendants": {
+                                    "artist:3oD2k6": {
+                                      "content": "Not connected"
+                                    },
+                                    "artist:8sj0Ew": {
+                                      "icon": "radio"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "wnMKEP",
+                          "ref": "artist:PiqhAO",
+                          "name": "No figures are shown for ser",
+                          "width": "fill_container",
+                          "textGrowth": "fixed-width",
+                          "content": "No figures are shown for services that are not connected."
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "Wxp5Ex",
+                  "ref": "artist:PiqhAO",
+                  "name": "Source: Bitrate playback by ",
+                  "width": "fill_container",
+                  "textGrowth": "fixed-width",
+                  "content": "Source: Bitrate playback by signed-in listeners. Read Nov 24, 2026, 06:00 UTC."
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 5600,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Dim"
+      },
+      "context": "/dashboard/analytics?days=7|28|90 — Plays and listeners on Bitrate only; other services are shown as not connected rather than zero."
+    },
+    {
+      "type": "frame",
       "id": "6axdZX",
       "name": "Artist / Analytics / Last 7 days / Desktop",
       "width": 1440,
@@ -4110,7 +5584,7 @@
           }
         }
       ],
-      "x": 5110,
+      "x": 6090,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -4847,7 +6321,7 @@
           }
         }
       ],
-      "x": 6650,
+      "x": 7630,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -5796,7 +7270,7 @@
           }
         }
       ],
-      "x": 7140,
+      "x": 8120,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -6605,7 +8079,7 @@
           }
         }
       ],
-      "x": 8680,
+      "x": 9660,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -6904,7 +8378,7 @@
           }
         }
       ],
-      "x": 9170,
+      "x": 10150,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -7181,7 +8655,7 @@
           }
         }
       ],
-      "x": 10710,
+      "x": 11690,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -7489,7 +8963,7 @@
           }
         }
       ],
-      "x": 11200,
+      "x": 12180,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -7768,7 +9242,7 @@
           }
         }
       ],
-      "x": 12740,
+      "x": 13720,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -8265,7 +9739,7 @@
           }
         }
       ],
-      "x": 13230,
+      "x": 14210,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -8734,7 +10208,7 @@
           }
         }
       ],
-      "x": 14770,
+      "x": 15750,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -9231,7 +10705,7 @@
           }
         }
       ],
-      "x": 15260,
+      "x": 16240,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -9700,7 +11174,7 @@
           }
         }
       ],
-      "x": 16800,
+      "x": 17780,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -10707,7 +12181,7 @@
           }
         }
       ],
-      "x": 17290,
+      "x": 18270,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -11545,7 +13019,7 @@
           }
         }
       ],
-      "x": 18830,
+      "x": 19810,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"

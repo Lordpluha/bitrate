@@ -3696,6 +3696,1758 @@
     },
     {
       "type": "frame",
+      "id": "dLsTNj",
+      "name": "Artist / Promotion calendar / Mobile / Light",
+      "width": 390,
+      "height": "fit_content",
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "Ruc4dD",
+          "ref": "artist:8H12ea",
+          "name": "Shell",
+          "width": 390,
+          "descendants": {
+            "artist:SIErRw": {
+              "type": "frame",
+              "id": "s2zBws",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 16,
+              "width": "fill_container",
+              "padding": [
+                12,
+                16,
+                40,
+                16
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "EQ711V",
+                  "name": "Page Heading",
+                  "gap": 16,
+                  "alignItems": "end",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "kogDOs",
+                      "name": "Text",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "w0N94H",
+                          "ref": "artist:MgMQ2L",
+                          "name": "Promotion",
+                          "content": "Promotion"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "tzNzo4",
+                          "ref": "artist:C5Ih8u",
+                          "name": "Upcoming steps from your rel",
+                          "width": "fill_container",
+                          "textGrowth": "fixed-width",
+                          "content": "Upcoming steps from your release plans"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "BYjRhh",
+                  "ref": "artist:hCymSg",
+                  "name": "Tabs",
+                  "descendants": {
+                    "artist:3WDvs4": {
+                      "type": "frame",
+                      "id": "5JAGFe",
+                      "name": "Items",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "vn1uQm",
+                          "ref": "artist:Vrjhec",
+                          "name": "Tab / Upcoming",
+                          "descendants": {
+                            "artist:NyZfC6": {
+                              "content": "Upcoming"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "An501j",
+                          "ref": "artist:MSnEq6",
+                          "name": "Tab / This month",
+                          "descendants": {
+                            "artist:YoFuvg": {
+                              "content": "This month"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "jetIgw",
+                          "ref": "artist:MSnEq6",
+                          "name": "Tab / Past",
+                          "descendants": {
+                            "artist:YoFuvg": {
+                              "content": "Past"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "ypWEj9",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / At a glance",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "icon": "chart-no-axes-column"
+                    },
+                    "artist:EZZdAr": {
+                      "content": "At a glance"
+                    },
+                    "artist:lICt0a": {
+                      "enabled": false
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "gzEgwO",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "ogaNRf",
+                          "name": "Numbers",
+                          "gap": 20,
+                          "alignItems": "start",
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "MFrEw0",
+                              "ref": "artist:iAdtxu",
+                              "name": "Stat / THIS WEEK",
+                              "descendants": {
+                                "artist:dZL7qM": {
+                                  "content": "THIS WEEK"
+                                },
+                                "artist:oDPrX4": {
+                                  "content": "3"
+                                },
+                                "artist:wWItkz": {
+                                  "content": "Steps due"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "L1RXzB",
+                              "ref": "artist:NINsLT",
+                              "name": "Stat / APPROVED",
+                              "descendants": {
+                                "artist:u82TeD": {
+                                  "content": "APPROVED"
+                                },
+                                "artist:txG9G2": {
+                                  "content": "12"
+                                },
+                                "artist:d014KZ": {
+                                  "content": "Across 2 releases"
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "foXTgl",
+                          "name": "Numbers",
+                          "gap": 20,
+                          "alignItems": "start",
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "joiGme",
+                              "ref": "artist:iAdtxu",
+                              "name": "Stat / AWAITING YOU",
+                              "descendants": {
+                                "artist:dZL7qM": {
+                                  "content": "AWAITING YOU"
+                                },
+                                "artist:oDPrX4": {
+                                  "content": "5"
+                                },
+                                "artist:wWItkz": {
+                                  "content": "Suggested steps"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "c4xCO9",
+                              "ref": "artist:NINsLT",
+                              "name": "Stat / AI ALLOWANCE",
+                              "descendants": {
+                                "artist:u82TeD": {
+                                  "content": "AI ALLOWANCE"
+                                },
+                                "artist:txG9G2": {
+                                  "content": "$0.42"
+                                },
+                                "artist:d014KZ": {
+                                  "content": "of $2.00 this month"
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "pdhjx2",
+                  "ref": "artist:ernseT",
+                  "name": "Tile / This week",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:cg8tcb": {
+                      "icon": "calendar-days"
+                    },
+                    "artist:3RHJS9": {
+                      "content": "This week"
+                    },
+                    "artist:iFLpY7": {
+                      "enabled": false
+                    },
+                    "artist:zzs1rB": {
+                      "type": "frame",
+                      "id": "KXuMOs",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "K4Jqsv",
+                          "ref": "artist:4PQdV8",
+                          "name": "Date / Share a 15-second hook —",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:U1ZSYC": {
+                              "content": "SEP"
+                            },
+                            "artist:Z6rysJ": {
+                              "content": "19"
+                            },
+                            "artist:lU9Lmk": {
+                              "content": "Share a 15-second hook — Afterglow"
+                            },
+                            "artist:uRxCt5": {
+                              "content": "Post · TikTok, YouTube Shorts"
+                            },
+                            "artist:Sz3aVZ": {
+                              "type": "frame",
+                              "id": "s7HdVB",
+                              "name": "Trail",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "S5d54D",
+                                  "ref": "artist:rlyek4",
+                                  "name": "Status / Suggested",
+                                  "descendants": {
+                                    "artist:EyHeXW": {
+                                      "content": "Suggested"
+                                    },
+                                    "artist:HCevJf": {
+                                      "icon": "sparkles"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "HoHIB7",
+                          "ref": "artist:4PQdV8",
+                          "name": "Date / Behind the song — Night ",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:U1ZSYC": {
+                              "content": "SEP"
+                            },
+                            "artist:Z6rysJ": {
+                              "content": "21"
+                            },
+                            "artist:lU9Lmk": {
+                              "content": "Behind the song — Night Signal"
+                            },
+                            "artist:uRxCt5": {
+                              "content": "Post · Instagram"
+                            },
+                            "artist:Sz3aVZ": {
+                              "type": "frame",
+                              "id": "p3GJOo",
+                              "name": "Trail",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "tyrHsi",
+                                  "ref": "artist:fSHiZY",
+                                  "name": "Status / Approved",
+                                  "descendants": {
+                                    "artist:wuogNV": {
+                                      "content": "Approved"
+                                    },
+                                    "artist:rFgkM6": {
+                                      "icon": "circle-check"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "GArznS",
+                          "ref": "artist:4PQdV8",
+                          "name": "Date / Send the track to music ",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:U1ZSYC": {
+                              "content": "SEP"
+                            },
+                            "artist:Z6rysJ": {
+                              "content": "23"
+                            },
+                            "artist:lU9Lmk": {
+                              "content": "Send the track to music channel hosts — Afterglow"
+                            },
+                            "artist:uRxCt5": {
+                              "content": "Action"
+                            },
+                            "artist:Sz3aVZ": {
+                              "type": "frame",
+                              "id": "0ZB4wl",
+                              "name": "Trail",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "aT47fR",
+                                  "ref": "artist:DASsL1",
+                                  "name": "Status / Edited",
+                                  "descendants": {
+                                    "artist:skfP8C": {
+                                      "content": "Edited"
+                                    },
+                                    "artist:lFiFfh": {
+                                      "icon": "pencil"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "2BLmXg",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / Later",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "icon": "calendar-clock"
+                    },
+                    "artist:EZZdAr": {
+                      "content": "Later"
+                    },
+                    "artist:lICt0a": {
+                      "enabled": false
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "8wVcUc",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "YhLpZU",
+                          "ref": "artist:4PQdV8",
+                          "name": "Date / Release day — Afterglow",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:U1ZSYC": {
+                              "content": "SEP"
+                            },
+                            "artist:Z6rysJ": {
+                              "content": "26"
+                            },
+                            "artist:lU9Lmk": {
+                              "content": "Release day — Afterglow"
+                            },
+                            "artist:uRxCt5": {
+                              "content": "Follower message · Post"
+                            },
+                            "artist:Sz3aVZ": {
+                              "type": "frame",
+                              "id": "w6fsQM",
+                              "name": "Trail",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "8WqvSm",
+                                  "ref": "artist:rlyek4",
+                                  "name": "Status / Suggested",
+                                  "descendants": {
+                                    "artist:EyHeXW": {
+                                      "content": "Suggested"
+                                    },
+                                    "artist:HCevJf": {
+                                      "icon": "sparkles"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "V8H8Df",
+                          "ref": "artist:4PQdV8",
+                          "name": "Date / Thank listeners — Afterg",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:U1ZSYC": {
+                              "content": "OCT"
+                            },
+                            "artist:Z6rysJ": {
+                              "content": "02"
+                            },
+                            "artist:lU9Lmk": {
+                              "content": "Thank listeners — Afterglow"
+                            },
+                            "artist:uRxCt5": {
+                              "content": "Post · Instagram, Telegram"
+                            },
+                            "artist:Sz3aVZ": {
+                              "type": "frame",
+                              "id": "NMZqVF",
+                              "name": "Trail",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "3xGGDP",
+                                  "ref": "artist:rlyek4",
+                                  "name": "Status / Suggested",
+                                  "descendants": {
+                                    "artist:EyHeXW": {
+                                      "content": "Suggested"
+                                    },
+                                    "artist:HCevJf": {
+                                      "icon": "sparkles"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "C3w528",
+                          "ref": "artist:4PQdV8",
+                          "name": "Date / Release day — Night Sign",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:U1ZSYC": {
+                              "content": "OCT"
+                            },
+                            "artist:Z6rysJ": {
+                              "content": "17"
+                            },
+                            "artist:lU9Lmk": {
+                              "content": "Release day — Night Signal"
+                            },
+                            "artist:uRxCt5": {
+                              "content": "Follower message"
+                            },
+                            "artist:Sz3aVZ": {
+                              "type": "frame",
+                              "id": "gvv77f",
+                              "name": "Trail",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "M9Tpso",
+                                  "ref": "artist:fSHiZY",
+                                  "name": "Status / Approved",
+                                  "descendants": {
+                                    "artist:wuogNV": {
+                                      "content": "Approved"
+                                    },
+                                    "artist:rFgkM6": {
+                                      "icon": "circle-check"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "XcXSJV",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / Active plans",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "icon": "calendar-range"
+                    },
+                    "artist:EZZdAr": {
+                      "content": "Active plans"
+                    },
+                    "artist:lICt0a": {
+                      "enabled": false
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "7zyKTI",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "TJX1TF",
+                          "ref": "artist:YRn8Rs",
+                          "name": "Row / Afterglow",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:2zzQC7": {
+                              "content": "Afterglow"
+                            },
+                            "artist:9L7bOG": {
+                              "content": "Single · Sep 26 · 8 steps"
+                            },
+                            "artist:Drnpbz": {
+                              "type": "frame",
+                              "id": "e5XpOW",
+                              "name": "Trail",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "MjXHZA",
+                                  "ref": "artist:fSHiZY",
+                                  "name": "Status / Active",
+                                  "descendants": {
+                                    "artist:wuogNV": {
+                                      "content": "Active"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "JSmWqh",
+                                  "ref": "artist:spoluO",
+                                  "name": "Button / Open",
+                                  "descendants": {
+                                    "artist:degIxI": {
+                                      "content": "Open"
+                                    },
+                                    "artist:gE2vVp": {
+                                      "icon": "arrow-up-right"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "QDTMbn",
+                          "ref": "artist:YRn8Rs",
+                          "name": "Row / Night Signal",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:2zzQC7": {
+                              "content": "Night Signal"
+                            },
+                            "artist:9L7bOG": {
+                              "content": "EP · Oct 17 · 11 steps"
+                            },
+                            "artist:Drnpbz": {
+                              "type": "frame",
+                              "id": "byIS2Y",
+                              "name": "Trail",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "fnenfA",
+                                  "ref": "artist:fSHiZY",
+                                  "name": "Status / Active",
+                                  "descendants": {
+                                    "artist:wuogNV": {
+                                      "content": "Active"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "8MZEtq",
+                                  "ref": "artist:spoluO",
+                                  "name": "Button / Open",
+                                  "descendants": {
+                                    "artist:degIxI": {
+                                      "content": "Open"
+                                    },
+                                    "artist:gE2vVp": {
+                                      "icon": "arrow-up-right"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "ULipsH",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / Scheduled without a plan",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "icon": "calendar-plus"
+                    },
+                    "artist:EZZdAr": {
+                      "content": "Scheduled without a plan"
+                    },
+                    "artist:lICt0a": {
+                      "enabled": false
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "IjGnBM",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "kfMvJG",
+                          "ref": "artist:YRn8Rs",
+                          "name": "Row / Midnight Drive",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:2zzQC7": {
+                              "content": "Midnight Drive"
+                            },
+                            "artist:9L7bOG": {
+                              "content": "Single · Nov 7"
+                            },
+                            "artist:Drnpbz": {
+                              "type": "frame",
+                              "id": "50UovN",
+                              "name": "Trail",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "dFRNiv",
+                                  "ref": "artist:LUaCU2",
+                                  "name": "Status / No plan",
+                                  "descendants": {
+                                    "artist:mtpREt": {
+                                      "content": "No plan"
+                                    },
+                                    "artist:jPj56V": {
+                                      "icon": "circle-dashed"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "7NxpeA",
+                          "ref": "artist:C4EcUr",
+                          "name": "Button / Create plan",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:rkJ43y": {
+                              "content": "Create plan"
+                            },
+                            "artist:uH2LRF": {
+                              "icon": "sparkles"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "L3tbEs",
+                  "ref": "artist:sgF75m",
+                  "name": "Alert / Nothing is published for",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxWcZz": {
+                      "content": "Nothing is published for you"
+                    },
+                    "artist:EHxm9r": {
+                      "content": "Every step needs your approval. Bitrate never posts to your social accounts."
+                    },
+                    "artist:otoXgv": {
+                      "enabled": false
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 5110,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Light"
+      },
+      "context": "planned — /dashboard/promotion — Upcoming plan steps across releases; nothing is posted automatically. Bento tiles on the 12-column grid."
+    },
+    {
+      "type": "frame",
+      "id": "Lk13NL",
+      "name": "Artist / Promotion calendar / Mobile / Dim",
+      "width": 390,
+      "height": "fit_content",
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "tPOS9t",
+          "ref": "artist:8H12ea",
+          "name": "Shell",
+          "width": 390,
+          "descendants": {
+            "artist:SIErRw": {
+              "type": "frame",
+              "id": "07BMXW",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 16,
+              "width": "fill_container",
+              "padding": [
+                12,
+                16,
+                40,
+                16
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "m7lU8O",
+                  "name": "Page Heading",
+                  "gap": 16,
+                  "alignItems": "end",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "wclDGX",
+                      "name": "Text",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "muBxmH",
+                          "ref": "artist:MgMQ2L",
+                          "name": "Promotion",
+                          "content": "Promotion"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "bmD7HK",
+                          "ref": "artist:C5Ih8u",
+                          "name": "Upcoming steps from your rel",
+                          "width": "fill_container",
+                          "textGrowth": "fixed-width",
+                          "content": "Upcoming steps from your release plans"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "dIigLR",
+                  "ref": "artist:hCymSg",
+                  "name": "Tabs",
+                  "descendants": {
+                    "artist:3WDvs4": {
+                      "type": "frame",
+                      "id": "3GLfdE",
+                      "name": "Items",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "bXo5eA",
+                          "ref": "artist:Vrjhec",
+                          "name": "Tab / Upcoming",
+                          "descendants": {
+                            "artist:NyZfC6": {
+                              "content": "Upcoming"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "8CNBz0",
+                          "ref": "artist:MSnEq6",
+                          "name": "Tab / This month",
+                          "descendants": {
+                            "artist:YoFuvg": {
+                              "content": "This month"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "91jN2b",
+                          "ref": "artist:MSnEq6",
+                          "name": "Tab / Past",
+                          "descendants": {
+                            "artist:YoFuvg": {
+                              "content": "Past"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "u59g7x",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / At a glance",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "icon": "chart-no-axes-column"
+                    },
+                    "artist:EZZdAr": {
+                      "content": "At a glance"
+                    },
+                    "artist:lICt0a": {
+                      "enabled": false
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "oM0kAL",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "kdGuIj",
+                          "name": "Numbers",
+                          "gap": 20,
+                          "alignItems": "start",
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "K4h0Nu",
+                              "ref": "artist:iAdtxu",
+                              "name": "Stat / THIS WEEK",
+                              "descendants": {
+                                "artist:dZL7qM": {
+                                  "content": "THIS WEEK"
+                                },
+                                "artist:oDPrX4": {
+                                  "content": "3"
+                                },
+                                "artist:wWItkz": {
+                                  "content": "Steps due"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "PhGARE",
+                              "ref": "artist:NINsLT",
+                              "name": "Stat / APPROVED",
+                              "descendants": {
+                                "artist:u82TeD": {
+                                  "content": "APPROVED"
+                                },
+                                "artist:txG9G2": {
+                                  "content": "12"
+                                },
+                                "artist:d014KZ": {
+                                  "content": "Across 2 releases"
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "hbBa6B",
+                          "name": "Numbers",
+                          "gap": 20,
+                          "alignItems": "start",
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "LUGyIm",
+                              "ref": "artist:iAdtxu",
+                              "name": "Stat / AWAITING YOU",
+                              "descendants": {
+                                "artist:dZL7qM": {
+                                  "content": "AWAITING YOU"
+                                },
+                                "artist:oDPrX4": {
+                                  "content": "5"
+                                },
+                                "artist:wWItkz": {
+                                  "content": "Suggested steps"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "OA9JNz",
+                              "ref": "artist:NINsLT",
+                              "name": "Stat / AI ALLOWANCE",
+                              "descendants": {
+                                "artist:u82TeD": {
+                                  "content": "AI ALLOWANCE"
+                                },
+                                "artist:txG9G2": {
+                                  "content": "$0.42"
+                                },
+                                "artist:d014KZ": {
+                                  "content": "of $2.00 this month"
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "pbDSou",
+                  "ref": "artist:ernseT",
+                  "name": "Tile / This week",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:cg8tcb": {
+                      "icon": "calendar-days"
+                    },
+                    "artist:3RHJS9": {
+                      "content": "This week"
+                    },
+                    "artist:iFLpY7": {
+                      "enabled": false
+                    },
+                    "artist:zzs1rB": {
+                      "type": "frame",
+                      "id": "eCr0I3",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "SkvMOL",
+                          "ref": "artist:4PQdV8",
+                          "name": "Date / Share a 15-second hook —",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:U1ZSYC": {
+                              "content": "SEP"
+                            },
+                            "artist:Z6rysJ": {
+                              "content": "19"
+                            },
+                            "artist:lU9Lmk": {
+                              "content": "Share a 15-second hook — Afterglow"
+                            },
+                            "artist:uRxCt5": {
+                              "content": "Post · TikTok, YouTube Shorts"
+                            },
+                            "artist:Sz3aVZ": {
+                              "type": "frame",
+                              "id": "C92Vow",
+                              "name": "Trail",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "IUQdtl",
+                                  "ref": "artist:rlyek4",
+                                  "name": "Status / Suggested",
+                                  "descendants": {
+                                    "artist:EyHeXW": {
+                                      "content": "Suggested"
+                                    },
+                                    "artist:HCevJf": {
+                                      "icon": "sparkles"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "HcfSKR",
+                          "ref": "artist:4PQdV8",
+                          "name": "Date / Behind the song — Night ",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:U1ZSYC": {
+                              "content": "SEP"
+                            },
+                            "artist:Z6rysJ": {
+                              "content": "21"
+                            },
+                            "artist:lU9Lmk": {
+                              "content": "Behind the song — Night Signal"
+                            },
+                            "artist:uRxCt5": {
+                              "content": "Post · Instagram"
+                            },
+                            "artist:Sz3aVZ": {
+                              "type": "frame",
+                              "id": "PVTZ7k",
+                              "name": "Trail",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "dNzapd",
+                                  "ref": "artist:fSHiZY",
+                                  "name": "Status / Approved",
+                                  "descendants": {
+                                    "artist:wuogNV": {
+                                      "content": "Approved"
+                                    },
+                                    "artist:rFgkM6": {
+                                      "icon": "circle-check"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "Yvqgip",
+                          "ref": "artist:4PQdV8",
+                          "name": "Date / Send the track to music ",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:U1ZSYC": {
+                              "content": "SEP"
+                            },
+                            "artist:Z6rysJ": {
+                              "content": "23"
+                            },
+                            "artist:lU9Lmk": {
+                              "content": "Send the track to music channel hosts — Afterglow"
+                            },
+                            "artist:uRxCt5": {
+                              "content": "Action"
+                            },
+                            "artist:Sz3aVZ": {
+                              "type": "frame",
+                              "id": "kgYI6x",
+                              "name": "Trail",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "SrQsOd",
+                                  "ref": "artist:DASsL1",
+                                  "name": "Status / Edited",
+                                  "descendants": {
+                                    "artist:skfP8C": {
+                                      "content": "Edited"
+                                    },
+                                    "artist:lFiFfh": {
+                                      "icon": "pencil"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "KKiH3v",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / Later",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "icon": "calendar-clock"
+                    },
+                    "artist:EZZdAr": {
+                      "content": "Later"
+                    },
+                    "artist:lICt0a": {
+                      "enabled": false
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "KhSWhL",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "ETAXOf",
+                          "ref": "artist:4PQdV8",
+                          "name": "Date / Release day — Afterglow",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:U1ZSYC": {
+                              "content": "SEP"
+                            },
+                            "artist:Z6rysJ": {
+                              "content": "26"
+                            },
+                            "artist:lU9Lmk": {
+                              "content": "Release day — Afterglow"
+                            },
+                            "artist:uRxCt5": {
+                              "content": "Follower message · Post"
+                            },
+                            "artist:Sz3aVZ": {
+                              "type": "frame",
+                              "id": "gGMBdR",
+                              "name": "Trail",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "aGPXep",
+                                  "ref": "artist:rlyek4",
+                                  "name": "Status / Suggested",
+                                  "descendants": {
+                                    "artist:EyHeXW": {
+                                      "content": "Suggested"
+                                    },
+                                    "artist:HCevJf": {
+                                      "icon": "sparkles"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "vmhJQk",
+                          "ref": "artist:4PQdV8",
+                          "name": "Date / Thank listeners — Afterg",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:U1ZSYC": {
+                              "content": "OCT"
+                            },
+                            "artist:Z6rysJ": {
+                              "content": "02"
+                            },
+                            "artist:lU9Lmk": {
+                              "content": "Thank listeners — Afterglow"
+                            },
+                            "artist:uRxCt5": {
+                              "content": "Post · Instagram, Telegram"
+                            },
+                            "artist:Sz3aVZ": {
+                              "type": "frame",
+                              "id": "ZLZl8I",
+                              "name": "Trail",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "lmjUSz",
+                                  "ref": "artist:rlyek4",
+                                  "name": "Status / Suggested",
+                                  "descendants": {
+                                    "artist:EyHeXW": {
+                                      "content": "Suggested"
+                                    },
+                                    "artist:HCevJf": {
+                                      "icon": "sparkles"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "MjS9Vd",
+                          "ref": "artist:4PQdV8",
+                          "name": "Date / Release day — Night Sign",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:U1ZSYC": {
+                              "content": "OCT"
+                            },
+                            "artist:Z6rysJ": {
+                              "content": "17"
+                            },
+                            "artist:lU9Lmk": {
+                              "content": "Release day — Night Signal"
+                            },
+                            "artist:uRxCt5": {
+                              "content": "Follower message"
+                            },
+                            "artist:Sz3aVZ": {
+                              "type": "frame",
+                              "id": "Mwb1q8",
+                              "name": "Trail",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "cMGrPy",
+                                  "ref": "artist:fSHiZY",
+                                  "name": "Status / Approved",
+                                  "descendants": {
+                                    "artist:wuogNV": {
+                                      "content": "Approved"
+                                    },
+                                    "artist:rFgkM6": {
+                                      "icon": "circle-check"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "zJzkJc",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / Active plans",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "icon": "calendar-range"
+                    },
+                    "artist:EZZdAr": {
+                      "content": "Active plans"
+                    },
+                    "artist:lICt0a": {
+                      "enabled": false
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "90bWqq",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "9SO6sA",
+                          "ref": "artist:YRn8Rs",
+                          "name": "Row / Afterglow",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:2zzQC7": {
+                              "content": "Afterglow"
+                            },
+                            "artist:9L7bOG": {
+                              "content": "Single · Sep 26 · 8 steps"
+                            },
+                            "artist:Drnpbz": {
+                              "type": "frame",
+                              "id": "cCGs5w",
+                              "name": "Trail",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "UAYJuy",
+                                  "ref": "artist:fSHiZY",
+                                  "name": "Status / Active",
+                                  "descendants": {
+                                    "artist:wuogNV": {
+                                      "content": "Active"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "V7bFS6",
+                                  "ref": "artist:spoluO",
+                                  "name": "Button / Open",
+                                  "descendants": {
+                                    "artist:degIxI": {
+                                      "content": "Open"
+                                    },
+                                    "artist:gE2vVp": {
+                                      "icon": "arrow-up-right"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "cpTt5K",
+                          "ref": "artist:YRn8Rs",
+                          "name": "Row / Night Signal",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:2zzQC7": {
+                              "content": "Night Signal"
+                            },
+                            "artist:9L7bOG": {
+                              "content": "EP · Oct 17 · 11 steps"
+                            },
+                            "artist:Drnpbz": {
+                              "type": "frame",
+                              "id": "FRMly0",
+                              "name": "Trail",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "RBngsk",
+                                  "ref": "artist:fSHiZY",
+                                  "name": "Status / Active",
+                                  "descendants": {
+                                    "artist:wuogNV": {
+                                      "content": "Active"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "UB2DQE",
+                                  "ref": "artist:spoluO",
+                                  "name": "Button / Open",
+                                  "descendants": {
+                                    "artist:degIxI": {
+                                      "content": "Open"
+                                    },
+                                    "artist:gE2vVp": {
+                                      "icon": "arrow-up-right"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "OSvjuk",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / Scheduled without a plan",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "icon": "calendar-plus"
+                    },
+                    "artist:EZZdAr": {
+                      "content": "Scheduled without a plan"
+                    },
+                    "artist:lICt0a": {
+                      "enabled": false
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "uQeKeD",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "66PXl3",
+                          "ref": "artist:YRn8Rs",
+                          "name": "Row / Midnight Drive",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:2zzQC7": {
+                              "content": "Midnight Drive"
+                            },
+                            "artist:9L7bOG": {
+                              "content": "Single · Nov 7"
+                            },
+                            "artist:Drnpbz": {
+                              "type": "frame",
+                              "id": "dJh03o",
+                              "name": "Trail",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "xfvMu3",
+                                  "ref": "artist:LUaCU2",
+                                  "name": "Status / No plan",
+                                  "descendants": {
+                                    "artist:mtpREt": {
+                                      "content": "No plan"
+                                    },
+                                    "artist:jPj56V": {
+                                      "icon": "circle-dashed"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "ZKM7EE",
+                          "ref": "artist:C4EcUr",
+                          "name": "Button / Create plan",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:rkJ43y": {
+                              "content": "Create plan"
+                            },
+                            "artist:uH2LRF": {
+                              "icon": "sparkles"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "LWUIsO",
+                  "ref": "artist:sgF75m",
+                  "name": "Alert / Nothing is published for",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxWcZz": {
+                      "content": "Nothing is published for you"
+                    },
+                    "artist:EHxm9r": {
+                      "content": "Every step needs your approval. Bitrate never posts to your social accounts."
+                    },
+                    "artist:otoXgv": {
+                      "enabled": false
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 5600,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Dim"
+      },
+      "context": "planned — /dashboard/promotion — Upcoming plan steps across releases; nothing is posted automatically. Bento tiles on the 12-column grid."
+    },
+    {
+      "type": "frame",
       "id": "8cYnng",
       "name": "Artist / Promotion calendar / No plans yet / Desktop",
       "width": 1440,
@@ -3922,7 +5674,7 @@
           }
         }
       ],
-      "x": 5110,
+      "x": 6090,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -4129,7 +5881,7 @@
           }
         }
       ],
-      "x": 6650,
+      "x": 7630,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -4361,7 +6113,7 @@
           }
         }
       ],
-      "x": 7140,
+      "x": 8120,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -4568,7 +6320,7 @@
           }
         }
       ],
-      "x": 8680,
+      "x": 9660,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -4817,7 +6569,7 @@
           }
         }
       ],
-      "x": 9170,
+      "x": 10150,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -5010,7 +6762,7 @@
           }
         }
       ],
-      "x": 10710,
+      "x": 11690,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -5242,7 +6994,7 @@
           }
         }
       ],
-      "x": 11200,
+      "x": 12180,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -5449,7 +7201,7 @@
           }
         }
       ],
-      "x": 12740,
+      "x": 13720,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"

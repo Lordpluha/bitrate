@@ -5670,6 +5670,2316 @@
     },
     {
       "type": "frame",
+      "id": "5z3hoR",
+      "name": "Artist / Release — Draft / Mobile / Light",
+      "width": 390,
+      "height": "fit_content",
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "zxdp1t",
+          "ref": "artist:8H12ea",
+          "name": "Shell",
+          "width": 390,
+          "descendants": {
+            "artist:SIErRw": {
+              "type": "frame",
+              "id": "IUbVyq",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 16,
+              "width": "fill_container",
+              "padding": [
+                12,
+                16,
+                40,
+                16
+              ],
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "03cArP",
+                  "ref": "artist:pZcyuZ",
+                  "name": "Back to music",
+                  "content": "Back to music"
+                },
+                {
+                  "type": "ref",
+                  "id": "5WuEtc",
+                  "ref": "artist:3i5VmQ",
+                  "name": "Release Header",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:9VATYo": {
+                      "fill": {
+                        "type": "image",
+                        "url": "../../web-player-design/design-system/assets/albums/album-night-signal.webp",
+                        "mode": "cover"
+                      }
+                    },
+                    "artist:sDexPU": {
+                      "content": "Night Signal"
+                    },
+                    "artist:ppaWQZ": {
+                      "content": "Mira Sol · Single · 2 tracks"
+                    },
+                    "artist:YPrwtY": {
+                      "type": "ref",
+                      "id": "Z8pp64",
+                      "ref": "artist:LUaCU2",
+                      "name": "Status / Draft",
+                      "descendants": {
+                        "artist:mtpREt": {
+                          "content": "Draft"
+                        },
+                        "artist:jPj56V": {
+                          "icon": "pencil-line"
+                        }
+                      }
+                    },
+                    "artist:98bElk": {
+                      "type": "frame",
+                      "id": "TK6l5B",
+                      "name": "Countdown",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "7L9YQZ",
+                          "ref": "artist:64DlLz",
+                          "name": "Countdown"
+                        }
+                      ]
+                    },
+                    "artist:v26Lkv": {
+                      "content": "Finish preparing your release"
+                    },
+                    "artist:KhPSdx": {
+                      "content": "3 items are left before Bitrate review."
+                    },
+                    "artist:l2GFpx/artist:vg489O": {
+                      "content": "Continue"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "857pZ6",
+                  "ref": "artist:3MLJnC",
+                  "name": "Stepper",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:dmJtwL": {
+                      "type": "ref",
+                      "id": "VIIC6D",
+                      "ref": "artist:HpcQmo",
+                      "name": "Step / Draft",
+                      "descendants": {
+                        "artist:sHNwKv": {
+                          "content": "Draft"
+                        },
+                        "artist:LlXoM9": {
+                          "content": "1"
+                        }
+                      }
+                    },
+                    "artist:pVFGWy": {
+                      "type": "ref",
+                      "id": "IYZw0d",
+                      "ref": "artist:yt6l2d",
+                      "name": "Step / Review",
+                      "descendants": {
+                        "artist:RGfqPD": {
+                          "enabled": false
+                        },
+                        "artist:WKcJ3K": {
+                          "content": "2"
+                        }
+                      }
+                    },
+                    "artist:8xRVMN": {
+                      "type": "ref",
+                      "id": "qR6XkV",
+                      "ref": "artist:UwhrWM",
+                      "name": "Line"
+                    },
+                    "artist:xFbfUz": {
+                      "type": "ref",
+                      "id": "48XvrM",
+                      "ref": "artist:yt6l2d",
+                      "name": "Step / Deliver",
+                      "descendants": {
+                        "artist:RGfqPD": {
+                          "enabled": false
+                        },
+                        "artist:WKcJ3K": {
+                          "content": "3"
+                        }
+                      }
+                    },
+                    "artist:sz4Zdv": {
+                      "type": "ref",
+                      "id": "ChwyI7",
+                      "ref": "artist:UwhrWM",
+                      "name": "Line"
+                    },
+                    "artist:vCRs52": {
+                      "type": "ref",
+                      "id": "caOBZ4",
+                      "ref": "artist:yt6l2d",
+                      "name": "Step / Launch",
+                      "descendants": {
+                        "artist:RGfqPD": {
+                          "enabled": false
+                        },
+                        "artist:WKcJ3K": {
+                          "content": "4"
+                        }
+                      }
+                    },
+                    "artist:sKFrPn": {
+                      "type": "ref",
+                      "id": "BnZ8bM",
+                      "ref": "artist:UwhrWM",
+                      "name": "Line"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "3FMqdm",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / Release timing",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "icon": "calendar-days"
+                    },
+                    "artist:EZZdAr": {
+                      "content": "Release timing"
+                    },
+                    "artist:lICt0a": {
+                      "enabled": false
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "7QVEO7",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "ByrY7t",
+                          "ref": "artist:RoXXJv",
+                          "name": "Dec 12, 2026, 18:00 UTC",
+                          "content": "Dec 12, 2026, 18:00 UTC"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "MGgHvA",
+                          "ref": "artist:C5Ih8u",
+                          "name": "A premiere: it goes live at ",
+                          "width": "fill_container",
+                          "textGrowth": "fixed-width",
+                          "content": "A premiere: it goes live at this date and time."
+                        },
+                        {
+                          "type": "frame",
+                          "id": "NmuRqM",
+                          "name": "Action",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "PQwkRD",
+                              "ref": "artist:b74brg",
+                              "name": "Button / Edit timing",
+                              "descendants": {
+                                "artist:wUlRtb": {
+                                  "content": "Edit timing"
+                                },
+                                "artist:lPAI5m": {
+                                  "enabled": false
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "EfzWSR",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / Tracks (2)",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "icon": "list-music"
+                    },
+                    "artist:EZZdAr": {
+                      "content": "Tracks (2)"
+                    },
+                    "artist:lICt0a": {
+                      "type": "frame",
+                      "id": "kyjrlB",
+                      "name": "Right",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "aP1T4M",
+                          "ref": "artist:b74brg",
+                          "name": "Button / Upload track",
+                          "descendants": {
+                            "artist:wUlRtb": {
+                              "content": "Upload track"
+                            },
+                            "artist:lPAI5m": {
+                              "icon": "upload"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "4UAPu9",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "ezfyGR",
+                          "ref": "artist:C5Ih8u",
+                          "name": "Recordings in this release, ",
+                          "width": "fill_container",
+                          "textGrowth": "fixed-width",
+                          "content": "Recordings in this release, in running order. Uploaded audio stays private."
+                        },
+                        {
+                          "type": "ref",
+                          "id": "hfKAJN",
+                          "ref": "artist:xq6UeK",
+                          "name": "Track / Night Signal",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:iWLEnS": {
+                              "content": "1"
+                            },
+                            "artist:kFWA4L": {
+                              "enabled": false
+                            },
+                            "artist:F6WFjQ": {
+                              "content": "Night Signal"
+                            },
+                            "artist:AIiyVE": {
+                              "content": "Original · 3:42 · ISRC GB-BTR-26-00012"
+                            },
+                            "artist:nitNWI": {
+                              "enabled": false
+                            },
+                            "artist:infYci": {
+                              "content": "Audio uploaded"
+                            },
+                            "artist:YnErnT": {
+                              "enabled": false
+                            },
+                            "artist:3kjx8C": {
+                              "content": "Genres: Synthwave, Electronic"
+                            },
+                            "artist:slLUry": {
+                              "type": "frame",
+                              "id": "djyYgD",
+                              "name": "Status",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "BhNlvI",
+                                  "ref": "artist:fSHiZY",
+                                  "name": "Status / Ready",
+                                  "descendants": {
+                                    "artist:wuogNV": {
+                                      "content": "Ready"
+                                    }
+                                  }
+                                }
+                              ]
+                            },
+                            "artist:6G2fpk": {
+                              "type": "frame",
+                              "id": "GN1O41",
+                              "name": "Player",
+                              "layout": "vertical",
+                              "gap": 0,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "adnYi2",
+                                  "ref": "artist:mrbasA",
+                                  "name": "Track player",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:ZMtIRc": {
+                                      "content": "Night Signal"
+                                    }
+                                  }
+                                }
+                              ]
+                            },
+                            "artist:735Ao6": {
+                              "type": "frame",
+                              "id": "31BPoU",
+                              "name": "Actions",
+                              "layout": "vertical",
+                              "gap": 6,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "hOx3Vt",
+                                  "name": "Actions 1",
+                                  "gap": 6,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "9CR64Y",
+                                      "ref": "artist:b74brg",
+                                      "name": "Button / Replace audio",
+                                      "descendants": {
+                                        "artist:wUlRtb": {
+                                          "content": "Replace audio"
+                                        },
+                                        "artist:lPAI5m": {
+                                          "enabled": false
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "cyoOnW",
+                                      "ref": "artist:b74brg",
+                                      "name": "Button / Rename",
+                                      "descendants": {
+                                        "artist:wUlRtb": {
+                                          "content": "Rename"
+                                        },
+                                        "artist:lPAI5m": {
+                                          "enabled": false
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "bRYhN2",
+                                      "ref": "artist:b74brg",
+                                      "name": "Button / Genres",
+                                      "descendants": {
+                                        "artist:wUlRtb": {
+                                          "content": "Genres"
+                                        },
+                                        "artist:lPAI5m": {
+                                          "enabled": false
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "mskKdZ",
+                                  "name": "Actions 2",
+                                  "gap": 6,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "YkixBm",
+                                      "ref": "artist:b74brg",
+                                      "name": "Button / ISRC",
+                                      "descendants": {
+                                        "artist:wUlRtb": {
+                                          "content": "ISRC"
+                                        },
+                                        "artist:lPAI5m": {
+                                          "enabled": false
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "Zmu8kB",
+                                      "ref": "artist:IgRCaZ",
+                                      "name": "Button / Remove",
+                                      "descendants": {
+                                        "artist:dzRHMf": {
+                                          "content": "Remove"
+                                        },
+                                        "artist:oFQA10": {
+                                          "enabled": false
+                                        }
+                                      }
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "m4zpwo",
+                          "ref": "artist:xq6UeK",
+                          "name": "Track / Low Tide",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:iWLEnS": {
+                              "content": "2"
+                            },
+                            "artist:kFWA4L": {
+                              "enabled": false
+                            },
+                            "artist:F6WFjQ": {
+                              "content": "Low Tide"
+                            },
+                            "artist:AIiyVE": {
+                              "content": "Original · Duration unavailable · No ISRC yet"
+                            },
+                            "artist:nitNWI": {},
+                            "artist:infYci": {
+                              "content": "No audio uploaded"
+                            },
+                            "artist:YnErnT": {},
+                            "artist:3kjx8C": {
+                              "content": "Genres: No genre yet"
+                            },
+                            "artist:slLUry": {
+                              "type": "frame",
+                              "id": "G9Jp2O",
+                              "name": "Status",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "Q4xNBa",
+                                  "ref": "artist:LUaCU2",
+                                  "name": "Status / Draft",
+                                  "descendants": {
+                                    "artist:mtpREt": {
+                                      "content": "Draft"
+                                    }
+                                  }
+                                }
+                              ]
+                            },
+                            "artist:6G2fpk": {
+                              "enabled": false
+                            },
+                            "artist:735Ao6": {
+                              "type": "frame",
+                              "id": "4PkqxB",
+                              "name": "Actions",
+                              "layout": "vertical",
+                              "gap": 6,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "eHxjNK",
+                                  "name": "Actions 1",
+                                  "gap": 6,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "8Zfg42",
+                                      "ref": "artist:b74brg",
+                                      "name": "Button / Upload audio",
+                                      "descendants": {
+                                        "artist:wUlRtb": {
+                                          "content": "Upload audio"
+                                        },
+                                        "artist:lPAI5m": {
+                                          "enabled": false
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "XgIitW",
+                                      "ref": "artist:b74brg",
+                                      "name": "Button / Rename",
+                                      "descendants": {
+                                        "artist:wUlRtb": {
+                                          "content": "Rename"
+                                        },
+                                        "artist:lPAI5m": {
+                                          "enabled": false
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "eGvHOM",
+                                      "ref": "artist:b74brg",
+                                      "name": "Button / Genres",
+                                      "descendants": {
+                                        "artist:wUlRtb": {
+                                          "content": "Genres"
+                                        },
+                                        "artist:lPAI5m": {
+                                          "enabled": false
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "9Qaiub",
+                                  "name": "Actions 2",
+                                  "gap": 6,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "zJUl3W",
+                                      "ref": "artist:b74brg",
+                                      "name": "Button / ISRC",
+                                      "descendants": {
+                                        "artist:wUlRtb": {
+                                          "content": "ISRC"
+                                        },
+                                        "artist:lPAI5m": {
+                                          "enabled": false
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "CL8hAL",
+                                      "ref": "artist:IgRCaZ",
+                                      "name": "Button / Remove",
+                                      "descendants": {
+                                        "artist:dzRHMf": {
+                                          "content": "Remove"
+                                        },
+                                        "artist:oFQA10": {
+                                          "enabled": false
+                                        }
+                                      }
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "J35pge",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / Credits & splits (2)",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "icon": "users-round"
+                    },
+                    "artist:EZZdAr": {
+                      "content": "Credits & splits (2)"
+                    },
+                    "artist:lICt0a": {
+                      "type": "frame",
+                      "id": "dmIfqq",
+                      "name": "Right",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "93JYeC",
+                          "ref": "artist:spoluO",
+                          "name": "Button / Edit splits",
+                          "descendants": {
+                            "artist:degIxI": {
+                              "content": "Edit splits"
+                            },
+                            "artist:gE2vVp": {
+                              "enabled": false
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "rT4NHW",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "H5yPXu",
+                          "ref": "artist:C5Ih8u",
+                          "name": "Who made this release, what ",
+                          "width": "fill_container",
+                          "textGrowth": "fixed-width",
+                          "content": "Who made this release, what they did, and their share of the master (the recording)."
+                        },
+                        {
+                          "type": "ref",
+                          "id": "KdQBSR",
+                          "ref": "artist:KETYDX",
+                          "name": "Split total",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:j3vLSf": {
+                              "content": "Master 75% of 100%"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "HwNKs4",
+                          "ref": "artist:5poXJi",
+                          "name": "Credit / Mira Sol",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:lIARtV/artist:KrLGr1": {
+                              "content": "MS"
+                            },
+                            "artist:meqs3A": {
+                              "content": "Mira Sol"
+                            },
+                            "artist:hsPERg": {
+                              "content": "Performer · Producer · Master 75%"
+                            },
+                            "artist:BRwhKy": {
+                              "content": "75%"
+                            },
+                            "artist:ENazr5": {
+                              "type": "frame",
+                              "id": "95H5m1",
+                              "name": "Actions",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "NKp56Y",
+                                  "ref": "artist:Zm2T39",
+                                  "name": "Edit",
+                                  "width": 30,
+                                  "height": 30,
+                                  "descendants": {
+                                    "artist:hwGaeO": {
+                                      "icon": "pencil"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "UaSn1o",
+                                  "ref": "artist:Zm2T39",
+                                  "name": "Remove",
+                                  "width": 30,
+                                  "height": 30,
+                                  "descendants": {
+                                    "artist:hwGaeO": {
+                                      "icon": "trash-2"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "EAuI7T",
+                          "ref": "artist:IW7JEb",
+                          "name": "Credit / Kite Harbor",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:68xDVA/artist:KrLGr1": {
+                              "content": "KH"
+                            },
+                            "artist:NngCkF": {
+                              "content": "Kite Harbor"
+                            },
+                            "artist:IH60x6": {
+                              "content": "Needs role · No roles specified — Assign at least one role."
+                            },
+                            "artist:YqxzFZ": {
+                              "content": "0%"
+                            },
+                            "artist:3NEeCv": {
+                              "type": "frame",
+                              "id": "3wb9D6",
+                              "name": "Actions",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "rwymLg",
+                                  "ref": "artist:spoluO",
+                                  "name": "Button / Edit roles",
+                                  "descendants": {
+                                    "artist:degIxI": {
+                                      "content": "Edit roles"
+                                    },
+                                    "artist:gE2vVp": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "wJnTnK",
+                                  "ref": "artist:Zm2T39",
+                                  "name": "Remove",
+                                  "width": 30,
+                                  "height": 30,
+                                  "descendants": {
+                                    "artist:hwGaeO": {
+                                      "icon": "trash-2"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "frame",
+                          "id": "BnPXU6",
+                          "name": "Add",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "rn9dQk",
+                              "ref": "artist:b74brg",
+                              "name": "Button / Add contributor",
+                              "descendants": {
+                                "artist:wUlRtb": {
+                                  "content": "Add contributor"
+                                },
+                                "artist:lPAI5m": {
+                                  "icon": "user-plus"
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "EwV1rO",
+                          "ref": "artist:PiqhAO",
+                          "name": "Credits do not grant workspa",
+                          "width": "fill_container",
+                          "textGrowth": "fixed-width",
+                          "content": "Credits do not grant workspace access. Each split must reach exactly 100% before review."
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "2PRCnU",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / Rights",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "icon": "shield-check"
+                    },
+                    "artist:EZZdAr": {
+                      "content": "Rights"
+                    },
+                    "artist:lICt0a": {
+                      "type": "frame",
+                      "id": "ANTLgd",
+                      "name": "Right",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "EJ02eZ",
+                          "ref": "artist:spoluO",
+                          "name": "Button / Edit rights",
+                          "descendants": {
+                            "artist:degIxI": {
+                              "content": "Edit rights"
+                            },
+                            "artist:gE2vVp": {
+                              "enabled": false
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "wSRbgG",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "q4iimQ",
+                          "ref": "artist:C5Ih8u",
+                          "name": "Who owns the recording.",
+                          "width": "fill_container",
+                          "textGrowth": "fixed-width",
+                          "content": "Who owns the recording."
+                        },
+                        {
+                          "type": "ref",
+                          "id": "pxkBtD",
+                          "ref": "artist:frVTtE",
+                          "name": "Master owner",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:cwpJf5": {
+                              "content": "Master owner not chosen (not confirmed)"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "iymilP",
+                          "ref": "artist:SOt7Oe",
+                          "name": "Identifiers · optional",
+                          "content": "Identifiers · optional"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "9kWcAF",
+                          "name": "UPC",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "pGFOOz",
+                              "ref": "artist:P2oa0L",
+                              "name": "UPC/EAN: Not provided",
+                              "width": "fill_container",
+                              "textGrowth": "fixed-width",
+                              "content": "UPC/EAN: Not provided"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "ivFnFr",
+                              "ref": "artist:pZcyuZ",
+                              "name": "Edit UPC",
+                              "content": "Edit UPC"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "6JwohS",
+                          "ref": "artist:PiqhAO",
+                          "name": "Store barcodes and track ISR",
+                          "width": "fill_container",
+                          "textGrowth": "fixed-width",
+                          "content": "Store barcodes and track ISRCs are optional here; each track's ISRC is set in Tracks."
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "ZkkBkW",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / Readiness checklist",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "icon": "list-checks"
+                    },
+                    "artist:EZZdAr": {
+                      "content": "Readiness checklist"
+                    },
+                    "artist:lICt0a": {
+                      "type": "frame",
+                      "id": "5bmyIu",
+                      "name": "Right",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "XbGWSp",
+                          "ref": "artist:SOt7Oe",
+                          "name": "3 of 6 ready",
+                          "content": "3 of 6 ready"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "0Tgu3t",
+                          "ref": "artist:Zm2T39",
+                          "name": "Toggle",
+                          "width": 30,
+                          "height": 30,
+                          "descendants": {
+                            "artist:hwGaeO": {
+                              "icon": "chevron-down"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "T50dSG",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "EXTdES",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / Danger zone",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "enabled": false
+                    },
+                    "artist:EZZdAr": {
+                      "content": "Danger zone"
+                    },
+                    "artist:lICt0a": {
+                      "enabled": false
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "I4pOMI",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "s5EnzX",
+                          "ref": "artist:C5Ih8u",
+                          "name": "Delete this release from you",
+                          "width": "fill_container",
+                          "textGrowth": "fixed-width",
+                          "content": "Delete this release from your workspace and the player. Recordings used by another release remain available. This cannot be undone."
+                        },
+                        {
+                          "type": "ref",
+                          "id": "f3lzI0",
+                          "ref": "artist:tZL23p",
+                          "name": "Button / Delete release",
+                          "descendants": {
+                            "artist:ciSEwh": {
+                              "content": "Delete release"
+                            },
+                            "artist:ZXzRgY": {
+                              "icon": "trash-2"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 5110,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Light"
+      },
+      "context": "/dashboard/music/$releaseId?step=draft — Where a release is prepared. The checklist links each item to its panel; nothing here publishes or delivers the release."
+    },
+    {
+      "type": "frame",
+      "id": "jElX5k",
+      "name": "Artist / Release — Draft / Mobile / Dim",
+      "width": 390,
+      "height": "fit_content",
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "RFCftS",
+          "ref": "artist:8H12ea",
+          "name": "Shell",
+          "width": 390,
+          "descendants": {
+            "artist:SIErRw": {
+              "type": "frame",
+              "id": "a9Bu3t",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 16,
+              "width": "fill_container",
+              "padding": [
+                12,
+                16,
+                40,
+                16
+              ],
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "I652e8",
+                  "ref": "artist:pZcyuZ",
+                  "name": "Back to music",
+                  "content": "Back to music"
+                },
+                {
+                  "type": "ref",
+                  "id": "FBezxR",
+                  "ref": "artist:3i5VmQ",
+                  "name": "Release Header",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:9VATYo": {
+                      "fill": {
+                        "type": "image",
+                        "url": "../../web-player-design/design-system/assets/albums/album-night-signal.webp",
+                        "mode": "cover"
+                      }
+                    },
+                    "artist:sDexPU": {
+                      "content": "Night Signal"
+                    },
+                    "artist:ppaWQZ": {
+                      "content": "Mira Sol · Single · 2 tracks"
+                    },
+                    "artist:YPrwtY": {
+                      "type": "ref",
+                      "id": "df6xK6",
+                      "ref": "artist:LUaCU2",
+                      "name": "Status / Draft",
+                      "descendants": {
+                        "artist:mtpREt": {
+                          "content": "Draft"
+                        },
+                        "artist:jPj56V": {
+                          "icon": "pencil-line"
+                        }
+                      }
+                    },
+                    "artist:98bElk": {
+                      "type": "frame",
+                      "id": "FoB4Wc",
+                      "name": "Countdown",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "R22GDk",
+                          "ref": "artist:64DlLz",
+                          "name": "Countdown"
+                        }
+                      ]
+                    },
+                    "artist:v26Lkv": {
+                      "content": "Finish preparing your release"
+                    },
+                    "artist:KhPSdx": {
+                      "content": "3 items are left before Bitrate review."
+                    },
+                    "artist:l2GFpx/artist:vg489O": {
+                      "content": "Continue"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "AWf0CK",
+                  "ref": "artist:3MLJnC",
+                  "name": "Stepper",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:dmJtwL": {
+                      "type": "ref",
+                      "id": "lXGR9M",
+                      "ref": "artist:HpcQmo",
+                      "name": "Step / Draft",
+                      "descendants": {
+                        "artist:sHNwKv": {
+                          "content": "Draft"
+                        },
+                        "artist:LlXoM9": {
+                          "content": "1"
+                        }
+                      }
+                    },
+                    "artist:pVFGWy": {
+                      "type": "ref",
+                      "id": "KAqZl9",
+                      "ref": "artist:yt6l2d",
+                      "name": "Step / Review",
+                      "descendants": {
+                        "artist:RGfqPD": {
+                          "enabled": false
+                        },
+                        "artist:WKcJ3K": {
+                          "content": "2"
+                        }
+                      }
+                    },
+                    "artist:8xRVMN": {
+                      "type": "ref",
+                      "id": "I4xDsm",
+                      "ref": "artist:UwhrWM",
+                      "name": "Line"
+                    },
+                    "artist:xFbfUz": {
+                      "type": "ref",
+                      "id": "mbKhXp",
+                      "ref": "artist:yt6l2d",
+                      "name": "Step / Deliver",
+                      "descendants": {
+                        "artist:RGfqPD": {
+                          "enabled": false
+                        },
+                        "artist:WKcJ3K": {
+                          "content": "3"
+                        }
+                      }
+                    },
+                    "artist:sz4Zdv": {
+                      "type": "ref",
+                      "id": "cOV5Ka",
+                      "ref": "artist:UwhrWM",
+                      "name": "Line"
+                    },
+                    "artist:vCRs52": {
+                      "type": "ref",
+                      "id": "qO0MYE",
+                      "ref": "artist:yt6l2d",
+                      "name": "Step / Launch",
+                      "descendants": {
+                        "artist:RGfqPD": {
+                          "enabled": false
+                        },
+                        "artist:WKcJ3K": {
+                          "content": "4"
+                        }
+                      }
+                    },
+                    "artist:sKFrPn": {
+                      "type": "ref",
+                      "id": "Dal54f",
+                      "ref": "artist:UwhrWM",
+                      "name": "Line"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "p8cVpm",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / Release timing",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "icon": "calendar-days"
+                    },
+                    "artist:EZZdAr": {
+                      "content": "Release timing"
+                    },
+                    "artist:lICt0a": {
+                      "enabled": false
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "d6uTCW",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "faBbyq",
+                          "ref": "artist:RoXXJv",
+                          "name": "Dec 12, 2026, 18:00 UTC",
+                          "content": "Dec 12, 2026, 18:00 UTC"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "ixwgyZ",
+                          "ref": "artist:C5Ih8u",
+                          "name": "A premiere: it goes live at ",
+                          "width": "fill_container",
+                          "textGrowth": "fixed-width",
+                          "content": "A premiere: it goes live at this date and time."
+                        },
+                        {
+                          "type": "frame",
+                          "id": "Z1gA3Q",
+                          "name": "Action",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "BfjjYf",
+                              "ref": "artist:b74brg",
+                              "name": "Button / Edit timing",
+                              "descendants": {
+                                "artist:wUlRtb": {
+                                  "content": "Edit timing"
+                                },
+                                "artist:lPAI5m": {
+                                  "enabled": false
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "oNK2ER",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / Tracks (2)",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "icon": "list-music"
+                    },
+                    "artist:EZZdAr": {
+                      "content": "Tracks (2)"
+                    },
+                    "artist:lICt0a": {
+                      "type": "frame",
+                      "id": "ahRm9f",
+                      "name": "Right",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "8hP3nm",
+                          "ref": "artist:b74brg",
+                          "name": "Button / Upload track",
+                          "descendants": {
+                            "artist:wUlRtb": {
+                              "content": "Upload track"
+                            },
+                            "artist:lPAI5m": {
+                              "icon": "upload"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "UFND0H",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "CQwpkf",
+                          "ref": "artist:C5Ih8u",
+                          "name": "Recordings in this release, ",
+                          "width": "fill_container",
+                          "textGrowth": "fixed-width",
+                          "content": "Recordings in this release, in running order. Uploaded audio stays private."
+                        },
+                        {
+                          "type": "ref",
+                          "id": "z4OSQZ",
+                          "ref": "artist:xq6UeK",
+                          "name": "Track / Night Signal",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:iWLEnS": {
+                              "content": "1"
+                            },
+                            "artist:kFWA4L": {
+                              "enabled": false
+                            },
+                            "artist:F6WFjQ": {
+                              "content": "Night Signal"
+                            },
+                            "artist:AIiyVE": {
+                              "content": "Original · 3:42 · ISRC GB-BTR-26-00012"
+                            },
+                            "artist:nitNWI": {
+                              "enabled": false
+                            },
+                            "artist:infYci": {
+                              "content": "Audio uploaded"
+                            },
+                            "artist:YnErnT": {
+                              "enabled": false
+                            },
+                            "artist:3kjx8C": {
+                              "content": "Genres: Synthwave, Electronic"
+                            },
+                            "artist:slLUry": {
+                              "type": "frame",
+                              "id": "3s5dKt",
+                              "name": "Status",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "BGwknL",
+                                  "ref": "artist:fSHiZY",
+                                  "name": "Status / Ready",
+                                  "descendants": {
+                                    "artist:wuogNV": {
+                                      "content": "Ready"
+                                    }
+                                  }
+                                }
+                              ]
+                            },
+                            "artist:6G2fpk": {
+                              "type": "frame",
+                              "id": "MYL3Dk",
+                              "name": "Player",
+                              "layout": "vertical",
+                              "gap": 0,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "IcgboR",
+                                  "ref": "artist:mrbasA",
+                                  "name": "Track player",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:ZMtIRc": {
+                                      "content": "Night Signal"
+                                    }
+                                  }
+                                }
+                              ]
+                            },
+                            "artist:735Ao6": {
+                              "type": "frame",
+                              "id": "RkfD9w",
+                              "name": "Actions",
+                              "layout": "vertical",
+                              "gap": 6,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "ZkrzEx",
+                                  "name": "Actions 1",
+                                  "gap": 6,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "bmUqFr",
+                                      "ref": "artist:b74brg",
+                                      "name": "Button / Replace audio",
+                                      "descendants": {
+                                        "artist:wUlRtb": {
+                                          "content": "Replace audio"
+                                        },
+                                        "artist:lPAI5m": {
+                                          "enabled": false
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "8kzksB",
+                                      "ref": "artist:b74brg",
+                                      "name": "Button / Rename",
+                                      "descendants": {
+                                        "artist:wUlRtb": {
+                                          "content": "Rename"
+                                        },
+                                        "artist:lPAI5m": {
+                                          "enabled": false
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "rHzGC9",
+                                      "ref": "artist:b74brg",
+                                      "name": "Button / Genres",
+                                      "descendants": {
+                                        "artist:wUlRtb": {
+                                          "content": "Genres"
+                                        },
+                                        "artist:lPAI5m": {
+                                          "enabled": false
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "cJNNpv",
+                                  "name": "Actions 2",
+                                  "gap": 6,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "IfZGYM",
+                                      "ref": "artist:b74brg",
+                                      "name": "Button / ISRC",
+                                      "descendants": {
+                                        "artist:wUlRtb": {
+                                          "content": "ISRC"
+                                        },
+                                        "artist:lPAI5m": {
+                                          "enabled": false
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "DdZ2Vc",
+                                      "ref": "artist:IgRCaZ",
+                                      "name": "Button / Remove",
+                                      "descendants": {
+                                        "artist:dzRHMf": {
+                                          "content": "Remove"
+                                        },
+                                        "artist:oFQA10": {
+                                          "enabled": false
+                                        }
+                                      }
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "wylnEf",
+                          "ref": "artist:xq6UeK",
+                          "name": "Track / Low Tide",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:iWLEnS": {
+                              "content": "2"
+                            },
+                            "artist:kFWA4L": {
+                              "enabled": false
+                            },
+                            "artist:F6WFjQ": {
+                              "content": "Low Tide"
+                            },
+                            "artist:AIiyVE": {
+                              "content": "Original · Duration unavailable · No ISRC yet"
+                            },
+                            "artist:nitNWI": {},
+                            "artist:infYci": {
+                              "content": "No audio uploaded"
+                            },
+                            "artist:YnErnT": {},
+                            "artist:3kjx8C": {
+                              "content": "Genres: No genre yet"
+                            },
+                            "artist:slLUry": {
+                              "type": "frame",
+                              "id": "aEuB7J",
+                              "name": "Status",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "4iQ9Hq",
+                                  "ref": "artist:LUaCU2",
+                                  "name": "Status / Draft",
+                                  "descendants": {
+                                    "artist:mtpREt": {
+                                      "content": "Draft"
+                                    }
+                                  }
+                                }
+                              ]
+                            },
+                            "artist:6G2fpk": {
+                              "enabled": false
+                            },
+                            "artist:735Ao6": {
+                              "type": "frame",
+                              "id": "yvCvl2",
+                              "name": "Actions",
+                              "layout": "vertical",
+                              "gap": 6,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "clWWO9",
+                                  "name": "Actions 1",
+                                  "gap": 6,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "U3eoWJ",
+                                      "ref": "artist:b74brg",
+                                      "name": "Button / Upload audio",
+                                      "descendants": {
+                                        "artist:wUlRtb": {
+                                          "content": "Upload audio"
+                                        },
+                                        "artist:lPAI5m": {
+                                          "enabled": false
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "NDpwnY",
+                                      "ref": "artist:b74brg",
+                                      "name": "Button / Rename",
+                                      "descendants": {
+                                        "artist:wUlRtb": {
+                                          "content": "Rename"
+                                        },
+                                        "artist:lPAI5m": {
+                                          "enabled": false
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "KQtbq3",
+                                      "ref": "artist:b74brg",
+                                      "name": "Button / Genres",
+                                      "descendants": {
+                                        "artist:wUlRtb": {
+                                          "content": "Genres"
+                                        },
+                                        "artist:lPAI5m": {
+                                          "enabled": false
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "1PS0vQ",
+                                  "name": "Actions 2",
+                                  "gap": 6,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "d64JOt",
+                                      "ref": "artist:b74brg",
+                                      "name": "Button / ISRC",
+                                      "descendants": {
+                                        "artist:wUlRtb": {
+                                          "content": "ISRC"
+                                        },
+                                        "artist:lPAI5m": {
+                                          "enabled": false
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "8uDzLp",
+                                      "ref": "artist:IgRCaZ",
+                                      "name": "Button / Remove",
+                                      "descendants": {
+                                        "artist:dzRHMf": {
+                                          "content": "Remove"
+                                        },
+                                        "artist:oFQA10": {
+                                          "enabled": false
+                                        }
+                                      }
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "j1Tzgk",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / Credits & splits (2)",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "icon": "users-round"
+                    },
+                    "artist:EZZdAr": {
+                      "content": "Credits & splits (2)"
+                    },
+                    "artist:lICt0a": {
+                      "type": "frame",
+                      "id": "7TI3eP",
+                      "name": "Right",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "X1CwCc",
+                          "ref": "artist:spoluO",
+                          "name": "Button / Edit splits",
+                          "descendants": {
+                            "artist:degIxI": {
+                              "content": "Edit splits"
+                            },
+                            "artist:gE2vVp": {
+                              "enabled": false
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "5BBPUP",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "lUwUKI",
+                          "ref": "artist:C5Ih8u",
+                          "name": "Who made this release, what ",
+                          "width": "fill_container",
+                          "textGrowth": "fixed-width",
+                          "content": "Who made this release, what they did, and their share of the master (the recording)."
+                        },
+                        {
+                          "type": "ref",
+                          "id": "uAma6T",
+                          "ref": "artist:KETYDX",
+                          "name": "Split total",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:j3vLSf": {
+                              "content": "Master 75% of 100%"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "xlup8L",
+                          "ref": "artist:5poXJi",
+                          "name": "Credit / Mira Sol",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:lIARtV/artist:KrLGr1": {
+                              "content": "MS"
+                            },
+                            "artist:meqs3A": {
+                              "content": "Mira Sol"
+                            },
+                            "artist:hsPERg": {
+                              "content": "Performer · Producer · Master 75%"
+                            },
+                            "artist:BRwhKy": {
+                              "content": "75%"
+                            },
+                            "artist:ENazr5": {
+                              "type": "frame",
+                              "id": "NqhrKv",
+                              "name": "Actions",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "Bnvq57",
+                                  "ref": "artist:Zm2T39",
+                                  "name": "Edit",
+                                  "width": 30,
+                                  "height": 30,
+                                  "descendants": {
+                                    "artist:hwGaeO": {
+                                      "icon": "pencil"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "Ml8YId",
+                                  "ref": "artist:Zm2T39",
+                                  "name": "Remove",
+                                  "width": 30,
+                                  "height": 30,
+                                  "descendants": {
+                                    "artist:hwGaeO": {
+                                      "icon": "trash-2"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "ATMsPT",
+                          "ref": "artist:IW7JEb",
+                          "name": "Credit / Kite Harbor",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:68xDVA/artist:KrLGr1": {
+                              "content": "KH"
+                            },
+                            "artist:NngCkF": {
+                              "content": "Kite Harbor"
+                            },
+                            "artist:IH60x6": {
+                              "content": "Needs role · No roles specified — Assign at least one role."
+                            },
+                            "artist:YqxzFZ": {
+                              "content": "0%"
+                            },
+                            "artist:3NEeCv": {
+                              "type": "frame",
+                              "id": "PKGUr7",
+                              "name": "Actions",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "3zXUu3",
+                                  "ref": "artist:spoluO",
+                                  "name": "Button / Edit roles",
+                                  "descendants": {
+                                    "artist:degIxI": {
+                                      "content": "Edit roles"
+                                    },
+                                    "artist:gE2vVp": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "eDFxGs",
+                                  "ref": "artist:Zm2T39",
+                                  "name": "Remove",
+                                  "width": 30,
+                                  "height": 30,
+                                  "descendants": {
+                                    "artist:hwGaeO": {
+                                      "icon": "trash-2"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "frame",
+                          "id": "D8AWbm",
+                          "name": "Add",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "9kKfLB",
+                              "ref": "artist:b74brg",
+                              "name": "Button / Add contributor",
+                              "descendants": {
+                                "artist:wUlRtb": {
+                                  "content": "Add contributor"
+                                },
+                                "artist:lPAI5m": {
+                                  "icon": "user-plus"
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "QaKjjA",
+                          "ref": "artist:PiqhAO",
+                          "name": "Credits do not grant workspa",
+                          "width": "fill_container",
+                          "textGrowth": "fixed-width",
+                          "content": "Credits do not grant workspace access. Each split must reach exactly 100% before review."
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "gga6ty",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / Rights",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "icon": "shield-check"
+                    },
+                    "artist:EZZdAr": {
+                      "content": "Rights"
+                    },
+                    "artist:lICt0a": {
+                      "type": "frame",
+                      "id": "YtdiCM",
+                      "name": "Right",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "4JpPZf",
+                          "ref": "artist:spoluO",
+                          "name": "Button / Edit rights",
+                          "descendants": {
+                            "artist:degIxI": {
+                              "content": "Edit rights"
+                            },
+                            "artist:gE2vVp": {
+                              "enabled": false
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "elnVFb",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "SiaRZT",
+                          "ref": "artist:C5Ih8u",
+                          "name": "Who owns the recording.",
+                          "width": "fill_container",
+                          "textGrowth": "fixed-width",
+                          "content": "Who owns the recording."
+                        },
+                        {
+                          "type": "ref",
+                          "id": "HIGxIB",
+                          "ref": "artist:frVTtE",
+                          "name": "Master owner",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:cwpJf5": {
+                              "content": "Master owner not chosen (not confirmed)"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "Wpvwf6",
+                          "ref": "artist:SOt7Oe",
+                          "name": "Identifiers · optional",
+                          "content": "Identifiers · optional"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "Tl0wDc",
+                          "name": "UPC",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "lqHm42",
+                              "ref": "artist:P2oa0L",
+                              "name": "UPC/EAN: Not provided",
+                              "width": "fill_container",
+                              "textGrowth": "fixed-width",
+                              "content": "UPC/EAN: Not provided"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "oBXjAv",
+                              "ref": "artist:pZcyuZ",
+                              "name": "Edit UPC",
+                              "content": "Edit UPC"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "yu3Zcw",
+                          "ref": "artist:PiqhAO",
+                          "name": "Store barcodes and track ISR",
+                          "width": "fill_container",
+                          "textGrowth": "fixed-width",
+                          "content": "Store barcodes and track ISRCs are optional here; each track's ISRC is set in Tracks."
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "3miwpu",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / Readiness checklist",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "icon": "list-checks"
+                    },
+                    "artist:EZZdAr": {
+                      "content": "Readiness checklist"
+                    },
+                    "artist:lICt0a": {
+                      "type": "frame",
+                      "id": "N8KHoh",
+                      "name": "Right",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "fdc1Kk",
+                          "ref": "artist:SOt7Oe",
+                          "name": "3 of 6 ready",
+                          "content": "3 of 6 ready"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "c1RjHQ",
+                          "ref": "artist:Zm2T39",
+                          "name": "Toggle",
+                          "width": 30,
+                          "height": 30,
+                          "descendants": {
+                            "artist:hwGaeO": {
+                              "icon": "chevron-down"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "Zsjzr6",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "0TfKqq",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / Danger zone",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "enabled": false
+                    },
+                    "artist:EZZdAr": {
+                      "content": "Danger zone"
+                    },
+                    "artist:lICt0a": {
+                      "enabled": false
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "4hRGIR",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "AEBGjv",
+                          "ref": "artist:C5Ih8u",
+                          "name": "Delete this release from you",
+                          "width": "fill_container",
+                          "textGrowth": "fixed-width",
+                          "content": "Delete this release from your workspace and the player. Recordings used by another release remain available. This cannot be undone."
+                        },
+                        {
+                          "type": "ref",
+                          "id": "vedRBf",
+                          "ref": "artist:tZL23p",
+                          "name": "Button / Delete release",
+                          "descendants": {
+                            "artist:ciSEwh": {
+                              "content": "Delete release"
+                            },
+                            "artist:ZXzRgY": {
+                              "icon": "trash-2"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 5600,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Dim"
+      },
+      "context": "/dashboard/music/$releaseId?step=draft — Where a release is prepared. The checklist links each item to its panel; nothing here publishes or delivers the release."
+    },
+    {
+      "type": "frame",
       "id": "xXfqx9",
       "name": "Artist / Release — Draft / Checklist open / Mobile",
       "width": 390,
@@ -7122,7 +9432,7 @@
           }
         }
       ],
-      "x": 5110,
+      "x": 6090,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -8634,7 +10944,7 @@
           }
         }
       ],
-      "x": 5600,
+      "x": 6580,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -9811,7 +12121,7 @@
           }
         }
       ],
-      "x": 7140,
+      "x": 8120,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -10896,7 +13206,7 @@
           }
         }
       ],
-      "x": 7630,
+      "x": 8610,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -11615,7 +13925,7 @@
           }
         }
       ],
-      "x": 9170,
+      "x": 10150,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -12700,7 +15010,7 @@
           }
         }
       ],
-      "x": 9660,
+      "x": 10640,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -13419,7 +15729,7 @@
           }
         }
       ],
-      "x": 11200,
+      "x": 12180,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -14934,7 +17244,7 @@
           }
         }
       ],
-      "x": 11690,
+      "x": 12670,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -16101,7 +18411,7 @@
           }
         }
       ],
-      "x": 13230,
+      "x": 14210,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -17168,7 +19478,7 @@
           }
         }
       ],
-      "x": 13720,
+      "x": 14700,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -17999,7 +20309,7 @@
           }
         }
       ],
-      "x": 15260,
+      "x": 16240,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -19066,7 +21376,7 @@
           }
         }
       ],
-      "x": 15750,
+      "x": 16730,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -19897,7 +22207,7 @@
           }
         }
       ],
-      "x": 17290,
+      "x": 18270,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -20964,7 +23274,7 @@
           }
         }
       ],
-      "x": 17780,
+      "x": 18760,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -21795,7 +24105,7 @@
           }
         }
       ],
-      "x": 19320,
+      "x": 20300,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -22844,7 +25154,7 @@
           }
         }
       ],
-      "x": 19810,
+      "x": 20790,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -23671,7 +25981,7 @@
           }
         }
       ],
-      "x": 21350,
+      "x": 22330,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -24804,7 +27114,7 @@
           }
         }
       ],
-      "x": 21840,
+      "x": 22820,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -25724,7 +28034,7 @@
           }
         }
       ],
-      "x": 23380,
+      "x": 24360,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -25911,7 +28221,7 @@
           }
         }
       ],
-      "x": 23870,
+      "x": 24850,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -26061,7 +28371,7 @@
           }
         }
       ],
-      "x": 25410,
+      "x": 26390,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -26278,7 +28588,7 @@
           }
         }
       ],
-      "x": 25900,
+      "x": 26880,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -26458,7 +28768,7 @@
           }
         }
       ],
-      "x": 27440,
+      "x": 28420,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -26885,7 +29195,7 @@
           }
         }
       ],
-      "x": 27930,
+      "x": 28910,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -27269,7 +29579,7 @@
           }
         }
       ],
-      "x": 29470,
+      "x": 30450,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -27729,7 +30039,7 @@
           }
         }
       ],
-      "x": 29960,
+      "x": 30940,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -28146,7 +30456,7 @@
           }
         }
       ],
-      "x": 31500,
+      "x": 32480,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -28574,7 +30884,7 @@
           }
         }
       ],
-      "x": 31990,
+      "x": 32970,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -28959,7 +31269,7 @@
           }
         }
       ],
-      "x": 33530,
+      "x": 34510,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -29418,7 +31728,7 @@
           }
         }
       ],
-      "x": 34020,
+      "x": 35000,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -29834,7 +32144,7 @@
           }
         }
       ],
-      "x": 35560,
+      "x": 36540,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -30293,7 +32603,7 @@
           }
         }
       ],
-      "x": 36050,
+      "x": 37030,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -30709,7 +33019,7 @@
           }
         }
       ],
-      "x": 37590,
+      "x": 38570,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -31137,7 +33447,7 @@
           }
         }
       ],
-      "x": 38080,
+      "x": 39060,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -31522,7 +33832,7 @@
           }
         }
       ],
-      "x": 39620,
+      "x": 40600,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -31992,7 +34302,7 @@
           }
         }
       ],
-      "x": 40110,
+      "x": 41090,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -32419,7 +34729,7 @@
           }
         }
       ],
-      "x": 41650,
+      "x": 42630,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -32863,7 +35173,7 @@
           }
         }
       ],
-      "x": 42140,
+      "x": 43120,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -33264,7 +35574,7 @@
           }
         }
       ],
-      "x": 43680,
+      "x": 44660,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -33667,7 +35977,7 @@
           }
         }
       ],
-      "x": 44170,
+      "x": 45150,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -34027,7 +36337,7 @@
           }
         }
       ],
-      "x": 45710,
+      "x": 46690,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -34442,7 +36752,7 @@
           }
         }
       ],
-      "x": 46200,
+      "x": 47180,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -34814,7 +37124,7 @@
           }
         }
       ],
-      "x": 47740,
+      "x": 48720,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -35316,7 +37626,7 @@
           }
         }
       ],
-      "x": 48230,
+      "x": 49210,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -35775,7 +38085,7 @@
           }
         }
       ],
-      "x": 49770,
+      "x": 50750,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -36172,7 +38482,7 @@
           }
         }
       ],
-      "x": 50260,
+      "x": 51240,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -36526,7 +38836,7 @@
           }
         }
       ],
-      "x": 51800,
+      "x": 52780,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -37029,7 +39339,7 @@
           }
         }
       ],
-      "x": 52290,
+      "x": 53270,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -37498,7 +39808,7 @@
           }
         }
       ],
-      "x": 53830,
+      "x": 54810,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -38003,7 +40313,7 @@
           }
         }
       ],
-      "x": 54320,
+      "x": 55300,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -38474,7 +40784,7 @@
           }
         }
       ],
-      "x": 55860,
+      "x": 56840,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -38857,7 +41167,7 @@
           }
         }
       ],
-      "x": 56350,
+      "x": 57330,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -39197,7 +41507,7 @@
           }
         }
       ],
-      "x": 57890,
+      "x": 58870,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -39580,7 +41890,7 @@
           }
         }
       ],
-      "x": 58380,
+      "x": 59360,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -39920,7 +42230,7 @@
           }
         }
       ],
-      "x": 59920,
+      "x": 60900,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -40317,7 +42627,7 @@
           }
         }
       ],
-      "x": 60410,
+      "x": 61390,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -40671,7 +42981,7 @@
           }
         }
       ],
-      "x": 61950,
+      "x": 62930,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -41068,7 +43378,7 @@
           }
         }
       ],
-      "x": 62440,
+      "x": 63420,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -41422,7 +43732,7 @@
           }
         }
       ],
-      "x": 63980,
+      "x": 64960,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -41890,7 +44200,7 @@
           }
         }
       ],
-      "x": 64470,
+      "x": 65450,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -42315,7 +44625,7 @@
           }
         }
       ],
-      "x": 66010,
+      "x": 66990,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -42797,7 +45107,7 @@
           }
         }
       ],
-      "x": 66500,
+      "x": 67480,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -43236,7 +45546,7 @@
           }
         }
       ],
-      "x": 68040,
+      "x": 69020,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -43681,7 +45991,7 @@
           }
         }
       ],
-      "x": 68530,
+      "x": 69510,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -44083,7 +46393,7 @@
           }
         }
       ],
-      "x": 70070,
+      "x": 71050,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -44498,7 +46808,7 @@
           }
         }
       ],
-      "x": 70560,
+      "x": 71540,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -44870,7 +47180,7 @@
           }
         }
       ],
-      "x": 72100,
+      "x": 73080,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -45367,7 +47677,7 @@
           }
         }
       ],
-      "x": 72590,
+      "x": 73570,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -45821,7 +48131,7 @@
           }
         }
       ],
-      "x": 74130,
+      "x": 75110,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -46272,7 +48582,7 @@
           }
         }
       ],
-      "x": 74620,
+      "x": 75600,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -46680,7 +48990,7 @@
           }
         }
       ],
-      "x": 76160,
+      "x": 77140,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -47077,7 +49387,7 @@
           }
         }
       ],
-      "x": 76650,
+      "x": 77630,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -47431,7 +49741,7 @@
           }
         }
       ],
-      "x": 78190,
+      "x": 79170,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"

@@ -1964,6 +1964,892 @@
     },
     {
       "type": "frame",
+      "id": "WVOG4p",
+      "name": "Artist / Release — Review / Mobile / Light",
+      "width": 390,
+      "height": "fit_content",
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "mSL8gQ",
+          "ref": "artist:8H12ea",
+          "name": "Shell",
+          "width": 390,
+          "descendants": {
+            "artist:SIErRw": {
+              "type": "frame",
+              "id": "1fSzLu",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 16,
+              "width": "fill_container",
+              "padding": [
+                12,
+                16,
+                40,
+                16
+              ],
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "LEise1",
+                  "ref": "artist:pZcyuZ",
+                  "name": "Back to music",
+                  "content": "Back to music"
+                },
+                {
+                  "type": "ref",
+                  "id": "IBC321",
+                  "ref": "artist:3i5VmQ",
+                  "name": "Release Header",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:9VATYo": {
+                      "fill": {
+                        "type": "image",
+                        "url": "../../web-player-design/design-system/assets/albums/album-night-signal.webp",
+                        "mode": "cover"
+                      }
+                    },
+                    "artist:sDexPU": {
+                      "content": "Night Signal"
+                    },
+                    "artist:ppaWQZ": {
+                      "content": "Mira Sol · Single · 2 tracks"
+                    },
+                    "artist:YPrwtY": {
+                      "type": "ref",
+                      "id": "mKySYs",
+                      "ref": "artist:LUaCU2",
+                      "name": "Status / Draft",
+                      "descendants": {
+                        "artist:mtpREt": {
+                          "content": "Draft"
+                        },
+                        "artist:jPj56V": {
+                          "icon": "pencil-line"
+                        }
+                      }
+                    },
+                    "artist:98bElk": {
+                      "type": "frame",
+                      "id": "W7Rq71",
+                      "name": "Countdown",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "eerFrF",
+                          "ref": "artist:64DlLz",
+                          "name": "Countdown"
+                        }
+                      ]
+                    },
+                    "artist:v26Lkv": {
+                      "content": "Finish preparing your release"
+                    },
+                    "artist:KhPSdx": {
+                      "content": "3 items are left before Bitrate review."
+                    },
+                    "artist:l2GFpx/artist:vg489O": {
+                      "content": "Continue"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "1vvXRS",
+                  "ref": "artist:3MLJnC",
+                  "name": "Stepper",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:dmJtwL": {
+                      "type": "ref",
+                      "id": "IgD4Eu",
+                      "ref": "artist:HpcQmo",
+                      "name": "Step / Draft",
+                      "descendants": {
+                        "artist:sHNwKv": {
+                          "content": "Draft"
+                        },
+                        "artist:LlXoM9": {
+                          "content": "1"
+                        }
+                      }
+                    },
+                    "artist:pVFGWy": {
+                      "type": "ref",
+                      "id": "pVj3Cp",
+                      "ref": "artist:yt6l2d",
+                      "name": "Step / Review",
+                      "descendants": {
+                        "artist:RGfqPD": {
+                          "enabled": false
+                        },
+                        "artist:WKcJ3K": {
+                          "content": "2"
+                        }
+                      }
+                    },
+                    "artist:8xRVMN": {
+                      "type": "ref",
+                      "id": "f6RGDj",
+                      "ref": "artist:UwhrWM",
+                      "name": "Line"
+                    },
+                    "artist:xFbfUz": {
+                      "type": "ref",
+                      "id": "fOCsBR",
+                      "ref": "artist:yt6l2d",
+                      "name": "Step / Deliver",
+                      "descendants": {
+                        "artist:RGfqPD": {
+                          "enabled": false
+                        },
+                        "artist:WKcJ3K": {
+                          "content": "3"
+                        }
+                      }
+                    },
+                    "artist:sz4Zdv": {
+                      "type": "ref",
+                      "id": "nZuQ2v",
+                      "ref": "artist:UwhrWM",
+                      "name": "Line"
+                    },
+                    "artist:vCRs52": {
+                      "type": "ref",
+                      "id": "BH0Fsw",
+                      "ref": "artist:yt6l2d",
+                      "name": "Step / Launch",
+                      "descendants": {
+                        "artist:RGfqPD": {
+                          "enabled": false
+                        },
+                        "artist:WKcJ3K": {
+                          "content": "4"
+                        }
+                      }
+                    },
+                    "artist:sKFrPn": {
+                      "type": "ref",
+                      "id": "kXx4t4",
+                      "ref": "artist:UwhrWM",
+                      "name": "Line"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "29hQ02",
+                  "ref": "artist:SzsXEg",
+                  "name": "Not submitted yet",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:qzI62y": {
+                      "icon": "send"
+                    },
+                    "artist:rJV0pM": {
+                      "content": "Not submitted yet"
+                    },
+                    "artist:aTvRg2": {
+                      "content": "Bitrate review starts when you submit the draft. Feedback and the decision appear here.",
+                      "width": "fill_container"
+                    },
+                    "artist:fUtlIB": {
+                      "enabled": false
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "9NybCs",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / Release readiness",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "icon": "list-checks"
+                    },
+                    "artist:EZZdAr": {
+                      "content": "Release readiness"
+                    },
+                    "artist:lICt0a": {
+                      "enabled": false
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "H5uvMl",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "TLK1fI",
+                          "ref": "artist:gGZXg7",
+                          "name": "Check / Artwork",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:BJt2Mo": {
+                              "content": "Artwork"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "0AiHJK",
+                          "ref": "artist:frVTtE",
+                          "name": "Check / Tracks and audio",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:cwpJf5": {
+                              "content": "Tracks and audio"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "HqlwnZ",
+                          "ref": "artist:frVTtE",
+                          "name": "Check / Credits & splits",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:cwpJf5": {
+                              "content": "Credits & splits"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "AcBGcF",
+                          "ref": "artist:frVTtE",
+                          "name": "Check / Rights",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:cwpJf5": {
+                              "content": "Rights"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "ZV4LBz",
+                          "ref": "artist:WHXSr6",
+                          "name": "Button / Back to the draft",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:vg489O": {
+                              "content": "Back to the draft"
+                            },
+                            "artist:wAdYtR": {
+                              "enabled": false
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "2Gp3Bj",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / Danger zone",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "enabled": false
+                    },
+                    "artist:EZZdAr": {
+                      "content": "Danger zone"
+                    },
+                    "artist:lICt0a": {
+                      "enabled": false
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "oEXv4e",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "sTQDkF",
+                          "ref": "artist:C5Ih8u",
+                          "name": "Delete this release from you",
+                          "width": "fill_container",
+                          "textGrowth": "fixed-width",
+                          "content": "Delete this release from your workspace and the player. Recordings used by another release remain available. This cannot be undone."
+                        },
+                        {
+                          "type": "ref",
+                          "id": "xvFylb",
+                          "ref": "artist:tZL23p",
+                          "name": "Button / Delete release",
+                          "descendants": {
+                            "artist:ciSEwh": {
+                              "content": "Delete release"
+                            },
+                            "artist:ZXzRgY": {
+                              "icon": "trash-2"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 5110,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Light"
+      },
+      "context": "/dashboard/music/$releaseId?step=review — Bitrate review of the release. Submitting only requests review; nothing reaches stores from here."
+    },
+    {
+      "type": "frame",
+      "id": "S4D57a",
+      "name": "Artist / Release — Review / Mobile / Dim",
+      "width": 390,
+      "height": "fit_content",
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "iJOBu8",
+          "ref": "artist:8H12ea",
+          "name": "Shell",
+          "width": 390,
+          "descendants": {
+            "artist:SIErRw": {
+              "type": "frame",
+              "id": "ZljI72",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 16,
+              "width": "fill_container",
+              "padding": [
+                12,
+                16,
+                40,
+                16
+              ],
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "n8R3mj",
+                  "ref": "artist:pZcyuZ",
+                  "name": "Back to music",
+                  "content": "Back to music"
+                },
+                {
+                  "type": "ref",
+                  "id": "qse3PG",
+                  "ref": "artist:3i5VmQ",
+                  "name": "Release Header",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:9VATYo": {
+                      "fill": {
+                        "type": "image",
+                        "url": "../../web-player-design/design-system/assets/albums/album-night-signal.webp",
+                        "mode": "cover"
+                      }
+                    },
+                    "artist:sDexPU": {
+                      "content": "Night Signal"
+                    },
+                    "artist:ppaWQZ": {
+                      "content": "Mira Sol · Single · 2 tracks"
+                    },
+                    "artist:YPrwtY": {
+                      "type": "ref",
+                      "id": "6AfnjG",
+                      "ref": "artist:LUaCU2",
+                      "name": "Status / Draft",
+                      "descendants": {
+                        "artist:mtpREt": {
+                          "content": "Draft"
+                        },
+                        "artist:jPj56V": {
+                          "icon": "pencil-line"
+                        }
+                      }
+                    },
+                    "artist:98bElk": {
+                      "type": "frame",
+                      "id": "W5I0OP",
+                      "name": "Countdown",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "UVoYJN",
+                          "ref": "artist:64DlLz",
+                          "name": "Countdown"
+                        }
+                      ]
+                    },
+                    "artist:v26Lkv": {
+                      "content": "Finish preparing your release"
+                    },
+                    "artist:KhPSdx": {
+                      "content": "3 items are left before Bitrate review."
+                    },
+                    "artist:l2GFpx/artist:vg489O": {
+                      "content": "Continue"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "7HqZ4r",
+                  "ref": "artist:3MLJnC",
+                  "name": "Stepper",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:dmJtwL": {
+                      "type": "ref",
+                      "id": "eD2UPC",
+                      "ref": "artist:HpcQmo",
+                      "name": "Step / Draft",
+                      "descendants": {
+                        "artist:sHNwKv": {
+                          "content": "Draft"
+                        },
+                        "artist:LlXoM9": {
+                          "content": "1"
+                        }
+                      }
+                    },
+                    "artist:pVFGWy": {
+                      "type": "ref",
+                      "id": "ByZopj",
+                      "ref": "artist:yt6l2d",
+                      "name": "Step / Review",
+                      "descendants": {
+                        "artist:RGfqPD": {
+                          "enabled": false
+                        },
+                        "artist:WKcJ3K": {
+                          "content": "2"
+                        }
+                      }
+                    },
+                    "artist:8xRVMN": {
+                      "type": "ref",
+                      "id": "tO8X4K",
+                      "ref": "artist:UwhrWM",
+                      "name": "Line"
+                    },
+                    "artist:xFbfUz": {
+                      "type": "ref",
+                      "id": "bxuf2g",
+                      "ref": "artist:yt6l2d",
+                      "name": "Step / Deliver",
+                      "descendants": {
+                        "artist:RGfqPD": {
+                          "enabled": false
+                        },
+                        "artist:WKcJ3K": {
+                          "content": "3"
+                        }
+                      }
+                    },
+                    "artist:sz4Zdv": {
+                      "type": "ref",
+                      "id": "xFB4kd",
+                      "ref": "artist:UwhrWM",
+                      "name": "Line"
+                    },
+                    "artist:vCRs52": {
+                      "type": "ref",
+                      "id": "bh1lZd",
+                      "ref": "artist:yt6l2d",
+                      "name": "Step / Launch",
+                      "descendants": {
+                        "artist:RGfqPD": {
+                          "enabled": false
+                        },
+                        "artist:WKcJ3K": {
+                          "content": "4"
+                        }
+                      }
+                    },
+                    "artist:sKFrPn": {
+                      "type": "ref",
+                      "id": "YK0DLQ",
+                      "ref": "artist:UwhrWM",
+                      "name": "Line"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "2w4cir",
+                  "ref": "artist:SzsXEg",
+                  "name": "Not submitted yet",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:qzI62y": {
+                      "icon": "send"
+                    },
+                    "artist:rJV0pM": {
+                      "content": "Not submitted yet"
+                    },
+                    "artist:aTvRg2": {
+                      "content": "Bitrate review starts when you submit the draft. Feedback and the decision appear here.",
+                      "width": "fill_container"
+                    },
+                    "artist:fUtlIB": {
+                      "enabled": false
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "rXIGoE",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / Release readiness",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "icon": "list-checks"
+                    },
+                    "artist:EZZdAr": {
+                      "content": "Release readiness"
+                    },
+                    "artist:lICt0a": {
+                      "enabled": false
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "leMoEK",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "R04tVt",
+                          "ref": "artist:gGZXg7",
+                          "name": "Check / Artwork",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:BJt2Mo": {
+                              "content": "Artwork"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "2GY1vz",
+                          "ref": "artist:frVTtE",
+                          "name": "Check / Tracks and audio",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:cwpJf5": {
+                              "content": "Tracks and audio"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "3ZbXy1",
+                          "ref": "artist:frVTtE",
+                          "name": "Check / Credits & splits",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:cwpJf5": {
+                              "content": "Credits & splits"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "8j3YeG",
+                          "ref": "artist:frVTtE",
+                          "name": "Check / Rights",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:cwpJf5": {
+                              "content": "Rights"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "xFhgoy",
+                          "ref": "artist:WHXSr6",
+                          "name": "Button / Back to the draft",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:vg489O": {
+                              "content": "Back to the draft"
+                            },
+                            "artist:wAdYtR": {
+                              "enabled": false
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "wk8jXE",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / Danger zone",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "enabled": false
+                    },
+                    "artist:EZZdAr": {
+                      "content": "Danger zone"
+                    },
+                    "artist:lICt0a": {
+                      "enabled": false
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "G2w4vF",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "qhEACQ",
+                          "ref": "artist:C5Ih8u",
+                          "name": "Delete this release from you",
+                          "width": "fill_container",
+                          "textGrowth": "fixed-width",
+                          "content": "Delete this release from your workspace and the player. Recordings used by another release remain available. This cannot be undone."
+                        },
+                        {
+                          "type": "ref",
+                          "id": "lVDbQ1",
+                          "ref": "artist:tZL23p",
+                          "name": "Button / Delete release",
+                          "descendants": {
+                            "artist:ciSEwh": {
+                              "content": "Delete release"
+                            },
+                            "artist:ZXzRgY": {
+                              "icon": "trash-2"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 5600,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Dim"
+      },
+      "context": "/dashboard/music/$releaseId?step=review — Bitrate review of the release. Submitting only requests review; nothing reaches stores from here."
+    },
+    {
+      "type": "frame",
       "id": "ojlbg8",
       "name": "Artist / Release — Review / Ready to submit / Desktop",
       "width": 1440,
@@ -2460,7 +3346,7 @@
           }
         }
       ],
-      "x": 5110,
+      "x": 6090,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -2903,7 +3789,7 @@
           }
         }
       ],
-      "x": 6650,
+      "x": 7630,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -3534,7 +4420,7 @@
           }
         }
       ],
-      "x": 7140,
+      "x": 8120,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -4122,7 +5008,7 @@
           }
         }
       ],
-      "x": 8680,
+      "x": 9660,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -4752,7 +5638,7 @@
           }
         }
       ],
-      "x": 9170,
+      "x": 10150,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -5339,7 +6225,7 @@
           }
         }
       ],
-      "x": 10710,
+      "x": 11690,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -5969,7 +6855,7 @@
           }
         }
       ],
-      "x": 11200,
+      "x": 12180,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -6556,7 +7442,7 @@
           }
         }
       ],
-      "x": 12740,
+      "x": 13720,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -7179,7 +8065,7 @@
           }
         }
       ],
-      "x": 13230,
+      "x": 14210,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -7739,7 +8625,7 @@
           }
         }
       ],
-      "x": 14770,
+      "x": 15750,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -8362,7 +9248,7 @@
           }
         }
       ],
-      "x": 15260,
+      "x": 16240,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -8922,7 +9808,7 @@
           }
         }
       ],
-      "x": 16800,
+      "x": 17780,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -9418,7 +10304,7 @@
           }
         }
       ],
-      "x": 17290,
+      "x": 18270,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -9851,7 +10737,7 @@
           }
         }
       ],
-      "x": 18830,
+      "x": 19810,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -10347,7 +11233,7 @@
           }
         }
       ],
-      "x": 19320,
+      "x": 20300,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -10780,7 +11666,7 @@
           }
         }
       ],
-      "x": 20860,
+      "x": 21840,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -11256,7 +12142,7 @@
           }
         }
       ],
-      "x": 21350,
+      "x": 22330,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -11669,7 +12555,7 @@
           }
         }
       ],
-      "x": 22890,
+      "x": 23870,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"

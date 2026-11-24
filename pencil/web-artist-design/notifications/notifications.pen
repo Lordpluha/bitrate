@@ -1365,6 +1365,642 @@
     },
     {
       "type": "frame",
+      "id": "IzaRdl",
+      "name": "Artist / Notifications / Mobile / Light",
+      "width": 390,
+      "height": "fit_content",
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "gtoOkU",
+          "ref": "artist:8H12ea",
+          "name": "Shell",
+          "width": 390,
+          "descendants": {
+            "artist:SIErRw": {
+              "type": "frame",
+              "id": "9KtazJ",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 16,
+              "width": "fill_container",
+              "padding": [
+                12,
+                16,
+                40,
+                16
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "Xqvwoq",
+                  "name": "Popover Layer",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "end",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "zFPgI7",
+                      "ref": "artist:uzclqb",
+                      "name": "Notifications",
+                      "width": "fill_container",
+                      "descendants": {
+                        "artist:lyx6Qc": {
+                          "content": "Notifications"
+                        },
+                        "artist:pNQAL1": {
+                          "type": "frame",
+                          "id": "Rs6uSG",
+                          "name": "Items",
+                          "layout": "vertical",
+                          "gap": 12,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "NwFey9",
+                              "name": "Toolbar",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "width": "fill_container",
+                              "justifyContent": "space_between",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "pL3smE",
+                                  "ref": "artist:PiqhAO",
+                                  "name": "3 unread",
+                                  "content": "3 unread"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "qqQAsP",
+                                  "ref": "artist:spoluO",
+                                  "name": "Button / Mark all as read",
+                                  "descendants": {
+                                    "artist:degIxI": {
+                                      "content": "Mark all as read"
+                                    },
+                                    "artist:gE2vVp": {
+                                      "icon": "check-check"
+                                    }
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "Q1x3D7",
+                              "name": "Group / Action required",
+                              "layout": "vertical",
+                              "gap": 4,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "oDKOHc",
+                                  "ref": "artist:yjiPHo",
+                                  "name": "ACTION REQUIRED",
+                                  "content": "ACTION REQUIRED"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "fWLWO6",
+                                  "ref": "artist:3HUiFX",
+                                  "name": "Notification / The reviewer request",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:FvPL3P": {
+                                      "icon": "message-square-warning"
+                                    },
+                                    "artist:uV6tdX": {
+                                      "content": "The reviewer requested changes"
+                                    },
+                                    "artist:lWaM0F": {
+                                      "content": "Echoes in Motion · 2 h ago"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "wxD7PO",
+                                  "ref": "artist:3HUiFX",
+                                  "name": "Notification / Publishing failed — ",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:FvPL3P": {
+                                      "icon": "circle-alert"
+                                    },
+                                    "artist:uV6tdX": {
+                                      "content": "Publishing failed — Bitrate has been notified"
+                                    },
+                                    "artist:lWaM0F": {
+                                      "content": "Static Lines · 5 h ago"
+                                    }
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "x9K6Ku",
+                              "name": "Group / Updates",
+                              "layout": "vertical",
+                              "gap": 4,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "7S6EjW",
+                                  "ref": "artist:yjiPHo",
+                                  "name": "UPDATES",
+                                  "content": "UPDATES"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "i9LIyG",
+                                  "ref": "artist:EM9tTQ",
+                                  "name": "Notification / Approved by Bitrate ",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:EkqTa9": {
+                                      "icon": "badge-check"
+                                    },
+                                    "artist:rzaJAh": {
+                                      "content": "Approved by Bitrate review"
+                                    },
+                                    "artist:w4VRMa": {
+                                      "content": "Static Lines · Yesterday"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "nj3fZr",
+                                  "ref": "artist:l8lSoZ",
+                                  "name": "Notification / Submitted for Bitrat",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:rNkNk5": {
+                                      "icon": "clock-3"
+                                    },
+                                    "artist:OITOAV": {
+                                      "content": "Submitted for Bitrate review"
+                                    },
+                                    "artist:RRag4a": {
+                                      "content": "Echoes in Motion · Nov 20"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "oUt6K4",
+                                  "ref": "artist:l8lSoZ",
+                                  "name": "Notification / Live on Bitrate",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:rNkNk5": {
+                                      "icon": "radio"
+                                    },
+                                    "artist:OITOAV": {
+                                      "content": "Live on Bitrate"
+                                    },
+                                    "artist:RRag4a": {
+                                      "content": "Afterglow · Oct 3"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 5110,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Light"
+      },
+      "context": "popover from the header bell on every /dashboard page — Opens under the bell (its label counts the unread). Each item links to its release workspace; the dot marks unread items."
+    },
+    {
+      "type": "frame",
+      "id": "O2PaV6",
+      "name": "Artist / Notifications / Mobile / Dim",
+      "width": 390,
+      "height": "fit_content",
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "EYp3uq",
+          "ref": "artist:8H12ea",
+          "name": "Shell",
+          "width": 390,
+          "descendants": {
+            "artist:SIErRw": {
+              "type": "frame",
+              "id": "91KTBZ",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 16,
+              "width": "fill_container",
+              "padding": [
+                12,
+                16,
+                40,
+                16
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "BBGpWO",
+                  "name": "Popover Layer",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "end",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "dPQTxb",
+                      "ref": "artist:uzclqb",
+                      "name": "Notifications",
+                      "width": "fill_container",
+                      "descendants": {
+                        "artist:lyx6Qc": {
+                          "content": "Notifications"
+                        },
+                        "artist:pNQAL1": {
+                          "type": "frame",
+                          "id": "z0OzuJ",
+                          "name": "Items",
+                          "layout": "vertical",
+                          "gap": 12,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "TWUm4N",
+                              "name": "Toolbar",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "width": "fill_container",
+                              "justifyContent": "space_between",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "jU1d9e",
+                                  "ref": "artist:PiqhAO",
+                                  "name": "3 unread",
+                                  "content": "3 unread"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "ueFglN",
+                                  "ref": "artist:spoluO",
+                                  "name": "Button / Mark all as read",
+                                  "descendants": {
+                                    "artist:degIxI": {
+                                      "content": "Mark all as read"
+                                    },
+                                    "artist:gE2vVp": {
+                                      "icon": "check-check"
+                                    }
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "MD93N6",
+                              "name": "Group / Action required",
+                              "layout": "vertical",
+                              "gap": 4,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "S97JdS",
+                                  "ref": "artist:yjiPHo",
+                                  "name": "ACTION REQUIRED",
+                                  "content": "ACTION REQUIRED"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "N5EiDh",
+                                  "ref": "artist:3HUiFX",
+                                  "name": "Notification / The reviewer request",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:FvPL3P": {
+                                      "icon": "message-square-warning"
+                                    },
+                                    "artist:uV6tdX": {
+                                      "content": "The reviewer requested changes"
+                                    },
+                                    "artist:lWaM0F": {
+                                      "content": "Echoes in Motion · 2 h ago"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "u1UxE4",
+                                  "ref": "artist:3HUiFX",
+                                  "name": "Notification / Publishing failed — ",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:FvPL3P": {
+                                      "icon": "circle-alert"
+                                    },
+                                    "artist:uV6tdX": {
+                                      "content": "Publishing failed — Bitrate has been notified"
+                                    },
+                                    "artist:lWaM0F": {
+                                      "content": "Static Lines · 5 h ago"
+                                    }
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "P9xLM3",
+                              "name": "Group / Updates",
+                              "layout": "vertical",
+                              "gap": 4,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "hkwcEP",
+                                  "ref": "artist:yjiPHo",
+                                  "name": "UPDATES",
+                                  "content": "UPDATES"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "k8B04t",
+                                  "ref": "artist:EM9tTQ",
+                                  "name": "Notification / Approved by Bitrate ",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:EkqTa9": {
+                                      "icon": "badge-check"
+                                    },
+                                    "artist:rzaJAh": {
+                                      "content": "Approved by Bitrate review"
+                                    },
+                                    "artist:w4VRMa": {
+                                      "content": "Static Lines · Yesterday"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "19sKAk",
+                                  "ref": "artist:l8lSoZ",
+                                  "name": "Notification / Submitted for Bitrat",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:rNkNk5": {
+                                      "icon": "clock-3"
+                                    },
+                                    "artist:OITOAV": {
+                                      "content": "Submitted for Bitrate review"
+                                    },
+                                    "artist:RRag4a": {
+                                      "content": "Echoes in Motion · Nov 20"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "eyBZi6",
+                                  "ref": "artist:l8lSoZ",
+                                  "name": "Notification / Live on Bitrate",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:rNkNk5": {
+                                      "icon": "radio"
+                                    },
+                                    "artist:OITOAV": {
+                                      "content": "Live on Bitrate"
+                                    },
+                                    "artist:RRag4a": {
+                                      "content": "Afterglow · Oct 3"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 5600,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Dim"
+      },
+      "context": "popover from the header bell on every /dashboard page — Opens under the bell (its label counts the unread). Each item links to its release workspace; the dot marks unread items."
+    },
+    {
+      "type": "frame",
       "id": "QkCqwJ",
       "name": "Artist / Notifications / All caught up / Desktop",
       "width": 1440,
@@ -1689,7 +2325,7 @@
           }
         }
       ],
-      "x": 5110,
+      "x": 6090,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -1993,7 +2629,7 @@
           }
         }
       ],
-      "x": 6650,
+      "x": 7630,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -2349,7 +2985,7 @@
           }
         }
       ],
-      "x": 7140,
+      "x": 8120,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -2676,7 +3312,7 @@
           }
         }
       ],
-      "x": 8680,
+      "x": 9660,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -2895,7 +3531,7 @@
           }
         }
       ],
-      "x": 9170,
+      "x": 10150,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -3085,7 +3721,7 @@
           }
         }
       ],
-      "x": 10710,
+      "x": 11690,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -3314,7 +3950,7 @@
           }
         }
       ],
-      "x": 11200,
+      "x": 12180,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -3514,7 +4150,7 @@
           }
         }
       ],
-      "x": 12740,
+      "x": 13720,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -3740,7 +4376,7 @@
           }
         }
       ],
-      "x": 13230,
+      "x": 14210,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -3937,7 +4573,7 @@
           }
         }
       ],
-      "x": 14770,
+      "x": 15750,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"

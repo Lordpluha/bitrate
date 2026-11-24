@@ -2451,6 +2451,1140 @@
     },
     {
       "type": "frame",
+      "id": "3aO4xF",
+      "name": "Artist / Promotion profile / Mobile / Light",
+      "width": 390,
+      "height": "fit_content",
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "R7LV6F",
+          "ref": "artist:8H12ea",
+          "name": "Shell",
+          "width": 390,
+          "descendants": {
+            "artist:SIErRw": {
+              "type": "frame",
+              "id": "Y6mwQD",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 16,
+              "width": "fill_container",
+              "padding": [
+                12,
+                16,
+                40,
+                16
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "aKCkqM",
+                  "name": "Page Heading",
+                  "gap": 16,
+                  "alignItems": "end",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "0QOKTU",
+                      "name": "Text",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "qBSCGU",
+                          "ref": "artist:MgMQ2L",
+                          "name": "Promotion profile",
+                          "content": "Promotion profile"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "nPLBHR",
+                          "ref": "artist:C5Ih8u",
+                          "name": "Used for every promotion pla",
+                          "width": "fill_container",
+                          "textGrowth": "fixed-width",
+                          "content": "Used for every promotion plan. You can change it for one release."
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "98C99G",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / Goal",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "icon": "target"
+                    },
+                    "artist:EZZdAr": {
+                      "content": "Goal"
+                    },
+                    "artist:lICt0a": {
+                      "enabled": false
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "Vr6oW6",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "XdM2K6",
+                          "ref": "artist:7uMMPH",
+                          "name": "Option / Streams",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:y5W8cz": {
+                              "content": "Streams"
+                            },
+                            "artist:BIDfdi": {
+                              "content": "More plays on Bitrate"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "Sj09I6",
+                          "ref": "artist:7uMMPH",
+                          "name": "Option / New followers",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:y5W8cz": {
+                              "content": "New followers"
+                            },
+                            "artist:BIDfdi": {
+                              "content": "Grow the audience that hears your next release"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "VdlKxs",
+                          "ref": "artist:6YQpz7",
+                          "name": "Option / Pre-release buzz",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:F7Kw8w": {
+                              "content": "Pre-release buzz"
+                            },
+                            "artist:SgHhcs": {
+                              "content": "Build anticipation before the release"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "4kpmBf",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / Channels you use",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "icon": "share-2"
+                    },
+                    "artist:EZZdAr": {
+                      "content": "Channels you use"
+                    },
+                    "artist:lICt0a": {
+                      "enabled": false
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "QHzWIF",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "uzlXld",
+                          "ref": "artist:vnqaH9",
+                          "name": "Switch / Instagram",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:BUFbcg": {
+                              "content": "Instagram"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "lEIxg2",
+                          "ref": "artist:vnqaH9",
+                          "name": "Switch / TikTok",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:BUFbcg": {
+                              "content": "TikTok"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "EBaCK9",
+                          "ref": "artist:vnqaH9",
+                          "name": "Switch / Telegram",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:BUFbcg": {
+                              "content": "Telegram"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "xn4xQ9",
+                          "ref": "artist:LdzAnd",
+                          "name": "Switch / YouTube Shorts",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:ZgS0Lr": {
+                              "content": "YouTube Shorts"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "Tr7J6Z",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / Time and audience",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "icon": "clock"
+                    },
+                    "artist:EZZdAr": {
+                      "content": "Time and audience"
+                    },
+                    "artist:lICt0a": {
+                      "enabled": false
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "Lk1OU7",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "dcmfX2",
+                          "name": "Pair",
+                          "layout": "vertical",
+                          "gap": 12,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "ZkJJxv",
+                              "ref": "artist:ebsrY2",
+                              "name": "Field / Weekly time",
+                              "width": "fill_container",
+                              "descendants": {
+                                "artist:G8meip": {
+                                  "content": "Weekly time"
+                                },
+                                "artist:ZMo1QE": {
+                                  "content": "3 hours"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "6zeaSW",
+                              "ref": "artist:ebsrY2",
+                              "name": "Field / Main countries",
+                              "width": "fill_container",
+                              "descendants": {
+                                "artist:G8meip": {
+                                  "content": "Main countries"
+                                },
+                                "artist:ZMo1QE": {
+                                  "content": "Ukraine, Poland"
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "g4HYzs",
+                          "ref": "artist:GR7MEs",
+                          "name": "Field / Who listens",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:WUGlOw": {
+                              "content": "Who listens"
+                            },
+                            "artist:5RhsjI": {
+                              "content": "Late-night listeners who like quiet indie and lo-fi"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "SxuYzj",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / Voice",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "icon": "audio-lines"
+                    },
+                    "artist:EZZdAr": {
+                      "content": "Voice"
+                    },
+                    "artist:lICt0a": {
+                      "enabled": false
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "6oxa9W",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "Uzp53v",
+                          "ref": "artist:GR7MEs",
+                          "name": "Field / Three words",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:WUGlOw": {
+                              "content": "Three words"
+                            },
+                            "artist:5RhsjI": {
+                              "content": "Calm, direct, warm"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "Rr3lpp",
+                          "ref": "artist:unXtOl",
+                          "name": "Field / Example post",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:6UoLnz": {
+                              "content": "Example post"
+                            },
+                            "artist:T19Gp1": {
+                              "content": "Wrote this one at 3 a.m. It sounds like it."
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "M95Mhh",
+                          "ref": "artist:unXtOl",
+                          "name": "Field / Second example (optional)",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:6UoLnz": {
+                              "content": "Second example (optional)"
+                            },
+                            "artist:T19Gp1": {
+                              "content": "Paste another post"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "T1Iabh",
+                          "ref": "artist:PiqhAO",
+                          "name": "Examples help AI write the w",
+                          "width": "fill_container",
+                          "textGrowth": "fixed-width",
+                          "content": "Examples help AI write the way you do. They are never published."
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "LH9faF",
+                  "ref": "artist:ernseT",
+                  "name": "Tile / How Bitrate uses this",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:cg8tcb": {
+                      "icon": "shield-check"
+                    },
+                    "artist:3RHJS9": {
+                      "content": "How Bitrate uses this"
+                    },
+                    "artist:iFLpY7": {
+                      "enabled": false
+                    },
+                    "artist:zzs1rB": {
+                      "type": "frame",
+                      "id": "OcbYyL",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "m9lxpx",
+                          "ref": "artist:C5Ih8u",
+                          "name": "Your profile, release detail",
+                          "width": "fill_container",
+                          "textGrowth": "fixed-width",
+                          "content": "Your profile, release details and public bio are sent to an AI model to draft plans and posts. Your email, listeners and payments are never sent."
+                        },
+                        {
+                          "type": "ref",
+                          "id": "98NmCT",
+                          "ref": "artist:8A3JLw",
+                          "name": "KV / AI provider",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:uAX8Tb": {
+                              "content": "AI provider"
+                            },
+                            "artist:zlG4cw": {
+                              "content": "Anthropic · USA"
+                            },
+                            "artist:Cc68qY": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "uGNtHz",
+                          "ref": "artist:8A3JLw",
+                          "name": "KV / Used for training",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:uAX8Tb": {
+                              "content": "Used for training"
+                            },
+                            "artist:zlG4cw": {
+                              "content": "No"
+                            },
+                            "artist:Cc68qY": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "pz0e8t",
+                          "ref": "artist:WHXSr6",
+                          "name": "Button / Save profile",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:vg489O": {
+                              "content": "Save profile"
+                            },
+                            "artist:wAdYtR": {
+                              "icon": "check"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 5110,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Light"
+      },
+      "context": "planned — /dashboard/promotion/profile — Set once per artist and overridable per release. States what is sent to the AI provider and what is not."
+    },
+    {
+      "type": "frame",
+      "id": "1pNq4l",
+      "name": "Artist / Promotion profile / Mobile / Dim",
+      "width": 390,
+      "height": "fit_content",
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "pUYU4R",
+          "ref": "artist:8H12ea",
+          "name": "Shell",
+          "width": 390,
+          "descendants": {
+            "artist:SIErRw": {
+              "type": "frame",
+              "id": "0qVYCZ",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 16,
+              "width": "fill_container",
+              "padding": [
+                12,
+                16,
+                40,
+                16
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "uT2L9T",
+                  "name": "Page Heading",
+                  "gap": 16,
+                  "alignItems": "end",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "SXJIEA",
+                      "name": "Text",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "acoViN",
+                          "ref": "artist:MgMQ2L",
+                          "name": "Promotion profile",
+                          "content": "Promotion profile"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "1px1it",
+                          "ref": "artist:C5Ih8u",
+                          "name": "Used for every promotion pla",
+                          "width": "fill_container",
+                          "textGrowth": "fixed-width",
+                          "content": "Used for every promotion plan. You can change it for one release."
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "zZ2MXn",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / Goal",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "icon": "target"
+                    },
+                    "artist:EZZdAr": {
+                      "content": "Goal"
+                    },
+                    "artist:lICt0a": {
+                      "enabled": false
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "Dj5NDf",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "DcXmQ4",
+                          "ref": "artist:7uMMPH",
+                          "name": "Option / Streams",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:y5W8cz": {
+                              "content": "Streams"
+                            },
+                            "artist:BIDfdi": {
+                              "content": "More plays on Bitrate"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "GnPpz3",
+                          "ref": "artist:7uMMPH",
+                          "name": "Option / New followers",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:y5W8cz": {
+                              "content": "New followers"
+                            },
+                            "artist:BIDfdi": {
+                              "content": "Grow the audience that hears your next release"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "nASTfH",
+                          "ref": "artist:6YQpz7",
+                          "name": "Option / Pre-release buzz",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:F7Kw8w": {
+                              "content": "Pre-release buzz"
+                            },
+                            "artist:SgHhcs": {
+                              "content": "Build anticipation before the release"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "CEyrBZ",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / Channels you use",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "icon": "share-2"
+                    },
+                    "artist:EZZdAr": {
+                      "content": "Channels you use"
+                    },
+                    "artist:lICt0a": {
+                      "enabled": false
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "4H0if0",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "kTy7Rn",
+                          "ref": "artist:vnqaH9",
+                          "name": "Switch / Instagram",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:BUFbcg": {
+                              "content": "Instagram"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "faEPhd",
+                          "ref": "artist:vnqaH9",
+                          "name": "Switch / TikTok",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:BUFbcg": {
+                              "content": "TikTok"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "coH0yk",
+                          "ref": "artist:vnqaH9",
+                          "name": "Switch / Telegram",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:BUFbcg": {
+                              "content": "Telegram"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "ZtHUTa",
+                          "ref": "artist:LdzAnd",
+                          "name": "Switch / YouTube Shorts",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:ZgS0Lr": {
+                              "content": "YouTube Shorts"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "BlPexC",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / Time and audience",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "icon": "clock"
+                    },
+                    "artist:EZZdAr": {
+                      "content": "Time and audience"
+                    },
+                    "artist:lICt0a": {
+                      "enabled": false
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "JzQ83a",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "LhMrnP",
+                          "name": "Pair",
+                          "layout": "vertical",
+                          "gap": 12,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "FlvfSp",
+                              "ref": "artist:ebsrY2",
+                              "name": "Field / Weekly time",
+                              "width": "fill_container",
+                              "descendants": {
+                                "artist:G8meip": {
+                                  "content": "Weekly time"
+                                },
+                                "artist:ZMo1QE": {
+                                  "content": "3 hours"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "A8oovQ",
+                              "ref": "artist:ebsrY2",
+                              "name": "Field / Main countries",
+                              "width": "fill_container",
+                              "descendants": {
+                                "artist:G8meip": {
+                                  "content": "Main countries"
+                                },
+                                "artist:ZMo1QE": {
+                                  "content": "Ukraine, Poland"
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "WFNrsZ",
+                          "ref": "artist:GR7MEs",
+                          "name": "Field / Who listens",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:WUGlOw": {
+                              "content": "Who listens"
+                            },
+                            "artist:5RhsjI": {
+                              "content": "Late-night listeners who like quiet indie and lo-fi"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "c6qWjD",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / Voice",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "icon": "audio-lines"
+                    },
+                    "artist:EZZdAr": {
+                      "content": "Voice"
+                    },
+                    "artist:lICt0a": {
+                      "enabled": false
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "Gq0Ecj",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "oEf5eI",
+                          "ref": "artist:GR7MEs",
+                          "name": "Field / Three words",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:WUGlOw": {
+                              "content": "Three words"
+                            },
+                            "artist:5RhsjI": {
+                              "content": "Calm, direct, warm"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "vZOYLN",
+                          "ref": "artist:unXtOl",
+                          "name": "Field / Example post",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:6UoLnz": {
+                              "content": "Example post"
+                            },
+                            "artist:T19Gp1": {
+                              "content": "Wrote this one at 3 a.m. It sounds like it."
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "w0L8NN",
+                          "ref": "artist:unXtOl",
+                          "name": "Field / Second example (optional)",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:6UoLnz": {
+                              "content": "Second example (optional)"
+                            },
+                            "artist:T19Gp1": {
+                              "content": "Paste another post"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "tDXTfh",
+                          "ref": "artist:PiqhAO",
+                          "name": "Examples help AI write the w",
+                          "width": "fill_container",
+                          "textGrowth": "fixed-width",
+                          "content": "Examples help AI write the way you do. They are never published."
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "hlln8y",
+                  "ref": "artist:ernseT",
+                  "name": "Tile / How Bitrate uses this",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:cg8tcb": {
+                      "icon": "shield-check"
+                    },
+                    "artist:3RHJS9": {
+                      "content": "How Bitrate uses this"
+                    },
+                    "artist:iFLpY7": {
+                      "enabled": false
+                    },
+                    "artist:zzs1rB": {
+                      "type": "frame",
+                      "id": "AmRCgD",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "IvHuoh",
+                          "ref": "artist:C5Ih8u",
+                          "name": "Your profile, release detail",
+                          "width": "fill_container",
+                          "textGrowth": "fixed-width",
+                          "content": "Your profile, release details and public bio are sent to an AI model to draft plans and posts. Your email, listeners and payments are never sent."
+                        },
+                        {
+                          "type": "ref",
+                          "id": "HUIB6k",
+                          "ref": "artist:8A3JLw",
+                          "name": "KV / AI provider",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:uAX8Tb": {
+                              "content": "AI provider"
+                            },
+                            "artist:zlG4cw": {
+                              "content": "Anthropic · USA"
+                            },
+                            "artist:Cc68qY": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "EmzQGb",
+                          "ref": "artist:8A3JLw",
+                          "name": "KV / Used for training",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:uAX8Tb": {
+                              "content": "Used for training"
+                            },
+                            "artist:zlG4cw": {
+                              "content": "No"
+                            },
+                            "artist:Cc68qY": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "Jmgcoh",
+                          "ref": "artist:WHXSr6",
+                          "name": "Button / Save profile",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:vg489O": {
+                              "content": "Save profile"
+                            },
+                            "artist:wAdYtR": {
+                              "icon": "check"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 5600,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Dim"
+      },
+      "context": "planned — /dashboard/promotion/profile — Set once per artist and overridable per release. States what is sent to the AI provider and what is not."
+    },
+    {
+      "type": "frame",
       "id": "8SKEg0",
       "name": "Artist / Promotion profile / First visit / Desktop",
       "width": 1440,
@@ -3091,7 +4225,7 @@
           }
         }
       ],
-      "x": 5110,
+      "x": 6090,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -3681,7 +4815,7 @@
           }
         }
       ],
-      "x": 6650,
+      "x": 7630,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -3923,7 +5057,7 @@
           }
         }
       ],
-      "x": 7140,
+      "x": 8120,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -4109,7 +5243,7 @@
           }
         }
       ],
-      "x": 8680,
+      "x": 9660,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -4749,7 +5883,7 @@
           }
         }
       ],
-      "x": 9170,
+      "x": 10150,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -5330,7 +6464,7 @@
           }
         }
       ],
-      "x": 10710,
+      "x": 11690,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -5976,7 +7110,7 @@
           }
         }
       ],
-      "x": 11200,
+      "x": 12180,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -6566,7 +7700,7 @@
           }
         }
       ],
-      "x": 12740,
+      "x": 13720,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -7210,7 +8344,7 @@
           }
         }
       ],
-      "x": 13230,
+      "x": 14210,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -7795,7 +8929,7 @@
           }
         }
       ],
-      "x": 14770,
+      "x": 15750,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"

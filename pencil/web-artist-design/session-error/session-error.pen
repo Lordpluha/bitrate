@@ -792,6 +792,408 @@
     },
     {
       "type": "frame",
+      "id": "npiu9F",
+      "name": "Artist / Session error / Mobile / Light",
+      "width": 390,
+      "height": 844,
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "5AkNxg",
+          "ref": "artist:mA2OOT",
+          "name": "Status Bar"
+        },
+        {
+          "type": "frame",
+          "id": "8ibAJY",
+          "name": "Page",
+          "layout": "vertical",
+          "gap": 16,
+          "width": "fill_container",
+          "padding": [
+            16,
+            16,
+            40,
+            16
+          ],
+          "alignItems": "center",
+          "height": "fill_container",
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "KYeD7k",
+              "ref": "artist:ZqiZXM",
+              "name": "Session Error",
+              "width": "fill_container",
+              "descendants": {
+                "artist:5uVeAv": {
+                  "type": "frame",
+                  "id": "ZMD1s5",
+                  "name": "Content",
+                  "layout": "vertical",
+                  "gap": 16,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "3hVM8R",
+                      "ref": "artist:MgMQ2L",
+                      "name": "We couldn't check your sessi",
+                      "content": "We couldn't check your session"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "cI0cnW",
+                      "ref": "artist:C5Ih8u",
+                      "name": "Your workspace is temporaril",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "Your workspace is temporarily unavailable. Try again in a moment."
+                    },
+                    {
+                      "type": "frame",
+                      "id": "fN1ffi",
+                      "name": "Actions",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "fQCsJZ",
+                          "ref": "artist:WHXSr6",
+                          "name": "Button / Try again",
+                          "descendants": {
+                            "artist:vg489O": {
+                              "content": "Try again"
+                            },
+                            "artist:wAdYtR": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "i0UNdK",
+                          "ref": "artist:kRq5ZY",
+                          "name": "Button / Back to Bitrate",
+                          "descendants": {
+                            "artist:v1XZog": {
+                              "content": "Back to Bitrate"
+                            },
+                            "artist:ASfyG9": {
+                              "enabled": false
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 5110,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Light"
+      },
+      "context": "/dashboard/* (session check failed) — Shown instead of the workspace when the session service is unreachable; a signed-out visitor goes to /login instead."
+    },
+    {
+      "type": "frame",
+      "id": "zZscHF",
+      "name": "Artist / Session error / Mobile / Dim",
+      "width": 390,
+      "height": 844,
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "NXNpSn",
+          "ref": "artist:mA2OOT",
+          "name": "Status Bar"
+        },
+        {
+          "type": "frame",
+          "id": "0gBaiW",
+          "name": "Page",
+          "layout": "vertical",
+          "gap": 16,
+          "width": "fill_container",
+          "padding": [
+            16,
+            16,
+            40,
+            16
+          ],
+          "alignItems": "center",
+          "height": "fill_container",
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "GwRegd",
+              "ref": "artist:ZqiZXM",
+              "name": "Session Error",
+              "width": "fill_container",
+              "descendants": {
+                "artist:5uVeAv": {
+                  "type": "frame",
+                  "id": "vGNJX4",
+                  "name": "Content",
+                  "layout": "vertical",
+                  "gap": 16,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "BHi5G8",
+                      "ref": "artist:MgMQ2L",
+                      "name": "We couldn't check your sessi",
+                      "content": "We couldn't check your session"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "EjC148",
+                      "ref": "artist:C5Ih8u",
+                      "name": "Your workspace is temporaril",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "Your workspace is temporarily unavailable. Try again in a moment."
+                    },
+                    {
+                      "type": "frame",
+                      "id": "lmAkvi",
+                      "name": "Actions",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "PlOwtz",
+                          "ref": "artist:WHXSr6",
+                          "name": "Button / Try again",
+                          "descendants": {
+                            "artist:vg489O": {
+                              "content": "Try again"
+                            },
+                            "artist:wAdYtR": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "KB3uOi",
+                          "ref": "artist:kRq5ZY",
+                          "name": "Button / Back to Bitrate",
+                          "descendants": {
+                            "artist:v1XZog": {
+                              "content": "Back to Bitrate"
+                            },
+                            "artist:ASfyG9": {
+                              "enabled": false
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 5600,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Dim"
+      },
+      "context": "/dashboard/* (session check failed) — Shown instead of the workspace when the session service is unreachable; a signed-out visitor goes to /login instead."
+    },
+    {
+      "type": "frame",
       "id": "TEooH3",
       "name": "Artist / Session error / Checking session / Desktop",
       "width": 1440,
@@ -920,7 +1322,7 @@
           ]
         }
       ],
-      "x": 5110,
+      "x": 6090,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -1070,7 +1472,7 @@
           ]
         }
       ],
-      "x": 6650,
+      "x": 7630,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"

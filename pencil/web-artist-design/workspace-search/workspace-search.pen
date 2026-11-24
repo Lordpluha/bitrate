@@ -1242,6 +1242,576 @@
     },
     {
       "type": "frame",
+      "id": "8RpOEV",
+      "name": "Artist / Workspace search / Mobile / Light",
+      "width": 390,
+      "height": "fit_content",
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "02HhQh",
+          "ref": "artist:8H12ea",
+          "name": "Shell",
+          "width": 390,
+          "descendants": {
+            "artist:SIErRw": {
+              "type": "frame",
+              "id": "hfXVxB",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 16,
+              "width": "fill_container",
+              "padding": [
+                12,
+                16,
+                40,
+                16
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "thTwcO",
+                  "name": "Modal Layer",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "center",
+                  "padding": 0,
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "RU2Zru",
+                      "ref": "artist:WLRzpO",
+                      "name": "Modal / Search workspace",
+                      "width": "fill_container",
+                      "descendants": {
+                        "artist:asYxoc": {
+                          "content": "Search workspace"
+                        },
+                        "artist:7AUcJz": {
+                          "type": "frame",
+                          "id": "IdxaxD",
+                          "name": "Body",
+                          "layout": "vertical",
+                          "gap": 14,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "Mk1DUh",
+                              "ref": "artist:WF9JLk",
+                              "name": "Query",
+                              "width": "fill_container",
+                              "descendants": {
+                                "artist:hqy5Gf": {
+                                  "content": "Search releases, tracks and sections…"
+                                }
+                              }
+                            },
+                            {
+                              "type": "frame",
+                              "id": "J496g6",
+                              "name": "Group / Sections",
+                              "layout": "vertical",
+                              "gap": 4,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "3PcxkO",
+                                  "ref": "artist:yjiPHo",
+                                  "name": "SECTIONS",
+                                  "content": "SECTIONS"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "8z5wzf",
+                                  "ref": "artist:7vIpty",
+                                  "name": "Result / Dashboard",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:35TI3I": {
+                                      "icon": "search"
+                                    },
+                                    "artist:e5L29H": {
+                                      "content": "Dashboard"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "R67oph",
+                                  "ref": "artist:7vIpty",
+                                  "name": "Result / Music",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:35TI3I": {
+                                      "icon": "search"
+                                    },
+                                    "artist:e5L29H": {
+                                      "content": "Music"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "0jgf7z",
+                                  "ref": "artist:7vIpty",
+                                  "name": "Result / Distribution",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:35TI3I": {
+                                      "icon": "search"
+                                    },
+                                    "artist:e5L29H": {
+                                      "content": "Distribution"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "pshQuQ",
+                                  "ref": "artist:7vIpty",
+                                  "name": "Result / Analytics",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:35TI3I": {
+                                      "icon": "search"
+                                    },
+                                    "artist:e5L29H": {
+                                      "content": "Analytics"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "suqJwE",
+                                  "ref": "artist:7vIpty",
+                                  "name": "Result / Profile",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:35TI3I": {
+                                      "icon": "search"
+                                    },
+                                    "artist:e5L29H": {
+                                      "content": "Profile"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "9fqEJh",
+                                  "ref": "artist:7vIpty",
+                                  "name": "Result / Settings",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:35TI3I": {
+                                      "icon": "search"
+                                    },
+                                    "artist:e5L29H": {
+                                      "content": "Settings"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        "artist:a5ERhu": {
+                          "enabled": false
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 5110,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Light"
+      },
+      "context": "overlay on every /dashboard page — Modal over the workspace. Results link to the section, the release workspace or the track in Music; sections show the search icon, releases a disc and tracks a note, as in WorkspaceSearch."
+    },
+    {
+      "type": "frame",
+      "id": "SuN64i",
+      "name": "Artist / Workspace search / Mobile / Dim",
+      "width": 390,
+      "height": "fit_content",
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "yeSFDu",
+          "ref": "artist:8H12ea",
+          "name": "Shell",
+          "width": 390,
+          "descendants": {
+            "artist:SIErRw": {
+              "type": "frame",
+              "id": "3IuTql",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 16,
+              "width": "fill_container",
+              "padding": [
+                12,
+                16,
+                40,
+                16
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "HCP0fv",
+                  "name": "Modal Layer",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "center",
+                  "padding": 0,
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "LvIHEF",
+                      "ref": "artist:WLRzpO",
+                      "name": "Modal / Search workspace",
+                      "width": "fill_container",
+                      "descendants": {
+                        "artist:asYxoc": {
+                          "content": "Search workspace"
+                        },
+                        "artist:7AUcJz": {
+                          "type": "frame",
+                          "id": "ksO2w3",
+                          "name": "Body",
+                          "layout": "vertical",
+                          "gap": 14,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "2iRsSu",
+                              "ref": "artist:WF9JLk",
+                              "name": "Query",
+                              "width": "fill_container",
+                              "descendants": {
+                                "artist:hqy5Gf": {
+                                  "content": "Search releases, tracks and sections…"
+                                }
+                              }
+                            },
+                            {
+                              "type": "frame",
+                              "id": "Riqykr",
+                              "name": "Group / Sections",
+                              "layout": "vertical",
+                              "gap": 4,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "zOGmvI",
+                                  "ref": "artist:yjiPHo",
+                                  "name": "SECTIONS",
+                                  "content": "SECTIONS"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "uJCFeV",
+                                  "ref": "artist:7vIpty",
+                                  "name": "Result / Dashboard",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:35TI3I": {
+                                      "icon": "search"
+                                    },
+                                    "artist:e5L29H": {
+                                      "content": "Dashboard"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "BM8CxQ",
+                                  "ref": "artist:7vIpty",
+                                  "name": "Result / Music",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:35TI3I": {
+                                      "icon": "search"
+                                    },
+                                    "artist:e5L29H": {
+                                      "content": "Music"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "EZATEH",
+                                  "ref": "artist:7vIpty",
+                                  "name": "Result / Distribution",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:35TI3I": {
+                                      "icon": "search"
+                                    },
+                                    "artist:e5L29H": {
+                                      "content": "Distribution"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "f3Dz7L",
+                                  "ref": "artist:7vIpty",
+                                  "name": "Result / Analytics",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:35TI3I": {
+                                      "icon": "search"
+                                    },
+                                    "artist:e5L29H": {
+                                      "content": "Analytics"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "aHdHsH",
+                                  "ref": "artist:7vIpty",
+                                  "name": "Result / Profile",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:35TI3I": {
+                                      "icon": "search"
+                                    },
+                                    "artist:e5L29H": {
+                                      "content": "Profile"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "v6Rt1U",
+                                  "ref": "artist:7vIpty",
+                                  "name": "Result / Settings",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:35TI3I": {
+                                      "icon": "search"
+                                    },
+                                    "artist:e5L29H": {
+                                      "content": "Settings"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        "artist:a5ERhu": {
+                          "enabled": false
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 5600,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Dim"
+      },
+      "context": "overlay on every /dashboard page — Modal over the workspace. Results link to the section, the release workspace or the track in Music; sections show the search icon, releases a disc and tracks a note, as in WorkspaceSearch."
+    },
+    {
+      "type": "frame",
       "id": "w8Ltpi",
       "name": "Artist / Workspace search / Results / Desktop",
       "width": 1440,
@@ -1507,7 +2077,7 @@
           }
         }
       ],
-      "x": 5110,
+      "x": 6090,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -1749,7 +2319,7 @@
           }
         }
       ],
-      "x": 6650,
+      "x": 7630,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -1991,7 +2561,7 @@
           }
         }
       ],
-      "x": 7140,
+      "x": 8120,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -2201,7 +2771,7 @@
           }
         }
       ],
-      "x": 8680,
+      "x": 9660,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -2420,7 +2990,7 @@
           }
         }
       ],
-      "x": 9170,
+      "x": 10150,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -2607,7 +3177,7 @@
           }
         }
       ],
-      "x": 10710,
+      "x": 11690,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -2826,7 +3396,7 @@
           }
         }
       ],
-      "x": 11200,
+      "x": 12180,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -3013,7 +3583,7 @@
           }
         }
       ],
-      "x": 12740,
+      "x": 13720,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -3232,7 +3802,7 @@
           }
         }
       ],
-      "x": 13230,
+      "x": 14210,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -3419,7 +3989,7 @@
           }
         }
       ],
-      "x": 14770,
+      "x": 15750,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"

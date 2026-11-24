@@ -9,13 +9,14 @@ import { overlaysPages } from './overlays.mjs'
 import { promotionPages } from './promotion.mjs'
 import { publicPages } from './public.mjs'
 import { releasePages } from './release.mjs'
+import { themedMobile } from './themed-mobile.mjs'
 import { workspacePages } from './workspace.mjs'
 
-/** The artist pages by directory. */
+/** The artist pages by directory, each phone frame in Dark, Light and Dim. */
 export function artistPages() {
   const ui = artistUi()
   const frames = artistFrames(ui)
-  return {
+  const pages = {
     ...publicPages(ui),
     ...workspacePages(ui, frames),
     ...releasePages(ui, frames),
@@ -24,4 +25,5 @@ export function artistPages() {
     ...overlaysPages(ui, frames),
     ...promotionPages(ui, frames),
   }
+  return Object.fromEntries(Object.entries(pages).map(([dir, spec]) => [dir, themedMobile(spec)]))
 }

@@ -52,8 +52,8 @@ One folder per route: `<page>/<page>.pen`, all generated from `scripts/pencil-pa
 
 ## States
 
-Each file holds the desktop page in Dark, Light and Dim, the phone page, then every state the code
-renders as a desktop + phone pair (`apps/docs/docs/brand/design.md` § 21): loading skeletons, errors
+Each file holds the desktop page in Dark, Light and Dim, then the phone page in Dark, Light and Dim
+(in that order), then every state the code renders once, in Dark, as a desktop + phone pair (`apps/docs/docs/brand/design.md` § 21): loading skeletons, errors
 with their retry, empty and first-use, not found / unavailable, validation and submission, locks,
 and every dialog, menu and popover the page opens. A state that exists on one side only (Customize
 mode, the phone menu drawer) is drawn on that side and says why in its frame context.
@@ -85,4 +85,6 @@ before editing through the MCP.
 
 `archive/` is skipped by the checks. `archive/concepts/` holds pages with no screen in code (the old
 release wizard, tabbed settings, delivery and profile concepts, …), `archive/campaign-concepts/` the
-earlier campaign ideas and `archive/landing-design/` the previous landing concept.
+earlier campaign ideas, `archive/landing-design/` the previous landing concept and
+`archive/impeccable-dark/` / `archive/impeccable-white/` the outdated Impeccable design settings. Every
+web-artists design lives under `pencil/web-artist-design/`, one folder per page.

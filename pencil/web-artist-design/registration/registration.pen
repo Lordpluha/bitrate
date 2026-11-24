@@ -948,6 +948,486 @@
     },
     {
       "type": "frame",
+      "id": "bCeA1Z",
+      "name": "Artist / Registration / Mobile / Light",
+      "width": 390,
+      "height": "fit_content",
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "Ljsy5b",
+          "ref": "artist:mA2OOT",
+          "name": "Status Bar"
+        },
+        {
+          "type": "frame",
+          "id": "MxmD5F",
+          "name": "Page",
+          "layout": "vertical",
+          "gap": 16,
+          "width": "fill_container",
+          "padding": [
+            16,
+            16,
+            40,
+            16
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "MbWnok",
+              "ref": "artist:O6wAF2",
+              "name": "Auth Card",
+              "width": "fill_container",
+              "descendants": {
+                "artist:F1So60": {
+                  "content": "Sign up and immerse yourself in music"
+                },
+                "artist:mycTtp": {
+                  "enabled": false
+                },
+                "artist:bQ87R0": {
+                  "type": "frame",
+                  "id": "VHFDR2",
+                  "name": "Body",
+                  "layout": "vertical",
+                  "gap": 14,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "xG8HF7",
+                      "ref": "artist:GR7MEs",
+                      "name": "Field / Email Address",
+                      "width": "fill_container",
+                      "descendants": {
+                        "artist:WUGlOw": {
+                          "content": "Email Address"
+                        },
+                        "artist:5RhsjI": {
+                          "content": "example@gmail.com"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "AILG2a",
+                      "ref": "artist:jT9tIN",
+                      "name": "Button / Continue",
+                      "width": "fill_container",
+                      "descendants": {
+                        "artist:DRcVId": {
+                          "content": "Continue"
+                        },
+                        "artist:EUKQcS": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "hcbBUN",
+                      "ref": "artist:RvBW0P",
+                      "name": "Or",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "uTFK4T",
+                      "ref": "artist:XKBItm",
+                      "name": "Consent",
+                      "width": "fill_container",
+                      "descendants": {
+                        "artist:W3P1ps": {
+                          "content": "I am at least 16 years old, I accept the Terms of Use, Community Guidelines and Artist Agreement, and I have read the Privacy Policy."
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "TvRMX0",
+                      "ref": "artist:Ns65Qy",
+                      "name": "Google",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "U3kCdZ",
+                      "ref": "artist:ms0ndO",
+                      "name": "Facebook",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "DAjIJo",
+                      "name": "Footnote",
+                      "gap": 6,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "justifyContent": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "lGGThe",
+                          "ref": "artist:C5Ih8u",
+                          "name": "Already have an account?",
+                          "content": "Already have an account?"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "eEC50O",
+                          "ref": "artist:LSzB6i",
+                          "name": "Log in.",
+                          "content": "Log in."
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 5110,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Light"
+      },
+      "context": "/registration — Two-step sign-up. Step 1 checks the address is free before asking for a password; social sign-up stays locked until the consent is ticked. Success goes to /verify-email."
+    },
+    {
+      "type": "frame",
+      "id": "hRdD5g",
+      "name": "Artist / Registration / Mobile / Dim",
+      "width": 390,
+      "height": "fit_content",
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "jMMQC0",
+          "ref": "artist:mA2OOT",
+          "name": "Status Bar"
+        },
+        {
+          "type": "frame",
+          "id": "uoiIc8",
+          "name": "Page",
+          "layout": "vertical",
+          "gap": 16,
+          "width": "fill_container",
+          "padding": [
+            16,
+            16,
+            40,
+            16
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "cfBTvR",
+              "ref": "artist:O6wAF2",
+              "name": "Auth Card",
+              "width": "fill_container",
+              "descendants": {
+                "artist:F1So60": {
+                  "content": "Sign up and immerse yourself in music"
+                },
+                "artist:mycTtp": {
+                  "enabled": false
+                },
+                "artist:bQ87R0": {
+                  "type": "frame",
+                  "id": "bWWKLc",
+                  "name": "Body",
+                  "layout": "vertical",
+                  "gap": 14,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "t70EW6",
+                      "ref": "artist:GR7MEs",
+                      "name": "Field / Email Address",
+                      "width": "fill_container",
+                      "descendants": {
+                        "artist:WUGlOw": {
+                          "content": "Email Address"
+                        },
+                        "artist:5RhsjI": {
+                          "content": "example@gmail.com"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "qRhQba",
+                      "ref": "artist:jT9tIN",
+                      "name": "Button / Continue",
+                      "width": "fill_container",
+                      "descendants": {
+                        "artist:DRcVId": {
+                          "content": "Continue"
+                        },
+                        "artist:EUKQcS": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "J0Zq8F",
+                      "ref": "artist:RvBW0P",
+                      "name": "Or",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "MtF8qW",
+                      "ref": "artist:XKBItm",
+                      "name": "Consent",
+                      "width": "fill_container",
+                      "descendants": {
+                        "artist:W3P1ps": {
+                          "content": "I am at least 16 years old, I accept the Terms of Use, Community Guidelines and Artist Agreement, and I have read the Privacy Policy."
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "P1ZNI2",
+                      "ref": "artist:Ns65Qy",
+                      "name": "Google",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "IYGoJq",
+                      "ref": "artist:ms0ndO",
+                      "name": "Facebook",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "PM8oYR",
+                      "name": "Footnote",
+                      "gap": 6,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "justifyContent": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "TYCtOu",
+                          "ref": "artist:C5Ih8u",
+                          "name": "Already have an account?",
+                          "content": "Already have an account?"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "W2WUyf",
+                          "ref": "artist:LSzB6i",
+                          "name": "Log in.",
+                          "content": "Log in."
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 5600,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Dim"
+      },
+      "context": "/registration — Two-step sign-up. Step 1 checks the address is free before asking for a password; social sign-up stays locked until the consent is ticked. Success goes to /verify-email."
+    },
+    {
+      "type": "frame",
       "id": "F31ofa",
       "name": "Artist / Registration / Email filled / Desktop",
       "width": 1440,
@@ -1173,7 +1653,7 @@
           ]
         }
       ],
-      "x": 5110,
+      "x": 6090,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -1413,7 +1893,7 @@
           ]
         }
       ],
-      "x": 6650,
+      "x": 7630,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -1650,7 +2130,7 @@
           ]
         }
       ],
-      "x": 7140,
+      "x": 8120,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -1893,7 +2373,7 @@
           ]
         }
       ],
-      "x": 8680,
+      "x": 9660,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -2141,7 +2621,7 @@
           ]
         }
       ],
-      "x": 9170,
+      "x": 10150,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -2396,7 +2876,7 @@
           ]
         }
       ],
-      "x": 10710,
+      "x": 11690,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -2644,7 +3124,7 @@
           ]
         }
       ],
-      "x": 11200,
+      "x": 12180,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -2899,7 +3379,7 @@
           ]
         }
       ],
-      "x": 12740,
+      "x": 13720,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -3208,7 +3688,7 @@
           ]
         }
       ],
-      "x": 13230,
+      "x": 14210,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -3523,7 +4003,7 @@
           ]
         }
       ],
-      "x": 14770,
+      "x": 15750,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -3832,7 +4312,7 @@
           ]
         }
       ],
-      "x": 15260,
+      "x": 16240,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -4147,7 +4627,7 @@
           ]
         }
       ],
-      "x": 16800,
+      "x": 17780,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -4459,7 +4939,7 @@
           ]
         }
       ],
-      "x": 17290,
+      "x": 18270,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -4777,7 +5257,7 @@
           ]
         }
       ],
-      "x": 18830,
+      "x": 19810,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -5097,7 +5577,7 @@
           ]
         }
       ],
-      "x": 19320,
+      "x": 20300,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -5424,7 +5904,7 @@
           ]
         }
       ],
-      "x": 20860,
+      "x": 21840,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -5744,7 +6224,7 @@
           ]
         }
       ],
-      "x": 21350,
+      "x": 22330,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -6071,7 +6551,7 @@
           ]
         }
       ],
-      "x": 22890,
+      "x": 23870,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -6402,7 +6882,7 @@
           ]
         }
       ],
-      "x": 23380,
+      "x": 24360,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -6739,7 +7219,7 @@
           ]
         }
       ],
-      "x": 24920,
+      "x": 25900,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -7048,7 +7528,7 @@
           ]
         }
       ],
-      "x": 25410,
+      "x": 26390,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -7363,7 +7843,7 @@
           ]
         }
       ],
-      "x": 26950,
+      "x": 27930,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -7672,7 +8152,7 @@
           ]
         }
       ],
-      "x": 27440,
+      "x": 28420,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -7987,7 +8467,7 @@
           ]
         }
       ],
-      "x": 28980,
+      "x": 29960,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -8307,7 +8787,7 @@
           ]
         }
       ],
-      "x": 29470,
+      "x": 30450,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -8634,7 +9114,7 @@
           ]
         }
       ],
-      "x": 31010,
+      "x": 31990,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -8954,7 +9434,7 @@
           ]
         }
       ],
-      "x": 31500,
+      "x": 32480,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -9281,7 +9761,7 @@
           ]
         }
       ],
-      "x": 33040,
+      "x": 34020,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"

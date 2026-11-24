@@ -1354,6 +1354,632 @@
     },
     {
       "type": "frame",
+      "id": "vCNHx3",
+      "name": "Artist / Account switcher / Mobile / Light",
+      "width": 390,
+      "height": "fit_content",
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "jmi8Ar",
+          "ref": "artist:8H12ea",
+          "name": "Shell",
+          "width": 390,
+          "descendants": {
+            "artist:SIErRw": {
+              "type": "frame",
+              "id": "8E8cET",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 16,
+              "width": "fill_container",
+              "padding": [
+                12,
+                16,
+                40,
+                16
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "y6hMMi",
+                  "name": "Modal Layer",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "center",
+                  "padding": 0,
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "6rX980",
+                      "ref": "artist:WLRzpO",
+                      "name": "Modal / Accounts",
+                      "width": "fill_container",
+                      "descendants": {
+                        "artist:asYxoc": {
+                          "content": "Accounts"
+                        },
+                        "artist:7AUcJz": {
+                          "type": "frame",
+                          "id": "XTvtaM",
+                          "name": "Body",
+                          "layout": "vertical",
+                          "gap": 14,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "PGJseZ",
+                              "ref": "artist:C5Ih8u",
+                              "name": "Accounts you have signed in ",
+                              "width": "fill_container",
+                              "textGrowth": "fixed-width",
+                              "content": "Accounts you have signed in to on this browser."
+                            },
+                            {
+                              "type": "frame",
+                              "id": "SQrI5u",
+                              "name": "Accounts",
+                              "layout": "vertical",
+                              "gap": 8,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "Gq3qUT",
+                                  "ref": "artist:qQV9nU",
+                                  "name": "Account / Mira Sol",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:Wyzdfi/artist:KrLGr1": {
+                                      "content": "M"
+                                    },
+                                    "artist:Bil6Rx": {
+                                      "content": "Mira Sol"
+                                    },
+                                    "artist:ClCTWF": {
+                                      "content": "Active account"
+                                    },
+                                    "artist:2KFs3S": {
+                                      "type": "frame",
+                                      "id": "F2YKsY",
+                                      "name": "Trail",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "x8Nqmq",
+                                          "ref": "artist:Zm2T39",
+                                          "name": "Current",
+                                          "width": 32,
+                                          "height": 32,
+                                          "descendants": {
+                                            "artist:hwGaeO": {
+                                              "icon": "check"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "Ligu1G",
+                                  "ref": "artist:jjgXnK",
+                                  "name": "Account / Kite Harbor",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:VWom8z/artist:KrLGr1": {
+                                      "content": "K"
+                                    },
+                                    "artist:4FC8g2": {
+                                      "content": "Kite Harbor"
+                                    },
+                                    "artist:9YAaFi": {
+                                      "content": "Switch to this account"
+                                    },
+                                    "artist:XxStrh": {
+                                      "type": "frame",
+                                      "id": "fIpGK3",
+                                      "name": "Trail",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "jVTVQA",
+                                          "ref": "artist:Zm2T39",
+                                          "name": "Remove Kite Harbor",
+                                          "width": 32,
+                                          "height": 32,
+                                          "descendants": {
+                                            "artist:hwGaeO": {
+                                              "icon": "x"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "type": "ref",
+                              "id": "PjTbud",
+                              "ref": "artist:kRq5ZY",
+                              "name": "Button / Add another account",
+                              "width": "fill_container",
+                              "descendants": {
+                                "artist:v1XZog": {
+                                  "content": "Add another account"
+                                },
+                                "artist:ASfyG9": {
+                                  "icon": "plus"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "MROKlK",
+                              "ref": "artist:PiqhAO",
+                              "name": "Save up to 5 accounts. Remov",
+                              "width": "fill_container",
+                              "textGrowth": "fixed-width",
+                              "content": "Save up to 5 accounts. Removing one here signs it out on this browser; it does not delete the account."
+                            },
+                            {
+                              "type": "frame",
+                              "id": "JysFVx",
+                              "name": "Sign out",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "9hJKks",
+                                  "ref": "artist:HtMQw9",
+                                  "name": "Button / Sign out",
+                                  "descendants": {
+                                    "artist:wKSako": {
+                                      "content": "Sign out"
+                                    },
+                                    "artist:DyTdif": {
+                                      "icon": "log-out"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        "artist:a5ERhu": {
+                          "enabled": false
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 5110,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Light"
+      },
+      "context": "modal from the sidebar account on every /dashboard page — Saved sessions live in this browser. Switching reloads the workspace as the chosen artist; Add another account opens /login?addAccount."
+    },
+    {
+      "type": "frame",
+      "id": "FZ5Kll",
+      "name": "Artist / Account switcher / Mobile / Dim",
+      "width": 390,
+      "height": "fit_content",
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "76gqFy",
+          "ref": "artist:8H12ea",
+          "name": "Shell",
+          "width": 390,
+          "descendants": {
+            "artist:SIErRw": {
+              "type": "frame",
+              "id": "K19dTp",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 16,
+              "width": "fill_container",
+              "padding": [
+                12,
+                16,
+                40,
+                16
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "MmtoTn",
+                  "name": "Modal Layer",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "center",
+                  "padding": 0,
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "eMF0ro",
+                      "ref": "artist:WLRzpO",
+                      "name": "Modal / Accounts",
+                      "width": "fill_container",
+                      "descendants": {
+                        "artist:asYxoc": {
+                          "content": "Accounts"
+                        },
+                        "artist:7AUcJz": {
+                          "type": "frame",
+                          "id": "Jra5sC",
+                          "name": "Body",
+                          "layout": "vertical",
+                          "gap": 14,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "dBtdvZ",
+                              "ref": "artist:C5Ih8u",
+                              "name": "Accounts you have signed in ",
+                              "width": "fill_container",
+                              "textGrowth": "fixed-width",
+                              "content": "Accounts you have signed in to on this browser."
+                            },
+                            {
+                              "type": "frame",
+                              "id": "ovksRN",
+                              "name": "Accounts",
+                              "layout": "vertical",
+                              "gap": 8,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "gKZwL5",
+                                  "ref": "artist:qQV9nU",
+                                  "name": "Account / Mira Sol",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:Wyzdfi/artist:KrLGr1": {
+                                      "content": "M"
+                                    },
+                                    "artist:Bil6Rx": {
+                                      "content": "Mira Sol"
+                                    },
+                                    "artist:ClCTWF": {
+                                      "content": "Active account"
+                                    },
+                                    "artist:2KFs3S": {
+                                      "type": "frame",
+                                      "id": "9aTlXb",
+                                      "name": "Trail",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "JCs0wU",
+                                          "ref": "artist:Zm2T39",
+                                          "name": "Current",
+                                          "width": 32,
+                                          "height": 32,
+                                          "descendants": {
+                                            "artist:hwGaeO": {
+                                              "icon": "check"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "bDcQp8",
+                                  "ref": "artist:jjgXnK",
+                                  "name": "Account / Kite Harbor",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:VWom8z/artist:KrLGr1": {
+                                      "content": "K"
+                                    },
+                                    "artist:4FC8g2": {
+                                      "content": "Kite Harbor"
+                                    },
+                                    "artist:9YAaFi": {
+                                      "content": "Switch to this account"
+                                    },
+                                    "artist:XxStrh": {
+                                      "type": "frame",
+                                      "id": "v6ykmS",
+                                      "name": "Trail",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "Bk1h99",
+                                          "ref": "artist:Zm2T39",
+                                          "name": "Remove Kite Harbor",
+                                          "width": 32,
+                                          "height": 32,
+                                          "descendants": {
+                                            "artist:hwGaeO": {
+                                              "icon": "x"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "type": "ref",
+                              "id": "pGCbUG",
+                              "ref": "artist:kRq5ZY",
+                              "name": "Button / Add another account",
+                              "width": "fill_container",
+                              "descendants": {
+                                "artist:v1XZog": {
+                                  "content": "Add another account"
+                                },
+                                "artist:ASfyG9": {
+                                  "icon": "plus"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "sVDery",
+                              "ref": "artist:PiqhAO",
+                              "name": "Save up to 5 accounts. Remov",
+                              "width": "fill_container",
+                              "textGrowth": "fixed-width",
+                              "content": "Save up to 5 accounts. Removing one here signs it out on this browser; it does not delete the account."
+                            },
+                            {
+                              "type": "frame",
+                              "id": "xDamMi",
+                              "name": "Sign out",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "JDZhTs",
+                                  "ref": "artist:HtMQw9",
+                                  "name": "Button / Sign out",
+                                  "descendants": {
+                                    "artist:wKSako": {
+                                      "content": "Sign out"
+                                    },
+                                    "artist:DyTdif": {
+                                      "icon": "log-out"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        "artist:a5ERhu": {
+                          "enabled": false
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 5600,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Dim"
+      },
+      "context": "modal from the sidebar account on every /dashboard page — Saved sessions live in this browser. Switching reloads the workspace as the chosen artist; Add another account opens /login?addAccount."
+    },
+    {
+      "type": "frame",
       "id": "5bEPhw",
       "name": "Artist / Account switcher / Loading / Desktop",
       "width": 1440,
@@ -1673,7 +2299,7 @@
           }
         }
       ],
-      "x": 5110,
+      "x": 6090,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -1969,7 +2595,7 @@
           }
         }
       ],
-      "x": 6650,
+      "x": 7630,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -2307,7 +2933,7 @@
           }
         }
       ],
-      "x": 7140,
+      "x": 8120,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -2613,7 +3239,7 @@
           }
         }
       ],
-      "x": 8680,
+      "x": 9660,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -3079,7 +3705,7 @@
           }
         }
       ],
-      "x": 9170,
+      "x": 10150,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -3513,7 +4139,7 @@
           }
         }
       ],
-      "x": 10710,
+      "x": 11690,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -3877,7 +4503,7 @@
           }
         }
       ],
-      "x": 11200,
+      "x": 12180,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -4209,7 +4835,7 @@
           }
         }
       ],
-      "x": 12740,
+      "x": 13720,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -4573,7 +5199,7 @@
           }
         }
       ],
-      "x": 13230,
+      "x": 14210,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -4905,7 +5531,7 @@
           }
         }
       ],
-      "x": 14770,
+      "x": 15750,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -5259,7 +5885,7 @@
           }
         }
       ],
-      "x": 15260,
+      "x": 16240,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -5581,7 +6207,7 @@
           }
         }
       ],
-      "x": 16800,
+      "x": 17780,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"

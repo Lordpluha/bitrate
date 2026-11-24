@@ -956,6 +956,490 @@
     },
     {
       "type": "frame",
+      "id": "erQwBY",
+      "name": "Artist / Verify email / Mobile / Light",
+      "width": 390,
+      "height": "fit_content",
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "Ch4HvW",
+          "ref": "artist:mA2OOT",
+          "name": "Status Bar"
+        },
+        {
+          "type": "frame",
+          "id": "HbiVex",
+          "name": "Page",
+          "layout": "vertical",
+          "gap": 16,
+          "width": "fill_container",
+          "padding": [
+            16,
+            16,
+            40,
+            16
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "ncr5iw",
+              "ref": "artist:O6wAF2",
+              "name": "Auth Card",
+              "width": "fill_container",
+              "descendants": {
+                "artist:F1So60": {
+                  "content": "Verify your email"
+                },
+                "artist:mycTtp": {
+                  "content": "One more step to your artist workspace."
+                },
+                "artist:bQ87R0": {
+                  "type": "frame",
+                  "id": "Mfeco6",
+                  "name": "Body",
+                  "layout": "vertical",
+                  "gap": 14,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "8z1OLO",
+                      "ref": "artist:P2oa0L",
+                      "name": "Enter the six-digit code fro",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "Enter the six-digit code from your verification email. The code is valid for 10 minutes."
+                    },
+                    {
+                      "type": "ref",
+                      "id": "d3Y7b8",
+                      "ref": "artist:GR7MEs",
+                      "name": "Field / Email address",
+                      "width": "fill_container",
+                      "descendants": {
+                        "artist:WUGlOw": {
+                          "content": "Email address"
+                        },
+                        "artist:5RhsjI": {
+                          "content": "mira@nightsignal.fm"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "ce29Q4",
+                      "ref": "artist:HPD8Y0",
+                      "name": "Field / Verification code",
+                      "width": "fill_container",
+                      "descendants": {
+                        "artist:P99qEy": {
+                          "content": "Verification code"
+                        },
+                        "artist:6GDlhY": {
+                          "content": "000000"
+                        },
+                        "artist:PSRBZc": {
+                          "content": "Six digits. You can paste the entire code."
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "bzRxgL",
+                      "ref": "artist:jT9tIN",
+                      "name": "Button / Verify and continue",
+                      "width": "fill_container",
+                      "descendants": {
+                        "artist:DRcVId": {
+                          "content": "Verify and continue"
+                        },
+                        "artist:EUKQcS": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "MdYiO2",
+                      "ref": "artist:HtMQw9",
+                      "name": "Button / Resend verification email",
+                      "width": "fill_container",
+                      "descendants": {
+                        "artist:wKSako": {
+                          "content": "Resend verification email"
+                        },
+                        "artist:DyTdif": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "frame",
+                      "id": "Rz0Tug",
+                      "name": "Footnote",
+                      "gap": 6,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "justifyContent": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "5Gdmfn",
+                          "ref": "artist:pZcyuZ",
+                          "name": "Back to login",
+                          "content": "Back to login"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 5110,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Light"
+      },
+      "context": "/verify-email?email=&token=&next= — Reached after sign-up (email prefilled) or from the verification email. The link adds a one-click \"Verify email\"; the code works on its own."
+    },
+    {
+      "type": "frame",
+      "id": "MhfqGw",
+      "name": "Artist / Verify email / Mobile / Dim",
+      "width": 390,
+      "height": "fit_content",
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "c65vZM",
+          "ref": "artist:mA2OOT",
+          "name": "Status Bar"
+        },
+        {
+          "type": "frame",
+          "id": "7bpnsg",
+          "name": "Page",
+          "layout": "vertical",
+          "gap": 16,
+          "width": "fill_container",
+          "padding": [
+            16,
+            16,
+            40,
+            16
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "vWIlAy",
+              "ref": "artist:O6wAF2",
+              "name": "Auth Card",
+              "width": "fill_container",
+              "descendants": {
+                "artist:F1So60": {
+                  "content": "Verify your email"
+                },
+                "artist:mycTtp": {
+                  "content": "One more step to your artist workspace."
+                },
+                "artist:bQ87R0": {
+                  "type": "frame",
+                  "id": "iZoOzG",
+                  "name": "Body",
+                  "layout": "vertical",
+                  "gap": 14,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "cat0vG",
+                      "ref": "artist:P2oa0L",
+                      "name": "Enter the six-digit code fro",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "Enter the six-digit code from your verification email. The code is valid for 10 minutes."
+                    },
+                    {
+                      "type": "ref",
+                      "id": "bjB6tp",
+                      "ref": "artist:GR7MEs",
+                      "name": "Field / Email address",
+                      "width": "fill_container",
+                      "descendants": {
+                        "artist:WUGlOw": {
+                          "content": "Email address"
+                        },
+                        "artist:5RhsjI": {
+                          "content": "mira@nightsignal.fm"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "8jviN7",
+                      "ref": "artist:HPD8Y0",
+                      "name": "Field / Verification code",
+                      "width": "fill_container",
+                      "descendants": {
+                        "artist:P99qEy": {
+                          "content": "Verification code"
+                        },
+                        "artist:6GDlhY": {
+                          "content": "000000"
+                        },
+                        "artist:PSRBZc": {
+                          "content": "Six digits. You can paste the entire code."
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "VWWpu4",
+                      "ref": "artist:jT9tIN",
+                      "name": "Button / Verify and continue",
+                      "width": "fill_container",
+                      "descendants": {
+                        "artist:DRcVId": {
+                          "content": "Verify and continue"
+                        },
+                        "artist:EUKQcS": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "AI5IDK",
+                      "ref": "artist:HtMQw9",
+                      "name": "Button / Resend verification email",
+                      "width": "fill_container",
+                      "descendants": {
+                        "artist:wKSako": {
+                          "content": "Resend verification email"
+                        },
+                        "artist:DyTdif": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "frame",
+                      "id": "t6RxJT",
+                      "name": "Footnote",
+                      "gap": 6,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "justifyContent": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "RVWc7a",
+                          "ref": "artist:pZcyuZ",
+                          "name": "Back to login",
+                          "content": "Back to login"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 5600,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Dim"
+      },
+      "context": "/verify-email?email=&token=&next= — Reached after sign-up (email prefilled) or from the verification email. The link adds a one-click \"Verify email\"; the code works on its own."
+    },
+    {
+      "type": "frame",
       "id": "iMunj1",
       "name": "Artist / Verify email / Code entered / Desktop",
       "width": 1440,
@@ -1183,7 +1667,7 @@
           ]
         }
       ],
-      "x": 5110,
+      "x": 6090,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -1425,7 +1909,7 @@
           ]
         }
       ],
-      "x": 6650,
+      "x": 7630,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -1676,7 +2160,7 @@
           ]
         }
       ],
-      "x": 7140,
+      "x": 8120,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -1933,7 +2417,7 @@
           ]
         }
       ],
-      "x": 8680,
+      "x": 9660,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -2175,7 +2659,7 @@
           ]
         }
       ],
-      "x": 9170,
+      "x": 10150,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -2423,7 +2907,7 @@
           ]
         }
       ],
-      "x": 10710,
+      "x": 11690,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -2659,7 +3143,7 @@
           ]
         }
       ],
-      "x": 11200,
+      "x": 12180,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -2901,7 +3385,7 @@
           ]
         }
       ],
-      "x": 12740,
+      "x": 13720,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -3156,7 +3640,7 @@
           ]
         }
       ],
-      "x": 13230,
+      "x": 14210,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -3417,7 +3901,7 @@
           ]
         }
       ],
-      "x": 14770,
+      "x": 15750,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -3687,7 +4171,7 @@
           ]
         }
       ],
-      "x": 15260,
+      "x": 16240,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -3963,7 +4447,7 @@
           ]
         }
       ],
-      "x": 16800,
+      "x": 17780,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -4218,7 +4702,7 @@
           ]
         }
       ],
-      "x": 17290,
+      "x": 18270,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -4479,7 +4963,7 @@
           ]
         }
       ],
-      "x": 18830,
+      "x": 19810,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -4734,7 +5218,7 @@
           ]
         }
       ],
-      "x": 19320,
+      "x": 20300,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -4995,7 +5479,7 @@
           ]
         }
       ],
-      "x": 20860,
+      "x": 21840,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -5231,7 +5715,7 @@
           ]
         }
       ],
-      "x": 21350,
+      "x": 22330,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -5473,7 +5957,7 @@
           ]
         }
       ],
-      "x": 22890,
+      "x": 23870,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -5718,7 +6202,7 @@
           ]
         }
       ],
-      "x": 23380,
+      "x": 24360,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -5969,7 +6453,7 @@
           ]
         }
       ],
-      "x": 24920,
+      "x": 25900,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -6214,7 +6698,7 @@
           ]
         }
       ],
-      "x": 25410,
+      "x": 26390,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -6465,7 +6949,7 @@
           ]
         }
       ],
-      "x": 26950,
+      "x": 27930,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -6710,7 +7194,7 @@
           ]
         }
       ],
-      "x": 27440,
+      "x": 28420,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -6961,7 +7445,7 @@
           ]
         }
       ],
-      "x": 28980,
+      "x": 29960,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -7216,7 +7700,7 @@
           ]
         }
       ],
-      "x": 29470,
+      "x": 30450,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -7477,7 +7961,7 @@
           ]
         }
       ],
-      "x": 31010,
+      "x": 31990,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -7732,7 +8216,7 @@
           ]
         }
       ],
-      "x": 31500,
+      "x": 32480,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -7993,7 +8477,7 @@
           ]
         }
       ],
-      "x": 33040,
+      "x": 34020,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -8169,7 +8653,7 @@
           ]
         }
       ],
-      "x": 33530,
+      "x": 34510,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -8351,7 +8835,7 @@
           ]
         }
       ],
-      "x": 35070,
+      "x": 36050,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
