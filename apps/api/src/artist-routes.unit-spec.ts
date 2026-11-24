@@ -100,6 +100,8 @@ function overlap(a: string, b: string): boolean {
 const LISTENER_ARTIST_ROUTES = [
   'GET /artists',
   'GET /artists/:id',
+  /** The promotion countdown tile on the player's artist page (AI promotion, AC-11). */
+  'GET /artists/:id/countdown',
   'GET /artists/:id/playlists',
   'GET /artists/:id/top-tracks',
   'POST /artists/:id/follow',
