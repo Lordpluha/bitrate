@@ -17,7 +17,6 @@ import { getAllFollowedUsers } from '@entities/User'
 const ok = new Response(null, { status: 200 })
 const track = (id: string) => ({
   artistId: 'artist-1',
-  audioUrl: `${id}.mp3`,
   cover: null,
   createdAt: '2026-01-01T00:00:00.000Z',
   deletedAt: null,

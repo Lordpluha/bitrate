@@ -6,13 +6,14 @@ import { UsersAuthModule } from '@modules/users-auth/users-auth.module'
 import { Module } from '@nestjs/common'
 import { TracksController } from './catalog/tracks.controller'
 import { PlaybackSessionsModule } from './playback/playback-sessions.module'
+import { TrackLicenseService } from './playback/track-license.service'
 import { TrackPlaybackController } from './playback/track-playback.controller'
 import { TrackPlaybackService } from './playback/track-playback.service'
 import { TranscodeModule } from './processing/transcode.module'
 import { TracksCoreModule } from './tracks-core.module'
 
 @Module({
-  providers: [TrackPlaybackService],
+  providers: [TrackPlaybackService, TrackLicenseService],
   controllers: [TracksController, TrackPlaybackController],
   imports: [
     PrismaModule,

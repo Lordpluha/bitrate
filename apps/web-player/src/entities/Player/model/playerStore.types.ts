@@ -1,7 +1,7 @@
-import type { ApiSchemas } from '@bitrate/contracts'
+import type { ApiTrack } from '@shared/api/track'
 
 type TrackDirection = 'next' | 'prev'
-export type PlayerTrack = ApiSchemas['TrackEntity']
+export type PlayerTrack = ApiTrack
 export type RepeatMode = 'off' | 'all' | 'one'
 
 export type QueuedTrack = {

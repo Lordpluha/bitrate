@@ -894,6 +894,26 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/api/v1/tracks/{id}/license': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Authorised by the session token alone, like the renditions it unlocks (ADR-0077).
+     * @description Answers the W3C ClearKey licence request a CDM emits for an encrypted rendition with the track's content key as a JSON Web Key set. Requires the live session's token (`?t=`), so revocation and listener limits apply to keys as to bytes. Never cached. See ADR-0077.
+     */
+    post: operations['TrackPlaybackController_requestLicense_v1']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/api/v1/playlists': {
     parameters: {
       query?: never
@@ -2948,6 +2968,63 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/api/v1/support/conversations': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Start a support conversation
+     * @description Works for guests and signed-in listeners. A guest receives a token, shown once, that opens the conversation later through the `x-support-token` header.
+     */
+    post: operations['SupportConversationsController_create_v1']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/support/conversations/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** Read a support conversation with its messages */
+    get: operations['SupportConversationsController_view_v1']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/support/conversations/{id}/messages': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Send a message and stream the reply
+     * @description Server-Sent Events. Each event is named after its `type` and carries JSON: `text-delta` `{ text }`, `state` `{ state, reason? }`, `citation` `{ citation }`, and last `done` `{ outcome, grounded }`. While an operator owns the conversation the message is stored and only `done` with outcome `forwarded` follows.
+     */
+    post: operations['SupportConversationsController_send_v1']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/api/v1/artists/me/profile': {
     parameters: {
       query?: never
@@ -3319,8 +3396,6 @@ export interface components {
       id: string
       /** @description The title value. */
       title: string
-      /** @description The audio url value. */
-      audioUrl: string
       /** @description The cover value. */
       cover: string | null
       /**
@@ -3646,6 +3721,20 @@ export interface components {
        *     ]
        */
       fragments: number[][]
+      /**
+       * @description CENC `cbcs` under the track's content key (ADR-0077): request the bytes with `?encrypted=1`
+       *     and the key from `POST /tracks/:id/license`. `null` for a clear rendition.
+       * @example {
+       *       "scheme": "cbcs",
+       *       "keyId": "0123456789abcdef0123456789abcdef"
+       *     }
+       */
+      encryption?: {
+        /** @enum {string} */
+        scheme: 'cbcs'
+        /** @example 0123456789abcdef0123456789abcdef */
+        keyId: string
+      } | null
     }
     TrackManifestEntity: {
       /**
@@ -3692,13 +3781,22 @@ export interface components {
        */
       deviceId?: string
     }
+    TrackLicenseRequestDto: {
+      /**
+       * @description Key ids the CDM needs, base64url without padding
+       * @example [
+       *       "ASNFZ4mrze8BI0VniavN7w"
+       *     ]
+       */
+      kids: string[]
+      /** @enum {string} */
+      type?: 'temporary'
+    }
     PlaylistTrackEntity: {
       /** @description The id value. */
       id: string
       /** @description The title value. */
       title: string
-      /** @description The audio url value. */
-      audioUrl: string
       /** @description The cover value. */
       cover: string | null
       /**
@@ -5196,6 +5294,52 @@ export interface components {
       daily: components['schemas']['AnalyticsDayEntity'][]
       topTracks: components['schemas']['AnalyticsTopTrackEntity'][]
       external: components['schemas']['AnalyticsExternalSourceEntity'][]
+    }
+    CreateSupportConversationDto: {
+      /** @enum {string} */
+      audience: 'listener' | 'artist'
+      /** @enum {string} */
+      locale?: 'en' | 'uk' | 'pl'
+    }
+    SupportCitationEntity: {
+      /** @description Stable id of the article chunk the answer drew on. */
+      chunkId: string
+      title: string
+      /** @description Public page of the source, when it has one. */
+      url?: string
+    }
+    SupportMessageEntity: {
+      id: string
+      /** @enum {string} */
+      role: 'user' | 'assistant' | 'operator'
+      text: string
+      /** @description Sources of an assistant answer; empty for other messages. */
+      citations: components['schemas']['SupportCitationEntity'][]
+      /** Format: date-time */
+      createdAt: string
+    }
+    SupportConversationEntity: {
+      id: string
+      /** @enum {string} */
+      audience: 'listener' | 'artist'
+      /** @enum {string} */
+      locale: 'en' | 'uk' | 'pl'
+      /**
+       * @description Who answers now: the assistant, an operator (waiting or replying), or nobody.
+       * @enum {string}
+       */
+      state: 'bot' | 'waiting_operator' | 'operator' | 'resolved'
+      messages: components['schemas']['SupportMessageEntity'][]
+      /** Format: date-time */
+      createdAt: string
+    }
+    SupportConversationCreatedEntity: {
+      conversation: components['schemas']['SupportConversationEntity']
+      /** @description Shown once and stored only as a hash: the guest client must keep it. */
+      token?: string
+    }
+    SendSupportMessageDto: {
+      text: string
     }
     ArtistSocialLinksEntity: {
       /** Format: uri */
@@ -11521,7 +11665,6 @@ export interface operations {
            *         "albumId": "album123",
            *         "artistId": "artist123",
            *         "cover": "https://example.com/cover.jpg",
-           *         "audioUrl": "",
            *         "userId": "",
            *         "createdAt": "2026-01-01T00:00:00.000Z",
            *         "updatedAt": "2026-01-01T00:00:00.000Z",
@@ -12240,6 +12383,8 @@ export interface operations {
       query: {
         /** @description Playback session token */
         t: unknown
+        /** @description `1` for the `cbcs`-encrypted rendition (ADR-0077); without it the clear rendition, which only the lowest bitrate has once a track is encrypted */
+        encrypted?: '1'
       }
       header?: {
         /** @description Inclusive byte window, e.g. `bytes=929-100915` */
@@ -12367,6 +12512,153 @@ export interface operations {
           [name: string]: unknown
         }
         content?: never
+      }
+    }
+  }
+  TrackPlaybackController_requestLicense_v1: {
+    parameters: {
+      query: {
+        /** @description Playback session token */
+        t: unknown
+      }
+      header?: never
+      path: {
+        /** @description Track ID */
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['TrackLicenseRequestDto']
+      }
+    }
+    responses: {
+      /** @description ClearKey licence */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            keys: {
+              /** @enum {string} */
+              kty: 'oct'
+              /** @description Key id, base64url */
+              kid: string
+              /** @description Content key, base64url */
+              k: string
+            }[]
+            /** @enum {string} */
+            type: 'temporary'
+          }
+        }
+      }
+      /** @description Malformed licence request */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Missing, forged, expired, revoked or other-track session token */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description The track is not encrypted, or the request names another key id */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Keys unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': Record<string, never>
+        }
       }
     }
   }
@@ -30568,6 +30860,352 @@ export interface operations {
         content?: never
       }
       /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  SupportConversationsController_create_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CreateSupportConversationDto']
+      }
+    }
+    responses: {
+      201: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['SupportConversationCreatedEntity']
+        }
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many new conversations */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  SupportConversationsController_view_v1: {
+    parameters: {
+      query?: never
+      header?: {
+        /** @description Guest token */
+        'x-support-token'?: string
+      }
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['SupportConversationEntity']
+        }
+      }
+      /** @description Missing, or not the caller’s */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['SupportConversationEntity']
+        }
+      }
+    }
+  }
+  SupportConversationsController_send_v1: {
+    parameters: {
+      query?: never
+      header?: {
+        /** @description Guest token */
+        'x-support-token'?: string
+      }
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['SendSupportMessageDto']
+      }
+    }
+    responses: {
+      /** @description The event stream */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Missing, or not the caller’s */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description A reply is still streaming */
+      409: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many messages */
       429: {
         headers: {
           [name: string]: unknown

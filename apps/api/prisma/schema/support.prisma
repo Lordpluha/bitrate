@@ -1,0 +1,89 @@
+/// Who a support conversation serves: listeners (web-player) or artists (web-artists).
+enum SupportAudience {
+  LISTENER
+  ARTIST
+}
+
+/// The channel a support conversation runs in (ADR-0074).
+enum SupportChannel {
+  WEB
+  TELEGRAM
+  WHATSAPP
+  INSTAGRAM
+}
+
+/// Who answers the conversation now: the assistant, an operator, or nobody (resolved).
+enum SupportConversationState {
+  BOT
+  WAITING_OPERATOR
+  OPERATOR
+  RESOLVED
+}
+
+/// Author of a support message.
+enum SupportMessageRole {
+  USER
+  ASSISTANT
+  OPERATOR
+}
+
+/// Whether a handed-off conversation still needs an operator.
+enum SupportTicketStatus {
+  OPEN
+  RESOLVED
+}
+
+/// A conversation with the support assistant. Deleted 90 days after its last message
+/// (retention job, #567), and with the user's account.
+model SupportConversation {
+  id            String                   @id @default(uuid(7)) @db.Uuid
+  createdAt     DateTime                 @default(now())
+  updatedAt     DateTime                 @default(now()) @updatedAt
+  audience      SupportAudience
+  channel       SupportChannel           @default(WEB)
+  /// `en`, `uk` or `pl`.
+  locale        String                   @db.VarChar(8)
+  state         SupportConversationState @default(BOT)
+  /// sha256 of the guest access token; the token itself is shown to the guest only once.
+  guestTokenHash String?                 @unique
+  userId        String?                  @db.Uuid
+  user          User?                    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  /// Model tokens spent in this conversation, for the per-conversation cap.
+  inputTokens   Int                      @default(0)
+  outputTokens  Int                      @default(0)
+  lastMessageAt DateTime                 @default(now())
+
+  messages SupportMessage[]
+  ticket   SupportTicket?
+
+  @@index([userId])
+  @@index([lastMessageAt])
+}
+
+model SupportMessage {
+  id             String              @id @default(uuid(7)) @db.Uuid
+  createdAt      DateTime            @default(now())
+  conversationId String              @db.Uuid
+  conversation   SupportConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  role           SupportMessageRole
+  text           String
+  /// Knowledge sources shown under an assistant answer: `[{ chunkId, title, url? }]`.
+  citations      Json?
+
+  @@index([conversationId, createdAt])
+}
+
+/// A conversation handed to an operator. One per conversation; reopened on a new handoff.
+model SupportTicket {
+  id             String              @id @default(uuid(7)) @db.Uuid
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @default(now()) @updatedAt
+  conversationId String              @unique @db.Uuid
+  conversation   SupportConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  /// The assistant's one-sentence summary of what the user needs.
+  reason         String
+  status         SupportTicketStatus @default(OPEN)
+  resolvedAt     DateTime?
+
+  @@index([status, createdAt])
+}

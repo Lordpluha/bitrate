@@ -4,6 +4,7 @@
  */
 export { aiSdkChatModel } from './ai-sdk-chat-model.js'
 export { aiSdkEmbedder } from './ai-sdk-embedder.js'
+export type { ChatModelOptions, ReasoningEffort } from './chat-model-options.js'
 export {
   createSupportModels,
   type SupportModelKeys,

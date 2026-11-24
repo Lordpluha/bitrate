@@ -154,6 +154,9 @@ USER bitrateapi
 # compose `command` paths.
 WORKDIR /app/apps/api
 RUN node --input-type=module -e "await import('@bitrate/converter')"
+# The worker encrypts renditions with Shaka Packager (ADR-0077); its static-pie binary ships in the
+# npm package. Fail the build, not the first encrypted transcode, if it is missing or cannot run.
+RUN node --input-type=module -e "const { packagerPath } = await import('@bitrate/converter/packager-path'); const { execFileSync } = await import('node:child_process'); execFileSync(packagerPath(), ['--version'], { stdio: 'inherit' })"
 WORKDIR /app
 
 EXPOSE 3000

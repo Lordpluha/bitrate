@@ -59,6 +59,8 @@ export class AdminTrackAudioService {
       where: {
         trackId: id,
         format: CMAF_FORMAT,
+        // Staff preview plays natively without a key: only clear renditions (ADR-0077 D10).
+        encrypted: false,
         ...(bitrate === undefined ? {} : { bitrate }),
         track: { processingStatus: 'READY' },
       },

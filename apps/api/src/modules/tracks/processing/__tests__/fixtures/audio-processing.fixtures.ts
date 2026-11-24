@@ -18,6 +18,31 @@ export const cmafResult = {
   })),
 }
 
+/**
+ * What `encryptCmafRenditions` returns for {@link cmafResult}: both renditions encrypted (their
+ * fragments grow) plus an unencrypted 128 kbps copy on the same grid (ADR-0077).
+ */
+export const encryptedCmafResult = (keyId: string) => ({
+  outputDir: '/tmp/bitrate-audio-jobs/track-1-job-1-1/cmaf-encrypted',
+  timescale: 48_000,
+  durationTicks: 2_881_024,
+  renditions: [
+    ...[128, 192].map((bitrate) => ({ bitrate, encrypted: true })),
+    { bitrate: 128, encrypted: false },
+  ].map(({ bitrate, encrypted }) => ({
+    bitrate,
+    path: `/tmp/cmaf-encrypted/${bitrate}${encrypted ? '' : '-clear'}.m4a`,
+    size: bitrate * 7_100,
+    initRange: [0, 801] as [number, number],
+    indexRange: [802, 857] as [number, number],
+    fragments: [
+      { startTicks: 0, durationTicks: 196_608, offset: 858, length: 66_400 },
+      { startTicks: 196_608, durationTicks: 196_608, offset: 67_258, length: 66_600 },
+    ],
+    encryption: encrypted ? { scheme: 'cbcs' as const, keyId } : null,
+  })),
+})
+
 /** The payload of a well-formed `convert-audio` job. */
 export const jobData = {
   trackId: 'track-1',

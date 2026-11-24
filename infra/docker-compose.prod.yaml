@@ -90,6 +90,11 @@ x-api-env: &api-env
   QDRANT_API_KEY: ${QDRANT_API_KEY:?QDRANT_API_KEY is required for the support knowledge index}
   OPENAI_API_KEY:
   SUPPORT_EMBED_MODEL:
+  # Support assistant chat (#571). Without ANTHROPIC_API_KEY every conversation goes straight
+  # to an operator. The budget is in US dollars per month; the model defaults to Haiku 5.5.
+  ANTHROPIC_API_KEY:
+  SUPPORT_CHAT_MODEL:
+  SUPPORT_MONTHLY_BUDGET_USD:
 
 services:
   postgres:
