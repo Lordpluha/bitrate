@@ -122,7 +122,16 @@ export type ManifestRendition = {
   /** Inclusive byte range of the MSE initialization segment (`ftyp`+`moov`). */
   initRange: readonly [number, number]
   fragments: readonly ManifestFragment[]
+  /**
+   * CENC `cbcs` under the track's content key (ADR-0077), or `null`/absent for a clear rendition.
+   * The element plays encrypted renditions only through EME ClearKey and a host `requestLicense`;
+   * otherwise it plays the clear ones.
+   */
+  encryption?: ManifestRenditionEncryption | null
 }
+
+/** How an encrypted rendition is protected; the key id is 128-bit lowercase hex. */
+export type ManifestRenditionEncryption = { scheme: 'cbcs'; keyId: string }
 
 /** The manifest the API returns from `POST /tracks/{id}/play-sessions`. */
 export type TrackManifest = {
@@ -158,12 +167,22 @@ export type BitratePlayerFetchRangeInput = {
   expectedSize: number
   range: readonly [number, number]
   signal: AbortSignal
+  /** The encrypted rendition of this bitrate (ADR-0077); the API serves it with `?encrypted=1`. */
+  encrypted?: boolean
 }
 
-/** One CMAF rendition file, which a media element without MSE plays whole. */
+/** One CMAF rendition file, which a media element without MSE plays whole — always clear. */
 export type BitratePlayerRenditionUrlInput = {
   trackId: string
   bitrate: number
+}
+
+/** A ClearKey licence request the element's CDM emitted for one track (ADR-0077). */
+export type BitratePlayerLicenseInput = {
+  trackId: string
+  /** The CDM's licence request (`MediaKeyMessageEvent.message`), JSON with base64url `kids`. */
+  message: ArrayBuffer
+  signal?: AbortSignal
 }
 
 /** Where the element keeps each play's resume position (web-player: `sessionStorage`). */
@@ -189,6 +208,12 @@ export type BitratePlayerStreaming = {
    * hosts pair it with `crossOrigin`.
    */
   renditionUrl: (input: BitratePlayerRenditionUrlInput) => string
+  /**
+   * Sends a ClearKey licence request for the track's live session and returns the licence bytes
+   * (`POST /tracks/:id/license`). Without it, or without ClearKey `cbcs` in the browser, the
+   * element plays only clear renditions (ADR-0077).
+   */
+  requestLicense?: (input: BitratePlayerLicenseInput) => Promise<ArrayBuffer>
   positions?: BitratePlayerPositionStore
   isConstrained?: () => boolean
   /** `crossorigin` for both media elements, e.g. `use-credentials` for cookie-authed media. */
