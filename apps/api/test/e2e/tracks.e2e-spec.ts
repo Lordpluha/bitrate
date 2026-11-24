@@ -33,6 +33,38 @@ describe('TracksController (e2e)', () => {
     expect(Array.isArray(res.body.data)).toBe(true)
   })
 
+  it('never returns the master storage key (audioUrl) to listeners (#522)', async () => {
+    const runId = Date.now().toString(36)
+    const artist = await prisma.artist.create({
+      data: {
+        email: `artist_${runId}@example.com`,
+        username: `Hidden Master ${runId}`,
+        emailVerifiedAt: new Date(),
+      },
+    })
+    const track = await prisma.track.create({
+      data: {
+        title: `Hidden Master ${runId}`,
+        audioUrl: 'tracks/master/secret-key.wav',
+        artistId: artist.id,
+        processingStatus: 'READY',
+        publishedAt: new Date(Date.now() - 60_000),
+      },
+    })
+
+    const detail = await request(app.getHttpServer()).get(`/tracks/${track.id}`).expect(200)
+    const list = await request(app.getHttpServer()).get('/tracks').expect(200)
+
+    expect(detail.body.id).toBe(track.id)
+    expect(detail.body).not.toHaveProperty('audioUrl')
+    expect(JSON.stringify(list.body)).not.toContain('secret-key')
+    const stored = await prisma.track.findUnique({
+      where: { id: track.id },
+      select: { audioUrl: true },
+    })
+    expect(stored?.audioUrl).toBe('tracks/master/secret-key.wav')
+  })
+
   it('GET /tracks/:id with invalid UUID should return 400', async () => {
     await request(app.getHttpServer()).get('/tracks/not-a-uuid').expect(400)
   })

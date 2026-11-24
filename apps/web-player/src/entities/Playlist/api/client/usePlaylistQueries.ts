@@ -10,7 +10,7 @@ import {
 import { useEffect } from 'react'
 import { fetchAllPages } from '@/shared/api/fetchAllPages'
 import type { PlaylistWithTracks } from './playlist.types'
-import { playlistQueryKeys, withPlayableTrackUrls } from './playlistQuery'
+import { playlistQueryKeys } from './playlistQuery'
 import {
   libraryPlaylistsResponseSchema,
   likedPlaylistsPageSchema,
@@ -63,7 +63,7 @@ export const playlistDetailQuery = (playlistId: string) =>
       ensureOkResponse(response, 'Failed to load playlist')
       if (!data) throw new ApiRequestError('Playlist response is empty', 502)
 
-      return withPlayableTrackUrls(data)
+      return { ...data, tracks: data.tracks ?? [] }
     },
     queryKey: playlistQueryKeys.detail(playlistId),
     staleTime: 60_000,

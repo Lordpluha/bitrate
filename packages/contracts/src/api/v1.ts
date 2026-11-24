@@ -3376,8 +3376,6 @@ export interface components {
       id: string
       /** @description The title value. */
       title: string
-      /** @description The audio url value. */
-      audioUrl: string
       /** @description The cover value. */
       cover: string | null
       /**
@@ -3754,8 +3752,6 @@ export interface components {
       id: string
       /** @description The title value. */
       title: string
-      /** @description The audio url value. */
-      audioUrl: string
       /** @description The cover value. */
       cover: string | null
       /**
@@ -11624,7 +11620,6 @@ export interface operations {
            *         "albumId": "album123",
            *         "artistId": "artist123",
            *         "cover": "https://example.com/cover.jpg",
-           *         "audioUrl": "",
            *         "userId": "",
            *         "createdAt": "2026-01-01T00:00:00.000Z",
            *         "updatedAt": "2026-01-01T00:00:00.000Z",
