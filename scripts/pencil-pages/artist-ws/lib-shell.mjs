@@ -42,11 +42,11 @@ export function addShell(lib, nav) {
               },
               [
                 I('search', { width: 16, height: 16, fill: C.artistTextSecondary }),
-                muted('Search your workspace', {
+                muted('Search workspace', {
                   width: 'fill_container',
                   textGrowth: 'fixed-width',
                 }),
-                muted('⌘K', { fontSize: 11 }),
+                muted('Ctrl K', { fontSize: 11 }),
               ],
             ),
           ),
@@ -73,6 +73,7 @@ export function addShell(lib, nav) {
           use('Logo/Mark', { name: 'Mark' }),
           T('Bitrate', { fontSize: 18, fill: C.artistForeground }),
         ]),
+        part('search', use('Button/Icon', { name: 'Search' }, { icon: { icon: 'search' } })),
         part('bell', use('Button/Icon', { name: 'Notifications' }, { icon: { icon: 'bell' } })),
       ]),
     ),

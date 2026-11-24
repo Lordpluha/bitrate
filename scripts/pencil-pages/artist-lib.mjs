@@ -11,6 +11,7 @@ import { setMode } from './kit.mjs'
 import { addActions } from './artist-ws/lib-actions.mjs'
 import { addAuth } from './artist-ws/lib-auth.mjs'
 import { addCatalogue } from './artist-ws/lib-catalogue.mjs'
+import { addDashRows } from './artist-ws/lib-dash-rows.mjs'
 import { addData } from './artist-ws/lib-data.mjs'
 import { addDelivery } from './artist-ws/lib-delivery.mjs'
 import { addDraft } from './artist-ws/lib-draft.mjs'
@@ -63,6 +64,7 @@ addShowcase(lib)
 addData(lib)
 addMedia(lib)
 addRows(lib)
+addDashRows(lib)
 addLayout(lib)
 addCatalogue(lib)
 addPaging(lib)

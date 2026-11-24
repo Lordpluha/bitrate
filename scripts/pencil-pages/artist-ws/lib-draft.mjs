@@ -4,13 +4,6 @@
 import { C, Col, I, Row, T } from '../kit.mjs'
 import { artistPaint } from './paint.mjs'
 
-const TRACK = {
-  '': ['circle-check', 'artistStatusReady', 'Audio uploaded'],
-  Missing: ['circle-alert', 'artistStatusWarning', 'No audio uploaded'],
-  Uploading: ['loader-circle', 'artistStatusProcessing', 'Uploading… 64%'],
-  Failed: ['circle-x', 'artistStatusError', 'Choose a WAV, FLAC, MP3 or OGG file.'],
-}
-
 /** Adds track, checklist, lock, credit, split and identifier rows to the library. */
 export function addDraft(lib) {
   const { comp, part, add, slot, use, nest } = lib
@@ -20,62 +13,49 @@ export function addDraft(lib) {
   const small = (s, o = {}) => T(s, { fontSize: 11, fill: C.artistTextSecondary, ...wrap, ...o })
   const trail = () =>
     slot('trail', { layout: 'horizontal', width: 'fit_content', gap: 6, alignItems: 'center' })
-  for (const [variant, [icon, role, status]] of Object.entries(TRACK))
-    add(
-      comp(
-        variant ? `Row/Track ${variant}` : 'Row/Track',
-        Row(
-          {
-            name: 'Track Row',
-            width: 640,
-            gap: 12,
-            padding: [12, 0],
-            alignItems: 'start',
-            ...paint.hairline(),
-          },
-          [
-            part(
-              'order',
-              Col({ name: 'Order', gap: 2 }, [
-                use(
-                  'Button/Icon',
-                  { name: 'Move up', width: 26, height: 26 },
-                  { icon: { icon: 'arrow-up' } },
-                ),
-                use(
-                  'Button/Icon',
-                  { name: 'Move down', width: 26, height: 26 },
-                  { icon: { icon: 'arrow-down' } },
-                ),
-              ]),
-            ),
-            part(
-              'number',
-              T('1', { fontSize: 13, fontWeight: '500', fill: C.artistTextSecondary }),
-            ),
-            Col({ name: 'Text', gap: 4, width: 'fill_container' }, [
-              part('title', strong('Night Signal')),
-              part('meta', small('Original · 3:42 · ISRC GB-BTR-26-00012')),
-              Row({ name: 'Status', gap: 6, width: 'fill_container' }, [
-                I(icon, { width: 13, height: 13, fill: C[role] }),
-                part('status', small(status, { fill: C[role] })),
-              ]),
-              ...(variant === 'Uploading'
-                ? [
-                    use(
-                      'Progress',
-                      { name: 'Upload', width: 'fill_container' },
-                      { bar: { width: 180 } },
-                    ),
-                  ]
-                : []),
-              slot('genres', { layout: 'horizontal', width: 'fit_content', gap: 6 }),
+  /* DraftTrackRow: reorder arrows with the position (or the bare position when locked), title, meta,
+     audio and genre lines (alert icon when missing), the track status chip, the inline player and the
+     explicit actions */
+  const line = (key, icon, text) =>
+    Row({ name: key, gap: 6, width: 'fill_container' }, [
+      part(`${key}Icon`, I(icon, { width: 13, height: 13, fill: C.artistStatusWarning })),
+      part(key, small(text)),
+    ])
+  add(
+    comp(
+      'Row/Track',
+      Col({ name: 'Track Row', width: 640, gap: 10, padding: [12, 0], ...paint.hairline() }, [
+        Row({ name: 'Head', width: 'fill_container', gap: 12, alignItems: 'start' }, [
+          part(
+            'order',
+            Col({ name: 'Order', gap: 2, alignItems: 'center' }, [
+              use(
+                'Button/Icon',
+                { name: 'Move up', width: 26, height: 26 },
+                { icon: { icon: 'arrow-up' } },
+              ),
+              part('orderIndex', T('1', { fontSize: 11, fill: C.artistTextSecondary })),
+              use(
+                'Button/Icon',
+                { name: 'Move down', width: 26, height: 26 },
+                { icon: { icon: 'arrow-down' } },
+              ),
             ]),
-            trail(),
-          ],
-        ),
-      ),
-    )
+          ),
+          part('number', T('1', { fontSize: 13, fontWeight: '500', fill: C.artistTextSecondary })),
+          Col({ name: 'Text', gap: 4, width: 'fill_container' }, [
+            part('title', strong('Night Signal')),
+            part('meta', small('Original · 3:42 · ISRC GB-BTR-26-00012')),
+            line('audio', 'circle-alert', 'Audio uploaded'),
+            line('genres', 'circle-alert', 'Genres: Synthwave, Electronic'),
+          ]),
+          slot('status', { layout: 'horizontal', width: 'fit_content', gap: 6 }),
+        ]),
+        slot('player', { gap: 0 }),
+        slot('actions', { layout: 'horizontal', width: 'fill_container', gap: 6 }),
+      ]),
+    ),
+  )
   for (const done of [true, false])
     add(
       comp(

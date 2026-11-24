@@ -13,7 +13,7 @@ const NAV = {
   profile: ['user-round', 'Profile'],
   settings: ['settings-2', 'Settings'],
 }
-const THEME_ICON = { Dark: 'moon', Light: 'sun', Dim: 'contrast' }
+const THEME_ICON = { Dark: 'moon', Light: 'sun', Dim: 'eclipse' }
 /** Width of a tile spanning `n` of the 12 columns. */
 const span = (n) => 93 * n - 20
 
@@ -32,7 +32,10 @@ export function artistFrames(ui) {
       },
       [shell],
     )
-  const desktop = ({ nav, crumb, action = null, actionIcon = 'plus', theme = 'Dark' }, nodes) => {
+  const desktop = (
+    { nav, crumb, action = null, actionIcon = 'plus', theme = 'Dark', back = false },
+    nodes,
+  ) => {
     const [icon, label] = NAV[nav]
     return screen(
       'Desktop',
@@ -49,12 +52,21 @@ export function artistFrames(ui) {
           'sidebar.pref_theme.icon': { icon: THEME_ICON[theme] },
           'sidebar.pref_theme.label': { content: theme },
           'header.crumb': { content: crumb },
-          ...(action
+          /* the release workspace swaps Create release for the outline "Back to music" */
+          ...(back
             ? {
-                'header.action.label': { content: action },
-                'header.action.icon': actionIcon ? { icon: actionIcon } : { enabled: false },
+                'header.action': W(
+                  'Button/Outline',
+                  { name: 'Back to music' },
+                  { label: { content: 'Back to music' }, icon: { enabled: false } },
+                ),
               }
-            : { 'header.action': { enabled: false } }),
+            : action
+              ? {
+                  'header.action.label': { content: action },
+                  'header.action.icon': actionIcon ? { icon: actionIcon } : { enabled: false },
+                }
+              : { 'header.action': { enabled: false } }),
           content: fill('Content', nodes.flat(), { gap: 20, padding: [36, 48, 48, 48] }),
         },
       ),

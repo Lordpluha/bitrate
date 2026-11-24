@@ -86,46 +86,55 @@ export function addLayout(lib) {
     ),
     comp(
       'Tile/Edit',
+      /* FreeGridCanvas: the tile's real content (inert) inside the selection outline, the move handle,
+         remove and the resize corner */
       Col(
         {
           name: 'Edit Tile',
           width: 360,
-          gap: 12,
-          padding: 14,
-          cornerRadius: 10,
-          ...paint.releaseGlass(),
+          gap: 6,
+          padding: 6,
+          cornerRadius: 12,
           stroke: C.artistSelectionBorder,
           strokeWidth: 2,
         },
         [
-          Row({ name: 'Handle Bar', width: 'fill_container', gap: 8 }, [
-            I('grip-vertical', { width: 16, height: 16, fill: C.artistTextSecondary }),
-            part(
-              'title',
-              T('Current release', {
-                fontSize: 13,
-                fontWeight: '500',
-                fill: C.artistForeground,
-                ...wrap,
-              }),
-            ),
-            use('Button/Icon', { name: 'Remove', width: 28, height: 28 }, { icon: { icon: 'x' } }),
-          ]),
-          slot('body', { gap: 12 }),
+          Row(
+            {
+              name: 'Handle Bar',
+              width: 'fill_container',
+              gap: 8,
+              justifyContent: 'space_between',
+            },
+            [
+              use(
+                'Button/Icon',
+                { name: 'Move', width: 28, height: 28 },
+                { icon: { icon: 'grip-vertical' } },
+              ),
+              use(
+                'Button/Icon',
+                { name: 'Remove', width: 28, height: 28 },
+                { icon: { icon: 'x' } },
+              ),
+            ],
+          ),
+          slot('body', { gap: 0 }),
           Row({ name: 'Resize', width: 'fill_container', justifyContent: 'end' }, [
             I('move-diagonal-2', { width: 14, height: 14, fill: C.artistIcon }),
           ]),
         ],
       ),
     ),
+    /* TileDrawer: a full-width strip above the canvas with the removed blocks */
     comp(
       'Drawer/Tiles',
-      Col(
+      Row(
         {
           name: 'Tile Drawer',
-          width: 280,
-          gap: 12,
-          padding: 16,
+          width: 1096,
+          gap: 14,
+          padding: 14,
           cornerRadius: 14,
           ...paint.sheet(),
         },
@@ -134,7 +143,7 @@ export function addLayout(lib) {
             'title',
             T('Add a block', { fontSize: 13, fontWeight: '500', fill: C.artistForeground }),
           ),
-          slot('items', { gap: 8 }),
+          slot('items', { layout: 'horizontal', width: 'fill_container', gap: 8 }),
         ],
       ),
     ),

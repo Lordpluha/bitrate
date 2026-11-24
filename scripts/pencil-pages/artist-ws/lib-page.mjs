@@ -42,7 +42,7 @@ const SECTIONS = [
   [
     'Workspace pages',
     'Release covers, the stage ring, premiere countdown, track player and share bar; the first-run poster, the Add a block drawer and the modal; the music catalogue table, filters and pagination; the now-playing island.',
-    /^(Cover|Ring|Countdown|Player|Share|Poster|Drawer|Modal|Catalogue|Page\/|Select|Island)/,
+    /^(Cover|Ring|Countdown|Player|Share|Poster|Drawer|Modal|Catalogue|Page\/|Select|Island|Link\/)/,
   ],
   [
     'Release stages',
@@ -52,7 +52,7 @@ const SECTIONS = [
   [
     'Account and insights',
     'The public profile preview card, the hued analytics stat, the authenticator QR code and the bare toggles of the notification channels. Image and link fields sit with the forms; device and channel rows with the bento rows.',
-    /^(Profile|QR|Toggle|Stat\/Hue)/,
+    /^(Profile|QR|Checkbox|Stat\/Hue)/,
   ],
   [
     'Shell',

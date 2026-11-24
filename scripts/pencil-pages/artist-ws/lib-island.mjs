@@ -1,7 +1,7 @@
 // Floating workspace pieces: the phone menu drawer (DashboardMobileMenu: brand and close, the
 // "Artist workspace" sections, preferences and the account with sign out) and the now-playing island
 // (NowPlayingIsland: spinning cover, title, equaliser, play/pause and close; expanded with the seek bar).
-import { C, Col, F, I, Row, T } from '../kit.mjs'
+import { C, Col, F, I, id, Row, T } from '../kit.mjs'
 import { artistPaint } from './paint.mjs'
 
 /** Adds the phone menu drawer and the now-playing island to the library. */
@@ -101,24 +101,33 @@ export function addIsland(lib) {
             ...(expanded
               ? [
                   Col({ name: 'More', gap: 6, width: 'fill_container', padding: [0, 8, 6, 8] }, [
-                    use('Progress', { name: 'Seek', width: 'fill_container' }, {}),
-                    Row(
-                      { name: 'Meta', width: 'fill_container', justifyContent: 'space_between' },
-                      [
-                        part(
-                          'time',
-                          T('1:12 / 3:42', { fontSize: 11, fill: C.artistTextSecondary }),
-                        ),
-                        part(
-                          'link',
-                          T('Open release', {
-                            fontSize: 11,
-                            fontWeight: '500',
-                            fill: C.artistIcon,
-                          }),
-                        ),
-                      ],
-                    ),
+                    /* Waveform seek: the played part in the accent, the rest muted */
+                    {
+                      type: 'path',
+                      id: id(),
+                      name: 'Waveform',
+                      width: 'fill_container',
+                      height: 28,
+                      viewBox: [0, 0, 288, 28],
+                      geometry: Array.from({ length: 48 }, (_, i) => {
+                        const h =
+                          4 + Math.round(10 * Math.abs(Math.sin(i * 0.7) * Math.cos(i * 0.23)))
+                        return `M${i * 6 + 1} ${14 - h} V${14 + h}`
+                      }).join(' '),
+                      stroke: C.artistIcon,
+                      strokeWidth: 2,
+                      strokeLinecap: 'round',
+                    },
+                    Row({ name: 'Meta', width: 'fill_container', gap: 10 }, [
+                      part('time', T('1:12 / 3:42', { fontSize: 11, fill: C.artistTextSecondary })),
+                      part(
+                        'link',
+                        T('Open release', { fontSize: 11, fontWeight: '500', fill: C.artistIcon }),
+                      ),
+                      F({ name: 'Space', width: 'fill_container', height: 1 }),
+                      I('volume-2', { width: 15, height: 15, fill: C.artistTextSecondary }),
+                      use('Progress', { name: 'Volume', width: 72 }, { bar: { width: 54 } }),
+                    ]),
                   ]),
                 ]
               : []),

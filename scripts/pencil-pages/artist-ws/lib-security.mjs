@@ -1,7 +1,7 @@
 // Settings pieces (views/SettingsView, features/account-security, notification-preferences): the
-// authenticator QR code, a signed-in device row (this device or another), bare toggles and the
-// notification channel row (category with in-app, email and push switches).
-import { C, Col, F, I, id, Row, T } from '../kit.mjs'
+// authenticator QR code, a signed-in device row (this device or another), bare checkboxes and the
+// notification channel row (category with in-app, email and push cells).
+import { C, Col, I, id, Row, T } from '../kit.mjs'
 import { artistPaint } from './paint.mjs'
 
 /* a deterministic 21 × 21 module pattern with the three finder squares */
@@ -97,28 +97,20 @@ export function addSecurity(lib) {
         ]),
       ),
     )
-  const track = (on) =>
+  /* the notification table's bare checkboxes */
+  const box = (on) =>
     Row(
       {
-        name: 'Track',
-        width: 36,
-        height: 20,
-        padding: 2,
-        cornerRadius: 10,
-        justifyContent: on ? 'end' : 'start',
+        name: 'Checkbox',
+        width: 16,
+        height: 16,
+        cornerRadius: 4,
+        justifyContent: 'center',
         ...(on ? { fill: paint.action().fill } : paint.control()),
       },
-      [
-        F({
-          name: 'Thumb',
-          width: 16,
-          height: 16,
-          cornerRadius: 8,
-          fill: on ? C.primaryForeground : C.artistTextSecondary,
-        }),
-      ],
+      on ? [I('check', { width: 12, height: 12, fill: C.primaryForeground })] : [],
     )
-  add(comp('Toggle/On', track(true)), comp('Toggle/Off', track(false)))
+  add(comp('Checkbox/Checked', box(true)), comp('Checkbox', box(false)))
   add(
     comp(
       'Row/Channels',

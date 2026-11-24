@@ -4,11 +4,13 @@
 import { C, Col, I, Row, T } from '../kit.mjs'
 import { artistPaint } from './paint.mjs'
 
+/* c3 is the status column; c6 (Updated) is the releases tab's sixth column */
 const COLS = [
-  ['c2', 150],
-  ['c3', 110],
-  ['c4', 130],
+  ['c2', 130],
+  ['c3', 120],
+  ['c4', 110],
   ['c5', 110],
+  ['c6', 100],
 ]
 
 /** Adds the catalogue controls, table and pagination pieces to the library. */
@@ -109,7 +111,7 @@ export function addCatalogue(lib) {
           ]),
         ]),
         ...cells(false).slice(0, 1),
-        Row({ name: 'Status Cell', width: 110 }, [
+        Row({ name: 'Status Cell', width: 120 }, [
           slot('status', { layout: 'horizontal', width: 'fit_content', gap: 6 }),
         ]),
         ...cells(false).slice(2),

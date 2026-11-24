@@ -42,6 +42,7 @@ export function addProfile(lib) {
         [
           image('header', `${COVER_ART}album-afterglow.webp`, 'fill_container', 140, 0),
           Col({ name: 'Identity', gap: 10, width: 'fill_container', padding: [16, 20, 20, 20] }, [
+            part('note', small('Preview · unsaved changes are shown but not published')),
             image('photo', `${AVATARS}avatar1.jpg`, 88, 88, 44),
             Row({ name: 'Name', gap: 8 }, [
               part(
@@ -58,6 +59,8 @@ export function addProfile(lib) {
             part('bio', T('No bio yet.', { fontSize: 12, fill: C.artistForeground, ...wrap })),
             slot('links', { layout: 'horizontal', width: 'fit_content', gap: 6 }),
           ]),
+          /* the photo and header image fields live in the card (.artist-profile-images) */
+          slot('images', { layout: 'horizontal', gap: 20, padding: [0, 20, 20, 20] }),
         ],
       ),
     ),

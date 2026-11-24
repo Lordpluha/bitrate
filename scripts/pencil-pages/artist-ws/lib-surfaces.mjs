@@ -11,7 +11,7 @@ const TOASTS = {
 
 /** Adds panel, popover, option rows, toasts and the legal blocks to the library. */
 export function addSurfaces(lib) {
-  const { comp, part, add, slot } = lib
+  const { comp, part, add, slot, use } = lib
   const paint = artistPaint()
   const wrap = { width: 'fill_container', textGrowth: 'fixed-width', lineHeight: 1.6 }
   add(
@@ -41,7 +41,24 @@ export function addSurfaces(lib) {
           ...paint.sheet(),
         },
         [
-          part('title', T('Theme', { fontSize: 12, fontWeight: '500', fill: C.artistForeground })),
+          /* heading: optional icon, title, optional close (the notifications popover has both) */
+          Row({ name: 'Head', width: 'fill_container', gap: 8 }, [
+            part('icon', I('bell', { width: 15, height: 15, fill: C.artistIcon })),
+            part(
+              'title',
+              T('Theme', {
+                fontSize: 12,
+                fontWeight: '500',
+                fill: C.artistForeground,
+                width: 'fill_container',
+                textGrowth: 'fixed-width',
+              }),
+            ),
+            part(
+              'close',
+              use('Button/Icon', { name: 'Close', width: 28, height: 28 }, { icon: { icon: 'x' } }),
+            ),
+          ]),
           slot('items', { gap: 4 }),
         ],
       ),

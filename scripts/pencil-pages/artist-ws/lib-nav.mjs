@@ -1,7 +1,7 @@
 // Workspace navigation (DashboardDesignNavigation + ArtistDashboard sidebar): seven sections, the
 // active pill, the collapse control, preferences, support and the account; expanded (248px) and
 // collapsed (80px) glass sidebars.
-import { Col, F, Row } from '../kit.mjs'
+import { C, Col, F, Row, T } from '../kit.mjs'
 import { artistPaint } from './paint.mjs'
 
 /** key → [lucide icon, label]; the order of the shipped sidebar */
@@ -14,10 +14,10 @@ const NAV = [
   ['profile', 'user-round', 'Profile'],
   ['settings', 'settings-2', 'Settings'],
 ]
+/* SidebarPreferences: language, then theme; Help & support is a text button (not in the rail) */
 const PREFS = [
+  ['language', 'globe', 'English'],
   ['theme', 'moon', 'Dark'],
-  ['language', 'languages', 'English'],
-  ['support', 'life-buoy', 'Help and support'],
 ]
 
 /** Adds the expanded and collapsed sidebars to the library; returns the sections for the phone menu. */
@@ -110,9 +110,22 @@ export function addNav(lib) {
                   ),
                 ),
               ),
+              ...(rail
+                ? []
+                : [
+                    Row(
+                      { name: 'Support', width: 'fill_container', height: 32, padding: [0, 12] },
+                      [
+                        part(
+                          'support',
+                          T('Help & support', { fontSize: 13, fill: C.artistTextSecondary }),
+                        ),
+                      ],
+                    ),
+                  ]),
               F({ name: 'Gap', width: 'fill_container', height: 10 }),
               rail
-                ? use('Avatar', { name: 'Avatar' })
+                ? use('Avatar/Fallback', { name: 'Avatar' })
                 : part('account', use('Nav/Account', { name: 'Account' })),
             ],
           ),

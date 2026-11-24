@@ -7,9 +7,12 @@ import { artistPaint } from './paint.mjs'
 /* availability → [icon, colour role, label] (entities/delivery availabilityLabels) */
 const CELLS = {
   Live: ['circle-check', 'artistStatusReady', 'Live'],
-  Pending: ['clock-3', 'artistStatusProcessing', 'Pending'],
+  Pending: ['clock', 'artistStatusProcessing', 'Pending'],
+  Failed: ['triangle-alert', 'artistStatusError', 'Failed'],
   'Not sent': ['circle-dashed', 'artistTextSecondary', 'Not sent'],
-  Failed: ['circle-x', 'artistStatusError', 'Failed'],
+  'Not connected': ['circle-dashed', 'artistStatusWarning', 'Not connected'],
+  Unavailable: ['circle-off', 'artistTextSecondary', 'Unavailable'],
+  'Taken down': ['ban', 'artistTextSecondary', 'Taken down'],
   'Not in plan': ['minus', 'artistTextSecondary', 'Not in the plan'],
 }
 
@@ -88,7 +91,7 @@ export function addDelivery(lib) {
     comp(
       'Matrix/Header',
       Row({ name: 'Matrix Header', width: 1000, gap: 10, padding: [10, 16], ...paint.hairline() }, [
-        T('RELEASE', { fontSize: 9, letterSpacing: 0.8, fill: C.artistTextSecondary, ...wrap }),
+        Row({ name: 'Release column', width: 'fill_container', height: 1 }, []),
         ...['SPOTIFY', 'APPLE MUSIC', 'YOUTUBE MUSIC', 'AMAZON MUSIC', 'DEEZER', 'TIDAL'].map(head),
         Row({ name: 'Chevron Space', width: 16, height: 1 }, []),
       ]),
@@ -108,10 +111,12 @@ export function addDelivery(lib) {
                 ...wrap,
               }),
             ),
-            part(
-              'meta',
-              T('Worldwide · Not sent', { fontSize: 11, fill: C.artistTextSecondary, ...wrap }),
-            ),
+            slot('meta', {
+              layout: 'horizontal',
+              width: 'fill_container',
+              gap: 6,
+              alignItems: 'center',
+            }),
           ]),
         ]),
         slot('cells', { layout: 'horizontal', width: 'fit_content', gap: 10 }),

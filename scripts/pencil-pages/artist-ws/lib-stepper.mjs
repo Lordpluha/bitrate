@@ -31,6 +31,12 @@ export function addStepper(lib) {
       C.artistTextSecondary,
       C.artistTextSecondary,
     ],
+    /* stages.ts `optional`: Deliver after approval — open, never required */
+    Optional: [
+      { stroke: C.artistStatusReady, strokeWidth: 1, strokeDash: [3, 3] },
+      C.artistTextSecondary,
+      C.artistTextSecondary,
+    ],
   }
   for (const [state, [surface, ink, labelInk]] of Object.entries(dot))
     add(

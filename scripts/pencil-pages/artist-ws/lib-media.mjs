@@ -153,6 +153,7 @@ export function addMedia(lib) {
         seg('live', 'artistStatusReady', 'fill_container'),
         seg('review', 'artistStatusProcessing', 100),
         seg('drafts', 'artistTextSecondary', 100),
+        seg('other', 'artistReleaseBorder', 100),
       ]),
     ),
   )
