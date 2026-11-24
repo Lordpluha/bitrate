@@ -87,7 +87,7 @@ Per-app файлы до контейнера тоже не доходят: ни 
 
 | Приложение | Валидация | Что читает |
 |---|---|---|
-| `apps/api` | Zod, `apps/api/env.schema.ts` — падает на старте | 29 переменных схемы + 3 в обход неё |
+| `apps/api` | Zod, `apps/api/env.schema.ts` — падает на старте | 31 переменная схемы + 3 в обход неё |
 | `apps/web-player` | Zod, `apps/web-player/env.schema.ts` — падает на сборке | 6 переменных схемы + 5 сборочных |
 | `apps/web-artists` | Zod, `apps/web-artists/env.schema.ts` | 3 переменные схемы + 1 в обход неё |
 | `apps/desktop` | нет | только `TAURI_DEV_HOST`, и тот ставит Tauri |
@@ -158,6 +158,8 @@ Per-app файлы до контейнера тоже не доходят: ни 
 | `QDRANT_API_KEY` | ассистент поддержки | Ключ Qdrant. Локально не нужен; в prod-compose обязателен, без него стек не поднимется |
 | `OPENAI_API_KEY` | ассистент поддержки | Ключ провайдера эмбеддингов по умолчанию. Без него индексация пропускается с записью в лог |
 | `ANTHROPIC_API_KEY` | ассистент поддержки | Ключ модели ответов по умолчанию. Без него, без `OPENAI_API_KEY` или без `QDRANT_URL` чат работает, но каждый диалог сразу передаётся оператору |
+| `TELEGRAM_BOT_TOKEN` | ассистент поддержки | Токен бота поддержки от @BotFather (#574). Без него или без `TELEGRAM_WEBHOOK_SECRET` вебхук `/api/v1/support/telegram/webhook` отвечает 404 |
+| `TELEGRAM_WEBHOOK_SECRET` | ассистент поддержки | 16–256 символов `A-Z a-z 0-9 _ -`. Telegram присылает его в `X-Telegram-Bot-Api-Secret-Token`, чужой запрос получает 401. Задаётся при регистрации вебхука: `curl -F url=https://<api>/api/v1/support/telegram/webhook -F secret_token=<секрет> https://api.telegram.org/bot<токен>/setWebhook` |
 
 ### Условно обязательные
 
@@ -339,6 +341,9 @@ S3_SECRET_KEY=bitrateDevSecretKeyChangeMe0001
 QDRANT_URL=http://localhost:6333
 # OPENAI_API_KEY=sk-...
 # ANTHROPIC_API_KEY=sk-ant-...
+# support bot in Telegram (#574): both, or the webhook answers 404
+# TELEGRAM_BOT_TOKEN=123456:ABC...
+# TELEGRAM_WEBHOOK_SECRET=change-me-to-a-long-random-string
 
 # ══════════ 2. OPTIONAL, WITH A DEFAULT ══════════
 # The values below match the schema defaults: drop a line entirely if you like,
