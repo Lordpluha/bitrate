@@ -1,7 +1,9 @@
 import type { PrismaService } from '@infra/prisma/prisma.service'
+import type { TelegramSendJob } from '@infra/queues/support-telegram.queue'
 import { beforeEach, describe, expect, it, jest } from '@jest/globals'
 import { NotFoundException } from '@nestjs/common'
 import type { SupportMessage, SupportTicket } from '@prisma/client'
+import type { Queue } from 'bullmq'
 import type { SupportInboxRow } from './entities'
 import { SupportInboxService } from './support-inbox.service'
 
@@ -36,12 +38,22 @@ const row = (messages: SupportMessage[]): SupportInboxRow => ({
   state: 'WAITING_OPERATOR',
   guestTokenHash: 'hash',
   userId: null,
+  externalId: null,
   inputTokens: 10,
   outputTokens: 5,
   lastMessageAt: NOW,
   ticket,
   messages,
 })
+
+type TicketLookup = {
+  id: string
+  conversation: { channel: 'WEB' | 'TELEGRAM'; externalId: string | null; locale: string }
+}
+const webTicket: TicketLookup = {
+  id: 't-1',
+  conversation: { channel: 'WEB', externalId: null, locale: 'uk' },
+}
 
 function makePrisma() {
   const prisma = {
@@ -52,7 +64,7 @@ function makePrisma() {
       update: jest.fn<(args?: unknown) => Promise<unknown>>().mockResolvedValue({}),
     },
     supportTicket: {
-      findUnique: jest.fn<(args?: unknown) => Promise<{ id: string } | null>>(),
+      findUnique: jest.fn<(args?: unknown) => Promise<TicketLookup | null>>(),
       update: jest.fn<(args?: unknown) => Promise<unknown>>().mockResolvedValue({}),
     },
     supportMessage: {
@@ -66,10 +78,15 @@ function makePrisma() {
 describe('SupportInboxService', () => {
   let prisma: ReturnType<typeof makePrisma>
   let service: SupportInboxService
+  let telegram: { add: jest.Mock<(...args: unknown[]) => Promise<unknown>> }
 
   beforeEach(() => {
     prisma = makePrisma()
-    service = new SupportInboxService(prisma as unknown as PrismaService)
+    telegram = { add: jest.fn(async () => ({})) }
+    service = new SupportInboxService(
+      prisma as unknown as PrismaService,
+      telegram as unknown as Queue<TelegramSendJob>,
+    )
   })
 
   describe('list', () => {
@@ -142,7 +159,7 @@ describe('SupportInboxService', () => {
 
   describe('reply', () => {
     it('adds an operator message, takes the conversation over and reopens the ticket in one transaction', async () => {
-      prisma.supportTicket.findUnique.mockResolvedValue({ id: 't-1' })
+      prisma.supportTicket.findUnique.mockResolvedValue(webTicket)
       prisma.supportConversation.findUnique.mockResolvedValue(row([]))
 
       await service.reply('c-1', 'We are on it')
@@ -161,6 +178,31 @@ describe('SupportInboxService', () => {
       })
     })
 
+    it('leaves a web reply to the widget, which loads it', async () => {
+      prisma.supportTicket.findUnique.mockResolvedValue(webTicket)
+      prisma.supportConversation.findUnique.mockResolvedValue(row([]))
+
+      await service.reply('c-1', 'We are on it')
+
+      expect(telegram.add).not.toHaveBeenCalled()
+    })
+
+    it('queues a reply to a Telegram conversation for sending in its language', async () => {
+      prisma.supportTicket.findUnique.mockResolvedValue({
+        id: 't-1',
+        conversation: { channel: 'TELEGRAM', externalId: '42', locale: 'pl' },
+      })
+      prisma.supportConversation.findUnique.mockResolvedValue(row([]))
+
+      await service.reply('c-1', 'Sprawdzamy to')
+
+      expect(telegram.add).toHaveBeenCalledWith(
+        'send',
+        { chatId: '42', text: 'Sprawdzamy to', citations: [], locale: 'pl' },
+        expect.objectContaining({ attempts: 5 }),
+      )
+    })
+
     it('refuses a conversation without a ticket and writes nothing', async () => {
       prisma.supportTicket.findUnique.mockResolvedValue(null)
       await expect(service.reply('c-1', 'Hello')).rejects.toBeInstanceOf(NotFoundException)
@@ -170,7 +212,7 @@ describe('SupportInboxService', () => {
 
   describe('resolve', () => {
     it('resolves the ticket and the conversation, so the assistant answers the next message', async () => {
-      prisma.supportTicket.findUnique.mockResolvedValue({ id: 't-1' })
+      prisma.supportTicket.findUnique.mockResolvedValue(webTicket)
       prisma.supportConversation.findUnique.mockResolvedValue(row([]))
 
       await service.resolve('c-1')

@@ -1,7 +1,16 @@
+import { isLocale } from '@bitrate/support-core'
 import { normalizePagination } from '@common/pagination'
 import { PrismaService } from '@infra/prisma/prisma.service'
+import {
+  SUPPORT_TELEGRAM_QUEUE,
+  SUPPORT_TELEGRAM_SEND_JOB,
+  TELEGRAM_SEND_JOB_OPTIONS,
+  type TelegramSendJob,
+} from '@infra/queues/support-telegram.queue'
+import { InjectQueue } from '@nestjs/bullmq'
 import { Injectable, NotFoundException } from '@nestjs/common'
 import type { SupportTicket } from '@prisma/client'
+import type { Queue } from 'bullmq'
 import { SUPPORT_ERRORS } from '../chat/errors/support.errors'
 import {
   type PaginatedSupportInboxEntity,
@@ -17,7 +26,10 @@ import { type SupportInboxQuery, supportInboxWhere } from './support-inbox-filte
  */
 @Injectable()
 export class SupportInboxService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    @InjectQueue(SUPPORT_TELEGRAM_QUEUE) private readonly telegram: Queue<TelegramSendJob>,
+  ) {}
 
   async list(query: SupportInboxQuery): Promise<PaginatedSupportInboxEntity> {
     const { page, limit, skip } = normalizePagination(query.page, query.limit)
@@ -49,9 +61,12 @@ export class SupportInboxService {
     return SupportInboxConversationEntity.fromHistory(row)
   }
 
-  /** The user sees the reply in the originating channel; the web widget picks it up on its next load. */
+  /**
+   * The user sees the reply in the originating channel: the web widget picks it up on its next
+   * load, and a Telegram reply is queued for the API process to send (#574).
+   */
   async reply(id: string, text: string): Promise<SupportInboxConversationEntity> {
-    await this.requireTicket(id)
+    const { conversation } = await this.requireTicket(id)
     await this.prisma.$transaction([
       this.prisma.supportMessage.create({ data: { conversationId: id, role: 'OPERATOR', text } }),
       this.prisma.supportConversation.update({
@@ -63,6 +78,14 @@ export class SupportInboxService {
         data: { status: 'OPEN', resolvedAt: null },
       }),
     ])
+    if (conversation.channel === 'TELEGRAM' && conversation.externalId) {
+      const locale = isLocale(conversation.locale) ? conversation.locale : 'en'
+      await this.telegram.add(
+        SUPPORT_TELEGRAM_SEND_JOB,
+        { chatId: conversation.externalId, text, citations: [], locale },
+        TELEGRAM_SEND_JOB_OPTIONS,
+      )
+    }
     return await this.view(id)
   }
 
@@ -79,12 +102,17 @@ export class SupportInboxService {
     return await this.view(id)
   }
 
-  private async requireTicket(conversationId: string): Promise<void> {
+  /** The ticket with where its conversation runs; 404 when it was never handed off. */
+  private async requireTicket(conversationId: string) {
     const ticket = await this.prisma.supportTicket.findUnique({
       where: { conversationId },
-      select: { id: true },
+      select: {
+        id: true,
+        conversation: { select: { channel: true, externalId: true, locale: true } },
+      },
     })
     if (!ticket) throw new NotFoundException(SUPPORT_ERRORS.CONVERSATION_NOT_FOUND)
+    return ticket
   }
 }
 

@@ -11,7 +11,7 @@ import { ArtistsAuthModule } from '@modules/artists-auth/artists-auth.module'
 import { HistoryModule } from '@modules/history/history.module'
 import { PlaylistsModule } from '@modules/playlists/playlists.module'
 import { SearchModule } from '@modules/search/search.module'
-import { SupportChatModule } from '@modules/support'
+import { SupportChatModule, SupportTelegramModule } from '@modules/support'
 import { TracksModule } from '@modules/tracks/tracks.module'
 import { UsersModule } from '@modules/users/users.module'
 import { UsersAuthModule } from '@modules/users-auth/users-auth.module'
@@ -53,6 +53,7 @@ import { verifyArtistEmail, verifyUserEmail } from '../helpers/db'
     TracksModule,
     SearchModule,
     SupportChatModule,
+    SupportTelegramModule,
     HistoryModule,
     CacheModule,
     StorageModule,

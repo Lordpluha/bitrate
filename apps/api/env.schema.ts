@@ -139,6 +139,13 @@ export const envSchema = z
      * `apps/api/knowledge`; in development the API reads `apps/docs/docs` directly.
      */
     SUPPORT_KNOWLEDGE_DIR: z.string().min(1).default('../docs/docs'),
+    /** Telegram bot of the support assistant (#574); the webhook answers 404 without both. */
+    TELEGRAM_BOT_TOKEN: z.string().min(20).optional(),
+    /** Sent by Telegram in `X-Telegram-Bot-Api-Secret-Token`; set with `setWebhook`. */
+    TELEGRAM_WEBHOOK_SECRET: z
+      .string()
+      .regex(/^[A-Za-z0-9_-]{16,256}$/)
+      .optional(),
 
     // CDN
     // CDN_URL: z.string().url().optional(),

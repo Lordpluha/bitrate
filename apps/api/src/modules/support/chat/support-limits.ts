@@ -18,3 +18,6 @@ export const SUPPORT_TURN_LOCK_SECONDS = 120
 /** Per-IP request limits; the per-conversation allowance and the budget sit behind them. */
 export const SUPPORT_CREATE_THROTTLE = { default: { ttl: 60_000, limit: 10 } }
 export const SUPPORT_MESSAGE_THROTTLE = { default: { ttl: 60_000, limit: 20 } }
+
+/** Messages one messenger contact may send a minute; the next one gets a notice, later ones are dropped. */
+export const SUPPORT_CONTACT_MESSAGES_PER_MINUTE = 20
