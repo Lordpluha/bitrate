@@ -1,11 +1,11 @@
 const DAY_MS = 86_400_000
 
 /** How far back the default window starts, so overdue steps stay visible. */
-export const CALENDAR_LOOKBACK_DAYS = 7
+const CALENDAR_LOOKBACK_DAYS = 7
 /** The default window covers a whole plan (−28 … +28 days) with room either side. */
-export const CALENDAR_DEFAULT_DAYS = 63
+const CALENDAR_DEFAULT_DAYS = 63
 /** The longest window one request may ask for. */
-export const CALENDAR_MAX_DAYS = 120
+const CALENDAR_MAX_DAYS = 120
 
 /** The `[from, to)` window of a calendar request; missing ends come from the defaults. */
 export function calendarWindow(

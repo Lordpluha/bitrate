@@ -16,7 +16,6 @@ export const ModerationOutputSchema = z.object({
   allowed: z.boolean(),
   category: z.enum(CATEGORIES),
 })
-export type ModerationOutput = z.infer<typeof ModerationOutputSchema>
 
 /** Stable instructions for the check task; kept first so providers cache them. */
 export const MODERATION_SYSTEM_PROMPT = [

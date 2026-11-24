@@ -1,5 +1,5 @@
-export { type CalendarQuery, CalendarQueryDto, CalendarQuerySchema } from './calendar-query.dto'
-export { POST_ACTIONS, type PostAction, PostActionDto, PostActionSchema } from './post-action.dto'
+export { type CalendarQuery, CalendarQuerySchema } from './calendar-query.dto'
+export { type PostAction, PostActionDto, PostActionSchema } from './post-action.dto'
 export { PROMOTION_CHANNELS, PROMOTION_GOALS, PROMOTION_STEP_ACTIONS } from './promotion-enums'
 export {
   PromotionProfileDto,
