@@ -3264,6 +3264,26 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/api/v1/artists/{id}/countdown': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * The upcoming-release countdown of an artist's page
+     * @description Present while the artist has approved a countdown step of an unpublished release and its day has come; only the title, cover and release time are shown.
+     */
+    get: operations['PromotionCountdownController_countdown_v1']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/api/v1/artists/me/profile': {
     parameters: {
       query?: never
@@ -5768,6 +5788,21 @@ export interface components {
        * @enum {string}
        */
       action: 'copied' | 'exported'
+    }
+    ArtistCountdownDetailsEntity: {
+      /** Format: uuid */
+      releaseId: string
+      title: string
+      /** @description Stored cover, as on albums */
+      cover: string | null
+      /**
+       * Format: date-time
+       * @description When the release goes live
+       */
+      releaseAt: string
+    }
+    ArtistCountdownEntity: {
+      countdown: components['schemas']['ArtistCountdownDetailsEntity'] | null
     }
     ArtistSocialLinksEntity: {
       /** Format: uri */
@@ -33904,6 +33939,110 @@ export interface operations {
       }
       /** @description The plan was replaced */
       409: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  PromotionCountdownController_countdown_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ArtistCountdownEntity']
+        }
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
         headers: {
           [name: string]: unknown
         }
