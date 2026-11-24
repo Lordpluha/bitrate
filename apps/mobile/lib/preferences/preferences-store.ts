@@ -6,7 +6,7 @@ import type { ThemeName } from '@/constants/theme'
 import type { Locale } from '@/lib/i18n/locales'
 
 export type ThemePreference = ThemeName | 'system'
-type LocalePreference = Locale | 'system'
+export type LocalePreference = Locale | 'system'
 
 type PreferencesState = {
   theme: ThemePreference
