@@ -5,6 +5,8 @@ import {
   PromotionModelUnavailableError,
   PromotionOutputRejectedError,
 } from '../ai/generator'
+import { PromotionEventsService } from '../events'
+import type { InputModerationService } from '../moderation'
 import { PROMOTION_ERRORS } from '../promotion.errors'
 import { GeneratePlanService } from './generate-plan.service'
 
@@ -22,13 +24,20 @@ const post = (offsetDays: number, title: string) => ({
 describe('GeneratePlanService', () => {
   let prisma: PrismaMock
   let generator: { generate: jest.Mock }
+  let moderation: { isAllowed: jest.Mock }
   let service: GeneratePlanService
 
   beforeEach(() => {
     resetPrismaMock()
     prisma = prismaMock
     generator = { generate: jest.fn() }
-    service = new GeneratePlanService(prisma, generator as unknown as PromotionGenerator)
+    moderation = { isAllowed: jest.fn(() => Promise.resolve(true)) }
+    service = new GeneratePlanService(
+      prisma,
+      generator as unknown as PromotionGenerator,
+      moderation as unknown as InputModerationService,
+      new PromotionEventsService(prisma),
+    )
   })
 
   const generatingPlan = (status = 'GENERATING') =>
@@ -53,7 +62,7 @@ describe('GeneratePlanService', () => {
             countries: ['UA'],
             audience: null,
             voiceWords: [],
-            voiceExamples: [],
+            voiceExamples: ['New song out soon, come listen'],
           },
         },
       },
@@ -87,6 +96,30 @@ describe('GeneratePlanService', () => {
     expect(prisma.promotionPlan.update).toHaveBeenCalledWith({
       where: { id: PLAN },
       data: { status: 'READY', model: 'anthropic:claude-sonnet-5-5' },
+    })
+    expect(prisma.promotionEvent.create).toHaveBeenCalledWith({
+      data: {
+        artistId: ARTIST,
+        name: 'promotion.plan.generated',
+        schemaVersion: 1,
+        subjectId: PLAN,
+        data: { steps: 3 },
+      },
+    })
+  })
+
+  it('moderates the artist-written text first and fails the plan when it is refused', async () => {
+    generatingPlan()
+    moderation.isAllowed.mockImplementation(() => Promise.resolve(false))
+    await service.generate(PLAN)
+    expect(moderation.isAllowed).toHaveBeenCalledWith(ARTIST, [
+      null,
+      'New song out soon, come listen',
+    ])
+    expect(generator.generate).not.toHaveBeenCalled()
+    expect(prisma.promotionPlan.updateMany).toHaveBeenCalledWith({
+      where: { id: PLAN, status: 'GENERATING' },
+      data: { status: 'FAILED', failure: PROMOTION_ERRORS.INPUT_REJECTED },
     })
   })
 

@@ -129,6 +129,10 @@ model PromotionPlanStep {
   postsStatus  PromotionGenerationStatus?
   /// Message key when `postsStatus` is FAILED.
   postsFailure String?
+  /// A per-step regeneration job is running; the artist cannot act on the step meanwhile.
+  regenerating        Boolean @default(false)
+  /// Message key of the last per-step regeneration failure; cleared by the next request.
+  regenerationFailure String?
   updatedAt    DateTime              @updatedAt @db.Timestamptz(3)
 
   plan  PromotionPlan   @relation(fields: [planId], references: [id], onDelete: Cascade)
@@ -190,4 +194,23 @@ model PromotionPostTranslation {
   post PromotionPost @relation(fields: [postId], references: [id], onDelete: Cascade)
 
   @@unique([postId, language])
+}
+
+/// A product event of AI promotion (spec "Events"). Named and versioned to fit the Stage 3
+/// taxonomy; the approved-or-edited versus rejected share is the Stage 5 gate metric.
+model PromotionEvent {
+  id            String   @id @default(uuid(7)) @db.Uuid
+  artistId      String   @db.Uuid
+  /// e.g. `promotion.step.approved`.
+  name          String
+  schemaVersion Int
+  /// The plan, step, post or translation the event is about.
+  subjectId     String   @db.Uuid
+  data          Json?
+  createdAt     DateTime @default(now()) @db.Timestamptz(3)
+
+  artist Artist @relation(fields: [artistId], references: [id], onDelete: Cascade)
+
+  @@index([artistId, createdAt])
+  @@index([name, createdAt])
 }

@@ -1,4 +1,3 @@
-import { ArtistAuth } from '@modules/artists-auth/artists-auth.guard'
 import type { ArtistAuthRequest } from '@modules/artists-auth/types'
 import {
   Body,
@@ -15,14 +14,18 @@ import {
 } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
 import { ZodValidationPipe } from 'nestjs-zod'
+import { PromotionAuth } from './access'
 import {
   GetStepPostsSwagger,
+  RecordPostActionSwagger,
   RequestStepPostsSwagger,
   RequestTranslationSwagger,
   UpdatePromotionPostSwagger,
   UpdateTranslationSwagger,
 } from './decorators'
 import {
+  type PostAction,
+  PostActionSchema,
   type RequestTranslationInput,
   RequestTranslationSchema,
   type UpdatePromotionPostInput,
@@ -32,6 +35,7 @@ import {
 } from './dtos'
 import {
   PostsViewService,
+  RecordPostActionService,
   RequestPostsService,
   RequestTranslationService,
   UpdatePostService,
@@ -50,10 +54,11 @@ export class PromotionPostsController {
     private readonly posts: UpdatePostService,
     private readonly translations: RequestTranslationService,
     private readonly translationEdits: UpdateTranslationService,
+    private readonly actions: RecordPostActionService,
   ) {}
 
   @GetStepPostsSwagger()
-  @ArtistAuth()
+  @PromotionAuth()
   @Header('Cache-Control', 'private, no-store')
   @Get('posts')
   list(
@@ -65,7 +70,7 @@ export class PromotionPostsController {
   }
 
   @RequestStepPostsSwagger()
-  @ArtistAuth()
+  @PromotionAuth()
   @Header('Cache-Control', 'private, no-store')
   @HttpCode(HttpStatus.ACCEPTED)
   @Post('posts')
@@ -78,7 +83,7 @@ export class PromotionPostsController {
   }
 
   @UpdatePromotionPostSwagger()
-  @ArtistAuth()
+  @PromotionAuth()
   @Header('Cache-Control', 'private, no-store')
   @Patch('posts/:postId')
   edit(
@@ -92,7 +97,7 @@ export class PromotionPostsController {
   }
 
   @RequestTranslationSwagger()
-  @ArtistAuth()
+  @PromotionAuth()
   @Header('Cache-Control', 'private, no-store')
   @HttpCode(HttpStatus.ACCEPTED)
   @Post('posts/:postId/translations')
@@ -108,7 +113,7 @@ export class PromotionPostsController {
   }
 
   @UpdateTranslationSwagger()
-  @ArtistAuth()
+  @PromotionAuth()
   @Header('Cache-Control', 'private, no-store')
   @Patch('translations/:translationId')
   editTranslation(
@@ -121,5 +126,19 @@ export class PromotionPostsController {
   ) {
     const artist = request.artist.id
     return this.translationEdits.update(artist, releaseId, stepId, translationId, input)
+  }
+
+  @RecordPostActionSwagger()
+  @PromotionAuth()
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @Post('posts/:postId/actions')
+  async recordAction(
+    @Req() request: ArtistAuthRequest,
+    @Param('releaseId', uuid) releaseId: string,
+    @Param('stepId', uuid) stepId: string,
+    @Param('postId', uuid) postId: string,
+    @Body(new ZodValidationPipe(PostActionSchema)) input: { action: PostAction },
+  ): Promise<void> {
+    await this.actions.record(request.artist.id, releaseId, stepId, postId, input.action)
   }
 }

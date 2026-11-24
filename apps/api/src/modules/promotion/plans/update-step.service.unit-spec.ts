@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it } from '@jest/globals'
 import { ConflictException, NotFoundException } from '@nestjs/common'
 import { type PrismaMock, prismaMock, resetPrismaMock } from '@test/mocks'
+import { PromotionEventsService } from '../events'
 import { PROMOTION_ERRORS } from '../promotion.errors'
 import { PlanViewService } from './plan-view.service'
 import { UpdateStepService } from './update-step.service'
@@ -18,7 +19,11 @@ describe('UpdateStepService', () => {
   beforeEach(() => {
     resetPrismaMock()
     prisma = prismaMock
-    service = new UpdateStepService(prisma, new PlanViewService(prisma))
+    service = new UpdateStepService(
+      prisma,
+      new PlanViewService(prisma),
+      new PromotionEventsService(prisma),
+    )
     prisma.release.findFirst.mockResolvedValue({ scheduledAt: DATE } as never)
     prisma.promotionPlanStep.findFirst.mockResolvedValue({ planId: PLAN } as never)
   })
@@ -51,7 +56,7 @@ describe('UpdateStepService', () => {
       new ConflictException(PROMOTION_ERRORS.STEP_CHANGED),
     )
     expect(prisma.promotionPlanStep.updateMany).toHaveBeenCalledWith({
-      where: { id: STEP, state: { in: ['SUGGESTED'] } },
+      where: { id: STEP, state: { in: ['SUGGESTED'] }, regenerating: false },
       data: { state: 'APPROVED' },
     })
   })
@@ -72,9 +77,46 @@ describe('UpdateStepService', () => {
       body: 'Out on Sep 26.',
     })
     expect(prisma.promotionPlanStep.updateMany).toHaveBeenCalledWith({
-      where: { id: STEP, state: { in: ['SUGGESTED', 'APPROVED', 'EDITED'] } },
+      where: { id: STEP, state: { in: ['SUGGESTED', 'APPROVED', 'EDITED'] }, regenerating: false },
       data: { state: 'EDITED', aiGenerated: false, body: 'Out on Sep 26.' },
     })
     expect(view.steps[0]?.dueAt?.toISOString()).toBe('2026-09-05T18:00:00.000Z')
+  })
+  it.each([
+    ['approve', 'promotion.step.approved'],
+    ['reject', 'promotion.step.rejected'],
+  ] as const)('records %s as %s for the approval-rate metric', async (action, name) => {
+    latest(PLAN)
+    prisma.promotionPlanStep.updateMany.mockResolvedValue({ count: 1 })
+    prisma.promotionPlan.findFirst.mockResolvedValueOnce({ id: PLAN, steps: [] } as never)
+    await service.update(ARTIST, RELEASE, STEP, { action })
+    expect(prisma.promotionEvent.create).toHaveBeenCalledWith({
+      data: { artistId: ARTIST, name, schemaVersion: 1, subjectId: STEP },
+    })
+  })
+
+  it('records an edit, and nothing when the change did not apply', async () => {
+    latest(PLAN)
+    prisma.promotionPlanStep.updateMany.mockResolvedValueOnce({ count: 0 })
+    await expect(
+      service.update(ARTIST, RELEASE, STEP, { action: 'edit', body: 'x' }),
+    ).rejects.toThrow()
+    expect(prisma.promotionEvent.create).not.toHaveBeenCalled()
+
+    latest(PLAN)
+    prisma.promotionPlanStep.updateMany.mockResolvedValueOnce({ count: 1 })
+    prisma.promotionPlan.findFirst.mockResolvedValueOnce({ id: PLAN, steps: [] } as never)
+    await service.update(ARTIST, RELEASE, STEP, { action: 'edit', body: 'x' })
+    expect(prisma.promotionEvent.create).toHaveBeenCalledWith({
+      data: { artistId: ARTIST, name: 'promotion.step.edited', schemaVersion: 1, subjectId: STEP },
+    })
+  })
+
+  it('records nothing when a step is marked done', async () => {
+    latest(PLAN)
+    prisma.promotionPlanStep.updateMany.mockResolvedValue({ count: 1 })
+    prisma.promotionPlan.findFirst.mockResolvedValueOnce({ id: PLAN, steps: [] } as never)
+    await service.update(ARTIST, RELEASE, STEP, { action: 'done' })
+    expect(prisma.promotionEvent.create).not.toHaveBeenCalled()
   })
 })

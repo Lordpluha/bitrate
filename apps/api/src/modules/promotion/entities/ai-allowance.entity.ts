@@ -9,4 +9,9 @@ export class AiAllowanceEntity {
 
   @ApiProperty({ type: String, format: 'date-time' })
   resetsAt: Date
+
+  @ApiProperty({
+    description: 'AI promotion is switched on for this artist; otherwise the UI hides it',
+  })
+  enabled: boolean
 }
