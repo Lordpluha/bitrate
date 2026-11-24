@@ -1,0 +1,353 @@
+{
+  "version": "2.20",
+  "imports": {
+    "ds": "../../web-player-design/design-system/bitrate.lib.pen"
+  },
+  "children": [
+    {
+      "type": "frame",
+      "id": "sjhcqc",
+      "name": "Mobile / Not found / Mobile / Dark",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "W9n5KG",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "3td8ce",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            12,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "frame",
+              "id": "DCT621",
+              "name": "State Area",
+              "width": "fill_container",
+              "height": "fill_container",
+              "justifyContent": "center",
+              "alignItems": "center",
+              "layout": "vertical",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "1f4IiI",
+                  "ref": "ds:UacIqy",
+                  "name": "State / This screen doesn't exist",
+                  "descendants": {
+                    "ds:QTS6fY": {
+                      "icon": "compass"
+                    },
+                    "ds:LaYbWr": {
+                      "content": "This screen doesn't exist"
+                    },
+                    "ds:IowS15": {
+                      "content": "The link may be broken or the content was removed."
+                    },
+                    "ds:PKR600/ds:NVe7y": {
+                      "content": "Go to Home"
+                    },
+                    "ds:Sk1EVh": {
+                      "enabled": false
+                    }
+                  },
+                  "width": "fill_container"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "kD80Xu",
+          "name": "Island Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16,
+            18,
+            16
+          ],
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "WL0nAV",
+              "ref": "ds:DrlRuW",
+              "name": "Mobile/Island",
+              "width": "fill_container",
+              "descendants": {
+                "ds:67K2eN": {
+                  "fill": "$ds:--secondary"
+                },
+                "ds:ApEsiS": {
+                  "fill": "$ds:--foreground"
+                },
+                "ds:zGaiUK": {
+                  "enabled": false
+                },
+                "ds:LtSnum": {
+                  "enabled": false
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 0,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "app +not-found — Unknown deep link or removed content."
+    },
+    {
+      "type": "frame",
+      "id": "CHwyyT",
+      "name": "Mobile / Not found / Mobile / Light",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "2KCidq",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "ZfRU9h",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            12,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "frame",
+              "id": "xv7I1o",
+              "name": "State Area",
+              "width": "fill_container",
+              "height": "fill_container",
+              "justifyContent": "center",
+              "alignItems": "center",
+              "layout": "vertical",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "BmTjfq",
+                  "ref": "ds:UacIqy",
+                  "name": "State / This screen doesn't exist",
+                  "descendants": {
+                    "ds:QTS6fY": {
+                      "icon": "compass"
+                    },
+                    "ds:LaYbWr": {
+                      "content": "This screen doesn't exist"
+                    },
+                    "ds:IowS15": {
+                      "content": "The link may be broken or the content was removed."
+                    },
+                    "ds:PKR600/ds:NVe7y": {
+                      "content": "Go to Home"
+                    },
+                    "ds:Sk1EVh": {
+                      "enabled": false
+                    }
+                  },
+                  "width": "fill_container"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "Uat6nE",
+          "name": "Island Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16,
+            18,
+            16
+          ],
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "6zpkbZ",
+              "ref": "ds:DrlRuW",
+              "name": "Mobile/Island",
+              "width": "fill_container",
+              "descendants": {
+                "ds:67K2eN": {
+                  "fill": "$ds:--secondary"
+                },
+                "ds:ApEsiS": {
+                  "fill": "$ds:--foreground"
+                },
+                "ds:zGaiUK": {
+                  "enabled": false
+                },
+                "ds:LtSnum": {
+                  "enabled": false
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 490,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Light"
+      },
+      "context": "app +not-found — Unknown deep link or removed content."
+    },
+    {
+      "type": "frame",
+      "id": "KNMKOK",
+      "name": "Mobile / Not found / Mobile / Dim",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "SKUMsv",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "Xvv8wZ",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            12,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "frame",
+              "id": "7WC3Hv",
+              "name": "State Area",
+              "width": "fill_container",
+              "height": "fill_container",
+              "justifyContent": "center",
+              "alignItems": "center",
+              "layout": "vertical",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "HgC7dL",
+                  "ref": "ds:UacIqy",
+                  "name": "State / This screen doesn't exist",
+                  "descendants": {
+                    "ds:QTS6fY": {
+                      "icon": "compass"
+                    },
+                    "ds:LaYbWr": {
+                      "content": "This screen doesn't exist"
+                    },
+                    "ds:IowS15": {
+                      "content": "The link may be broken or the content was removed."
+                    },
+                    "ds:PKR600/ds:NVe7y": {
+                      "content": "Go to Home"
+                    },
+                    "ds:Sk1EVh": {
+                      "enabled": false
+                    }
+                  },
+                  "width": "fill_container"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "WEYQlU",
+          "name": "Island Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16,
+            18,
+            16
+          ],
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "Eftewc",
+              "ref": "ds:DrlRuW",
+              "name": "Mobile/Island",
+              "width": "fill_container",
+              "descendants": {
+                "ds:67K2eN": {
+                  "fill": "$ds:--secondary"
+                },
+                "ds:ApEsiS": {
+                  "fill": "$ds:--foreground"
+                },
+                "ds:zGaiUK": {
+                  "enabled": false
+                },
+                "ds:LtSnum": {
+                  "enabled": false
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 980,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dim"
+      },
+      "context": "app +not-found — Unknown deep link or removed content."
+    }
+  ]
+}

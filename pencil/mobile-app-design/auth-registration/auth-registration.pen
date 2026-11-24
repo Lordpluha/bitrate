@@ -1,0 +1,1355 @@
+{
+  "version": "2.20",
+  "imports": {
+    "ds": "../../web-player-design/design-system/bitrate.lib.pen"
+  },
+  "children": [
+    {
+      "type": "frame",
+      "id": "mHODcO",
+      "name": "Mobile / Registration / Mobile / Dark",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "03sk4y",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "5Ksje1",
+          "name": "Form",
+          "layout": "vertical",
+          "gap": 22,
+          "width": "fill_container",
+          "padding": [
+            20,
+            20
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "ZdFaVx",
+              "ref": "ds:J95vY0",
+              "name": "Logo/Lockup"
+            },
+            {
+              "type": "frame",
+              "id": "ey1bZ8",
+              "name": "Heading",
+              "layout": "vertical",
+              "gap": 8,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "onjuzD",
+                  "ref": "ds:RoXXJv",
+                  "name": "Text/H2",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Create your account for free and start listening"
+                },
+                {
+                  "type": "ref",
+                  "id": "lh1asI",
+                  "ref": "ds:XDvNAD",
+                  "name": "Text/Paragraph",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Sign up with your email to start listening."
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "fg42mE",
+              "name": "Fields",
+              "layout": "vertical",
+              "gap": 12,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "h2DzuF",
+                  "ref": "ds:j04F4",
+                  "name": "Input / Email Address",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:l4agQ": {
+                      "content": "Email Address"
+                    },
+                    "ds:iI0CE": {
+                      "content": "you@example.com"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "kDMenh",
+                  "ref": "ds:j04F4",
+                  "name": "Input / Username",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:l4agQ": {
+                      "content": "Username"
+                    },
+                    "ds:iI0CE": {
+                      "content": "yourname"
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "5vvnvj",
+                  "name": "Password Field",
+                  "gap": 8,
+                  "alignItems": "end",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "vJgJwW",
+                      "ref": "ds:j04F4",
+                      "name": "Input / Password",
+                      "width": "fill_container",
+                      "descendants": {
+                        "ds:l4agQ": {
+                          "content": "Password"
+                        },
+                        "ds:iI0CE": {
+                          "content": "••••••••"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "G43gRI",
+                      "ref": "ds:cS9uPp",
+                      "name": "Button/Icon Ghost",
+                      "descendants": {
+                        "ds:KFmiLY": {
+                          "icon": "eye"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "keYb2M",
+              "ref": "ds:LWaLJ5",
+              "name": "Form/Checkbox Row",
+              "width": "fill_container",
+              "descendants": {
+                "ds:eMN4Sq": {
+                  "content": "I am at least 16 years old and I accept the Terms of Use, Community Guidelines and Privacy Policy"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "FKufTT",
+              "ref": "ds:Y4ylzP",
+              "name": "Button / Register",
+              "width": "fill_container",
+              "descendants": {
+                "ds:NVe7y": {
+                  "content": "Register"
+                },
+                "ds:ksrFi": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "QjBg7R",
+              "name": "Footer Link",
+              "gap": 6,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "2CtW4N",
+                  "ref": "ds:C5Ih8u",
+                  "name": "Text/Muted",
+                  "content": "Already have an account?"
+                },
+                {
+                  "type": "ref",
+                  "id": "1n3ndv",
+                  "ref": "ds:LSzB6i",
+                  "name": "Text/Link",
+                  "content": "Log in"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "x": 0,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "app (auth)/register — Email sign-up; the account confirms its email before the first login."
+    },
+    {
+      "type": "frame",
+      "id": "YOwy9g",
+      "name": "Mobile / Registration / Mobile / Light",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "WmqXol",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "RveF8r",
+          "name": "Form",
+          "layout": "vertical",
+          "gap": 22,
+          "width": "fill_container",
+          "padding": [
+            20,
+            20
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "roEJVI",
+              "ref": "ds:J95vY0",
+              "name": "Logo/Lockup"
+            },
+            {
+              "type": "frame",
+              "id": "y5bzJa",
+              "name": "Heading",
+              "layout": "vertical",
+              "gap": 8,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "y0rCYF",
+                  "ref": "ds:RoXXJv",
+                  "name": "Text/H2",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Create your account for free and start listening"
+                },
+                {
+                  "type": "ref",
+                  "id": "BS0OSe",
+                  "ref": "ds:XDvNAD",
+                  "name": "Text/Paragraph",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Sign up with your email to start listening."
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "fJygoe",
+              "name": "Fields",
+              "layout": "vertical",
+              "gap": 12,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "FqdKJ1",
+                  "ref": "ds:j04F4",
+                  "name": "Input / Email Address",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:l4agQ": {
+                      "content": "Email Address"
+                    },
+                    "ds:iI0CE": {
+                      "content": "you@example.com"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "A06dfZ",
+                  "ref": "ds:j04F4",
+                  "name": "Input / Username",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:l4agQ": {
+                      "content": "Username"
+                    },
+                    "ds:iI0CE": {
+                      "content": "yourname"
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "DQ8PYc",
+                  "name": "Password Field",
+                  "gap": 8,
+                  "alignItems": "end",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "HbNvNo",
+                      "ref": "ds:j04F4",
+                      "name": "Input / Password",
+                      "width": "fill_container",
+                      "descendants": {
+                        "ds:l4agQ": {
+                          "content": "Password"
+                        },
+                        "ds:iI0CE": {
+                          "content": "••••••••"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "KpUzV4",
+                      "ref": "ds:cS9uPp",
+                      "name": "Button/Icon Ghost",
+                      "descendants": {
+                        "ds:KFmiLY": {
+                          "icon": "eye"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "qTZBsS",
+              "ref": "ds:LWaLJ5",
+              "name": "Form/Checkbox Row",
+              "width": "fill_container",
+              "descendants": {
+                "ds:eMN4Sq": {
+                  "content": "I am at least 16 years old and I accept the Terms of Use, Community Guidelines and Privacy Policy"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "P417AD",
+              "ref": "ds:Y4ylzP",
+              "name": "Button / Register",
+              "width": "fill_container",
+              "descendants": {
+                "ds:NVe7y": {
+                  "content": "Register"
+                },
+                "ds:ksrFi": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "QnDpAw",
+              "name": "Footer Link",
+              "gap": 6,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "CHJRaH",
+                  "ref": "ds:C5Ih8u",
+                  "name": "Text/Muted",
+                  "content": "Already have an account?"
+                },
+                {
+                  "type": "ref",
+                  "id": "roLuUM",
+                  "ref": "ds:LSzB6i",
+                  "name": "Text/Link",
+                  "content": "Log in"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "x": 490,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Light"
+      },
+      "context": "app (auth)/register — Email sign-up; the account confirms its email before the first login."
+    },
+    {
+      "type": "frame",
+      "id": "a7YPVt",
+      "name": "Mobile / Registration / Mobile / Dim",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "oZohGv",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "vH6QSQ",
+          "name": "Form",
+          "layout": "vertical",
+          "gap": 22,
+          "width": "fill_container",
+          "padding": [
+            20,
+            20
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "JbKZhU",
+              "ref": "ds:J95vY0",
+              "name": "Logo/Lockup"
+            },
+            {
+              "type": "frame",
+              "id": "SP2ELY",
+              "name": "Heading",
+              "layout": "vertical",
+              "gap": 8,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "MqkVQY",
+                  "ref": "ds:RoXXJv",
+                  "name": "Text/H2",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Create your account for free and start listening"
+                },
+                {
+                  "type": "ref",
+                  "id": "Lew7Bo",
+                  "ref": "ds:XDvNAD",
+                  "name": "Text/Paragraph",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Sign up with your email to start listening."
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "Vk4Jav",
+              "name": "Fields",
+              "layout": "vertical",
+              "gap": 12,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "5yzZT5",
+                  "ref": "ds:j04F4",
+                  "name": "Input / Email Address",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:l4agQ": {
+                      "content": "Email Address"
+                    },
+                    "ds:iI0CE": {
+                      "content": "you@example.com"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "8bP8IN",
+                  "ref": "ds:j04F4",
+                  "name": "Input / Username",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:l4agQ": {
+                      "content": "Username"
+                    },
+                    "ds:iI0CE": {
+                      "content": "yourname"
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "3Mmr28",
+                  "name": "Password Field",
+                  "gap": 8,
+                  "alignItems": "end",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "ZDHoSZ",
+                      "ref": "ds:j04F4",
+                      "name": "Input / Password",
+                      "width": "fill_container",
+                      "descendants": {
+                        "ds:l4agQ": {
+                          "content": "Password"
+                        },
+                        "ds:iI0CE": {
+                          "content": "••••••••"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "8uiRuF",
+                      "ref": "ds:cS9uPp",
+                      "name": "Button/Icon Ghost",
+                      "descendants": {
+                        "ds:KFmiLY": {
+                          "icon": "eye"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "Y4PpW8",
+              "ref": "ds:LWaLJ5",
+              "name": "Form/Checkbox Row",
+              "width": "fill_container",
+              "descendants": {
+                "ds:eMN4Sq": {
+                  "content": "I am at least 16 years old and I accept the Terms of Use, Community Guidelines and Privacy Policy"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "1RMBq5",
+              "ref": "ds:Y4ylzP",
+              "name": "Button / Register",
+              "width": "fill_container",
+              "descendants": {
+                "ds:NVe7y": {
+                  "content": "Register"
+                },
+                "ds:ksrFi": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "e23Fm3",
+              "name": "Footer Link",
+              "gap": 6,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "CQf34k",
+                  "ref": "ds:C5Ih8u",
+                  "name": "Text/Muted",
+                  "content": "Already have an account?"
+                },
+                {
+                  "type": "ref",
+                  "id": "xEAAWh",
+                  "ref": "ds:LSzB6i",
+                  "name": "Text/Link",
+                  "content": "Log in"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "x": 980,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dim"
+      },
+      "context": "app (auth)/register — Email sign-up; the account confirms its email before the first login."
+    },
+    {
+      "type": "frame",
+      "id": "in1vxD",
+      "name": "Mobile / Registration / Validation errors / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "ePPjxm",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "9boE7V",
+          "name": "Form",
+          "layout": "vertical",
+          "gap": 22,
+          "width": "fill_container",
+          "padding": [
+            20,
+            20
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "Rb2eYx",
+              "ref": "ds:J95vY0",
+              "name": "Logo/Lockup"
+            },
+            {
+              "type": "frame",
+              "id": "ScGO2R",
+              "name": "Heading",
+              "layout": "vertical",
+              "gap": 8,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "QHydNX",
+                  "ref": "ds:RoXXJv",
+                  "name": "Text/H2",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Create your account for free and start listening"
+                },
+                {
+                  "type": "ref",
+                  "id": "FNEuCC",
+                  "ref": "ds:XDvNAD",
+                  "name": "Text/Paragraph",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Sign up with your email to start listening."
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "BWhQsJ",
+              "name": "Fields",
+              "layout": "vertical",
+              "gap": 12,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "lJeJxx",
+                  "ref": "ds:j04F4",
+                  "name": "Input / Email Address",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:l4agQ": {
+                      "content": "Email Address"
+                    },
+                    "ds:iI0CE": {
+                      "content": "you@example.com"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "wwnvev",
+                  "ref": "ds:IqJK6E",
+                  "name": "Form/Field Error",
+                  "descendants": {
+                    "ds:brmWkY": {
+                      "content": "Enter a valid email address."
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "Bksb3h",
+                  "ref": "ds:j04F4",
+                  "name": "Input / Username",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:l4agQ": {
+                      "content": "Username"
+                    },
+                    "ds:iI0CE": {
+                      "content": "yourname"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "CQieqm",
+                  "ref": "ds:IqJK6E",
+                  "name": "Form/Field Error",
+                  "descendants": {
+                    "ds:brmWkY": {
+                      "content": "Use 3 to 20 characters."
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "1GPF2h",
+                  "name": "Password Field",
+                  "gap": 8,
+                  "alignItems": "end",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "t8XXWI",
+                      "ref": "ds:j04F4",
+                      "name": "Input / Password",
+                      "width": "fill_container",
+                      "descendants": {
+                        "ds:l4agQ": {
+                          "content": "Password"
+                        },
+                        "ds:iI0CE": {
+                          "content": "••••••••"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "qkfQpE",
+                      "ref": "ds:cS9uPp",
+                      "name": "Button/Icon Ghost",
+                      "descendants": {
+                        "ds:KFmiLY": {
+                          "icon": "eye"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "aBmP6y",
+                  "ref": "ds:IqJK6E",
+                  "name": "Form/Field Error",
+                  "descendants": {
+                    "ds:brmWkY": {
+                      "content": "Use 6 to 32 characters."
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "yYpNCK",
+              "ref": "ds:LWaLJ5",
+              "name": "Form/Checkbox Row",
+              "width": "fill_container",
+              "descendants": {
+                "ds:eMN4Sq": {
+                  "content": "I am at least 16 years old and I accept the Terms of Use, Community Guidelines and Privacy Policy"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "Xhlog4",
+              "ref": "ds:IqJK6E",
+              "name": "Form/Field Error",
+              "descendants": {
+                "ds:brmWkY": {
+                  "content": "Accept the terms to create an account."
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "0pLWZF",
+              "ref": "ds:Y4ylzP",
+              "name": "Button / Register",
+              "width": "fill_container",
+              "descendants": {
+                "ds:NVe7y": {
+                  "content": "Register"
+                },
+                "ds:ksrFi": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "VLFu5S",
+              "name": "Footer Link",
+              "gap": 6,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "lleOTG",
+                  "ref": "ds:C5Ih8u",
+                  "name": "Text/Muted",
+                  "content": "Already have an account?"
+                },
+                {
+                  "type": "ref",
+                  "id": "uXhj9s",
+                  "ref": "ds:LSzB6i",
+                  "name": "Text/Link",
+                  "content": "Log in"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "x": 1470,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "app (auth)/register — Email sign-up; the account confirms its email before the first login. · no desktop frame: native phone app (apps/mobile) — there is no desktop layout"
+    },
+    {
+      "type": "frame",
+      "id": "RgAZ85",
+      "name": "Mobile / Registration / Taken / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "Jf8Gaq",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "UuMMjU",
+          "name": "Form",
+          "layout": "vertical",
+          "gap": 22,
+          "width": "fill_container",
+          "padding": [
+            20,
+            20
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "O9aXqS",
+              "ref": "ds:J95vY0",
+              "name": "Logo/Lockup"
+            },
+            {
+              "type": "frame",
+              "id": "NnN7qb",
+              "name": "Heading",
+              "layout": "vertical",
+              "gap": 8,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "XonRAS",
+                  "ref": "ds:RoXXJv",
+                  "name": "Text/H2",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Create your account for free and start listening"
+                },
+                {
+                  "type": "ref",
+                  "id": "06LGkm",
+                  "ref": "ds:XDvNAD",
+                  "name": "Text/Paragraph",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Sign up with your email to start listening."
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "GBGMyN",
+              "ref": "ds:ogW5t",
+              "name": "Alert / Unable to create account. Please try again.",
+              "width": "fill_container",
+              "descendants": {
+                "ds:L7SHNm": {
+                  "content": "Unable to create account. Please try again."
+                },
+                "ds:F9kE6W": {
+                  "content": "This email or username is already taken."
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "xMhabk",
+              "name": "Fields",
+              "layout": "vertical",
+              "gap": 12,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "ZBVJ1G",
+                  "ref": "ds:j04F4",
+                  "name": "Input / Email Address",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:l4agQ": {
+                      "content": "Email Address"
+                    },
+                    "ds:iI0CE": {
+                      "content": "maya@example.com"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "SAzkva",
+                  "ref": "ds:j04F4",
+                  "name": "Input / Username",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:l4agQ": {
+                      "content": "Username"
+                    },
+                    "ds:iI0CE": {
+                      "content": "maya"
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "bxuuBy",
+                  "name": "Password Field",
+                  "gap": 8,
+                  "alignItems": "end",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "7S6CPR",
+                      "ref": "ds:j04F4",
+                      "name": "Input / Password",
+                      "width": "fill_container",
+                      "descendants": {
+                        "ds:l4agQ": {
+                          "content": "Password"
+                        },
+                        "ds:iI0CE": {
+                          "content": "••••••••"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "ae3xal",
+                      "ref": "ds:cS9uPp",
+                      "name": "Button/Icon Ghost",
+                      "descendants": {
+                        "ds:KFmiLY": {
+                          "icon": "eye"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "u4ossL",
+              "ref": "ds:LWaLJ5",
+              "name": "Form/Checkbox Row",
+              "width": "fill_container",
+              "descendants": {
+                "ds:eMN4Sq": {
+                  "content": "I am at least 16 years old and I accept the Terms of Use, Community Guidelines and Privacy Policy"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "rOS0BL",
+              "ref": "ds:Y4ylzP",
+              "name": "Button / Register",
+              "width": "fill_container",
+              "descendants": {
+                "ds:NVe7y": {
+                  "content": "Register"
+                },
+                "ds:ksrFi": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "o9qhOl",
+              "name": "Footer Link",
+              "gap": 6,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "0JzIBN",
+                  "ref": "ds:C5Ih8u",
+                  "name": "Text/Muted",
+                  "content": "Already have an account?"
+                },
+                {
+                  "type": "ref",
+                  "id": "VDRUly",
+                  "ref": "ds:LSzB6i",
+                  "name": "Text/Link",
+                  "content": "Log in"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "x": 1960,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "app (auth)/register — Email sign-up; the account confirms its email before the first login. · no desktop frame: native phone app (apps/mobile) — there is no desktop layout"
+    },
+    {
+      "type": "frame",
+      "id": "IHrvkC",
+      "name": "Mobile / Registration / Submitting / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "gFaiQs",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "7k5PeR",
+          "name": "Form",
+          "layout": "vertical",
+          "gap": 22,
+          "width": "fill_container",
+          "padding": [
+            20,
+            20
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "LWazEa",
+              "ref": "ds:J95vY0",
+              "name": "Logo/Lockup"
+            },
+            {
+              "type": "frame",
+              "id": "EwjsBA",
+              "name": "Heading",
+              "layout": "vertical",
+              "gap": 8,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "qUkJ7R",
+                  "ref": "ds:RoXXJv",
+                  "name": "Text/H2",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Create your account for free and start listening"
+                },
+                {
+                  "type": "ref",
+                  "id": "pH73bk",
+                  "ref": "ds:XDvNAD",
+                  "name": "Text/Paragraph",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Sign up with your email to start listening."
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "Xfqlwj",
+              "name": "Fields",
+              "layout": "vertical",
+              "gap": 12,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "L3ACcl",
+                  "ref": "ds:j04F4",
+                  "name": "Input / Email Address",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:l4agQ": {
+                      "content": "Email Address"
+                    },
+                    "ds:iI0CE": {
+                      "content": "maya@example.com"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "Od2Xdk",
+                  "ref": "ds:j04F4",
+                  "name": "Input / Username",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:l4agQ": {
+                      "content": "Username"
+                    },
+                    "ds:iI0CE": {
+                      "content": "maya"
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "vg2WZH",
+                  "name": "Password Field",
+                  "gap": 8,
+                  "alignItems": "end",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "NFRrLz",
+                      "ref": "ds:j04F4",
+                      "name": "Input / Password",
+                      "width": "fill_container",
+                      "descendants": {
+                        "ds:l4agQ": {
+                          "content": "Password"
+                        },
+                        "ds:iI0CE": {
+                          "content": "••••••••"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "IcNIn7",
+                      "ref": "ds:cS9uPp",
+                      "name": "Button/Icon Ghost",
+                      "descendants": {
+                        "ds:KFmiLY": {
+                          "icon": "eye"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "04jwoc",
+              "ref": "ds:LWaLJ5",
+              "name": "Form/Checkbox Row",
+              "width": "fill_container",
+              "descendants": {
+                "ds:eMN4Sq": {
+                  "content": "I am at least 16 years old and I accept the Terms of Use, Community Guidelines and Privacy Policy"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "3NMzUq",
+              "ref": "ds:Y4ylzP",
+              "name": "Button / Registering...",
+              "width": "fill_container",
+              "descendants": {
+                "ds:NVe7y": {
+                  "content": "Registering..."
+                },
+                "ds:ksrFi": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "0pI3fU",
+              "name": "Footer Link",
+              "gap": 6,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "o3UO4C",
+                  "ref": "ds:C5Ih8u",
+                  "name": "Text/Muted",
+                  "content": "Already have an account?"
+                },
+                {
+                  "type": "ref",
+                  "id": "jEgBsT",
+                  "ref": "ds:LSzB6i",
+                  "name": "Text/Link",
+                  "content": "Log in"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "x": 2450,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "app (auth)/register — Email sign-up; the account confirms its email before the first login. · no desktop frame: native phone app (apps/mobile) — there is no desktop layout"
+    },
+    {
+      "type": "frame",
+      "id": "4LMGLf",
+      "name": "Mobile / Registration / Done / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "eWuJd6",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "5zhoJg",
+          "name": "Form",
+          "layout": "vertical",
+          "gap": 22,
+          "width": "fill_container",
+          "padding": [
+            20,
+            20
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "HxRVrx",
+              "ref": "ds:J95vY0",
+              "name": "Logo/Lockup"
+            },
+            {
+              "type": "ref",
+              "id": "E7jTFB",
+              "ref": "ds:x4Fixv",
+              "name": "Surface/Panel",
+              "descendants": {
+                "ds:xhr0E3": {
+                  "type": "frame",
+                  "id": "35xeuu",
+                  "name": "Panel Content",
+                  "layout": "vertical",
+                  "gap": 14,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "JTnLpB",
+                      "ref": "ds:Qjj2NE",
+                      "name": "Text/H3",
+                      "content": "Confirm your email"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "SVt1fN",
+                      "ref": "ds:XDvNAD",
+                      "name": "Text/Paragraph",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "We sent a confirmation link to maya@example.com. Open it, then log in."
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "HUgHU3",
+              "ref": "ds:qz3aI",
+              "name": "Button / Back to login",
+              "width": "fill_container",
+              "descendants": {
+                "ds:i6a4e": {
+                  "content": "Back to login"
+                },
+                "ds:MlIUw": {
+                  "enabled": false
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 2940,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "app (auth)/register — Email sign-up; the account confirms its email before the first login. · no desktop frame: native phone app (apps/mobile) — there is no desktop layout"
+    }
+  ]
+}

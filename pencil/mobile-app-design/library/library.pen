@@ -1,0 +1,1153 @@
+{
+  "version": "2.20",
+  "imports": {
+    "ds": "../../web-player-design/design-system/bitrate.lib.pen"
+  },
+  "children": [
+    {
+      "type": "frame",
+      "id": "5CMHJ4",
+      "name": "Mobile / Library / Mobile / Dark",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "fIVs1l",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "mXHZZ0",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            12,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "ref",
+              "id": "KrOYVz",
+              "ref": "ds:MgMQ2L",
+              "name": "Text/H1",
+              "content": "Library"
+            },
+            {
+              "type": "frame",
+              "id": "P6OKhn",
+              "name": "Liked Songs Row",
+              "gap": 12,
+              "alignItems": "center",
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "DsUNsa",
+                  "ref": "ds:BpWsUG",
+                  "name": "Media/Liked Cover Small"
+                },
+                {
+                  "type": "frame",
+                  "id": "MMTg6R",
+                  "name": "Column",
+                  "layout": "vertical",
+                  "gap": 2,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "eSl12k",
+                      "ref": "ds:SOt7Oe",
+                      "name": "Text/Body Strong",
+                      "content": "Liked Songs"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "d7ZxWQ",
+                      "ref": "ds:C5Ih8u",
+                      "name": "Text/Muted",
+                      "content": "124 tracks"
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "P3lSIk",
+                  "ref": "ds:Kq8Urf",
+                  "name": "Icon/Muted",
+                  "icon": "chevron-right",
+                  "width": 20,
+                  "height": 20
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "QJFdpt",
+              "ref": "ds:zVqAJC",
+              "name": "Section Header",
+              "descendants": {
+                "ds:zBZfky": {
+                  "content": "Your playlists"
+                },
+                "ds:uyhHlD": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "NGVrfF",
+              "ref": "ds:Y2h8VV",
+              "name": "Track / Night drive",
+              "width": "fill_container",
+              "descendants": {
+                "ds:fjPYf": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../../web-player-design/design-system/assets/albums/album-night-signal.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:RJ2go": {
+                  "content": "Night drive"
+                },
+                "ds:rFh9q": {
+                  "content": "Playlist · 18 tracks"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "qAlMfi",
+              "ref": "ds:Y2h8VV",
+              "name": "Track / Road Radio",
+              "width": "fill_container",
+              "descendants": {
+                "ds:fjPYf": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../../web-player-design/design-system/assets/albums/album-static-lines.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:RJ2go": {
+                  "content": "Road Radio"
+                },
+                "ds:rFh9q": {
+                  "content": "Playlist · 42 tracks"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "vRtx8r",
+              "ref": "ds:zVqAJC",
+              "name": "Section Header",
+              "descendants": {
+                "ds:zBZfky": {
+                  "content": "Listening history"
+                },
+                "ds:uyhHlD": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "KbgTUD",
+              "ref": "ds:Y2h8VV",
+              "name": "Track / Afterglow",
+              "width": "fill_container",
+              "descendants": {
+                "ds:fjPYf": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../../web-player-design/design-system/assets/albums/album-afterglow.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:RJ2go": {
+                  "content": "Afterglow"
+                },
+                "ds:rFh9q": {
+                  "content": "Nova & the Static"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "H0Ghgh",
+              "ref": "ds:Y2h8VV",
+              "name": "Track / Drift Control",
+              "width": "fill_container",
+              "descendants": {
+                "ds:fjPYf": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../../web-player-design/design-system/assets/albums/album-drift-control.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:RJ2go": {
+                  "content": "Drift Control"
+                },
+                "ds:rFh9q": {
+                  "content": "Mira Sol"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "hUu1yo",
+          "name": "Island Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16,
+            18,
+            16
+          ],
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "rBnEhA",
+              "ref": "ds:DrlRuW",
+              "name": "Mobile/Island",
+              "width": "fill_container",
+              "descendants": {
+                "ds:YMvBMe": {
+                  "fill": "$ds:--secondary"
+                },
+                "ds:kcysNs": {
+                  "fill": "$ds:--foreground"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 0,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "app (tabs)/library — Library: Liked Songs (GET /tracks/liked), own playlists (GET /playlists/me), history (GET /history)."
+    },
+    {
+      "type": "frame",
+      "id": "rZp4CZ",
+      "name": "Mobile / Library / Mobile / Light",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "bp0xRx",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "gpr7mq",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            12,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "ref",
+              "id": "Kg18DC",
+              "ref": "ds:MgMQ2L",
+              "name": "Text/H1",
+              "content": "Library"
+            },
+            {
+              "type": "frame",
+              "id": "BlGTyY",
+              "name": "Liked Songs Row",
+              "gap": 12,
+              "alignItems": "center",
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "tAPgX4",
+                  "ref": "ds:BpWsUG",
+                  "name": "Media/Liked Cover Small"
+                },
+                {
+                  "type": "frame",
+                  "id": "mWrKYM",
+                  "name": "Column",
+                  "layout": "vertical",
+                  "gap": 2,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "MgdzQN",
+                      "ref": "ds:SOt7Oe",
+                      "name": "Text/Body Strong",
+                      "content": "Liked Songs"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "HpeHUV",
+                      "ref": "ds:C5Ih8u",
+                      "name": "Text/Muted",
+                      "content": "124 tracks"
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "F3mGpn",
+                  "ref": "ds:Kq8Urf",
+                  "name": "Icon/Muted",
+                  "icon": "chevron-right",
+                  "width": 20,
+                  "height": 20
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "StByVL",
+              "ref": "ds:zVqAJC",
+              "name": "Section Header",
+              "descendants": {
+                "ds:zBZfky": {
+                  "content": "Your playlists"
+                },
+                "ds:uyhHlD": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "NStkmX",
+              "ref": "ds:Y2h8VV",
+              "name": "Track / Night drive",
+              "width": "fill_container",
+              "descendants": {
+                "ds:fjPYf": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../../web-player-design/design-system/assets/albums/album-night-signal.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:RJ2go": {
+                  "content": "Night drive"
+                },
+                "ds:rFh9q": {
+                  "content": "Playlist · 18 tracks"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "s6vV5W",
+              "ref": "ds:Y2h8VV",
+              "name": "Track / Road Radio",
+              "width": "fill_container",
+              "descendants": {
+                "ds:fjPYf": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../../web-player-design/design-system/assets/albums/album-static-lines.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:RJ2go": {
+                  "content": "Road Radio"
+                },
+                "ds:rFh9q": {
+                  "content": "Playlist · 42 tracks"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "fhEZX8",
+              "ref": "ds:zVqAJC",
+              "name": "Section Header",
+              "descendants": {
+                "ds:zBZfky": {
+                  "content": "Listening history"
+                },
+                "ds:uyhHlD": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "y35mhP",
+              "ref": "ds:Y2h8VV",
+              "name": "Track / Afterglow",
+              "width": "fill_container",
+              "descendants": {
+                "ds:fjPYf": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../../web-player-design/design-system/assets/albums/album-afterglow.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:RJ2go": {
+                  "content": "Afterglow"
+                },
+                "ds:rFh9q": {
+                  "content": "Nova & the Static"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "v3AKYq",
+              "ref": "ds:Y2h8VV",
+              "name": "Track / Drift Control",
+              "width": "fill_container",
+              "descendants": {
+                "ds:fjPYf": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../../web-player-design/design-system/assets/albums/album-drift-control.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:RJ2go": {
+                  "content": "Drift Control"
+                },
+                "ds:rFh9q": {
+                  "content": "Mira Sol"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "VddIyU",
+          "name": "Island Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16,
+            18,
+            16
+          ],
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "VzFyEb",
+              "ref": "ds:DrlRuW",
+              "name": "Mobile/Island",
+              "width": "fill_container",
+              "descendants": {
+                "ds:YMvBMe": {
+                  "fill": "$ds:--secondary"
+                },
+                "ds:kcysNs": {
+                  "fill": "$ds:--foreground"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 490,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Light"
+      },
+      "context": "app (tabs)/library — Library: Liked Songs (GET /tracks/liked), own playlists (GET /playlists/me), history (GET /history)."
+    },
+    {
+      "type": "frame",
+      "id": "vrFm1A",
+      "name": "Mobile / Library / Mobile / Dim",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "7gImgn",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "6JmS6Z",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            12,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "ref",
+              "id": "AW6pnX",
+              "ref": "ds:MgMQ2L",
+              "name": "Text/H1",
+              "content": "Library"
+            },
+            {
+              "type": "frame",
+              "id": "xIS7pU",
+              "name": "Liked Songs Row",
+              "gap": 12,
+              "alignItems": "center",
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "tvYQfa",
+                  "ref": "ds:BpWsUG",
+                  "name": "Media/Liked Cover Small"
+                },
+                {
+                  "type": "frame",
+                  "id": "ujWp15",
+                  "name": "Column",
+                  "layout": "vertical",
+                  "gap": 2,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "mBdeq0",
+                      "ref": "ds:SOt7Oe",
+                      "name": "Text/Body Strong",
+                      "content": "Liked Songs"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "rM0xHk",
+                      "ref": "ds:C5Ih8u",
+                      "name": "Text/Muted",
+                      "content": "124 tracks"
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "dmVQUv",
+                  "ref": "ds:Kq8Urf",
+                  "name": "Icon/Muted",
+                  "icon": "chevron-right",
+                  "width": 20,
+                  "height": 20
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "wQ2sgF",
+              "ref": "ds:zVqAJC",
+              "name": "Section Header",
+              "descendants": {
+                "ds:zBZfky": {
+                  "content": "Your playlists"
+                },
+                "ds:uyhHlD": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "zYzgWX",
+              "ref": "ds:Y2h8VV",
+              "name": "Track / Night drive",
+              "width": "fill_container",
+              "descendants": {
+                "ds:fjPYf": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../../web-player-design/design-system/assets/albums/album-night-signal.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:RJ2go": {
+                  "content": "Night drive"
+                },
+                "ds:rFh9q": {
+                  "content": "Playlist · 18 tracks"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "wxlHCB",
+              "ref": "ds:Y2h8VV",
+              "name": "Track / Road Radio",
+              "width": "fill_container",
+              "descendants": {
+                "ds:fjPYf": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../../web-player-design/design-system/assets/albums/album-static-lines.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:RJ2go": {
+                  "content": "Road Radio"
+                },
+                "ds:rFh9q": {
+                  "content": "Playlist · 42 tracks"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "r0Dh8X",
+              "ref": "ds:zVqAJC",
+              "name": "Section Header",
+              "descendants": {
+                "ds:zBZfky": {
+                  "content": "Listening history"
+                },
+                "ds:uyhHlD": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "8vFNKr",
+              "ref": "ds:Y2h8VV",
+              "name": "Track / Afterglow",
+              "width": "fill_container",
+              "descendants": {
+                "ds:fjPYf": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../../web-player-design/design-system/assets/albums/album-afterglow.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:RJ2go": {
+                  "content": "Afterglow"
+                },
+                "ds:rFh9q": {
+                  "content": "Nova & the Static"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "fHgGPB",
+              "ref": "ds:Y2h8VV",
+              "name": "Track / Drift Control",
+              "width": "fill_container",
+              "descendants": {
+                "ds:fjPYf": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../../web-player-design/design-system/assets/albums/album-drift-control.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:RJ2go": {
+                  "content": "Drift Control"
+                },
+                "ds:rFh9q": {
+                  "content": "Mira Sol"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "nDBMtD",
+          "name": "Island Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16,
+            18,
+            16
+          ],
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "7e3iNA",
+              "ref": "ds:DrlRuW",
+              "name": "Mobile/Island",
+              "width": "fill_container",
+              "descendants": {
+                "ds:YMvBMe": {
+                  "fill": "$ds:--secondary"
+                },
+                "ds:kcysNs": {
+                  "fill": "$ds:--foreground"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 980,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dim"
+      },
+      "context": "app (tabs)/library — Library: Liked Songs (GET /tracks/liked), own playlists (GET /playlists/me), history (GET /history)."
+    },
+    {
+      "type": "frame",
+      "id": "hIbvND",
+      "name": "Mobile / Library / Loading / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "HYFc4y",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "CrgggB",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            12,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "ref",
+              "id": "eSqdgT",
+              "ref": "ds:MgMQ2L",
+              "name": "Text/H1",
+              "content": "Library"
+            },
+            {
+              "type": "frame",
+              "id": "bwkD4g",
+              "name": "Loading",
+              "layout": "vertical",
+              "gap": 24,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "Fl7a3S",
+                  "ref": "ds:Jjegi",
+                  "name": "Skeleton",
+                  "width": 140,
+                  "height": 28
+                },
+                {
+                  "type": "frame",
+                  "id": "I90WhV",
+                  "name": "Skeleton Rows",
+                  "layout": "vertical",
+                  "gap": 16,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "4OcLsM",
+                      "ref": "ds:Gq2CrB",
+                      "name": "Skeleton/Track Row Mobile",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "5FT6HW",
+                      "ref": "ds:Gq2CrB",
+                      "name": "Skeleton/Track Row Mobile",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "oV1QXy",
+                      "ref": "ds:Gq2CrB",
+                      "name": "Skeleton/Track Row Mobile",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "lut13U",
+                      "ref": "ds:Gq2CrB",
+                      "name": "Skeleton/Track Row Mobile",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "olNjaZ",
+                      "ref": "ds:Gq2CrB",
+                      "name": "Skeleton/Track Row Mobile",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "toXHaY",
+                      "ref": "ds:Gq2CrB",
+                      "name": "Skeleton/Track Row Mobile",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "uxqxMT",
+                      "ref": "ds:Gq2CrB",
+                      "name": "Skeleton/Track Row Mobile",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "rM9Hqy",
+                      "ref": "ds:Gq2CrB",
+                      "name": "Skeleton/Track Row Mobile",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "KeXXKT",
+                      "ref": "ds:Gq2CrB",
+                      "name": "Skeleton/Track Row Mobile",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "x5g78O",
+                      "ref": "ds:Gq2CrB",
+                      "name": "Skeleton/Track Row Mobile",
+                      "width": "fill_container"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "XdjPBI",
+          "name": "Island Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16,
+            18,
+            16
+          ],
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "xTSi5Z",
+              "ref": "ds:DrlRuW",
+              "name": "Mobile/Island",
+              "width": "fill_container",
+              "descendants": {
+                "ds:YMvBMe": {
+                  "fill": "$ds:--secondary"
+                },
+                "ds:kcysNs": {
+                  "fill": "$ds:--foreground"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 1470,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "app (tabs)/library — Library: Liked Songs (GET /tracks/liked), own playlists (GET /playlists/me), history (GET /history). · no desktop frame: native phone app (apps/mobile) — there is no desktop layout"
+    },
+    {
+      "type": "frame",
+      "id": "ALw5Qj",
+      "name": "Mobile / Library / Empty / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "8aUSzj",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "5s2Ta5",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            12,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "ref",
+              "id": "DNF0If",
+              "ref": "ds:MgMQ2L",
+              "name": "Text/H1",
+              "content": "Library"
+            },
+            {
+              "type": "frame",
+              "id": "GDhq4G",
+              "name": "State Area",
+              "width": "fill_container",
+              "height": "fill_container",
+              "justifyContent": "center",
+              "alignItems": "center",
+              "layout": "vertical",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "qofe7H",
+                  "ref": "ds:UacIqy",
+                  "name": "State / Your library is empty",
+                  "descendants": {
+                    "ds:QTS6fY": {
+                      "icon": "library"
+                    },
+                    "ds:LaYbWr": {
+                      "content": "Your library is empty"
+                    },
+                    "ds:IowS15": {
+                      "content": "Like tracks and create playlists to fill it up."
+                    },
+                    "ds:PKR600": {
+                      "enabled": false
+                    },
+                    "ds:Sk1EVh": {
+                      "enabled": false
+                    }
+                  },
+                  "width": "fill_container"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "2NkgfS",
+          "name": "Island Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16,
+            18,
+            16
+          ],
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "Od9cXn",
+              "ref": "ds:DrlRuW",
+              "name": "Mobile/Island",
+              "width": "fill_container",
+              "descendants": {
+                "ds:YMvBMe": {
+                  "fill": "$ds:--secondary"
+                },
+                "ds:kcysNs": {
+                  "fill": "$ds:--foreground"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 1960,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "app (tabs)/library — Library: Liked Songs (GET /tracks/liked), own playlists (GET /playlists/me), history (GET /history). · no desktop frame: native phone app (apps/mobile) — there is no desktop layout"
+    },
+    {
+      "type": "frame",
+      "id": "ny8wNh",
+      "name": "Mobile / Library / Error / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "1On4PZ",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "4XcJr9",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            12,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "ref",
+              "id": "0dRQzY",
+              "ref": "ds:MgMQ2L",
+              "name": "Text/H1",
+              "content": "Library"
+            },
+            {
+              "type": "frame",
+              "id": "5MewbT",
+              "name": "State Area",
+              "width": "fill_container",
+              "height": "fill_container",
+              "justifyContent": "center",
+              "alignItems": "center",
+              "layout": "vertical",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "LjUIqn",
+                  "ref": "ds:LQ8GwL",
+                  "name": "State / We couldn't load your library.",
+                  "descendants": {
+                    "ds:zG3uZd": {
+                      "icon": "triangle-alert"
+                    },
+                    "ds:ATKZVK": {
+                      "content": "We couldn't load your library."
+                    },
+                    "ds:h7OAoY": {
+                      "enabled": false
+                    },
+                    "ds:ydkfG5/ds:NVe7y": {
+                      "content": "Try again"
+                    },
+                    "ds:voqjVU": {
+                      "enabled": false
+                    }
+                  },
+                  "width": "fill_container"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "3K6N4Q",
+          "name": "Island Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16,
+            18,
+            16
+          ],
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "5Cyw3f",
+              "ref": "ds:DrlRuW",
+              "name": "Mobile/Island",
+              "width": "fill_container",
+              "descendants": {
+                "ds:YMvBMe": {
+                  "fill": "$ds:--secondary"
+                },
+                "ds:kcysNs": {
+                  "fill": "$ds:--foreground"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 2450,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "app (tabs)/library — Library: Liked Songs (GET /tracks/liked), own playlists (GET /playlists/me), history (GET /history). · no desktop frame: native phone app (apps/mobile) — there is no desktop layout"
+    }
+  ]
+}

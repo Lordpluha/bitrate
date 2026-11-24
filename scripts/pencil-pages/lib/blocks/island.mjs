@@ -13,24 +13,28 @@ const GLASS = {
   ],
 }
 const RING_GRAD = gradient(C.magenta500, C.primary, 135)
+/* the whole ring is a part (`ring`) so an island without a track can switch it off */
 const islArt = (art = 'afterglow') =>
-  F(
-    {
-      name: 'Artwork',
-      width: 50,
-      height: 50,
-      cornerRadius: 25,
-      stroke: RING_GRAD,
-      strokeWidth: 2.5,
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    [
-      part(
-        'art',
-        F({ name: 'Cover', width: 40, height: 40, cornerRadius: 20, fill: img(ART[art]) }),
-      ),
-    ],
+  part(
+    'ring',
+    F(
+      {
+        name: 'Artwork',
+        width: 50,
+        height: 50,
+        cornerRadius: 25,
+        stroke: RING_GRAD,
+        strokeWidth: 2.5,
+        justifyContent: 'center',
+        alignItems: 'center',
+      },
+      [
+        part(
+          'art',
+          F({ name: 'Cover', width: 40, height: 40, cornerRadius: 20, fill: img(ART[art]) }),
+        ),
+      ],
+    ),
   )
 const islTab = (key, icon) =>
   part(
