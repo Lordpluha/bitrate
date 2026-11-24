@@ -33,7 +33,7 @@ export type TrackManifestPayload = {
 }
 
 /** How an encrypted rendition is protected; the key id is public, it is in the init segment. */
-export type RenditionEncryption = { scheme: 'cbcs'; keyId: string }
+type RenditionEncryption = { scheme: 'cbcs'; keyId: string }
 
 /** One rendition as it appears in the public manifest. */
 export type ManifestRendition = TrackManifestPayload['renditions'][number]
