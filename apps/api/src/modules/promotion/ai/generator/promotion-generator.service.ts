@@ -65,7 +65,10 @@ export class PromotionGenerator {
           lastClaims = []
           continue
         }
-        const claims = findUngroundedClaims(request.textOf(attempt.output), request.facts)
+        const claims = [
+          ...findUngroundedClaims(request.textOf(attempt.output), request.facts),
+          ...(request.check?.(attempt.output) ?? []),
+        ]
         if (claims.length > 0) {
           await this.record(request, ref, attempt.usage, 'REJECTED_UNGROUNDED')
           lastClaims = claims

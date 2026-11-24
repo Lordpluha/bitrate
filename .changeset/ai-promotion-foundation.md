@@ -22,5 +22,10 @@ is set.
   `GET …/plans/latest` and `PATCH …/promotion/steps/:stepId` (approve, edit, reject, done).
   Steps are dated from the release date, so moving the release moves the plan, and a new
   version keeps every step the artist approved, edited or finished.
+- **Post drafts and translations:** under `…/promotion/steps/:stepId`, `POST posts` writes one
+  English master per channel in the background, `PATCH posts/:postId` edits it,
+  `POST posts/:postId/translations` translates it into Ukrainian or Polish (names, links and
+  hashtags kept), and `PATCH translations/:translationId` edits or rates a translation. A
+  changed master makes its translations STALE; an edited translation is never overwritten.
 - **Import boundary:** `ai` and `@ai-sdk/*` may be imported only in
   `src/modules/promotion/ai/`, enforced by Biome.

@@ -1,4 +1,5 @@
 import type { z } from 'zod'
+import type { UngroundedClaim } from '../grounding'
 import type { PromotionTask } from '../routing'
 
 export interface GenerationRequest<T> {
@@ -13,6 +14,8 @@ export interface GenerationRequest<T> {
   facts: readonly string[]
   /** The human-readable text of an output, which the grounding check reads. */
   textOf(output: T): string
+  /** Extra problems in an output (e.g. dropped glossary terms); they trigger the regeneration. */
+  check?(output: T): readonly UngroundedClaim[]
 }
 
 export interface GenerationResult<T> {

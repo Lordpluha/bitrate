@@ -12,10 +12,22 @@ import {
   RequestPlanService,
   UpdateStepService,
 } from './plans'
+import {
+  GeneratePostsService,
+  LlmTranslator,
+  PostsViewService,
+  RequestPostsService,
+  RequestTranslationService,
+  RunTranslationService,
+  TRANSLATOR,
+  UpdatePostService,
+  UpdateTranslationService,
+} from './posts'
 import { PromotionProfileService } from './profile/promotion-profile.service'
 import { PromotionConsumer } from './promotion.consumer'
 import { PromotionController } from './promotion.controller'
 import { PROMOTION_QUEUE } from './promotion.queue'
+import { PromotionPostsController } from './promotion-posts.controller'
 import { AI_QUOTA_LIMITS, type AiQuotaLimits, AiQuotaService, AiUsageService } from './usage'
 
 type Env = ConfigService<AppConfig>
@@ -29,7 +41,7 @@ const DEFAULT_MONTHLY_LIMIT_USD = 2
  */
 @Module({
   imports: [PrismaModule, TokensModule, BullModule.registerQueue({ name: PROMOTION_QUEUE })],
-  controllers: [PromotionController],
+  controllers: [PromotionController, PromotionPostsController],
   providers: [
     {
       provide: PROMOTION_MODELS,
@@ -62,6 +74,15 @@ const DEFAULT_MONTHLY_LIMIT_USD = 2
     RequestPlanService,
     GeneratePlanService,
     UpdateStepService,
+    PostsViewService,
+    RequestPostsService,
+    GeneratePostsService,
+    UpdatePostService,
+    RequestTranslationService,
+    RunTranslationService,
+    UpdateTranslationService,
+    LlmTranslator,
+    { provide: TRANSLATOR, useExisting: LlmTranslator },
     PromotionConsumer,
   ],
   exports: [PromotionGenerator, AiQuotaService],
