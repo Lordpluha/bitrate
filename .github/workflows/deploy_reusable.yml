@@ -422,6 +422,8 @@ jobs:
           TRUST_PROXY_HOPS: ${{ vars.TRUST_PROXY_HOPS }}
           HEALTH_CHECK_TIMEOUT_MS: ${{ vars.HEALTH_CHECK_TIMEOUT_MS }}
           AUDIO_PROCESSING_WORKER_ENABLED: ${{ vars.AUDIO_PROCESSING_WORKER_ENABLED }}
+          PROMOTION_AI_ENABLED: ${{ vars.PROMOTION_AI_ENABLED }}
+          PROMOTION_AI_MONTHLY_LIMIT_USD: ${{ vars.PROMOTION_AI_MONTHLY_LIMIT_USD }}
           DEV_MAIL_LOG_TOKENS: ${{ vars.DEV_MAIL_LOG_TOKENS }}
           OAUTH_GOOGLE_CLIENT_ID: ${{ vars.OAUTH_GOOGLE_CLIENT_ID }}
           OAUTH_FACEBOOK_APP_ID: ${{ vars.OAUTH_FACEBOOK_APP_ID }}
@@ -431,6 +433,8 @@ jobs:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           SMTP_USER: ${{ secrets.SMTP_USER }}
           SMTP_PASS: ${{ secrets.SMTP_PASS }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
           OAUTH_GOOGLE_CLIENT_SECRET: ${{ secrets.OAUTH_GOOGLE_CLIENT_SECRET }}
           OAUTH_FACEBOOK_APP_SECRET: ${{ secrets.OAUTH_FACEBOOK_APP_SECRET }}
           METRICS_TOKEN: ${{ secrets.METRICS_TOKEN }}
@@ -482,6 +486,7 @@ jobs:
             RESTIC_PASSWORD
             TRUST_PROXY_HOPS HEALTH_CHECK_TIMEOUT_MS DEV_MAIL_LOG_TOKENS
             AUDIO_PROCESSING_WORKER_ENABLED
+            PROMOTION_AI_ENABLED PROMOTION_AI_MONTHLY_LIMIT_USD ANTHROPIC_API_KEY MISTRAL_API_KEY
             OAUTH_GOOGLE_CLIENT_ID OAUTH_GOOGLE_CLIENT_SECRET
             OAUTH_FACEBOOK_APP_ID OAUTH_FACEBOOK_APP_SECRET
             METRICS_TOKEN SENTRY_DSN SENTRY_RELEASE SENTRY_ENVIRONMENT
@@ -522,6 +527,14 @@ jobs:
             true|false) ;;
             *) bad+=("AUDIO_PROCESSING_WORKER_ENABLED (only true or false)") ;;
           esac
+          case "${PROMOTION_AI_ENABLED:-false}" in
+            true|false) ;;
+            *) bad+=("PROMOTION_AI_ENABLED (only true or false)") ;;
+          esac
+          # AI promotion needs its default provider's key once it is switched on (ADR-0076).
+          if [ "${PROMOTION_AI_ENABLED:-false}" = "true" ] && [ -z "${ANTHROPIC_API_KEY:-}" ]; then
+            bad+=("ANTHROPIC_API_KEY (required while PROMOTION_AI_ENABLED is true)")
+          fi
           if [ -n "${S3_ENDPOINT:-}" ]; then
             case "${S3_ENDPOINT}" in
               http://*|https://*) ;;
@@ -736,6 +749,8 @@ jobs:
           TRUST_PROXY_HOPS: ${{ vars.TRUST_PROXY_HOPS }}
           HEALTH_CHECK_TIMEOUT_MS: ${{ vars.HEALTH_CHECK_TIMEOUT_MS }}
           AUDIO_PROCESSING_WORKER_ENABLED: ${{ vars.AUDIO_PROCESSING_WORKER_ENABLED }}
+          PROMOTION_AI_ENABLED: ${{ vars.PROMOTION_AI_ENABLED }}
+          PROMOTION_AI_MONTHLY_LIMIT_USD: ${{ vars.PROMOTION_AI_MONTHLY_LIMIT_USD }}
           DEV_MAIL_LOG_TOKENS: ${{ vars.DEV_MAIL_LOG_TOKENS }}
           OAUTH_GOOGLE_CLIENT_ID: ${{ vars.OAUTH_GOOGLE_CLIENT_ID }}
           OAUTH_FACEBOOK_APP_ID: ${{ vars.OAUTH_FACEBOOK_APP_ID }}
@@ -745,6 +760,8 @@ jobs:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           SMTP_USER: ${{ secrets.SMTP_USER }}
           SMTP_PASS: ${{ secrets.SMTP_PASS }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
           OAUTH_GOOGLE_CLIENT_SECRET: ${{ secrets.OAUTH_GOOGLE_CLIENT_SECRET }}
           OAUTH_FACEBOOK_APP_SECRET: ${{ secrets.OAUTH_FACEBOOK_APP_SECRET }}
           METRICS_TOKEN: ${{ secrets.METRICS_TOKEN }}
@@ -848,6 +865,14 @@ jobs:
             opt SMTP_PASS
             opt EMAIL_FROM
             opt DEV_MAIL_LOG_TOKENS
+
+            printf '\n# --- AI promotion (ADR-0076) ---\n'
+            # Off unless the production variable says true; artists also need their own flag.
+            # ANTHROPIC_API_KEY is shared with the support assistant.
+            opt PROMOTION_AI_ENABLED
+            opt PROMOTION_AI_MONTHLY_LIMIT_USD
+            opt ANTHROPIC_API_KEY
+            opt MISTRAL_API_KEY
 
             printf '\n# --- Storage ---\n'
             # The object store: the bucket-scoped application token the api is handed

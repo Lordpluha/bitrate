@@ -190,23 +190,23 @@ validation fails twice, 503 when no enabled provider is available.
 
 | ID | Observable criterion | Verification | Result / limitation |
 |---|---|---|---|
-| AC-1 | An artist with a scheduled release and a profile generates a plan whose steps fall between T−28 and T+28 and render in the Promotion tab | API e2e with a fake provider; UI check | Pending |
-| AC-2 | Without `scheduledAt`, generation returns 409 and the tab shows the "pick a date" state | API e2e; UI state | Pending |
-| AC-3 | Changing the release date moves every step's absolute date by the same amount | Unit + e2e | Pending |
-| AC-4 | Regenerating a plan keeps approved and edited steps and replaces only suggested ones | Unit | Pending |
-| AC-5 | Output that fails the schema, or states a fact absent from the context, is rejected and regenerated once, then surfaced as a 422 | Unit with fixtures | Pending |
-| AC-6 | A post has one English master per selected channel within that channel's length limit | Unit | Pending |
-| AC-7 | A UK/PL translation keeps glossary terms, hashtags, links and placeholders unchanged | Unit with fixtures; eval | Pending |
-| AC-8 | Editing the English master marks translations `STALE` and never overwrites an `EDITED` one | Unit | Pending |
-| AC-9 | Every AI-generated item shows the "Created with AI" marker, and translations show "Machine translation: please review" | UI tests | Pending |
-| AC-10 | The follower notification includes the artist message only when it was approved before release; otherwise it is unchanged | Notifications unit/e2e | Pending |
-| AC-11 | An approved countdown step shows the tile on the player's artist page until the release goes live | web-player test | Pending |
-| AC-12 | Every provider call writes an `AiUsage` record. A Free artist past the ceiling gets `AI_QUOTA_EXCEEDED` and the quota state | Unit + e2e | Pending |
-| AC-13 | No provider package is imported outside the promotion module's model adapter; switching a task's `provider:model` in config needs no code change | Biome rule + unit | Pending |
-| AC-14 | Only approved providers (DPA, no training) can be enabled in production configuration, and requests contain no email, listener or payment data | Config validation test; unit test of the context builder | Pending |
-| AC-15 | The listed promotion events are recorded with a schema version | Unit | Pending |
-| AC-16 | Eval: the chosen model meets the agreed bar on 15–20 release fixtures (schema validity, no ungrounded claims, glossary preservation, judge score) | Eval report linked here | Pending |
-| AC-17 | Pencil designs cover every listed state on desktop and mobile, using library components only, before UI implementation starts | Design review | Pending |
+| AC-1 | An artist with a scheduled release and a profile generates a plan whose steps fall between T−28 and T+28 and render in the Promotion tab | API e2e with a fake provider; UI check | Partial: unit (`GeneratePlanService`, `normaliseSteps`, #590) and the plan board UI (#614). The API e2e with a fake provider is not written yet |
+| AC-2 | Without `scheduledAt`, generation returns 409 and the tab shows the "pick a date" state | API e2e; UI state | Partial: unit (`RequestPlanService`, #590) and the "pick a date" stage state (#614). No API e2e yet |
+| AC-3 | Changing the release date moves every step's absolute date by the same amount | Unit + e2e | Met in unit tests (`plan-dates`, #590): dates are `scheduledAt + offsetDays`, never stored. No e2e yet |
+| AC-4 | Regenerating a plan keeps approved and edited steps and replaces only suggested ones | Unit | Met: unit (`RequestPlanService`, #590) |
+| AC-5 | Output that fails the schema, or states a fact absent from the context, is rejected and regenerated once, then surfaced as a 422 | Unit with fixtures | Met: unit (`PromotionGenerator`, #588). Deviation: generation runs as a job, so a twice-rejected output settles the plan or step as FAILED with `errors.promotion.generation_rejected` instead of answering 422 |
+| AC-6 | A post has one English master per selected channel within that channel's length limit | Unit | Met: unit (posts generation, #592) |
+| AC-7 | A UK/PL translation keeps glossary terms, hashtags, links and placeholders unchanged | Unit with fixtures; eval | Partial: unit with fixtures (glossary, #592). The eval part waits for AC-16 |
+| AC-8 | Editing the English master marks translations `STALE` and never overwrites an `EDITED` one | Unit | Met: unit (`post-edits`, #592) |
+| AC-9 | Every AI-generated item shows the "Created with AI" marker, and translations show "Machine translation: please review" | UI tests | Met: UI unit tests `PlanStepRow` and `TranslationEditor` (#614) |
+| AC-10 | The follower notification includes the artist message only when it was approved before release; otherwise it is unchanged | Notifications unit/e2e | Met in the API: unit `notify-release-published` and `findApprovedFollowerMessage` (#612). The player shows `payload.artistMessage` in a later change |
+| AC-11 | An approved countdown step shows the tile on the player's artist page until the release goes live | web-player test | API met: `GET /artists/:id/countdown`, unit (#615); design state drawn (#615). The web-player tile follows |
+| AC-12 | Every provider call writes an `AiUsage` record. A Free artist past the ceiling gets `AI_QUOTA_EXCEEDED` and the quota state | Unit + e2e | Met in unit tests (`AiUsageService`, `AiQuotaService`, #588). No e2e yet |
+| AC-13 | No provider package is imported outside the promotion module's model adapter; switching a task's `provider:model` in config needs no code change | Biome rule + unit | Met: Biome import rule and routing unit tests (#588) |
+| AC-14 | Only approved providers (DPA, no training) can be enabled in production configuration, and requests contain no email, listener or payment data | Config validation test; unit test of the context builder | Met: startup validation allows only `anthropic:` and `mistral:` routes (#588); the prompt builders read release and profile fields only (#590, #611) |
+| AC-15 | The listed promotion events are recorded with a schema version | Unit | Met: unit (`PromotionEventsService` callers, #611) |
+| AC-16 | Eval: the chosen model meets the agreed bar on 15–20 release fixtures (schema validity, no ungrounded claims, glossary preservation, judge score) | Eval report linked here | Pending: the eval waits for the owner to approve its budget |
+| AC-17 | Pencil designs cover every listed state on desktop and mobile, using library components only, before UI implementation starts | Design review | Met: #577 and #599 (web-artists), #615 (countdown tile on the player artist page) |
 
 ## Decisions and approval
 
@@ -261,21 +261,25 @@ and run through `.claude/scripts/run-heavy.py`.
    choice of models goes into the config defaults and AC-16.
 4. **Pencil designs** in `pencil/web-artist-design*`: profile form, Promotion tab, step and
    post editors, translations, calendar, and every state in AC-17. **Drafted in #577**;
-   the countdown tile on the player's artist page is still to be drawn.
+   the countdown tile on the player's artist page was drawn in #615.
 5. **API, AI foundation**: the promotion module's model adapter on the AI SDK (task router,
    `anthropic:` and `mistral:` providers, moderation, grounding validator), the `promotion`
    queue, `AiUsage`, quotas and the Biome import rule. Tests use a fake model (TDD per the
-   project workflow).
+   project workflow). **Done in #588.**
 6. **API, promotion domain**: profile, plans and steps, posts, re-anchoring on date change,
-   events, endpoints, Swagger decorators, regenerated `packages/contracts`.
+   events, endpoints, Swagger decorators, regenerated `packages/contracts`. **Done in #590
+   and #611** (step regeneration with a hint, calendar, events, input moderation, access flag).
 7. **API, translator**: `Translator` with LLM and DeepL adapters, glossary, `STALE` and
-   `EDITED` handling, batch for translation jobs.
+   `EDITED` handling, batch for translation jobs. **Done in #592** with the LLM adapter;
+   the DeepL adapter is not built (the `Translator` interface allows it).
 8. **web-artists UI**: Promotion tab replacing the "Coming soon" row, Promotion page,
-   profile, i18n en/uk/pl.
+   profile, i18n en/uk/pl. **Done in #613 and #614.**
 9. **Internal channels**: follower message on `releasePublished` (api), countdown tile
-   (web-player).
+   (web-player). **API done in #612 and #615**; the player tile and the follower message
+   in the player's notification list are still to build.
 10. **Rollout** behind a per-artist feature flag. Enable it for the owner's own artist
-    account first, then for beta artists.
+    account first, then for beta artists. Procedure: the
+    [AI promotion rollout runbook](../infrastructure/ai-promotion-rollout-runbook.md).
 
 Dependencies: 1 → 2 → 3 decide the defaults, but steps 4–7 can start against the fake
 provider in parallel with 3. Step 8 needs 4 and 6. Step 9 needs 6.

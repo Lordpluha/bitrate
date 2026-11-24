@@ -95,6 +95,11 @@ x-api-env: &api-env
   ANTHROPIC_API_KEY:
   SUPPORT_CHAT_MODEL:
   SUPPORT_MONTHLY_BUDGET_USD:
+  # AI promotion (ADR-0076). Off unless the deploy renders PROMOTION_AI_ENABLED=true; each
+  # artist also needs Artist.promotionEnabled. Mistral is the fallback provider.
+  PROMOTION_AI_ENABLED: ${PROMOTION_AI_ENABLED:-false}
+  PROMOTION_AI_MONTHLY_LIMIT_USD:
+  MISTRAL_API_KEY:
 
 services:
   postgres:
