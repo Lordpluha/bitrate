@@ -119,7 +119,7 @@ audio files and anonymous user ids.
 | ID | Observable criterion | Verification | Result / limitation |
 |---|---|---|---|
 | AC-1 | Every environment's database has the `vector` extension; existing volumes keep valid indexes | Image built and smoke-tested locally and in `postgres_image.yml`; an alpine-initialised volume attached to the new image passed `bt_index_check`; all migrations applied through the CI compose step | Stage 0 — done; CI green on #519 |
-| AC-2 | The player reports listened ms, completion or skip, and source context for every play | Integration test on the events endpoint; player unit test | API side: `recommendations.controller.int-spec.ts`, `playback-events.service.unit-spec.ts`. Player reporting pending |
+| AC-2 | The player reports listened ms, completion or skip, and source context for every play | Integration test on the events endpoint; player unit test | API: `playback-events.controller.int-spec.ts`, `playback-events.service.unit-spec.ts`. Web player: `useReportPlaybackEvents.unit-spec.tsx` and the `entities/PlaybackEvent` model specs. Limitation: single tracks started from search, home, charts or history report `OTHER` until those views pass their source to the player |
 | AC-3 | Private-session plays never reach the taste profile; Jam and system-chosen plays are down-weighted | Unit tests of the weighting | `taste-weight.unit-spec.ts`, `playback-events.service.unit-spec.ts` |
 | AC-4 | "Not interested" hides the item from every surface; "Don't use for my taste" removes it from the profile | API integration tests across surfaces | API and "Made For You": `taste.service.unit-spec.ts`, `discovery.service.unit-spec.ts`. Exclusions take effect when stage 2 reads signals; web-player UI pending |
 | AC-5 | "Made For You", similar tracks and artists, and radio/autoplay come from co-listening, not genre overlap, and never return filtered items | Integration tests on seeded listening data | Pending |
@@ -164,8 +164,10 @@ Each stage lands as its own PR chain (one workspace per PR, producer first).
    CI and prod; `postgres_image.yml`; migration `enable_pgvector`; ADR-0080.
 1. **Signals** (AC-2, AC-3, AC-4, AC-14): `PlaybackEvent`, `NotInterested` and
    `TasteExclusion` with their endpoints, "Not interested" applied to "Made For You", and the
-   retention job (api, with #519); then player reporting (player); then the "Not interested"
-   and "Don't use for my taste" UI (web-player).
+   retention job (api, with #519); then playback-event reporting in the web player, which
+   needs no change to `packages/player` because its `statechange` already carries position,
+   status and a per-play key; then the "Not interested" and "Don't use for my taste" UI
+   (web-player, designed in Pencil first).
 2. **Co-listening v1** (AC-5, AC-6, AC-7, AC-8, AC-12 logging): nightly BullMQ job building
    track similarity; serving in the `recommendations` module with candidates, filters (including
    taste exclusions and early skips), ranker, diversity, exploration and reasons; impression and

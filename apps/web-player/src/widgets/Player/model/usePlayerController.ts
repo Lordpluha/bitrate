@@ -21,6 +21,7 @@ import { usePlayerHotkeys } from './usePlayerHotkeys'
 import { usePlayerSessionPersistence } from './usePlayerSessionPersistence'
 import { usePlaylistShuffle } from './usePlaylistShuffle'
 import { useRecordListenedTrack } from './useRecordListenedTrack'
+import { useReportPlaybackEvents } from './useReportPlaybackEvents'
 import { useStreamQualityCap } from './useStreamQualityCap'
 
 type UsePlayerControllerInput = {
@@ -64,6 +65,14 @@ export const usePlayerController = ({
   useRecordListenedTrack({
     currentTime: player.currentTime,
     trackId: currentTrack?.id,
+  })
+  useReportPlaybackEvents({
+    trackId: currentTrack?.id,
+    playbackSequence: player.playbackSequence,
+    currentPlaylistId: player.currentPlaylistId,
+    currentTime: player.currentTime,
+    duration: player.duration,
+    isPlaying: player.isPlaying,
   })
   usePlayerHotkeys({
     currentTime: player.currentTime,
