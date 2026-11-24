@@ -103,13 +103,13 @@ export function addNavItems(lib) {
           fill: C.artistAccountSurface,
         },
         [
-          use('Avatar', { name: 'Avatar' }),
+          use('Avatar/Fallback', { name: 'Avatar' }),
           Col({ name: 'Who', gap: 0, width: 'fill_container' }, [
             part(
               'name',
-              T('Demo artist', { fontSize: 12, fontWeight: '500', fill: C.artistForeground }),
+              T('Mira Sol', { fontSize: 12, fontWeight: '500', fill: C.artistForeground }),
             ),
-            part('email', T('demo@bitrate.fm', { fontSize: 10, fill: C.artistTextSecondary })),
+            part('email', T('Artist account', { fontSize: 10, fill: C.artistTextSecondary })),
           ]),
           I('chevrons-up-down', { width: 14, height: 14, fill: C.artistTextSecondary }),
         ],

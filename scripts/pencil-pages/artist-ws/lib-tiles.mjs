@@ -164,7 +164,8 @@ export function addTiles(lib) {
       'Table/Row',
       Row({ name: 'Table Row', width: 640, gap: 12, padding: [12, 0], ...paint.hairline() }, [
         ...cells(false),
-        Row({ name: 'Trail', width: 180, gap: 8, alignItems: 'center' }, [trail()]),
+        /* the trail slot itself takes the 180px column, so switching it off frees the width */
+        slot('trail', { layout: 'horizontal', width: 180, gap: 8, alignItems: 'center' }),
       ]),
     ),
   )

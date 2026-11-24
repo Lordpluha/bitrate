@@ -1,9 +1,16 @@
-// The release stage stepper (widgets/ReleaseWorkspace/ReleaseStepper): Draft, Review, Deliver, Launch
-// and the planned Promotion stage, done, current and upcoming steps joined by solid or dashed lines; on a
-// phone only the current stage keeps its name.
+// The release stage stepper (widgets/ReleaseWorkspace/ReleaseStepper): Draft, Review, Deliver, Launch,
+// done, current and upcoming steps joined by solid or dashed lines; on a phone only the current stage
+// keeps its name. `Release/Stages` is the shipped four-stage stepper (Draft current; pages swap the
+// steps for their stage); `Release/Stepper` adds the planned Promotion stage for the promotion pages.
 import { C, F, I, Row, T } from '../kit.mjs'
 import { artistPaint } from './paint.mjs'
 
+const FOUR = [
+  ['draft', 'Draft', 'Current'],
+  ['review', 'Review', 'Upcoming'],
+  ['deliver', 'Deliver', 'Upcoming'],
+  ['launch', 'Launch', 'Upcoming'],
+]
 const STAGES = [
   ['draft', 'Draft', 'Done'],
   ['review', 'Review', 'Done'],
@@ -21,6 +28,12 @@ export function addStepper(lib) {
     Current: [{ fill: C.primary }, C.primaryForeground, C.artistForeground],
     Upcoming: [
       { stroke: C.artistReleaseBorder, strokeWidth: 1 },
+      C.artistTextSecondary,
+      C.artistTextSecondary,
+    ],
+    /* stages.ts `optional`: Deliver after approval — open, never required */
+    Optional: [
+      { stroke: C.artistStatusReady, strokeWidth: 1, strokeDash: [3, 3] },
       C.artistTextSecondary,
       C.artistTextSecondary,
     ],
@@ -67,14 +80,14 @@ export function addStepper(lib) {
     ),
   )
   /* on a phone only the current stage keeps its name; steps and the line before each are parts */
-  const steps = (compact) => {
+  const steps = (compact, stages = STAGES) => {
     const out = []
-    STAGES.forEach(([key, label, state], i) => {
+    stages.forEach(([key, label, state], i) => {
       if (i)
         out.push(
           part(
             `line_${key}`,
-            use(STAGES[i - 1][2] === 'Done' && state === 'Done' ? 'Step/Line Done' : 'Step/Line', {
+            use(stages[i - 1][2] === 'Done' && state === 'Done' ? 'Step/Line Done' : 'Step/Line', {
               name: 'Line',
             }),
           ),
@@ -117,4 +130,20 @@ export function addStepper(lib) {
       ),
     ),
   )
+  const stepper = (name, compact) =>
+    comp(
+      name,
+      Row(
+        {
+          name: 'Release Stepper',
+          width: compact ? 358 : 1096,
+          gap: compact ? 6 : 12,
+          padding: compact ? [12, 14] : [14, 18],
+          cornerRadius: 12,
+          ...glass,
+        },
+        steps(compact, FOUR),
+      ),
+    )
+  add(stepper('Release/Stages', false), stepper('Release/Stages Compact', true))
 }

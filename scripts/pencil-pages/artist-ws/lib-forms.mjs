@@ -141,6 +141,7 @@ export function addForms(lib) {
   for (const [state, icon, role] of [
     ['Done', 'circle-check', 'artistStatusReady'],
     ['Pending', 'circle-dashed', 'artistStatusWarning'],
+    ['Info', 'info', 'artistStatusProcessing'],
   ])
     add(
       comp(

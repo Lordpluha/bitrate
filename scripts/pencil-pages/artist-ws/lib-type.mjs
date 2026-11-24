@@ -19,13 +19,26 @@ const TYPE = {
   Figure: [36, '500', 'artistForeground', -0.7],
   Link: [11, '500', 'artistIcon', 0],
   Error: [11, '400', 'artistStatusError', 0],
+  /* public pages: landing display sizes, the auth card title, the one-time code and legal reading text */
+  Hero: [56, '600', 'artistForeground', -1.6],
+  'Hero Accent': [56, '600', 'artistIcon', -1.6],
+  Section: [40, '600', 'artistForeground', -1],
+  'Section Accent': [40, '600', 'artistIcon', -1],
+  Lead: [16, '400', 'artistTextSecondary', 0],
+  Title: [26, '500', 'artistForeground', -0.4],
+  Code: [28, '500', 'artistForeground', 8],
+  Reading: [14, '400', 'artistForeground', 0],
+  /* the underlined text links of the auth pages, legal and settings */
+  'Link Underline': [11, '500', 'artistForeground', 0, { underline: true }],
 }
 
 /** Adds the type styles and the small primitives to the library. */
 export function addType(lib, root) {
   const { comp, part, add, use } = lib
   const paint = artistPaint()
-  for (const [name, [fontSize, fontWeight, role, letterSpacing]] of Object.entries(TYPE))
+  for (const [name, [fontSize, fontWeight, role, letterSpacing, extra = {}]] of Object.entries(
+    TYPE,
+  ))
     add(
       comp(
         `Text/${name}`,
@@ -37,6 +50,7 @@ export function addType(lib, root) {
             fill: C[role],
             letterSpacing,
             lineHeight: 1.5,
+            ...extra,
           }),
         ),
       ),
@@ -93,6 +107,21 @@ export function addType(lib, root) {
           fill: C.artistSelection,
         },
         [part('initials', T('DA', { fontSize: 12, fontWeight: '500', fill: C.artistIcon }))],
+      ),
+    ),
+    /* AvatarFallback of the account menu: the UserRound icon when there is no photo */
+    comp(
+      'Avatar/Fallback',
+      Row(
+        {
+          name: 'Avatar',
+          width: 36,
+          height: 36,
+          cornerRadius: 18,
+          justifyContent: 'center',
+          fill: C.artistSelection,
+        },
+        [I('user-round', { width: 18, height: 18, fill: C.artistIcon })],
       ),
     ),
     comp(

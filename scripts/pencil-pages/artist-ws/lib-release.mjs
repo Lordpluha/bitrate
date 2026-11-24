@@ -8,7 +8,7 @@ const CLEAR = '#0B071600'
 
 /** Adds the release header and its compact variant to the library. */
 export function addRelease(lib) {
-  const { comp, part, add, use, nest } = lib
+  const { comp, part, add, use, nest, slot } = lib
   const paint = artistPaint()
   const glass = paint.releaseGlass()
   const small = (s, o = {}) =>
@@ -74,6 +74,13 @@ export function addRelease(lib) {
                   ? []
                   : [part('updated', small('Updated Sep 01, 2026 · 10:42 UTC', { fontSize: 10 }))]),
               ]),
+              /* the premiere Countdown under the identity, when a future premiere is set */
+              slot('countdown', {
+                layout: 'horizontal',
+                width: 'fit_content',
+                gap: 6,
+                padding: [6, 0, 0, 0],
+              }),
             ]),
           ]),
           part(
@@ -103,16 +110,20 @@ export function addRelease(lib) {
                   }),
                 ),
                 part('nextDesc', small('4 suggested steps are waiting for your approval.', wrap)),
-                Row({ name: 'Action', padding: [8, 0, 0, 0] }, [
-                  part(
-                    'nextButton',
-                    use(
-                      'Button/Primary',
-                      { name: 'Next' },
-                      { icon: { icon: 'arrow-right' }, label: { content: 'Open plan' } },
+                /* `nextAction` switches the whole button row off when there is nothing to press */
+                part(
+                  'nextAction',
+                  Row({ name: 'Action', padding: [8, 0, 0, 0] }, [
+                    part(
+                      'nextButton',
+                      use(
+                        'Button/Primary',
+                        { name: 'Next' },
+                        { icon: { icon: 'arrow-right' }, label: { content: 'Open plan' } },
+                      ),
                     ),
-                  ),
-                ]),
+                  ]),
+                ),
               ],
             ),
           ),
