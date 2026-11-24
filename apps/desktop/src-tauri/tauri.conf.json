@@ -10,20 +10,23 @@
     "frontendDist": "../dist"
   },
   "app": {
-    "windows": [
-      {
-        "title": "@bitrate/desktop",
-        "width": 800,
-        "height": 600
-      }
-    ],
+    "windows": [],
     "security": {
-      "csp": null
+      "csp": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; media-src 'self' blob:; font-src 'self' data:; connect-src 'self' ipc: http://ipc.localhost; worker-src 'self' blob:; object-src 'none'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'"
+    }
+  },
+  "plugins": {
+    "deep-link": {
+      "desktop": {
+        "schemes": ["bitrate"]
+      }
     }
   },
   "bundle": {
     "active": true,
     "targets": "all",
+    "category": "Music",
+    "shortDescription": "Bitrate music player",
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",

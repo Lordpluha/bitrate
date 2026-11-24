@@ -1,16 +1,12 @@
 [package]
 name = "bitrate-desktop"
 version = "0.1.0"
-description = "A Tauri App"
-authors = ["you"]
+description = "Bitrate for desktop"
+authors = ["Bitrate"]
 edition = "2021"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [lib]
-# The `_lib` suffix may seem redundant but it is necessary
-# to make the lib name unique and wouldn't conflict with the bin name.
-# This seems to be only an issue on Windows, see https://github.com/rust-lang/cargo/issues/8519
+# The `_lib` suffix keeps the lib name distinct from the bin name (cargo#8519 on Windows).
 name = "bitrate_desktop_lib"
 crate-type = ["staticlib", "cdylib", "rlib"]
 
@@ -18,8 +14,17 @@ crate-type = ["staticlib", "cdylib", "rlib"]
 tauri-build = { version = "2", features = [] }
 
 [dependencies]
-tauri = { version = "2", features = [] }
+tauri = { version = "2", features = ["tray-icon"] }
 tauri-plugin-opener = "2"
+tauri-plugin-deep-link = "2"
+tauri-plugin-window-state = "2"
+tauri-plugin-single-instance = { version = "2", features = ["deep-link"] }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
-
+url = "2"
+percent-encoding = "2"
+# The loopback server: serves the renderer and proxies the API on one origin.
+axum = { version = "0.8", default-features = false, features = ["http1", "tokio"] }
+reqwest = { version = "0.12", default-features = false, features = ["rustls-tls", "stream"] }
+tokio = { version = "1", features = ["net", "rt-multi-thread", "macros"] }
+futures-util = { version = "0.3", default-features = false }

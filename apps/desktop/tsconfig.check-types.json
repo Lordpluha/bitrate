@@ -1,0 +1,14 @@
+{
+  /* Used only by `pnpm check-types` — never by vite. Resolves `@bitrate/ui-react` and
+     `@bitrate/player` via their own "bitrate-typecheck" export condition (see each
+     package.json), as web-player and web-artists do. */
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "customConditions": ["bitrate-typecheck"]
+  },
+  "references": [
+    { "path": "./tsconfig.node.json" },
+    { "path": "../../packages/ui-react/tsconfig.refs.json" },
+    { "path": "../../packages/player/tsconfig.refs.json" }
+  ]
+}
