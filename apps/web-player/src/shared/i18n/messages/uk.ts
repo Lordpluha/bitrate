@@ -510,6 +510,7 @@ export const uk = {
   'main.loadingRecommendations': 'Завантажуємо рекомендації',
   'main.recommendationsFailed': 'Не вдалося завантажити ваші рекомендації.',
   'main.recommendationsUnavailable': 'Рекомендації недоступні',
+  'notifications.createdWithAi': 'Створено з AI',
   'notifications.filter.events': 'Події',
   'notifications.filter.followers': 'Підписники',
   'notifications.filter.friends': 'Друзі',

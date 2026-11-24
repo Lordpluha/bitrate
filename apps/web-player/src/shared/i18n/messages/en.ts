@@ -492,6 +492,7 @@ export const en = {
   'main.loadingRecommendations': 'Loading recommendations',
   'main.recommendationsFailed': 'Your recommendations could not be loaded.',
   'main.recommendationsUnavailable': 'Recommendations are unavailable',
+  'notifications.createdWithAi': 'Created with AI',
   'notifications.filter.events': 'Events',
   'notifications.filter.followers': 'Followers',
   'notifications.filter.friends': 'Friends',

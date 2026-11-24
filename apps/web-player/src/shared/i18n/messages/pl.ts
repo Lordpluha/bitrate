@@ -514,6 +514,7 @@ export const pl = {
   'main.loadingRecommendations': 'Wczytujemy rekomendacje',
   'main.recommendationsFailed': 'Nie udało się wczytać Twoich rekomendacji.',
   'main.recommendationsUnavailable': 'Rekomendacje są niedostępne',
+  'notifications.createdWithAi': 'Utworzone z AI',
   'notifications.filter.events': 'Wydarzenia',
   'notifications.filter.followers': 'Obserwujący',
   'notifications.filter.friends': 'Znajomi',
