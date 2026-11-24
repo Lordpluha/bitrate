@@ -7,8 +7,9 @@
 adaptive
 
 Web is the mature surface today (`apps/web-player`, `apps/web-artists`). The Expo app
-(`apps/mobile`, roadmap v0.5.0) and the Tauri app (`apps/desktop`, roadmap v1.2.0) are
-scaffolded but unstarted. `adaptive` is a decision about where this product is going: the
+(`apps/mobile`, roadmap v0.5.0) is scaffolded but unstarted; the Tauri app (`apps/desktop`,
+roadmap v1.2.0) renders web-player's screens in a native window with a tray, deep links and
+a single instance. `adaptive` is a decision about where this product is going: the
 mobile surface is expected to read as native on each OS rather than inherit web
 conventions, so native platform guidance applies to its design work when it begins.
 
@@ -106,7 +107,7 @@ own engine; the redesign and the move onto `@bitrate/player` are planned (Player
 package is used only by the admin panel today. Treat "the API supports it" as a reason a
 surface is worth designing, not as evidence it already works.
 
-**Not started:** mobile app beyond scaffolding, desktop app beyond scaffolding, artist
+**Not started:** mobile app beyond scaffolding, artist
 verification, monetization/subscriptions, delivery to external stores, gapless playback,
 equalizer, offline mode, recommendations.
 

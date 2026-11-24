@@ -17,7 +17,7 @@ Turborepo + pnpm; workspace names use `@bitrate/`.
 | `packages/player` | Svelte 5 custom element; framework-free contract, no host globals in engine |
 | `packages/contracts` | Generated OpenAPI TypeScript contracts |
 | `apps/mobile` | React Native + Expo scaffold; conventions still evolving |
-| `apps/desktop` | Tauri 2 + React scaffold; conventions still evolving |
+| `apps/desktop` | Tauri 2 + Vite SPA reusing web-player source via aliases and `next/*` shims |
 
 Read only affected workspaces. Check scope before applying React/FSD/Next.js conventions.
 

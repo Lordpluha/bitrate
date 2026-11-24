@@ -1,25 +1,46 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
-    "useDefineForClassFields": true,
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "module": "ESNext",
-    "skipLibCheck": true,
-
-    /* Bundler mode */
     "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
+    "moduleDetection": "force",
+    "jsx": "react-jsx",
+    "types": ["node", "vite/client"],
+    "skipLibCheck": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
+    "esModuleInterop": true,
     "noEmit": true,
-    "jsx": "react-jsx",
 
-    /* Linting */
+    /* The reused web-player sources are type-checked as part of this program, so the
+       strictness matches web-player's own tsconfig rather than drifting from it. */
     "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "noUncheckedIndexedAccess": true,
+    "noFallthroughCasesInSwitch": true,
+
+    "ignoreDeprecations": "6.0",
+    "baseUrl": ".",
+    /* Mirrors vite/aliases.ts: web-player's layer aliases point at its source, and the
+       `next/*` modules it imports resolve to the desktop shims. */
+    "paths": {
+      "@desktop/*": ["./src/*"],
+      "@/*": ["../web-player/src/*"],
+      "@app/*": ["../web-player/src/app/*"],
+      "@entities/*": ["../web-player/src/entities/*"],
+      "@features/*": ["../web-player/src/features/*"],
+      "@shared/*": ["../web-player/src/shared/*"],
+      "@views/*": ["../web-player/src/views/*"],
+      "@widgets/*": ["../web-player/src/widgets/*"],
+      "next": ["./src/next-shims/next.ts"],
+      "next/link": ["./src/next-shims/link.tsx"],
+      "next/image": ["./src/next-shims/image.tsx"],
+      "next/navigation": ["./src/next-shims/navigation.ts"],
+      "@sentry/nextjs": ["../../node_modules/@sentry/react"]
+    }
   },
-  "include": ["src"],
+  /* web-player's global declarations (the <bitrate-player> elements, CSS custom properties)
+     come along with the views that rely on them. */
+  "include": ["src", "../web-player/src/shared/types/*.d.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

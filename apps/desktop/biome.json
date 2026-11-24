@@ -1,0 +1,14 @@
+{
+  "root": false,
+  "$schema": "https://biomejs.dev/schemas/2.6.4/schema.json",
+  "extends": "//",
+  "files": {
+    "includes": ["**", "!dist", "!src-tauri/target", "!src-tauri/gen"]
+  },
+  "css": {
+    "parser": {
+      "cssModules": false,
+      "tailwindDirectives": true
+    }
+  }
+}

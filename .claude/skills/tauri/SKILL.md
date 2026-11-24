@@ -13,11 +13,10 @@ A Rust native shell (`src-tauri/`) wrapping a React + Vite renderer.
 
 ## Read this first — two traps
 
-**1. `apps/desktop` is scaffolded but unstarted** (roadmap v1.2.0, per `PRODUCT.md`), close
-to the `create-tauri-app` React template. `.claude/rules/desktop-rules.md` is its law — read
-it alongside this skill; it also records that `tauri.conf.json` ships `"csp": null` today.
-Next.js-only conventions — FSD layers, `'use client'`, `app/**/page.tsx` adapters — mean
-nothing in a Vite SPA. Flag any convention you had to improvise.
+**1. `apps/desktop` renders web-player's own source** through Vite aliases and `next/*`
+shims, from a loopback origin that proxies the API. `.claude/rules/desktop-rules.md` is its
+law — read it alongside this skill. Screens change in web-player, not in desktop; native
+concerns (tray, links, deep links, window) live in Rust. Flag any convention you improvise.
 
 **2. Most Tauri material online is v1.** The v2 API, permission model, and plugin system all
 changed. Read the installed `@tauri-apps/api` types and the v2 documentation; a v1 snippet

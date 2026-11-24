@@ -1,9 +1,25 @@
+import { brandFontVariables } from '@shared/fonts'
+import { RouterProvider } from '@tanstack/react-router'
 import { StrictMode } from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './App'
+import { createRoot } from 'react-dom/client'
+import { AppProviders } from './app/providers/AppProviders'
+import { router } from './app/router/router'
+import { applyStoredTheme } from './app/theme/applyStoredTheme'
+import { NativeBridge } from './native/NativeBridge'
 
-ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
+import './app/styles/global.css'
+
+applyStoredTheme()
+document.body.classList.add(brandFontVariables)
+
+const root = document.getElementById('root')
+if (!root) throw new Error('index.html is missing the #root element')
+
+createRoot(root).render(
   <StrictMode>
-    <App />
+    <AppProviders>
+      <NativeBridge />
+      <RouterProvider router={router} />
+    </AppProviders>
   </StrictMode>,
 )

@@ -1,7 +1,10 @@
 {
   "$schema": "../gen/schemas/desktop-schema.json",
   "identifier": "default",
-  "description": "Capability for the main window",
+  "description": "The main window may only receive the shell's tray and deep-link events. Links, tray, deep links and window state are handled in Rust, so the renderer gets no other native access.",
   "windows": ["main"],
-  "permissions": ["core:default", "opener:default"]
+  "remote": {
+    "urls": ["http://127.0.0.1:*", "http://localhost:1420"]
+  },
+  "permissions": ["core:event:allow-listen", "core:event:allow-unlisten"]
 }

@@ -5,7 +5,7 @@ Read only the section needed for this task. The scoped rule
 
 # Form layer — web-player
 
-React Hook Form + Zod. Used in `features/AuthModal`, `features/Login`, `features/Registration` and any future form-bearing slice. Read before writing a form component.
+React Hook Form + Zod. Used in `features/Login`, `features/Registration` and any future form-bearing slice. Read before writing a form component.
 
 ## Schema location
 

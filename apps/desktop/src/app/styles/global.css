@@ -1,0 +1,55 @@
+/*
+ * web-player's stylesheet is the desktop stylesheet: same tokens, themes, breakpoints and
+ * variants, so a reused view renders identically. Only what Next did for web-player is added.
+ */
+@import "../../../../web-player/src/app/global.css";
+
+/* Desktop-only sources (routes, shell) and the shared component library. */
+@source "../../";
+@source "../../../../../packages/ui-react/src";
+
+/* `next/font/local` declared Kanit for web-player; the same files, as plain faces. */
+@font-face {
+  font-family: Kanit;
+  font-weight: 300;
+  font-display: swap;
+  src: url("../../../../web-player/src/shared/fonts/files/Kanit-Light.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: Kanit;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../../../../web-player/src/shared/fonts/files/Kanit-Regular.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: Kanit;
+  font-weight: 500;
+  font-display: swap;
+  src: url("../../../../web-player/src/shared/fonts/files/Kanit-Medium.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: Kanit;
+  font-weight: 600;
+  font-display: swap;
+  src: url("../../../../web-player/src/shared/fonts/files/Kanit-SemiBold.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: Kanit;
+  font-weight: 700;
+  font-display: swap;
+  src: url("../../../../web-player/src/shared/fonts/files/Kanit-Bold.woff2") format("woff2");
+}
+
+:root {
+  --font-kanit: Kanit;
+}
+
+/* A desktop window is an app, not a document: no rubber-band overscroll on the root. */
+html,
+body {
+  overscroll-behavior: none;
+}
