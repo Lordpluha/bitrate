@@ -1,0 +1,1411 @@
+{
+  "version": "2.20",
+  "imports": {
+    "ds": "../../web-player-design/design-system/bitrate.lib.pen"
+  },
+  "children": [
+    {
+      "type": "frame",
+      "id": "pS4Yun",
+      "name": "Mobile / Now playing / Mobile / Dark",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "BkDs5P",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "G3BuF0",
+          "name": "Modal",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 18,
+          "padding": [
+            8,
+            22,
+            24,
+            22
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "22ImZl",
+              "name": "Top",
+              "gap": 12,
+              "alignItems": "center",
+              "width": "fill_container",
+              "justifyContent": "space_between",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "GecWam",
+                  "ref": "ds:cS9uPp",
+                  "name": "Button/Icon Ghost",
+                  "descendants": {
+                    "ds:KFmiLY": {
+                      "icon": "chevron-down"
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "FCLpKv",
+                  "name": "Column",
+                  "layout": "vertical",
+                  "gap": 0,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "BK6orM",
+                      "ref": "ds:PiqhAO",
+                      "name": "Text/Caption",
+                      "content": "Now playing"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "E4yFOz",
+                      "ref": "ds:SOt7Oe",
+                      "name": "Text/Body Strong",
+                      "content": "Recently played"
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "CwyFCc",
+                  "ref": "ds:cS9uPp",
+                  "name": "Button/Icon Ghost",
+                  "descendants": {
+                    "ds:KFmiLY": {
+                      "icon": "ellipsis"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "P7tutI",
+              "ref": "ds:awAtR9",
+              "name": "Media/Cover Large",
+              "width": 346,
+              "height": 346,
+              "fill": {
+                "type": "image",
+                "url": "../../web-player-design/design-system/assets/albums/album-afterglow.webp",
+                "mode": "cover"
+              }
+            },
+            {
+              "type": "frame",
+              "id": "aj578l",
+              "name": "Meta",
+              "layout": "vertical",
+              "gap": 4,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "2ofbO1",
+                  "ref": "ds:RoXXJv",
+                  "name": "Text/H2",
+                  "content": "Afterglow"
+                },
+                {
+                  "type": "ref",
+                  "id": "TbioPc",
+                  "ref": "ds:C5Ih8u",
+                  "name": "Text/Muted",
+                  "content": "Nova & the Static"
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "5e4FUf",
+              "ref": "ds:SbrVsk",
+              "name": "Seek Bar"
+            },
+            {
+              "type": "ref",
+              "id": "GpPmNs",
+              "ref": "ds:8PfYYb",
+              "name": "Transport"
+            }
+          ]
+        }
+      ],
+      "x": 0,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "app /now-playing (modal, opened from the island artwork) — Full player: one track loads at a time from a play session (POST /tracks/:id/play-sessions → CMAF ?t= URL); lock-screen controls mirror it."
+    },
+    {
+      "type": "frame",
+      "id": "dEXicu",
+      "name": "Mobile / Now playing / Mobile / Light",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "hFGjki",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "kHSrAt",
+          "name": "Modal",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 18,
+          "padding": [
+            8,
+            22,
+            24,
+            22
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "YXi64D",
+              "name": "Top",
+              "gap": 12,
+              "alignItems": "center",
+              "width": "fill_container",
+              "justifyContent": "space_between",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "m2kjVc",
+                  "ref": "ds:cS9uPp",
+                  "name": "Button/Icon Ghost",
+                  "descendants": {
+                    "ds:KFmiLY": {
+                      "icon": "chevron-down"
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "j21g2Y",
+                  "name": "Column",
+                  "layout": "vertical",
+                  "gap": 0,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "9ZTqNb",
+                      "ref": "ds:PiqhAO",
+                      "name": "Text/Caption",
+                      "content": "Now playing"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "eSqMCO",
+                      "ref": "ds:SOt7Oe",
+                      "name": "Text/Body Strong",
+                      "content": "Recently played"
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "YL1qyg",
+                  "ref": "ds:cS9uPp",
+                  "name": "Button/Icon Ghost",
+                  "descendants": {
+                    "ds:KFmiLY": {
+                      "icon": "ellipsis"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "3NLzfB",
+              "ref": "ds:awAtR9",
+              "name": "Media/Cover Large",
+              "width": 346,
+              "height": 346,
+              "fill": {
+                "type": "image",
+                "url": "../../web-player-design/design-system/assets/albums/album-afterglow.webp",
+                "mode": "cover"
+              }
+            },
+            {
+              "type": "frame",
+              "id": "6mG2aY",
+              "name": "Meta",
+              "layout": "vertical",
+              "gap": 4,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "wGpBTc",
+                  "ref": "ds:RoXXJv",
+                  "name": "Text/H2",
+                  "content": "Afterglow"
+                },
+                {
+                  "type": "ref",
+                  "id": "zyZOZL",
+                  "ref": "ds:C5Ih8u",
+                  "name": "Text/Muted",
+                  "content": "Nova & the Static"
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "5RrJSP",
+              "ref": "ds:SbrVsk",
+              "name": "Seek Bar"
+            },
+            {
+              "type": "ref",
+              "id": "GGWZds",
+              "ref": "ds:8PfYYb",
+              "name": "Transport"
+            }
+          ]
+        }
+      ],
+      "x": 490,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Light"
+      },
+      "context": "app /now-playing (modal, opened from the island artwork) — Full player: one track loads at a time from a play session (POST /tracks/:id/play-sessions → CMAF ?t= URL); lock-screen controls mirror it."
+    },
+    {
+      "type": "frame",
+      "id": "VOobYx",
+      "name": "Mobile / Now playing / Mobile / Dim",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "ntVIMj",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "wGL5JF",
+          "name": "Modal",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 18,
+          "padding": [
+            8,
+            22,
+            24,
+            22
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "IX7K1Z",
+              "name": "Top",
+              "gap": 12,
+              "alignItems": "center",
+              "width": "fill_container",
+              "justifyContent": "space_between",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "K3J9Qv",
+                  "ref": "ds:cS9uPp",
+                  "name": "Button/Icon Ghost",
+                  "descendants": {
+                    "ds:KFmiLY": {
+                      "icon": "chevron-down"
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "zW8uQt",
+                  "name": "Column",
+                  "layout": "vertical",
+                  "gap": 0,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "DyDs73",
+                      "ref": "ds:PiqhAO",
+                      "name": "Text/Caption",
+                      "content": "Now playing"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "yFStnE",
+                      "ref": "ds:SOt7Oe",
+                      "name": "Text/Body Strong",
+                      "content": "Recently played"
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "SDXoDr",
+                  "ref": "ds:cS9uPp",
+                  "name": "Button/Icon Ghost",
+                  "descendants": {
+                    "ds:KFmiLY": {
+                      "icon": "ellipsis"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "Hxu0VH",
+              "ref": "ds:awAtR9",
+              "name": "Media/Cover Large",
+              "width": 346,
+              "height": 346,
+              "fill": {
+                "type": "image",
+                "url": "../../web-player-design/design-system/assets/albums/album-afterglow.webp",
+                "mode": "cover"
+              }
+            },
+            {
+              "type": "frame",
+              "id": "CYuB1u",
+              "name": "Meta",
+              "layout": "vertical",
+              "gap": 4,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "EdCXwr",
+                  "ref": "ds:RoXXJv",
+                  "name": "Text/H2",
+                  "content": "Afterglow"
+                },
+                {
+                  "type": "ref",
+                  "id": "Bs6RU5",
+                  "ref": "ds:C5Ih8u",
+                  "name": "Text/Muted",
+                  "content": "Nova & the Static"
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "ruB6x5",
+              "ref": "ds:SbrVsk",
+              "name": "Seek Bar"
+            },
+            {
+              "type": "ref",
+              "id": "qJWJ3I",
+              "ref": "ds:8PfYYb",
+              "name": "Transport"
+            }
+          ]
+        }
+      ],
+      "x": 980,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dim"
+      },
+      "context": "app /now-playing (modal, opened from the island artwork) — Full player: one track loads at a time from a play session (POST /tracks/:id/play-sessions → CMAF ?t= URL); lock-screen controls mirror it."
+    },
+    {
+      "type": "frame",
+      "id": "5ER2Bw",
+      "name": "Mobile / Now playing / Paused / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "pwxdoC",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "AZlLGv",
+          "name": "Modal",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 18,
+          "padding": [
+            8,
+            22,
+            24,
+            22
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "MhHayh",
+              "name": "Top",
+              "gap": 12,
+              "alignItems": "center",
+              "width": "fill_container",
+              "justifyContent": "space_between",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "2lNtWg",
+                  "ref": "ds:cS9uPp",
+                  "name": "Button/Icon Ghost",
+                  "descendants": {
+                    "ds:KFmiLY": {
+                      "icon": "chevron-down"
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "5iTVgJ",
+                  "name": "Column",
+                  "layout": "vertical",
+                  "gap": 0,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "tXLrrp",
+                      "ref": "ds:PiqhAO",
+                      "name": "Text/Caption",
+                      "content": "Now playing"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "EXgKRQ",
+                      "ref": "ds:SOt7Oe",
+                      "name": "Text/Body Strong",
+                      "content": "Recently played"
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "maJX9V",
+                  "ref": "ds:cS9uPp",
+                  "name": "Button/Icon Ghost",
+                  "descendants": {
+                    "ds:KFmiLY": {
+                      "icon": "ellipsis"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "JJNuhJ",
+              "ref": "ds:awAtR9",
+              "name": "Media/Cover Large",
+              "width": 346,
+              "height": 346,
+              "fill": {
+                "type": "image",
+                "url": "../../web-player-design/design-system/assets/albums/album-afterglow.webp",
+                "mode": "cover"
+              }
+            },
+            {
+              "type": "frame",
+              "id": "GevZVq",
+              "name": "Meta",
+              "layout": "vertical",
+              "gap": 4,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "W0SEmA",
+                  "ref": "ds:RoXXJv",
+                  "name": "Text/H2",
+                  "content": "Afterglow"
+                },
+                {
+                  "type": "ref",
+                  "id": "RVBfIy",
+                  "ref": "ds:C5Ih8u",
+                  "name": "Text/Muted",
+                  "content": "Nova & the Static"
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "xrsgub",
+              "ref": "ds:SbrVsk",
+              "name": "Seek Bar"
+            },
+            {
+              "type": "ref",
+              "id": "awlys2",
+              "ref": "ds:8PfYYb",
+              "name": "Transport",
+              "descendants": {
+                "ds:6p7s38": {
+                  "icon": "play"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 1470,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "app /now-playing (modal, opened from the island artwork) — Full player: one track loads at a time from a play session (POST /tracks/:id/play-sessions → CMAF ?t= URL); lock-screen controls mirror it. · no desktop frame: native phone app (apps/mobile) — there is no desktop layout"
+    },
+    {
+      "type": "frame",
+      "id": "lYAT0g",
+      "name": "Mobile / Now playing / Buffering / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "TPFSF1",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "WsWGHY",
+          "name": "Modal",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 18,
+          "padding": [
+            8,
+            22,
+            24,
+            22
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "CWGq3N",
+              "name": "Top",
+              "gap": 12,
+              "alignItems": "center",
+              "width": "fill_container",
+              "justifyContent": "space_between",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "IgYTLx",
+                  "ref": "ds:cS9uPp",
+                  "name": "Button/Icon Ghost",
+                  "descendants": {
+                    "ds:KFmiLY": {
+                      "icon": "chevron-down"
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "DJjXef",
+                  "name": "Column",
+                  "layout": "vertical",
+                  "gap": 0,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "Ri8lnD",
+                      "ref": "ds:PiqhAO",
+                      "name": "Text/Caption",
+                      "content": "Now playing"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "UfoI2V",
+                      "ref": "ds:SOt7Oe",
+                      "name": "Text/Body Strong",
+                      "content": "Recently played"
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "AklJ0T",
+                  "ref": "ds:cS9uPp",
+                  "name": "Button/Icon Ghost",
+                  "descendants": {
+                    "ds:KFmiLY": {
+                      "icon": "ellipsis"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "FDFJCf",
+              "ref": "ds:awAtR9",
+              "name": "Media/Cover Large",
+              "width": 346,
+              "height": 346,
+              "fill": {
+                "type": "image",
+                "url": "../../web-player-design/design-system/assets/albums/album-afterglow.webp",
+                "mode": "cover"
+              }
+            },
+            {
+              "type": "frame",
+              "id": "Y6uRxm",
+              "name": "Meta",
+              "layout": "vertical",
+              "gap": 4,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "agt6mN",
+                  "ref": "ds:RoXXJv",
+                  "name": "Text/H2",
+                  "content": "Afterglow"
+                },
+                {
+                  "type": "ref",
+                  "id": "Xc2fp7",
+                  "ref": "ds:C5Ih8u",
+                  "name": "Text/Muted",
+                  "content": "Nova & the Static"
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "Vrs2wo",
+              "ref": "ds:RzC9ls",
+              "name": "Seek Bar/Buffering",
+              "descendants": {
+                "ds:GbC8sk": {
+                  "content": "Buffering…"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "Ys0P6T",
+              "ref": "ds:8PfYYb",
+              "name": "Transport",
+              "descendants": {
+                "ds:6p7s38": {
+                  "icon": "loader-circle"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 1960,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "app /now-playing (modal, opened from the island artwork) — Full player: one track loads at a time from a play session (POST /tracks/:id/play-sessions → CMAF ?t= URL); lock-screen controls mirror it. · no desktop frame: native phone app (apps/mobile) — there is no desktop layout"
+    },
+    {
+      "type": "frame",
+      "id": "wOk7nK",
+      "name": "Mobile / Now playing / Protected track / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "sUMcqS",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "lknGJ4",
+          "name": "Modal",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 18,
+          "padding": [
+            8,
+            22,
+            24,
+            22
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "vgupDQ",
+              "name": "Top",
+              "gap": 12,
+              "alignItems": "center",
+              "width": "fill_container",
+              "justifyContent": "space_between",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "tfY2il",
+                  "ref": "ds:cS9uPp",
+                  "name": "Button/Icon Ghost",
+                  "descendants": {
+                    "ds:KFmiLY": {
+                      "icon": "chevron-down"
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "wPm9Lb",
+                  "name": "Column",
+                  "layout": "vertical",
+                  "gap": 0,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "0GKEmc",
+                      "ref": "ds:PiqhAO",
+                      "name": "Text/Caption",
+                      "content": "Now playing"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "3bg5Bi",
+                      "ref": "ds:SOt7Oe",
+                      "name": "Text/Body Strong",
+                      "content": "Recently played"
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "hWFT92",
+                  "ref": "ds:cS9uPp",
+                  "name": "Button/Icon Ghost",
+                  "descendants": {
+                    "ds:KFmiLY": {
+                      "icon": "ellipsis"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "yDJiim",
+              "ref": "ds:awAtR9",
+              "name": "Media/Cover Large",
+              "width": 346,
+              "height": 346,
+              "fill": {
+                "type": "image",
+                "url": "../../web-player-design/design-system/assets/albums/album-afterglow.webp",
+                "mode": "cover"
+              }
+            },
+            {
+              "type": "frame",
+              "id": "xNq4RV",
+              "name": "Meta",
+              "layout": "vertical",
+              "gap": 4,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "jYLirm",
+                  "ref": "ds:RoXXJv",
+                  "name": "Text/H2",
+                  "content": "Afterglow"
+                },
+                {
+                  "type": "ref",
+                  "id": "sneSGh",
+                  "ref": "ds:C5Ih8u",
+                  "name": "Text/Muted",
+                  "content": "Nova & the Static"
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "sEKiNS",
+              "ref": "ds:3eatV3",
+              "name": "Text/Error",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "This track can't be played on mobile yet."
+            },
+            {
+              "type": "ref",
+              "id": "p3xOJC",
+              "ref": "ds:SbrVsk",
+              "name": "Seek Bar"
+            },
+            {
+              "type": "ref",
+              "id": "sjOVCJ",
+              "ref": "ds:8PfYYb",
+              "name": "Transport",
+              "descendants": {
+                "ds:6p7s38": {
+                  "icon": "play"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 2450,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "app /now-playing (modal, opened from the island artwork) — Full player: one track loads at a time from a play session (POST /tracks/:id/play-sessions → CMAF ?t= URL); lock-screen controls mirror it. · no desktop frame: native phone app (apps/mobile) — there is no desktop layout"
+    },
+    {
+      "type": "frame",
+      "id": "gzDeNt",
+      "name": "Mobile / Now playing / Still processing / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "OpOsf6",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "BKJoqm",
+          "name": "Modal",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 18,
+          "padding": [
+            8,
+            22,
+            24,
+            22
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "P1ejYU",
+              "name": "Top",
+              "gap": 12,
+              "alignItems": "center",
+              "width": "fill_container",
+              "justifyContent": "space_between",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "hXOI8k",
+                  "ref": "ds:cS9uPp",
+                  "name": "Button/Icon Ghost",
+                  "descendants": {
+                    "ds:KFmiLY": {
+                      "icon": "chevron-down"
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "sKtuC4",
+                  "name": "Column",
+                  "layout": "vertical",
+                  "gap": 0,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "UHWsLo",
+                      "ref": "ds:PiqhAO",
+                      "name": "Text/Caption",
+                      "content": "Now playing"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "P4jiwh",
+                      "ref": "ds:SOt7Oe",
+                      "name": "Text/Body Strong",
+                      "content": "Recently played"
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "tA7wCB",
+                  "ref": "ds:cS9uPp",
+                  "name": "Button/Icon Ghost",
+                  "descendants": {
+                    "ds:KFmiLY": {
+                      "icon": "ellipsis"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "Mr1tge",
+              "ref": "ds:awAtR9",
+              "name": "Media/Cover Large",
+              "width": 346,
+              "height": 346,
+              "fill": {
+                "type": "image",
+                "url": "../../web-player-design/design-system/assets/albums/album-afterglow.webp",
+                "mode": "cover"
+              }
+            },
+            {
+              "type": "frame",
+              "id": "PcgPIr",
+              "name": "Meta",
+              "layout": "vertical",
+              "gap": 4,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "bwAxjL",
+                  "ref": "ds:RoXXJv",
+                  "name": "Text/H2",
+                  "content": "Afterglow"
+                },
+                {
+                  "type": "ref",
+                  "id": "eaRQ9h",
+                  "ref": "ds:C5Ih8u",
+                  "name": "Text/Muted",
+                  "content": "Nova & the Static"
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "S8WRt2",
+              "ref": "ds:3eatV3",
+              "name": "Text/Error",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "This track is still being processed."
+            },
+            {
+              "type": "ref",
+              "id": "xJhR7O",
+              "ref": "ds:SbrVsk",
+              "name": "Seek Bar"
+            },
+            {
+              "type": "ref",
+              "id": "qT7Ibx",
+              "ref": "ds:8PfYYb",
+              "name": "Transport",
+              "descendants": {
+                "ds:6p7s38": {
+                  "icon": "play"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 2940,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "app /now-playing (modal, opened from the island artwork) — Full player: one track loads at a time from a play session (POST /tracks/:id/play-sessions → CMAF ?t= URL); lock-screen controls mirror it. · no desktop frame: native phone app (apps/mobile) — there is no desktop layout"
+    },
+    {
+      "type": "frame",
+      "id": "vsyVUg",
+      "name": "Mobile / Now playing / Rate limited / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "Nxbyeh",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "Q6IBEY",
+          "name": "Modal",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 18,
+          "padding": [
+            8,
+            22,
+            24,
+            22
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "GBV7Df",
+              "name": "Top",
+              "gap": 12,
+              "alignItems": "center",
+              "width": "fill_container",
+              "justifyContent": "space_between",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "WysriA",
+                  "ref": "ds:cS9uPp",
+                  "name": "Button/Icon Ghost",
+                  "descendants": {
+                    "ds:KFmiLY": {
+                      "icon": "chevron-down"
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "T2cp4W",
+                  "name": "Column",
+                  "layout": "vertical",
+                  "gap": 0,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "DxLDxl",
+                      "ref": "ds:PiqhAO",
+                      "name": "Text/Caption",
+                      "content": "Now playing"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "GCE3IJ",
+                      "ref": "ds:SOt7Oe",
+                      "name": "Text/Body Strong",
+                      "content": "Recently played"
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "OPO4Zg",
+                  "ref": "ds:cS9uPp",
+                  "name": "Button/Icon Ghost",
+                  "descendants": {
+                    "ds:KFmiLY": {
+                      "icon": "ellipsis"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "x9b7Qn",
+              "ref": "ds:awAtR9",
+              "name": "Media/Cover Large",
+              "width": 346,
+              "height": 346,
+              "fill": {
+                "type": "image",
+                "url": "../../web-player-design/design-system/assets/albums/album-afterglow.webp",
+                "mode": "cover"
+              }
+            },
+            {
+              "type": "frame",
+              "id": "OGWPHm",
+              "name": "Meta",
+              "layout": "vertical",
+              "gap": 4,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "ePeWxe",
+                  "ref": "ds:RoXXJv",
+                  "name": "Text/H2",
+                  "content": "Afterglow"
+                },
+                {
+                  "type": "ref",
+                  "id": "jQ9YZL",
+                  "ref": "ds:C5Ih8u",
+                  "name": "Text/Muted",
+                  "content": "Nova & the Static"
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "JQVHdb",
+              "ref": "ds:3eatV3",
+              "name": "Text/Error",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "Slow down a little — playback will resume shortly."
+            },
+            {
+              "type": "ref",
+              "id": "4JHosA",
+              "ref": "ds:SbrVsk",
+              "name": "Seek Bar"
+            },
+            {
+              "type": "ref",
+              "id": "TRX0f9",
+              "ref": "ds:8PfYYb",
+              "name": "Transport",
+              "descendants": {
+                "ds:6p7s38": {
+                  "icon": "play"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 3430,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "app /now-playing (modal, opened from the island artwork) — Full player: one track loads at a time from a play session (POST /tracks/:id/play-sessions → CMAF ?t= URL); lock-screen controls mirror it. · no desktop frame: native phone app (apps/mobile) — there is no desktop layout"
+    },
+    {
+      "type": "frame",
+      "id": "xTdr3y",
+      "name": "Mobile / Now playing / Playback failed / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "xEcoOU",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "A2oBlN",
+          "name": "Modal",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 18,
+          "padding": [
+            8,
+            22,
+            24,
+            22
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "6hNwku",
+              "name": "Top",
+              "gap": 12,
+              "alignItems": "center",
+              "width": "fill_container",
+              "justifyContent": "space_between",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "AbQ0x9",
+                  "ref": "ds:cS9uPp",
+                  "name": "Button/Icon Ghost",
+                  "descendants": {
+                    "ds:KFmiLY": {
+                      "icon": "chevron-down"
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "xPKc4I",
+                  "name": "Column",
+                  "layout": "vertical",
+                  "gap": 0,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "pqx9Ur",
+                      "ref": "ds:PiqhAO",
+                      "name": "Text/Caption",
+                      "content": "Now playing"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "qb95hp",
+                      "ref": "ds:SOt7Oe",
+                      "name": "Text/Body Strong",
+                      "content": "Recently played"
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "gPWOyP",
+                  "ref": "ds:cS9uPp",
+                  "name": "Button/Icon Ghost",
+                  "descendants": {
+                    "ds:KFmiLY": {
+                      "icon": "ellipsis"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "b8ndA5",
+              "ref": "ds:awAtR9",
+              "name": "Media/Cover Large",
+              "width": 346,
+              "height": 346,
+              "fill": {
+                "type": "image",
+                "url": "../../web-player-design/design-system/assets/albums/album-afterglow.webp",
+                "mode": "cover"
+              }
+            },
+            {
+              "type": "frame",
+              "id": "ebLbJL",
+              "name": "Meta",
+              "layout": "vertical",
+              "gap": 4,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "Kl8zZZ",
+                  "ref": "ds:RoXXJv",
+                  "name": "Text/H2",
+                  "content": "Afterglow"
+                },
+                {
+                  "type": "ref",
+                  "id": "Rj0pvg",
+                  "ref": "ds:C5Ih8u",
+                  "name": "Text/Muted",
+                  "content": "Nova & the Static"
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "90lvS2",
+              "ref": "ds:3eatV3",
+              "name": "Text/Error",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "Couldn't play this track."
+            },
+            {
+              "type": "ref",
+              "id": "OxlX6E",
+              "ref": "ds:SbrVsk",
+              "name": "Seek Bar"
+            },
+            {
+              "type": "ref",
+              "id": "PlT4tB",
+              "ref": "ds:8PfYYb",
+              "name": "Transport",
+              "descendants": {
+                "ds:6p7s38": {
+                  "icon": "rotate-ccw"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 3920,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "app /now-playing (modal, opened from the island artwork) — Full player: one track loads at a time from a play session (POST /tracks/:id/play-sessions → CMAF ?t= URL); lock-screen controls mirror it. · no desktop frame: native phone app (apps/mobile) — there is no desktop layout"
+    }
+  ]
+}
