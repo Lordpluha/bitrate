@@ -3,7 +3,7 @@ import type { ApiSchemas } from '@bitrate/contracts'
 /** `POST /me/playback-events`: one finished play. */
 export type PlaybackEventBody = ApiSchemas['RecordPlaybackEventDto']
 
-export type PlaybackSource = PlaybackEventBody['source']
+type PlaybackSource = PlaybackEventBody['source']
 export type PlaybackEndReason = PlaybackEventBody['endReason']
 
 /** Where the play came from, as the API stores it. */

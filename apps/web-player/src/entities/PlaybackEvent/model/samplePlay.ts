@@ -7,7 +7,7 @@ import type {
  * The longest step between two ticks that still counts as heard audio. The element reports about
  * four times a second, so a larger forward jump is a seek, and seeking past audio is not hearing it.
  */
-export const MAX_HEARD_STEP_SECONDS = 1.5
+const MAX_HEARD_STEP_SECONDS = 1.5
 
 const MS_PER_SECOND = 1000
 

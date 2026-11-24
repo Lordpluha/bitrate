@@ -3,7 +3,6 @@ export {
   endReasonOnChange,
   finishPlay,
   type PlaybackEventBody,
-  type PlaySample,
   playbackOriginOf,
   samplePlay,
   startPlay,

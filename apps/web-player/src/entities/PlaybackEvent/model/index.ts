@@ -2,7 +2,6 @@ export { endReasonOnChange } from '@/entities/PlaybackEvent/model/endReasonOnCha
 export { finishPlay } from '@/entities/PlaybackEvent/model/finishPlay'
 export type {
   PlaybackEventBody,
-  PlaySample,
   TrackedPlay,
 } from '@/entities/PlaybackEvent/model/playbackEvent.types'
 export { playbackOriginOf } from '@/entities/PlaybackEvent/model/playbackOriginOf'
