@@ -118,6 +118,12 @@ export const envSchema = z
     OPENAI_API_KEY: z.string().min(1).optional(),
     /** `provider:model`; changing it builds a new collection on the next start. */
     SUPPORT_EMBED_MODEL: z.string().min(3).default('openai:text-embedding-3-small'),
+    /** Key for the default chat provider (`SUPPORT_CHAT_MODEL`). Without it the chat hands off. */
+    ANTHROPIC_API_KEY: z.string().min(1).optional(),
+    /** `provider:model` of the support assistant; Haiku keeps a turn near $0.0008. */
+    SUPPORT_CHAT_MODEL: z.string().min(3).default('anthropic:claude-haiku-5-5'),
+    /** Monthly model spend in US dollars; once reached, conversations go to an operator. */
+    SUPPORT_MONTHLY_BUDGET_USD: z.coerce.number().min(0).default(10),
     /**
      * Directory holding `help/` and `legal/` knowledge sources. The image bakes them into
      * `apps/api/knowledge`; in development the API reads `apps/docs/docs` directly.

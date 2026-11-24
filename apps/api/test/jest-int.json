@@ -10,6 +10,8 @@
   },
   "transformIgnorePatterns": ["node_modules/(?!(@noble|@scure|@otplib|@nestjs)/)"],
   "moduleNameMapper": {
+    "^@bitrate/support-core$": "<rootDir>/../../../packages/support-core/src/index.ts",
+    "^(\\.{1,2}/.*)\\.js$": "$1",
     "^@sentry/nestjs$": "<rootDir>/../test/mocks/sentry-nestjs.ts",
     "^@sentry/nestjs/setup$": "<rootDir>/../test/mocks/sentry-nestjs-setup.ts",
     "^music-metadata$": "<rootDir>/../test/__mocks__/music-metadata.ts",

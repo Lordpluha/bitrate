@@ -44,6 +44,7 @@ x-api-env: &api-env
   # shell or .env; without it the API logs that it skipped and moves on.
   QDRANT_URL: http://qdrant:6333
   OPENAI_API_KEY:
+  ANTHROPIC_API_KEY:
   # Whether `api` also consumes the audio-processing queue; `worker` forces it to "true" below.
   # Set it to false to rehearse the production cutover (apps/docs/docs/infrastructure/worker-rollout-runbook.md).
   AUDIO_PROCESSING_WORKER_ENABLED: ${AUDIO_PROCESSING_WORKER_ENABLED:-true}
