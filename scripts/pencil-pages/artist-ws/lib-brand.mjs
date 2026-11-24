@@ -23,12 +23,12 @@ export function brandRow(use) {
         }),
       ],
     )
-  /* the FOR ARTISTS badge is dropped on phones (≤480px the menu hides it; the header has no room) */
+  /* "Bitrate / FOR ARTISTS": the divider and badge are hidden below 900px (LandingHeader.css) */
   const brand = (withBadge = true) =>
     Row({ name: 'Brand', gap: 10 }, [
       use('Logo/Mark', { name: 'Mark' }),
       T('Bitrate', { fontSize: 18, fontWeight: '500', fill: C.artistForeground }),
-      ...(withBadge ? [badge()] : []),
+      ...(withBadge ? [T('/', { fontSize: 16, fill: C.artistTextSecondary }), badge()] : []),
     ])
   return brand
 }

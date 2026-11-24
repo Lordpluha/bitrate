@@ -1,19 +1,28 @@
 // Artist / Release — Deliver (step=deliver; widgets/ReleaseDelivery ReleaseDeliveryPanel, features/
-// delivery-plan DeliveryPlanDialog): timing, territories, destinations with what each store reports,
-// "Before you continue" and the honest "nothing sent" note; the plan locked by review, publishing or
-// going live; loading, error and the plan dialog with its validation and save errors.
+// delivery-plan DeliveryPlanDialog): territories and destinations (every store with its availability,
+// the patchbay artwork), and on the right "Before you continue", the next action, "Edit delivery plan"
+// (a locked button with its reason while review, publishing or live) and the honest note; loading,
+// error and the plan dialog.
 import { pageSpec } from '../../../artist-ws/spec.mjs'
 import { deliveryPlanDialog } from './delivery-plan-dialog.mjs'
 import { releaseKit } from './kit.mjs'
 
 const STORES = ['Spotify', 'Apple Music', 'YouTube Music', 'Amazon Music', 'Deezer', 'TIDAL']
 const PLANNED = ['Spotify', 'Apple Music', 'YouTube Music', 'Deezer']
+/* availability → [chip tone, label, icon] (entities/delivery, ReleaseDeliveryPanel tone and icons) */
+const AVAIL = {
+  notConnected: ['Warning', 'Not connected', 'radio'],
+  pending: ['Processing', 'Pending', 'clock'],
+  live: ['Ready', 'Live', 'circle-check'],
+}
 
 /** The release-deliver page spec. */
 export function releaseDeliverPage(ui, frames) {
   const { W, Tx, P, Btn, Check, inline } = ui
   const k = releaseKit(ui)
-  const store = (name, sent) => {
+  const plan = deliveryPlanDialog(ui, k)
+  const store = (avail) => (name) => {
+    const [tone, label, icon] = AVAIL[avail]
     const on = PLANNED.includes(name)
     return W(
       on ? 'Row/Store' : 'Row/Store Off',
@@ -21,127 +30,121 @@ export function releaseDeliverPage(ui, frames) {
       {
         name: { content: name },
         plan: { content: on ? 'In the plan' : 'Not in the plan' },
-        trail: on
-          ? inline('Trail', [
-              W(
-                sent ? 'Status/Processing' : 'Status/Neutral',
-                { name: 'Availability' },
-                { label: { content: sent ? 'Pending' : 'Not sent' } },
-              ),
-            ])
-          : { enabled: false },
+        trail: inline('Trail', [
+          W(
+            `Status/${tone}`,
+            { name: 'Availability' },
+            { label: { content: label }, icon: { icon } },
+          ),
+        ]),
       },
     )
   }
-  const tiles = (m, o = {}) => {
-    const edit = (label, icon) => (o.lock ? [] : [Btn(label, 'Compact Ghost', icon)])
-    return k.columns(
+  const page = (m, status = 'approved', o = {}) => {
+    const approved = status === 'approved' || status === 'released'
+    const stores = o.noStores ? [] : PLANNED
+    const avail = o.sent ? (status === 'released' ? 'live' : 'pending') : 'notConnected'
+    return k.stage(
       m,
+      status,
       [
-        k.tile('Before you continue', 'list-checks', [
-          Check(true, 'Bitrate review approved'),
-          Check(true, 'Premiere Nov 14, 2026, 18:00 UTC'),
-          Check(!o.noStores, o.noStores ? 'No stores planned yet' : '4 of 6 planned'),
-          P(
-            'Muted',
-            o.sent
-              ? 'Store states below are reported by the distribution partner.'
-              : 'Delivery starts once a distribution partner is connected.',
-          ),
-        ]),
-      ],
-      [
-        ...(o.lock ? [k.lock(o.lock)] : []),
-        k.tile(
-          'Delivery plan',
-          'calendar-days',
+        k.columns(
+          m,
           [
-            P(
-              'Muted',
-              'When and where the release goes out. It stays a plan until a distribution partner delivers it.',
+            k.tile('Territories', 'globe', [
+              P(
+                'Muted',
+                'When and where the release goes out. It stays a plan until a distribution partner delivers it.',
+              ),
+              Check(true, 'Territories'),
+              Tx('H2', 'Worldwide'),
+              P(
+                'Caption',
+                'Countries where listeners can find it. Change them in the delivery plan.',
+              ),
+            ]),
+            k.tile(
+              'Destinations',
+              'store',
+              [
+                W('Artwork', {
+                  name: 'Patchbay',
+                  width: 'fill_container',
+                  height: 120,
+                  fill: {
+                    type: 'image',
+                    url: '../../../apps/web-artists/public/artwork/releases/state-patchbay-v1.webp',
+                    mode: 'cover',
+                  },
+                }),
+                ...STORES.map(store(avail)),
+              ],
+              {},
+              [Tx('Caption', `${stores.length} of 6 planned`)],
             ),
-            Tx('H2', 'Nov 14, 2026, 18:00 UTC'),
-            P('Caption', 'A premiere: it goes live at this date and time.'),
           ],
-          {},
-          edit('Edit schedule', 'pencil'),
-        ),
-        k.tile('Territories', 'globe', [
-          Tx('H2', 'Worldwide'),
-          P('Muted', 'Countries where listeners can find it. Change them in the delivery plan.'),
-        ]),
-        k.tile(
-          'Destinations',
-          'store',
           [
-            P('Muted', o.noStores ? 'No stores planned.' : '4 of 6 planned'),
-            ...(o.noStores ? [] : STORES.map((s) => store(s, o.sent))),
+            k.tile('Before you continue', 'list-checks', [
+              Check(approved, 'Bitrate review approved'),
+              Check(true, 'Premiere Dec 12, 2026, 18:00 UTC'),
+              Check(
+                stores.length > 0,
+                stores.length
+                  ? 'Spotify, Apple Music, YouTube Music, Deezer · Worldwide'
+                  : 'No stores planned yet',
+              ),
+              Tx('Eyebrow', 'NEXT ACTION'),
+              P(
+                'Body',
+                o.sent
+                  ? 'Store states below are reported by the distribution partner.'
+                  : stores.length
+                    ? 'Delivery starts once a distribution partner is connected.'
+                    : 'Choose the stores and territories for this release.',
+              ),
+              o.lock
+                ? k.locked('Edit delivery plan')
+                : Btn('Edit delivery plan', 'Primary', null, { width: 'fill_container' }),
+              W(
+                'Check/Info',
+                { name: 'Honest', width: 'fill_container' },
+                {
+                  label: {
+                    content: o.sent
+                      ? 'Delivery has started through the connected partner.'
+                      : 'Nothing has been sent. Saving this plan does not send the release to any external platform.',
+                  },
+                },
+              ),
+            ]),
           ],
-          {},
-          edit('Edit delivery plan', 'send'),
-        ),
-        k.note(
-          'Info',
-          o.sent
-            ? 'Delivery has started through the connected partner.'
-            : 'Nothing has been sent. Saving this plan does not send the release to any external platform.',
         ),
       ],
+      { premiere: status !== 'released' },
     )
   }
-  const page = (m, o = {}, status = 'approved') => k.stage(m, status, 'deliver', [tiles(m, o)])
-  const plan = deliveryPlanDialog(ui, k)
-  const over = (o) => (m) => [k.header(m, 'approved'), k.stepper(m, 'deliver'), plan(m, o)]
+  const panel = (m, body) => [
+    k.header(m, 'approved', true),
+    k.stepper(m, 'approved'),
+    k.tile('Delivery plan', 'send', body),
+    k.danger(),
+  ]
+  const over = (o) => (m) => [k.header(m, 'approved', true), k.stepper(m, 'approved'), plan(m, o)]
   const states = [
-    ['No stores planned', (m) => page(m, { noStores: true })],
-    ['Sent to partner', (m) => page(m, { sent: true }, 'released')],
-    [
-      'Locked in review',
-      (m) =>
-        k.stage(m, 'submitted', 'review', [
-          tiles(m, { lock: 'The delivery plan is locked while Bitrate reviews this release.' }),
-        ]),
-    ],
-    [
-      'Locked while publishing',
-      (m) =>
-        page(
-          m,
-          { lock: 'The delivery plan is locked while the release is being published.' },
-          'publishing',
-        ),
-    ],
-    [
-      'Locked when live',
-      (m) =>
-        k.stage(m, 'released', 'launch', [
-          tiles(m, { lock: 'The release is live; its delivery plan can no longer change.' }),
-        ]),
-    ],
-    [
-      'Locked after changes requested',
-      (m) =>
-        k.stage(m, 'rejected', 'review', [
-          tiles(m, { lock: 'Start revising on the Review step to change the delivery plan.' }),
-        ]),
-    ],
-    [
-      'Loading',
-      (m) => [
-        k.header(m, 'approved'),
-        k.stepper(m, 'deliver'),
-        Tx('Muted', 'Loading delivery plan…'),
-        W('Skeleton/Tile', { name: 'Skeleton', width: 'fill_container' }),
-      ],
-    ],
+    ['No stores planned', (m) => page(m, 'approved', { noStores: true })],
+    ['Draft planning', (m) => page(m, 'draft')],
+    ['Locked in review', (m) => page(m, 'submitted', { lock: true })],
+    ['Locked after changes requested', (m) => page(m, 'rejected', { lock: true })],
+    ['Locked while publishing', (m) => page(m, 'publishing', { lock: true })],
+    ['Live, sent to partner', (m) => page(m, 'released', { lock: true, sent: true })],
+    ['Loading', (m) => panel(m, [P('Muted', 'Loading delivery plan…')])],
     [
       'Error',
-      (m) => [
-        k.header(m, 'approved'),
-        k.stepper(m, 'deliver'),
-        P('Body', 'Could not load the delivery plan. Please try again.'),
-        Btn('Try again', 'Outline', 'refresh-cw'),
-      ],
+      (m) =>
+        panel(m, [
+          P('Body', 'Could not load the delivery plan. Please try again.'),
+          Btn('Try again', 'Compact Outline'),
+        ]),
     ],
     ['Plan dialog', over({})],
     ['Plan — selected countries', over({ selected: true })],
@@ -168,7 +171,7 @@ export function releaseDeliverPage(ui, frames) {
       title: 'Artist / Release — Deliver',
       route: '/dashboard/music/$releaseId?step=deliver',
       context:
-        'Stores and territories for the release. No distribution partner is connected yet, so saving the plan sends nothing.',
+        'Stores and territories for the release. No distribution partner is connected yet, so saving the plan sends nothing; "Bitrate review approved" is ticked for Ready and Released only, as the code does.',
     },
     k.shell,
     (m) => page(m),

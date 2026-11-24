@@ -70,6 +70,8 @@ export function landingChrome(ui) {
       { name: 'Theme Popover' },
       {
         title: { content: 'Theme' },
+        icon: { enabled: false },
+        close: { enabled: false },
         items: fill(
           'Items',
           [
@@ -87,6 +89,8 @@ export function landingChrome(ui) {
       { name: 'Language Popover' },
       {
         title: { content: 'Interface language' },
+        icon: { enabled: false },
+        close: { enabled: false },
         items: fill(
           'Items',
           [

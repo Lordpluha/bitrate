@@ -1,26 +1,37 @@
-// The other settings panels (views/SettingsView): Account (sign-in email verified or not, public
-// handle, edit profile), Appearance (theme, density, motion; this browser only), Language (saved to
-// the account), Notifications (channels per category) and the Danger zone with its delete dialog.
+// The other settings panels (views/SettingsView): Account (sign-in email with its verification icon,
+// public handle, edit profile), Appearance (theme, density, motion; this browser only), Language (saved
+// to the account), Notifications (the checkbox table per category) and the Danger zone with its dialog.
 import { workspaceModal } from '../workspace/workspace-modal.mjs'
 
 const CHANNELS = [
-  ['Bitrate review', 'Submissions, approvals and requested changes'],
-  ['Delivery and release', 'Stores going live, failed deliveries and releases'],
+  ['Bitrate review', 'Submissions, approvals and requested changes', true],
+  ['Delivery and release', 'Stores going live, failed deliveries and releases', false],
 ]
 
 /** Settings panel builders bound to the screen helpers `ui`. */
 export function settingsPanels(ui) {
-  const { W, Tx, P, Row, Col, inline, Btn, Tile, KV, St, Tabs, Field } = ui
+  const { W, Tx, P, Row, Col, inline, Btn, Tile, Tabs, Field } = ui
   const modal = workspaceModal(ui)
   const account = (o = {}) =>
     Tile('Account', 'user-round', [
-      KV(
-        'Sign-in email',
-        St(o.unverified ? 'Warning' : 'Ready', o.unverified ? 'Not verified' : 'Verified'),
-      ),
-      P('Body', 'mira@nightsignal.fm'),
-      KV('Public handle', '@mirasol'),
-      Tx('Link', 'Edit profile'),
+      Row({ name: 'Email', gap: 8, width: 'fill_container' }, [
+        Col({ name: 'Label', gap: 2, width: 'fill_container' }, [
+          P('Caption', 'Sign-in email'),
+          P('Body', 'mira@nightsignal.fm'),
+        ]),
+        W(
+          o.unverified ? 'Check/Pending' : 'Check/Done',
+          { name: o.unverified ? 'Not verified' : 'Verified', width: 24 },
+          { label: { enabled: false } },
+        ),
+      ]),
+      Col({ name: 'Handle', gap: 2, width: 'fill_container' }, [
+        P('Caption', 'Public handle'),
+        Row({ name: 'Value', gap: 10 }, [
+          Tx('Body', '@mirasol'),
+          Tx('Link Underline', 'Edit profile'),
+        ]),
+      ]),
     ])
   const choice = (label, hint, options, active) =>
     Row({ name: label, width: 'fill_container', gap: 12, justifyContent: 'space_between' }, [
@@ -30,52 +41,49 @@ export function settingsPanels(ui) {
       ]),
       Tabs(options, active),
     ])
-  const appearance = (theme = 1) =>
+  const appearance = () =>
     Tile('Appearance', 'palette', [
-      choice('Theme', 'Colours of the workspace', ['Light', 'Dark', 'Dim'], theme),
+      choice('Theme', 'Colours of the workspace', ['Light', 'Dark', 'Dim'], 1),
       choice('Density', 'Compact fits more on screen', ['Comfortable', 'Compact'], 0),
       choice('Motion', 'Reduced turns animations off', ['System', 'Reduced'], 0),
       P('Caption', 'Saved in this browser only.'),
     ])
   const language = (o = {}) =>
-    Tile('Language', 'languages', [
+    Tile('Language', 'globe', [
       Field('Interface language', 'English', 'Select'),
       o.failed
         ? P('Error', 'Changed on this device, but not saved to your account. Try again later.')
         : P('Caption', 'Saved to your account, so your other devices follow it.'),
     ])
-  const toggle = (on) => W(on ? 'Toggle/On' : 'Toggle/Off', { name: on ? 'On' : 'Off' })
+  const cell = (node) => inline('Cell', [node])
   const notifications = (o = {}) =>
     Tile(
       'Notifications',
       'bell',
       o.loading
-        ? [
-            P('Muted', 'Loading notification settings…'),
-            W('Skeleton/Row', { name: 'Skeleton', width: 'fill_container' }),
-          ]
+        ? [P('Muted', 'Loading notification settings…')]
         : o.error
           ? [
               P('Error', 'Could not load notification settings. Please try again.'),
-              Btn('Try again', 'Compact Outline', 'refresh-cw'),
+              Btn('Try again', 'Compact Outline'),
             ]
           : [
-              Row({ name: 'Channels', width: 'fill_container', gap: 12 }, [
+              Row({ name: 'Head', width: 'fill_container', gap: 12 }, [
                 Tx('Eyebrow', 'CATEGORY', { width: 'fill_container', textGrowth: 'fixed-width' }),
                 ...['IN-APP', 'EMAIL', 'PUSH'].map((c) =>
                   Tx('Eyebrow', c, { width: 80, textGrowth: 'fixed-width', textAlign: 'center' }),
                 ),
               ]),
-              ...CHANNELS.map(([title, hint], i) =>
+              ...CHANNELS.map(([title, hint, on]) =>
                 W(
                   'Row/Channels',
                   { name: `Channels / ${title}`, width: 'fill_container' },
                   {
                     title: { content: title },
                     hint: { content: hint },
-                    inApp: inline('In-app', [toggle(true)]),
-                    email: inline('Email', [toggle(i === 0)]),
-                    push: inline('Push', [Tx('Caption', 'Not sent yet')]),
+                    inApp: cell(W(on ? 'Checkbox/Checked' : 'Checkbox', { name: 'In-app' })),
+                    email: cell(Tx('Caption', 'Not sent yet')),
+                    push: cell(Tx('Caption', 'Not sent yet')),
                   },
                 ),
               ),
@@ -93,7 +101,7 @@ export function settingsPanels(ui) {
     Tile('Danger zone', 'triangle-alert', [
       Tx('Body Strong', 'Delete account'),
       P('Muted', 'Removes your artist account from Bitrate and signs you out.'),
-      Btn('Delete account', 'Danger', 'trash-2'),
+      Btn('Delete account', 'Danger'),
     ])
   const deleteDialog = (m, o = {}) =>
     modal(
@@ -108,7 +116,7 @@ export function settingsPanels(ui) {
         Btn(
           o.busy ? 'Deleting…' : 'Delete account',
           'Danger',
-          o.busy ? 'loader-circle' : 'trash-2',
+          null,
           o.typed ? {} : { opacity: 0.45 },
         ),
       ],

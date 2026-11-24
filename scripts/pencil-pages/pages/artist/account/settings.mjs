@@ -3,35 +3,31 @@
 // the page and of each panel, two-factor setup and turn-off, the reset link, device sign-out and the
 // delete-account confirmation.
 import { pageSpec } from '../../../artist-ws/spec.mjs'
+import { pageSkeleton } from '../workspace/page-skeleton.mjs'
 import { settingsPanels } from './settings-panels.mjs'
 import { settingsSecurity } from './settings-security.mjs'
 
 /** The settings page spec. */
 export function settingsPage(ui, frames) {
-  const { W, P, Row, Col, Btn } = ui
+  const { P, Col, Btn } = ui
+  const skeleton = pageSkeleton(ui)
   const { pageHead } = frames
   const s = settingsPanels(ui)
   const security = settingsSecurity(ui)
   const shell = { nav: 'settings', crumb: 'Settings', action: 'Create release' }
   const head = () => pageHead('Settings', 'Your account, security and workspace preferences.')
-  const page = (m, o = {}) => {
-    const left = [s.account(o), security(o), s.danger()]
-    const right = [s.appearance(), s.language(o), s.notifications(o)]
-    return [
-      head(),
-      m
-        ? Col({ name: 'Panels', gap: 16, width: 'fill_container' }, [
-            left[0],
-            left[1],
-            ...right,
-            left[2],
-          ])
-        : Row({ name: 'Panels', gap: 20, width: 'fill_container', alignItems: 'start' }, [
-            Col({ name: 'Left', gap: 20, width: 'fill_container' }, left),
-            Col({ name: 'Right', gap: 20, width: 'fill_container' }, right),
-          ]),
-    ]
-  }
+  /* one column of panels (max-w-3xl) in the code's order */
+  const page = (m, o = {}) => [
+    head(),
+    Col({ name: 'Panels', gap: m ? 16 : 20, width: m ? 'fill_container' : 768 }, [
+      s.account(o),
+      security(o),
+      s.appearance(),
+      s.language(o),
+      s.notifications(o),
+      s.danger(),
+    ]),
+  ]
   const over = (o) => (m) => [head(), s.deleteDialog(m, o)]
   const states = [
     ['Email not verified', (m) => page(m, { unverified: true })],
@@ -44,6 +40,7 @@ export function settingsPage(ui, frames) {
     ['Reset link sent', (m) => page(m, { resetSent: true })],
     ['Signing out devices', (m) => page(m, { signingOut: true })],
     ['Devices signed out', (m) => page(m, { signedOut: true })],
+    ['All devices', (m) => page(m, { allDevices: true })],
     ['Devices loading', (m) => page(m, { sessionsLoading: true })],
     ['Devices error', (m) => page(m, { sessionsError: true })],
     ['Notifications loading', (m) => page(m, { loading: true })],
@@ -54,22 +51,13 @@ export function settingsPage(ui, frames) {
     ['Delete account', over({})],
     ['Delete account confirmed', over({ typed: true })],
     ['Deleting account', over({ typed: true, busy: true })],
-    [
-      'Loading',
-      () => [
-        head(),
-        P('Muted', 'Loading settings…'),
-        ...[1, 2].map((i) =>
-          W('Skeleton/Tile', { name: `Skeleton ${i}`, width: 'fill_container' }),
-        ),
-      ],
-    ],
+    ['Loading', (m) => [head(), ...skeleton(m)]],
     [
       'Error',
       () => [
         head(),
         P('Body', 'Could not load your profile. Please try again.'),
-        Btn('Try again', 'Outline', 'refresh-cw'),
+        Btn('Try again', 'Outline'),
       ],
     ],
   ]

@@ -10,7 +10,7 @@ const ENGLISH_ONLY = 'This document is available in English only.'
 
 /** The legal page spec. */
 export function legalPage(ui, frames) {
-  const { W, Tx, P, Col, fill } = ui
+  const { W, Tx, Row, Col } = ui
   const full = (name) => ({ name, width: 'fill_container' })
   const block =
     (m) =>
@@ -23,25 +23,9 @@ export function legalPage(ui, frames) {
           { name: 'List', gap: 4, width: 'fill_container' },
           a.map((item) => W('Legal/Item', full('Item'), { text: { content: item } })),
         )
-      /* table: on a phone each row becomes a stack of key–value rows */
-      if (m)
-        return Col(
-          { name: 'Table', gap: 12, width: 'fill_container' },
-          b.map((row) =>
-            Col(
-              { name: 'Row', gap: 0, width: 'fill_container' },
-              row.map((cell, i) =>
-                W('Row/Key Value', full(`Cell / ${a[i]}`), {
-                  label: { content: a[i] },
-                  value: { content: cell },
-                  trail: { enabled: false },
-                }),
-              ),
-            ),
-          ),
-        )
+      /* table: overflow-x-auto — on a phone it keeps its width and scrolls, so it is drawn clipped */
       const cols = { c2: { width: 220 }, c3: { width: 170 } }
-      return Col({ name: 'Table', gap: 0, width: 'fill_container' }, [
+      const table = Col({ name: 'Table', gap: 0, width: m ? 640 : 'fill_container' }, [
         W('Table/Header', full('Header'), {
           c1: { content: a[0] },
           c2: { content: a[1], ...cols.c2 },
@@ -57,42 +41,37 @@ export function legalPage(ui, frames) {
           }),
         ),
       ])
+      return m ? Row({ name: 'Scroll', width: 'fill_container', clip: true }, [table]) : table
     }
+  /* LegalView: a flat article (max-w-3xl) — the notice as a bordered paragraph, the title, the
+     sections, then the other documents as a wrapping row of links with no visible heading */
   const article = (m, doc, notices = []) =>
-    W(
-      'Panel',
-      { name: 'Article', width: m ? 'fill_container' : 768, padding: m ? 20 : 40 },
-      {
-        content: fill(
-          'Content',
-          [
-            ...(notices.length
-              ? [
-                  W('Alert/Info', full('Notice'), {
-                    title: { content: notices.join(' ') },
-                    body: { enabled: false },
-                    action: { enabled: false },
-                  }),
-                ]
-              : []),
-            Tx('Title', doc.title),
-            ...doc.sections.map(([heading, blocks]) =>
-              Col({ name: heading ?? 'Lead-in', gap: 12, width: 'fill_container' }, [
-                ...(heading ? [Tx('H2', heading)] : []),
-                ...blocks.map(block(m)),
-              ]),
-            ),
-            W('Divider', full('Divider')),
-            P('Muted', 'Other legal documents'),
+    Col({ name: 'Article', gap: 24, width: m ? 'fill_container' : 768 }, [
+      ...(notices.length
+        ? [W('Legal/Note', full('Notice'), { text: { content: notices.join(' ') } })]
+        : []),
+      Tx('Title', doc.title),
+      ...doc.sections.map(([heading, blocks]) =>
+        Col({ name: heading ?? 'Lead-in', gap: 12, width: 'fill_container' }, [
+          ...(heading ? [Tx('H2', heading)] : []),
+          ...blocks.map(block(m)),
+        ]),
+      ),
+      W('Divider', full('Divider')),
+      ...(m
+        ? [
             Col(
               { name: 'Other documents', gap: 8 },
-              LEGAL_TITLES.filter((t) => t !== doc.title).map((t) => Tx('Link', t)),
+              LEGAL_TITLES.filter((t) => t !== doc.title).map((t) => Tx('Link Underline', t)),
             ),
-          ],
-          { gap: 24 },
-        ),
-      },
-    )
+          ]
+        : [
+            Row(
+              { name: 'Other documents', gap: 16 },
+              LEGAL_TITLES.filter((t) => t !== doc.title).map((t) => Tx('Link Underline', t)),
+            ),
+          ]),
+    ])
   return publicSpec(
     frames,
     {

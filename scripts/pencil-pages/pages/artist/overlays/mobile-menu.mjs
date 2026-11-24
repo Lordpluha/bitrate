@@ -7,18 +7,18 @@ import { F } from '../../../kit.mjs'
 
 const NAV = [
   ['dashboard', 'layout-dashboard', 'Dashboard'],
-  ['music', 'disc-3', 'Music'],
+  ['music', 'music-2', 'Music'],
   ['distribution', 'send', 'Distribution'],
   ['promotion', 'megaphone', 'Promotion'],
   ['analytics', 'chart-no-axes-combined', 'Analytics'],
   ['profile', 'user-round', 'Profile'],
   ['settings', 'settings-2', 'Settings'],
 ]
-const THEME_ICON = { Dark: 'moon', Light: 'sun', Dim: 'contrast' }
+const THEME_ICON = { Dark: 'moon', Light: 'sun', Dim: 'eclipse' }
 
 /** The mobile-menu page spec. */
 export function mobileMenuPage(ui, frames) {
-  const { W, fill } = ui
+  const { W, Tx, fill } = ui
   const { pageHead } = frames
   const head = () => pageHead('Dashboard', 'Everything you need for your next release.')
   const phone = (children) =>
@@ -54,17 +54,17 @@ export function mobileMenuPage(ui, frames) {
         { name: 'Menu Drawer', height: 797 },
         {
           nav: fill('Nav', NAV.map(item(active)), { gap: 4 }),
-          prefs: fill('Prefs', [pref(THEME_ICON[theme], theme), pref('languages', 'English')], {
+          prefs: fill('Prefs', [pref('globe', 'English'), pref(THEME_ICON[theme], theme)], {
             gap: 4,
           }),
           account: fill(
             'Account',
             [
-              pref('life-buoy', 'Help & support'),
+              Tx('Muted', 'Help & support'),
               W(
                 'Nav/Account',
                 { name: 'Account', width: 'fill_container' },
-                { name: { content: 'Mira Sol' }, email: { content: 'mira@nightsignal.fm' } },
+                { name: { content: 'Mira Sol' }, email: { content: 'Artist account' } },
               ),
             ],
             { gap: 12 },
@@ -109,7 +109,7 @@ export function mobileMenuPage(ui, frames) {
     )
   return {
     title: 'Artist / Mobile menu',
-    route: 'drawer from the header menu button on every /dashboard page (below 1280px)',
+    route: 'drawer from the header menu button on every /dashboard page (below 991px)',
     context:
       'The phone and tablet navigation. Choosing a section closes the drawer; Escape or a tap outside closes it too.',
     desktop,

@@ -1,8 +1,8 @@
-// The studio window's content per stage tab (LandingWorkspaceReplica): the release workspace
+// The studio window per stage tab (LandingWorkspaceReplica): the mini shell around the release workspace
 // (StudioWorkspacePreview), the dashboard (StudioDashboardPreview) and analytics
 // (StudioAnalyticsPreview), with the demo numbers those previews show.
 
-/** The replica builder bound to the screen helpers `ui`: `(m, tab) → nodes`. */
+/** The replica builder bound to the screen helpers `ui`: `(m, tab) → window`. */
 export function landingReplica(ui) {
   const { W, Tx, Row, Col, Tile, KV, St, Stats, TableRow } = ui
   const pair = (m, nodes) =>
@@ -16,14 +16,10 @@ export function landingReplica(ui) {
         meta: { content: 'Mira Sol · Single · 1 track' },
       },
     ),
-    W(
-      m ? 'Release/Stepper Compact' : 'Release/Stepper',
-      { name: 'Stepper', width: 'fill_container' },
-      {
-        line_promotion: { enabled: false },
-        step_promotion: { enabled: false },
-      },
-    ),
+    W(m ? 'Release/Stages Compact' : 'Release/Stages', {
+      name: 'Stepper',
+      width: 'fill_container',
+    }),
     pair(m, [
       Tile('Credits & splits', 'users-round', [
         KV('Mira Sol · Performer, Producer', '75%'),
@@ -90,5 +86,58 @@ export function landingReplica(ui) {
     ]),
   ]
   const tabs = [workspace, dashboard, analytics]
-  return (m, tab = 0) => tabs[tab](m)
+  const NAV = [
+    ['layout-dashboard', 'Dashboard'],
+    ['music-2', 'Music'],
+    ['chart-no-axes-combined', 'Analytics'],
+  ]
+  const SECTION = ['Music', 'Dashboard', 'Analytics']
+  /* LandingWorkspaceReplica: the mini shell — brand and collapse, three sections, the account; the
+     header with "Workspace / section", "Interactive demo" and "Sign up"; on a phone no sidebar */
+  return (m, tab = 0) =>
+    W(
+      'Landing/Window',
+      { name: 'Studio Window', width: m ? 'fill_container' : 1120 },
+      {
+        sidebar: m
+          ? { enabled: false }
+          : ui.fill(
+              'Sidebar',
+              [
+                Row(
+                  {
+                    name: 'Brand',
+                    width: 'fill_container',
+                    gap: 8,
+                    justifyContent: 'space_between',
+                  },
+                  [W('Logo/Lockup', { name: 'Lockup' }), W('Nav/Collapse', { name: 'Collapse' })],
+                ),
+                ...NAV.map(([icon, label]) =>
+                  W(
+                    label === SECTION[tab] ? 'Nav/Item Active' : 'Nav/Item',
+                    { name: `Nav / ${label}` },
+                    { icon: { icon }, label: { content: label } },
+                  ),
+                ),
+                W(
+                  'Nav/Account',
+                  { name: 'Account' },
+                  { name: { content: 'Mira Sol' }, email: { content: 'Artist account' } },
+                ),
+              ],
+              { gap: 8 },
+            ),
+        header: ui.inline('Header', [
+          Tx('Muted', `Workspace / ${SECTION[tab]}`),
+          W(
+            'Status/Brand',
+            { name: 'Interactive demo' },
+            { label: { content: 'Interactive demo' }, icon: { icon: 'sparkles' } },
+          ),
+          Tx('Link', 'Sign up'),
+        ]),
+        content: ui.fill('Replica', tabs[tab](m), { gap: 16, padding: m ? 14 : 20 }),
+      },
+    )
 }

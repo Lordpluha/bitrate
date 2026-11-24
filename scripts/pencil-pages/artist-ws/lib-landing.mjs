@@ -109,7 +109,7 @@ export function addLanding(lib) {
               fill: C.artistIcon,
             }),
           ),
-          T('·', { fontSize: 11, fill: C.artistTextSecondary }),
+          part('divider', T('·', { fontSize: 11, fill: C.artistTextSecondary })),
           part(
             'meta',
             T('STUDIO RELEASE OS', {

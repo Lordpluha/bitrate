@@ -8,52 +8,32 @@ export function addShowcase(lib) {
   const { comp, part, add, slot, use } = lib
   const paint = artistPaint()
   const wrap = { width: 'fill_container', textGrowth: 'fixed-width', lineHeight: 1.5 }
-  const dot = () =>
-    F({
-      name: 'Light',
-      width: 10,
-      height: 10,
-      cornerRadius: 5,
-      fill: paint.tint(C.artistForeground, 0.2),
-    })
   add(
     comp(
       'Landing/Window',
-      Col(
+      /* LandingWorkspaceReplica: a miniature workspace — its own sidebar, a header with the
+         breadcrumb, the "Interactive demo" badge and "Sign up", then the previewed page */
+      Row(
         {
           name: 'Studio Window',
           width: 1120,
           gap: 0,
           cornerRadius: 18,
           clip: true,
+          alignItems: 'start',
           ...paint.releaseGlass(),
         },
         [
-          Row(
-            {
-              name: 'Title Bar',
-              width: 'fill_container',
-              height: 40,
-              padding: [0, 16],
-              gap: 8,
-              ...paint.hairline(),
-            },
-            [
-              dot(),
-              dot(),
-              dot(),
-              part(
-                'title',
-                T('Release workspace', {
-                  fontSize: 11,
-                  fill: C.artistTextSecondary,
-                  textAlign: 'center',
-                  ...wrap,
-                }),
-              ),
-            ],
-          ),
-          slot('content', { gap: 20, padding: 24 }),
+          Col({ name: 'Sidebar', width: 210, gap: 0, padding: 16, ...paint.hairline('right') }, [
+            slot('sidebar', { gap: 8 }),
+          ]),
+          Col({ name: 'Main', gap: 0, width: 'fill_container' }, [
+            Row(
+              { name: 'Header', width: 'fill_container', padding: [14, 20], ...paint.hairline() },
+              [slot('header', { layout: 'horizontal', gap: 10, alignItems: 'center' })],
+            ),
+            slot('content', { gap: 16, padding: 20 }),
+          ]),
         ],
       ),
     ),

@@ -37,22 +37,26 @@ export function addAuth(lib, root) {
           ...paint.releaseGlass(),
         },
         [
-          Col({ name: 'Head', gap: 10, width: 'fill_container', alignItems: 'center' }, [
-            use('Logo/Mark', { name: 'Mark' }),
-            part(
-              'title',
-              T('Welcome back!', { fontSize: 26, fontWeight: '500', fill: C.artistForeground }),
-            ),
-            part(
-              'desc',
-              T('Description', {
-                fontSize: 12,
-                fill: C.artistTextSecondary,
-                textAlign: 'center',
-                ...wrap,
-              }),
-            ),
-          ]),
+          /* forgot/reset password have no logo and a left-aligned title: pages switch `head`/`logo` */
+          part(
+            'head',
+            Col({ name: 'Head', gap: 10, width: 'fill_container', alignItems: 'center' }, [
+              part('logo', use('Logo/Mark', { name: 'Mark' })),
+              part(
+                'title',
+                T('Welcome back!', { fontSize: 26, fontWeight: '500', fill: C.artistForeground }),
+              ),
+              part(
+                'desc',
+                T('Description', {
+                  fontSize: 12,
+                  fill: C.artistTextSecondary,
+                  textAlign: 'center',
+                  ...wrap,
+                }),
+              ),
+            ]),
+          ),
           slot('body', { gap: 14 }),
         ],
       ),

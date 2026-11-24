@@ -7,13 +7,15 @@ const CONSENT =
 
 /** Auth helpers bound to the screen helpers `ui`. */
 export function authKit(ui) {
-  const { W, Tx, Row, fill, inline } = ui
+  const { W, Tx, P, Row, Col, fill } = ui
   const full = (name) => ({ name, width: 'fill_container' })
-  const card = (m, title, desc, body) =>
+  /* `plain`: forgot/reset password — no logo, the title left-aligned */
+  const card = (m, title, desc, body, plain = false) =>
     W(
       'Auth/Card',
       { name: 'Auth Card', width: m ? 'fill_container' : 440 },
       {
+        ...(plain ? { head: { alignItems: 'start' }, logo: { enabled: false } } : {}),
         title: title ? { content: title } : { enabled: false },
         desc: desc ? { content: desc } : { enabled: false },
         body: fill('Body', body.flat(), { gap: 14 }),
@@ -25,7 +27,7 @@ export function authKit(ui) {
       value: { content: value },
       ...(error ? { error: { content: error } } : {}),
       /* only the code field has a hint; without one it is switched off */
-      ...(kind === 'Code' && !error ? { hint: hint ? { content: hint } : { enabled: false } } : {}),
+      ...(kind === 'Code' ? { hint: hint ? { content: hint } : { enabled: false } } : {}),
     })
   const action = (variant) => (label, icon) =>
     W(`Button/${variant}`, full(`Button / ${label}`), {
@@ -39,16 +41,16 @@ export function authKit(ui) {
     W(unlocked ? 'Button/Google' : 'Button/Google Locked', full('Google')),
     W(unlocked ? 'Button/Facebook' : 'Button/Facebook Locked', full('Facebook')),
   ]
-  const alert = (tone, text, act) =>
-    W(`Alert/${tone}`, full(`Alert / ${text.slice(0, 24)}`), {
-      title: { content: text },
-      body: { enabled: false },
-      action: act ? inline('Action', [act]) : { enabled: false },
-    })
+  /* role="alert" texts are plain paragraphs (red for field-level errors), with an optional link */
+  const alert = (tone, text, link) =>
+    Col({ name: `Alert / ${text.slice(0, 24)}`, gap: 4, width: 'fill_container' }, [
+      P(tone === 'Error' ? 'Error' : 'Body', text),
+      ...(link ? [Tx('Link Underline', link)] : []),
+    ])
   const footnote = (text, link) =>
     Row({ name: 'Footnote', width: 'fill_container', gap: 6, justifyContent: 'center' }, [
       ...(text ? [Tx('Muted', text)] : []),
-      Tx('Link', link),
+      Tx(text ? 'Link' : 'Link Underline', link),
     ])
   const rule = (met, label) =>
     W(

@@ -1,6 +1,6 @@
 // The Security panel of settings (features/account-security TwoFactorSection, ActiveSessionsSection and
 // the password reset link): two-factor off, setting up (QR, key, code), on, turning off; the reset link
-// sent; signed-in devices with sign-out, loading and errors.
+// sent; signed-in devices with "Sign out other devices" first, a sign-out per device and "Show all".
 
 const DEVICES = [
   ['monitor', 'Chrome on macOS', 'This device · active now', true],
@@ -24,29 +24,25 @@ export function settingsSecurity(ui) {
       },
     )
   const twoFactor = (o) => {
-    const head = Row(
-      { name: 'Two-factor', width: 'fill_container', gap: 12, justifyContent: 'space_between' },
-      [
-        Col({ name: 'Text', gap: 2, width: 'fill_container' }, [
-          Tx('Body Strong', 'Two-factor sign-in'),
-          P(
-            'Muted',
-            o.on
-              ? 'On. Sign-in asks for a code from your authenticator app.'
-              : 'Off. Add a second step to protect your releases.',
-          ),
-        ]),
-        ...(o.setup || o.turningOff
-          ? []
-          : [
-              Btn(
-                o.on ? 'Turn off' : o.preparing ? 'Preparing…' : 'Set up',
-                o.on ? 'Compact Outline' : 'Compact Primary',
-                o.preparing ? 'loader-circle' : 'shield-check',
-              ),
-            ]),
-      ],
-    )
+    const head = Row({ name: 'Two-factor', width: 'fill_container', gap: 12 }, [
+      W(
+        o.on ? 'Check/Done' : 'Check/Pending',
+        { name: o.on ? 'Shield on' : 'Shield off', width: 24 },
+        { label: { enabled: false } },
+      ),
+      Col({ name: 'Text', gap: 2, width: 'fill_container' }, [
+        Tx('Body Strong', 'Two-factor sign-in'),
+        P(
+          'Muted',
+          o.on
+            ? 'On. Sign-in asks for a code from your authenticator app.'
+            : 'Off. Add a second step to protect your releases.',
+        ),
+      ]),
+      ...(o.setup || o.turningOff
+        ? []
+        : [Btn(o.on ? 'Turn off' : o.preparing ? 'Preparing…' : 'Set up', 'Compact Outline')]),
+    ])
     if (!o.setup && !o.turningOff) return [head]
     return [
       head,
@@ -62,12 +58,11 @@ export function settingsSecurity(ui) {
         : []),
       code(o.codeError),
       Row({ name: 'Actions', gap: 10 }, [
-        Btn('Cancel', 'Ghost'),
         Btn(
           o.checking ? 'Checking…' : o.turningOff ? 'Turn off two-factor' : 'Turn on two-factor',
-          o.turningOff ? 'Danger' : 'Primary',
-          o.checking ? 'loader-circle' : null,
+          'Primary',
         ),
+        Btn('Cancel', 'Ghost'),
       ]),
     ]
   }
@@ -79,41 +74,36 @@ export function settingsSecurity(ui) {
         icon: { icon },
         title: { content: title },
         meta: { content: meta },
-        trail: current
-          ? { enabled: false }
-          : inline('Trail', [
-              W(
-                'Button/Icon',
-                { name: `Sign out ${title}`, width: 30, height: 30 },
-                { icon: { icon: 'log-out' } },
-              ),
-            ]),
+        trail: current ? { enabled: false } : inline('Trail', [Btn('Sign out', 'Compact Ghost')]),
       },
     )
   const sessions = (o) => [
-    Tx('Body Strong', 'Signed-in devices'),
-    P('Muted', 'Sign out anywhere you no longer use or do not recognise.'),
+    Row({ name: 'Devices head', width: 'fill_container', gap: 12 }, [
+      Col({ name: 'Text', gap: 2, width: 'fill_container' }, [
+        Tx('Body Strong', 'Signed-in devices'),
+        P(
+          'Muted',
+          o.signedOut
+            ? 'Signed out 2 devices.'
+            : 'Sign out anywhere you no longer use or do not recognise.',
+        ),
+      ]),
+      Btn(o.signingOut ? 'Signing out…' : 'Sign out other devices', 'Compact Outline'),
+    ]),
     ...(o.sessionsLoading
-      ? [
-          P('Caption', 'Loading devices…'),
-          W('Skeleton/Row', { name: 'Skeleton', width: 'fill_container' }),
-        ]
+      ? [P('Caption', 'Loading devices…')]
       : o.sessionsError
         ? [
             P('Error', 'Could not load your signed-in devices. Please try again.'),
-            Btn('Try again', 'Compact Outline', 'refresh-cw'),
+            Btn('Try again', 'Compact Outline'),
           ]
-        : DEVICES.map(device)),
-    ...(o.signedOut ? [P('Caption', 'Signed out 2 devices.')] : []),
-    ...(o.sessionsLoading || o.sessionsError
-      ? []
-      : [
-          Btn(
-            o.signingOut ? 'Signing out…' : 'Sign out other devices',
-            'Outline',
-            o.signingOut ? 'loader-circle' : 'log-out',
-          ),
-        ]),
+        : [
+            ...(o.allDevices
+              ? [...DEVICES, ['tablet', 'Chrome on Android', 'Signed in Sep 12, 2026', false]]
+              : DEVICES
+            ).map(device),
+            Btn(o.allDevices ? 'Show fewer' : 'Show all devices (4)', 'Compact Ghost'),
+          ]),
   ]
   return (o = {}) =>
     Tile('Security', 'shield', [
@@ -126,7 +116,7 @@ export function settingsSecurity(ui) {
           ? 'If mira@nightsignal.fm can receive mail, a reset link is on its way.'
           : 'We email you a link to choose a new password.',
       ),
-      Btn(o.resetBusy ? 'Sending…' : 'Send reset link', 'Compact Outline', 'mail'),
+      Btn(o.resetBusy ? 'Sending…' : 'Send reset link', 'Compact Outline'),
       W('Divider', { name: 'Divider', width: 'fill_container' }),
       ...sessions(o),
     ])

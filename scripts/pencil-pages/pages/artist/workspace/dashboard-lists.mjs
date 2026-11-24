@@ -1,92 +1,106 @@
-// The dashboard's list tiles (widgets/DashboardOverview/ui): your releases, coming up, recent activity
-// and listening data, with the demo catalogue; each builder takes the tile's frame size.
+// The dashboard's list tiles (widgets/DashboardOverview/ui): your releases (three, with loading and
+// unavailable), coming up (UTC dates, the dashed "Plan the next release" slot, empty), recent activity
+// (three bell rows, loading, empty) and listening data with its artwork.
 import { dashboardTile } from './dashboard-tile.mjs'
 import { coverFill, RELEASES } from './demo.mjs'
 
+const ART = '../../../apps/web-artists/public/artwork/dashboard/'
+const ACTIVITY = [
+  ['The reviewer requested changes · Echoes in Motion', '2 h ago'],
+  ['Approved by Bitrate review · Static Lines', 'Yesterday'],
+  ['Live on Bitrate · Afterglow', 'Oct 3'],
+]
+
 /** List tile builders bound to the screen helpers `ui`. */
 export function dashboardLists(ui) {
-  const { W, Tx, P, inline, St, Btn } = ui
+  const { W, Tx, P, inline, St } = ui
   const tile = dashboardTile(ui)
-  const releaseRow = ([title, cover, type, tone, status, , , updated]) =>
+  const releaseRow = ([title, cover, type, tone, status, tracks, , updated]) =>
     W(
       'Row/Release',
       { name: `Release / ${title}`, width: 'fill_container' },
       {
         cover: coverFill(cover),
         title: { content: title },
-        meta: { content: `${type} · ${updated}` },
-        trail: inline('Trail', [St(tone, status)]),
+        meta: { content: `${type} · ${tracks}` },
+        trail: inline('Trail', [St(tone, status), Tx('Caption', updated)]),
       },
     )
-  const releases = (o) =>
-    tile('Your releases', 'library', RELEASES.map(releaseRow), o, [Tx('Link', 'View music')])
-  const comingUp = (o) =>
+  const releases = (c, state) =>
+    tile(
+      'Your releases',
+      'library',
+      state === 'loading'
+        ? [P('Muted', 'Loading releases…')]
+        : state === 'error'
+          ? [P('Body', 'Releases are unavailable right now.')]
+          : RELEASES.slice(0, 3).map(releaseRow),
+      c,
+      [Tx('Link', 'View music')],
+    )
+  const timeline = (date, time, cover, title, tone, status) =>
+    W(
+      'Row/Timeline',
+      { name: `Coming up / ${title}`, width: 'fill_container' },
+      {
+        date: { content: date },
+        time: { content: time },
+        cover: coverFill(cover),
+        title: { content: title },
+        status: inline('Status', [St(tone, status)]),
+      },
+    )
+  const comingUp = (c, empty = false) =>
     tile(
       'Coming up',
       'calendar-clock',
       [
-        W(
-          'Row/Date',
-          { name: 'Date / Static Lines', width: 'fill_container' },
-          {
-            month: { content: 'NOV' },
-            day: { content: '28' },
-            title: { content: 'Static Lines' },
-            meta: { content: '00:00 UTC · Scheduled' },
-            trail: { enabled: false },
-          },
-        ),
-        W(
-          'Row/Date',
-          { name: 'Date / Echoes in Motion', width: 'fill_container' },
-          {
-            month: { content: 'DEC' },
-            day: { content: '5' },
-            title: { content: 'Echoes in Motion' },
-            meta: { content: '00:00 UTC · Submitted' },
-            trail: { enabled: false },
-          },
-        ),
-        Btn('Plan the next release', 'Outline', 'calendar-plus'),
+        ...(empty
+          ? [P('Body', 'No dates yet. Plan a release date in a release.')]
+          : [
+              timeline('DEC 12', '18:00', 'static-lines', 'Static Lines', 'Ready', 'Scheduled'),
+              timeline(
+                'DEC 19',
+                '00:00',
+                'echoes-in-motion',
+                'Echoes in Motion',
+                'Processing',
+                'Submitted',
+              ),
+            ]),
+        W('Link/Dashed', { name: 'Plan the next release', width: 'fill_container' }),
       ],
-      o,
+      c,
+      [Tx('Caption', 'UTC')],
     )
-  const activity = (o) =>
+  const activity = (c, state) =>
     tile(
       'Recent activity',
       'activity',
-      [
-        W(
-          'Row/Notification Action',
-          { name: 'Activity / changes', width: 'fill_container' },
-          {
-            icon: { icon: 'message-square-warning' },
-            title: { content: 'The reviewer requested changes' },
-            meta: { content: 'Echoes in Motion · 2 h ago' },
-          },
-        ),
-        W(
-          'Row/Notification',
-          { name: 'Activity / approved', width: 'fill_container' },
-          { meta: { content: 'Static Lines · Yesterday' } },
-        ),
-        W(
-          'Row/Notification',
-          { name: 'Activity / live', width: 'fill_container' },
-          {
-            icon: { icon: 'radio' },
-            title: { content: 'Live on Bitrate' },
-            meta: { content: 'Afterglow · Oct 3' },
-          },
-        ),
-      ],
-      o,
+      state === 'loading'
+        ? [P('Muted', 'Loading activity…')]
+        : state === 'empty'
+          ? [P('Body', 'No activity yet. Reviews, deadlines and delivery updates appear here.')]
+          : ACTIVITY.map(([text, time]) =>
+              W(
+                'Row/Activity',
+                { name: `Activity / ${time}`, width: 'fill_container' },
+                { text: { content: text }, time: { content: time } },
+              ),
+            ),
+      c,
     )
-  const listening = (o) =>
+  const listening = (c) =>
     tile(
       'Listening data',
       'audio-lines',
       [
+        W('Artwork', {
+          name: 'Artwork',
+          width: 'fill_container',
+          height: 96,
+          fill: { type: 'image', url: `${ART}listening-spectrum.webp`, mode: 'cover' },
+        }),
         Tx('Muted', 'Last 28 days'),
         P(
           'Caption',
@@ -94,7 +108,7 @@ export function dashboardLists(ui) {
         ),
         Tx('Link', 'Open analytics'),
       ],
-      o,
+      c,
     )
   return { releases, comingUp, activity, listening }
 }

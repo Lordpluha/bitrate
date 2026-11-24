@@ -7,10 +7,13 @@ import { publicSpec } from './spec.mjs'
 export function forgotPasswordPage(ui, frames) {
   const a = authKit(ui)
   const form = (m, o = {}) =>
-    a.card(m, 'Forgot password', null, [
-      a.input('Email', o.email ?? '', o.error),
-      a.secondary('Send reset link'),
-    ])
+    a.card(
+      m,
+      'Forgot password',
+      null,
+      [a.input('Email', o.email ?? '', o.error), a.secondary('Send reset link')],
+      true,
+    )
   const withToast = (tone, text, o) => (m) => [a.toast(tone, text, m), form(m, o)]
   return publicSpec(
     frames,

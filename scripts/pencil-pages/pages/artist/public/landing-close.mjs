@@ -1,6 +1,7 @@
 // Landing closing sections: the listening response (ListeningResponse: demo plays per day over a chosen
 // period, plays, listeners, plays per listener and the most played tracks) and the finale
 // (LandingFinale: the empty release sleeve that starts a sign-up, "Create your release").
+import { coverFill } from '../workspace/demo.mjs'
 import { landingHeading } from './landing-heading.mjs'
 
 /* 28-day demo numbers of views/ArtistView/lib/listeningPreview.ts */
@@ -10,18 +11,14 @@ const TRACKS = [
   ['Afterglow', '4,820'],
 ]
 
-const STATS = [
-  ['Plays', '18,420', 'See how your music moves over time.'],
-  ['Listeners', '5,210', 'Know how many listeners you reach.'],
-  ['Plays / listener', '3.5', 'Most played: Night Signal'],
-]
-
 /** The listening and finale section builders bound to the screen helpers `ui`. */
 export function landingClose(ui) {
-  const { W, Tx, Row, Col, fill, Tabs, Stats, St, TableRow } = ui
+  const { W, Tx, Row, Col, fill, Tabs, St, KV, TableRow } = ui
   const heading = landingHeading(ui)
+  /* ListeningResponse: the chart card (Plays beside the period switch), the "Most played" record
+     spotlight with the audience panel, and the top tracks */
   const listening = (m) =>
-    Col({ name: 'Listening', gap: 32, width: 'fill_container', alignItems: 'center' }, [
+    Col({ name: 'Listening', gap: 28, width: 'fill_container', alignItems: 'center' }, [
       heading(
         m,
         'After the premiere',
@@ -29,38 +26,84 @@ export function landingClose(ui) {
         'Their response.',
         'See how your music finds its audience.',
       ),
-      W(
-        'Tile',
-        { name: 'Tile / Listening on Bitrate', width: m ? 'fill_container' : 960 },
-        {
-          icon: { icon: 'audio-lines' },
-          title: { content: 'Listening on Bitrate' },
-          right: fill('Right', [St('Neutral', 'Demo data', 'flask-conical')], {
-            layout: 'horizontal',
-            width: 'fit_content',
-            gap: 8,
-          }),
-          body: fill(
-            'Body',
-            [
-              Tabs(['7 days', '28 days', '90 days'], 1),
-              ...(m ? STATS.map((stat) => Stats([stat])) : [Stats(STATS)]),
-              Tx('Muted', 'Plays per day'),
-              W('Chart/Area', { name: 'Plays per day', width: 'fill_container' }),
-              Tx('H3', 'Top tracks'),
-              ...TRACKS.map(([title, plays], i) => TableRow(title, `#${i + 1}`, plays)),
-            ],
-            { gap: 16 },
+      (m ? Col : Row)({ name: 'Visual', gap: 20, width: 'fill_container', alignItems: 'start' }, [
+        W(
+          'Tile',
+          { name: 'Tile / Listening on Bitrate', width: 'fill_container' },
+          {
+            icon: { icon: 'audio-lines' },
+            title: { content: 'Listening on Bitrate' },
+            right: fill('Right', [St('Neutral', 'Demo data')], {
+              layout: 'horizontal',
+              width: 'fit_content',
+              gap: 8,
+            }),
+            body: fill(
+              'Body',
+              [
+                (m ? Col : Row)(
+                  {
+                    name: 'Summary',
+                    gap: 12,
+                    width: 'fill_container',
+                    alignItems: m ? 'start' : 'end',
+                    justifyContent: 'space_between',
+                  },
+                  [
+                    W(
+                      'Stat/First',
+                      { name: 'Plays' },
+                      {
+                        label: { content: 'Plays' },
+                        value: { content: '18,420' },
+                        caption: { enabled: false },
+                      },
+                    ),
+                    Tabs(['7 days', '28 days', '90 days'], 1),
+                  ],
+                ),
+                W('Chart/Area', { name: 'Plays per day', width: 'fill_container' }),
+              ],
+              { gap: 16 },
+            ),
+          },
+        ),
+        Col({ name: 'Spotlight', gap: 16, width: m ? 'fill_container' : 340 }, [
+          Col({ name: 'Record', gap: 8, width: 'fill_container', alignItems: 'center' }, [
+            W('Cover/Large', { name: 'Night Signal', ...coverFill('night-signal') }),
+            W(
+              'Status/Brand',
+              { name: 'Most played' },
+              { label: { content: 'Most played · 1' }, icon: { icon: 'headphones' } },
+            ),
+          ]),
+          W(
+            'Panel',
+            { name: 'Audience', width: 'fill_container' },
+            {
+              content: fill('Content', [KV('Listeners', '5,210'), KV('Plays / listener', '3.5')], {
+                gap: 4,
+              }),
+            },
           ),
-        },
-      ),
+          W(
+            'Tile',
+            { name: 'Tile / Top tracks', width: 'fill_container' },
+            {
+              icon: { icon: 'music-2' },
+              title: { content: 'Top tracks' },
+              right: { enabled: false },
+              body: fill(
+                'Body',
+                TRACKS.map(([title, plays], i) => TableRow(`0${i + 1} ${title}`, plays, '')),
+              ),
+            },
+          ),
+        ]),
+      ]),
       Col({ name: 'Invite', gap: 12, alignItems: 'center', width: 'fill_container' }, [
         Tx('Muted', 'Try a different period. Watch the story change.', { textAlign: 'center' }),
-        W(
-          'Button/Large Primary',
-          { name: 'Start your next release' },
-          { label: { content: 'Start your next release' } },
-        ),
+        Tx('Link', 'Start your next release'),
         Tx('Caption', 'Plays and listeners on Bitrate.', { textAlign: 'center' }),
       ]),
     ])

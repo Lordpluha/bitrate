@@ -1,11 +1,13 @@
 // Artist / Session error (widgets/ArtistDashboard DashboardSessionError): the session check failed for a
 // reason other than being signed out, so the workspace shell is not drawn and the visitor is not sent
 // to /login. "Try again" re-runs the check, which shows the checking state meanwhile.
+import { pageSkeleton } from '../workspace/page-skeleton.mjs'
 import { publicSpec } from './spec.mjs'
 
 /** The session-error page spec. */
 export function sessionErrorPage(ui, frames) {
   const { W, Tx, P, Row, Btn, fill } = ui
+  const skeleton = pageSkeleton(ui)
   const panel = (m) =>
     W(
       'Panel',
@@ -17,7 +19,7 @@ export function sessionErrorPage(ui, frames) {
             Tx('H1', "We couldn't check your session"),
             P('Muted', 'Your workspace is temporarily unavailable. Try again in a moment.'),
             Row({ name: 'Actions', gap: 12 }, [
-              Btn('Try again', 'Primary', 'refresh-cw'),
+              Btn('Try again', 'Primary'),
               Btn('Back to Bitrate', 'Outline'),
             ]),
           ],
@@ -38,12 +40,8 @@ export function sessionErrorPage(ui, frames) {
     [
       [
         'Checking session',
-        () => [
-          Row({ name: 'Checking', gap: 10 }, [
-            W('Spinner', { name: 'Spinner' }),
-            Tx('Muted', 'Checking your session…'),
-          ]),
-        ],
+        /* the session check shows the page skeleton; its "Checking your session…" label is screen-reader only */
+        (m) => skeleton(m),
       ],
     ],
   )

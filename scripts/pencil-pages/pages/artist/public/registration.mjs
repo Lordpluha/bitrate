@@ -27,7 +27,11 @@ export function registrationPage(ui, frames) {
     return a.card(m, null, null, [
       W('Progress', { name: 'Step Progress' }, { bar: { width: m ? 139 : 180 } }),
       Row({ name: 'Step Head', width: 'fill_container', gap: 12, alignItems: 'start' }, [
-        W('Button/Icon', { name: 'Back to email step' }, { icon: { icon: 'arrow-left' } }),
+        W(
+          'Button/Compact Ghost',
+          { name: 'Back to email step' },
+          { icon: { icon: 'arrow-left' }, label: { enabled: false } },
+        ),
         Col({ name: 'Step', gap: 2 }, [Tx('Muted', 'Step 2 of 2'), Tx('H2', 'Create a password')]),
       ]),
       a.password('Password', o.password ?? '••••••••', o.passwordError),
@@ -78,21 +82,21 @@ export function registrationPage(ui, frames) {
       ],
       [
         'Email taken',
-        (m) => [
+        toastAbove('Error', 'This email is already registered. Please log in instead.', (m) =>
           emailStep(m, {
             email: 'mira@nightsignal.fm',
             error: 'This email is already registered. Please log in instead.',
           }),
-        ],
+        ),
       ],
       [
         'Email check failed',
-        (m) => [
+        toastAbove('Error', 'Unable to verify this email right now', (m) =>
           emailStep(m, {
             email: 'mira@nightsignal.fm',
             error: 'Unable to verify this email right now',
           }),
-        ],
+        ),
       ],
       ['Password step', (m) => [passwordStep(m)]],
       [
@@ -108,6 +112,19 @@ export function registrationPage(ui, frames) {
             passwordError: 'Password must be at least 10 characters',
           }),
         ],
+      ],
+      /* useRegistrationForm: letter and number/symbol failures are toasts only */
+      [
+        'Password needs a letter',
+        toastAbove('Error', 'Password must contain at least one letter', (m) =>
+          passwordStep(m, { password: '••••••••••••', met: [false, true, true], checked: true }),
+        ),
+      ],
+      [
+        'Password needs a number or symbol',
+        toastAbove('Error', 'Password must contain a number or special character', (m) =>
+          passwordStep(m, { password: '••••••••••••', met: [true, false, true], checked: true }),
+        ),
       ],
       [
         'Consent missing',
@@ -135,6 +152,17 @@ export function registrationPage(ui, frames) {
             busy: true,
           }),
         ],
+      ],
+      [
+        'Account created',
+        toastAbove('Success', 'Account created. Verify your email before signing in.', (m) =>
+          passwordStep(m, {
+            password: '••••••••••••',
+            met: [true, true, true],
+            checked: true,
+            busy: true,
+          }),
+        ),
       ],
       [
         'Registration failed',

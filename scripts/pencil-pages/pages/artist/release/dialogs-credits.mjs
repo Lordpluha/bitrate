@@ -2,6 +2,8 @@
 // contributor, credit me alone, remove a contributor, splits, rights, the release UPC and the
 // compilation picker. Each builder returns the modal for desktop or phone (`m`).
 
+import { compilationDialog } from './dialogs-compilation.mjs'
+
 const ROLES = [
   ['Performer', true],
   ['Producer', true],
@@ -12,52 +14,57 @@ const ROLES = [
 
 /** Credits, rights and picker dialog builders bound to the screen helpers `ui` and the release kit `k`. */
 export function creditDialogs(ui, k) {
-  const { W, P, Row, Col, Btn, Field, Option } = ui
+  const { W, P, Row, Btn, Field, Option } = ui
   const save = (label) => [Btn('Cancel', 'Ghost'), Btn(label, 'Primary')]
   const share = (name, value) => Field(`${name} Master share`, value)
-  const pick = (selected, title, meta) =>
-    W(
-      selected ? 'Row/Pick Selected' : 'Row/Pick',
-      { name: `Pick / ${title}`, width: 'fill_container' },
-      { title: { content: title }, meta: { content: meta } },
-    )
   return {
-    contributor: (m, error = false) =>
+    /* add or edit; `o.error` the role requirement, `o.loading` / `o.notDraft` the edit form's states */
+    contributor: (m, o = {}) =>
       k.modal(
         m,
-        error ? 'Edit contributor' : 'Add contributor',
-        [
-          P('Muted', 'Credit a person involved in this release and assign at least one role.'),
-          Field('Contributor name', 'Kite Harbor'),
-          P('Body Strong', 'Assigned roles'),
-          /* five chips do not fit a phone row: three, then two */
-          ...(m ? [ROLES.slice(0, 3), ROLES.slice(3)] : [ROLES]).map((roles, i) =>
-            Row(
-              { name: `Roles ${i + 1}`, gap: 6 },
-              roles.map(([role, on]) =>
-                W(
-                  on && !error ? 'Chip/Toggle On' : 'Chip/Toggle',
-                  { name: `Role / ${role}` },
-                  { label: { content: role } },
-                ),
-              ),
-            ),
-          ),
-          ...(error
+        o.error || o.loading || o.notDraft ? 'Edit contributor' : 'Add contributor',
+        o.loading
+          ? [P('Muted', 'Loading the latest contributor…')]
+          : o.notDraft
             ? [
-                W(
-                  'Field/Error',
-                  { name: 'Roles error' },
-                  { text: { content: 'Choose at least one role.' } },
+                P(
+                  'Body',
+                  'This release is no longer a draft. Close the form and refresh Music to review its status.',
                 ),
               ]
-            : [P('Caption', 'Choose at least one role.')]),
-          P(
-            'Caption',
-            'Credits do not grant workspace access. Shares are set in the master split.',
-          ),
-        ],
-        save('Save contributor'),
+            : [
+                P(
+                  'Muted',
+                  'Credit a person involved in this release and assign at least one role.',
+                ),
+                Field('Contributor name', 'Kite Harbor'),
+                P('Body Strong', 'Assigned roles'),
+                /* five chips do not fit a phone row: three, then two */
+                ...(m ? [ROLES.slice(0, 3), ROLES.slice(3)] : [ROLES]).map((roles, r) =>
+                  Row(
+                    { name: `Roles ${r + 1}`, gap: 6 },
+                    roles.map(([role, on]) =>
+                      W(
+                        on && !o.error ? 'Chip/Toggle On' : 'Chip/Toggle',
+                        { name: `Role / ${role}` },
+                        { label: { content: role } },
+                      ),
+                    ),
+                  ),
+                ),
+                o.error
+                  ? W(
+                      'Field/Error',
+                      { name: 'Roles error' },
+                      { text: { content: 'Choose at least one role.' } },
+                    )
+                  : P('Caption', 'Choose at least one role.'),
+                P(
+                  'Caption',
+                  'Credits do not grant workspace access. Shares are set in the master split.',
+                ),
+              ],
+        o.loading || o.notDraft ? [Btn('Cancel', 'Ghost')] : save('Save contributor'),
       ),
     creditSelf: (m) =>
       k.modal(
@@ -82,7 +89,7 @@ export function creditDialogs(ui, k) {
             'Remove Kite Harbor from the release? Their master share is removed, so the split must add up to 100% again.',
           ),
         ],
-        [Btn('Keep contributor', 'Ghost'), Btn('Remove', 'Danger', 'trash-2')],
+        [Btn('Keep contributor', 'Ghost'), Btn('Remove contributor', 'Danger')],
         440,
       ),
     splits: (m, over = false) =>
@@ -93,6 +100,15 @@ export function creditDialogs(ui, k) {
           P(
             'Muted',
             'Master is the money from the recording itself. The shares must reach exactly 100% before review; a draft can stay below.',
+          ),
+          Row(
+            {
+              name: 'Table head',
+              gap: 12,
+              width: 'fill_container',
+              justifyContent: 'space_between',
+            },
+            [P('Caption', 'Contributor'), P('Caption', 'Shares in percent')],
           ),
           share('Mira Sol', over ? '80' : '75'),
           share('Kite Harbor', '25'),
@@ -150,32 +166,6 @@ export function creditDialogs(ui, k) {
         save('Save code'),
         440,
       ),
-    compilation: (m, o = {}) =>
-      k.modal(
-        m,
-        'Build a compilation',
-        [
-          P(
-            'Muted',
-            'Choose your published recordings. Their audio, ISRC, likes and listening history stay the same. The compilation has its own artwork and still goes through review.',
-          ),
-          W(
-            'Field/Search',
-            { name: 'Find a recording', width: 'fill_container' },
-            { value: { content: 'Find a recording' } },
-          ),
-          ...(o.empty
-            ? [P('Muted', 'No published recordings match your search.')]
-            : [
-                Col({ name: 'Recordings', gap: 4, width: 'fill_container' }, [
-                  pick(true, 'Afterglow', 'Afterglow · Remaster · 3:57'),
-                  pick(true, 'Echoes in Motion', 'Echoes in Motion · Original · 4:05'),
-                  pick(false, 'Low Tide', 'Echoes in Motion · Original · 3:18'),
-                ]),
-              ]),
-          P('Caption', 'Selected: 2. You can add up to 50 recordings.'),
-        ],
-        [Btn('Cancel', 'Ghost'), Btn('Add recordings (2)', 'Primary', 'plus')],
-      ),
+    compilation: compilationDialog(ui, k),
   }
 }

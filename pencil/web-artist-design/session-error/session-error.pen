@@ -165,7 +165,7 @@
                               "content": "Try again"
                             },
                             "artist:wAdYtR": {
-                              "icon": "refresh-cw"
+                              "enabled": false
                             }
                           }
                         },
@@ -360,7 +360,7 @@
                               "content": "Try again"
                             },
                             "artist:wAdYtR": {
-                              "icon": "refresh-cw"
+                              "enabled": false
                             }
                           }
                         },
@@ -555,7 +555,7 @@
                               "content": "Try again"
                             },
                             "artist:wAdYtR": {
-                              "icon": "refresh-cw"
+                              "enabled": false
                             }
                           }
                         },
@@ -756,7 +756,7 @@
                               "content": "Try again"
                             },
                             "artist:wAdYtR": {
-                              "icon": "refresh-cw"
+                              "enabled": false
                             }
                           }
                         },
@@ -904,26 +904,18 @@
           "justifyContent": "center",
           "children": [
             {
-              "type": "frame",
+              "type": "ref",
               "id": "39BWhB",
-              "name": "Checking",
-              "gap": 10,
-              "alignItems": "center",
-              "children": [
-                {
-                  "type": "ref",
-                  "id": "R0xfp0",
-                  "ref": "artist:24Kgld",
-                  "name": "Spinner"
-                },
-                {
-                  "type": "ref",
-                  "id": "2p0bex",
-                  "ref": "artist:C5Ih8u",
-                  "name": "Checking your session…",
-                  "content": "Checking your session…"
-                }
-              ]
+              "ref": "artist:z1OgFt",
+              "name": "Skeleton 1",
+              "width": "fill_container"
+            },
+            {
+              "type": "ref",
+              "id": "Y2PPfi",
+              "ref": "artist:z1OgFt",
+              "name": "Skeleton 2",
+              "width": "fill_container"
             }
           ]
         }
@@ -1055,26 +1047,25 @@
           "justifyContent": "center",
           "children": [
             {
-              "type": "frame",
+              "type": "ref",
               "id": "yypjX2",
-              "name": "Checking",
-              "gap": 10,
-              "alignItems": "center",
-              "children": [
-                {
-                  "type": "ref",
-                  "id": "CYlEcC",
-                  "ref": "artist:24Kgld",
-                  "name": "Spinner"
-                },
-                {
-                  "type": "ref",
-                  "id": "znJsJP",
-                  "ref": "artist:C5Ih8u",
-                  "name": "Checking your session…",
-                  "content": "Checking your session…"
-                }
-              ]
+              "ref": "artist:z1OgFt",
+              "name": "Skeleton 1",
+              "width": "fill_container"
+            },
+            {
+              "type": "ref",
+              "id": "FHXkNy",
+              "ref": "artist:z1OgFt",
+              "name": "Skeleton 2",
+              "width": "fill_container"
+            },
+            {
+              "type": "ref",
+              "id": "WYnw24",
+              "ref": "artist:z1OgFt",
+              "name": "Skeleton 3",
+              "width": "fill_container"
             }
           ]
         }

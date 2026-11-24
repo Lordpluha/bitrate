@@ -78,17 +78,17 @@ export function addFields(lib) {
           ],
           { justifyContent: 'center' },
         ),
-        error
-          ? [errorLine()]
-          : [
-              part(
-                'hint',
-                T('Six digits. You can paste the entire code.', {
-                  fontSize: 11,
-                  fill: C.artistTextSecondary,
-                }),
-              ),
-            ],
+        /* the hint stays under the field; an error line follows it (VerifyEmailForm) */
+        [
+          part(
+            'hint',
+            T('Six digits. You can paste the entire code.', {
+              fontSize: 11,
+              fill: C.artistTextSecondary,
+            }),
+          ),
+          ...(error ? [errorLine()] : []),
+        ],
       ),
     )
   }

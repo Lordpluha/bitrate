@@ -6,14 +6,20 @@ import { publicSpec } from './spec.mjs'
 
 /** The reset-password page spec. */
 export function resetPasswordPage(ui, frames) {
-  const { W, Tx, Row } = ui
+  const { W } = ui
   const a = authKit(ui)
   const form = (m, o = {}) =>
-    a.card(m, 'Reset password', null, [
-      a.password('New password', o.password ?? '', o.passwordError),
-      a.password('Confirm password', o.confirm ?? '', o.confirmError),
-      a.secondary('Set new password'),
-    ])
+    a.card(
+      m,
+      'Reset password',
+      null,
+      [
+        a.password('New password', o.password ?? '', o.passwordError),
+        a.password('Confirm password', o.confirm ?? '', o.confirmError),
+        a.secondary('Set new password'),
+      ],
+      true,
+    )
   const filled = { password: '••••••••••', confirm: '••••••••••' }
   const withToast = (tone, text, o) => (m) => [a.toast(tone, text, m), form(m, o)]
   return publicSpec(
@@ -38,16 +44,18 @@ export function resetPasswordPage(ui, frames) {
           }),
         ],
       ],
+      [
+        'Confirm empty',
+        (m) => [form(m, { password: '••••••••••', confirmError: 'Confirm password' })],
+      ],
       ['Missing token', withToast('Error', 'Missing token', filled)],
       ['Reset failed', withToast('Error', 'Unable to reset password', filled)],
       ['Password updated', withToast('Success', 'Password updated — please log in', filled)],
       [
         'Loading',
         () => [
-          Row({ name: 'Loading', gap: 10 }, [
-            W('Spinner', { name: 'Spinner' }),
-            Tx('Muted', 'Loading page'),
-          ]),
+          /* Suspense fallback: the spinner, its "Loading page" label for screen readers only */
+          W('Spinner', { name: 'Spinner' }),
         ],
         { height: 900 },
       ],

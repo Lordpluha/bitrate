@@ -1,8 +1,11 @@
-// Shared parts of the four release-stage pages (views/ReleaseWorkspaceView): the shell, the release
-// header for a status, the four-stage stepper with the stage the release has reached, glass tiles,
-// notices and the page frame for a stage (header, stepper, stage content).
+// Shared frame of the four release-stage pages (views/ReleaseWorkspaceView): "Draft updated" status
+// paragraph, "Back to music" on phones, the release header for a status (chip, premiere countdown,
+// next action), the four-stage stepper with stages.ts progress, then the stage (main column, side
+// panel on the right), the changes-after-publication panel when the release accepts changes and the
+// danger zone on every stage.
 import { coverFill } from '../workspace/demo.mjs'
 import { workspaceModal } from '../workspace/workspace-modal.mjs'
+import { acceptsChanges, STATUS } from './status.mjs'
 
 const STAGES = [
   ['draft', 'Draft'],
@@ -10,130 +13,53 @@ const STAGES = [
   ['deliver', 'Deliver'],
   ['launch', 'Launch'],
 ]
-/* release status → [chip tone, chip label, chip icon, next title, next detail, next action] */
-const HEADER = {
-  draft: [
-    'Neutral',
-    'Draft',
-    'circle-dashed',
-    'Finish preparing your release',
-    '3 items are left before Bitrate review.',
-    'Edit tracks',
-  ],
-  ready: [
-    'Ready',
-    'Ready',
-    'circle-check',
-    'Submit for Bitrate review',
-    'Everything required is ready. Confirm and submit.',
-    'Review and submit',
-  ],
-  submitted: [
-    'Processing',
-    'Submitted',
-    'clock-3',
-    'Waiting for Bitrate review',
-    'You will be notified when Bitrate decides.',
-    'View review',
-  ],
-  rejected: [
-    'Error',
-    'Rejected',
-    'circle-x',
-    'Address the requested changes',
-    'Bitrate asked for changes before approval.',
-    'Open feedback',
-  ],
-  approved: [
-    'Ready',
-    'Ready',
-    'circle-check',
-    'Publish on Bitrate',
-    'Approved by Bitrate. Publish when you are ready.',
-    'Open launch',
-  ],
-  scheduled: [
-    'Ready',
-    'Scheduled',
-    'calendar-clock',
-    'Premiere scheduled',
-    'Your release goes live on Bitrate at the premiere time.',
-    'Open launch',
-  ],
-  publishing: [
-    'Processing',
-    'Publishing',
-    'loader-circle',
-    'Publishing on Bitrate',
-    'Your tracks are being prepared for the player.',
-    'Open launch',
-  ],
-  failed: [
-    'Error',
-    'Publishing failed',
-    'circle-x',
-    'Publishing failed',
-    'Bitrate has been notified and will retry.',
-    'Open launch',
-  ],
-  released: [
-    'Ready',
-    'Released',
-    'radio',
-    'Your release is live on Bitrate',
-    'Share it and follow the first signals.',
-    'Open launch',
-  ],
-  unpublished: [
-    'Neutral',
-    'Unpublished',
-    'circle-pause',
-    'Your release is offline',
-    'Listeners cannot play it until it is published again.',
-    'Open launch',
-  ],
-}
 
 /** Release-page helpers bound to the screen helpers `ui`. */
 export function releaseKit(ui) {
-  const { W, Row, Col, fill, inline } = ui
-  const shell = { nav: 'music', crumb: 'Music / Night Signal', action: 'Create release' }
-  const header = (m, status = 'draft') => {
-    const [tone, label, icon, title, detail, action] = HEADER[status]
+  const { W, P, Tx, Row, Col, fill, inline, Btn } = ui
+  const shell = { nav: 'music', crumb: 'Music / Night Signal', back: true }
+  const header = (m, status = 'draft', premiere = false) => {
+    const [tone, label, icon, title, detail, action] = STATUS[status]
     return W(
       m ? 'Release/Header Compact' : 'Release/Header',
       { name: 'Release Header', width: 'fill_container' },
       {
         cover: coverFill('night-signal'),
         title: { content: 'Night Signal' },
-        meta: { content: 'Mira Sol · Single · 1 track' },
+        meta: { content: 'Mira Sol · Single · 2 tracks' },
         status: W(
           `Status/${tone}`,
           { name: `Status / ${label}` },
           { label: { content: label }, icon: { icon } },
         ),
         ...(m ? {} : { updated: { content: 'Updated Nov 23, 2026, 14:20 UTC' } }),
+        countdown: premiere
+          ? inline('Countdown', [W('Countdown', { name: 'Countdown' })])
+          : { enabled: false },
         nextTitle: { content: title },
         nextDesc: { content: detail },
         'nextButton.label': { content: action },
       },
     )
   }
-  const stepper = (m, reached) => {
-    const at = STAGES.findIndex(([key]) => key === reached)
+  const stepper = (m, status) => {
+    const progress = STATUS[status][6]
     const parts = {}
     STAGES.forEach(([key, label], i) => {
-      const state = i < at ? 'Done' : i === at ? 'Current' : 'Upcoming'
-      const show = !m || state === 'Current'
+      const state = progress[key]
       parts[`step_${key}`] = W(
         `Step/${state}`,
         { name: `Step / ${label}` },
         {
-          label: show ? { content: label } : { enabled: false },
+          label: !m || state === 'Current' ? { content: label } : { enabled: false },
           ...(state === 'Done' ? {} : { number: { content: String(i + 1) } }),
         },
       )
-      if (i) parts[`line_${key}`] = W(i <= at ? 'Step/Line Done' : 'Step/Line', { name: 'Line' })
+      if (i)
+        parts[`line_${key}`] = W(
+          progress[STAGES[i - 1][0]] === 'Done' ? 'Step/Line Done' : 'Step/Line',
+          { name: 'Line' },
+        )
     })
     return W(
       m ? 'Release/Stages Compact' : 'Release/Stages',
@@ -146,36 +72,79 @@ export function releaseKit(ui) {
       'Tile',
       { name: `Tile / ${title}`, width: 'fill_container', ...o },
       {
-        icon: { icon },
+        icon: icon ? { icon } : { enabled: false },
         title: { content: title },
         right: right.length ? inline('Right', right) : { enabled: false },
         body: fill('Body', body.flat(), { gap: 12 }),
       },
     )
-  const note = (tone, text, action) =>
+  /* role="status" paragraphs and notes: a bordered paragraph, not an alert */
+  const note = (text) =>
     W(
-      `Alert/${tone}`,
-      { name: `Notice / ${text.slice(0, 20)}`, width: 'fill_container' },
-      {
-        title: { content: text },
-        body: { enabled: false },
-        action: action ? inline('Action', [action]) : { enabled: false },
-      },
+      'Legal/Note',
+      { name: `Note / ${text.slice(0, 20)}`, width: 'fill_container' },
+      { text: { content: text } },
     )
-  const lock = (text) =>
-    W('Alert/Lock', { name: 'Lock', width: 'fill_container' }, { text: { content: text } })
-  /** A stage page: header, stepper, then the stage's own nodes. */
-  const stage = (m, status, reached, nodes) => [
-    header(m, status),
-    stepper(m, reached),
+  /* LockedButton: the action stays visible, disabled, with the lock reason as its tooltip */
+  const locked = (label) => Btn(label, 'Compact Outline', 'lock', { opacity: 0.5 })
+  const changes = () =>
+    tile(
+      'Changes after publication',
+      'file-pen',
+      [
+        P(
+          'Muted',
+          'Listeners keep seeing the current title and cover until Bitrate approves each change.',
+        ),
+        W(
+          'Row/Identifier',
+          { name: 'Change / title', width: 'fill_container' },
+          {
+            label: { content: 'Release title · In review' },
+            value: { content: 'Night Signal → Night Signal (Deluxe)' },
+            trail: inline('Trail', [Btn('Withdraw', 'Compact Ghost')]),
+          },
+        ),
+      ],
+      {},
+      [Btn('Propose changes', 'Compact Outline')],
+    )
+  const danger = () =>
+    tile('Danger zone', null, [
+      P(
+        'Muted',
+        'Delete this release from your workspace and the player. Recordings used by another release remain available. This cannot be undone.',
+      ),
+      Btn('Delete release', 'Danger', 'trash-2'),
+    ])
+  /** A stage page; `o.saved` adds the "Draft updated." status, `o.premiere` the header countdown. */
+  const stage = (m, status, nodes, o = {}) => [
+    ...(o.saved ? [note('Draft updated.')] : []),
+    ...(m ? [Tx('Link Underline', 'Back to music')] : []),
+    header(m, status, o.premiere),
+    stepper(m, status),
     ...nodes.flat(),
+    ...(acceptsChanges(status) ? [changes()] : []),
+    danger(),
   ]
-  const columns = (m, side, main) =>
+  /** Main column first, the 352px side panel on its right; stacked on a phone. */
+  const columns = (m, main, side) =>
     m
-      ? [...side, ...main]
+      ? [...main, ...side]
       : Row({ name: 'Stage', gap: 20, width: 'fill_container', alignItems: 'start' }, [
-          Col({ name: 'Side', gap: 20, width: 352 }, side),
           Col({ name: 'Main', gap: 20, width: 'fill_container' }, main),
+          Col({ name: 'Side', gap: 20, width: 352 }, side),
         ])
-  return { shell, header, stepper, tile, note, lock, stage, columns, modal: workspaceModal(ui) }
+  return {
+    shell,
+    header,
+    stepper,
+    tile,
+    note,
+    locked,
+    danger,
+    stage,
+    columns,
+    modal: workspaceModal(ui),
+  }
 }

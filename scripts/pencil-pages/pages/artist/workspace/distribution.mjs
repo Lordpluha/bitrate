@@ -1,34 +1,50 @@
-// Artist / Distribution (views/DistributionView + DeliveryMatrix): every release's delivery plan across
-// the six stores, with the no-partner banner (Your plan → Partner → Stores) and pagination; table
-// skeleton, error and the empty catalogue with "Open Music".
+// Artist / Distribution (views/DistributionView + DeliveryMatrix): the no-partner banner (Your plan →
+// Partner → Stores), the delivery-plan matrix, pagination below it only with more than one page; the
+// table skeleton, the error and the empty catalogue with its "Open Music" link, outside the panel.
 import { pageSpec } from '../../../artist-ws/spec.mjs'
 import { distributionMatrix } from './distribution-matrix.mjs'
+import { pageSkeleton } from './page-skeleton.mjs'
 
-/* [title, cover, territories · state, store cells] */
+/* [title, cover, [chip tone, status], territories, sent state, cell per store] */
 const ROWS = [
   [
     'Night Signal',
     'night-signal',
-    'Worldwide · Not sent',
-    ['Not sent', 'Not sent', 'Not sent', 'Not in plan', 'Not sent', 'Not in plan'],
+    ['Neutral', 'Draft'],
+    'Worldwide',
+    'Not sent',
+    [
+      'Not connected',
+      'Not connected',
+      'Not connected',
+      'Not in plan',
+      'Not connected',
+      'Not in plan',
+    ],
   ],
   [
     'Echoes in Motion',
     'echoes-in-motion',
-    '2 countries · Not sent',
-    ['Not sent', 'Not sent', 'Not in plan', 'Not in plan', 'Not in plan', 'Not in plan'],
+    ['Processing', 'Submitted'],
+    '2 countries',
+    'Not sent',
+    ['Not connected', 'Not connected', 'Not in plan', 'Not in plan', 'Not in plan', 'Not in plan'],
   ],
   [
     'Afterglow',
     'afterglow',
-    'Worldwide · No stores planned',
-    ['Not in plan', 'Not in plan', 'Not in plan', 'Not in plan', 'Not in plan', 'Not in plan'],
+    ['Ready', 'Released'],
+    'Worldwide',
+    'Sent to partner',
+    ['Live', 'Live', 'Pending', 'Failed', 'Taken down', 'Unavailable'],
   ],
   [
     'Static Lines',
     'static-lines',
-    'Worldwide · Not sent',
-    ['Not sent', 'Not sent', 'Not sent', 'Not sent', 'Not sent', 'Not sent'],
+    ['Ready', 'Scheduled'],
+    'Worldwide',
+    'No stores planned',
+    ['Not in plan', 'Not in plan', 'Not in plan', 'Not in plan', 'Not in plan', 'Not in plan'],
   ],
 ]
 
@@ -36,6 +52,8 @@ const ROWS = [
 export function distributionPage(ui, frames) {
   const { W, Tx, P, Row, Col, fill, Btn } = ui
   const { pageHead } = frames
+  const matrix = distributionMatrix(ui)
+  const skeleton = pageSkeleton(ui)
   const shell = { nav: 'distribution', crumb: 'Distribution', action: 'Create release' }
   const head = () =>
     pageHead('Distribution', 'Where your releases are planned to go, and what stores report back.')
@@ -62,96 +80,56 @@ export function distributionPage(ui, frames) {
         ]),
       },
     )
-  const { row, matrix } = distributionMatrix(ui, ROWS)
-  const inside = (nodes) => [
-    Col(
-      { name: 'State', gap: 14, width: 'fill_container', padding: [40, 24], alignItems: 'start' },
-      nodes,
-    ),
-  ]
+  const pagination = () =>
+    Row({ name: 'Pagination', gap: 4, width: 'fill_container', justifyContent: 'center' }, [
+      Btn('Previous', 'Compact Ghost', 'chevron-left'),
+      W('Page/Item', { name: 'Page 1' }),
+      W('Page/Item Active', { name: 'Page 2' }, { label: { content: '2' } }),
+      Btn('Next', 'Compact Ghost', 'chevron-right'),
+    ])
+  const page = (m, nodes) => [head(), banner(m), ...nodes]
   return pageSpec(
     frames,
     {
       title: 'Artist / Distribution',
-      route: '/dashboard/distribution',
+      route: '/dashboard/distribution?page=',
       context:
-        'Plans only: no distribution partner is connected, so every store reads Not sent or Not in the plan. Each row opens the release on Deliver.',
+        'Plans only: no distribution partner is connected. Each row opens the release on Deliver; the legend lists the states shown.',
     },
     shell,
-    (m) => [head(), banner(m), matrix(m)],
+    (m) => page(m, [matrix(m, ROWS)]),
     [
-      [
-        'Second page',
-        shell,
-        (m) => [
-          head(),
-          banner(m),
-          matrix(m, [
-            ...(m ? [] : [W('Matrix/Header', { name: 'Header', width: 'fill_container' })]),
-            ...ROWS.slice(0, 2).map((r) => row(m, r)),
-            Row(
-              {
-                name: 'Footer',
-                width: 'fill_container',
-                padding: [12, 16],
-                justifyContent: 'space_between',
-              },
-              [
-                Tx('Muted', '11–12 of 12'),
-                Row({ name: 'Pages', gap: 4 }, [
-                  W('Page/Item', { name: 'Page 1' }),
-                  W('Page/Item Active', { name: 'Page 2' }, { label: { content: '2' } }),
-                ]),
-              ],
-            ),
-          ]),
-        ],
-      ],
-      [
-        'Loading',
-        shell,
-        (m) => [
-          head(),
-          banner(m),
-          matrix(m, [
-            Col({ name: 'Loading', gap: 0, width: 'fill_container', padding: 16 }, [
-              Tx('Muted', 'Loading distribution…'),
-              ...[1, 2, 3, 4].map((i) =>
-                W('Skeleton/Row', { name: `Skeleton ${i}`, width: 'fill_container' }),
-              ),
-            ]),
-          ]),
-        ],
-      ],
+      ['Second page', shell, (m) => page(m, [matrix(m, ROWS.slice(0, 2)), pagination()])],
+      ['Loading', shell, (m) => page(m, skeleton(m, 'table'))],
       [
         'Error',
         shell,
-        (m) => [
-          head(),
-          banner(m),
-          matrix(
-            m,
-            inside([
-              P('Body', 'Could not load distribution. Please try again.'),
-              Btn('Try again', 'Outline', 'refresh-cw'),
-            ]),
-          ),
-        ],
+        (m) =>
+          page(m, [
+            P('Body', 'Could not load distribution. Please try again.'),
+            Btn('Try again', 'Outline'),
+          ]),
       ],
       [
         'Empty',
         shell,
-        (m) => [
-          head(),
-          banner(m),
-          matrix(
-            m,
-            inside([
-              P('Body', 'No releases yet. Create a release to plan its delivery.'),
-              Btn('Open Music', 'Primary', 'arrow-right'),
-            ]),
-          ),
-        ],
+        (m) =>
+          page(m, [
+            Col(
+              {
+                name: 'Empty',
+                gap: 10,
+                width: 'fill_container',
+                padding: [32, 0],
+                alignItems: 'center',
+              },
+              [
+                W('Button/Icon', { name: 'Send' }, { icon: { icon: 'send' } }),
+                P('Body', 'No releases yet. Create a release to plan its delivery.'),
+                Tx('Link Underline', 'Open Music'),
+              ],
+            ),
+          ]),
       ],
     ],
   )

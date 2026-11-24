@@ -1,155 +1,104 @@
 // Artist / Release — Draft (views/ReleaseWorkspaceView, step=draft; widgets/ReleaseWorkspace DraftStage):
-// the readiness checklist beside timing, tracks, credits and rights, then the danger zone; lock banners
-// once submitted, rejected, approved or released (with the changes-after-publication panel); loading,
-// unavailable, uploads and every dialog the draft opens.
+// timing, tracks, credits and rights in the main column, the readiness checklist with the submission
+// on the right (folded on a phone until opened); locks once submitted, rejected, approved or released;
+// loading, unavailable, and every dialog the draft opens.
 import { pageSpec } from '../../../artist-ws/spec.mjs'
+import { pageSkeleton } from '../workspace/page-skeleton.mjs'
 import { creditDialogs } from './dialogs-credits.mjs'
 import { mediaDialogs } from './dialogs-media.mjs'
+import { draftRights } from './draft-rights.mjs'
 import { draftTiles } from './draft-tiles.mjs'
 import { releaseKit } from './kit.mjs'
 
-const LOCK = {
-  submitted: 'Locked while Bitrate reviews this release. Withdraw it from review to edit.',
-  rejected: 'Choose Start revising on the Review step to edit the draft.',
-  approved: 'Approved releases can no longer be edited.',
-  released: 'Released releases can no longer be edited.',
-}
-const REACHED = { submitted: 'review', rejected: 'review', approved: 'deliver', released: 'launch' }
-
 /** The release-draft page spec. */
 export function releaseDraftPage(ui, frames) {
-  const { W, Tx, P, Row, Col, Btn, inline } = ui
+  const { Tx, P, Row, Col, Btn } = ui
   const k = releaseKit(ui)
-  const t = draftTiles(ui, k)
+  const t = { ...draftTiles(ui, k), ...draftRights(ui, k) }
   const md = mediaDialogs(ui, k)
   const cd = creditDialogs(ui, k)
+  const skeleton = pageSkeleton(ui)
   const halves = (m, a, b) =>
     m
       ? [a, b]
       : [Row({ name: 'Halves', gap: 20, width: 'fill_container', alignItems: 'start' }, [a, b])]
-  const body = (m, o = {}) => [
-    ...(o.notice ? [o.notice] : []),
-    k.columns(
+  const draft = (m, o = {}) => {
+    const s = { status: 'draft', ...o }
+    return k.stage(
       m,
-      [t.readiness(o)],
-      [t.timing(o), t.tracks({ ...o, m }), ...halves(m, t.credits(o), t.rights(o))],
-    ),
-    ...(o.after ?? []),
-    ...(o.locked ? [] : [t.danger()]),
-  ]
-  const draft = (m, o = {}, status = 'draft', reached = 'draft') =>
-    k.stage(m, status, reached, body(m, o))
-  const locked = (status) => (m) => {
-    const o = { locked: true, complete: true, lockText: LOCK[status] }
-    const changes =
-      status === 'released'
-        ? [
-            k.tile(
-              'Changes after publication',
-              'file-pen',
-              [
-                P(
-                  'Muted',
-                  'Listeners keep seeing the current title and cover until Bitrate approves each change.',
-                ),
-                W(
-                  'Row/Identifier',
-                  { name: 'Change / title', width: 'fill_container' },
-                  {
-                    label: { content: 'Release title' },
-                    value: { content: 'Night Signal → Night Signal (Deluxe)' },
-                    trail: inline('Trail', [
-                      W(
-                        'Status/Processing',
-                        { name: 'In review' },
-                        { label: { content: 'In review' } },
-                      ),
-                      Btn('Withdraw', 'Compact Ghost'),
-                    ]),
-                  },
-                ),
-              ],
-              {},
-              [Btn('Propose changes', 'Compact Outline', 'file-pen')],
-            ),
-          ]
-        : []
-    return draft(m, { ...o, after: changes }, status, REACHED[status])
+      s.status,
+      [
+        k.columns(
+          m,
+          [t.timing(s), t.tracks(s, m), ...halves(m, t.credits(s), t.rights(s))],
+          [t.readiness(s, m)],
+        ),
+      ],
+      { saved: o.saved, premiere: true },
+    )
   }
-  const over = (dialog) => (m) => [k.header(m), k.stepper(m, 'draft'), dialog(m)]
-  const ready = { complete: true }
-  const uploads = (variant) => ({
-    rows: [
-      ['', 'Night Signal', 'Original · 3:42 · ISRC GB-BTR-26-00012', '1', ['Synthwave']],
-      [variant, 'Low Tide', 'Original · No ISRC yet', '2', []],
+  const done = { done: true }
+  const over = (dialog) => (m) => [k.header(m, 'draft', true), k.stepper(m, 'draft'), dialog(m)]
+  const mobileOnly = { side: 'mobile', reason: 'the checklist folds on phones only' }
+  const states = [
+    ['Checklist open', (m) => draft(m, { open: true }), mobileOnly],
+    ['Ready to submit', (m) => draft(m, { ...done, status: 'draftReady' })],
+    ['Empty draft', (m) => draft(m, { empty: true })],
+    ['Compilation', (m) => draft(m, { empty: true, compilation: true })],
+    ['Draft updated', (m) => draft(m, { saved: true })],
+    ['Submitted', (m) => draft(m, { ...done, status: 'submitted' })],
+    ['Withdrawing', (m) => draft(m, { ...done, status: 'submitted', busy: true })],
+    ['Rejected', (m) => draft(m, { ...done, status: 'rejected' })],
+    ['Approved', (m) => draft(m, { ...done, status: 'approved' })],
+    ['Released', (m) => draft(m, { ...done, status: 'released' })],
+    ['Loading', (m) => skeleton(m, 'release')],
+    [
+      'Unavailable',
+      () => [
+        Col({ name: 'Unavailable', gap: 14, width: 'fill_container', padding: [32, 0] }, [
+          Tx('H1', 'Release workspace unavailable'),
+          P('Body', 'Could not load this release workspace. Please try again.'),
+          Btn('Try again', 'Outline'),
+          Tx('Link Underline', 'Return to Music'),
+        ]),
+      ],
     ],
-  })
+    ['Edit draft', over(md.editRelease)],
+    ['Edit timing', over(md.schedule)],
+    ['Edit artwork', over(md.artwork)],
+    ['Upload track', over(md.upload)],
+    ['Upload track — dropping', over((m) => md.upload(m, { active: true }))],
+    ['Upload track — uploading', over((m) => md.upload(m, { progress: true }))],
+    ['Upload track — file too large', over((m) => md.upload(m, { error: true }))],
+    ['Replace audio', over((m) => md.upload(m, { replace: true }))],
+    ['Rename track', over(md.rename)],
+    ['Track ISRC', over((m) => md.isrc(m, true))],
+    ['Track genres', over(md.genres)],
+    ['Remove track', over(md.removeTrack)],
+    ['Add contributor', over(cd.contributor)],
+    ['Contributor needs a role', over((m) => cd.contributor(m, { error: true }))],
+    ['Edit contributor — loading', over((m) => cd.contributor(m, { loading: true }))],
+    ['Edit contributor — not a draft', over((m) => cd.contributor(m, { notDraft: true }))],
+    ['Credit me alone', over(cd.creditSelf)],
+    ['Remove contributor', over(cd.removeContributor)],
+    ['Splits', over(cd.splits)],
+    ['Splits over 100%', over((m) => cd.splits(m, true))],
+    ['Rights', over(cd.rights)],
+    ['Release UPC', over((m) => cd.upc(m, true))],
+    ['Compilation picker', over(cd.compilation)],
+    ['Compilation — no matches', over((m) => cd.compilation(m, { empty: true }))],
+    ['Delete release', over(md.deleteRelease)],
+  ]
   return pageSpec(
     frames,
     {
       title: 'Artist / Release — Draft',
       route: '/dashboard/music/$releaseId?step=draft',
       context:
-        'Where a release is prepared. The checklist links each item to its tile; nothing here publishes or delivers the release.',
+        'Where a release is prepared. The checklist links each item to its panel; nothing here publishes or delivers the release.',
     },
     k.shell,
     (m) => draft(m),
-    [
-      ['Ready to submit', k.shell, (m) => draft(m, ready, 'ready')],
-      ['Empty draft', k.shell, (m) => draft(m, { empty: true })],
-      ['Draft updated', k.shell, (m) => draft(m, { notice: k.note('Success', 'Draft updated.') })],
-      ['Uploading audio', k.shell, (m) => draft(m, uploads('Uploading'))],
-      ['Upload failed', k.shell, (m) => draft(m, uploads('Failed'))],
-      ['Submitted', k.shell, locked('submitted')],
-      ['Rejected', k.shell, locked('rejected')],
-      ['Approved', k.shell, locked('approved')],
-      ['Released', k.shell, locked('released')],
-      [
-        'Loading',
-        k.shell,
-        () => [
-          Tx('Muted', 'Loading release workspace…'),
-          ...[1, 2, 3].map((i) =>
-            W('Skeleton/Tile', { name: `Skeleton ${i}`, width: 'fill_container' }),
-          ),
-        ],
-      ],
-      [
-        'Unavailable',
-        k.shell,
-        () => [
-          Col({ name: 'Unavailable', gap: 14, width: 'fill_container', padding: [48, 0] }, [
-            Tx('H1', 'Release workspace unavailable'),
-            Row({ name: 'Actions', gap: 10 }, [
-              Btn('Try again', 'Outline', 'refresh-cw'),
-              Btn('Return to Music', 'Ghost', 'arrow-left'),
-            ]),
-          ]),
-        ],
-      ],
-      ['Edit details', k.shell, over(md.editRelease)],
-      ['Edit timing', k.shell, over(md.schedule)],
-      ['Edit artwork', k.shell, over(md.artwork)],
-      ['Upload track', k.shell, over(md.upload)],
-      ['Upload track — dropping', k.shell, over((m) => md.upload(m, { active: true }))],
-      ['Upload track — uploading', k.shell, over((m) => md.upload(m, { progress: true }))],
-      ['Upload track — file too large', k.shell, over((m) => md.upload(m, { error: true }))],
-      ['Replace audio', k.shell, over((m) => md.upload(m, { replace: true }))],
-      ['Rename track', k.shell, over(md.rename)],
-      ['Track ISRC', k.shell, over((m) => md.isrc(m, true))],
-      ['Track genres', k.shell, over(md.genres)],
-      ['Remove track', k.shell, over(md.removeTrack)],
-      ['Add contributor', k.shell, over(cd.contributor)],
-      ['Contributor needs a role', k.shell, over((m) => cd.contributor(m, true))],
-      ['Credit me alone', k.shell, over(cd.creditSelf)],
-      ['Remove contributor', k.shell, over(cd.removeContributor)],
-      ['Splits', k.shell, over(cd.splits)],
-      ['Splits over 100%', k.shell, over((m) => cd.splits(m, true))],
-      ['Rights', k.shell, over(cd.rights)],
-      ['Release UPC', k.shell, over((m) => cd.upc(m, true))],
-      ['Compilation picker', k.shell, over(cd.compilation)],
-      ['Compilation — no matches', k.shell, over((m) => cd.compilation(m, { empty: true }))],
-      ['Delete release', k.shell, over(md.deleteRelease)],
-    ],
+    states.map(([label, build, only]) => [label, k.shell, build, only]),
   )
 }

@@ -4,25 +4,26 @@
 import { landingReplica } from './landing-replica.mjs'
 
 const TABS = [
-  ['01', 'disc-3', 'Release workspace'],
-  ['02', 'layout-dashboard', 'Dashboard'],
-  ['03', 'chart-no-axes-combined', 'Analytics'],
+  ['01', 'disc-3', 'Release workspace', 'Release'],
+  ['02', 'layout-dashboard', 'Dashboard', 'Dashboard'],
+  ['03', 'chart-no-axes-combined', 'Analytics', 'Analytics'],
 ]
 
 /** The hero section builder bound to the screen helpers `ui`. */
 export function landingHero(ui) {
-  const { W, Tx, Row, Col, inline, fill } = ui
+  const { W, Tx, Row, Col, inline } = ui
   const center = { textAlign: 'center', width: 'fill_container', textGrowth: 'fixed-width' }
   const replica = landingReplica(ui)
-  const stageTabs = (tab) =>
-    TABS.map(([step, icon, label], i) =>
+  /* on a phone the dock wraps with short labels and no step numbers */
+  const stageTabs = (tab, m) =>
+    TABS.map(([step, icon, label, short], i) =>
       W(
         i === tab ? 'Landing/Stage Tab Active' : 'Landing/Stage Tab',
         { name: `Tab / ${label}` },
         {
-          step: { content: step },
+          step: m ? { enabled: false } : { content: step },
           icon: { icon },
-          label: { content: label },
+          label: { content: m ? short : label },
         },
       ),
     )
@@ -36,7 +37,11 @@ export function landingHero(ui) {
         padding: m ? [24, 0, 0, 0] : [56, 160, 0, 160],
       },
       [
-        W('Landing/Eyebrow', { name: 'Eyebrow' }, m ? { meta: { enabled: false } } : {}),
+        W(
+          'Landing/Eyebrow',
+          { name: 'Eyebrow' },
+          m ? { divider: { enabled: false }, meta: { enabled: false } } : {},
+        ),
         Tx(m ? 'Section' : 'Hero', 'Plan, prepare and track your releases.', center),
         (m ? Col : Row)({ name: 'Capabilities', gap: 8, alignItems: 'center' }, [
           Tx('Muted', 'Built for independent artists:'),
@@ -74,17 +79,8 @@ export function landingHero(ui) {
       ],
     ),
     Col({ name: 'Studio Stage', gap: 20, width: 'fill_container', alignItems: 'center' }, [
-      m
-        ? Col({ name: 'Stage Tabs', gap: 4, width: 'fill_container' }, stageTabs(tab))
-        : inline('Stage Tabs', stageTabs(tab)),
-      W(
-        'Landing/Window',
-        { name: 'Studio Window', width: m ? 'fill_container' : 1120 },
-        {
-          title: { content: TABS[tab][2] },
-          content: fill('Replica', replica(m, tab), { gap: 20, padding: m ? 14 : 24 }),
-        },
-      ),
+      inline('Stage Tabs', stageTabs(tab, m)),
+      replica(m, tab),
     ]),
   ]
 }

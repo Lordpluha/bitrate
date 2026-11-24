@@ -24,7 +24,9 @@ export function accountSwitcherPage(ui, frames) {
       'avatar.initials': { content: 'M' },
       title: { content: 'Mira Sol' },
       meta: { content: 'Active account' },
-      trail: { enabled: false },
+      trail: inline('Trail', [
+        W('Button/Icon', { name: 'Current', width: 32, height: 32 }, { icon: { icon: 'check' } }),
+      ]),
     },
   )
   const other = ([name, initial]) =>
@@ -49,7 +51,7 @@ export function accountSwitcherPage(ui, frames) {
       P('Muted', 'Accounts you have signed in to on this browser.'),
       Col(
         { name: 'Accounts', gap: 8, width: 'fill_container' },
-        o.loading ? [] : [current, ...OTHERS.slice(0, o.count ?? 1).map(other)],
+        o.loading || o.retry ? [current] : [current, ...OTHERS.slice(0, o.count ?? 1).map(other)],
       ),
       ...(o.loading
         ? [
@@ -67,7 +69,7 @@ export function accountSwitcherPage(ui, frames) {
             ]),
           ]
         : []),
-      Btn('Add another account', 'Outline', 'user-plus', {
+      Btn('Add another account', 'Outline', 'plus', {
         width: 'fill_container',
         ...(o.full || o.loading ? { opacity: 0.45 } : {}),
       }),
@@ -75,9 +77,8 @@ export function accountSwitcherPage(ui, frames) {
         'Caption',
         'Save up to 5 accounts. Removing one here signs it out on this browser; it does not delete the account.',
       ),
-      W('Divider', { name: 'Divider', width: 'fill_container' }),
+      Row({ name: 'Sign out', width: 'fill_container' }, [Btn('Sign out', 'Ghost', 'log-out')]),
       ...(o.signOutError ? [P('Error', 'Could not sign out. Please try again.')] : []),
-      Btn('Sign out', 'Danger', 'log-out', { width: 'fill_container' }),
     ])
   return pageSpec(
     frames,
@@ -96,7 +97,6 @@ export function accountSwitcherPage(ui, frames) {
         shell,
         (m) => [
           switcher(m, {
-            loading: true,
             error: 'Could not load saved accounts. Try again.',
             retry: true,
           }),

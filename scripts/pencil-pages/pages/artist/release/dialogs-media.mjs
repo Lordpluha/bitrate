@@ -25,14 +25,14 @@ export function mediaDialogs(ui, k) {
     editRelease: (m) =>
       k.modal(
         m,
-        'Edit release',
+        'Edit draft',
         [
           P(
             'Muted',
-            'Update the release title. Its type is detected automatically from the number of tracks.',
+            'Update the draft title and release type. Your music stays unpublished. Artwork and tracks are edited in the release workspace.',
           ),
           Field('Release title', 'Night Signal'),
-          P('Caption', 'Detected automatically: 1–4 tracks — Single, 5–6 — EP, 7 or more — Album.'),
+          Field('Release type', 'Single', 'Select'),
         ],
         save('Save changes'),
       ),
@@ -74,7 +74,7 @@ export function mediaDialogs(ui, k) {
     upload: (m, o = {}) =>
       k.modal(
         m,
-        o.replace ? 'Replace audio for Night Signal' : 'Upload track',
+        o.replace ? 'Replace audio' : 'Upload track',
         [
           ...(o.replace
             ? [
@@ -83,7 +83,7 @@ export function mediaDialogs(ui, k) {
                   'The current file (night-signal-master.wav) of Night Signal is replaced once the new one is saved.',
                 ),
               ]
-            : [Field('Track title', 'Low Tide')]),
+            : [Field('Track title', 'Low Tide'), P('Muted', 'Add the master for Low Tide.')]),
           o.progress
             ? W('Upload/Progress', { name: 'Upload progress', width: 'fill_container' })
             : dropzone(
@@ -105,9 +105,9 @@ export function mediaDialogs(ui, k) {
         [
           Btn('Cancel', 'Ghost'),
           Btn(
-            o.progress ? 'Uploading…' : 'Upload audio',
+            o.progress ? 'Uploading…' : o.replace ? 'Replace audio' : 'Upload track',
             'Primary',
-            o.progress ? 'loader-circle' : 'upload',
+            o.progress ? 'loader-circle' : null,
           ),
         ],
       ),
@@ -138,13 +138,13 @@ export function mediaDialogs(ui, k) {
         'Track genres',
         [
           P('Muted', 'Choose up to 3 genres. Listeners find the track under them once it is live.'),
+          P('Caption', 'Chosen genres'),
+          chips(['Synthwave', 'Electronic']),
           W(
             'Field/Search',
             { name: 'Find a genre', width: 'fill_container' },
             { value: { content: 'Find a genre' } },
           ),
-          P('Caption', 'Chosen genres'),
-          chips(['Synthwave', 'Electronic']),
           chips(['Ambient', 'Downtempo', 'House', 'Techno'], 'Chip'),
         ],
         save('Save genres'),
@@ -159,7 +159,7 @@ export function mediaDialogs(ui, k) {
             'Remove Low Tide from the release? Its uploaded audio is deleted and its ISRC is freed. This cannot be undone.',
           ),
         ],
-        [Btn('Keep track', 'Ghost'), Btn('Remove', 'Danger', 'trash-2')],
+        [Btn('Keep track', 'Ghost'), Btn('Remove track', 'Danger')],
         440,
       ),
     deleteRelease: (m) =>

@@ -1,47 +1,52 @@
-// Music dialogs: the catalogue item dialog (CatalogueItemDialog) in its details and actions modes for a
-// release and a track, and the "Upload track" explainer (workspace notice: tracks are uploaded inside
-// a release). The edit, delete and propose dialogs it opens belong to the release pages.
+// Music dialogs: the catalogue item dialog (CatalogueItemDialog) — status, meta, the demo note, "Open
+// workspace" and (for a draft) "Edit draft", then in actions mode "View details", "Propose changes" /
+// "Change title" only when the item accepts changes, and "Delete release" for a draft — and the
+// "Upload track" explainer (workspace notice: tracks are uploaded inside a release).
 import { workspaceModal } from './workspace-modal.mjs'
 
 /** Dialog builders bound to the screen helpers `ui`. */
 export function musicDialogs(ui) {
   const { P, Col, Row, St, Btn } = ui
   const modal = workspaceModal(ui)
-  const wrapRow = (m, nodes) =>
+  const buttons = (m, nodes) =>
     (m ? Col : Row)({ name: 'Buttons', gap: 10, ...(m ? { width: 'fill_container' } : {}) }, nodes)
-  const head = (tone, status, meta, demo) => [
-    St(tone, status),
-    P('Muted', meta),
-    ...(demo
-      ? [
-          P(
-            'Caption',
-            'Illustrative demo record. This does not represent an actual publication or delivery.',
-          ),
-        ]
-      : []),
-  ]
-  const release = (m, actions) =>
-    modal(m, actions ? 'Actions for Night Signal' : 'Night Signal', [
-      ...head('Neutral', 'Draft', 'Mira Sol · Single · 1 track'),
-      wrapRow(m, [
-        Btn('Open workspace', 'Outline', 'arrow-up-right'),
-        Btn('Edit draft', 'Outline', 'pencil'),
-      ]),
-      ...(actions
-        ? [
-            wrapRow(m, [
-              Btn('View details', 'Ghost', 'info'),
-              Btn('Propose changes', 'Ghost', 'file-pen'),
-              Btn('Delete release', 'Danger', 'trash-2'),
-            ]),
-          ]
-        : []),
-    ])
+  /* `o.actions` actions mode, `o.released` a live release (accepts changes, not deletable) */
+  const release = (m, o = {}) =>
+    modal(
+      m,
+      o.actions
+        ? `Actions for ${o.released ? 'Afterglow' : 'Night Signal'}`
+        : o.released
+          ? 'Afterglow'
+          : 'Night Signal',
+      [
+        o.released ? St('Ready', 'Released') : St('Neutral', 'Draft'),
+        P('Muted', o.released ? 'Mira Sol · Album · 9 tracks' : 'Mira Sol · Single · 1 track'),
+        buttons(m, [
+          Btn('Open workspace', 'Outline'),
+          ...(o.released ? [] : [Btn('Edit draft', 'Primary')]),
+        ]),
+        ...(o.actions
+          ? [
+              buttons(m, [
+                Btn('View details', 'Outline'),
+                ...(o.released
+                  ? [Btn('Propose changes', 'Outline')]
+                  : [Btn('Delete release', 'Danger')]),
+              ]),
+            ]
+          : []),
+      ],
+    )
   const track = (m) =>
     modal(m, 'Actions for Afterglow', [
-      ...head('Ready', 'Published', 'Mira Sol · Remaster · 3:57', true),
-      wrapRow(m, [Btn('View details', 'Ghost', 'info'), Btn('Change title', 'Ghost', 'pencil')]),
+      St('Ready', 'Published'),
+      P('Muted', 'Mira Sol · Remaster · 3:57'),
+      P(
+        'Caption',
+        'Illustrative demo record. This does not represent an actual publication or delivery.',
+      ),
+      buttons(m, [Btn('View details', 'Outline'), Btn('Change title', 'Outline')]),
     ])
   const uploadTrack = (m) =>
     modal(

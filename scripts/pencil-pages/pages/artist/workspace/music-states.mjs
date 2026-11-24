@@ -4,7 +4,7 @@ import { coverFill } from './demo.mjs'
 
 /** State builders bound to the screen helpers `ui`. */
 export function musicStates(ui) {
-  const { W, Tx, P, Row, Col, inline, Btn } = ui
+  const { W, P, Row, Col, inline, Btn } = ui
   const message = (m, title, body, actions, icon = 'disc-3') => [
     W(
       'State/Empty',
@@ -17,10 +17,10 @@ export function musicStates(ui) {
       },
     ),
   ]
-  const loading = (tab) => [
+  /* PageSkeleton table: five skeleton rows, its label for screen readers only */
+  const loading = () => [
     Col({ name: 'Loading', gap: 0, width: 'fill_container', padding: 16 }, [
-      Tx('Muted', tab === 'tracks' ? 'Loading your tracks…' : 'Loading your releases…'),
-      ...[1, 2, 3, 4, 5, 6].map((i) =>
+      ...[1, 2, 3, 4, 5].map((i) =>
         W('Skeleton/Row', { name: `Skeleton ${i}`, width: 'fill_container' }),
       ),
     ]),
@@ -33,7 +33,7 @@ export function musicStates(ui) {
           ? 'Could not load your tracks. Please try again.'
           : 'Could not load your releases. Please try again.',
       ),
-      Btn('Try again', 'Outline', 'refresh-cw'),
+      Btn('Try again', 'Outline'),
     ]),
   ]
   const cover = { cover: coverFill('night-signal') }

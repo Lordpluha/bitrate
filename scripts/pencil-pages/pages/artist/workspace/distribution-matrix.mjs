@@ -1,62 +1,78 @@
-// The delivery matrix of the distribution page (views/DistributionView DeliveryMatrix): a release row
-// with a status cell per store (a plain release row on a phone) inside the table panel with its footer.
+// The delivery matrix of the distribution page (views/DistributionView DeliveryMatrix): the "Delivery
+// plan" panel with the store heads, a row per release (cover, title, status · territories · sent state)
+// with an icon per store (store name beside it on a phone), and the legend of the states shown.
 import { coverFill } from './demo.mjs'
 
 const STORES = ['Spotify', 'Apple Music', 'YouTube Music', 'Amazon Music', 'Deezer', 'TIDAL']
 
-/** Matrix builders bound to the screen helpers `ui`; `rows` are the demo rows of distribution.mjs. */
-export function distributionMatrix(ui, rows) {
-  const { W, Tx, Row, fill, inline } = ui
-  const row = (m, [title, cover, meta, cells]) =>
-    m
-      ? W(
-          'Row/Release',
-          { name: `Release / ${title}`, width: 'fill_container' },
-          {
-            cover: coverFill(cover),
-            title: { content: title },
-            meta: {
-              content: `${meta} · ${cells.filter((c) => c !== 'Not in plan').length} of 6 planned`,
-            },
-            trail: { enabled: false },
-          },
-        )
-      : W(
-          'Matrix/Row',
-          { name: `Release / ${title}`, width: 'fill_container' },
-          {
-            cover: coverFill(cover),
-            title: { content: title },
-            meta: { content: meta },
-            cells: inline(
-              'Cells',
-              cells.map((c, i) => W(`Cell/${c}`, { name: `${STORES[i]} / ${c}` })),
-            ),
-          },
-        )
-  const matrix = (m, body) =>
+/** Matrix builder bound to the screen helpers `ui`: `(m, rows) → panel`. */
+export function distributionMatrix(ui) {
+  const { W, Tx, Row, Col, fill, inline, St } = ui
+  const meta = ([tone, status], territories, sent) =>
+    inline('Meta', [St(tone, status), Tx('Caption', `${territories} · ${sent}`)])
+  const cell = (state, i, m) =>
     W(
-      'Panel',
-      { name: 'Delivery plan', width: 'fill_container', padding: 0 },
-      {
-        content: fill(
-          'Content',
-          body ?? [
-            ...(m ? [] : [W('Matrix/Header', { name: 'Header', width: 'fill_container' })]),
-            ...rows.map((r) => row(m, r)),
-            Row(
+      `Cell/${state}`,
+      { name: `${STORES[i]} / ${state}` },
+      m ? { label: { content: STORES[i] } } : { label: { enabled: false } },
+    )
+  const row =
+    (m) =>
+    ([title, cover, status, territories, sent, cells]) =>
+      m
+        ? Col({ name: `Release / ${title}`, gap: 8, width: 'fill_container', padding: [10, 12] }, [
+            W(
+              'Row/Release',
+              { name: 'Release', width: 'fill_container' },
               {
-                name: 'Footer',
-                width: 'fill_container',
-                padding: [12, 16],
-                justifyContent: 'space_between',
+                cover: coverFill(cover),
+                title: { content: title },
+                meta: { content: `${status[1]} · ${territories} · ${sent}` },
+                trail: { enabled: false },
               },
-              [Tx('Muted', '1–4 of 4'), W('Page/Item Active', { name: 'Page 1' })],
+            ),
+            ...[cells.slice(0, 3), cells.slice(3)].map((part, r) =>
+              Row(
+                { name: `Stores ${r + 1}`, gap: 6 },
+                part.map((s, i) => cell(s, i + r * 3, true)),
+              ),
+            ),
+          ])
+        : W(
+            'Matrix/Row',
+            { name: `Release / ${title}`, width: 'fill_container' },
+            {
+              cover: coverFill(cover),
+              title: { content: title },
+              meta: meta(status, territories, sent),
+              cells: inline(
+                'Cells',
+                cells.map((s, i) => cell(s, i, false)),
+              ),
+            },
+          )
+  return (m, rows) => {
+    const shown = [...new Set(rows.flatMap((r) => r[5]))].filter((s) => s !== 'Not in plan')
+    return W(
+      'Tile',
+      { name: 'Delivery plan', width: 'fill_container' },
+      {
+        icon: { icon: 'send' },
+        title: { content: 'Delivery plan' },
+        right: { enabled: false },
+        body: fill(
+          'Body',
+          [
+            ...(m ? [] : [W('Matrix/Header', { name: 'Header', width: 'fill_container' })]),
+            ...rows.map(row(m)),
+            Row(
+              { name: 'Legend', gap: 6 },
+              [...shown, 'Not in plan'].map((s) => W(`Cell/${s}`, { name: `Legend / ${s}` })),
             ),
           ],
           { gap: 0 },
         ),
       },
     )
-  return { row, matrix }
+  }
 }

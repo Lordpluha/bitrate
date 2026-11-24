@@ -7691,15 +7691,24 @@
                           ]
                         },
                         {
-                          "type": "frame",
+                          "type": "text",
                           "id": "Vkurhd",
+                          "name": "Six digits. You can paste th",
+                          "content": "Six digits. You can paste the entire code.",
+                          "fontSize": 11,
+                          "fill": "$--artist-text-secondary",
+                          "fontFamily": "$--font-sans"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "SW992U",
                           "name": "Error",
                           "gap": 6,
                           "alignItems": "center",
                           "children": [
                             {
                               "type": "icon",
-                              "id": "31mSfx",
+                              "id": "McbsIx",
                               "name": "Icon / circle-alert",
                               "library": "lucide",
                               "icon": "circle-alert",
@@ -7709,7 +7718,7 @@
                             },
                             {
                               "type": "text",
-                              "id": "8jO0RW",
+                              "id": "JTzj8J",
                               "name": "Error",
                               "content": "Error",
                               "fontSize": 11,
@@ -16665,8 +16674,17 @@
                               "fontFamily": "$--font-sans"
                             },
                             {
-                              "type": "frame",
+                              "type": "text",
                               "id": "Y3fyFq",
+                              "name": "/",
+                              "content": "/",
+                              "fontSize": 16,
+                              "fill": "$--artist-text-secondary",
+                              "fontFamily": "$--font-sans"
+                            },
+                            {
+                              "type": "frame",
+                              "id": "Vrljqn",
                               "name": "Badge",
                               "gap": 12,
                               "alignItems": "center",
@@ -16681,7 +16699,7 @@
                               "children": [
                                 {
                                   "type": "text",
-                                  "id": "uucrv2",
+                                  "id": "HbMis9",
                                   "name": "FOR ARTISTS",
                                   "content": "FOR ARTISTS",
                                   "fontSize": 9,
@@ -17468,8 +17486,8 @@
                       "type": "frame",
                       "id": "N2RXRO",
                       "name": "Landing/Window",
-                      "layout": "vertical",
                       "gap": 0,
+                      "alignItems": "start",
                       "width": 1120,
                       "cornerRadius": 18,
                       "clip": true,
@@ -17511,117 +17529,77 @@
                         {
                           "type": "frame",
                           "id": "Xp6zlT",
-                          "name": "Title Bar",
-                          "gap": 8,
-                          "alignItems": "center",
-                          "width": "fill_container",
-                          "height": 40,
-                          "padding": [
-                            0,
-                            16
-                          ],
+                          "name": "Sidebar",
+                          "layout": "vertical",
+                          "gap": 0,
+                          "width": 210,
+                          "padding": 16,
                           "stroke": "$--artist-release-border",
                           "strokeWidth": {
-                            "bottom": 1
+                            "right": 1
                           },
                           "children": [
                             {
                               "type": "frame",
                               "id": "ZXvkTI",
-                              "name": "Light",
-                              "width": 10,
-                              "height": 10,
-                              "cornerRadius": 5,
-                              "fill": {
-                                "type": "gradient",
-                                "gradientType": "linear",
-                                "opacity": 0.2,
-                                "colors": [
-                                  {
-                                    "color": "$--artist-foreground",
-                                    "position": 0
-                                  },
-                                  {
-                                    "color": "$--artist-foreground",
-                                    "position": 1
-                                  }
-                                ]
-                              },
-                              "children": []
-                            },
-                            {
-                              "type": "frame",
-                              "id": "2QCj8J",
-                              "name": "Light",
-                              "width": 10,
-                              "height": 10,
-                              "cornerRadius": 5,
-                              "fill": {
-                                "type": "gradient",
-                                "gradientType": "linear",
-                                "opacity": 0.2,
-                                "colors": [
-                                  {
-                                    "color": "$--artist-foreground",
-                                    "position": 0
-                                  },
-                                  {
-                                    "color": "$--artist-foreground",
-                                    "position": 1
-                                  }
-                                ]
-                              },
-                              "children": []
-                            },
-                            {
-                              "type": "frame",
-                              "id": "Ni7ET7",
-                              "name": "Light",
-                              "width": 10,
-                              "height": 10,
-                              "cornerRadius": 5,
-                              "fill": {
-                                "type": "gradient",
-                                "gradientType": "linear",
-                                "opacity": 0.2,
-                                "colors": [
-                                  {
-                                    "color": "$--artist-foreground",
-                                    "position": 0
-                                  },
-                                  {
-                                    "color": "$--artist-foreground",
-                                    "position": 1
-                                  }
-                                ]
-                              },
-                              "children": []
-                            },
-                            {
-                              "type": "text",
-                              "id": "GAzIaD",
-                              "name": "Release workspace",
-                              "content": "Release workspace",
-                              "fontSize": 11,
-                              "fill": "$--artist-text-secondary",
-                              "textAlign": "center",
+                              "name": "Slot",
+                              "layout": "vertical",
+                              "gap": 8,
                               "width": "fill_container",
-                              "textGrowth": "fixed-width",
-                              "lineHeight": 1.5,
-                              "fontFamily": "$--font-sans"
+                              "slot": [],
+                              "children": []
                             }
                           ]
                         },
                         {
                           "type": "frame",
                           "id": "aeZbi4",
-                          "name": "Slot",
+                          "name": "Main",
                           "layout": "vertical",
-                          "gap": 20,
+                          "gap": 0,
                           "width": "fill_container",
-                          "slot": [],
-                          "padding": 24,
-                          "children": []
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "6e1AzZ",
+                              "name": "Header",
+                              "gap": 12,
+                              "alignItems": "center",
+                              "width": "fill_container",
+                              "padding": [
+                                14,
+                                20
+                              ],
+                              "stroke": "$--artist-release-border",
+                              "strokeWidth": {
+                                "bottom": 1
+                              },
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "ca0bx9",
+                                  "name": "Slot",
+                                  "layout": "horizontal",
+                                  "gap": 10,
+                                  "width": "fill_container",
+                                  "slot": [],
+                                  "alignItems": "center",
+                                  "children": []
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "372pDo",
+                              "name": "Slot",
+                              "layout": "vertical",
+                              "gap": 16,
+                              "width": "fill_container",
+                              "slot": [],
+                              "padding": 20,
+                              "children": []
+                            }
+                          ]
                         }
                       ],
                       "reusable": true

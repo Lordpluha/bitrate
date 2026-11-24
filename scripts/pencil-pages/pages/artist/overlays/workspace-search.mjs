@@ -47,10 +47,10 @@ export function workspaceSearchPage(ui, frames) {
     )
   const all = group(
     'Sections',
-    SECTIONS.map(([icon, label], i) => result(icon, label, i === 0)),
+    SECTIONS.map(([, label]) => result('search', label)),
   )
   const night = [
-    group('Releases', [result('disc-3', 'Night Signal', true)]),
+    group('Releases', [result('disc-3', 'Night Signal')]),
     group('Tracks', [result('music-2', 'Night Signal')]),
   ]
   return pageSpec(
@@ -59,7 +59,7 @@ export function workspaceSearchPage(ui, frames) {
       title: 'Artist / Workspace search',
       route: 'overlay on every /dashboard page',
       context:
-        'Modal over the workspace. Results link to the section, the release workspace or the track in Music; the focused result is highlighted.',
+        'Modal over the workspace. Results link to the section, the release workspace or the track in Music; sections show the search icon, releases a disc and tracks a note, as in WorkspaceSearch.',
     },
     shell,
     (m) => [search(m, '', [all])],
@@ -68,7 +68,7 @@ export function workspaceSearchPage(ui, frames) {
       [
         'Section match',
         shell,
-        (m) => [search(m, 'mu', [group('Sections', [result('disc-3', 'Music', true)])])],
+        (m) => [search(m, 'mu', [group('Sections', [result('search', 'Music')])])],
       ],
       ['Searching', shell, (m) => [search(m, 'nigh', [], 'Searching…')]],
       ['Nothing found', shell, (m) => [search(m, 'lullaby', [], 'Nothing matches your search.')]],
