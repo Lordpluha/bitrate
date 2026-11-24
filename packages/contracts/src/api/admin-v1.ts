@@ -240,6 +240,74 @@ export interface paths {
     patch: operations['AdminModerationController_update_v1']
     trace?: never
   }
+  '/api/v1/admin/support/conversations': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** Lists handed-off conversations. */
+    get: operations['AdminSupportController_list_v1']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/admin/support/conversations/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** Opens one conversation with its history. */
+    get: operations['AdminSupportController_getById_v1']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/admin/support/conversations/{id}/messages': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /** Replies as an operator. */
+    post: operations['AdminSupportController_reply_v1']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/admin/support/conversations/{id}/resolve': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /** Resolves the ticket. */
+    post: operations['AdminSupportController_resolve_v1']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/api/v1/admin/artists': {
     parameters: {
       query?: never
@@ -1319,6 +1387,8 @@ export interface components {
         | 'playlists:restore'
         | 'releases:read'
         | 'releases:review'
+        | 'support:read'
+        | 'support:reply'
       )[]
       /** @description Whether two-factor authentication is enabled. */
       twoFactorEnabled: boolean
@@ -1506,6 +1576,88 @@ export interface components {
     UpdateReportDto: {
       /** @enum {string} */
       status: 'OPEN' | 'REVIEWING' | 'RESOLVED' | 'REJECTED'
+    }
+    SupportTicketEntity: {
+      /** @description The assistant's one-sentence summary of what the user needs. */
+      reason: string
+      /** @enum {string} */
+      status: 'open' | 'resolved'
+      /** Format: date-time */
+      createdAt: string
+      /** Format: date-time */
+      resolvedAt: string | null
+    }
+    SupportCitationEntity: {
+      chunkId: string
+      title: string
+      url?: string
+    }
+    SupportMessageEntity: {
+      id: string
+      /** @enum {string} */
+      role: 'user' | 'assistant' | 'operator'
+      text: string
+      /** @description Sources of an assistant answer; empty for other messages. */
+      citations: components['schemas']['SupportCitationEntity'][]
+      /** Format: date-time */
+      createdAt: string
+    }
+    SupportInboxItemEntity: {
+      id: string
+      /** @enum {string} */
+      audience: 'listener' | 'artist'
+      /** @enum {string} */
+      channel: 'web' | 'telegram' | 'whatsapp' | 'instagram'
+      /** @enum {string} */
+      locale: 'en' | 'uk' | 'pl'
+      /** @enum {string} */
+      state: 'bot' | 'waiting_operator' | 'operator' | 'resolved'
+      /**
+       * Format: uuid
+       * @description Set when a signed-in listener wrote; guests and messenger contacts have none.
+       */
+      userId: string | null
+      ticket: components['schemas']['SupportTicketEntity']
+      /** @description The newest message, for the list preview. */
+      lastMessage: components['schemas']['SupportMessageEntity'] | null
+      /** Format: date-time */
+      lastMessageAt: string
+      /** Format: date-time */
+      createdAt: string
+    }
+    PaginatedSupportInboxEntity: {
+      data: components['schemas']['SupportInboxItemEntity'][]
+      /** @description The total number of conversations matching the filters. */
+      total: number
+      page: number
+      limit: number
+    }
+    SupportInboxConversationEntity: {
+      id: string
+      /** @enum {string} */
+      audience: 'listener' | 'artist'
+      /** @enum {string} */
+      channel: 'web' | 'telegram' | 'whatsapp' | 'instagram'
+      /** @enum {string} */
+      locale: 'en' | 'uk' | 'pl'
+      /** @enum {string} */
+      state: 'bot' | 'waiting_operator' | 'operator' | 'resolved'
+      /**
+       * Format: uuid
+       * @description Set when a signed-in listener wrote; guests and messenger contacts have none.
+       */
+      userId: string | null
+      ticket: components['schemas']['SupportTicketEntity']
+      /** @description The newest message, for the list preview. */
+      lastMessage: components['schemas']['SupportMessageEntity'] | null
+      /** Format: date-time */
+      lastMessageAt: string
+      /** Format: date-time */
+      createdAt: string
+      messages: components['schemas']['SupportMessageEntity'][]
+    }
+    ReplySupportConversationDto: {
+      text: string
     }
     AdminArtistEntity: {
       /** @description The id value. */
@@ -2213,6 +2365,8 @@ export interface components {
         | 'playlists:restore'
         | 'releases:read'
         | 'releases:review'
+        | 'support:read'
+        | 'support:reply'
       )[]
       /** @description Active operators currently assigned this role. */
       holders: number
@@ -2272,6 +2426,8 @@ export interface components {
         | 'playlists:restore'
         | 'releases:read'
         | 'releases:review'
+        | 'support:read'
+        | 'support:reply'
       /**
        * @description Active, non-`ADMIN` operators currently holding this permission. Zero means only the
        *     built-in `ADMIN` role can exercise it today.
@@ -2322,6 +2478,8 @@ export interface components {
         | 'playlists:restore'
         | 'releases:read'
         | 'releases:review'
+        | 'support:read'
+        | 'support:reply'
       )[]
     }
     UpdateRoleDto: {
@@ -2365,6 +2523,8 @@ export interface components {
         | 'playlists:restore'
         | 'releases:read'
         | 'releases:review'
+        | 'support:read'
+        | 'support:reply'
       )[]
     }
     AdminStaffRoleEntity: {
@@ -2411,6 +2571,8 @@ export interface components {
         | 'playlists:restore'
         | 'releases:read'
         | 'releases:review'
+        | 'support:read'
+        | 'support:reply'
       )[]
     }
     AdminStaffEntity: {
@@ -2464,6 +2626,8 @@ export interface components {
         | 'playlists:restore'
         | 'releases:read'
         | 'releases:review'
+        | 'support:read'
+        | 'support:reply'
       )[]
       /** @description Whether two-factor authentication is enabled. */
       twoFactorEnabled: boolean
@@ -2545,6 +2709,8 @@ export interface components {
         | 'playlists:restore'
         | 'releases:read'
         | 'releases:review'
+        | 'support:read'
+        | 'support:reply'
       )[]
     }
     AssignStaffRoleDto: {
@@ -2588,6 +2754,8 @@ export interface components {
         | 'playlists:restore'
         | 'releases:read'
         | 'releases:review'
+        | 'support:read'
+        | 'support:reply'
       )[]
     }
     UpdateStaffPermissionsDto: {
@@ -2629,6 +2797,8 @@ export interface components {
         | 'playlists:restore'
         | 'releases:read'
         | 'releases:review'
+        | 'support:read'
+        | 'support:reply'
       )[]
     }
     AdminOverviewReportsEntity: {
@@ -5040,6 +5210,587 @@ export interface operations {
         content?: never
       }
       /** @description Report not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  AdminSupportController_list_v1: {
+    parameters: {
+      query?: {
+        page?: number
+        limit?: number
+        status?: 'open' | 'resolved'
+        channel?: 'web' | 'telegram' | 'whatsapp' | 'instagram'
+        audience?: 'listener' | 'artist'
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PaginatedSupportInboxEntity']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example Invalid or expired token
+             * @enum {string}
+             */
+            message?:
+              | 'Access token required'
+              | 'Refresh token required'
+              | 'Invalid token requirement'
+              | 'Invalid or expired token'
+              | 'Staff not found'
+              | 'Session not found'
+            /** @example Unauthorized */
+            error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
+          }
+        }
+      }
+      /** @description Requires the support:read permission */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  AdminSupportController_getById_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['SupportInboxConversationEntity']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example Invalid or expired token
+             * @enum {string}
+             */
+            message?:
+              | 'Access token required'
+              | 'Refresh token required'
+              | 'Invalid token requirement'
+              | 'Invalid or expired token'
+              | 'Staff not found'
+              | 'Session not found'
+            /** @example Unauthorized */
+            error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
+          }
+        }
+      }
+      /** @description Requires the support:read permission */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description No handed-off conversation */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  AdminSupportController_reply_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['ReplySupportConversationDto']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['SupportInboxConversationEntity']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example Invalid or expired token
+             * @enum {string}
+             */
+            message?:
+              | 'Access token required'
+              | 'Refresh token required'
+              | 'Invalid token requirement'
+              | 'Invalid or expired token'
+              | 'Staff not found'
+              | 'Session not found'
+            /** @example Unauthorized */
+            error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
+          }
+        }
+      }
+      /** @description Requires the support:reply permission */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description No handed-off conversation */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  AdminSupportController_resolve_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['SupportInboxConversationEntity']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example Invalid or expired token
+             * @enum {string}
+             */
+            message?:
+              | 'Access token required'
+              | 'Refresh token required'
+              | 'Invalid token requirement'
+              | 'Invalid or expired token'
+              | 'Staff not found'
+              | 'Session not found'
+            /** @example Unauthorized */
+            error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
+          }
+        }
+      }
+      /** @description Requires the support:reply permission */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description No handed-off conversation */
       404: {
         headers: {
           [name: string]: unknown
