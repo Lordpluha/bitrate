@@ -100,6 +100,23 @@ export function dashboardPage(ui, frames) {
         Btn('Try again', 'Outline'),
       ],
     ],
+    /* design ahead of code: useCustomizableLayout does not expose the load error yet */
+    [
+      'Layout not loaded',
+      (m) => [
+        head(m),
+        W(
+          'Alert/Error',
+          { name: 'Layout not loaded', width: 'fill_container' },
+          {
+            title: { content: 'Your layout could not be loaded, so the default one is shown.' },
+            body: { enabled: false },
+            action: ui.inline('Action', [Btn('Try again', 'Compact Outline')]),
+          },
+        ),
+        overview(m),
+      ],
+    ],
     [
       'First release',
       (m) => [

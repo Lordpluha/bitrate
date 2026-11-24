@@ -41,7 +41,8 @@ export function releaseDeliverPage(ui, frames) {
     )
   }
   const page = (m, status = 'approved', o = {}) => {
-    const approved = status === 'approved' || status === 'released'
+    /* design ahead of code: review is done from Ready on, incl. Scheduled and Publishing */
+    const approved = ['approved', 'scheduled', 'publishing', 'released'].includes(status)
     const stores = o.noStores ? [] : PLANNED
     const avail = o.sent ? (status === 'released' ? 'live' : 'pending') : 'notConnected'
     return k.stage(
@@ -171,7 +172,7 @@ export function releaseDeliverPage(ui, frames) {
       title: 'Artist / Release — Deliver',
       route: '/dashboard/music/$releaseId?step=deliver',
       context:
-        'Stores and territories for the release. No distribution partner is connected yet, so saving the plan sends nothing; "Bitrate review approved" is ticked for Ready and Released only, as the code does.',
+        'Stores and territories for the release. No distribution partner is connected yet, so saving the plan sends nothing; "Bitrate review approved" is ticked from Ready on: Scheduled, Publishing and Released too.',
     },
     k.shell,
     (m) => page(m),

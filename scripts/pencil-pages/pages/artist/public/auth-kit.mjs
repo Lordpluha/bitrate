@@ -49,6 +49,11 @@ export function authKit(ui) {
       P(tone === 'Error' ? 'Error' : 'Body', text),
       ...(link ? [Tx('Link Underline', link)] : []),
     ])
+  /* a right-aligned link under a field (login "Forgot password?") */
+  const endLink = (link) =>
+    Row({ name: `Link / ${link}`, width: 'fill_container', justifyContent: 'end' }, [
+      Tx('Link', link),
+    ])
   const footnote = (text, link) =>
     Row({ name: 'Footnote', width: 'fill_container', gap: 6, justifyContent: 'center' }, [
       ...(text ? [Tx('Muted', text)] : []),
@@ -69,6 +74,7 @@ export function authKit(ui) {
     )
   return {
     card,
+    endLink,
     input: field('Input'),
     password: field('Password'),
     code: field('Code'),

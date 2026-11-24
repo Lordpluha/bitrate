@@ -68,6 +68,21 @@ mode, the phone menu drawer) is drawn on that side and says why in its frame con
   and content overrides (text, cover images). The screen frame itself carries the canvas + aurora
   fill. Film grain, the landing's spotlight beams and grid, and motion are not drawn.
 
+## Design ahead of code
+
+The designs follow the `apps/web-artists` code, except where an audit found a bug: there the design
+shows the correct behaviour and the code is aligned to it later. Paths are under
+`apps/web-artists/src/`.
+
+| # | Design | Code to align |
+|---|---|---|
+| 1 | Login card: "Forgot password?" link between the password field and Continue (to `/forgot-password`); "Back to login" on forgot-password and reset-password | `features/login/ui/LoginForm.tsx`; `features/forgot-password/ui/ForgotPasswordForm.tsx`, `features/reset-password/ui/ResetPasswordForm.tsx` |
+| 2 | Reset password, empty confirmation: "Please confirm your password" | `ResetPasswordForm.tsx:15` shows the field label; add the message key to `shared/i18n/messages/en/auth.ts` |
+| 3 | Registration rules: the unmet ring is visible in every theme (secondary text colour) | `features/registration/ui/PasswordRequirements.tsx:14` |
+| 4 | Release deliver: "Bitrate review approved" is done for Ready, Scheduled, Publishing and Released | `widgets/ReleaseDelivery/ui/ReleaseDeliveryPanel.tsx:91`: `approved` covers only READY/RELEASED |
+| 5 | Dashboard "Layout not loaded": the `layout.error.load` alert above the tiles, with Try again | `features/workspace-layout/model/useCustomizableLayout.ts` does not expose the load error |
+| 6 | "Don't have an account? Sign up." / "Already have an account? Log in." stay on one line | `LoginForm.tsx:174`, `features/registration/ui/RegistrationEmailStep.tsx:54` break them with `<br/>` |
+
 ## Regenerating
 
 ```sh

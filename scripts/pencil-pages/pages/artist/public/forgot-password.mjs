@@ -11,7 +11,12 @@ export function forgotPasswordPage(ui, frames) {
       m,
       'Forgot password',
       null,
-      [a.input('Email', o.email ?? '', o.error), a.secondary('Send reset link')],
+      [
+        a.input('Email', o.email ?? '', o.error),
+        a.secondary('Send reset link'),
+        /* design ahead of code: ForgotPasswordForm has no way back yet */
+        a.footnote(null, 'Back to login'),
+      ],
       true,
     )
   const withToast = (tone, text, o) => (m) => [a.toast(tone, text, m), form(m, o)]

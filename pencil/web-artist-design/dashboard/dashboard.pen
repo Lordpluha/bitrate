@@ -8083,6 +8083,2508 @@
     },
     {
       "type": "frame",
+      "id": "kfIIgl",
+      "name": "Artist / Dashboard / Layout not loaded / Desktop",
+      "width": 1440,
+      "height": "fit_content",
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "KpVVF8",
+          "ref": "artist:EoFzgK",
+          "name": "Shell",
+          "width": 1440,
+          "descendants": {
+            "artist:wUJe6Y/artist:s6OYk6": {
+              "type": "ref",
+              "id": "bK4ZoL",
+              "ref": "artist:eNXmbM",
+              "name": "Nav / Dashboard",
+              "descendants": {
+                "artist:it6GEx": {
+                  "icon": "layout-dashboard"
+                },
+                "artist:9i1hx0": {
+                  "content": "Dashboard"
+                }
+              }
+            },
+            "artist:wUJe6Y/artist:9iS34v/artist:wU47I0": {
+              "icon": "moon"
+            },
+            "artist:wUJe6Y/artist:9iS34v/artist:n1Vqlv": {
+              "content": "Dark"
+            },
+            "artist:Ni7iI8/artist:qAqwpx": {
+              "content": "Dashboard"
+            },
+            "artist:Ni7iI8/artist:ZD0P3t/artist:vg489O": {
+              "content": "Create release"
+            },
+            "artist:Ni7iI8/artist:ZD0P3t/artist:wAdYtR": {
+              "icon": "plus"
+            },
+            "artist:QNgR6T": {
+              "type": "frame",
+              "id": "R7Hkki",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 20,
+              "width": "fill_container",
+              "padding": [
+                36,
+                48,
+                48,
+                48
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "9KanH1",
+                  "name": "Page Heading",
+                  "gap": 16,
+                  "alignItems": "end",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "lTKv4V",
+                      "name": "Text",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "J7dEFd",
+                          "ref": "artist:MgMQ2L",
+                          "name": "Dashboard",
+                          "content": "Dashboard"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "IUbrLO",
+                          "ref": "artist:C5Ih8u",
+                          "name": "Everything you need for your",
+                          "width": "fill_container",
+                          "textGrowth": "fixed-width",
+                          "content": "Everything you need for your next release."
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "ysjAK1",
+                      "name": "Actions",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "8YUyjK",
+                          "ref": "artist:b74brg",
+                          "name": "Button / Customize",
+                          "descendants": {
+                            "artist:wUlRtb": {
+                              "content": "Customize"
+                            },
+                            "artist:lPAI5m": {
+                              "icon": "layout-grid"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "28kIAz",
+                  "ref": "artist:kIFWE4",
+                  "name": "Layout not loaded",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:D92RPp": {
+                      "content": "Your layout could not be loaded, so the default one is shown."
+                    },
+                    "artist:yoC3wU": {
+                      "enabled": false
+                    },
+                    "artist:UzGmvl": {
+                      "type": "frame",
+                      "id": "mPtx0I",
+                      "name": "Action",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "K1THto",
+                          "ref": "artist:b74brg",
+                          "name": "Button / Try again",
+                          "descendants": {
+                            "artist:wUlRtb": {
+                              "content": "Try again"
+                            },
+                            "artist:lPAI5m": {
+                              "enabled": false
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "7OPnVM",
+                  "name": "Bento",
+                  "layout": "vertical",
+                  "gap": 20,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "fJpCNv",
+                      "name": "Bento Row 1",
+                      "gap": 20,
+                      "alignItems": "start",
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "phdHQr",
+                          "ref": "artist:RmrVkN",
+                          "name": "Tile / Current release",
+                          "width": 724,
+                          "height": 484,
+                          "descendants": {
+                            "artist:NUZ1XN": {
+                              "enabled": false
+                            },
+                            "artist:02kI8m": {
+                              "type": "frame",
+                              "id": "BywfZn",
+                              "name": "Body",
+                              "layout": "vertical",
+                              "gap": 16,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "tgk1ff",
+                                  "name": "Release",
+                                  "gap": 18,
+                                  "alignItems": "start",
+                                  "width": "fill_container",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "1HCIqY",
+                                      "ref": "artist:8iD2KG",
+                                      "name": "Cover",
+                                      "fill": {
+                                        "type": "image",
+                                        "url": "../../web-player-design/design-system/assets/albums/album-night-signal.webp",
+                                        "mode": "cover"
+                                      }
+                                    },
+                                    {
+                                      "type": "frame",
+                                      "id": "YDCmck",
+                                      "name": "Identity",
+                                      "layout": "vertical",
+                                      "gap": 6,
+                                      "width": "fill_container",
+                                      "children": [
+                                        {
+                                          "type": "frame",
+                                          "id": "AwNAes",
+                                          "name": "Title Row",
+                                          "gap": 8,
+                                          "alignItems": "center",
+                                          "width": "fill_container",
+                                          "children": [
+                                            {
+                                              "type": "ref",
+                                              "id": "UyEXbN",
+                                              "ref": "artist:MgMQ2L",
+                                              "name": "Night Signal",
+                                              "width": "fill_container",
+                                              "textGrowth": "fixed-width",
+                                              "content": "Night Signal"
+                                            },
+                                            {
+                                              "type": "ref",
+                                              "id": "XyHHZn",
+                                              "ref": "artist:LUaCU2",
+                                              "name": "Status / Draft",
+                                              "descendants": {
+                                                "artist:mtpREt": {
+                                                  "content": "Draft"
+                                                }
+                                              }
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "zAXvcI",
+                                          "ref": "artist:C5Ih8u",
+                                          "name": "Single · Planned Dec 12, 202",
+                                          "content": "Single · Planned Dec 12, 2026"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "wg52LE",
+                                          "ref": "artist:mrbasA",
+                                          "name": "Track Player",
+                                          "width": "fill_container"
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "Cha96c",
+                                  "name": "Next",
+                                  "gap": 18,
+                                  "alignItems": "start",
+                                  "width": "fill_container",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "y01r1t",
+                                      "ref": "artist:wG5oWl",
+                                      "name": "Stage Ring"
+                                    },
+                                    {
+                                      "type": "frame",
+                                      "id": "tBwEKr",
+                                      "name": "Step",
+                                      "layout": "vertical",
+                                      "gap": 8,
+                                      "width": "fill_container",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "PzcTz8",
+                                          "ref": "artist:RoXXJv",
+                                          "name": "Finish preparing the release",
+                                          "content": "Finish preparing the release"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "SXXb5Y",
+                                          "ref": "artist:C5Ih8u",
+                                          "name": "2 steps left before Bitrate ",
+                                          "width": "fill_container",
+                                          "textGrowth": "fixed-width",
+                                          "content": "2 steps left before Bitrate review."
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "RZM9Am",
+                                          "ref": "artist:64DlLz",
+                                          "name": "Countdown"
+                                        },
+                                        {
+                                          "type": "frame",
+                                          "id": "OVqFAZ",
+                                          "name": "Action",
+                                          "gap": 12,
+                                          "alignItems": "center",
+                                          "children": [
+                                            {
+                                              "type": "ref",
+                                              "id": "MHxg37",
+                                              "ref": "artist:WHXSr6",
+                                              "name": "Button / Continue release",
+                                              "descendants": {
+                                                "artist:vg489O": {
+                                                  "content": "Continue release"
+                                                },
+                                                "artist:wAdYtR": {
+                                                  "icon": "arrow-right"
+                                                }
+                                              }
+                                            },
+                                            {
+                                              "type": "ref",
+                                              "id": "JIg3g7",
+                                              "ref": "artist:PiqhAO",
+                                              "name": "Draft saved · Nothing is pub",
+                                              "content": "Draft saved · Nothing is published yet"
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "sat07s",
+                          "ref": "artist:RmrVkN",
+                          "name": "Tile / Needs attention",
+                          "width": 352,
+                          "height": 484,
+                          "descendants": {
+                            "artist:BxRdiD": {
+                              "icon": "circle-alert"
+                            },
+                            "artist:EZZdAr": {
+                              "content": "Needs attention"
+                            },
+                            "artist:lICt0a": {
+                              "type": "frame",
+                              "id": "yP4ZHW",
+                              "name": "Right",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "sb1Bv0",
+                                  "ref": "artist:Qjj2NE",
+                                  "name": "2",
+                                  "content": "2"
+                                }
+                              ]
+                            },
+                            "artist:02kI8m": {
+                              "type": "frame",
+                              "id": "6HB82H",
+                              "name": "Body",
+                              "layout": "vertical",
+                              "gap": 12,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "mLG3sR",
+                                  "ref": "artist:nLCBGb",
+                                  "name": "Artwork",
+                                  "width": "fill_container",
+                                  "height": 96,
+                                  "fill": {
+                                    "type": "image",
+                                    "url": "../../../apps/web-artists/public/artwork/dashboard/mastering-console.webp",
+                                    "mode": "cover"
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "ji0yoU",
+                                  "ref": "artist:MwMnhr",
+                                  "name": "Attention / blockers",
+                                  "width": "fill_container"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "entOPK",
+                                  "ref": "artist:MwMnhr",
+                                  "name": "Attention / changes",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:m0fcsc": {
+                                      "content": "Echoes in Motion needs changes after review"
+                                    },
+                                    "artist:jWz3aa": {
+                                      "content": "See review feedback"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "gxedf9",
+                      "name": "Bento Row 2",
+                      "gap": 20,
+                      "alignItems": "start",
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "Gr1Zuv",
+                          "ref": "artist:RmrVkN",
+                          "name": "Tile / Your catalogue",
+                          "width": 724,
+                          "height": 232,
+                          "descendants": {
+                            "artist:BxRdiD": {
+                              "icon": "hash"
+                            },
+                            "artist:EZZdAr": {
+                              "content": "Your catalogue"
+                            },
+                            "artist:lICt0a": {
+                              "enabled": false
+                            },
+                            "artist:02kI8m": {
+                              "type": "frame",
+                              "id": "ewhpQD",
+                              "name": "Body",
+                              "layout": "vertical",
+                              "gap": 12,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "AaElIj",
+                                  "name": "Numbers",
+                                  "gap": 20,
+                                  "alignItems": "start",
+                                  "width": "fill_container",
+                                  "children": [
+                                    {
+                                      "type": "frame",
+                                      "id": "yJ9oEJ",
+                                      "name": "Figures",
+                                      "layout": "vertical",
+                                      "gap": 12,
+                                      "width": "fill_container",
+                                      "children": [
+                                        {
+                                          "type": "frame",
+                                          "id": "G63LTB",
+                                          "name": "Counts",
+                                          "gap": 32,
+                                          "alignItems": "center",
+                                          "width": "fill_container",
+                                          "children": [
+                                            {
+                                              "type": "ref",
+                                              "id": "Aqqiug",
+                                              "ref": "artist:iAdtxu",
+                                              "name": "Stat / Releases",
+                                              "width": "fill_container",
+                                              "descendants": {
+                                                "artist:dZL7qM": {
+                                                  "content": "Releases"
+                                                },
+                                                "artist:oDPrX4": {
+                                                  "content": "4"
+                                                },
+                                                "artist:wWItkz": {
+                                                  "enabled": false
+                                                }
+                                              }
+                                            },
+                                            {
+                                              "type": "ref",
+                                              "id": "z9Rswc",
+                                              "ref": "artist:iAdtxu",
+                                              "name": "Stat / Tracks",
+                                              "width": "fill_container",
+                                              "descendants": {
+                                                "artist:dZL7qM": {
+                                                  "content": "Tracks"
+                                                },
+                                                "artist:oDPrX4": {
+                                                  "content": "6"
+                                                },
+                                                "artist:wWItkz": {
+                                                  "enabled": false
+                                                }
+                                              }
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "tbkO0m",
+                                          "ref": "artist:eqkmb1",
+                                          "name": "Share",
+                                          "width": "fill_container",
+                                          "descendants": {
+                                            "artist:l5crZz": {
+                                              "width": 90
+                                            },
+                                            "artist:Appsmk": {
+                                              "width": 90
+                                            },
+                                            "artist:xJJ1Uy": {
+                                              "width": 90
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "type": "frame",
+                                          "id": "MFQzak",
+                                          "name": "Legend",
+                                          "gap": 14,
+                                          "alignItems": "center",
+                                          "children": [
+                                            {
+                                              "type": "ref",
+                                              "id": "GPthiD",
+                                              "ref": "artist:PiqhAO",
+                                              "name": "Live 1",
+                                              "content": "Live 1"
+                                            },
+                                            {
+                                              "type": "ref",
+                                              "id": "JKqNsY",
+                                              "ref": "artist:PiqhAO",
+                                              "name": "In review 1",
+                                              "content": "In review 1"
+                                            },
+                                            {
+                                              "type": "ref",
+                                              "id": "0QWnht",
+                                              "ref": "artist:PiqhAO",
+                                              "name": "Drafts 1",
+                                              "content": "Drafts 1"
+                                            },
+                                            {
+                                              "type": "ref",
+                                              "id": "ZdPtN2",
+                                              "ref": "artist:PiqhAO",
+                                              "name": "Other 1",
+                                              "content": "Other 1"
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "frame",
+                                      "id": "vcjhfG",
+                                      "name": "Cover fan",
+                                      "gap": -18,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "H93BM6",
+                                          "ref": "artist:YZI6gz",
+                                          "name": "Fan / night-signal",
+                                          "fill": {
+                                            "type": "image",
+                                            "url": "../../web-player-design/design-system/assets/albums/album-night-signal.webp",
+                                            "mode": "cover"
+                                          }
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "KbVDcq",
+                                          "ref": "artist:YZI6gz",
+                                          "name": "Fan / echoes-in-motion",
+                                          "fill": {
+                                            "type": "image",
+                                            "url": "../../web-player-design/design-system/assets/albums/album-echoes-in-motion.webp",
+                                            "mode": "cover"
+                                          }
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "rYKhWR",
+                                          "ref": "artist:YZI6gz",
+                                          "name": "Fan / afterglow",
+                                          "fill": {
+                                            "type": "image",
+                                            "url": "../../web-player-design/design-system/assets/albums/album-afterglow.webp",
+                                            "mode": "cover"
+                                          }
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "Cfrmyk",
+                                          "ref": "artist:YZI6gz",
+                                          "name": "Fan / static-lines",
+                                          "fill": {
+                                            "type": "image",
+                                            "url": "../../web-player-design/design-system/assets/albums/album-static-lines.webp",
+                                            "mode": "cover"
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "LKw0w8",
+                          "ref": "artist:RmrVkN",
+                          "name": "Tile / Next premiere",
+                          "width": 352,
+                          "height": 232,
+                          "descendants": {
+                            "artist:BxRdiD": {
+                              "icon": "timer"
+                            },
+                            "artist:EZZdAr": {
+                              "content": "Next premiere"
+                            },
+                            "artist:lICt0a": {
+                              "enabled": false
+                            },
+                            "artist:02kI8m": {
+                              "type": "frame",
+                              "id": "BYY0e8",
+                              "name": "Body",
+                              "layout": "vertical",
+                              "gap": 12,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "pqYoU3",
+                                  "ref": "artist:nC6VAu",
+                                  "name": "Premiere / Static Lines",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:TeeiCg": {
+                                      "fill": {
+                                        "type": "image",
+                                        "url": "../../web-player-design/design-system/assets/albums/album-static-lines.webp",
+                                        "mode": "cover"
+                                      }
+                                    },
+                                    "artist:M4wRua": {
+                                      "content": "Static Lines"
+                                    },
+                                    "artist:JNMZAk": {
+                                      "content": "Sat, Dec 12, 18:00 UTC"
+                                    },
+                                    "artist:9B16Nf": {
+                                      "type": "frame",
+                                      "id": "UBdjDp",
+                                      "name": "Trail",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "yfMvIr",
+                                          "ref": "artist:fSHiZY",
+                                          "name": "Status / Scheduled",
+                                          "descendants": {
+                                            "artist:wuogNV": {
+                                              "content": "Scheduled"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "sAktUI",
+                                  "ref": "artist:64DlLz",
+                                  "name": "Countdown"
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "ZAPc5a",
+                      "name": "Bento Row 3",
+                      "gap": 20,
+                      "alignItems": "start",
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "lx9uG3",
+                          "ref": "artist:RmrVkN",
+                          "name": "Tile / Your releases",
+                          "width": 724,
+                          "height": 484,
+                          "descendants": {
+                            "artist:BxRdiD": {
+                              "icon": "library"
+                            },
+                            "artist:EZZdAr": {
+                              "content": "Your releases"
+                            },
+                            "artist:lICt0a": {
+                              "type": "frame",
+                              "id": "3Y681t",
+                              "name": "Right",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "Hug7jf",
+                                  "ref": "artist:LSzB6i",
+                                  "name": "View music",
+                                  "content": "View music"
+                                }
+                              ]
+                            },
+                            "artist:02kI8m": {
+                              "type": "frame",
+                              "id": "N9za3u",
+                              "name": "Body",
+                              "layout": "vertical",
+                              "gap": 12,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "7ihWUA",
+                                  "ref": "artist:nC6VAu",
+                                  "name": "Release / Night Signal",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:TeeiCg": {
+                                      "fill": {
+                                        "type": "image",
+                                        "url": "../../web-player-design/design-system/assets/albums/album-night-signal.webp",
+                                        "mode": "cover"
+                                      }
+                                    },
+                                    "artist:M4wRua": {
+                                      "content": "Night Signal"
+                                    },
+                                    "artist:JNMZAk": {
+                                      "content": "Single · 1 track"
+                                    },
+                                    "artist:9B16Nf": {
+                                      "type": "frame",
+                                      "id": "MAEfAl",
+                                      "name": "Trail",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "i1XdEk",
+                                          "ref": "artist:LUaCU2",
+                                          "name": "Status / Draft",
+                                          "descendants": {
+                                            "artist:mtpREt": {
+                                              "content": "Draft"
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "lSAY4B",
+                                          "ref": "artist:PiqhAO",
+                                          "name": "Today",
+                                          "content": "Today"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "83ipuO",
+                                  "ref": "artist:nC6VAu",
+                                  "name": "Release / Echoes in Motion",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:TeeiCg": {
+                                      "fill": {
+                                        "type": "image",
+                                        "url": "../../web-player-design/design-system/assets/albums/album-echoes-in-motion.webp",
+                                        "mode": "cover"
+                                      }
+                                    },
+                                    "artist:M4wRua": {
+                                      "content": "Echoes in Motion"
+                                    },
+                                    "artist:JNMZAk": {
+                                      "content": "EP · 5 tracks"
+                                    },
+                                    "artist:9B16Nf": {
+                                      "type": "frame",
+                                      "id": "1FaGEP",
+                                      "name": "Trail",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "NNpktM",
+                                          "ref": "artist:DASsL1",
+                                          "name": "Status / Submitted",
+                                          "descendants": {
+                                            "artist:skfP8C": {
+                                              "content": "Submitted"
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "Q6I5fl",
+                                          "ref": "artist:PiqhAO",
+                                          "name": "Yesterday",
+                                          "content": "Yesterday"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "RLxIXI",
+                                  "ref": "artist:nC6VAu",
+                                  "name": "Release / Afterglow",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:TeeiCg": {
+                                      "fill": {
+                                        "type": "image",
+                                        "url": "../../web-player-design/design-system/assets/albums/album-afterglow.webp",
+                                        "mode": "cover"
+                                      }
+                                    },
+                                    "artist:M4wRua": {
+                                      "content": "Afterglow"
+                                    },
+                                    "artist:JNMZAk": {
+                                      "content": "Album · 9 tracks"
+                                    },
+                                    "artist:9B16Nf": {
+                                      "type": "frame",
+                                      "id": "oMjXO6",
+                                      "name": "Trail",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "eL61gY",
+                                          "ref": "artist:fSHiZY",
+                                          "name": "Status / Released",
+                                          "descendants": {
+                                            "artist:wuogNV": {
+                                              "content": "Released"
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "bj3irh",
+                                          "ref": "artist:PiqhAO",
+                                          "name": "Oct 3, 2026",
+                                          "content": "Oct 3, 2026"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "iYV1V0",
+                          "ref": "artist:RmrVkN",
+                          "name": "Tile / Coming up",
+                          "width": 352,
+                          "height": 484,
+                          "descendants": {
+                            "artist:BxRdiD": {
+                              "icon": "calendar-clock"
+                            },
+                            "artist:EZZdAr": {
+                              "content": "Coming up"
+                            },
+                            "artist:lICt0a": {
+                              "type": "frame",
+                              "id": "0mYiRd",
+                              "name": "Right",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "W5Fpt9",
+                                  "ref": "artist:PiqhAO",
+                                  "name": "UTC",
+                                  "content": "UTC"
+                                }
+                              ]
+                            },
+                            "artist:02kI8m": {
+                              "type": "frame",
+                              "id": "K6prK5",
+                              "name": "Body",
+                              "layout": "vertical",
+                              "gap": 12,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "64iuKo",
+                                  "ref": "artist:ncN5eE",
+                                  "name": "Coming up / Static Lines",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:tqFyGN": {
+                                      "content": "DEC 12"
+                                    },
+                                    "artist:qu1l8X": {
+                                      "content": "18:00"
+                                    },
+                                    "artist:gKp1Ue": {
+                                      "fill": {
+                                        "type": "image",
+                                        "url": "../../web-player-design/design-system/assets/albums/album-static-lines.webp",
+                                        "mode": "cover"
+                                      }
+                                    },
+                                    "artist:5j4JgE": {
+                                      "content": "Static Lines"
+                                    },
+                                    "artist:8JVpYR": {
+                                      "type": "frame",
+                                      "id": "iQIGqf",
+                                      "name": "Status",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "ecGcGh",
+                                          "ref": "artist:fSHiZY",
+                                          "name": "Status / Scheduled",
+                                          "descendants": {
+                                            "artist:wuogNV": {
+                                              "content": "Scheduled"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "bmGpti",
+                                  "ref": "artist:ncN5eE",
+                                  "name": "Coming up / Echoes in Motion",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:tqFyGN": {
+                                      "content": "DEC 19"
+                                    },
+                                    "artist:qu1l8X": {
+                                      "content": "00:00"
+                                    },
+                                    "artist:gKp1Ue": {
+                                      "fill": {
+                                        "type": "image",
+                                        "url": "../../web-player-design/design-system/assets/albums/album-echoes-in-motion.webp",
+                                        "mode": "cover"
+                                      }
+                                    },
+                                    "artist:5j4JgE": {
+                                      "content": "Echoes in Motion"
+                                    },
+                                    "artist:8JVpYR": {
+                                      "type": "frame",
+                                      "id": "52y6FE",
+                                      "name": "Status",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "FSlqas",
+                                          "ref": "artist:DASsL1",
+                                          "name": "Status / Submitted",
+                                          "descendants": {
+                                            "artist:skfP8C": {
+                                              "content": "Submitted"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "uuKpFJ",
+                                  "ref": "artist:LzCwGy",
+                                  "name": "Plan the next release",
+                                  "width": "fill_container"
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "cUiA0w",
+                      "name": "Bento Row 4",
+                      "gap": 20,
+                      "alignItems": "start",
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "iROuX1",
+                          "ref": "artist:RmrVkN",
+                          "name": "Tile / Recent activity",
+                          "width": 724,
+                          "height": 316,
+                          "descendants": {
+                            "artist:BxRdiD": {
+                              "icon": "activity"
+                            },
+                            "artist:EZZdAr": {
+                              "content": "Recent activity"
+                            },
+                            "artist:lICt0a": {
+                              "enabled": false
+                            },
+                            "artist:02kI8m": {
+                              "type": "frame",
+                              "id": "CZGnX0",
+                              "name": "Body",
+                              "layout": "vertical",
+                              "gap": 12,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "2rBjyL",
+                                  "ref": "artist:R5FCxw",
+                                  "name": "Activity / 2 h ago",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:47DbTv": {
+                                      "content": "The reviewer requested changes · Echoes in Motion"
+                                    },
+                                    "artist:l17mv5": {
+                                      "content": "2 h ago"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "Z9ubZL",
+                                  "ref": "artist:R5FCxw",
+                                  "name": "Activity / Yesterday",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:47DbTv": {
+                                      "content": "Approved by Bitrate review · Static Lines"
+                                    },
+                                    "artist:l17mv5": {
+                                      "content": "Yesterday"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "EJX3f8",
+                                  "ref": "artist:R5FCxw",
+                                  "name": "Activity / Oct 3",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:47DbTv": {
+                                      "content": "Live on Bitrate · Afterglow"
+                                    },
+                                    "artist:l17mv5": {
+                                      "content": "Oct 3"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "fNQwGQ",
+                          "ref": "artist:RmrVkN",
+                          "name": "Tile / Listening data",
+                          "width": 352,
+                          "height": 316,
+                          "descendants": {
+                            "artist:BxRdiD": {
+                              "icon": "audio-lines"
+                            },
+                            "artist:EZZdAr": {
+                              "content": "Listening data"
+                            },
+                            "artist:lICt0a": {
+                              "enabled": false
+                            },
+                            "artist:02kI8m": {
+                              "type": "frame",
+                              "id": "v6pLS2",
+                              "name": "Body",
+                              "layout": "vertical",
+                              "gap": 12,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "NsNdRi",
+                                  "ref": "artist:nLCBGb",
+                                  "name": "Artwork",
+                                  "width": "fill_container",
+                                  "height": 96,
+                                  "fill": {
+                                    "type": "image",
+                                    "url": "../../../apps/web-artists/public/artwork/dashboard/listening-spectrum.webp",
+                                    "mode": "cover"
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "I5VjEd",
+                                  "ref": "artist:C5Ih8u",
+                                  "name": "Last 28 days",
+                                  "content": "Last 28 days"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "LUa46Z",
+                                  "ref": "artist:PiqhAO",
+                                  "name": "Plays and listeners on Bitra",
+                                  "width": "fill_container",
+                                  "textGrowth": "fixed-width",
+                                  "content": "Plays and listeners on Bitrate; external services are shown as not connected rather than zero."
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "OBGp7C",
+                                  "ref": "artist:LSzB6i",
+                                  "name": "Open analytics",
+                                  "content": "Open analytics"
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 10150,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Dark"
+      },
+      "context": "/dashboard — Home of the workspace. Tiles sit on the 12-column grid (64px rows) in the default order of widgets/DashboardOverview/config/tiles.ts and stack on phones."
+    },
+    {
+      "type": "frame",
+      "id": "MR4Ffk",
+      "name": "Artist / Dashboard / Layout not loaded / Mobile",
+      "width": 390,
+      "height": "fit_content",
+      "layout": "vertical",
+      "clip": true,
+      "fill": [
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "rotation": 135,
+          "colors": [
+            {
+              "color": "$artist:--artist-canvas-start",
+              "position": 0
+            },
+            {
+              "color": "$artist:--artist-canvas-middle",
+              "position": 0.62
+            },
+            {
+              "color": "$artist:--artist-canvas-end",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.86,
+            "y": 0.04
+          },
+          "size": {
+            "width": 1.1,
+            "height": 1.3
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-1",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.12,
+            "y": 0.98
+          },
+          "size": {
+            "width": 1,
+            "height": 1.2
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-2",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.42
+          },
+          "size": {
+            "width": 0.62,
+            "height": 0.7
+          },
+          "colors": [
+            {
+              "color": "$artist:--artist-aurora-3",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "CXgG9q",
+          "ref": "artist:8H12ea",
+          "name": "Shell",
+          "width": 390,
+          "descendants": {
+            "artist:SIErRw": {
+              "type": "frame",
+              "id": "51LjC7",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 16,
+              "width": "fill_container",
+              "padding": [
+                12,
+                16,
+                40,
+                16
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "9ToDcj",
+                  "name": "Page Heading",
+                  "gap": 16,
+                  "alignItems": "end",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "1wqhhJ",
+                      "name": "Text",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "rLGoO2",
+                          "ref": "artist:MgMQ2L",
+                          "name": "Dashboard",
+                          "content": "Dashboard"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "kh2Az4",
+                          "ref": "artist:C5Ih8u",
+                          "name": "Everything you need for your",
+                          "width": "fill_container",
+                          "textGrowth": "fixed-width",
+                          "content": "Everything you need for your next release."
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "48Ff42",
+                  "ref": "artist:kIFWE4",
+                  "name": "Layout not loaded",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:D92RPp": {
+                      "content": "Your layout could not be loaded, so the default one is shown."
+                    },
+                    "artist:yoC3wU": {
+                      "enabled": false
+                    },
+                    "artist:UzGmvl": {
+                      "type": "frame",
+                      "id": "4FEFLs",
+                      "name": "Action",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "ukUbz9",
+                          "ref": "artist:b74brg",
+                          "name": "Button / Try again",
+                          "descendants": {
+                            "artist:wUlRtb": {
+                              "content": "Try again"
+                            },
+                            "artist:lPAI5m": {
+                              "enabled": false
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "7RTsEG",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / Current release",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:NUZ1XN": {
+                      "enabled": false
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "HOW7fl",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 16,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "lg5Nir",
+                          "name": "Release",
+                          "gap": 18,
+                          "alignItems": "start",
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "pok27z",
+                              "ref": "artist:YZI6gz",
+                              "name": "Cover",
+                              "fill": {
+                                "type": "image",
+                                "url": "../../web-player-design/design-system/assets/albums/album-night-signal.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            {
+                              "type": "frame",
+                              "id": "k9UWcl",
+                              "name": "Identity",
+                              "layout": "vertical",
+                              "gap": 6,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "whbTm5",
+                                  "name": "Title Row",
+                                  "gap": 8,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "G6J6vl",
+                                      "ref": "artist:MgMQ2L",
+                                      "name": "Night Signal",
+                                      "width": "fill_container",
+                                      "textGrowth": "fixed-width",
+                                      "content": "Night Signal"
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "LziC7M",
+                                      "ref": "artist:LUaCU2",
+                                      "name": "Status / Draft",
+                                      "descendants": {
+                                        "artist:mtpREt": {
+                                          "content": "Draft"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "toN7BT",
+                                  "ref": "artist:C5Ih8u",
+                                  "name": "Single · Planned Dec 12, 202",
+                                  "content": "Single · Planned Dec 12, 2026"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "s0FQvd",
+                                  "ref": "artist:mrbasA",
+                                  "name": "Track Player",
+                                  "width": "fill_container"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "wtZVxV",
+                          "name": "Next",
+                          "gap": 18,
+                          "alignItems": "start",
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "Eh9nwH",
+                              "ref": "artist:wG5oWl",
+                              "name": "Stage Ring"
+                            },
+                            {
+                              "type": "frame",
+                              "id": "BJNWIk",
+                              "name": "Step",
+                              "layout": "vertical",
+                              "gap": 8,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "BacPqT",
+                                  "ref": "artist:RoXXJv",
+                                  "name": "Finish preparing the release",
+                                  "content": "Finish preparing the release"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "EZyFuR",
+                                  "ref": "artist:C5Ih8u",
+                                  "name": "2 steps left before Bitrate ",
+                                  "width": "fill_container",
+                                  "textGrowth": "fixed-width",
+                                  "content": "2 steps left before Bitrate review."
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "DwnukR",
+                                  "ref": "artist:64DlLz",
+                                  "name": "Countdown"
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "yGuwYg",
+                                  "name": "Action",
+                                  "layout": "vertical",
+                                  "gap": 12,
+                                  "width": "fill_container",
+                                  "alignItems": "start",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "maeh0f",
+                                      "ref": "artist:WHXSr6",
+                                      "name": "Button / Continue release",
+                                      "descendants": {
+                                        "artist:vg489O": {
+                                          "content": "Continue release"
+                                        },
+                                        "artist:wAdYtR": {
+                                          "icon": "arrow-right"
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "jEo5Qi",
+                                      "ref": "artist:PiqhAO",
+                                      "name": "Draft saved · Nothing is pub",
+                                      "content": "Draft saved · Nothing is published yet"
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "eKCVHN",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / Needs attention",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "icon": "circle-alert"
+                    },
+                    "artist:EZZdAr": {
+                      "content": "Needs attention"
+                    },
+                    "artist:lICt0a": {
+                      "type": "frame",
+                      "id": "s4Z864",
+                      "name": "Right",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "8Q9rvs",
+                          "ref": "artist:Qjj2NE",
+                          "name": "2",
+                          "content": "2"
+                        }
+                      ]
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "i4PEAw",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "mm1qa8",
+                          "ref": "artist:nLCBGb",
+                          "name": "Artwork",
+                          "width": "fill_container",
+                          "height": 96,
+                          "fill": {
+                            "type": "image",
+                            "url": "../../../apps/web-artists/public/artwork/dashboard/mastering-console.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "jX5A7e",
+                          "ref": "artist:MwMnhr",
+                          "name": "Attention / blockers",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "gTdZA2",
+                          "ref": "artist:MwMnhr",
+                          "name": "Attention / changes",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:m0fcsc": {
+                              "content": "Echoes in Motion needs changes after review"
+                            },
+                            "artist:jWz3aa": {
+                              "content": "See review feedback"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "PgoWyg",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / Your catalogue",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "icon": "hash"
+                    },
+                    "artist:EZZdAr": {
+                      "content": "Your catalogue"
+                    },
+                    "artist:lICt0a": {
+                      "enabled": false
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "fVRzI5",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "ZqHQKf",
+                          "name": "Numbers",
+                          "gap": 20,
+                          "alignItems": "start",
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "DvCpEw",
+                              "name": "Figures",
+                              "layout": "vertical",
+                              "gap": 12,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "hZ86ad",
+                                  "name": "Counts",
+                                  "gap": 32,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "1si8Dg",
+                                      "ref": "artist:iAdtxu",
+                                      "name": "Stat / Releases",
+                                      "width": "fill_container",
+                                      "descendants": {
+                                        "artist:dZL7qM": {
+                                          "content": "Releases"
+                                        },
+                                        "artist:oDPrX4": {
+                                          "content": "4"
+                                        },
+                                        "artist:wWItkz": {
+                                          "enabled": false
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "6o563G",
+                                      "ref": "artist:iAdtxu",
+                                      "name": "Stat / Tracks",
+                                      "width": "fill_container",
+                                      "descendants": {
+                                        "artist:dZL7qM": {
+                                          "content": "Tracks"
+                                        },
+                                        "artist:oDPrX4": {
+                                          "content": "6"
+                                        },
+                                        "artist:wWItkz": {
+                                          "enabled": false
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "k7wP9f",
+                                  "ref": "artist:eqkmb1",
+                                  "name": "Share",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "artist:l5crZz": {
+                                      "width": 90
+                                    },
+                                    "artist:Appsmk": {
+                                      "width": 90
+                                    },
+                                    "artist:xJJ1Uy": {
+                                      "width": 90
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "jsw4E4",
+                                  "name": "Legend",
+                                  "gap": 14,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "R0qYPG",
+                                      "ref": "artist:PiqhAO",
+                                      "name": "Live 1",
+                                      "content": "Live 1"
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "4ssPn8",
+                                      "ref": "artist:PiqhAO",
+                                      "name": "In review 1",
+                                      "content": "In review 1"
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "7Pxln3",
+                                      "ref": "artist:PiqhAO",
+                                      "name": "Drafts 1",
+                                      "content": "Drafts 1"
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "aTjJfo",
+                                      "ref": "artist:PiqhAO",
+                                      "name": "Other 1",
+                                      "content": "Other 1"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "EgLCSD",
+                              "name": "Cover fan",
+                              "gap": -18,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "2d7b0p",
+                                  "ref": "artist:YZI6gz",
+                                  "name": "Fan / night-signal",
+                                  "fill": {
+                                    "type": "image",
+                                    "url": "../../web-player-design/design-system/assets/albums/album-night-signal.webp",
+                                    "mode": "cover"
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "7evy4B",
+                                  "ref": "artist:YZI6gz",
+                                  "name": "Fan / echoes-in-motion",
+                                  "fill": {
+                                    "type": "image",
+                                    "url": "../../web-player-design/design-system/assets/albums/album-echoes-in-motion.webp",
+                                    "mode": "cover"
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "q3jgV9",
+                                  "ref": "artist:YZI6gz",
+                                  "name": "Fan / afterglow",
+                                  "fill": {
+                                    "type": "image",
+                                    "url": "../../web-player-design/design-system/assets/albums/album-afterglow.webp",
+                                    "mode": "cover"
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "nF8dLJ",
+                                  "ref": "artist:YZI6gz",
+                                  "name": "Fan / static-lines",
+                                  "fill": {
+                                    "type": "image",
+                                    "url": "../../web-player-design/design-system/assets/albums/album-static-lines.webp",
+                                    "mode": "cover"
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "KzOHI9",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / Next premiere",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "icon": "timer"
+                    },
+                    "artist:EZZdAr": {
+                      "content": "Next premiere"
+                    },
+                    "artist:lICt0a": {
+                      "enabled": false
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "yxvrSi",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "gTVuys",
+                          "ref": "artist:nC6VAu",
+                          "name": "Premiere / Static Lines",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:TeeiCg": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../../web-player-design/design-system/assets/albums/album-static-lines.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "artist:M4wRua": {
+                              "content": "Static Lines"
+                            },
+                            "artist:JNMZAk": {
+                              "content": "Sat, Dec 12, 18:00 UTC"
+                            },
+                            "artist:9B16Nf": {
+                              "type": "frame",
+                              "id": "HjKH6g",
+                              "name": "Trail",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "dVCCs9",
+                                  "ref": "artist:fSHiZY",
+                                  "name": "Status / Scheduled",
+                                  "descendants": {
+                                    "artist:wuogNV": {
+                                      "content": "Scheduled"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "jxr8Ek",
+                          "ref": "artist:64DlLz",
+                          "name": "Countdown"
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "5bpHBe",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / Your releases",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "icon": "library"
+                    },
+                    "artist:EZZdAr": {
+                      "content": "Your releases"
+                    },
+                    "artist:lICt0a": {
+                      "type": "frame",
+                      "id": "zsXLBG",
+                      "name": "Right",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "rYGopM",
+                          "ref": "artist:LSzB6i",
+                          "name": "View music",
+                          "content": "View music"
+                        }
+                      ]
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "ZTF8vH",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "FWKWhE",
+                          "ref": "artist:nC6VAu",
+                          "name": "Release / Night Signal",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:TeeiCg": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../../web-player-design/design-system/assets/albums/album-night-signal.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "artist:M4wRua": {
+                              "content": "Night Signal"
+                            },
+                            "artist:JNMZAk": {
+                              "content": "Single · 1 track"
+                            },
+                            "artist:9B16Nf": {
+                              "type": "frame",
+                              "id": "sEfY3i",
+                              "name": "Trail",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "uDUokZ",
+                                  "ref": "artist:LUaCU2",
+                                  "name": "Status / Draft",
+                                  "descendants": {
+                                    "artist:mtpREt": {
+                                      "content": "Draft"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "pYEt9H",
+                                  "ref": "artist:PiqhAO",
+                                  "name": "Today",
+                                  "content": "Today"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "ARDB6W",
+                          "ref": "artist:nC6VAu",
+                          "name": "Release / Echoes in Motion",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:TeeiCg": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../../web-player-design/design-system/assets/albums/album-echoes-in-motion.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "artist:M4wRua": {
+                              "content": "Echoes in Motion"
+                            },
+                            "artist:JNMZAk": {
+                              "content": "EP · 5 tracks"
+                            },
+                            "artist:9B16Nf": {
+                              "type": "frame",
+                              "id": "jUbiGu",
+                              "name": "Trail",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "PulVFD",
+                                  "ref": "artist:DASsL1",
+                                  "name": "Status / Submitted",
+                                  "descendants": {
+                                    "artist:skfP8C": {
+                                      "content": "Submitted"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "07mPEw",
+                                  "ref": "artist:PiqhAO",
+                                  "name": "Yesterday",
+                                  "content": "Yesterday"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "V3Ilx5",
+                          "ref": "artist:nC6VAu",
+                          "name": "Release / Afterglow",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:TeeiCg": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../../web-player-design/design-system/assets/albums/album-afterglow.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "artist:M4wRua": {
+                              "content": "Afterglow"
+                            },
+                            "artist:JNMZAk": {
+                              "content": "Album · 9 tracks"
+                            },
+                            "artist:9B16Nf": {
+                              "type": "frame",
+                              "id": "42BTcG",
+                              "name": "Trail",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "OWtAhC",
+                                  "ref": "artist:fSHiZY",
+                                  "name": "Status / Released",
+                                  "descendants": {
+                                    "artist:wuogNV": {
+                                      "content": "Released"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "Tff3yE",
+                                  "ref": "artist:PiqhAO",
+                                  "name": "Oct 3, 2026",
+                                  "content": "Oct 3, 2026"
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "8c5EJt",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / Coming up",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "icon": "calendar-clock"
+                    },
+                    "artist:EZZdAr": {
+                      "content": "Coming up"
+                    },
+                    "artist:lICt0a": {
+                      "type": "frame",
+                      "id": "K45rbR",
+                      "name": "Right",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "6VFiKI",
+                          "ref": "artist:PiqhAO",
+                          "name": "UTC",
+                          "content": "UTC"
+                        }
+                      ]
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "O3H1eg",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "QtOUg1",
+                          "ref": "artist:ncN5eE",
+                          "name": "Coming up / Static Lines",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:tqFyGN": {
+                              "content": "DEC 12"
+                            },
+                            "artist:qu1l8X": {
+                              "content": "18:00"
+                            },
+                            "artist:gKp1Ue": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../../web-player-design/design-system/assets/albums/album-static-lines.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "artist:5j4JgE": {
+                              "content": "Static Lines"
+                            },
+                            "artist:8JVpYR": {
+                              "type": "frame",
+                              "id": "OQ6ZDN",
+                              "name": "Status",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "WZM8ce",
+                                  "ref": "artist:fSHiZY",
+                                  "name": "Status / Scheduled",
+                                  "descendants": {
+                                    "artist:wuogNV": {
+                                      "content": "Scheduled"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "LPb2qe",
+                          "ref": "artist:ncN5eE",
+                          "name": "Coming up / Echoes in Motion",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:tqFyGN": {
+                              "content": "DEC 19"
+                            },
+                            "artist:qu1l8X": {
+                              "content": "00:00"
+                            },
+                            "artist:gKp1Ue": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../../web-player-design/design-system/assets/albums/album-echoes-in-motion.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "artist:5j4JgE": {
+                              "content": "Echoes in Motion"
+                            },
+                            "artist:8JVpYR": {
+                              "type": "frame",
+                              "id": "PQ0cgd",
+                              "name": "Status",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "No5XOA",
+                                  "ref": "artist:DASsL1",
+                                  "name": "Status / Submitted",
+                                  "descendants": {
+                                    "artist:skfP8C": {
+                                      "content": "Submitted"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "KbF6zW",
+                          "ref": "artist:LzCwGy",
+                          "name": "Plan the next release",
+                          "width": "fill_container"
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "BL0U4a",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / Recent activity",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "icon": "activity"
+                    },
+                    "artist:EZZdAr": {
+                      "content": "Recent activity"
+                    },
+                    "artist:lICt0a": {
+                      "enabled": false
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "hWemKY",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "7cY89C",
+                          "ref": "artist:R5FCxw",
+                          "name": "Activity / 2 h ago",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:47DbTv": {
+                              "content": "The reviewer requested changes · Echoes in Motion"
+                            },
+                            "artist:l17mv5": {
+                              "content": "2 h ago"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "ew7ERS",
+                          "ref": "artist:R5FCxw",
+                          "name": "Activity / Yesterday",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:47DbTv": {
+                              "content": "Approved by Bitrate review · Static Lines"
+                            },
+                            "artist:l17mv5": {
+                              "content": "Yesterday"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "V1NQyY",
+                          "ref": "artist:R5FCxw",
+                          "name": "Activity / Oct 3",
+                          "width": "fill_container",
+                          "descendants": {
+                            "artist:47DbTv": {
+                              "content": "Live on Bitrate · Afterglow"
+                            },
+                            "artist:l17mv5": {
+                              "content": "Oct 3"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "MHSl7f",
+                  "ref": "artist:RmrVkN",
+                  "name": "Tile / Listening data",
+                  "width": "fill_container",
+                  "descendants": {
+                    "artist:BxRdiD": {
+                      "icon": "audio-lines"
+                    },
+                    "artist:EZZdAr": {
+                      "content": "Listening data"
+                    },
+                    "artist:lICt0a": {
+                      "enabled": false
+                    },
+                    "artist:02kI8m": {
+                      "type": "frame",
+                      "id": "uOsoiF",
+                      "name": "Body",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "APvYcS",
+                          "ref": "artist:nLCBGb",
+                          "name": "Artwork",
+                          "width": "fill_container",
+                          "height": 96,
+                          "fill": {
+                            "type": "image",
+                            "url": "../../../apps/web-artists/public/artwork/dashboard/listening-spectrum.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "nwxMd6",
+                          "ref": "artist:C5Ih8u",
+                          "name": "Last 28 days",
+                          "content": "Last 28 days"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "GudHMf",
+                          "ref": "artist:PiqhAO",
+                          "name": "Plays and listeners on Bitra",
+                          "width": "fill_container",
+                          "textGrowth": "fixed-width",
+                          "content": "Plays and listeners on Bitrate; external services are shown as not connected rather than zero."
+                        },
+                        {
+                          "type": "ref",
+                          "id": "DEuZSQ",
+                          "ref": "artist:LSzB6i",
+                          "name": "Open analytics",
+                          "content": "Open analytics"
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 11690,
+      "y": 0,
+      "theme": {
+        "artist:Mode": "Dark"
+      },
+      "context": "/dashboard — Home of the workspace. Tiles sit on the 12-column grid (64px rows) in the default order of widgets/DashboardOverview/config/tiles.ts and stack on phones."
+    },
+    {
+      "type": "frame",
       "id": "fksCNM",
       "name": "Artist / Dashboard / First release / Desktop",
       "width": 1440,
@@ -8303,7 +10805,7 @@
           }
         }
       ],
-      "x": 10150,
+      "x": 12180,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -8503,7 +11005,7 @@
           }
         }
       ],
-      "x": 11690,
+      "x": 13720,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -9637,7 +12139,7 @@
           }
         }
       ],
-      "x": 12180,
+      "x": 14210,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -10663,7 +13165,7 @@
           }
         }
       ],
-      "x": 13720,
+      "x": 15750,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -11792,7 +14294,7 @@
           }
         }
       ],
-      "x": 14210,
+      "x": 16240,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -12811,7 +15313,7 @@
           }
         }
       ],
-      "x": 15750,
+      "x": 17780,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -14080,7 +16582,7 @@
           }
         }
       ],
-      "x": 16240,
+      "x": 18270,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -15241,7 +17743,7 @@
           }
         }
       ],
-      "x": 17780,
+      "x": 19810,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -16507,7 +19009,7 @@
           }
         }
       ],
-      "x": 18270,
+      "x": 20300,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -17665,7 +20167,7 @@
           }
         }
       ],
-      "x": 19810,
+      "x": 21840,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -18794,7 +21296,7 @@
           }
         }
       ],
-      "x": 20300,
+      "x": 22330,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -19815,7 +22317,7 @@
           }
         }
       ],
-      "x": 21840,
+      "x": 23870,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -20944,7 +23446,7 @@
           }
         }
       ],
-      "x": 22330,
+      "x": 24360,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -21965,7 +24467,7 @@
           }
         }
       ],
-      "x": 23870,
+      "x": 25900,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -23196,7 +25698,7 @@
           }
         }
       ],
-      "x": 24360,
+      "x": 26390,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -24319,7 +26821,7 @@
           }
         }
       ],
-      "x": 25900,
+      "x": 27930,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -25550,7 +28052,7 @@
           }
         }
       ],
-      "x": 26390,
+      "x": 28420,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -26673,7 +29175,7 @@
           }
         }
       ],
-      "x": 27930,
+      "x": 29960,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -28177,7 +30679,7 @@
           }
         }
       ],
-      "x": 28420,
+      "x": 30450,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -29508,7 +32010,7 @@
           }
         }
       ],
-      "x": 29960,
+      "x": 31990,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -31012,7 +33514,7 @@
           }
         }
       ],
-      "x": 31500,
+      "x": 33530,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -32523,7 +35025,7 @@
           }
         }
       ],
-      "x": 33040,
+      "x": 35070,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -33816,7 +36318,7 @@
           }
         }
       ],
-      "x": 34580,
+      "x": 36610,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -35002,7 +37504,7 @@
           }
         }
       ],
-      "x": 36120,
+      "x": 38150,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -35299,7 +37801,7 @@
           }
         }
       ],
-      "x": 36610,
+      "x": 38640,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -35541,7 +38043,7 @@
           }
         }
       ],
-      "x": 38150,
+      "x": 40180,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -35838,7 +38340,7 @@
           }
         }
       ],
-      "x": 38640,
+      "x": 40670,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"
@@ -36080,7 +38582,7 @@
           }
         }
       ],
-      "x": 40180,
+      "x": 42210,
       "y": 0,
       "theme": {
         "artist:Mode": "Dark"

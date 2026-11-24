@@ -46,6 +46,8 @@ export function loginPage(ui, frames) {
         : []),
       a.input('Email Address', o.email ?? 'example@gmail.com', o.emailError),
       a.password('Password', o.password ?? 'Password', o.passwordError),
+      /* design ahead of code: LoginForm has no reset link yet (DESIGN.md § Design ahead of code) */
+      a.endLink('Forgot password?'),
       ...(o.alert ? [o.alert] : []),
       a.primary(o.busy ? 'Logging in...' : 'Continue'),
       a.or(),

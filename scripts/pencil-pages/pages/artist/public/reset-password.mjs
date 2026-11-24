@@ -17,6 +17,8 @@ export function resetPasswordPage(ui, frames) {
         a.password('New password', o.password ?? '', o.passwordError),
         a.password('Confirm password', o.confirm ?? '', o.confirmError),
         a.secondary('Set new password'),
+        /* design ahead of code: ResetPasswordForm has no way back yet */
+        a.footnote(null, 'Back to login'),
       ],
       true,
     )
@@ -46,7 +48,7 @@ export function resetPasswordPage(ui, frames) {
       ],
       [
         'Confirm empty',
-        (m) => [form(m, { password: '••••••••••', confirmError: 'Confirm password' })],
+        (m) => [form(m, { password: '••••••••••', confirmError: 'Please confirm your password' })],
       ],
       ['Missing token', withToast('Error', 'Missing token', filled)],
       ['Reset failed', withToast('Error', 'Unable to reset password', filled)],
