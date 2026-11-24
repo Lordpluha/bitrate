@@ -894,6 +894,26 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/api/v1/tracks/{id}/license': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Authorised by the session token alone, like the renditions it unlocks (ADR-0077).
+     * @description Answers the W3C ClearKey licence request a CDM emits for an encrypted rendition with the track's content key as a JSON Web Key set. Requires the live session's token (`?t=`), so revocation and listener limits apply to keys as to bytes. Never cached. See ADR-0077.
+     */
+    post: operations['TrackPlaybackController_requestLicense_v1']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/api/v1/playlists': {
     parameters: {
       query?: never
@@ -2948,45 +2968,7 @@ export interface paths {
     patch?: never
     trace?: never
   }
-  '/api/v1/artists/me/promotion-profile': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    /** Read the artist's promotion profile */
-    get: operations['PromotionController_profile_v1']
-    /**
-     * Replace the artist's promotion profile
-     * @description Goal, channels, weekly time, audience and voice that every plan generation reads. Audience and example posts may not contain links, emails, phone numbers or @handles.
-     */
-    put: operations['PromotionController_saveProfile_v1']
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/api/v1/artists/me/promotion/allowance': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    /** Read the artist's AI allowance for this month */
-    get: operations['PromotionController_allowance_v1']
-    put?: never
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/api/v1/artists/me/releases/{releaseId}/promotion/plans': {
+  '/api/v1/support/conversations': {
     parameters: {
       query?: never
       header?: never
@@ -2996,28 +2978,25 @@ export interface paths {
     get?: never
     put?: never
     /**
-     * Generate a new promotion plan version for a release
-     * @description Starts generation in the background and returns the new GENERATING version. Steps the artist approved, edited or finished are kept; suggested ones are replaced.
+     * Start a support conversation
+     * @description Works for guests and signed-in listeners. A guest receives a token, shown once, that opens the conversation later through the `x-support-token` header.
      */
-    post: operations['PromotionController_requestPlan_v1']
+    post: operations['SupportConversationsController_create_v1']
     delete?: never
     options?: never
     head?: never
     patch?: never
     trace?: never
   }
-  '/api/v1/artists/me/releases/{releaseId}/promotion/plans/latest': {
+  '/api/v1/support/conversations/{id}': {
     parameters: {
       query?: never
       header?: never
       path?: never
       cookie?: never
     }
-    /**
-     * Read a release's latest promotion plan
-     * @description Every step is dated from the release date as it is now.
-     */
-    get: operations['PromotionController_plan_v1']
+    /** Read a support conversation with its messages */
+    get: operations['SupportConversationsController_view_v1']
     put?: never
     post?: never
     delete?: never
@@ -3026,7 +3005,7 @@ export interface paths {
     patch?: never
     trace?: never
   }
-  '/api/v1/artists/me/releases/{releaseId}/promotion/steps/{stepId}': {
+  '/api/v1/support/conversations/{id}/messages': {
     parameters: {
       query?: never
       header?: never
@@ -3035,15 +3014,15 @@ export interface paths {
     }
     get?: never
     put?: never
-    post?: never
+    /**
+     * Send a message and stream the reply
+     * @description Server-Sent Events. Each event is named after its `type` and carries JSON: `text-delta` `{ text }`, `state` `{ state, reason? }`, `citation` `{ citation }`, and last `done` `{ outcome, grounded }`. While an operator owns the conversation the message is stored and only `done` with outcome `forwarded` follows.
+     */
+    post: operations['SupportConversationsController_send_v1']
     delete?: never
     options?: never
     head?: never
-    /**
-     * Approve, edit, reject or finish a promotion step
-     * @description Only steps of the latest version change. Editing marks the step as written by the artist.
-     */
-    patch: operations['PromotionController_updateStep_v1']
+    patch?: never
     trace?: never
   }
   '/api/v1/artists/me/profile': {
@@ -3417,8 +3396,6 @@ export interface components {
       id: string
       /** @description The title value. */
       title: string
-      /** @description The audio url value. */
-      audioUrl: string
       /** @description The cover value. */
       cover: string | null
       /**
@@ -3744,6 +3721,20 @@ export interface components {
        *     ]
        */
       fragments: number[][]
+      /**
+       * @description CENC `cbcs` under the track's content key (ADR-0077): request the bytes with `?encrypted=1`
+       *     and the key from `POST /tracks/:id/license`. `null` for a clear rendition.
+       * @example {
+       *       "scheme": "cbcs",
+       *       "keyId": "0123456789abcdef0123456789abcdef"
+       *     }
+       */
+      encryption?: {
+        /** @enum {string} */
+        scheme: 'cbcs'
+        /** @example 0123456789abcdef0123456789abcdef */
+        keyId: string
+      } | null
     }
     TrackManifestEntity: {
       /**
@@ -3790,13 +3781,22 @@ export interface components {
        */
       deviceId?: string
     }
+    TrackLicenseRequestDto: {
+      /**
+       * @description Key ids the CDM needs, base64url without padding
+       * @example [
+       *       "ASNFZ4mrze8BI0VniavN7w"
+       *     ]
+       */
+      kids: string[]
+      /** @enum {string} */
+      type?: 'temporary'
+    }
     PlaylistTrackEntity: {
       /** @description The id value. */
       id: string
       /** @description The title value. */
       title: string
-      /** @description The audio url value. */
-      audioUrl: string
       /** @description The cover value. */
       cover: string | null
       /**
@@ -5295,91 +5295,51 @@ export interface components {
       topTracks: components['schemas']['AnalyticsTopTrackEntity'][]
       external: components['schemas']['AnalyticsExternalSourceEntity'][]
     }
-    /** @enum {string} */
-    PromotionGoal: 'STREAMS' | 'FOLLOWERS' | 'BUZZ'
-    /** @enum {string} */
-    PromotionChannel: 'INSTAGRAM' | 'TIKTOK' | 'TELEGRAM' | 'YOUTUBE_SHORTS'
-    PromotionProfileEntity: {
-      goal: components['schemas']['PromotionGoal']
-      channels: components['schemas']['PromotionChannel'][]
-      weeklyHours: number
-      /** @description ISO 3166-1 alpha-2 codes */
-      countries: string[]
-      audience: string | null
-      voiceWords: string[]
-      voiceExamples: string[]
-      /** Format: date-time */
-      updatedAt: string
-    }
-    PromotionProfileDto: {
+    CreateSupportConversationDto: {
       /** @enum {string} */
-      goal: 'STREAMS' | 'FOLLOWERS' | 'BUZZ'
-      channels: ('INSTAGRAM' | 'TIKTOK' | 'TELEGRAM' | 'YOUTUBE_SHORTS')[]
-      /** @description Hours a week the artist will spend */
-      weeklyHours: number
-      /** @description ISO 3166-1 alpha-2 codes of the main audience */
-      countries: string[]
-      audience: string | null
-      voiceWords: string[]
-      /** @description Posts the artist wrote */
-      voiceExamples: string[]
+      audience: 'listener' | 'artist'
+      /** @enum {string} */
+      locale?: 'en' | 'uk' | 'pl'
     }
-    AiAllowanceEntity: {
-      /** @description Spent this month, in micro-dollars (US$ 1 = 1,000,000) */
-      usedMicroUsd: number
-      /** @description Monthly ceiling, in micro-dollars */
-      limitMicroUsd: number
-      /** Format: date-time */
-      resetsAt: string
-    }
-    /** @enum {string} */
-    PromotionPlanStatus: 'GENERATING' | 'READY' | 'FAILED'
-    /** @enum {string} */
-    PromotionStepPhase: 'PRE' | 'LAUNCH' | 'POST'
-    /** @enum {string} */
-    PromotionStepKind: 'POST' | 'FOLLOWER_MESSAGE' | 'COUNTDOWN' | 'ACTION'
-    /** @enum {string} */
-    PromotionStepState: 'SUGGESTED' | 'APPROVED' | 'EDITED' | 'REJECTED' | 'DONE'
-    PromotionStepEntity: {
-      /** Format: uuid */
-      id: string
-      position: number
-      /** @description Days from the release date */
-      offsetDays: number
-      /**
-       * Format: date-time
-       * @description Release date plus the offset; moves with the release, null without a date
-       */
-      dueAt: string | null
-      phase: components['schemas']['PromotionStepPhase']
-      kind: components['schemas']['PromotionStepKind']
-      channels: components['schemas']['PromotionChannel'][]
+    SupportCitationEntity: {
+      /** @description Stable id of the article chunk the answer drew on. */
+      chunkId: string
       title: string
-      body: string
-      state: components['schemas']['PromotionStepState']
-      /** @description False once the artist edited the text */
-      aiGenerated: boolean
+      /** @description Public page of the source, when it has one. */
+      url?: string
     }
-    PromotionPlanEntity: {
-      /** Format: uuid */
+    SupportMessageEntity: {
       id: string
-      version: number
-      status: components['schemas']['PromotionPlanStatus']
-      /** @description Message key when FAILED */
-      failure: string | null
-      /** Format: date-time */
-      releaseDate: string | null
-      steps: components['schemas']['PromotionStepEntity'][]
+      /** @enum {string} */
+      role: 'user' | 'assistant' | 'operator'
+      text: string
+      /** @description Sources of an assistant answer; empty for other messages. */
+      citations: components['schemas']['SupportCitationEntity'][]
       /** Format: date-time */
       createdAt: string
     }
-    UpdatePromotionStepDto: {
+    SupportConversationEntity: {
+      id: string
       /** @enum {string} */
-      action: 'approve' | 'edit' | 'reject' | 'done'
-      /** @description Only with `edit` */
-      title?: string
-      /** @description Only with `edit` */
-      body?: string
+      audience: 'listener' | 'artist'
+      /** @enum {string} */
+      locale: 'en' | 'uk' | 'pl'
+      /**
+       * @description Who answers now: the assistant, an operator (waiting or replying), or nobody.
+       * @enum {string}
+       */
+      state: 'bot' | 'waiting_operator' | 'operator' | 'resolved'
+      messages: components['schemas']['SupportMessageEntity'][]
+      /** Format: date-time */
+      createdAt: string
+    }
+    SupportConversationCreatedEntity: {
+      conversation: components['schemas']['SupportConversationEntity']
+      /** @description Shown once and stored only as a hash: the guest client must keep it. */
+      token?: string
+    }
+    SendSupportMessageDto: {
+      text: string
     }
     ArtistSocialLinksEntity: {
       /** Format: uri */
@@ -11705,7 +11665,6 @@ export interface operations {
            *         "albumId": "album123",
            *         "artistId": "artist123",
            *         "cover": "https://example.com/cover.jpg",
-           *         "audioUrl": "",
            *         "userId": "",
            *         "createdAt": "2026-01-01T00:00:00.000Z",
            *         "updatedAt": "2026-01-01T00:00:00.000Z",
@@ -12424,6 +12383,8 @@ export interface operations {
       query: {
         /** @description Playback session token */
         t: unknown
+        /** @description `1` for the `cbcs`-encrypted rendition (ADR-0077); without it the clear rendition, which only the lowest bitrate has once a track is encrypted */
+        encrypted?: '1'
       }
       header?: {
         /** @description Inclusive byte window, e.g. `bytes=929-100915` */
@@ -12551,6 +12512,153 @@ export interface operations {
           [name: string]: unknown
         }
         content?: never
+      }
+    }
+  }
+  TrackPlaybackController_requestLicense_v1: {
+    parameters: {
+      query: {
+        /** @description Playback session token */
+        t: unknown
+      }
+      header?: never
+      path: {
+        /** @description Track ID */
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['TrackLicenseRequestDto']
+      }
+    }
+    responses: {
+      /** @description ClearKey licence */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            keys: {
+              /** @enum {string} */
+              kty: 'oct'
+              /** @description Key id, base64url */
+              kid: string
+              /** @description Content key, base64url */
+              k: string
+            }[]
+            /** @enum {string} */
+            type: 'temporary'
+          }
+        }
+      }
+      /** @description Malformed licence request */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Missing, forged, expired, revoked or other-track session token */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description The track is not encrypted, or the request names another key id */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Keys unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': Record<string, never>
+        }
       }
     }
   }
@@ -30822,153 +30930,7 @@ export interface operations {
       }
     }
   }
-  PromotionController_profile_v1: {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['PromotionProfileEntity']
-        }
-      }
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': {
-            /** @example 401 */
-            statusCode?: number
-            /**
-             * @example errors.auth.invalid_or_expired_token
-             * @enum {string}
-             */
-            message?:
-              | 'errors.auth.access_token_required'
-              | 'errors.auth.refresh_token_required'
-              | 'errors.auth.invalid_token_requirement'
-              | 'errors.auth.invalid_or_expired_token'
-              | 'errors.auth.user_not_found'
-              | 'errors.auth.session_not_found'
-            /** @example Unauthorized */
-            error?: string
-            /**
-             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
-             * @example errors.auth.invalid_or_expired_token
-             * @enum {string}
-             */
-            code?:
-              | 'errors.auth.access_token_required'
-              | 'errors.auth.refresh_token_required'
-              | 'errors.auth.invalid_token_requirement'
-              | 'errors.auth.invalid_or_expired_token'
-              | 'errors.auth.user_not_found'
-              | 'errors.auth.session_not_found'
-          }
-        }
-      }
-      /** @description No profile yet */
-      404: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Method not allowed */
-      405: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Request timeout */
-      408: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Too many requests */
-      429: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Internal server error */
-      500: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Not implemented */
-      501: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Bad gateway */
-      502: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Service unavailable */
-      503: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Gateway timeout */
-      504: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description HTTP version not supported */
-      505: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Insufficient storage */
-      507: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Loop detected */
-      508: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      default: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-    }
-  }
-  PromotionController_saveProfile_v1: {
+  SupportConversationsController_create_v1: {
     parameters: {
       query?: never
       header?: never
@@ -30977,53 +30939,16 @@ export interface operations {
     }
     requestBody: {
       content: {
-        'application/json': components['schemas']['PromotionProfileDto']
+        'application/json': components['schemas']['CreateSupportConversationDto']
       }
     }
     responses: {
-      200: {
+      201: {
         headers: {
           [name: string]: unknown
         }
         content: {
-          'application/json': components['schemas']['PromotionProfileEntity']
-        }
-      }
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': {
-            /** @example 401 */
-            statusCode?: number
-            /**
-             * @example errors.auth.invalid_or_expired_token
-             * @enum {string}
-             */
-            message?:
-              | 'errors.auth.access_token_required'
-              | 'errors.auth.refresh_token_required'
-              | 'errors.auth.invalid_token_requirement'
-              | 'errors.auth.invalid_or_expired_token'
-              | 'errors.auth.user_not_found'
-              | 'errors.auth.session_not_found'
-            /** @example Unauthorized */
-            error?: string
-            /**
-             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
-             * @example errors.auth.invalid_or_expired_token
-             * @enum {string}
-             */
-            code?:
-              | 'errors.auth.access_token_required'
-              | 'errors.auth.refresh_token_required'
-              | 'errors.auth.invalid_token_requirement'
-              | 'errors.auth.invalid_or_expired_token'
-              | 'errors.auth.user_not_found'
-              | 'errors.auth.session_not_found'
-          }
+          'application/json': components['schemas']['SupportConversationCreatedEntity']
         }
       }
       /** @description Method not allowed */
@@ -31040,7 +30965,7 @@ export interface operations {
         }
         content?: never
       }
-      /** @description Too many requests */
+      /** @description Too many new conversations */
       429: {
         headers: {
           [name: string]: unknown
@@ -31111,315 +31036,15 @@ export interface operations {
       }
     }
   }
-  PromotionController_allowance_v1: {
+  SupportConversationsController_view_v1: {
     parameters: {
       query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['AiAllowanceEntity']
-        }
+      header?: {
+        /** @description Guest token */
+        'x-support-token'?: string
       }
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': {
-            /** @example 401 */
-            statusCode?: number
-            /**
-             * @example errors.auth.invalid_or_expired_token
-             * @enum {string}
-             */
-            message?:
-              | 'errors.auth.access_token_required'
-              | 'errors.auth.refresh_token_required'
-              | 'errors.auth.invalid_token_requirement'
-              | 'errors.auth.invalid_or_expired_token'
-              | 'errors.auth.user_not_found'
-              | 'errors.auth.session_not_found'
-            /** @example Unauthorized */
-            error?: string
-            /**
-             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
-             * @example errors.auth.invalid_or_expired_token
-             * @enum {string}
-             */
-            code?:
-              | 'errors.auth.access_token_required'
-              | 'errors.auth.refresh_token_required'
-              | 'errors.auth.invalid_token_requirement'
-              | 'errors.auth.invalid_or_expired_token'
-              | 'errors.auth.user_not_found'
-              | 'errors.auth.session_not_found'
-          }
-        }
-      }
-      /** @description Method not allowed */
-      405: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Request timeout */
-      408: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Too many requests */
-      429: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Internal server error */
-      500: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Not implemented */
-      501: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Bad gateway */
-      502: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Service unavailable */
-      503: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Gateway timeout */
-      504: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description HTTP version not supported */
-      505: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Insufficient storage */
-      507: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Loop detected */
-      508: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      default: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': Record<string, never>
-        }
-      }
-    }
-  }
-  PromotionController_requestPlan_v1: {
-    parameters: {
-      query?: never
-      header?: never
       path: {
-        releaseId: string
-      }
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      202: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['PromotionPlanEntity']
-        }
-      }
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': {
-            /** @example 401 */
-            statusCode?: number
-            /**
-             * @example errors.auth.invalid_or_expired_token
-             * @enum {string}
-             */
-            message?:
-              | 'errors.auth.access_token_required'
-              | 'errors.auth.refresh_token_required'
-              | 'errors.auth.invalid_token_requirement'
-              | 'errors.auth.invalid_or_expired_token'
-              | 'errors.auth.user_not_found'
-              | 'errors.auth.session_not_found'
-            /** @example Unauthorized */
-            error?: string
-            /**
-             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
-             * @example errors.auth.invalid_or_expired_token
-             * @enum {string}
-             */
-            code?:
-              | 'errors.auth.access_token_required'
-              | 'errors.auth.refresh_token_required'
-              | 'errors.auth.invalid_token_requirement'
-              | 'errors.auth.invalid_or_expired_token'
-              | 'errors.auth.user_not_found'
-              | 'errors.auth.session_not_found'
-          }
-        }
-      }
-      /** @description Monthly AI allowance used */
-      402: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Release not found */
-      404: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Method not allowed */
-      405: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Request timeout */
-      408: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description No release date, no profile, or a version is already generating */
-      409: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Too many requests */
-      429: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Internal server error */
-      500: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Not implemented */
-      501: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Bad gateway */
-      502: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Service unavailable */
-      503: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Gateway timeout */
-      504: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description HTTP version not supported */
-      505: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Insufficient storage */
-      507: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Loop detected */
-      508: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      default: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-    }
-  }
-  PromotionController_plan_v1: {
-    parameters: {
-      query?: never
-      header?: never
-      path: {
-        releaseId: string
+        id: string
       }
       cookie?: never
     }
@@ -31430,47 +31055,10 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          'application/json': components['schemas']['PromotionPlanEntity']
+          'application/json': components['schemas']['SupportConversationEntity']
         }
       }
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': {
-            /** @example 401 */
-            statusCode?: number
-            /**
-             * @example errors.auth.invalid_or_expired_token
-             * @enum {string}
-             */
-            message?:
-              | 'errors.auth.access_token_required'
-              | 'errors.auth.refresh_token_required'
-              | 'errors.auth.invalid_token_requirement'
-              | 'errors.auth.invalid_or_expired_token'
-              | 'errors.auth.user_not_found'
-              | 'errors.auth.session_not_found'
-            /** @example Unauthorized */
-            error?: string
-            /**
-             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
-             * @example errors.auth.invalid_or_expired_token
-             * @enum {string}
-             */
-            code?:
-              | 'errors.auth.access_token_required'
-              | 'errors.auth.refresh_token_required'
-              | 'errors.auth.invalid_token_requirement'
-              | 'errors.auth.invalid_or_expired_token'
-              | 'errors.auth.user_not_found'
-              | 'errors.auth.session_not_found'
-          }
-        }
-      }
-      /** @description Release or plan not found */
+      /** @description Missing, or not the caller’s */
       404: {
         headers: {
           [name: string]: unknown
@@ -31558,72 +31146,38 @@ export interface operations {
         headers: {
           [name: string]: unknown
         }
-        content?: never
+        content: {
+          'application/json': components['schemas']['SupportConversationEntity']
+        }
       }
     }
   }
-  PromotionController_updateStep_v1: {
+  SupportConversationsController_send_v1: {
     parameters: {
       query?: never
-      header?: never
+      header?: {
+        /** @description Guest token */
+        'x-support-token'?: string
+      }
       path: {
-        releaseId: string
-        stepId: string
+        id: string
       }
       cookie?: never
     }
     requestBody: {
       content: {
-        'application/json': components['schemas']['UpdatePromotionStepDto']
+        'application/json': components['schemas']['SendSupportMessageDto']
       }
     }
     responses: {
+      /** @description The event stream */
       200: {
         headers: {
           [name: string]: unknown
         }
-        content: {
-          'application/json': components['schemas']['PromotionPlanEntity']
-        }
+        content?: never
       }
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': {
-            /** @example 401 */
-            statusCode?: number
-            /**
-             * @example errors.auth.invalid_or_expired_token
-             * @enum {string}
-             */
-            message?:
-              | 'errors.auth.access_token_required'
-              | 'errors.auth.refresh_token_required'
-              | 'errors.auth.invalid_token_requirement'
-              | 'errors.auth.invalid_or_expired_token'
-              | 'errors.auth.user_not_found'
-              | 'errors.auth.session_not_found'
-            /** @example Unauthorized */
-            error?: string
-            /**
-             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
-             * @example errors.auth.invalid_or_expired_token
-             * @enum {string}
-             */
-            code?:
-              | 'errors.auth.access_token_required'
-              | 'errors.auth.refresh_token_required'
-              | 'errors.auth.invalid_token_requirement'
-              | 'errors.auth.invalid_or_expired_token'
-              | 'errors.auth.user_not_found'
-              | 'errors.auth.session_not_found'
-          }
-        }
-      }
-      /** @description Release or step not found */
+      /** @description Missing, or not the caller’s */
       404: {
         headers: {
           [name: string]: unknown
@@ -31644,14 +31198,14 @@ export interface operations {
         }
         content?: never
       }
-      /** @description The step changed, the action does not apply, or the plan was replaced */
+      /** @description A reply is still streaming */
       409: {
         headers: {
           [name: string]: unknown
         }
         content?: never
       }
-      /** @description Too many requests */
+      /** @description Too many messages */
       429: {
         headers: {
           [name: string]: unknown

@@ -28,9 +28,13 @@ knowledge base anyway.
 - The support knowledge index is stored in **Qdrant**, in one collection per embedding
   model, with `audience`, `locale`, `source` and `url` payload fields indexed for filtering.
 - **Qdrant holds derived data only.** The source of truth is the markdown in `apps/docs`.
-  An idempotent ingest job on the worker rebuilds the collection. It runs after a change to
-  the knowledge sources and on demand from the operator panel. Because the index can be
-  rebuilt, it is **not backed up**. Conversations and tickets are user data, so they live in
+  The API image bakes in the help articles and the allowlisted legal texts. On every start the
+  API enqueues an idempotent ingest job, which it also consumes, and the operator panel can
+  trigger one on demand. The collection name hashes the sources, the embedding model and the
+  ingest format: an unchanged deploy finds its collection in place and embeds nothing, while a
+  changed one builds a new collection, moves the search alias to it and drops the old one.
+  The transcode worker (ADR-0049) stays single-purpose. Because the index can be rebuilt, it
+  is **not backed up**. Conversations and tickets are user data, so they live in
   PostgreSQL under the existing backups
   ([ADR-0072](./0072-cloudflare-r2-production-storage-and-backups.md)).
 - Qdrant runs as a single instance with a pinned image, an explicit memory limit and no

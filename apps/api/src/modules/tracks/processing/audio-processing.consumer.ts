@@ -1,5 +1,6 @@
 import { readdir, rm } from 'node:fs/promises'
 import { extname, join } from 'node:path'
+import type { AppConfig } from '@common/config'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import {
   AUDIO_PROCESSING_DEAD_LETTER_QUEUE,
@@ -19,6 +20,7 @@ import type { StorageService } from '@infra/storage/storage.types'
 import { NotificationsProducer } from '@modules/notifications'
 import { InjectQueue, OnWorkerEvent, Processor, WorkerHost } from '@nestjs/bullmq'
 import { Inject, Logger, type OnModuleInit } from '@nestjs/common'
+import { ConfigService } from '@nestjs/config'
 import type { TrackProcessingStep, TrackProcessingTrigger } from '@prisma/client'
 import * as Sentry from '@sentry/nestjs'
 import type { Job, Queue } from 'bullmq'
@@ -76,11 +78,17 @@ export class AudioProcessingConsumer extends WorkerHost implements OnModuleInit 
     private readonly notifications: NotificationsProducer,
     @InjectQueue(RELEASE_PUBLISHING_QUEUE)
     private readonly releasePublishing: Queue<ReleaseTrackSettledJob>,
+    private readonly config: ConfigService<AppConfig>,
   ) {
     super()
   }
 
   private readonly logger = new Logger(AudioProcessingConsumer.name, { timestamp: true })
+
+  /** Encrypts new generations when set (ADR-0077); read per job so tests can vary it. */
+  private get keyEncryptionKey(): string | undefined {
+    return this.config.get('PLAYBACK_KEY_ENCRYPTION_KEY')
+  }
 
   /**
    * Removes scratch directories a crashed run left behind. Only a process that actually
@@ -207,6 +215,7 @@ export class AudioProcessingConsumer extends WorkerHost implements OnModuleInit 
       jobId,
       attempt,
       isStillCurrent: () => this.isStillCurrent(data),
+      ...(this.keyEncryptionKey ? { keyEncryptionKey: this.keyEncryptionKey } : {}),
     })
 
     if (outcome === 'SUPERSEDED') {

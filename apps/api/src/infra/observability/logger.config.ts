@@ -19,6 +19,8 @@ const REDACTED_HEADER_PATHS = [
   'req.headers.authorization',
   'req.headers.cookie',
   'res.headers["set-cookie"]',
+  // Guest access token of a support conversation (modules/support/chat/guest-token.ts).
+  'req.headers["x-support-token"]',
 ]
 
 /** The playback session token travels as `?t=` (ADR-0067); it must never reach a log. */

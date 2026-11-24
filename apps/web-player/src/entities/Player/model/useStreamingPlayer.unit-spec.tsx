@@ -25,7 +25,6 @@ const createTrack = (id: string): TrackEntity => ({
   title: id,
   duration: 200,
   artistId: 'artist-id',
-  audioUrl: `/audio/${id}.mp3`,
   cover: '/cover.jpg',
   createdAt: new Date().toISOString(),
   updatedAt: new Date().toISOString(),

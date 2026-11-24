@@ -1,0 +1,650 @@
+{
+  "version": "2.20",
+  "imports": {
+    "ds": "../../web-player-design/design-system/bitrate.lib.pen"
+  },
+  "children": [
+    {
+      "type": "frame",
+      "id": "tqgknf",
+      "name": "Mobile / Two-factor / Mobile / Dark",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "lss6zA",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "ozjhj9",
+          "name": "Form",
+          "layout": "vertical",
+          "gap": 22,
+          "width": "fill_container",
+          "padding": [
+            20,
+            20
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "AdblW2",
+              "ref": "ds:J95vY0",
+              "name": "Logo/Lockup"
+            },
+            {
+              "type": "frame",
+              "id": "nokLzz",
+              "name": "Heading",
+              "layout": "vertical",
+              "gap": 8,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "5r4GHJ",
+                  "ref": "ds:RoXXJv",
+                  "name": "Text/H2",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Enter your 2FA code"
+                },
+                {
+                  "type": "ref",
+                  "id": "2ZIChH",
+                  "ref": "ds:XDvNAD",
+                  "name": "Text/Paragraph",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Use the 6-digit code from your authenticator app."
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "I5OZqk",
+              "ref": "ds:OPjx8q",
+              "name": "Form/OTP/Active",
+              "descendants": {
+                "ds:yqJVXC": {
+                  "content": "Authentication code"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "DXd2tY",
+              "ref": "ds:Y4ylzP",
+              "name": "Button / Verify",
+              "width": "fill_container",
+              "descendants": {
+                "ds:NVe7y": {
+                  "content": "Verify"
+                },
+                "ds:ksrFi": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "Uqhp9I",
+              "ref": "ds:LSzB6i",
+              "name": "Text/Link",
+              "content": "Back to login"
+            }
+          ]
+        }
+      ],
+      "x": 0,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "app (auth)/two-factor — Second sign-in step after a login that answered requires2fa."
+    },
+    {
+      "type": "frame",
+      "id": "77uwms",
+      "name": "Mobile / Two-factor / Mobile / Light",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "7WQh1f",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "aBjuNl",
+          "name": "Form",
+          "layout": "vertical",
+          "gap": 22,
+          "width": "fill_container",
+          "padding": [
+            20,
+            20
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "sY2XEX",
+              "ref": "ds:J95vY0",
+              "name": "Logo/Lockup"
+            },
+            {
+              "type": "frame",
+              "id": "jxWiiI",
+              "name": "Heading",
+              "layout": "vertical",
+              "gap": 8,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "p0EFbi",
+                  "ref": "ds:RoXXJv",
+                  "name": "Text/H2",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Enter your 2FA code"
+                },
+                {
+                  "type": "ref",
+                  "id": "kbKC80",
+                  "ref": "ds:XDvNAD",
+                  "name": "Text/Paragraph",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Use the 6-digit code from your authenticator app."
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "CfVyh1",
+              "ref": "ds:OPjx8q",
+              "name": "Form/OTP/Active",
+              "descendants": {
+                "ds:yqJVXC": {
+                  "content": "Authentication code"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "zLEYg9",
+              "ref": "ds:Y4ylzP",
+              "name": "Button / Verify",
+              "width": "fill_container",
+              "descendants": {
+                "ds:NVe7y": {
+                  "content": "Verify"
+                },
+                "ds:ksrFi": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "OuTzvm",
+              "ref": "ds:LSzB6i",
+              "name": "Text/Link",
+              "content": "Back to login"
+            }
+          ]
+        }
+      ],
+      "x": 490,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Light"
+      },
+      "context": "app (auth)/two-factor — Second sign-in step after a login that answered requires2fa."
+    },
+    {
+      "type": "frame",
+      "id": "90HCX2",
+      "name": "Mobile / Two-factor / Mobile / Dim",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "ZoLxYo",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "ak0uy9",
+          "name": "Form",
+          "layout": "vertical",
+          "gap": 22,
+          "width": "fill_container",
+          "padding": [
+            20,
+            20
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "wPtRmC",
+              "ref": "ds:J95vY0",
+              "name": "Logo/Lockup"
+            },
+            {
+              "type": "frame",
+              "id": "tdwoKj",
+              "name": "Heading",
+              "layout": "vertical",
+              "gap": 8,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "N0dW6q",
+                  "ref": "ds:RoXXJv",
+                  "name": "Text/H2",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Enter your 2FA code"
+                },
+                {
+                  "type": "ref",
+                  "id": "SZxZsY",
+                  "ref": "ds:XDvNAD",
+                  "name": "Text/Paragraph",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Use the 6-digit code from your authenticator app."
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "sW1dl4",
+              "ref": "ds:OPjx8q",
+              "name": "Form/OTP/Active",
+              "descendants": {
+                "ds:yqJVXC": {
+                  "content": "Authentication code"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "hmYrre",
+              "ref": "ds:Y4ylzP",
+              "name": "Button / Verify",
+              "width": "fill_container",
+              "descendants": {
+                "ds:NVe7y": {
+                  "content": "Verify"
+                },
+                "ds:ksrFi": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "Si12qY",
+              "ref": "ds:LSzB6i",
+              "name": "Text/Link",
+              "content": "Back to login"
+            }
+          ]
+        }
+      ],
+      "x": 980,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dim"
+      },
+      "context": "app (auth)/two-factor — Second sign-in step after a login that answered requires2fa."
+    },
+    {
+      "type": "frame",
+      "id": "MRHJXh",
+      "name": "Mobile / Two-factor / Incomplete code / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "4teYeu",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "3YWhFT",
+          "name": "Form",
+          "layout": "vertical",
+          "gap": 22,
+          "width": "fill_container",
+          "padding": [
+            20,
+            20
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "FfJwuP",
+              "ref": "ds:J95vY0",
+              "name": "Logo/Lockup"
+            },
+            {
+              "type": "frame",
+              "id": "Io6i27",
+              "name": "Heading",
+              "layout": "vertical",
+              "gap": 8,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "2cryu9",
+                  "ref": "ds:RoXXJv",
+                  "name": "Text/H2",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Enter your 2FA code"
+                },
+                {
+                  "type": "ref",
+                  "id": "9cC69a",
+                  "ref": "ds:XDvNAD",
+                  "name": "Text/Paragraph",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Use the 6-digit code from your authenticator app."
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "pGrHeZ",
+              "ref": "ds:AeCEXD",
+              "name": "Form/OTP/Error",
+              "descendants": {
+                "ds:20CjqX": {
+                  "content": "Authentication code"
+                },
+                "ds:lDsWSH": {
+                  "content": "Enter the 6-digit code."
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "AMpRcA",
+              "ref": "ds:Y4ylzP",
+              "name": "Button / Verify",
+              "width": "fill_container",
+              "descendants": {
+                "ds:NVe7y": {
+                  "content": "Verify"
+                },
+                "ds:ksrFi": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "Zf8AJp",
+              "ref": "ds:LSzB6i",
+              "name": "Text/Link",
+              "content": "Back to login"
+            }
+          ]
+        }
+      ],
+      "x": 1470,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "app (auth)/two-factor — Second sign-in step after a login that answered requires2fa. · no desktop frame: native phone app (apps/mobile) — there is no desktop layout"
+    },
+    {
+      "type": "frame",
+      "id": "xiA76F",
+      "name": "Mobile / Two-factor / Invalid code / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "FiFh9J",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "I1dpPU",
+          "name": "Form",
+          "layout": "vertical",
+          "gap": 22,
+          "width": "fill_container",
+          "padding": [
+            20,
+            20
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "qRNsic",
+              "ref": "ds:J95vY0",
+              "name": "Logo/Lockup"
+            },
+            {
+              "type": "frame",
+              "id": "x63BrF",
+              "name": "Heading",
+              "layout": "vertical",
+              "gap": 8,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "r90Uvj",
+                  "ref": "ds:RoXXJv",
+                  "name": "Text/H2",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Enter your 2FA code"
+                },
+                {
+                  "type": "ref",
+                  "id": "A2wGod",
+                  "ref": "ds:XDvNAD",
+                  "name": "Text/Paragraph",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Use the 6-digit code from your authenticator app."
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "yheTBs",
+              "ref": "ds:AeCEXD",
+              "name": "Form/OTP/Error",
+              "descendants": {
+                "ds:20CjqX": {
+                  "content": "Authentication code"
+                },
+                "ds:lDsWSH": {
+                  "content": "Invalid or expired 2FA code"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "viibYJ",
+              "ref": "ds:Y4ylzP",
+              "name": "Button / Verify",
+              "width": "fill_container",
+              "descendants": {
+                "ds:NVe7y": {
+                  "content": "Verify"
+                },
+                "ds:ksrFi": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "6strSM",
+              "ref": "ds:LSzB6i",
+              "name": "Text/Link",
+              "content": "Back to login"
+            }
+          ]
+        }
+      ],
+      "x": 1960,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "app (auth)/two-factor — Second sign-in step after a login that answered requires2fa. · no desktop frame: native phone app (apps/mobile) — there is no desktop layout"
+    },
+    {
+      "type": "frame",
+      "id": "b67iXG",
+      "name": "Mobile / Two-factor / Submitting / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "xEDQ5v",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "yZkemF",
+          "name": "Form",
+          "layout": "vertical",
+          "gap": 22,
+          "width": "fill_container",
+          "padding": [
+            20,
+            20
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "wHC2Ln",
+              "ref": "ds:J95vY0",
+              "name": "Logo/Lockup"
+            },
+            {
+              "type": "frame",
+              "id": "l0vXK9",
+              "name": "Heading",
+              "layout": "vertical",
+              "gap": 8,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "JzhwjF",
+                  "ref": "ds:RoXXJv",
+                  "name": "Text/H2",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Enter your 2FA code"
+                },
+                {
+                  "type": "ref",
+                  "id": "G7ngUz",
+                  "ref": "ds:XDvNAD",
+                  "name": "Text/Paragraph",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Use the 6-digit code from your authenticator app."
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "CdAWok",
+              "ref": "ds:KCrWrI",
+              "name": "Form/OTP/Filled",
+              "descendants": {
+                "ds:YoNSYg": {
+                  "content": "Authentication code"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "xkUqjb",
+              "ref": "ds:Y4ylzP",
+              "name": "Button / Verify",
+              "width": "fill_container",
+              "descendants": {
+                "ds:NVe7y": {
+                  "content": "Verify"
+                },
+                "ds:D3xnv": {
+                  "icon": "loader-circle"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "8rJBeg",
+              "ref": "ds:LSzB6i",
+              "name": "Text/Link",
+              "content": "Back to login"
+            }
+          ]
+        }
+      ],
+      "x": 2450,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "app (auth)/two-factor — Second sign-in step after a login that answered requires2fa. · no desktop frame: native phone app (apps/mobile) — there is no desktop layout"
+    }
+  ]
+}
