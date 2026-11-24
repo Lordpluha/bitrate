@@ -7,3 +7,5 @@ const trimSlash = (value: string) => value.replace(/\/$/, '')
  */
 export const API_BASE_URL = trimSlash(process.env.EXPO_PUBLIC_API_URL ?? 'http://localhost:3000')
 
+/** The web player origin, used for pages the app opens in the browser (legal documents). */
+export const WEB_PLAYER_URL = trimSlash(process.env.EXPO_PUBLIC_WEB_PLAYER_URL ?? 'http://localhost:3001')

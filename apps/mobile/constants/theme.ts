@@ -1,11 +1,11 @@
-import { colorThemes, fontSize, fontWeight, spacing } from './tokens.gen'
+import { brandColors, colorThemes, fontSize, fontWeight, radius, spacing } from './tokens.gen'
 
 /**
  * Theme values bridged from `packages/tailwind/src` — one palette, three themes (dark is the
  * default, light and dim mirror `:root.light` / `:root.dim`). Never hard-code a hex in a
  * component; read a role through `useTheme()` instead.
  */
-export { colorThemes, spacing }
+export { brandColors, colorThemes, radius, spacing }
 
 export type ThemeName = keyof typeof colorThemes
 export type ColorName = keyof typeof colorThemes.dark

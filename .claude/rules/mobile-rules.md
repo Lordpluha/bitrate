@@ -16,8 +16,8 @@ framework mechanics; this file is project law.
 
 ## Status: bootstrapped (epic #225)
 
-`apps/mobile` has its conventions (#226): API client, state layer, design-token bridge, i18n and
-Jest. Screens arrive with #227–#229; the app's README "Conventions" table summarises the rules.
+`apps/mobile` has its conventions (#226) and the auth screens (#227). Home, search and the
+player arrive with #228–#229; the app's README "Conventions" table summarises the rules.
 
 **Propose, don't improvise silently.** When a task needs a convention this app has not
 established, say so in your report and state the convention you chose. The next agent
@@ -48,11 +48,13 @@ and React hook correctness. Component size, props and effects prompt review unde
 ```
 apps/mobile/
   app/            expo-router routes — a file here IS a route
-    _layout.tsx   providers
-  components/     shared components; components/ui/ for primitives
+    _layout.tsx   providers; components/app-navigator.tsx guards by session (Stack.Protected)
+    (auth)/       signed-out screens
+    (app)/        signed-in area
+  components/     screen parts; components/ui/ for primitives
   hooks/          use-*.ts
   constants/      theme.ts + tokens.gen.ts
-  lib/            logic without UI: api/, i18n/, preferences/
+  lib/            logic without UI: api/, auth/, i18n/, preferences/
   scripts/tokens/ design-token bridge generator
 ```
 
