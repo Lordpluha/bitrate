@@ -1,7 +1,12 @@
+import type { PlaybackEventBody } from '@entities/PlaybackEvent'
 import { renderHook } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-const postPlaybackEvent = vi.hoisted(() => vi.fn(async () => undefined))
+type PostInput = { body: PlaybackEventBody; keepalive?: boolean }
+
+const postPlaybackEvent = vi.hoisted(() =>
+  vi.fn<(input: PostInput) => Promise<void>>(async () => undefined),
+)
 
 vi.mock('@entities/PlaybackEvent', async (importOriginal) => ({
   ...(await importOriginal<Record<string, unknown>>()),
