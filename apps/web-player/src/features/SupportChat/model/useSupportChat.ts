@@ -9,6 +9,7 @@ import {
   type SupportChatState,
   SupportClientError,
   startSupportTurn,
+  watchOperatorReplies,
 } from '@bitrate/support-core/client'
 import { fetchWithAuthRefresh } from '@shared/api/client'
 import type { Locale } from '@shared/i18n'
@@ -51,6 +52,21 @@ export function useSupportChat({ locale, owner }: UseSupportChatInput) {
       setState(EMPTY_CHAT_STATE)
     }
   }, [owner])
+
+  /** An operator's replies arrive outside the user's turn, so they are polled for (#573). */
+  useEffect(() => {
+    const current = session.current
+    if (state.status !== 'waiting_operator' || !current) return
+    return watchOperatorReplies({
+      load: () => client.load(current.id, current.token),
+      // A send that started meanwhile owns the state; the next tick catches up after it.
+      onState: (next) =>
+        setState((previous) =>
+          previous.status === 'waiting_operator' ? next : previous,
+        ),
+      isHidden: () => document.hidden,
+    })
+  }, [client, state.status])
 
   const forget = useCallback(() => {
     session.current = undefined

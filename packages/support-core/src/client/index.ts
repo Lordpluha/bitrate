@@ -18,3 +18,8 @@ export {
 export { chatStateFromView } from './chat-state-from-view.js'
 export { failSupportTurn } from './fail-support-turn.js'
 export { startSupportTurn } from './start-support-turn.js'
+export {
+  OPERATOR_POLL_INTERVAL_MS,
+  type WatchOperatorRepliesInput,
+  watchOperatorReplies,
+} from './watch-operator-replies.js'
