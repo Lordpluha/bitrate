@@ -195,6 +195,7 @@ export const ukrainian = (nodes) => {
 const THEME_ICON = { Dark: 'moon', Light: 'sun', Dim: 'contrast' }
 const NAV_LABEL = {
   moderation: 'Moderation',
+  support: 'Support',
   releases: 'Releases',
   catalog: 'Catalog',
   albums: 'Albums',
@@ -210,6 +211,7 @@ const NAV_LABEL = {
 const NAV_ICON = {
   overview: 'layout-dashboard',
   moderation: 'flag',
+  support: 'life-buoy',
   releases: 'disc-3',
   catalog: 'audio-lines',
   albums: 'disc-album',
