@@ -199,8 +199,8 @@ validation fails twice, 503 when no enabled provider is available.
 | AC-7 | A UK/PL translation keeps glossary terms, hashtags, links and placeholders unchanged | Unit with fixtures; eval | Partial: unit with fixtures (glossary, #592). The eval part waits for AC-16 |
 | AC-8 | Editing the English master marks translations `STALE` and never overwrites an `EDITED` one | Unit | Met: unit (`post-edits`, #592) |
 | AC-9 | Every AI-generated item shows the "Created with AI" marker, and translations show "Machine translation: please review" | UI tests | Met: UI unit tests `PlanStepRow` and `TranslationEditor` (#614) |
-| AC-10 | The follower notification includes the artist message only when it was approved before release; otherwise it is unchanged | Notifications unit/e2e | Met in the API: unit `notify-release-published` and `findApprovedFollowerMessage` (#612). The player shows `payload.artistMessage` in a later change |
-| AC-11 | An approved countdown step shows the tile on the player's artist page until the release goes live | web-player test | API met: `GET /artists/:id/countdown`, unit (#615); design state drawn (#615). The web-player tile follows |
+| AC-10 | The follower notification includes the artist message only when it was approved before release; otherwise it is unchanged | Notifications unit/e2e | Met: API unit `notify-release-published` and `findApprovedFollowerMessage` (#612); the player quotes the message in the notification list (#617) |
+| AC-11 | An approved countdown step shows the tile on the player's artist page until the release goes live | web-player test | Met: `GET /artists/:id/countdown` with unit tests and the design state (#615); the web-player tile with a unit test (#617) |
 | AC-12 | Every provider call writes an `AiUsage` record. A Free artist past the ceiling gets `AI_QUOTA_EXCEEDED` and the quota state | Unit + e2e | Met in unit tests (`AiUsageService`, `AiQuotaService`, #588). No e2e yet |
 | AC-13 | No provider package is imported outside the promotion module's model adapter; switching a task's `provider:model` in config needs no code change | Biome rule + unit | Met: Biome import rule and routing unit tests (#588) |
 | AC-14 | Only approved providers (DPA, no training) can be enabled in production configuration, and requests contain no email, listener or payment data | Config validation test; unit test of the context builder | Met: startup validation allows only `anthropic:` and `mistral:` routes (#588); the prompt builders read release and profile fields only (#590, #611) |
@@ -275,8 +275,7 @@ and run through `.claude/scripts/run-heavy.py`.
 8. **web-artists UI**: Promotion tab replacing the "Coming soon" row, Promotion page,
    profile, i18n en/uk/pl. **Done in #613 and #614.**
 9. **Internal channels**: follower message on `releasePublished` (api), countdown tile
-   (web-player). **API done in #612 and #615**; the player tile and the follower message
-   in the player's notification list are still to build.
+   (web-player). **Done in #612, #615 and #617.**
 10. **Rollout** behind a per-artist feature flag. Enable it for the owner's own artist
     account first, then for beta artists. Procedure: the
     [AI promotion rollout runbook](../infrastructure/ai-promotion-rollout-runbook.md).
