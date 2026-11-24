@@ -1,22 +1,26 @@
 import { QueryClientProvider } from '@tanstack/react-query'
-import { Stack } from 'expo-router'
-import { StatusBar } from 'expo-status-bar'
+import * as SplashScreen from 'expo-splash-screen'
+import { StyleSheet } from 'react-native'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import 'react-native-reanimated'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 
-import { useTheme } from '@/hooks/use-theme'
+import { AppNavigator } from '@/components/app-navigator'
 import { queryClient } from '@/lib/api/query-client'
 
-/** App root: the query cache, safe areas and a header-less stack. */
-export default function RootLayout() {
-  const { isDark } = useTheme()
+void SplashScreen.preventAutoHideAsync()
 
+/** App root: providers only. Routing and the session guard live in `AppNavigator`. */
+export default function RootLayout() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <SafeAreaProvider>
-        <Stack screenOptions={{ headerShown: false }} />
-        <StatusBar style={isDark ? 'light' : 'dark'} />
-      </SafeAreaProvider>
-    </QueryClientProvider>
+    <GestureHandlerRootView style={styles.root}>
+      <QueryClientProvider client={queryClient}>
+        <SafeAreaProvider>
+          <AppNavigator />
+        </SafeAreaProvider>
+      </QueryClientProvider>
+    </GestureHandlerRootView>
   )
 }
+
+const styles = StyleSheet.create({ root: { flex: 1 } })

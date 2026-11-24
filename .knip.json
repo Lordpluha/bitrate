@@ -106,7 +106,6 @@
     },
     "apps/mobile": {
       "entry": ["**/*.{ios,android,web}.{ts,tsx}", "**/*.unit-spec.{ts,tsx}", "jest.setup.ts"],
-      "ignore": ["constants/tokens.gen.ts"],
       "ignoreBinaries": ["eas"],
       "ignoreDependencies": ["expo-updates"]
     },

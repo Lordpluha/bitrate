@@ -53,12 +53,13 @@ pnpm web
 
 ```
 app/                  — expo-router routes (a file is a route)
-  _layout.tsx         — providers
-  index.tsx           — bootstrap check: GET /health through the client, drawn with the tokens
-components/           — shared components
+  _layout.tsx         — providers; AppNavigator guards routes by session
+  (auth)/             — login, two-factor, register, forgot/reset password
+  (app)/              — signed-in area
+components/           — screen parts; components/ui/ holds the primitives
 constants/            — theme.ts + tokens.gen.ts (bridged design tokens)
 hooks/                — use-*.ts React hooks
-lib/                  — logic without UI: api/, i18n/, preferences/
+lib/                  — logic without UI: api/, auth/, i18n/, preferences/
 scripts/tokens/       — the design-token bridge generator
 ```
 
@@ -67,6 +68,7 @@ scripts/tokens/       — the design-token bridge generator
 | Concern | Choice |
 |---|---|
 | API | `lib/api/client.ts` — one openapi-fetch client typed by `@bitrate/contracts`; a middleware refreshes the session on 401 once and replays the request. Untyped responses get a zod schema next to their query. |
+| Session | The API's httpOnly cookies live in the platform cookie store (`credentials: include`); the app never reads a token. `GET /auth/me` answers "signed in?"; `Stack.Protected` routes `(app)` / `(auth)`. |
 | State | Server data in TanStack Query (`queryOptions` factories in `lib/<domain>/`); device-local state (UI preferences) in Zustand, persisted with AsyncStorage. |
 | Tokens | `pnpm tokens` regenerates `constants/tokens.gen.ts` from `packages/tailwind/src` (Dark default, Light, Dim). `pnpm tokens:check` fails on drift (CI runs it). Read colours with `useTheme()`. |
 | i18n | `lib/i18n/messages/{en,uk,pl}` — the web player's locales; a unit test keeps the catalogs' keys equal. |
