@@ -4,9 +4,11 @@ React Native + Expo mobile app for Bitrate. Runs on Android, iOS, and web (via r
 
 ## Stack
 
-- **Expo SDK 57** + **React Native 0.86** + **React 19**
+- **Expo SDK 58** + **React Native 0.88** + **React 19**
 - **expo-router** — file-based routing (`app/` directory)
-- **React Navigation** — bottom tabs + stack navigation
+- **React Navigation** — stack navigation
+- **TanStack Query** (server state) + **Zustand** (device-local state)
+- **openapi-fetch** typed against `@bitrate/contracts`
 - **react-native-reanimated 4** + **react-native-gesture-handler** — animations
 - **expo-image** — optimized image rendering
 - **EAS Build** — cloud builds for Android (APK/AAB) and iOS (IPA)
@@ -50,16 +52,30 @@ pnpm web
 ## Project Structure
 
 ```
-app/                  — expo-router pages (file-based routing)
-  (tabs)/             — bottom tab screens
-  _layout.tsx         — root layout
-  modal.tsx           — modal screen
-assets/               — fonts, images, icons
-components/           — shared UI components
-constants/            — colors, config constants
-hooks/                — custom React hooks
-scripts/              — utility scripts
+app/                  — expo-router routes (a file is a route)
+  _layout.tsx         — providers
+  index.tsx           — bootstrap check: GET /health through the client, drawn with the tokens
+components/           — shared components
+constants/            — theme.ts + tokens.gen.ts (bridged design tokens)
+hooks/                — use-*.ts React hooks
+lib/                  — logic without UI: api/, i18n/, preferences/
+scripts/tokens/       — the design-token bridge generator
 ```
+
+## Conventions
+
+| Concern | Choice |
+|---|---|
+| API | `lib/api/client.ts` — one openapi-fetch client typed by `@bitrate/contracts`; a middleware refreshes the session on 401 once and replays the request. Untyped responses get a zod schema next to their query. |
+| State | Server data in TanStack Query (`queryOptions` factories in `lib/<domain>/`); device-local state (UI preferences) in Zustand, persisted with AsyncStorage. |
+| Tokens | `pnpm tokens` regenerates `constants/tokens.gen.ts` from `packages/tailwind/src` (Dark default, Light, Dim). `pnpm tokens:check` fails on drift (CI runs it). Read colours with `useTheme()`. |
+| i18n | `lib/i18n/messages/{en,uk,pl}` — the web player's locales; a unit test keeps the catalogs' keys equal. |
+| Tests | Jest (`jest-expo`), files `*.unit-spec.ts(x)`: `pnpm test:unit`. |
+
+## Environment
+
+Copy `.env.example` to `.env`. `EXPO_PUBLIC_API_URL` defaults to `http://localhost:3000`; an
+Android emulator needs `http://10.0.2.2:3000`, a phone your machine's LAN address.
 
 ## EAS Build
 

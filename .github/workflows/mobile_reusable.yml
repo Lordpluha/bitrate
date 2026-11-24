@@ -3,6 +3,11 @@ name: "[mobile] Reusable"
 on:
   workflow_call:
     inputs:
+      run-unit-tests:
+        description: Run Jest unit tests and the design-token drift check
+        required: false
+        default: true
+        type: boolean
       run-expo-check:
         description: Run Expo dev server smoke check
         required: false
@@ -90,6 +95,28 @@ permissions:
   packages: write
 
 jobs:
+  unit-tests:
+    if: ${{ inputs.run-unit-tests }}
+    name: Mobile unit tests
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup Node.js and pnpm
+        uses: $/.github/actions/setup-node-pnpm
+
+      - name: Check design tokens are in sync
+        run: pnpm --filter @bitrate/mobile tokens:check
+
+      - name: Run unit tests
+        run: pnpm --filter @bitrate/mobile test:unit
+
   expo-dev-server-check:
     if: ${{ inputs.run-expo-check }}
     uses: $/.github/workflows/mobile_expo_reusable.yml

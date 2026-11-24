@@ -93,8 +93,7 @@
         "src/**/*.unit-spec.ts",
         "src/**/*.node-spec.ts",
         "src/**/*.browser-spec.ts",
-        "scripts/make-cmaf-fixture.mjs",
-        "scripts/make-encrypted-cmaf-fixture.mjs"
+        "scripts/make-cmaf-fixture.mjs"
       ],
       "ignoreBinaries": ["ffmpeg"]
     },
@@ -106,7 +105,8 @@
       ]
     },
     "apps/mobile": {
-      "entry": ["components/**/*.ios.tsx", "hooks/**/*.web.ts"],
+      "entry": ["**/*.{ios,android,web}.{ts,tsx}", "**/*.unit-spec.{ts,tsx}", "jest.setup.ts"],
+      "ignore": ["constants/tokens.gen.ts"],
       "ignoreBinaries": ["eas"],
       "ignoreDependencies": ["expo-updates"]
     },
