@@ -46,6 +46,8 @@ export type StreamRenditionInput = {
   bitrate: number
   rangeHeader?: string
   token?: string
+  /** The encrypted rendition rather than the clear one (ADR-0077); clear by default. */
+  encrypted?: boolean
 }
 
 /**
@@ -74,11 +76,13 @@ export class TrackPlaybackService {
       select: {
         fragmentTimescale: true,
         durationTicks: true,
+        contentKey: { select: { keyId: true } },
         audioFiles: {
           where: { format: CMAF_FORMAT },
-          orderBy: { bitrate: 'asc' },
+          orderBy: [{ bitrate: 'asc' }, { encrypted: 'asc' }],
           select: {
             bitrate: true,
+            encrypted: true,
             codec: true,
             size: true,
             initRangeStart: true,
@@ -93,7 +97,7 @@ export class TrackPlaybackService {
       throw new NotFoundException(`Track ${trackId} not found`)
     }
 
-    const { fragmentTimescale, durationTicks, audioFiles } = track
+    const { fragmentTimescale, durationTicks, audioFiles, contentKey } = track
 
     if (
       audioFiles.length === 0 ||
@@ -105,7 +109,7 @@ export class TrackPlaybackService {
       throw new NotFoundException(`Track ${trackId} has no CMAF renditions`)
     }
 
-    const renditions = audioFiles.map(parseRendition)
+    const renditions = audioFiles.map((file) => parseRendition(file, contentKey?.keyId ?? null))
     if (renditions.some((rendition) => rendition === null)) {
       this.logger.error(`Track ${trackId} contains an invalid persisted CMAF byte index`)
       throw new ServiceUnavailableException('Track playback manifest is unavailable')
@@ -173,6 +177,7 @@ export class TrackPlaybackService {
     bitrate,
     rangeHeader,
     token,
+    encrypted = false,
   }: StreamRenditionInput): Promise<RenditionStream> {
     const session = await this.sessions.authorize(token, trackId)
 
@@ -181,6 +186,7 @@ export class TrackPlaybackService {
         trackId,
         format: CMAF_FORMAT,
         bitrate,
+        encrypted,
         track: PUBLIC_TRACK_WHERE,
       },
       select: {
@@ -191,7 +197,8 @@ export class TrackPlaybackService {
         initRangeStart: true,
         initRangeEnd: true,
         fragments: true,
-        track: { select: { fragmentTimescale: true } },
+        encrypted: true,
+        track: { select: { fragmentTimescale: true, contentKey: { select: { keyId: true } } } },
       },
     })
 
@@ -199,7 +206,7 @@ export class TrackPlaybackService {
       throw new NotFoundException(`Track ${trackId} has no ${bitrate}k CMAF rendition`)
     }
 
-    const rendition = parseRendition(file)
+    const rendition = parseRendition(file, file.track.contentKey?.keyId ?? null)
     const timescale = file.track.fragmentTimescale
     if (!(rendition && timescale) || timescale <= 0) {
       this.logger.error(`Track ${trackId} has an invalid ${bitrate}k CMAF byte index`)

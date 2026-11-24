@@ -68,6 +68,9 @@ const musicTrackSchema = z.object({
   isDemo: z.boolean(),
   updatedAt: z.iso.datetime({ offset: true }),
   release: z.object({ id: z.uuid(), title: z.string() }).nullable(),
+  // Older API builds omit both; nothing can then be proposed from the catalogue.
+  acceptsChanges: z.boolean().default(false),
+  hasPendingChanges: z.boolean().default(false),
 }) satisfies z.ZodType<MusicTrack>
 
 const musicReleaseSchema = z.object({
@@ -79,6 +82,9 @@ const musicReleaseSchema = z.object({
   cover: optionalMedia,
   isDemo: z.boolean(),
   trackCount: z.number().int().nonnegative(),
+  // Older API builds omit both; nothing can then be proposed from the catalogue.
+  acceptsChanges: z.boolean().default(false),
+  hasPendingChanges: z.boolean().default(false),
   upc: z.string().nullable(),
   scheduledAt: z.iso.datetime({ offset: true }).nullable(),
   createdAt: z.iso.datetime({ offset: true }),

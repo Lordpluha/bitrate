@@ -110,7 +110,11 @@
       "ignoreDependencies": ["expo-updates"]
     },
     "packages/converter": {
-      "entry": ["src/ffmpeg-process.d.ts"]
+      "entry": ["src/ffmpeg-process.d.ts"],
+      "ignoreDependencies": ["shaka-packager"]
+    },
+    "packages/support-core": {
+      "entry": ["src/index.ts", "src/ai-sdk/index.ts"]
     },
     "packages/ncs-parser": {
       "entry": ["src/main.ts", "tests/*.test.ts"]

@@ -1,9 +1,11 @@
 import { rm, stat } from 'node:fs/promises'
 import { convertAudioToCmaf } from '@bitrate/converter'
+import { encryptCmafRenditions } from '@bitrate/converter/cmaf-encrypt'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import { STORAGE_SERVICE } from '@infra/storage/storage.constants'
 import { beforeEach, describe, expect, it, jest } from '@jest/globals'
 import { NotificationsProducer } from '@modules/notifications'
+import { ConfigService } from '@nestjs/config'
 import * as Sentry from '@sentry/nestjs'
 import {
   makeProcessingAttemptRecorderMock,
@@ -11,14 +13,24 @@ import {
   prismaMock,
   resetPrismaMock,
 } from '@test/mocks'
+import { unwrapContentKey } from '../encryption/unwrap-content-key'
 import { downloadObjectToFile } from '../shared/audio-master'
 import { removeStaleScratchDirs } from '../shared/audio-scratch'
-import { buildJob, cmafResult, jobData } from './__tests__/fixtures/audio-processing.fixtures'
+import {
+  buildJob,
+  cmafResult,
+  encryptedCmafResult,
+  jobData,
+} from './__tests__/fixtures/audio-processing.fixtures'
 import { AudioProcessingConsumer } from './audio-processing.consumer'
 import { ProcessingAttemptRecorder } from './processing-attempt.recorder'
 
 jest.mock('@bitrate/converter', () => ({
   convertAudioToCmaf: jest.fn(),
+}))
+
+jest.mock('@bitrate/converter/cmaf-encrypt', () => ({
+  encryptCmafRenditions: jest.fn(),
 }))
 
 /** Builds an object shaped like `@bitrate/converter`'s `FfmpegError`, without importing it. */
@@ -65,6 +77,11 @@ jest.mock('node:fs/promises', () => ({
 }))
 
 const convertAudioToCmafMock = convertAudioToCmaf as jest.MockedFunction<typeof convertAudioToCmaf>
+const encryptMock = encryptCmafRenditions as jest.MockedFunction<typeof encryptCmafRenditions>
+
+/** A key-encryption key for the specs; real ones come from `PLAYBACK_KEY_ENCRYPTION_KEY`. */
+const KEK = 'c'.repeat(64)
+const configWith = (kek?: string) => ({ get: () => kek })
 
 const downloadMock = downloadObjectToFile as jest.MockedFunction<typeof downloadObjectToFile>
 const removeStaleMock = removeStaleScratchDirs as jest.MockedFunction<typeof removeStaleScratchDirs>
@@ -82,6 +99,7 @@ describe('AudioProcessingConsumer', () => {
       ProcessingAttemptRecorder,
       NotificationsProducer,
       Function,
+      ConfigService,
     ])
     expect(Reflect.getMetadata('self:paramtypes', AudioProcessingConsumer)).toEqual(
       expect.arrayContaining([expect.objectContaining({ index: 1, param: STORAGE_SERVICE })]),
@@ -112,6 +130,7 @@ describe('AudioProcessingConsumer', () => {
       recorder,
       notifications as never,
       releasePublishing as never,
+      configWith() as never,
     )
     prisma.track.count.mockResolvedValue(1)
     prisma.track.update.mockResolvedValue({ id: 'track-1' } as never)
@@ -529,5 +548,90 @@ describe('AudioProcessingConsumer', () => {
     await consumer.onStalled('job-9')
 
     expect(recorder.markStalledByJob).toHaveBeenCalledWith('job-9')
+  })
+
+  describe('content encryption (ADR-0077)', () => {
+    const encrypting = () =>
+      new AudioProcessingConsumer(
+        prisma,
+        storage as never,
+        deadLetterQueue as never,
+        recorder,
+        notifications as never,
+        releasePublishing as never,
+        configWith(KEK) as never,
+      )
+
+    beforeEach(() => {
+      encryptMock.mockImplementation(async ({ keyId }) => encryptedCmafResult(keyId) as never)
+      prisma.trackContentKey.upsert.mockResolvedValue({} as never)
+      prisma.trackContentKey.deleteMany.mockResolvedValue({ count: 0 } as never)
+    })
+
+    it('encrypts every rendition under a fresh key and keeps a clear copy of the lowest', async () => {
+      await encrypting().process(buildJob('convert-audio', jobData))
+
+      expect(encryptMock).toHaveBeenCalledTimes(1)
+      const [options] = encryptMock.mock.calls[0] ?? []
+      expect(options).toMatchObject({
+        renditions: cmafResult.renditions,
+        clearBitrates: [128],
+        keyId: expect.stringMatching(/^[0-9a-f]{32}$/),
+        key: expect.stringMatching(/^[0-9a-f]{32}$/),
+      })
+      const uploadedKeys = storage.upload.mock.calls.map(([key]) =>
+        String(key).replace(/^.*\/cmaf\//, ''),
+      )
+      expect(uploadedKeys.sort()).toEqual(['128-clear.m4a', '128.m4a', '192.m4a'])
+    })
+
+    it('publishes encrypted and clear rows with the packaged index, and the wrapped key', async () => {
+      await encrypting().process(buildJob('convert-audio', jobData))
+      const [options] = encryptMock.mock.calls[0] ?? []
+
+      const rows = prisma.trackFile.upsert.mock.calls.map(
+        ([call]) =>
+          (call as { create: { bitrate: number; encrypted: boolean; size: number } }).create,
+      )
+      expect(rows.map(({ bitrate, encrypted }) => `${bitrate}:${encrypted}`).sort()).toEqual([
+        '128:false',
+        '128:true',
+        '192:true',
+      ])
+      expect(rows.every(({ size }) => size % 7_100 === 0)).toBe(true)
+      expect(prisma.track.updateMany).toHaveBeenCalledWith(
+        expect.objectContaining({ data: expect.objectContaining({ durationTicks: 2_881_024 }) }),
+      )
+
+      const [keyWrite] = prisma.trackContentKey.upsert.mock.calls[0] ?? []
+      const row = (
+        keyWrite as {
+          create: { keyId: string; wrappedKey: Uint8Array; iv: Uint8Array; authTag: Uint8Array }
+        }
+      ).create
+      const stored = {
+        keyId: row.keyId,
+        wrappedKey: Buffer.from(row.wrappedKey),
+        iv: Buffer.from(row.iv),
+        authTag: Buffer.from(row.authTag),
+      }
+      expect(stored.keyId).toBe(options?.keyId)
+      expect(stored.wrappedKey.includes(Buffer.from(String(options?.key), 'hex'))).toBe(false)
+      expect(unwrapContentKey(stored, KEK)).toBe(options?.key)
+    })
+
+    it('publishes clear renditions and drops any old key when no key-encryption key is set', async () => {
+      await consumer.process(buildJob('convert-audio', jobData))
+
+      expect(encryptMock).not.toHaveBeenCalled()
+      const rows = prisma.trackFile.upsert.mock.calls.map(
+        ([call]) => (call as { create: { encrypted: boolean } }).create,
+      )
+      expect(rows.every(({ encrypted }) => encrypted === false)).toBe(true)
+      expect(prisma.trackContentKey.upsert).not.toHaveBeenCalled()
+      expect(prisma.trackContentKey.deleteMany).toHaveBeenCalledWith({
+        where: { trackId: 'track-1' },
+      })
+    })
   })
 })

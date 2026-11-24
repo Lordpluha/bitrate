@@ -127,6 +127,10 @@ Per-app файлы до контейнера тоже не доходят: ни 
 | `SMTP_PORT` | почта | `587` | SMTP-порт |
 | `HEALTH_CHECK_TIMEOUT_MS` | наблюдаемость | `2000` | Таймаут health-проверок (100–10000) |
 | `DEV_MAIL_LOG_TOKENS` | разработка | `false` | Логировать токены писем. В production обязан быть `false` |
+| `SUPPORT_EMBED_MODEL` | ассистент поддержки | `openai:text-embedding-3-small` | Модель эмбеддингов базы знаний в формате `provider:model` (ADR-0074). Смена модели строит новую коллекцию при следующем старте |
+| `SUPPORT_KNOWLEDGE_DIR` | ассистент поддержки | `../docs/docs` | Каталог с `help/` и `legal/`. Образ API кладёт их в `/app/apps/api/knowledge` и задаёт переменную сам |
+| `SUPPORT_CHAT_MODEL` | ассистент поддержки | `anthropic:claude-haiku-5-5` | Модель ответов ассистента в формате `provider:model`. Цены моделей для учёта бюджета заданы в `modules/support/chat/model-prices.ts`, неизвестная модель считается по ценам Sonnet 5.5 |
+| `SUPPORT_MONTHLY_BUDGET_USD` | ассистент поддержки | `10` | Месячный бюджет на модели в долларах. Когда он исчерпан, новые диалоги сразу уходят оператору |
 
 Имена кук сессии через окружение не настраиваются. Все куки живут на общем `COOKIE_DOMAIN`,
 поэтому у каждого типа аккаунта своя пара: `user_*` у плеера, `artist_*` у портала артистов,
@@ -150,6 +154,10 @@ Per-app файлы до контейнера тоже не доходят: ни 
 | `SMTP_HOST` | почта | SMTP-сервер. Без него письма сброса пароля пишутся в лог |
 | `METRICS_TOKEN` | наблюдаемость | Токен доступа к метрикам, минимум 32 символа |
 | `SENTRY_DSN` | наблюдаемость | DSN проекта API в Sentry. Без него SDK стартует отключённым |
+| `QDRANT_URL` | ассистент поддержки | Qdrant с индексом базы знаний (ADR-0075). Локально `http://localhost:6333` (`task infra:up`), в проде `http://qdrant:6333`. Без него индексация пропускается |
+| `QDRANT_API_KEY` | ассистент поддержки | Ключ Qdrant. Локально не нужен; в prod-compose обязателен, без него стек не поднимется |
+| `OPENAI_API_KEY` | ассистент поддержки | Ключ провайдера эмбеддингов по умолчанию. Без него индексация пропускается с записью в лог |
+| `ANTHROPIC_API_KEY` | ассистент поддержки | Ключ модели ответов по умолчанию. Без него, без `OPENAI_API_KEY` или без `QDRANT_URL` чат работает, но каждый диалог сразу передаётся оператору |
 
 ### Условно обязательные
 
@@ -327,6 +335,10 @@ S3_ENDPOINT=http://localhost:8333
 S3_BUCKET=bitrate-audio
 S3_ACCESS_KEY=bitrateDevAccessKey
 S3_SECRET_KEY=bitrateDevSecretKeyChangeMe0001
+# support assistant knowledge index (ADR-0075). Without OPENAI_API_KEY the ingest is skipped.
+QDRANT_URL=http://localhost:6333
+# OPENAI_API_KEY=sk-...
+# ANTHROPIC_API_KEY=sk-ant-...
 
 # ══════════ 2. OPTIONAL, WITH A DEFAULT ══════════
 # The values below match the schema defaults: drop a line entirely if you like,

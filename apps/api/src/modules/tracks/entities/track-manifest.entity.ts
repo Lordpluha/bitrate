@@ -35,6 +35,22 @@ export class TrackManifestRenditionEntity {
     ],
   })
   fragments: number[][]
+
+  /**
+   * CENC `cbcs` under the track's content key (ADR-0077): request the bytes with `?encrypted=1`
+   * and the key from `POST /tracks/:id/license`. `null` for a clear rendition.
+   */
+  @ApiProperty({
+    nullable: true,
+    type: 'object',
+    properties: {
+      scheme: { type: 'string', enum: ['cbcs'] },
+      keyId: { type: 'string', example: '0123456789abcdef0123456789abcdef' },
+    },
+    required: ['scheme', 'keyId'],
+    example: { scheme: 'cbcs', keyId: '0123456789abcdef0123456789abcdef' },
+  })
+  encryption: { scheme: 'cbcs'; keyId: string } | null
 }
 
 /**

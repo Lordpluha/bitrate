@@ -3,18 +3,20 @@ import {
   useSaveWorkspaceLayout,
   useWorkspaceLayout,
 } from '../api/useWorkspaceLayout'
+import type { GridTile } from './grid'
 import {
   defaultLayout,
+  fromStoredLayout,
   type LayoutPage,
-  type LayoutTile,
-  mergeLayout,
   sameLayout,
   type TileDefinition,
+  toStoredLayout,
 } from './layout'
 
 /**
- * A page's tiles in the artist's arrangement, plus a customize mode that edits a draft and
- * saves it on Done. Until the stored layout loads, the default one is shown.
+ * A page's tiles on the free grid in the artist's arrangement, plus a customize mode that
+ * edits a draft and saves it on Done. Until the stored layout loads, the default one is shown.
+ * Tiles not on the grid wait in the drawer.
  */
 export function useCustomizableLayout(
   artistId: string,
@@ -23,8 +25,8 @@ export function useCustomizableLayout(
 ) {
   const stored = useWorkspaceLayout(artistId, page)
   const save = useSaveWorkspaceLayout(artistId, page)
-  const [draft, setDraft] = useState<LayoutTile[] | null>(null)
-  const saved = mergeLayout(definitions, stored.data ?? [])
+  const [draft, setDraft] = useState<GridTile[] | null>(null)
+  const saved = fromStoredLayout(definitions, stored.data ?? [])
   const fallback = defaultLayout(definitions)
   return {
     definitions,
@@ -39,16 +41,17 @@ export function useCustomizableLayout(
     },
     cancel: () => setDraft(null),
     reset: () => setDraft(fallback),
-    change: (next: LayoutTile[]) => setDraft(next),
+    change: (next: GridTile[]) => setDraft(next),
     done: () => {
       if (!draft) return
       if (sameLayout(draft, saved)) {
         setDraft(null)
         return
       }
-      save.mutate(sameLayout(draft, fallback) ? null : draft, {
-        onSuccess: () => setDraft(null),
-      })
+      save.mutate(
+        sameLayout(draft, fallback) ? null : toStoredLayout(definitions, draft),
+        { onSuccess: () => setDraft(null) },
+      )
     },
   }
 }

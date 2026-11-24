@@ -101,4 +101,6 @@ export function resetReleaseMocks(): void {
     if (typeof operation !== 'function') throw new Error('Expected an interactive transaction')
     return await operation(transactionMock)
   })
+  // Deletion cancels changes awaiting review; a release without any returns no rows.
+  transactionMock.releaseChange.updateManyAndReturn.mockResolvedValue([])
 }

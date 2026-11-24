@@ -13,6 +13,7 @@ import { NotificationsModule } from '@modules/notifications/notifications.module
 import { PlaylistsModule } from '@modules/playlists/playlists.module'
 import { ReleasePublishingModule, ReleasesModule } from '@modules/releases'
 import { SearchModule } from '@modules/search/search.module'
+import { SupportChatModule, SupportKnowledgeModule } from '@modules/support'
 import { TracksModule } from '@modules/tracks/tracks.module'
 import { UsersModule } from '@modules/users/users.module'
 import { UsersAuthModule } from '@modules/users-auth/users-auth.module'
@@ -39,6 +40,8 @@ import { AppCoreModule } from './app-core.module'
     MeModule,
     ReleasesModule,
     ReleasePublishingModule,
+    SupportKnowledgeModule,
+    SupportChatModule,
     ArtistProfileModule,
     ArtistWorkspaceModule,
     ModerationModule,

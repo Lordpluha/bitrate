@@ -67,7 +67,7 @@ jobs:
       # brought instead: the PR's range, the push's range, or (schedule, dispatch, a new branch's
       # first push) the whole history, which an empty base means.
       - name: TruffleHog
-        uses: trufflesecurity/trufflehog@3bd2b5887eb0efb8fa18bfd1d296032924e4ffdc # v3.99.9
+        uses: trufflesecurity/trufflehog@d232362a64a09a9e7d58267b8f5acef00ae90e23 # v3.100.0
         with:
           path: ./
           base: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || (github.event_name == 'push' && github.event.before != '0000000000000000000000000000000000000000' && github.event.before) || '' }}
@@ -100,7 +100,7 @@ jobs:
 
       - name: Upload Trivy results to code scanning
         if: always() && hashFiles('trivy-fs.sarif') != '' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
-        uses: github/codeql-action/upload-sarif@33d7b85da1a04171e211befe2c739303b9a4c066 # v4.39.3
+        uses: github/codeql-action/upload-sarif@1bd86f2fdb4b86187fa4059f16f31a3202acc9ea # v4.39.4
         with:
           sarif_file: trivy-fs.sarif
           category: trivy-fs
@@ -126,14 +126,14 @@ jobs:
           persist-credentials: false
 
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@33d7b85da1a04171e211befe2c739303b9a4c066 # v4.39.3
+        uses: github/codeql-action/init@1bd86f2fdb4b86187fa4059f16f31a3202acc9ea # v4.39.4
         with:
           languages: ${{ matrix.language }}
           build-mode: none
           queries: security-extended
 
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@33d7b85da1a04171e211befe2c739303b9a4c066 # v4.39.3
+        uses: github/codeql-action/analyze@1bd86f2fdb4b86187fa4059f16f31a3202acc9ea # v4.39.4
         with:
           category: /language:${{ matrix.language }}
 
@@ -192,7 +192,7 @@ jobs:
 
       - name: Upload Trivy results to code scanning
         if: always() && hashFiles('trivy-third-party.sarif') != ''
-        uses: github/codeql-action/upload-sarif@33d7b85da1a04171e211befe2c739303b9a4c066 # v4.39.3
+        uses: github/codeql-action/upload-sarif@1bd86f2fdb4b86187fa4059f16f31a3202acc9ea # v4.39.4
         with:
           sarif_file: trivy-third-party.sarif
           category: third-party-image/${{ matrix.image }}
