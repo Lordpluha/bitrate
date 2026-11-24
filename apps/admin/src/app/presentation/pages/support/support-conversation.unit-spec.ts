@@ -53,8 +53,14 @@ const button = (root: ParentNode | null, text: string) =>
     (candidate) => candidate.textContent?.trim() === text,
   )
 
+const dialog = () => document.body.querySelector('[data-slot="dialog-content"]')
+const replyField = () => document.body.querySelector<HTMLTextAreaElement>('#support-reply')
+
+/** Opens the Reply dialog and types into it. */
 async function type(fixture: { whenStable(): Promise<unknown> }, host: HTMLElement, text: string) {
-  const field = host.querySelector<HTMLTextAreaElement>('#support-reply')
+  button(host, 'Reply')?.click()
+  await fixture.whenStable()
+  const field = replyField()
   if (!field) throw new Error('no reply field')
   field.value = text
   field.dispatchEvent(new Event('input'))
@@ -99,12 +105,12 @@ describe('SupportConversationPage', () => {
     const { fixture, host } = await render()
 
     await type(fixture, host, 'We are on it')
-    button(host, 'Send reply')?.click()
+    button(dialog(), 'Send reply')?.click()
     await fixture.whenStable()
 
     expect(reply).toHaveBeenCalledWith({ id: '', text: 'We are on it' })
     expect(host.textContent).toContain('With an operator')
-    expect(host.querySelector<HTMLTextAreaElement>('#support-reply')?.value).toBe('')
+    expect(dialog()).toBeNull()
   })
 
   it('refuses a blank reply before calling the API', async () => {
@@ -112,11 +118,11 @@ describe('SupportConversationPage', () => {
     const { fixture, host } = await render()
 
     await type(fixture, host, '   ')
-    button(host, 'Send reply')?.click()
+    button(dialog(), 'Send reply')?.click()
     await fixture.whenStable()
 
     expect(reply).not.toHaveBeenCalled()
-    expect(host.querySelector('#support-reply-error')?.textContent).toContain(
+    expect(document.body.querySelector('#support-reply-error')?.textContent).toContain(
       'Write a reply first.',
     )
   })
@@ -127,11 +133,11 @@ describe('SupportConversationPage', () => {
     const { fixture, host } = await render()
 
     await type(fixture, host, 'Hello')
-    button(host, 'Send reply')?.click()
+    button(dialog(), 'Send reply')?.click()
     await fixture.whenStable()
 
-    expect(host.textContent).toContain("Couldn't send the reply. Try again.")
-    expect(host.querySelector<HTMLTextAreaElement>('#support-reply')?.value).toBe('Hello')
+    expect(dialog()?.textContent).toContain("Couldn't send the reply. Try again.")
+    expect(replyField()?.value).toBe('Hello')
   })
 
   it('asks before resolving, and resolves on confirm', async () => {
@@ -143,7 +149,6 @@ describe('SupportConversationPage', () => {
       }),
     )
     const { fixture, host } = await render()
-    const dialog = () => document.body.querySelector('[data-slot="dialog-content"]')
 
     button(host, 'Resolve')?.click()
     await fixture.whenStable()
@@ -161,9 +166,8 @@ describe('SupportConversationPage', () => {
     getConversation.mockResolvedValue(supportConversation())
     const { host } = await render(['support:read'])
 
-    expect(host.querySelector('#support-reply')).toBeNull()
+    expect(button(host, 'Reply')).toBeUndefined()
     expect(button(host, 'Resolve')).toBeUndefined()
-    expect(host.textContent).toContain('You can read this conversation but not reply to it.')
   })
 
   it('shows not found for a conversation that was never handed off', async () => {

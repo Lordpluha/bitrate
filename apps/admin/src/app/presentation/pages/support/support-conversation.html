@@ -3,12 +3,24 @@
     [back]="back()"
     [eyebrow]="'supportConversation.eyebrow' | transloco: { id: shortId(c.id) }"
     [title]="c.ticket.reason"
-    [subtitle]="subtitle(c, c.lastMessageAt | elapsed)"
+    [subtitle]="subtitle(c, (c.lastMessageAt | elapsed) ?? '')"
   >
     <span headerStatus hlmBadge [variant]="stateBadge[c.state]">
       {{ stateLabel[c.state] | transloco }}
     </span>
     <ng-container ngProjectAs="[headerActions]">
+      @if (canReply()) {
+        <button
+          hlmBtn
+          variant="secondary"
+          type="button"
+          [disabled]="pending()"
+          (click)="replying.set(true)"
+        >
+          <ng-icon name="lucideSend" aria-hidden="true" />
+          {{ 'supportConversation.action.reply' | transloco }}
+        </button>
+      }
       @if (canReply() && resolvable(c)) {
         <button hlmBtn type="button" [disabled]="pending()" (click)="confirmingResolve.set(true)">
           <ng-icon name="lucideCheck" aria-hidden="true" />
@@ -111,57 +123,66 @@
         </app-kv-row>
       </div>
     </app-tile>
+  </app-tile-grid>
 
-    <app-tile
-      icon="lucideSend"
-      [title]="'supportConversation.tile.reply' | transloco"
-      [meta]="'supportConversation.tile.replyMeta' | transloco"
-      [span]="4"
-    >
-      @if (canReply()) {
-        <form class="flex flex-col gap-1.5" [formGroup]="form" (ngSubmit)="sendReply()">
+  <hlm-dialog [state]="replying() ? 'open' : 'closed'" (closed)="dismissReply()">
+    <hlm-dialog-content *hlmDialogPortal="let ctx">
+      <form class="flex flex-col gap-4" [formGroup]="form" (ngSubmit)="sendReply()">
+        <hlm-dialog-header>
+          <h2 hlmDialogTitle>{{ 'supportConversation.dialog.replyTitle' | transloco }}</h2>
+          <p hlmDialogDescription>{{ 'supportConversation.dialog.replyDesc' | transloco }}</p>
+        </hlm-dialog-header>
+        <div class="flex flex-col gap-1.5">
           <label hlmLabel for="support-reply">{{
             'supportConversation.reply.label' | transloco
           }}</label>
           <textarea
             id="support-reply"
             class="w-full min-w-0 rounded-xl border border-glass-line bg-foreground/5 px-3 py-2 text-sm outline-hidden transition-[border-color,box-shadow] placeholder:text-muted-foreground focus-visible:border-primary/60 focus-visible:ring-3 focus-visible:ring-primary/20 disabled:opacity-50"
-            rows="4"
+            rows="5"
             formControlName="text"
             [placeholder]="'supportConversation.reply.placeholder' | transloco"
             [attr.aria-invalid]="replyError() !== null"
             [attr.aria-describedby]="replyError() ? 'support-reply-error' : 'support-reply-hint'"
           ></textarea>
-          <div class="flex items-center justify-between gap-3">
-            @if (replyError(); as key) {
-              <p class="text-xs text-error-text" id="support-reply-error" role="alert">
-                {{ key | transloco }}
-              </p>
-            } @else {
-              <p class="text-xs tabular-nums text-muted-foreground" id="support-reply-hint">
-                {{
-                  'supportConversation.reply.hint'
-                    | transloco: { count: draftLength(), max: replyMax }
-                }}
-              </p>
-            }
-            <button hlmBtn type="submit" [disabled]="pending()">
-              <ng-icon name="lucideSend" aria-hidden="true" />
+          @if (replyError(); as key) {
+            <p class="text-xs text-error-text" id="support-reply-error" role="alert">
+              {{ key | transloco }}
+            </p>
+          } @else {
+            <p class="text-xs tabular-nums text-muted-foreground" id="support-reply-hint">
               {{
-                pending()
-                  ? ('ui.working' | transloco)
-                  : ('supportConversation.reply.send' | transloco)
+                'supportConversation.reply.hint'
+                  | transloco: { count: draftLength(), max: replyMax }
               }}
-            </button>
-          </div>
-        </form>
-      } @else {
-        <p class="text-sm text-muted-foreground">
-          {{ 'supportConversation.reply.readOnly' | transloco }}
-        </p>
-      }
-    </app-tile>
-  </app-tile-grid>
+            </p>
+          }
+        </div>
+        @if (failureText(); as message) {
+          <p class="text-sm text-error-text" role="alert">{{ message }}</p>
+        }
+        <hlm-dialog-footer>
+          <button
+            hlmBtn
+            variant="ghost"
+            type="button"
+            [disabled]="pending()"
+            (click)="dismissReply()"
+          >
+            {{ 'ui.cancel' | transloco }}
+          </button>
+          <button hlmBtn type="submit" [disabled]="pending()">
+            <ng-icon name="lucideSend" aria-hidden="true" />
+            {{
+              pending()
+                ? ('ui.working' | transloco)
+                : ('supportConversation.reply.send' | transloco)
+            }}
+          </button>
+        </hlm-dialog-footer>
+      </form>
+    </hlm-dialog-content>
+  </hlm-dialog>
 
   <hlm-dialog [state]="confirmingResolve() ? 'open' : 'closed'" (closed)="dismissResolve()">
     <hlm-dialog-content *hlmDialogPortal="let ctx">
@@ -197,8 +218,8 @@
   />
   @if (loading()) {
     <app-tile-grid role="status" [attr.aria-label]="'ui.loading' | transloco">
-      @for (tile of [3, 1, 4]; track $index) {
-        <app-tile [title]="'ui.loading' | transloco" [span]="tile === 4 ? 4 : tile === 3 ? 3 : 1">
+      @for (tile of [3, 1]; track $index) {
+        <app-tile [title]="'ui.loading' | transloco" [span]="tile === 3 ? 3 : 1">
           <app-skeleton class="h-3.5 w-full" />
           <app-skeleton class="h-3.5 w-4/5" />
           <app-skeleton class="h-3.5 w-3/5" />

@@ -44,7 +44,7 @@ const ticketDto = z.object({
   resolvedAt: z.iso.datetime().nullable(),
 }) satisfies z.ZodType<ApiSchemas['SupportTicketEntity']>
 
-export const supportItemDto = z.object({
+const supportItemDto = z.object({
   id: z.uuid(),
   audience: audienceDto,
   channel: channelDto,

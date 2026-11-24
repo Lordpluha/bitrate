@@ -11,7 +11,7 @@ export type SupportConversationState = 'bot' | 'waiting_operator' | 'operator' |
 export type SupportMessageRole = 'user' | 'assistant' | 'operator'
 
 /** A knowledge-base source under an assistant answer. */
-export type SupportCitation = {
+type SupportCitation = {
   title: string
   url: string | null
 }
@@ -25,7 +25,7 @@ export type SupportMessage = {
 }
 
 /** Why and since when a conversation waits for an operator. */
-export type SupportTicket = {
+type SupportTicket = {
   reason: string
   status: SupportTicketStatus
   createdAt: Date

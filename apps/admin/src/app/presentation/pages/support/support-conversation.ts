@@ -89,6 +89,7 @@ export class SupportConversationPage {
   protected readonly failure = this.record.failure
   protected readonly pending = signal(false)
   protected readonly confirmingResolve = signal(false)
+  protected readonly replying = signal(false)
 
   protected readonly form = new FormGroup(
     { text: new FormControl('', { nonNullable: true }) },
@@ -144,8 +145,13 @@ export class SupportConversationPage {
         text: this.form.controls.text.value,
       })
       this.form.reset({ text: '' })
+      this.replying.set(false)
       return updated
     })
+  }
+
+  protected dismissReply(): void {
+    if (!this.pending()) this.replying.set(false)
   }
 
   protected dismissResolve(): void {
