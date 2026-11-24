@@ -18,7 +18,6 @@ const createTrack = ({
   title,
   duration,
   artistId: 'artist-id',
-  audioUrl: `/audio/${id}.mp3`,
   cover: '/cover.jpg',
   createdAt: new Date().toISOString(),
   updatedAt: new Date().toISOString(),

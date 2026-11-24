@@ -6,6 +6,7 @@ import { configureCmafEngine } from '@bitrate/player/engine'
 import {
   fetchRenditionRange,
   getRenditionUrl,
+  requestTrackLicense,
 } from '@/entities/Player/api/client'
 import {
   isSlowNetwork,
@@ -47,6 +48,8 @@ export const createStreamingTransport = ({
     isConstrained: isSlowNetwork,
     positions: sessionPositionStore,
     renditionUrl: getRenditionUrl,
+    /** ClearKey licences for encrypted tracks (ADR-0077), against the track's play session. */
+    requestLicense: requestTrackLicense,
     resolveManifest,
   }
 }

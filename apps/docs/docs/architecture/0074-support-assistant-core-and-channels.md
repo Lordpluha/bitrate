@@ -49,10 +49,12 @@ process ([ADR-0068](./0068-operator-api-process.md)).
     acknowledge at once. The worker runs the core and sends the reply through the
     channel's `ChannelAdapter`. Operator replies use the same adapter, so a person
     answers in the channel the user wrote from.
-- **Models.** The core talks to models only through its ports. The API implements them with
-  the Vercel AI SDK, which resolves `provider:model` strings from configuration
-  (`SUPPORT_CHAT_MODEL`, `SUPPORT_EMBED_MODEL`), so changing provider is a configuration
-  change, not a code change. Defaults:
+- **Models.** The core talks to models only through its ports. The Vercel AI SDK
+  implementation ships in the same package behind a separate entry,
+  `@bitrate/support-core/ai-sdk`, so the core itself imports no model SDK. It resolves
+  `provider:model` strings from configuration (`SUPPORT_CHAT_MODEL`,
+  `SUPPORT_EMBED_MODEL`), so changing provider is a configuration change, not a code
+  change. The API chooses which model serves a turn. Defaults:
   - chat: `anthropic:claude-haiku-5-5`, escalating hard cases to
     `anthropic:claude-sonnet-5-5`;
   - embeddings: `openai:text-embedding-3-small`.

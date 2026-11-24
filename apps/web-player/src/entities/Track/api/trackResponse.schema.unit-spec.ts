@@ -6,7 +6,6 @@ describe('trackResponseSchema', () => {
   it('accepts a track without a cover', () => {
     const result = trackResponseSchema.safeParse({
       artistId: 'artist-1',
-      audioUrl: 'track.mp3',
       cover: null,
       createdAt: '2026-01-01T00:00:00.000Z',
       deletedAt: null,

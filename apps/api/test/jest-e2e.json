@@ -13,6 +13,8 @@
     "node_modules/(?!(@noble|@scure|@otplib|@nestjs|ai|@ai-sdk|@standard-schema|@workflow|eventsource-parser|zod)/)"
   ],
   "moduleNameMapper": {
+    "^@bitrate/support-core$": "<rootDir>/../../packages/support-core/src/index.ts",
+    "^(\\.{1,2}/.*)\\.js$": "$1",
     "^src/(.*)$": "<rootDir>/src/$1",
     "^@modules/(.*)$": "<rootDir>/src/modules/$1",
     "^@infra/(.*)$": "<rootDir>/src/infra/$1",
