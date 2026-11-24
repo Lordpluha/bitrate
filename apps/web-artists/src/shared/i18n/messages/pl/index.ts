@@ -14,6 +14,10 @@ import { music } from './music'
 import { notifications } from './notifications'
 import { player } from './player'
 import { profile } from './profile'
+import { promotion } from './promotion'
+import { promotionErrors } from './promotionErrors'
+import { promotionPages } from './promotionPages'
+import { promotionPosts } from './promotionPosts'
 import { publish } from './publish'
 import { release } from './release'
 import { releaseChanges } from './releaseChanges'
@@ -37,6 +41,10 @@ export const pl = {
   ...music,
   ...notifications,
   ...player,
+  ...promotion,
+  ...promotionPosts,
+  ...promotionPages,
+  ...promotionErrors,
   ...profile,
   ...publish,
   ...release,
