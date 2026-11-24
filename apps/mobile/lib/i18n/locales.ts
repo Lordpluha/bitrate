@@ -1,5 +1,5 @@
 /** The locales the web player ships; mobile mirrors them. */
-const SUPPORTED_LOCALES = ['en', 'uk', 'pl'] as const
+export const SUPPORTED_LOCALES = ['en', 'uk', 'pl'] as const
 
 export type Locale = (typeof SUPPORTED_LOCALES)[number]
 

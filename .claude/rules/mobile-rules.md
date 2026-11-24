@@ -14,10 +14,11 @@ metadata:
 Read before writing any file in `apps/mobile/`. Pair with the `expo` skill, which covers the
 framework mechanics; this file is project law.
 
-## Status: bootstrapped (epic #225)
+## Status: core MVP (epic #225)
 
-`apps/mobile` has its conventions (#226) and the auth screens (#227). Home, search and the
-player arrive with #228–#229; the app's README "Conventions" table summarises the rules.
+`apps/mobile` has auth, Home, Search, Library, Profile and the player (#226–#229). The
+conventions below are decided; the app's README "Conventions" table is their one-page summary.
+Offline mode, background playback, push and the EAS pipeline are still open (#230–#233).
 
 **Propose, don't improvise silently.** When a task needs a convention this app has not
 established, say so in your report and state the convention you chose. The next agent
@@ -50,11 +51,12 @@ apps/mobile/
   app/            expo-router routes — a file here IS a route
     _layout.tsx   providers; components/app-navigator.tsx guards by session (Stack.Protected)
     (auth)/       signed-out screens
-    (app)/        signed-in area
+    (app)/        signed-in tabs, drawn by the Mobile Island (components/island/)
+    now-playing.tsx
   components/     screen parts; components/ui/ for primitives
   hooks/          use-*.ts
   constants/      theme.ts + tokens.gen.ts
-  lib/            logic without UI: api/, auth/, i18n/, preferences/
+  lib/            logic without UI: api/, auth/, catalog/, player/, i18n/, preferences/
   scripts/tokens/ design-token bridge generator
 ```
 
@@ -65,7 +67,7 @@ That contradicts `.claude/rules/typescript.md`'s React-component naming, and the
 convention wins inside this app. Match the existing files; do not half-migrate.
 
 Platform-specific variants use the extension suffix Expo resolves automatically:
-`use-color-scheme.web.ts`. Do not hand-roll `Platform.OS` branching
+`lib/player/engine/index.web.ts`, `use-color-scheme.web.ts`. Do not hand-roll `Platform.OS` branching
 where a `.ios`/`.android`/`.web` file is the idiom.
 
 ## Path alias
@@ -109,7 +111,8 @@ not import `@bitrate/ui-react`.
 Use the one client, `api` from `lib/api/client.ts` (openapi-fetch + the 401 refresh
 middleware). Session cookies stay in the native cookie store; never read or store a token.
 Queries are `queryOptions` factories in `lib/<domain>/…-query.ts` with keys from
-one keys module per domain. A response the contract leaves untyped is validated with zod.
+`lib/catalog/query-keys.ts`. A response the contract leaves untyped is validated with zod
+(`lib/catalog/schemas/`). `apiFetch` exists only for paths whose generated contract is wrong.
 
 ## Accessibility
 
@@ -128,7 +131,7 @@ pnpm --filter @bitrate/mobile test:unit            # Jest (jest-expo), *.unit-sp
 pnpm --filter @bitrate/mobile tokens:check
 ```
 
-EAS builds
+Playback needs a development build (react-native-track-player is native; no Expo Go). EAS builds
 (`build:dev:*`, `build:prod:*`) and store submission are the user's to run.
 
 ## Related

@@ -5,12 +5,13 @@ import { useEffect } from 'react'
 
 import { SessionErrorScreen } from '@/components/session-error-screen'
 import { useNavigationTheme } from '@/hooks/use-navigation-theme'
+import { usePlayerEngine } from '@/hooks/use-player-engine'
 import { useSession } from '@/hooks/use-session'
 import { useSessionExpiry } from '@/hooks/use-session-expiry'
 import { useTheme } from '@/hooks/use-theme'
 
 /**
- * Routes by session: `(app)` only with a session, `(auth)` only without one.
+ * Routes by session: `(app)` and Now Playing only with a session, `(auth)` only without one.
  * The splash screen stays up until the first `/auth/me` answer, so nothing flashes.
  */
 export function AppNavigator() {
@@ -18,6 +19,7 @@ export function AppNavigator() {
   const { isDark } = useTheme()
   const navigationTheme = useNavigationTheme()
   useSessionExpiry()
+  usePlayerEngine()
 
   const settled = session.status !== 'loading'
   useEffect(() => {
@@ -35,6 +37,7 @@ export function AppNavigator() {
         <Stack screenOptions={{ headerShown: false }}>
           <Stack.Protected guard={signedIn}>
             <Stack.Screen name="(app)" />
+            <Stack.Screen name="now-playing" options={{ presentation: 'modal' }} />
           </Stack.Protected>
           <Stack.Protected guard={!signedIn}>
             <Stack.Screen name="(auth)" />
