@@ -36,6 +36,8 @@ export type RunConversionPhasesInput = {
   jobId: string
   attempt: number
   isStillCurrent: (job: Job<ConvertAudioJob>) => Promise<boolean>
+  /** `PLAYBACK_KEY_ENCRYPTION_KEY`; unset publishes unencrypted renditions (ADR-0077). */
+  keyEncryptionKey?: string
 }
 
 /** Whether the conversion finished normally or was abandoned for a newer upload. */
@@ -66,13 +68,20 @@ export async function runConversionPhases(
     sourceFileName,
     jobId,
     attempt,
+    keyEncryptionKey,
   } = input
   const { bitrates } = job.data
 
   ctx.step = 'CMAF_ENCODE'
   ctx.stepDetail = undefined
   const generationRoot = getAudioGenerationRoot(trackId, sourceFileName)
-  const cmafPackage = await generateCmaf(generationRoot, inputPath, temporaryRoot, bitrates)
+  const cmafPackage = await generateCmaf({
+    generationRoot,
+    inputPath,
+    temporaryRoot,
+    bitrates,
+    ...(keyEncryptionKey ? { keyEncryptionKey } : {}),
+  })
   await job.updateProgress(PROGRESS.cmafReady)
   if (!(await input.isStillCurrent(job))) {
     await recorder.supersede({ trackId, jobId, attempt, step: ctx.step })

@@ -46,6 +46,16 @@ export const envSchema = z
       }),
 
     /**
+     * Key-encryption key for per-track content keys (ADR-0077): 32 bytes as 64 lowercase hex
+     * characters. Unset means new uploads are not encrypted. Back it up with the database:
+     * losing it makes every encrypted track unplayable.
+     */
+    PLAYBACK_KEY_ENCRYPTION_KEY: z
+      .string()
+      .regex(/^[0-9a-f]{64}$/, 'Must be 32 bytes as 64 lowercase hex characters')
+      .optional(),
+
+    /**
      * Parent domain the auth cookies are scoped to, e.g. `.bitrate.me`.
      * Unset means host-only cookies, which is correct on localhost but leaves the
      * web apps unable to read a session issued by the API on another subdomain.

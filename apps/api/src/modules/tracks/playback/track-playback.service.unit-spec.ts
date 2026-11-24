@@ -50,6 +50,40 @@ describe('TrackPlaybackService', () => {
       ],
     }
 
+    it('marks encrypted renditions with the track key id and the clear copy with none (ADR-0077)', async () => {
+      const keyId = '0123456789abcdef0123456789abcdef'
+      const [low, high] = trackWithRenditions.audioFiles
+      prisma.track.findFirst.mockResolvedValue({
+        ...trackWithRenditions,
+        contentKey: { keyId },
+        audioFiles: [
+          { ...low, encrypted: false },
+          { ...low, encrypted: true },
+          { ...high, encrypted: true },
+        ],
+      } as never)
+
+      const manifest = await service.getManifest(trackId)
+
+      expect(
+        manifest.renditions.map(({ bitrate, encryption }) => ({ bitrate, encryption })),
+      ).toEqual([
+        { bitrate: 128, encryption: null },
+        { bitrate: 128, encryption: { scheme: 'cbcs', keyId } },
+        { bitrate: 320, encryption: { scheme: 'cbcs', keyId } },
+      ])
+    })
+
+    it('refuses a track whose encrypted renditions have no content key', async () => {
+      prisma.track.findFirst.mockResolvedValue({
+        ...trackWithRenditions,
+        contentKey: null,
+        audioFiles: trackWithRenditions.audioFiles.map((file) => ({ ...file, encrypted: true })),
+      } as never)
+
+      await expect(service.getManifest(trackId)).rejects.toThrow(ServiceUnavailableException)
+    })
+
     it('builds a manifest from the stored fragment index', async () => {
       prisma.track.findFirst.mockResolvedValue(trackWithRenditions as never)
 
@@ -279,6 +313,28 @@ describe('TrackPlaybackService', () => {
       const result = await stream('bytes=0-707')
 
       expect(result.contentType).toBe('audio/mp4')
+    })
+
+    it('serves the clear rendition unless the encrypted one is asked for (ADR-0077)', async () => {
+      await stream('bytes=929-67166')
+      expect(prisma.trackFile.findFirst).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          where: expect.objectContaining({ bitrate: 192, encrypted: false }),
+        }),
+      )
+
+      await service.getRenditionStream({
+        trackId,
+        bitrate: 192,
+        rangeHeader: 'bytes=929-67166',
+        token: 'signed',
+        encrypted: true,
+      })
+      expect(prisma.trackFile.findFirst).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          where: expect.objectContaining({ bitrate: 192, encrypted: true }),
+        }),
+      )
     })
 
     it('reports a missing rendition', async () => {
