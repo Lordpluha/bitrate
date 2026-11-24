@@ -1,0 +1,1595 @@
+{
+  "version": "2.20",
+  "imports": {
+    "ds": "../../web-player-design/design-system/bitrate.lib.pen"
+  },
+  "children": [
+    {
+      "type": "frame",
+      "id": "IMzwMW",
+      "name": "Mobile / Login / Mobile / Dark",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "0ytsz5",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "POuL4m",
+          "name": "Form",
+          "layout": "vertical",
+          "gap": 22,
+          "width": "fill_container",
+          "padding": [
+            20,
+            20
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "nVf6JZ",
+              "ref": "ds:J95vY0",
+              "name": "Logo/Lockup"
+            },
+            {
+              "type": "frame",
+              "id": "mqZL9D",
+              "name": "Heading",
+              "layout": "vertical",
+              "gap": 8,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "Clc9rO",
+                  "ref": "ds:RoXXJv",
+                  "name": "Text/H2",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Login to your account"
+                },
+                {
+                  "type": "ref",
+                  "id": "zlQJjl",
+                  "ref": "ds:XDvNAD",
+                  "name": "Text/Paragraph",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Welcome back! Please sign in to continue."
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "DmGihw",
+              "name": "Fields",
+              "layout": "vertical",
+              "gap": 14,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "7TPCMF",
+                  "ref": "ds:j04F4",
+                  "name": "Input / Email Address",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:l4agQ": {
+                      "content": "Email Address"
+                    },
+                    "ds:iI0CE": {
+                      "content": "you@example.com"
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "cyGRnR",
+                  "name": "Password Field",
+                  "gap": 8,
+                  "alignItems": "end",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "mlkwS8",
+                      "ref": "ds:j04F4",
+                      "name": "Input / Password",
+                      "width": "fill_container",
+                      "descendants": {
+                        "ds:l4agQ": {
+                          "content": "Password"
+                        },
+                        "ds:iI0CE": {
+                          "content": "••••••••"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "daIZya",
+                      "ref": "ds:cS9uPp",
+                      "name": "Button/Icon Ghost",
+                      "descendants": {
+                        "ds:KFmiLY": {
+                          "icon": "eye"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "VmEeJ1",
+                  "name": "Row",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "end",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "xrAfyA",
+                      "ref": "ds:LSzB6i",
+                      "name": "Text/Link",
+                      "content": "Forgot password?"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "GQxzGT",
+              "ref": "ds:Y4ylzP",
+              "name": "Button / Log in",
+              "width": "fill_container",
+              "descendants": {
+                "ds:NVe7y": {
+                  "content": "Log in"
+                },
+                "ds:ksrFi": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "Jz5xoX",
+              "name": "Footer Link",
+              "gap": 6,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "hC2l66",
+                  "ref": "ds:C5Ih8u",
+                  "name": "Text/Muted",
+                  "content": "Don't have an account?"
+                },
+                {
+                  "type": "ref",
+                  "id": "ugY8cc",
+                  "ref": "ds:LSzB6i",
+                  "name": "Text/Link",
+                  "content": "Sign up"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "x": 0,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "app (auth)/login — Native app sign-in: email + password; session cookies live in the OS cookie store."
+    },
+    {
+      "type": "frame",
+      "id": "c0HTRA",
+      "name": "Mobile / Login / Mobile / Light",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "GooX3V",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "D4rc5t",
+          "name": "Form",
+          "layout": "vertical",
+          "gap": 22,
+          "width": "fill_container",
+          "padding": [
+            20,
+            20
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "lQQyys",
+              "ref": "ds:J95vY0",
+              "name": "Logo/Lockup"
+            },
+            {
+              "type": "frame",
+              "id": "s7Z3yW",
+              "name": "Heading",
+              "layout": "vertical",
+              "gap": 8,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "Qn2SyI",
+                  "ref": "ds:RoXXJv",
+                  "name": "Text/H2",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Login to your account"
+                },
+                {
+                  "type": "ref",
+                  "id": "XEG1vw",
+                  "ref": "ds:XDvNAD",
+                  "name": "Text/Paragraph",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Welcome back! Please sign in to continue."
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "nw3u7Q",
+              "name": "Fields",
+              "layout": "vertical",
+              "gap": 14,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "jg60M9",
+                  "ref": "ds:j04F4",
+                  "name": "Input / Email Address",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:l4agQ": {
+                      "content": "Email Address"
+                    },
+                    "ds:iI0CE": {
+                      "content": "you@example.com"
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "siaItb",
+                  "name": "Password Field",
+                  "gap": 8,
+                  "alignItems": "end",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "sHW9qe",
+                      "ref": "ds:j04F4",
+                      "name": "Input / Password",
+                      "width": "fill_container",
+                      "descendants": {
+                        "ds:l4agQ": {
+                          "content": "Password"
+                        },
+                        "ds:iI0CE": {
+                          "content": "••••••••"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "r6KM4u",
+                      "ref": "ds:cS9uPp",
+                      "name": "Button/Icon Ghost",
+                      "descendants": {
+                        "ds:KFmiLY": {
+                          "icon": "eye"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "vrgTfE",
+                  "name": "Row",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "end",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "h13n1c",
+                      "ref": "ds:LSzB6i",
+                      "name": "Text/Link",
+                      "content": "Forgot password?"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "ibau6c",
+              "ref": "ds:Y4ylzP",
+              "name": "Button / Log in",
+              "width": "fill_container",
+              "descendants": {
+                "ds:NVe7y": {
+                  "content": "Log in"
+                },
+                "ds:ksrFi": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "jeYms5",
+              "name": "Footer Link",
+              "gap": 6,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "zjDVhr",
+                  "ref": "ds:C5Ih8u",
+                  "name": "Text/Muted",
+                  "content": "Don't have an account?"
+                },
+                {
+                  "type": "ref",
+                  "id": "AmlM6i",
+                  "ref": "ds:LSzB6i",
+                  "name": "Text/Link",
+                  "content": "Sign up"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "x": 490,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Light"
+      },
+      "context": "app (auth)/login — Native app sign-in: email + password; session cookies live in the OS cookie store."
+    },
+    {
+      "type": "frame",
+      "id": "wy0BAX",
+      "name": "Mobile / Login / Mobile / Dim",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "O0y4O3",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "TQ8ZFD",
+          "name": "Form",
+          "layout": "vertical",
+          "gap": 22,
+          "width": "fill_container",
+          "padding": [
+            20,
+            20
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "jc2hVS",
+              "ref": "ds:J95vY0",
+              "name": "Logo/Lockup"
+            },
+            {
+              "type": "frame",
+              "id": "spGgjE",
+              "name": "Heading",
+              "layout": "vertical",
+              "gap": 8,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "smC25O",
+                  "ref": "ds:RoXXJv",
+                  "name": "Text/H2",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Login to your account"
+                },
+                {
+                  "type": "ref",
+                  "id": "ngcwZC",
+                  "ref": "ds:XDvNAD",
+                  "name": "Text/Paragraph",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Welcome back! Please sign in to continue."
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "vNTv3X",
+              "name": "Fields",
+              "layout": "vertical",
+              "gap": 14,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "RJCzQp",
+                  "ref": "ds:j04F4",
+                  "name": "Input / Email Address",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:l4agQ": {
+                      "content": "Email Address"
+                    },
+                    "ds:iI0CE": {
+                      "content": "you@example.com"
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "URhVG0",
+                  "name": "Password Field",
+                  "gap": 8,
+                  "alignItems": "end",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "iQT9mZ",
+                      "ref": "ds:j04F4",
+                      "name": "Input / Password",
+                      "width": "fill_container",
+                      "descendants": {
+                        "ds:l4agQ": {
+                          "content": "Password"
+                        },
+                        "ds:iI0CE": {
+                          "content": "••••••••"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "51aLHU",
+                      "ref": "ds:cS9uPp",
+                      "name": "Button/Icon Ghost",
+                      "descendants": {
+                        "ds:KFmiLY": {
+                          "icon": "eye"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "F6TfB4",
+                  "name": "Row",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "end",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "TOvKgZ",
+                      "ref": "ds:LSzB6i",
+                      "name": "Text/Link",
+                      "content": "Forgot password?"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "ARar85",
+              "ref": "ds:Y4ylzP",
+              "name": "Button / Log in",
+              "width": "fill_container",
+              "descendants": {
+                "ds:NVe7y": {
+                  "content": "Log in"
+                },
+                "ds:ksrFi": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "XQiUkE",
+              "name": "Footer Link",
+              "gap": 6,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "h4tI63",
+                  "ref": "ds:C5Ih8u",
+                  "name": "Text/Muted",
+                  "content": "Don't have an account?"
+                },
+                {
+                  "type": "ref",
+                  "id": "c1aw29",
+                  "ref": "ds:LSzB6i",
+                  "name": "Text/Link",
+                  "content": "Sign up"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "x": 980,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dim"
+      },
+      "context": "app (auth)/login — Native app sign-in: email + password; session cookies live in the OS cookie store."
+    },
+    {
+      "type": "frame",
+      "id": "mx9BGk",
+      "name": "Mobile / Login / Validation errors / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "sqlg2m",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "lweMjg",
+          "name": "Form",
+          "layout": "vertical",
+          "gap": 22,
+          "width": "fill_container",
+          "padding": [
+            20,
+            20
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "l3mbgo",
+              "ref": "ds:J95vY0",
+              "name": "Logo/Lockup"
+            },
+            {
+              "type": "frame",
+              "id": "o8ubdm",
+              "name": "Heading",
+              "layout": "vertical",
+              "gap": 8,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "iQBeZX",
+                  "ref": "ds:RoXXJv",
+                  "name": "Text/H2",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Login to your account"
+                },
+                {
+                  "type": "ref",
+                  "id": "j9Igp1",
+                  "ref": "ds:XDvNAD",
+                  "name": "Text/Paragraph",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Welcome back! Please sign in to continue."
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "pH47aL",
+              "name": "Fields",
+              "layout": "vertical",
+              "gap": 14,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "lGocmR",
+                  "ref": "ds:j04F4",
+                  "name": "Input / Email Address",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:l4agQ": {
+                      "content": "Email Address"
+                    },
+                    "ds:iI0CE": {
+                      "content": "maya@"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "w2sWct",
+                  "ref": "ds:IqJK6E",
+                  "name": "Form/Field Error",
+                  "descendants": {
+                    "ds:brmWkY": {
+                      "content": "Enter a valid email address."
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "BDcPDL",
+                  "name": "Password Field",
+                  "gap": 8,
+                  "alignItems": "end",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "hSb5m3",
+                      "ref": "ds:j04F4",
+                      "name": "Input / Password",
+                      "width": "fill_container",
+                      "descendants": {
+                        "ds:l4agQ": {
+                          "content": "Password"
+                        },
+                        "ds:iI0CE": {
+                          "content": "••••••••"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "mFw5NY",
+                      "ref": "ds:cS9uPp",
+                      "name": "Button/Icon Ghost",
+                      "descendants": {
+                        "ds:KFmiLY": {
+                          "icon": "eye"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "EOOZoD",
+                  "ref": "ds:IqJK6E",
+                  "name": "Form/Field Error",
+                  "descendants": {
+                    "ds:brmWkY": {
+                      "content": "Use 6 to 32 characters."
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "FM6Kb5",
+                  "name": "Row",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "end",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "f01FVY",
+                      "ref": "ds:LSzB6i",
+                      "name": "Text/Link",
+                      "content": "Forgot password?"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "i3OfPf",
+              "ref": "ds:Y4ylzP",
+              "name": "Button / Log in",
+              "width": "fill_container",
+              "descendants": {
+                "ds:NVe7y": {
+                  "content": "Log in"
+                },
+                "ds:ksrFi": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "fX6xZk",
+              "name": "Footer Link",
+              "gap": 6,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "HqkxQm",
+                  "ref": "ds:C5Ih8u",
+                  "name": "Text/Muted",
+                  "content": "Don't have an account?"
+                },
+                {
+                  "type": "ref",
+                  "id": "OuFlpb",
+                  "ref": "ds:LSzB6i",
+                  "name": "Text/Link",
+                  "content": "Sign up"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "x": 1470,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "app (auth)/login — Native app sign-in: email + password; session cookies live in the OS cookie store. · no desktop frame: native phone app (apps/mobile) — there is no desktop layout"
+    },
+    {
+      "type": "frame",
+      "id": "CS3RiY",
+      "name": "Mobile / Login / Submitting / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "6n6SHH",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "bp3W57",
+          "name": "Form",
+          "layout": "vertical",
+          "gap": 22,
+          "width": "fill_container",
+          "padding": [
+            20,
+            20
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "lVy1r4",
+              "ref": "ds:J95vY0",
+              "name": "Logo/Lockup"
+            },
+            {
+              "type": "frame",
+              "id": "uYWT6V",
+              "name": "Heading",
+              "layout": "vertical",
+              "gap": 8,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "Oc4sgT",
+                  "ref": "ds:RoXXJv",
+                  "name": "Text/H2",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Login to your account"
+                },
+                {
+                  "type": "ref",
+                  "id": "NwIxPI",
+                  "ref": "ds:XDvNAD",
+                  "name": "Text/Paragraph",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Welcome back! Please sign in to continue."
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "xmX90e",
+              "name": "Fields",
+              "layout": "vertical",
+              "gap": 14,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "nWpfK3",
+                  "ref": "ds:j04F4",
+                  "name": "Input / Email Address",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:l4agQ": {
+                      "content": "Email Address"
+                    },
+                    "ds:iI0CE": {
+                      "content": "maya@example.com"
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "q2EXAV",
+                  "name": "Password Field",
+                  "gap": 8,
+                  "alignItems": "end",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "OuRL0D",
+                      "ref": "ds:j04F4",
+                      "name": "Input / Password",
+                      "width": "fill_container",
+                      "descendants": {
+                        "ds:l4agQ": {
+                          "content": "Password"
+                        },
+                        "ds:iI0CE": {
+                          "content": "••••••••"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "B5uygC",
+                      "ref": "ds:cS9uPp",
+                      "name": "Button/Icon Ghost",
+                      "descendants": {
+                        "ds:KFmiLY": {
+                          "icon": "eye"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "7547Db",
+                  "name": "Row",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "end",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "jKqV6z",
+                      "ref": "ds:LSzB6i",
+                      "name": "Text/Link",
+                      "content": "Forgot password?"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "CLQahc",
+              "ref": "ds:Y4ylzP",
+              "name": "Button / Logging in...",
+              "width": "fill_container",
+              "descendants": {
+                "ds:NVe7y": {
+                  "content": "Logging in..."
+                },
+                "ds:ksrFi": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "ZJga7G",
+              "name": "Footer Link",
+              "gap": 6,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "jdG0xn",
+                  "ref": "ds:C5Ih8u",
+                  "name": "Text/Muted",
+                  "content": "Don't have an account?"
+                },
+                {
+                  "type": "ref",
+                  "id": "e64Lod",
+                  "ref": "ds:LSzB6i",
+                  "name": "Text/Link",
+                  "content": "Sign up"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "x": 1960,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "app (auth)/login — Native app sign-in: email + password; session cookies live in the OS cookie store. · no desktop frame: native phone app (apps/mobile) — there is no desktop layout"
+    },
+    {
+      "type": "frame",
+      "id": "3iZw9x",
+      "name": "Mobile / Login / Wrong credentials / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "rwPf8d",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "CyBrIi",
+          "name": "Form",
+          "layout": "vertical",
+          "gap": 22,
+          "width": "fill_container",
+          "padding": [
+            20,
+            20
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "urZ0iK",
+              "ref": "ds:J95vY0",
+              "name": "Logo/Lockup"
+            },
+            {
+              "type": "frame",
+              "id": "rZSUf9",
+              "name": "Heading",
+              "layout": "vertical",
+              "gap": 8,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "VOZI1Z",
+                  "ref": "ds:RoXXJv",
+                  "name": "Text/H2",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Login to your account"
+                },
+                {
+                  "type": "ref",
+                  "id": "0F43bx",
+                  "ref": "ds:XDvNAD",
+                  "name": "Text/Paragraph",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Welcome back! Please sign in to continue."
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "qIFC89",
+              "ref": "ds:ogW5t",
+              "name": "Alert / Sign-in failed",
+              "width": "fill_container",
+              "descendants": {
+                "ds:L7SHNm": {
+                  "content": "Sign-in failed"
+                },
+                "ds:F9kE6W": {
+                  "content": "Check your email and password and try again."
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "fgSo7T",
+              "name": "Fields",
+              "layout": "vertical",
+              "gap": 14,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "73W3hs",
+                  "ref": "ds:j04F4",
+                  "name": "Input / Email Address",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:l4agQ": {
+                      "content": "Email Address"
+                    },
+                    "ds:iI0CE": {
+                      "content": "you@example.com"
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "2Dh9HM",
+                  "name": "Password Field",
+                  "gap": 8,
+                  "alignItems": "end",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "OO6UBT",
+                      "ref": "ds:j04F4",
+                      "name": "Input / Password",
+                      "width": "fill_container",
+                      "descendants": {
+                        "ds:l4agQ": {
+                          "content": "Password"
+                        },
+                        "ds:iI0CE": {
+                          "content": "••••••••"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "LsSIXJ",
+                      "ref": "ds:cS9uPp",
+                      "name": "Button/Icon Ghost",
+                      "descendants": {
+                        "ds:KFmiLY": {
+                          "icon": "eye"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "9Vmf7v",
+                  "name": "Row",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "end",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "TDE2wN",
+                      "ref": "ds:LSzB6i",
+                      "name": "Text/Link",
+                      "content": "Forgot password?"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "QSShKC",
+              "ref": "ds:Y4ylzP",
+              "name": "Button / Log in",
+              "width": "fill_container",
+              "descendants": {
+                "ds:NVe7y": {
+                  "content": "Log in"
+                },
+                "ds:ksrFi": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "L07lyj",
+              "name": "Footer Link",
+              "gap": 6,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "Bq1Tci",
+                  "ref": "ds:C5Ih8u",
+                  "name": "Text/Muted",
+                  "content": "Don't have an account?"
+                },
+                {
+                  "type": "ref",
+                  "id": "E6aqxC",
+                  "ref": "ds:LSzB6i",
+                  "name": "Text/Link",
+                  "content": "Sign up"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "x": 2450,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "app (auth)/login — Native app sign-in: email + password; session cookies live in the OS cookie store. · no desktop frame: native phone app (apps/mobile) — there is no desktop layout"
+    },
+    {
+      "type": "frame",
+      "id": "KP3fSu",
+      "name": "Mobile / Login / Network error / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "GbyoBr",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "JkRSY5",
+          "name": "Form",
+          "layout": "vertical",
+          "gap": 22,
+          "width": "fill_container",
+          "padding": [
+            20,
+            20
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "fhUgmX",
+              "ref": "ds:J95vY0",
+              "name": "Logo/Lockup"
+            },
+            {
+              "type": "frame",
+              "id": "qPIMMS",
+              "name": "Heading",
+              "layout": "vertical",
+              "gap": 8,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "E2mx7b",
+                  "ref": "ds:RoXXJv",
+                  "name": "Text/H2",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Login to your account"
+                },
+                {
+                  "type": "ref",
+                  "id": "xU1BF8",
+                  "ref": "ds:XDvNAD",
+                  "name": "Text/Paragraph",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Welcome back! Please sign in to continue."
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "vPEbv5",
+              "ref": "ds:ogW5t",
+              "name": "Alert / Sign-in failed",
+              "width": "fill_container",
+              "descendants": {
+                "ds:L7SHNm": {
+                  "content": "Sign-in failed"
+                },
+                "ds:F9kE6W": {
+                  "content": "Can't reach Bitrate. Check your connection and try again."
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "AqaVQZ",
+              "name": "Fields",
+              "layout": "vertical",
+              "gap": 14,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "GX0kJt",
+                  "ref": "ds:j04F4",
+                  "name": "Input / Email Address",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:l4agQ": {
+                      "content": "Email Address"
+                    },
+                    "ds:iI0CE": {
+                      "content": "you@example.com"
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "v1Gzxa",
+                  "name": "Password Field",
+                  "gap": 8,
+                  "alignItems": "end",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "lhiQ9N",
+                      "ref": "ds:j04F4",
+                      "name": "Input / Password",
+                      "width": "fill_container",
+                      "descendants": {
+                        "ds:l4agQ": {
+                          "content": "Password"
+                        },
+                        "ds:iI0CE": {
+                          "content": "••••••••"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "kx9Kyr",
+                      "ref": "ds:cS9uPp",
+                      "name": "Button/Icon Ghost",
+                      "descendants": {
+                        "ds:KFmiLY": {
+                          "icon": "eye"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "Oly4ZD",
+                  "name": "Row",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "end",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "6dR4hD",
+                      "ref": "ds:LSzB6i",
+                      "name": "Text/Link",
+                      "content": "Forgot password?"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "VZvBvG",
+              "ref": "ds:Y4ylzP",
+              "name": "Button / Log in",
+              "width": "fill_container",
+              "descendants": {
+                "ds:NVe7y": {
+                  "content": "Log in"
+                },
+                "ds:ksrFi": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "83uqun",
+              "name": "Footer Link",
+              "gap": 6,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "sVB3A9",
+                  "ref": "ds:C5Ih8u",
+                  "name": "Text/Muted",
+                  "content": "Don't have an account?"
+                },
+                {
+                  "type": "ref",
+                  "id": "rPrTKG",
+                  "ref": "ds:LSzB6i",
+                  "name": "Text/Link",
+                  "content": "Sign up"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "x": 2940,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "app (auth)/login — Native app sign-in: email + password; session cookies live in the OS cookie store. · no desktop frame: native phone app (apps/mobile) — there is no desktop layout"
+    },
+    {
+      "type": "frame",
+      "id": "sq2he0",
+      "name": "Mobile / Login / Rate limited / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "A1xhun",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "D8Em7k",
+          "name": "Form",
+          "layout": "vertical",
+          "gap": 22,
+          "width": "fill_container",
+          "padding": [
+            20,
+            20
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "HfeQh1",
+              "ref": "ds:J95vY0",
+              "name": "Logo/Lockup"
+            },
+            {
+              "type": "frame",
+              "id": "SH3RsA",
+              "name": "Heading",
+              "layout": "vertical",
+              "gap": 8,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "0350BZ",
+                  "ref": "ds:RoXXJv",
+                  "name": "Text/H2",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Login to your account"
+                },
+                {
+                  "type": "ref",
+                  "id": "XRTGNR",
+                  "ref": "ds:XDvNAD",
+                  "name": "Text/Paragraph",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Welcome back! Please sign in to continue."
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "XmgCBV",
+              "ref": "ds:ogW5t",
+              "name": "Alert / Sign-in failed",
+              "width": "fill_container",
+              "descendants": {
+                "ds:L7SHNm": {
+                  "content": "Sign-in failed"
+                },
+                "ds:F9kE6W": {
+                  "content": "Too many requests. Wait a moment and try again."
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "0N3oPf",
+              "name": "Fields",
+              "layout": "vertical",
+              "gap": 14,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "w0NM6w",
+                  "ref": "ds:j04F4",
+                  "name": "Input / Email Address",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:l4agQ": {
+                      "content": "Email Address"
+                    },
+                    "ds:iI0CE": {
+                      "content": "you@example.com"
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "lGloPg",
+                  "name": "Password Field",
+                  "gap": 8,
+                  "alignItems": "end",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "xvQJce",
+                      "ref": "ds:j04F4",
+                      "name": "Input / Password",
+                      "width": "fill_container",
+                      "descendants": {
+                        "ds:l4agQ": {
+                          "content": "Password"
+                        },
+                        "ds:iI0CE": {
+                          "content": "••••••••"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "shx0wB",
+                      "ref": "ds:cS9uPp",
+                      "name": "Button/Icon Ghost",
+                      "descendants": {
+                        "ds:KFmiLY": {
+                          "icon": "eye"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "CZsHZH",
+                  "name": "Row",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "end",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "WSqdi3",
+                      "ref": "ds:LSzB6i",
+                      "name": "Text/Link",
+                      "content": "Forgot password?"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "lD7vmv",
+              "ref": "ds:Y4ylzP",
+              "name": "Button / Log in",
+              "width": "fill_container",
+              "descendants": {
+                "ds:NVe7y": {
+                  "content": "Log in"
+                },
+                "ds:ksrFi": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "ya6VIk",
+              "name": "Footer Link",
+              "gap": 6,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "0GZDBi",
+                  "ref": "ds:C5Ih8u",
+                  "name": "Text/Muted",
+                  "content": "Don't have an account?"
+                },
+                {
+                  "type": "ref",
+                  "id": "XKMNOI",
+                  "ref": "ds:LSzB6i",
+                  "name": "Text/Link",
+                  "content": "Sign up"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "x": 3430,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "app (auth)/login — Native app sign-in: email + password; session cookies live in the OS cookie store. · no desktop frame: native phone app (apps/mobile) — there is no desktop layout"
+    }
+  ]
+}

@@ -37,6 +37,9 @@ const storeMasterMock = storeMaster as jest.MockedFunction<typeof storeMaster>
 const downloadMock = downloadObjectToFile as jest.MockedFunction<typeof downloadObjectToFile>
 const parseFileMock = parseFile as jest.MockedFunction<typeof parseFile>
 
+/** A track row as ingest selects it: the response entity plus the master's storage key. */
+const buildStoredTrack = () => ({ ...buildTrack(), audioUrl: 'audio.mp3' })
+
 describe('TrackIngestService', () => {
   let service: TrackIngestService
   let prisma: PrismaMock
@@ -306,7 +309,7 @@ describe('TrackIngestService', () => {
 
   describe('reprocess', () => {
     it('re-enqueues the stored source with trigger REPROCESS and a fresh input probe', async () => {
-      const track = buildTrack()
+      const track = buildStoredTrack()
       prisma.track.findFirst.mockResolvedValue(track as never)
       prisma.track.update.mockResolvedValue(track as never)
       queue.add.mockResolvedValue({} as never)
@@ -335,7 +338,7 @@ describe('TrackIngestService', () => {
     it('replaces a finished job under the same id, so the reprocess actually runs', async () => {
       // BullMQ keeps a failed job for days and silently ignores add() with its id; the
       // reprocess would otherwise flip the track to PROCESSING with nothing queued.
-      const track = buildTrack()
+      const track = buildStoredTrack()
       prisma.track.findFirst.mockResolvedValue(track as never)
       prisma.track.update.mockResolvedValue(track as never)
       const finished = {
@@ -355,7 +358,7 @@ describe('TrackIngestService', () => {
     })
 
     it('keeps a job that is still queued or running instead of replacing it', async () => {
-      const track = buildTrack()
+      const track = buildStoredTrack()
       prisma.track.findFirst.mockResolvedValue(track as never)
       prisma.track.update.mockResolvedValue(track as never)
       const live = {

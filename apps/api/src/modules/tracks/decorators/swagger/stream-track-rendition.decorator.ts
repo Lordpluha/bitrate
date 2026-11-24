@@ -15,6 +15,14 @@ export function StreamTrackRenditionSwagger() {
     ApiParam({ name: 'id', type: 'string', format: 'uuid', description: 'Track ID' }),
     ApiParam({ name: 'bitrate', type: 'integer', example: 192, description: 'Rendition kbps' }),
     ApiQuery({ name: 't', required: true, description: 'Playback session token' }),
+    ApiQuery({
+      name: 'encrypted',
+      required: false,
+      enum: ['1'],
+      description:
+        '`1` for the `cbcs`-encrypted rendition (ADR-0077); without it the clear rendition, ' +
+        'which only the lowest bitrate has once a track is encrypted',
+    }),
     ApiHeader({
       name: 'Range',
       required: false,

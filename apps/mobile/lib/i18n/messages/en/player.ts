@@ -1,0 +1,17 @@
+export const enPlayer = {
+  'player.play': 'Play',
+  'player.pause': 'Pause',
+  'player.next': 'Next track',
+  'player.previous': 'Previous track',
+  'player.seek': 'Playback position',
+  'player.nowPlaying': 'Now playing',
+  'player.openNowPlaying': 'Open now playing',
+  'player.idle.title': 'Nothing playing',
+  'player.idle.description': 'Pick something from Home or Search to start listening.',
+  'player.buffering': 'Buffering…',
+  'player.error.notReady': 'This track is still being processed.',
+  'player.error.protected': "This track can't be played on mobile yet.",
+  'player.error.rateLimited': 'Slow down a little — playback will resume shortly.',
+  'player.error.failed': "Couldn't play this track.",
+  'player.unknownArtist': 'Unknown artist',
+}

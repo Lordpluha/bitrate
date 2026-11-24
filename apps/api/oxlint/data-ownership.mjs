@@ -35,6 +35,7 @@ export const DATA_OWNERS = {
 
   track: ['tracks'],
   trackFile: ['tracks'],
+  trackContentKey: ['tracks'],
   trackProcessingAttempt: ['tracks'],
   trackArtist: ['tracks'],
   trackGenre: ['tracks'],
@@ -89,6 +90,10 @@ export const DATA_OWNERS = {
   userSettings: ['me'],
 
   moderationReport: ['moderation'],
+  /** The support assistant's chat and its retention sweep (ADR-0074). */
+  supportConversation: ['support'],
+  supportMessage: ['support'],
+  supportTicket: ['support'],
   /** The request-level interceptor and the admin batch writer — see `SkipAudit`. */
   auditLog: ['infra/observability', 'admin/shared'],
 }

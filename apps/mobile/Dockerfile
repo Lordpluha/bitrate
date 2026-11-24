@@ -24,6 +24,7 @@ COPY packages/contracts/package.json ./packages/contracts/
 COPY packages/converter/package.json ./packages/converter/
 COPY packages/ncs-parser/package.json ./packages/ncs-parser/
 COPY packages/player/package.json ./packages/player/
+COPY packages/support-core/package.json ./packages/support-core/
 COPY packages/svgr/package.json ./packages/svgr/
 COPY packages/tailwind/package.json ./packages/tailwind/
 COPY packages/ui-react/package.json ./packages/ui-react/

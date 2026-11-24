@@ -65,7 +65,6 @@ export const DEMO_TRACK_LIST: readonly TrackEntity[] = TRACK_TITLES.map(
     const artist = pick(DEMO_ARTISTS, index)
     return {
       artistId: artist.id,
-      audioUrl: '',
       cover: pick(COVERS, index),
       createdAt: minutesAgo(60 * 24 * (20 + index)),
       deletedAt: null,
