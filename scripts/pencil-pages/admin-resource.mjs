@@ -47,6 +47,9 @@ const ICON = {
   id: 'id-card',
   right: 'chevron-right',
   lock: 'lock',
+  support: 'life-buoy',
+  send: 'send',
+  message: 'messages-square',
 }
 const icon = (k) => ICON[k] ?? k
 const PILL = { up: 'Up', down: 'Down', warn: 'Warn', info: 'Info', flat: 'Flat' }
@@ -507,7 +510,7 @@ const listNodes = (sp, st, m) => {
   const page = [
     listHeader(sp, st, m),
     st === 'offline' ? banner() : null,
-    metrics(sp, st, m),
+    sp.kpis?.length ? metrics(sp, st, m) : null,
     panel([toolbar(sp, st, m), listBody(sp, st, m)]),
     sp.after && !['loading', 'error', 'restricted', 'empty'].includes(st)
       ? grid(sp.after, m)

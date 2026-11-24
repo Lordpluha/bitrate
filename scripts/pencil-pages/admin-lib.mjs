@@ -548,6 +548,7 @@ const NAV = [
     'Operations',
     [
       ['moderation', 'flag', 'Moderation', '16', true],
+      ['support', 'life-buoy', 'Support', '3'],
       ['releases', 'disc-3', 'Releases', '7'],
       ['catalog', 'audio-lines', 'Catalog', '4'],
       ['albums', 'disc-album', 'Albums'],

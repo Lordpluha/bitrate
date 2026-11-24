@@ -40,6 +40,8 @@ export const PERMISSIONS = [
   'playlists:restore',
   'releases:read',
   'releases:review',
+  'support:read',
+  'support:reply',
 ] as const
 
 /** A single permission id from the catalogue. */
@@ -80,4 +82,6 @@ export const MODERATOR_TEMPLATE: readonly Permission[] = [
   'playlists:hide',
   'releases:read',
   'releases:review',
+  'support:read',
+  'support:reply',
 ]
