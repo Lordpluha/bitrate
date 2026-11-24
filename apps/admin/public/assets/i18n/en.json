@@ -27,7 +27,8 @@
     "expandSidebar": "Expand sidebar",
     "collapseSidebar": "Collapse sidebar",
     "collapse": "Collapse",
-    "releaseChanges": "Release changes"
+    "releaseChanges": "Release changes",
+    "support": "Support"
   },
   "locale": {
     "ariaLabel": "{{label}}. Activate to switch language."
@@ -422,6 +423,114 @@
     "error": {
       "load": "Couldn’t load this report",
       "advance": "Couldn’t change this report’s status. Nothing was changed."
+    }
+  },
+  "support": {
+    "eyebrow": "Operations · Support",
+    "title": "Support inbox",
+    "subtitle": "Conversations the assistant handed to a person. Your reply reaches the user in the channel they wrote from.",
+    "filter": {
+      "status": "Status",
+      "channel": "Channel",
+      "audience": "Audience"
+    },
+    "status": {
+      "all": "All tickets",
+      "open": "Open",
+      "resolved": "Resolved"
+    },
+    "channel": {
+      "all": "All channels",
+      "web": "Website",
+      "telegram": "Telegram",
+      "whatsapp": "WhatsApp",
+      "instagram": "Instagram"
+    },
+    "audience": {
+      "all": "Everyone",
+      "listener": "Listener",
+      "artist": "Artist"
+    },
+    "state": {
+      "bot": "Assistant",
+      "waiting_operator": "Waiting for an operator",
+      "operator": "With an operator",
+      "resolved": "Resolved"
+    },
+    "table": {
+      "caption": "Conversations handed to operators",
+      "conversation": "Conversation",
+      "state": "State",
+      "channel": "Channel",
+      "activity": "Last activity"
+    },
+    "noMessages": "No messages yet",
+    "empty": {
+      "title": "Nobody is waiting",
+      "desc": "Conversations appear here when the assistant hands one to a person."
+    },
+    "noResults": {
+      "title": "No conversations match these filters",
+      "desc": "Try another status, channel or audience."
+    },
+    "error": {
+      "load": "Couldn't load the inbox."
+    }
+  },
+  "supportConversation": {
+    "eyebrow": "Support · {id}",
+    "loadingTitle": "Conversation",
+    "subtitle": "{channel} · {audience} · last message {age} ago",
+    "role": {
+      "user": "User",
+      "assistant": "Assistant",
+      "operator": "Operator"
+    },
+    "sources": "Sources",
+    "tile": {
+      "history": "Conversation",
+      "historyMeta": "Oldest first",
+      "ticket": "Ticket",
+      "ticketMeta": "Why it reached an operator",
+      "reason": "Reason",
+      "status": "Ticket",
+      "state": "State",
+      "opened": "Handed off",
+      "resolvedAt": "Resolved",
+      "user": "User",
+      "signedIn": "Signed in",
+      "guest": "Guest",
+      "language": "Language",
+      "reply": "Reply",
+      "replyMeta": "Sent to the user's channel"
+    },
+    "reply": {
+      "label": "Your reply",
+      "placeholder": "Write to the user…",
+      "hint": "{count} / {max}",
+      "send": "Send reply",
+      "readOnly": "You can read this conversation but not reply to it."
+    },
+    "action": {
+      "resolve": "Resolve"
+    },
+    "dialog": {
+      "resolveTitle": "Resolve this conversation?",
+      "resolveDesc": "The ticket closes and the assistant answers the user's next message again. Asking for a person reopens it.",
+      "resolveAction": "Resolve conversation"
+    },
+    "invalid": {
+      "textRequired": "Write a reply first.",
+      "textTooLong": "Keep the reply under 2,000 characters."
+    },
+    "notFound": {
+      "title": "Conversation not found",
+      "desc": "It was never handed to an operator, or it was deleted 90 days after its last message."
+    },
+    "error": {
+      "load": "Couldn't load the conversation.",
+      "reply": "Couldn't send the reply. Try again.",
+      "resolve": "Couldn't resolve the conversation."
     }
   },
   "releases": {
@@ -1233,7 +1342,8 @@
       "roles": "Roles",
       "staff": "Staff",
       "tracks": "Catalog",
-      "users": "Listeners"
+      "users": "Listeners",
+      "support": "Support"
     },
     "holders": "{count, plural, one {# holder} other {# holders}}",
     "unheld": "Unheld",
