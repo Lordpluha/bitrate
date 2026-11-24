@@ -83,6 +83,10 @@ export class ArtistEntity implements Artist {
   @ApiProperty()
   locale: string
 
+  /** AI promotion is switched on for this artist (rollout flag). */
+  @ApiProperty()
+  promotionEnabled: boolean
+
   /** Revision of the Terms of Use, Community Guidelines and Privacy Policy accepted at registration, if recorded. */
   @ApiProperty({ nullable: true, type: String })
   legalVersion: string | null

@@ -1,0 +1,2864 @@
+{
+  "version": "2.20",
+  "imports": {
+    "ds": "../../../../web-player-design/design-system/bitrate.lib.pen"
+  },
+  "children": [
+    {
+      "type": "frame",
+      "id": "ZyX9ER",
+      "name": "Artist / Reviewer feedback / Desktop / Dark",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "FVKMKk",
+          "ref": "ds:Rn6HB6",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:6bAVSI": {
+              "type": "ref",
+              "id": "jVEYpj",
+              "ref": "ds:9ZM5u5",
+              "name": "Nav / Music",
+              "descendants": {
+                "ds:D2aLpc": {
+                  "icon": "disc-3"
+                },
+                "ds:GZQzF3": {
+                  "content": "Music"
+                }
+              }
+            },
+            "ds:4RTEpp": {
+              "content": "Workspace / Music / Afterglow / Feedback"
+            },
+            "ds:YLdi4o/ds:E23bq6": {
+              "content": "Release overview"
+            },
+            "ds:YLdi4o/ds:k0WCtI": {
+              "enabled": false
+            },
+            "ds:ttgy7g": {
+              "type": "frame",
+              "id": "gHEzIt",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "2zNCqp",
+                  "name": "Release Head",
+                  "gap": 16,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "cYqAj0",
+                      "ref": "ds:rUgRzr",
+                      "name": "Media/Cover",
+                      "width": 64,
+                      "height": 64,
+                      "fill": {
+                        "type": "image",
+                        "url": "../../../../web-player-design/design-system/assets/albums/album-afterglow.webp",
+                        "mode": "cover"
+                      }
+                    },
+                    {
+                      "type": "frame",
+                      "id": "fUM1Zz",
+                      "name": "Column",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "nXFisv",
+                          "ref": "ds:RoXXJv",
+                          "name": "Text/H2",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Afterglow"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "ATaNy2",
+                          "ref": "ds:C5Ih8u",
+                          "name": "Text/Muted",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Demo artist · Single · 1 track · Updated 6 min ago"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "go8b1a",
+                      "ref": "ds:WcSzPr",
+                      "name": "Status/Warning",
+                      "descendants": {
+                        "ds:8sj0Ew": {
+                          "content": "Changes requested"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "ZYgc9v",
+                  "name": "Tabs",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "VW9cxl",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Overview",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Overview"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "YYGhva",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Tasks",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Tasks"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Fd07RV",
+                      "ref": "ds:Q9hm3",
+                      "name": "Tab / Feedback",
+                      "descendants": {
+                        "ds:dQjtW": {
+                          "content": "Feedback"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Sd7AjJ",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Delivery",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Delivery"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "dQgAor",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Versions",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Versions"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "iD38TQ",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Activity",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Activity"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "1hHt8V",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Promotion",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Promotion"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "WPEHbu",
+                  "ref": "ds:ogW5t",
+                  "name": "Alert / Resolve 2 required changes before resubmitting",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:L7SHNm": {
+                      "content": "Resolve 2 required changes before resubmitting"
+                    },
+                    "ds:F9kE6W": {
+                      "content": "Recommendations are optional and never block the review. 0 of 2 resolved."
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "1CZGsH",
+                  "name": "Columns",
+                  "gap": 24,
+                  "alignItems": "start",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "H3lN6t",
+                      "name": "Main Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "TgyNsw",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "ici4Xu",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "ezphZA",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "oFUvLQ",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Reviewer notes"
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "f7qdze",
+                                      "ref": "ds:FJUa1",
+                                      "name": "Badge / 3 open items",
+                                      "descendants": {
+                                        "ds:BI0Pd": {
+                                          "content": "3 open items"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "9gmsMk",
+                                  "ref": "ds:yjiPHo",
+                                  "name": "Text/Eyebrow",
+                                  "content": "REQUIRED CHANGE · RIGHTS"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "6sFVRZ",
+                                  "ref": "ds:fLuqjC",
+                                  "name": "Text/H4",
+                                  "content": "Confirm the master recording owner"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "Xh5RM4",
+                                  "ref": "ds:XDvNAD",
+                                  "name": "Text/Paragraph",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "The listed owner needs an explicit confirmation before review can continue."
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "UjW3mk",
+                                  "ref": "ds:j04F4",
+                                  "name": "Input / Your response",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:l4agQ": {
+                                      "content": "Your response"
+                                    },
+                                    "ds:iI0CE": {
+                                      "content": "I confirm Demo artist owns the master recording."
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "RK6NEF",
+                                  "ref": "ds:exjwf",
+                                  "name": "Button / Save & mark resolved",
+                                  "descendants": {
+                                    "ds:E23bq6": {
+                                      "content": "Save & mark resolved"
+                                    },
+                                    "ds:o7NXW": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "OVFtFq",
+                                  "ref": "ds:RlxQk",
+                                  "name": "Divider",
+                                  "width": "fill_container"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "B9aBGp",
+                                  "ref": "ds:yjiPHo",
+                                  "name": "Text/Eyebrow",
+                                  "content": "REQUIRED CHANGE · ARTWORK"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "yYc8ra",
+                                  "ref": "ds:fLuqjC",
+                                  "name": "Text/H4",
+                                  "content": "Replace the cover artwork"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "vEw44P",
+                                  "ref": "ds:G5tJp",
+                                  "name": "Button / Edit artwork",
+                                  "descendants": {
+                                    "ds:d2zCI": {
+                                      "content": "Edit artwork"
+                                    },
+                                    "ds:zDiHG": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "RLfWXq",
+                                  "ref": "ds:RlxQk",
+                                  "name": "Divider",
+                                  "width": "fill_container"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "WGYY8j",
+                                  "ref": "ds:yjiPHo",
+                                  "name": "Text/Eyebrow",
+                                  "content": "RECOMMENDATION · OPTIONAL"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "FwIzKx",
+                                  "ref": "ds:fLuqjC",
+                                  "name": "Text/H4",
+                                  "content": "Clarify the mix version label"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "OnxUv2",
+                                  "ref": "ds:DTwJb",
+                                  "name": "Button / Dismiss",
+                                  "descendants": {
+                                    "ds:GyGLK": {
+                                      "content": "Dismiss"
+                                    },
+                                    "ds:uRXDu": {
+                                      "enabled": false
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "U853wS",
+                      "name": "Side Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": 380,
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "Ck6olo",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "hzRH99",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "xGIpVO",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "X6GtlK",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Review progress"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "COwrDe",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "content": "0 of 2 required resolved"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "hl43ml",
+                                  "ref": "ds:AQPfV",
+                                  "name": "Progress",
+                                  "width": "fill_container"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "sgRiWq",
+                                  "ref": "ds:KdKXRG",
+                                  "name": "Checklist Row/Blocked",
+                                  "descendants": {
+                                    "ds:Vmx3Ga": {
+                                      "content": "Confirm master owner"
+                                    },
+                                    "ds:SolG4j": {
+                                      "enabled": false
+                                    },
+                                    "ds:IkujNN": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "dHs03N",
+                                  "ref": "ds:KdKXRG",
+                                  "name": "Checklist Row/Blocked",
+                                  "descendants": {
+                                    "ds:Vmx3Ga": {
+                                      "content": "Replace cover artwork"
+                                    },
+                                    "ds:SolG4j": {
+                                      "enabled": false
+                                    },
+                                    "ds:IkujNN": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "gnJ8Yq",
+                                  "ref": "ds:BNKrLn",
+                                  "name": "Checklist Row/Pending",
+                                  "descendants": {
+                                    "ds:kHGXMJ": {
+                                      "content": "Version label · optional"
+                                    },
+                                    "ds:9U0qv6": {
+                                      "enabled": false
+                                    },
+                                    "ds:9lRveR": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "XEpFwI",
+                                  "ref": "ds:Wveyx",
+                                  "name": "Button / Resolve required changes first",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:f8YTr": {
+                                      "content": "Resolve required changes first"
+                                    },
+                                    "ds:q1x1J": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "8l4xwY",
+                                  "ref": "ds:PiqhAO",
+                                  "name": "Text/Caption",
+                                  "content": "Resubmit returns this release to Bitrate review only."
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 0,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "designed — /dashboard/music/$releaseId (Feedback) — Required changes block resubmission; recommendations never do."
+    },
+    {
+      "type": "frame",
+      "id": "fGmRkL",
+      "name": "Artist / Reviewer feedback / Desktop / Light",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "FwyTgP",
+          "ref": "ds:Rn6HB6",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:6bAVSI": {
+              "type": "ref",
+              "id": "PmMQal",
+              "ref": "ds:9ZM5u5",
+              "name": "Nav / Music",
+              "descendants": {
+                "ds:D2aLpc": {
+                  "icon": "disc-3"
+                },
+                "ds:GZQzF3": {
+                  "content": "Music"
+                }
+              }
+            },
+            "ds:4RTEpp": {
+              "content": "Workspace / Music / Afterglow / Feedback"
+            },
+            "ds:YLdi4o/ds:E23bq6": {
+              "content": "Release overview"
+            },
+            "ds:YLdi4o/ds:k0WCtI": {
+              "enabled": false
+            },
+            "ds:ttgy7g": {
+              "type": "frame",
+              "id": "cnf8JK",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "8qG6om",
+                  "name": "Release Head",
+                  "gap": 16,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "4R18sa",
+                      "ref": "ds:rUgRzr",
+                      "name": "Media/Cover",
+                      "width": 64,
+                      "height": 64,
+                      "fill": {
+                        "type": "image",
+                        "url": "../../../../web-player-design/design-system/assets/albums/album-afterglow.webp",
+                        "mode": "cover"
+                      }
+                    },
+                    {
+                      "type": "frame",
+                      "id": "RKK04a",
+                      "name": "Column",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "5FA4kI",
+                          "ref": "ds:RoXXJv",
+                          "name": "Text/H2",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Afterglow"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "20g4Rm",
+                          "ref": "ds:C5Ih8u",
+                          "name": "Text/Muted",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Demo artist · Single · 1 track · Updated 6 min ago"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "8uPgUG",
+                      "ref": "ds:WcSzPr",
+                      "name": "Status/Warning",
+                      "descendants": {
+                        "ds:8sj0Ew": {
+                          "content": "Changes requested"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "3PSmdu",
+                  "name": "Tabs",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "dYrztn",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Overview",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Overview"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "g8Qb8U",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Tasks",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Tasks"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "XTWA32",
+                      "ref": "ds:Q9hm3",
+                      "name": "Tab / Feedback",
+                      "descendants": {
+                        "ds:dQjtW": {
+                          "content": "Feedback"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Saj7Ga",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Delivery",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Delivery"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "hbUmZ1",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Versions",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Versions"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "mGAzRk",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Activity",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Activity"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "jNtWMk",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Promotion",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Promotion"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "0jbLvo",
+                  "ref": "ds:ogW5t",
+                  "name": "Alert / Resolve 2 required changes before resubmitting",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:L7SHNm": {
+                      "content": "Resolve 2 required changes before resubmitting"
+                    },
+                    "ds:F9kE6W": {
+                      "content": "Recommendations are optional and never block the review. 0 of 2 resolved."
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "NUr3co",
+                  "name": "Columns",
+                  "gap": 24,
+                  "alignItems": "start",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "bLh9kb",
+                      "name": "Main Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "d3sgJ6",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "EsS8F6",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "UStG3S",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "8wsiyg",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Reviewer notes"
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "drhYLu",
+                                      "ref": "ds:FJUa1",
+                                      "name": "Badge / 3 open items",
+                                      "descendants": {
+                                        "ds:BI0Pd": {
+                                          "content": "3 open items"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "R26tnX",
+                                  "ref": "ds:yjiPHo",
+                                  "name": "Text/Eyebrow",
+                                  "content": "REQUIRED CHANGE · RIGHTS"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "MIS88x",
+                                  "ref": "ds:fLuqjC",
+                                  "name": "Text/H4",
+                                  "content": "Confirm the master recording owner"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "PILWex",
+                                  "ref": "ds:XDvNAD",
+                                  "name": "Text/Paragraph",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "The listed owner needs an explicit confirmation before review can continue."
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "MNeg7o",
+                                  "ref": "ds:j04F4",
+                                  "name": "Input / Your response",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:l4agQ": {
+                                      "content": "Your response"
+                                    },
+                                    "ds:iI0CE": {
+                                      "content": "I confirm Demo artist owns the master recording."
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "LAdI10",
+                                  "ref": "ds:exjwf",
+                                  "name": "Button / Save & mark resolved",
+                                  "descendants": {
+                                    "ds:E23bq6": {
+                                      "content": "Save & mark resolved"
+                                    },
+                                    "ds:o7NXW": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "spDY0W",
+                                  "ref": "ds:RlxQk",
+                                  "name": "Divider",
+                                  "width": "fill_container"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "vDA0y9",
+                                  "ref": "ds:yjiPHo",
+                                  "name": "Text/Eyebrow",
+                                  "content": "REQUIRED CHANGE · ARTWORK"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "ASEDq5",
+                                  "ref": "ds:fLuqjC",
+                                  "name": "Text/H4",
+                                  "content": "Replace the cover artwork"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "vqJLUH",
+                                  "ref": "ds:G5tJp",
+                                  "name": "Button / Edit artwork",
+                                  "descendants": {
+                                    "ds:d2zCI": {
+                                      "content": "Edit artwork"
+                                    },
+                                    "ds:zDiHG": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "fgUohW",
+                                  "ref": "ds:RlxQk",
+                                  "name": "Divider",
+                                  "width": "fill_container"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "kzKDib",
+                                  "ref": "ds:yjiPHo",
+                                  "name": "Text/Eyebrow",
+                                  "content": "RECOMMENDATION · OPTIONAL"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "3Bprfm",
+                                  "ref": "ds:fLuqjC",
+                                  "name": "Text/H4",
+                                  "content": "Clarify the mix version label"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "WNYkDH",
+                                  "ref": "ds:DTwJb",
+                                  "name": "Button / Dismiss",
+                                  "descendants": {
+                                    "ds:GyGLK": {
+                                      "content": "Dismiss"
+                                    },
+                                    "ds:uRXDu": {
+                                      "enabled": false
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "8iSFBw",
+                      "name": "Side Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": 380,
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "iBMw8z",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "LIQj0A",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "nM0Iff",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "Po0wrT",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Review progress"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "ust4Dm",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "content": "0 of 2 required resolved"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "rtJbik",
+                                  "ref": "ds:AQPfV",
+                                  "name": "Progress",
+                                  "width": "fill_container"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "kxP0ll",
+                                  "ref": "ds:KdKXRG",
+                                  "name": "Checklist Row/Blocked",
+                                  "descendants": {
+                                    "ds:Vmx3Ga": {
+                                      "content": "Confirm master owner"
+                                    },
+                                    "ds:SolG4j": {
+                                      "enabled": false
+                                    },
+                                    "ds:IkujNN": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "lmwNRB",
+                                  "ref": "ds:KdKXRG",
+                                  "name": "Checklist Row/Blocked",
+                                  "descendants": {
+                                    "ds:Vmx3Ga": {
+                                      "content": "Replace cover artwork"
+                                    },
+                                    "ds:SolG4j": {
+                                      "enabled": false
+                                    },
+                                    "ds:IkujNN": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "oDZblL",
+                                  "ref": "ds:BNKrLn",
+                                  "name": "Checklist Row/Pending",
+                                  "descendants": {
+                                    "ds:kHGXMJ": {
+                                      "content": "Version label · optional"
+                                    },
+                                    "ds:9U0qv6": {
+                                      "enabled": false
+                                    },
+                                    "ds:9lRveR": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "5ZnTHm",
+                                  "ref": "ds:Wveyx",
+                                  "name": "Button / Resolve required changes first",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:f8YTr": {
+                                      "content": "Resolve required changes first"
+                                    },
+                                    "ds:q1x1J": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "2jL6u4",
+                                  "ref": "ds:PiqhAO",
+                                  "name": "Text/Caption",
+                                  "content": "Resubmit returns this release to Bitrate review only."
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 1540,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Light"
+      },
+      "context": "designed — /dashboard/music/$releaseId (Feedback) — Required changes block resubmission; recommendations never do."
+    },
+    {
+      "type": "frame",
+      "id": "Xbh22G",
+      "name": "Artist / Reviewer feedback / Desktop / Dim",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "zQp6IP",
+          "ref": "ds:Rn6HB6",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:6bAVSI": {
+              "type": "ref",
+              "id": "pItXhC",
+              "ref": "ds:9ZM5u5",
+              "name": "Nav / Music",
+              "descendants": {
+                "ds:D2aLpc": {
+                  "icon": "disc-3"
+                },
+                "ds:GZQzF3": {
+                  "content": "Music"
+                }
+              }
+            },
+            "ds:4RTEpp": {
+              "content": "Workspace / Music / Afterglow / Feedback"
+            },
+            "ds:YLdi4o/ds:E23bq6": {
+              "content": "Release overview"
+            },
+            "ds:YLdi4o/ds:k0WCtI": {
+              "enabled": false
+            },
+            "ds:ttgy7g": {
+              "type": "frame",
+              "id": "eT5Y1G",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "Qbecwi",
+                  "name": "Release Head",
+                  "gap": 16,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "Aa9Bgl",
+                      "ref": "ds:rUgRzr",
+                      "name": "Media/Cover",
+                      "width": 64,
+                      "height": 64,
+                      "fill": {
+                        "type": "image",
+                        "url": "../../../../web-player-design/design-system/assets/albums/album-afterglow.webp",
+                        "mode": "cover"
+                      }
+                    },
+                    {
+                      "type": "frame",
+                      "id": "vKuCzH",
+                      "name": "Column",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "xE8ZZq",
+                          "ref": "ds:RoXXJv",
+                          "name": "Text/H2",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Afterglow"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "AZsRvI",
+                          "ref": "ds:C5Ih8u",
+                          "name": "Text/Muted",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Demo artist · Single · 1 track · Updated 6 min ago"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "sRN5ml",
+                      "ref": "ds:WcSzPr",
+                      "name": "Status/Warning",
+                      "descendants": {
+                        "ds:8sj0Ew": {
+                          "content": "Changes requested"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "DAYVIm",
+                  "name": "Tabs",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "BXwGbB",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Overview",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Overview"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "y2X0LD",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Tasks",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Tasks"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "RZ9AvI",
+                      "ref": "ds:Q9hm3",
+                      "name": "Tab / Feedback",
+                      "descendants": {
+                        "ds:dQjtW": {
+                          "content": "Feedback"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "UiOrlj",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Delivery",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Delivery"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "X2aYEL",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Versions",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Versions"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "UuS4Hw",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Activity",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Activity"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Xzv8Rc",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Promotion",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Promotion"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "YS0DIU",
+                  "ref": "ds:ogW5t",
+                  "name": "Alert / Resolve 2 required changes before resubmitting",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:L7SHNm": {
+                      "content": "Resolve 2 required changes before resubmitting"
+                    },
+                    "ds:F9kE6W": {
+                      "content": "Recommendations are optional and never block the review. 0 of 2 resolved."
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "TlGYpS",
+                  "name": "Columns",
+                  "gap": 24,
+                  "alignItems": "start",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "Z1i9e2",
+                      "name": "Main Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "xeQIFY",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "ArDj7S",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "CElkML",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "MjbuXi",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Reviewer notes"
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "FHysBx",
+                                      "ref": "ds:FJUa1",
+                                      "name": "Badge / 3 open items",
+                                      "descendants": {
+                                        "ds:BI0Pd": {
+                                          "content": "3 open items"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "HSRY0z",
+                                  "ref": "ds:yjiPHo",
+                                  "name": "Text/Eyebrow",
+                                  "content": "REQUIRED CHANGE · RIGHTS"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "Ktf1oM",
+                                  "ref": "ds:fLuqjC",
+                                  "name": "Text/H4",
+                                  "content": "Confirm the master recording owner"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "FWYnYf",
+                                  "ref": "ds:XDvNAD",
+                                  "name": "Text/Paragraph",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "The listed owner needs an explicit confirmation before review can continue."
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "gvFV09",
+                                  "ref": "ds:j04F4",
+                                  "name": "Input / Your response",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:l4agQ": {
+                                      "content": "Your response"
+                                    },
+                                    "ds:iI0CE": {
+                                      "content": "I confirm Demo artist owns the master recording."
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "lkyrUM",
+                                  "ref": "ds:exjwf",
+                                  "name": "Button / Save & mark resolved",
+                                  "descendants": {
+                                    "ds:E23bq6": {
+                                      "content": "Save & mark resolved"
+                                    },
+                                    "ds:o7NXW": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "EVMbxr",
+                                  "ref": "ds:RlxQk",
+                                  "name": "Divider",
+                                  "width": "fill_container"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "BDGIug",
+                                  "ref": "ds:yjiPHo",
+                                  "name": "Text/Eyebrow",
+                                  "content": "REQUIRED CHANGE · ARTWORK"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "kOpTeY",
+                                  "ref": "ds:fLuqjC",
+                                  "name": "Text/H4",
+                                  "content": "Replace the cover artwork"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "9IJs80",
+                                  "ref": "ds:G5tJp",
+                                  "name": "Button / Edit artwork",
+                                  "descendants": {
+                                    "ds:d2zCI": {
+                                      "content": "Edit artwork"
+                                    },
+                                    "ds:zDiHG": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "hVF430",
+                                  "ref": "ds:RlxQk",
+                                  "name": "Divider",
+                                  "width": "fill_container"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "skPmR4",
+                                  "ref": "ds:yjiPHo",
+                                  "name": "Text/Eyebrow",
+                                  "content": "RECOMMENDATION · OPTIONAL"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "xe8EFn",
+                                  "ref": "ds:fLuqjC",
+                                  "name": "Text/H4",
+                                  "content": "Clarify the mix version label"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "ynypja",
+                                  "ref": "ds:DTwJb",
+                                  "name": "Button / Dismiss",
+                                  "descendants": {
+                                    "ds:GyGLK": {
+                                      "content": "Dismiss"
+                                    },
+                                    "ds:uRXDu": {
+                                      "enabled": false
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "2DKuyw",
+                      "name": "Side Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": 380,
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "WMIYlX",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "96k2fV",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "xfcX71",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "hDPofd",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Review progress"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "GYqZnZ",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "content": "0 of 2 required resolved"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "JoDzJR",
+                                  "ref": "ds:AQPfV",
+                                  "name": "Progress",
+                                  "width": "fill_container"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "OLXuNf",
+                                  "ref": "ds:KdKXRG",
+                                  "name": "Checklist Row/Blocked",
+                                  "descendants": {
+                                    "ds:Vmx3Ga": {
+                                      "content": "Confirm master owner"
+                                    },
+                                    "ds:SolG4j": {
+                                      "enabled": false
+                                    },
+                                    "ds:IkujNN": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "blwWlV",
+                                  "ref": "ds:KdKXRG",
+                                  "name": "Checklist Row/Blocked",
+                                  "descendants": {
+                                    "ds:Vmx3Ga": {
+                                      "content": "Replace cover artwork"
+                                    },
+                                    "ds:SolG4j": {
+                                      "enabled": false
+                                    },
+                                    "ds:IkujNN": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "oar0Yq",
+                                  "ref": "ds:BNKrLn",
+                                  "name": "Checklist Row/Pending",
+                                  "descendants": {
+                                    "ds:kHGXMJ": {
+                                      "content": "Version label · optional"
+                                    },
+                                    "ds:9U0qv6": {
+                                      "enabled": false
+                                    },
+                                    "ds:9lRveR": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "rhPSuN",
+                                  "ref": "ds:Wveyx",
+                                  "name": "Button / Resolve required changes first",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:f8YTr": {
+                                      "content": "Resolve required changes first"
+                                    },
+                                    "ds:q1x1J": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "u3Hqzs",
+                                  "ref": "ds:PiqhAO",
+                                  "name": "Text/Caption",
+                                  "content": "Resubmit returns this release to Bitrate review only."
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 3080,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dim"
+      },
+      "context": "designed — /dashboard/music/$releaseId (Feedback) — Required changes block resubmission; recommendations never do."
+    },
+    {
+      "type": "frame",
+      "id": "Tw8V4d",
+      "name": "Artist / Reviewer feedback / Mobile / Dark",
+      "width": 390,
+      "height": 1800,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "DWDSgq",
+          "ref": "ds:duKVtw",
+          "name": "Artist Shell/Mobile",
+          "width": 390,
+          "height": 1800,
+          "descendants": {
+            "ds:ZQncvR": {
+              "type": "frame",
+              "id": "Kcc05f",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 20,
+              "padding": [
+                20,
+                16
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "2gWOVY",
+                  "name": "Release Head",
+                  "gap": 16,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "Uu7zr4",
+                      "ref": "ds:rUgRzr",
+                      "name": "Media/Cover",
+                      "width": 64,
+                      "height": 64,
+                      "fill": {
+                        "type": "image",
+                        "url": "../../../../web-player-design/design-system/assets/albums/album-afterglow.webp",
+                        "mode": "cover"
+                      }
+                    },
+                    {
+                      "type": "frame",
+                      "id": "Xa8J8h",
+                      "name": "Column",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "DHJlxI",
+                          "ref": "ds:RoXXJv",
+                          "name": "Text/H2",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Afterglow"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "OpZkqu",
+                          "ref": "ds:C5Ih8u",
+                          "name": "Text/Muted",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Demo artist · Single · 1 track · Updated 6 min ago"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "g2l8B8",
+                      "ref": "ds:WcSzPr",
+                      "name": "Status/Warning",
+                      "descendants": {
+                        "ds:8sj0Ew": {
+                          "content": "Changes requested"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "Z6xStJ",
+                  "name": "Tabs",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "TsZvVJ",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Overview",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Overview"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Y9pq1H",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Tasks",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Tasks"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "VscrRP",
+                      "ref": "ds:Q9hm3",
+                      "name": "Tab / Feedback",
+                      "descendants": {
+                        "ds:dQjtW": {
+                          "content": "Feedback"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Qatvrd",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Delivery",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Delivery"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "PfVqiv",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Versions",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Versions"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "SRhgB7",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Activity",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Activity"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "zYTwkN",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Promotion",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Promotion"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "UT45hJ",
+                  "ref": "ds:ogW5t",
+                  "name": "Alert / Resolve 2 required changes before resubmitting",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:L7SHNm": {
+                      "content": "Resolve 2 required changes before resubmitting"
+                    },
+                    "ds:F9kE6W": {
+                      "content": "Recommendations are optional and never block the review. 0 of 2 resolved."
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "JLN8Vl",
+                  "ref": "ds:x4Fixv",
+                  "name": "Surface/Panel",
+                  "descendants": {
+                    "ds:xhr0E3": {
+                      "type": "frame",
+                      "id": "kJldYr",
+                      "name": "Panel Content",
+                      "layout": "vertical",
+                      "gap": 14,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "OLNdea",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "GZvFTU",
+                              "ref": "ds:fLuqjC",
+                              "name": "Text/H4",
+                              "content": "Reviewer notes"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "xQGCIM",
+                              "ref": "ds:FJUa1",
+                              "name": "Badge / 3 open items",
+                              "descendants": {
+                                "ds:BI0Pd": {
+                                  "content": "3 open items"
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "LZdQXT",
+                          "ref": "ds:yjiPHo",
+                          "name": "Text/Eyebrow",
+                          "content": "REQUIRED CHANGE · RIGHTS"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "u7SAx6",
+                          "ref": "ds:fLuqjC",
+                          "name": "Text/H4",
+                          "content": "Confirm the master recording owner"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "vi4LAV",
+                          "ref": "ds:XDvNAD",
+                          "name": "Text/Paragraph",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "The listed owner needs an explicit confirmation before review can continue."
+                        },
+                        {
+                          "type": "ref",
+                          "id": "UBinjk",
+                          "ref": "ds:j04F4",
+                          "name": "Input / Your response",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:l4agQ": {
+                              "content": "Your response"
+                            },
+                            "ds:iI0CE": {
+                              "content": "I confirm Demo artist owns the master recording."
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "RSeHu8",
+                          "ref": "ds:exjwf",
+                          "name": "Button / Save & mark resolved",
+                          "descendants": {
+                            "ds:E23bq6": {
+                              "content": "Save & mark resolved"
+                            },
+                            "ds:o7NXW": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "Ouc0Lz",
+                          "ref": "ds:RlxQk",
+                          "name": "Divider",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "T0h5AQ",
+                          "ref": "ds:yjiPHo",
+                          "name": "Text/Eyebrow",
+                          "content": "REQUIRED CHANGE · ARTWORK"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "gxslDZ",
+                          "ref": "ds:fLuqjC",
+                          "name": "Text/H4",
+                          "content": "Replace the cover artwork"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "dNuE4l",
+                          "ref": "ds:G5tJp",
+                          "name": "Button / Edit artwork",
+                          "descendants": {
+                            "ds:d2zCI": {
+                              "content": "Edit artwork"
+                            },
+                            "ds:zDiHG": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "fplQEJ",
+                          "ref": "ds:RlxQk",
+                          "name": "Divider",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "i2Ofmv",
+                          "ref": "ds:yjiPHo",
+                          "name": "Text/Eyebrow",
+                          "content": "RECOMMENDATION · OPTIONAL"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "hfoAk5",
+                          "ref": "ds:fLuqjC",
+                          "name": "Text/H4",
+                          "content": "Clarify the mix version label"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "aH2JK6",
+                          "ref": "ds:DTwJb",
+                          "name": "Button / Dismiss",
+                          "descendants": {
+                            "ds:GyGLK": {
+                              "content": "Dismiss"
+                            },
+                            "ds:uRXDu": {
+                              "enabled": false
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "kvFNN3",
+                  "ref": "ds:x4Fixv",
+                  "name": "Surface/Panel",
+                  "descendants": {
+                    "ds:xhr0E3": {
+                      "type": "frame",
+                      "id": "nW6hX9",
+                      "name": "Panel Content",
+                      "layout": "vertical",
+                      "gap": 14,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "bsjUIC",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "zUmaSq",
+                              "ref": "ds:fLuqjC",
+                              "name": "Text/H4",
+                              "content": "Review progress"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "etQWKr",
+                          "ref": "ds:C5Ih8u",
+                          "name": "Text/Muted",
+                          "content": "0 of 2 required resolved"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "Vr7Y8k",
+                          "ref": "ds:AQPfV",
+                          "name": "Progress",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "6NZTBI",
+                          "ref": "ds:KdKXRG",
+                          "name": "Checklist Row/Blocked",
+                          "descendants": {
+                            "ds:Vmx3Ga": {
+                              "content": "Confirm master owner"
+                            },
+                            "ds:SolG4j": {
+                              "enabled": false
+                            },
+                            "ds:IkujNN": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "P23Rm9",
+                          "ref": "ds:KdKXRG",
+                          "name": "Checklist Row/Blocked",
+                          "descendants": {
+                            "ds:Vmx3Ga": {
+                              "content": "Replace cover artwork"
+                            },
+                            "ds:SolG4j": {
+                              "enabled": false
+                            },
+                            "ds:IkujNN": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "UW4L3o",
+                          "ref": "ds:BNKrLn",
+                          "name": "Checklist Row/Pending",
+                          "descendants": {
+                            "ds:kHGXMJ": {
+                              "content": "Version label · optional"
+                            },
+                            "ds:9U0qv6": {
+                              "enabled": false
+                            },
+                            "ds:9lRveR": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "DR5fDF",
+                          "ref": "ds:Wveyx",
+                          "name": "Button / Resolve required changes first",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:f8YTr": {
+                              "content": "Resolve required changes first"
+                            },
+                            "ds:q1x1J": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "MymGNA",
+                          "ref": "ds:PiqhAO",
+                          "name": "Text/Caption",
+                          "content": "Resubmit returns this release to Bitrate review only."
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 4620,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "designed — /dashboard/music/$releaseId (Feedback) — Required changes block resubmission; recommendations never do."
+    },
+    {
+      "type": "frame",
+      "id": "yrvwQY",
+      "name": "Artist / Reviewer feedback / Saving response / Desktop",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "UU3z0y",
+          "ref": "ds:Rn6HB6",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:6bAVSI": {
+              "type": "ref",
+              "id": "ilFJi7",
+              "ref": "ds:9ZM5u5",
+              "name": "Nav / Music",
+              "descendants": {
+                "ds:D2aLpc": {
+                  "icon": "disc-3"
+                },
+                "ds:GZQzF3": {
+                  "content": "Music"
+                }
+              }
+            },
+            "ds:4RTEpp": {
+              "content": "Workspace / Music / Afterglow / Feedback"
+            },
+            "ds:YLdi4o/ds:E23bq6": {
+              "content": "Release overview"
+            },
+            "ds:YLdi4o/ds:k0WCtI": {
+              "enabled": false
+            },
+            "ds:ttgy7g": {
+              "type": "frame",
+              "id": "HikCZs",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "HPc1Dw",
+                  "ref": "ds:x4Fixv",
+                  "name": "Surface/Panel",
+                  "descendants": {
+                    "ds:xhr0E3": {
+                      "type": "frame",
+                      "id": "68gb68",
+                      "name": "Panel Content",
+                      "layout": "vertical",
+                      "gap": 14,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "mjQNrC",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "wWO6jD",
+                              "ref": "ds:fLuqjC",
+                              "name": "Text/H4",
+                              "content": "Confirm master owner"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "jVtSJS",
+                          "ref": "ds:j04F4",
+                          "name": "Input / Your response",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:l4agQ": {
+                              "content": "Your response"
+                            },
+                            "ds:iI0CE": {
+                              "content": "I confirm Demo artist owns the master recording."
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "YfHorM",
+                          "ref": "ds:exjwf",
+                          "name": "Button / Saving response…",
+                          "descendants": {
+                            "ds:E23bq6": {
+                              "content": "Saving response…"
+                            },
+                            "ds:o7NXW": {
+                              "enabled": false
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 5110,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "designed — /dashboard/music/$releaseId (Feedback) — Required changes block resubmission; recommendations never do."
+    },
+    {
+      "type": "frame",
+      "id": "2nrfs7",
+      "name": "Artist / Reviewer feedback / Saving response / Mobile",
+      "width": 390,
+      "height": 1100,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "AAEdGI",
+          "ref": "ds:duKVtw",
+          "name": "Artist Shell/Mobile",
+          "width": 390,
+          "height": 1100,
+          "descendants": {
+            "ds:ZQncvR": {
+              "type": "frame",
+              "id": "dj89f8",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 20,
+              "padding": [
+                20,
+                16
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "nzm7ko",
+                  "ref": "ds:x4Fixv",
+                  "name": "Surface/Panel",
+                  "descendants": {
+                    "ds:xhr0E3": {
+                      "type": "frame",
+                      "id": "EvTLwA",
+                      "name": "Panel Content",
+                      "layout": "vertical",
+                      "gap": 14,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "cgJaSx",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "UKImb7",
+                              "ref": "ds:fLuqjC",
+                              "name": "Text/H4",
+                              "content": "Confirm master owner"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "93gz3Y",
+                          "ref": "ds:j04F4",
+                          "name": "Input / Your response",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:l4agQ": {
+                              "content": "Your response"
+                            },
+                            "ds:iI0CE": {
+                              "content": "I confirm Demo artist owns the master recording."
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "4qHoMy",
+                          "ref": "ds:exjwf",
+                          "name": "Button / Saving response…",
+                          "descendants": {
+                            "ds:E23bq6": {
+                              "content": "Saving response…"
+                            },
+                            "ds:o7NXW": {
+                              "enabled": false
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 6650,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "designed — /dashboard/music/$releaseId (Feedback) — Required changes block resubmission; recommendations never do."
+    },
+    {
+      "type": "frame",
+      "id": "4NEQaM",
+      "name": "Artist / Reviewer feedback / Ready to resubmit / Desktop",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "sZ6gFv",
+          "ref": "ds:Rn6HB6",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:6bAVSI": {
+              "type": "ref",
+              "id": "mPDfdC",
+              "ref": "ds:9ZM5u5",
+              "name": "Nav / Music",
+              "descendants": {
+                "ds:D2aLpc": {
+                  "icon": "disc-3"
+                },
+                "ds:GZQzF3": {
+                  "content": "Music"
+                }
+              }
+            },
+            "ds:4RTEpp": {
+              "content": "Workspace / Music / Afterglow / Feedback"
+            },
+            "ds:YLdi4o/ds:E23bq6": {
+              "content": "Release overview"
+            },
+            "ds:YLdi4o/ds:k0WCtI": {
+              "enabled": false
+            },
+            "ds:ttgy7g": {
+              "type": "frame",
+              "id": "Bl8Ks2",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "1rqXcE",
+                  "ref": "ds:x4Fixv",
+                  "name": "Surface/Panel",
+                  "descendants": {
+                    "ds:xhr0E3": {
+                      "type": "frame",
+                      "id": "ou8GiE",
+                      "name": "Panel Content",
+                      "layout": "vertical",
+                      "gap": 14,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "IUISFd",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "C8F9or",
+                              "ref": "ds:fLuqjC",
+                              "name": "Text/H4",
+                              "content": "2 of 2 resolved"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "FklFeW",
+                          "ref": "ds:ye2ZlZ",
+                          "name": "Checklist Row/Done",
+                          "descendants": {
+                            "ds:BWmC54": {
+                              "content": "Master owner confirmed"
+                            },
+                            "ds:ui1TFi": {
+                              "content": "Resolved just now"
+                            },
+                            "ds:4QtRy2": {
+                              "content": "View response"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "C1XKkD",
+                          "ref": "ds:ye2ZlZ",
+                          "name": "Checklist Row/Done",
+                          "descendants": {
+                            "ds:BWmC54": {
+                              "content": "Cover artwork replaced"
+                            },
+                            "ds:ui1TFi": {
+                              "content": "Resolved"
+                            },
+                            "ds:4QtRy2": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "FpROOx",
+                          "ref": "ds:exjwf",
+                          "name": "Button / Resubmit for review",
+                          "descendants": {
+                            "ds:E23bq6": {
+                              "content": "Resubmit for review"
+                            },
+                            "ds:o7NXW": {
+                              "enabled": false
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 7140,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "designed — /dashboard/music/$releaseId (Feedback) — Required changes block resubmission; recommendations never do."
+    },
+    {
+      "type": "frame",
+      "id": "gp9vCQ",
+      "name": "Artist / Reviewer feedback / Ready to resubmit / Mobile",
+      "width": 390,
+      "height": 1100,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "e9m6yz",
+          "ref": "ds:duKVtw",
+          "name": "Artist Shell/Mobile",
+          "width": 390,
+          "height": 1100,
+          "descendants": {
+            "ds:ZQncvR": {
+              "type": "frame",
+              "id": "D2e7BG",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 20,
+              "padding": [
+                20,
+                16
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "NvL7cE",
+                  "ref": "ds:x4Fixv",
+                  "name": "Surface/Panel",
+                  "descendants": {
+                    "ds:xhr0E3": {
+                      "type": "frame",
+                      "id": "CnT53R",
+                      "name": "Panel Content",
+                      "layout": "vertical",
+                      "gap": 14,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "SBhr9J",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "u1gV79",
+                              "ref": "ds:fLuqjC",
+                              "name": "Text/H4",
+                              "content": "2 of 2 resolved"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "P6BLfU",
+                          "ref": "ds:ye2ZlZ",
+                          "name": "Checklist Row/Done",
+                          "descendants": {
+                            "ds:BWmC54": {
+                              "content": "Master owner confirmed"
+                            },
+                            "ds:ui1TFi": {
+                              "content": "Resolved just now"
+                            },
+                            "ds:4QtRy2": {
+                              "content": "View response"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "Odq9i0",
+                          "ref": "ds:ye2ZlZ",
+                          "name": "Checklist Row/Done",
+                          "descendants": {
+                            "ds:BWmC54": {
+                              "content": "Cover artwork replaced"
+                            },
+                            "ds:ui1TFi": {
+                              "content": "Resolved"
+                            },
+                            "ds:4QtRy2": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "zxp1wy",
+                          "ref": "ds:exjwf",
+                          "name": "Button / Resubmit for review",
+                          "descendants": {
+                            "ds:E23bq6": {
+                              "content": "Resubmit for review"
+                            },
+                            "ds:o7NXW": {
+                              "enabled": false
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 8680,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "designed — /dashboard/music/$releaseId (Feedback) — Required changes block resubmission; recommendations never do."
+    },
+    {
+      "type": "frame",
+      "id": "it2INZ",
+      "name": "Artist / Reviewer feedback / Resubmit error / Desktop",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "Ef31UX",
+          "ref": "ds:Rn6HB6",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:6bAVSI": {
+              "type": "ref",
+              "id": "WHz7Vb",
+              "ref": "ds:9ZM5u5",
+              "name": "Nav / Music",
+              "descendants": {
+                "ds:D2aLpc": {
+                  "icon": "disc-3"
+                },
+                "ds:GZQzF3": {
+                  "content": "Music"
+                }
+              }
+            },
+            "ds:4RTEpp": {
+              "content": "Workspace / Music / Afterglow / Feedback"
+            },
+            "ds:YLdi4o/ds:E23bq6": {
+              "content": "Release overview"
+            },
+            "ds:YLdi4o/ds:k0WCtI": {
+              "enabled": false
+            },
+            "ds:ttgy7g": {
+              "type": "frame",
+              "id": "hg2gx0",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "r9m8Us",
+                  "name": "State Area",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "layout": "vertical",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "PSi2S4",
+                      "ref": "ds:LQ8GwL",
+                      "name": "State / Could not resubmit",
+                      "descendants": {
+                        "ds:zG3uZd": {
+                          "icon": "triangle-alert"
+                        },
+                        "ds:ATKZVK": {
+                          "content": "Could not resubmit"
+                        },
+                        "ds:h7OAoY": {
+                          "content": "The release is still in Changes requested. Saved responses remain available."
+                        },
+                        "ds:ydkfG5/ds:NVe7y": {
+                          "content": "Try again"
+                        },
+                        "ds:voqjVU": {
+                          "enabled": false
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 9170,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "designed — /dashboard/music/$releaseId (Feedback) — Required changes block resubmission; recommendations never do."
+    },
+    {
+      "type": "frame",
+      "id": "ir14F9",
+      "name": "Artist / Reviewer feedback / Resubmit error / Mobile",
+      "width": 390,
+      "height": 1100,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "eA4HaL",
+          "ref": "ds:duKVtw",
+          "name": "Artist Shell/Mobile",
+          "width": 390,
+          "height": 1100,
+          "descendants": {
+            "ds:ZQncvR": {
+              "type": "frame",
+              "id": "5oP7hl",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 20,
+              "padding": [
+                20,
+                16
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "7g1R4U",
+                  "name": "State Area",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "layout": "vertical",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "n5ztsL",
+                      "ref": "ds:LQ8GwL",
+                      "name": "State / Could not resubmit",
+                      "descendants": {
+                        "ds:zG3uZd": {
+                          "icon": "triangle-alert"
+                        },
+                        "ds:ATKZVK": {
+                          "content": "Could not resubmit"
+                        },
+                        "ds:h7OAoY": {
+                          "content": "The release is still in Changes requested. Saved responses remain available."
+                        },
+                        "ds:ydkfG5/ds:NVe7y": {
+                          "content": "Try again"
+                        },
+                        "ds:voqjVU": {
+                          "enabled": false
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 10710,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "designed — /dashboard/music/$releaseId (Feedback) — Required changes block resubmission; recommendations never do."
+    }
+  ]
+}

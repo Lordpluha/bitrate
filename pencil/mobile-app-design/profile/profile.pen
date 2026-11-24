@@ -1,0 +1,1352 @@
+{
+  "version": "2.20",
+  "imports": {
+    "ds": "../../web-player-design/design-system/bitrate.lib.pen"
+  },
+  "children": [
+    {
+      "type": "frame",
+      "id": "TazSKr",
+      "name": "Mobile / Profile / Mobile / Dark",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "tQRxHJ",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "ref",
+          "id": "EspFvQ",
+          "ref": "ds:pmBZPg",
+          "name": "Mobile/Header",
+          "width": "fill_container",
+          "descendants": {
+            "ds:AfZgNi": {
+              "content": "Profile"
+            },
+            "ds:Du8iEf": {
+              "enabled": false
+            },
+            "ds:GvquLa": {
+              "enabled": false
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "Jt6VTS",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            12,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "frame",
+              "id": "r6LlVL",
+              "name": "Account",
+              "gap": 14,
+              "alignItems": "center",
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "nH63MI",
+                  "ref": "ds:pIPJZe",
+                  "name": "Media/Avatar",
+                  "width": 64,
+                  "height": 64,
+                  "fill": {
+                    "type": "image",
+                    "url": "../../web-player-design/design-system/assets/avatars/avatar1.jpg",
+                    "mode": "cover"
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "qT4ndw",
+                  "name": "Column",
+                  "layout": "vertical",
+                  "gap": 2,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "QL9BcW",
+                      "ref": "ds:Qjj2NE",
+                      "name": "Text/H3",
+                      "content": "maya"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Tzn0Eh",
+                      "ref": "ds:C5Ih8u",
+                      "name": "Text/Muted",
+                      "content": "maya@example.com"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "wJnWMK",
+              "name": "Theme",
+              "layout": "vertical",
+              "gap": 10,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "osAcn8",
+                  "ref": "ds:fLuqjC",
+                  "name": "Text/H4",
+                  "content": "Theme"
+                },
+                {
+                  "type": "frame",
+                  "id": "vKTMFC",
+                  "name": "Theme Options",
+                  "width": 374,
+                  "clip": true,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "TiKiol",
+                      "name": "Theme Options Row",
+                      "gap": 12,
+                      "alignItems": "start",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "hOVkmz",
+                          "name": "Chips",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "NFdt2P",
+                              "ref": "ds:AdNrrb",
+                              "name": "Chip/Active",
+                              "descendants": {
+                                "ds:cUY4Fi": {
+                                  "content": "System"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "WSYUD6",
+                              "ref": "ds:LUcTan",
+                              "name": "Chip/Default",
+                              "descendants": {
+                                "ds:lXs2ja": {
+                                  "content": "Dark"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "ZqMkyp",
+                              "ref": "ds:LUcTan",
+                              "name": "Chip/Default",
+                              "descendants": {
+                                "ds:lXs2ja": {
+                                  "content": "Light"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "6M6FGe",
+                              "ref": "ds:LUcTan",
+                              "name": "Chip/Default",
+                              "descendants": {
+                                "ds:lXs2ja": {
+                                  "content": "Neutral"
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "tEGr1o",
+              "name": "Language",
+              "layout": "vertical",
+              "gap": 10,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "vp6FJg",
+                  "ref": "ds:fLuqjC",
+                  "name": "Text/H4",
+                  "content": "Language"
+                },
+                {
+                  "type": "frame",
+                  "id": "EqjHbD",
+                  "name": "Language Options",
+                  "width": 374,
+                  "clip": true,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "60JMY4",
+                      "name": "Language Options Row",
+                      "gap": 12,
+                      "alignItems": "start",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "Sw2nhX",
+                          "name": "Chips",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "c1r21C",
+                              "ref": "ds:AdNrrb",
+                              "name": "Chip/Active",
+                              "descendants": {
+                                "ds:cUY4Fi": {
+                                  "content": "Device language"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "9bXba9",
+                              "ref": "ds:LUcTan",
+                              "name": "Chip/Default",
+                              "descendants": {
+                                "ds:lXs2ja": {
+                                  "content": "English"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "4AWaCQ",
+                              "ref": "ds:LUcTan",
+                              "name": "Chip/Default",
+                              "descendants": {
+                                "ds:lXs2ja": {
+                                  "content": "Українська"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "T8NALK",
+                              "ref": "ds:LUcTan",
+                              "name": "Chip/Default",
+                              "descendants": {
+                                "ds:lXs2ja": {
+                                  "content": "Polski"
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "oygeaG",
+              "ref": "ds:uT1Ux",
+              "name": "Button / Log out",
+              "width": "fill_container",
+              "descendants": {
+                "ds:QLznA": {
+                  "content": "Log out"
+                },
+                "ds:w2aMIw": {
+                  "icon": "log-out"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "ntdojh",
+              "ref": "ds:PiqhAO",
+              "name": "Text/Caption",
+              "content": "Version 2.0.1"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "M2SlW0",
+          "name": "Island Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16,
+            18,
+            16
+          ],
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "kwCtWL",
+              "ref": "ds:DrlRuW",
+              "name": "Mobile/Island",
+              "width": "fill_container",
+              "descendants": {
+                "ds:67K2eN": {
+                  "fill": "$ds:--secondary"
+                },
+                "ds:ApEsiS": {
+                  "fill": "$ds:--foreground"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 0,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "app /profile (pushed from the Home avatar) — Profile: theme (System follows the OS; Neutral = dim) and language are device-local preferences; Log out ends the session."
+    },
+    {
+      "type": "frame",
+      "id": "jib8Jl",
+      "name": "Mobile / Profile / Mobile / Light",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "JIulrd",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "ref",
+          "id": "GCumwo",
+          "ref": "ds:pmBZPg",
+          "name": "Mobile/Header",
+          "width": "fill_container",
+          "descendants": {
+            "ds:AfZgNi": {
+              "content": "Profile"
+            },
+            "ds:Du8iEf": {
+              "enabled": false
+            },
+            "ds:GvquLa": {
+              "enabled": false
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "ZdBYha",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            12,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "frame",
+              "id": "d3bA4m",
+              "name": "Account",
+              "gap": 14,
+              "alignItems": "center",
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "3tW5kV",
+                  "ref": "ds:pIPJZe",
+                  "name": "Media/Avatar",
+                  "width": 64,
+                  "height": 64,
+                  "fill": {
+                    "type": "image",
+                    "url": "../../web-player-design/design-system/assets/avatars/avatar1.jpg",
+                    "mode": "cover"
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "6a3RIW",
+                  "name": "Column",
+                  "layout": "vertical",
+                  "gap": 2,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "cjn8BM",
+                      "ref": "ds:Qjj2NE",
+                      "name": "Text/H3",
+                      "content": "maya"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "3FeDuc",
+                      "ref": "ds:C5Ih8u",
+                      "name": "Text/Muted",
+                      "content": "maya@example.com"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "ge9jzj",
+              "name": "Theme",
+              "layout": "vertical",
+              "gap": 10,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "ukz9X7",
+                  "ref": "ds:fLuqjC",
+                  "name": "Text/H4",
+                  "content": "Theme"
+                },
+                {
+                  "type": "frame",
+                  "id": "j04Uho",
+                  "name": "Theme Options",
+                  "width": 374,
+                  "clip": true,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "9F8klv",
+                      "name": "Theme Options Row",
+                      "gap": 12,
+                      "alignItems": "start",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "LAQ6I6",
+                          "name": "Chips",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "bb3vF5",
+                              "ref": "ds:AdNrrb",
+                              "name": "Chip/Active",
+                              "descendants": {
+                                "ds:cUY4Fi": {
+                                  "content": "System"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "8SH4xz",
+                              "ref": "ds:LUcTan",
+                              "name": "Chip/Default",
+                              "descendants": {
+                                "ds:lXs2ja": {
+                                  "content": "Dark"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "nRijPv",
+                              "ref": "ds:LUcTan",
+                              "name": "Chip/Default",
+                              "descendants": {
+                                "ds:lXs2ja": {
+                                  "content": "Light"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "uMvXQJ",
+                              "ref": "ds:LUcTan",
+                              "name": "Chip/Default",
+                              "descendants": {
+                                "ds:lXs2ja": {
+                                  "content": "Neutral"
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "Xcu68P",
+              "name": "Language",
+              "layout": "vertical",
+              "gap": 10,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "NcEFxS",
+                  "ref": "ds:fLuqjC",
+                  "name": "Text/H4",
+                  "content": "Language"
+                },
+                {
+                  "type": "frame",
+                  "id": "IlImSi",
+                  "name": "Language Options",
+                  "width": 374,
+                  "clip": true,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "AIkUcQ",
+                      "name": "Language Options Row",
+                      "gap": 12,
+                      "alignItems": "start",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "iG3dvw",
+                          "name": "Chips",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "Yvu84D",
+                              "ref": "ds:AdNrrb",
+                              "name": "Chip/Active",
+                              "descendants": {
+                                "ds:cUY4Fi": {
+                                  "content": "Device language"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "VkI1F9",
+                              "ref": "ds:LUcTan",
+                              "name": "Chip/Default",
+                              "descendants": {
+                                "ds:lXs2ja": {
+                                  "content": "English"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "A9zFYt",
+                              "ref": "ds:LUcTan",
+                              "name": "Chip/Default",
+                              "descendants": {
+                                "ds:lXs2ja": {
+                                  "content": "Українська"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "FbIpje",
+                              "ref": "ds:LUcTan",
+                              "name": "Chip/Default",
+                              "descendants": {
+                                "ds:lXs2ja": {
+                                  "content": "Polski"
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "8mJsoA",
+              "ref": "ds:uT1Ux",
+              "name": "Button / Log out",
+              "width": "fill_container",
+              "descendants": {
+                "ds:QLznA": {
+                  "content": "Log out"
+                },
+                "ds:w2aMIw": {
+                  "icon": "log-out"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "RHegfG",
+              "ref": "ds:PiqhAO",
+              "name": "Text/Caption",
+              "content": "Version 2.0.1"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "2QohzG",
+          "name": "Island Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16,
+            18,
+            16
+          ],
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "cWe7Lo",
+              "ref": "ds:DrlRuW",
+              "name": "Mobile/Island",
+              "width": "fill_container",
+              "descendants": {
+                "ds:67K2eN": {
+                  "fill": "$ds:--secondary"
+                },
+                "ds:ApEsiS": {
+                  "fill": "$ds:--foreground"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 490,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Light"
+      },
+      "context": "app /profile (pushed from the Home avatar) — Profile: theme (System follows the OS; Neutral = dim) and language are device-local preferences; Log out ends the session."
+    },
+    {
+      "type": "frame",
+      "id": "riFEhW",
+      "name": "Mobile / Profile / Mobile / Dim",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "HIZXKD",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "ref",
+          "id": "KdBDXI",
+          "ref": "ds:pmBZPg",
+          "name": "Mobile/Header",
+          "width": "fill_container",
+          "descendants": {
+            "ds:AfZgNi": {
+              "content": "Profile"
+            },
+            "ds:Du8iEf": {
+              "enabled": false
+            },
+            "ds:GvquLa": {
+              "enabled": false
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "vH8P3y",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            12,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "frame",
+              "id": "3jauFg",
+              "name": "Account",
+              "gap": 14,
+              "alignItems": "center",
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "TCvls3",
+                  "ref": "ds:pIPJZe",
+                  "name": "Media/Avatar",
+                  "width": 64,
+                  "height": 64,
+                  "fill": {
+                    "type": "image",
+                    "url": "../../web-player-design/design-system/assets/avatars/avatar1.jpg",
+                    "mode": "cover"
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "4xb5R3",
+                  "name": "Column",
+                  "layout": "vertical",
+                  "gap": 2,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "EEnD0x",
+                      "ref": "ds:Qjj2NE",
+                      "name": "Text/H3",
+                      "content": "maya"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "B2h8Ee",
+                      "ref": "ds:C5Ih8u",
+                      "name": "Text/Muted",
+                      "content": "maya@example.com"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "YaVJFm",
+              "name": "Theme",
+              "layout": "vertical",
+              "gap": 10,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "yvk8Si",
+                  "ref": "ds:fLuqjC",
+                  "name": "Text/H4",
+                  "content": "Theme"
+                },
+                {
+                  "type": "frame",
+                  "id": "vxKRw5",
+                  "name": "Theme Options",
+                  "width": 374,
+                  "clip": true,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "PZpkpB",
+                      "name": "Theme Options Row",
+                      "gap": 12,
+                      "alignItems": "start",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "bvfkVy",
+                          "name": "Chips",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "xDPCDE",
+                              "ref": "ds:AdNrrb",
+                              "name": "Chip/Active",
+                              "descendants": {
+                                "ds:cUY4Fi": {
+                                  "content": "System"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "y92uNT",
+                              "ref": "ds:LUcTan",
+                              "name": "Chip/Default",
+                              "descendants": {
+                                "ds:lXs2ja": {
+                                  "content": "Dark"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "hMQn5D",
+                              "ref": "ds:LUcTan",
+                              "name": "Chip/Default",
+                              "descendants": {
+                                "ds:lXs2ja": {
+                                  "content": "Light"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "qBHP4X",
+                              "ref": "ds:LUcTan",
+                              "name": "Chip/Default",
+                              "descendants": {
+                                "ds:lXs2ja": {
+                                  "content": "Neutral"
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "jIDdJT",
+              "name": "Language",
+              "layout": "vertical",
+              "gap": 10,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "RxxuBL",
+                  "ref": "ds:fLuqjC",
+                  "name": "Text/H4",
+                  "content": "Language"
+                },
+                {
+                  "type": "frame",
+                  "id": "SKypjV",
+                  "name": "Language Options",
+                  "width": 374,
+                  "clip": true,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "wSWq5A",
+                      "name": "Language Options Row",
+                      "gap": 12,
+                      "alignItems": "start",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "YfD9nj",
+                          "name": "Chips",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "I8Iym7",
+                              "ref": "ds:AdNrrb",
+                              "name": "Chip/Active",
+                              "descendants": {
+                                "ds:cUY4Fi": {
+                                  "content": "Device language"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "N0NH3v",
+                              "ref": "ds:LUcTan",
+                              "name": "Chip/Default",
+                              "descendants": {
+                                "ds:lXs2ja": {
+                                  "content": "English"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "6yizsR",
+                              "ref": "ds:LUcTan",
+                              "name": "Chip/Default",
+                              "descendants": {
+                                "ds:lXs2ja": {
+                                  "content": "Українська"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "31Im6k",
+                              "ref": "ds:LUcTan",
+                              "name": "Chip/Default",
+                              "descendants": {
+                                "ds:lXs2ja": {
+                                  "content": "Polski"
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "mzlEtb",
+              "ref": "ds:uT1Ux",
+              "name": "Button / Log out",
+              "width": "fill_container",
+              "descendants": {
+                "ds:QLznA": {
+                  "content": "Log out"
+                },
+                "ds:w2aMIw": {
+                  "icon": "log-out"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "nUjcph",
+              "ref": "ds:PiqhAO",
+              "name": "Text/Caption",
+              "content": "Version 2.0.1"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "GrKZHn",
+          "name": "Island Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16,
+            18,
+            16
+          ],
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "K8bpKB",
+              "ref": "ds:DrlRuW",
+              "name": "Mobile/Island",
+              "width": "fill_container",
+              "descendants": {
+                "ds:67K2eN": {
+                  "fill": "$ds:--secondary"
+                },
+                "ds:ApEsiS": {
+                  "fill": "$ds:--foreground"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 980,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dim"
+      },
+      "context": "app /profile (pushed from the Home avatar) — Profile: theme (System follows the OS; Neutral = dim) and language are device-local preferences; Log out ends the session."
+    },
+    {
+      "type": "frame",
+      "id": "lhLoDb",
+      "name": "Mobile / Profile / Theme set to Light / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "tbw8Hj",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "ref",
+          "id": "yIIU8L",
+          "ref": "ds:pmBZPg",
+          "name": "Mobile/Header",
+          "width": "fill_container",
+          "descendants": {
+            "ds:AfZgNi": {
+              "content": "Profile"
+            },
+            "ds:Du8iEf": {
+              "enabled": false
+            },
+            "ds:GvquLa": {
+              "enabled": false
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "hH7Qxh",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            12,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "frame",
+              "id": "FksulT",
+              "name": "Account",
+              "gap": 14,
+              "alignItems": "center",
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "z8qwFH",
+                  "ref": "ds:pIPJZe",
+                  "name": "Media/Avatar",
+                  "width": 64,
+                  "height": 64,
+                  "fill": {
+                    "type": "image",
+                    "url": "../../web-player-design/design-system/assets/avatars/avatar1.jpg",
+                    "mode": "cover"
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "IdEBup",
+                  "name": "Column",
+                  "layout": "vertical",
+                  "gap": 2,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "48RJWp",
+                      "ref": "ds:Qjj2NE",
+                      "name": "Text/H3",
+                      "content": "maya"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Z4ifzE",
+                      "ref": "ds:C5Ih8u",
+                      "name": "Text/Muted",
+                      "content": "maya@example.com"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "EaGjlH",
+              "name": "Theme",
+              "layout": "vertical",
+              "gap": 10,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "c3tNyf",
+                  "ref": "ds:fLuqjC",
+                  "name": "Text/H4",
+                  "content": "Theme"
+                },
+                {
+                  "type": "frame",
+                  "id": "9zMxao",
+                  "name": "Theme Options",
+                  "width": 374,
+                  "clip": true,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "78ewdo",
+                      "name": "Theme Options Row",
+                      "gap": 12,
+                      "alignItems": "start",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "93CCdy",
+                          "name": "Chips",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "7ZedGG",
+                              "ref": "ds:LUcTan",
+                              "name": "Chip/Default",
+                              "descendants": {
+                                "ds:lXs2ja": {
+                                  "content": "System"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "ah8B6v",
+                              "ref": "ds:LUcTan",
+                              "name": "Chip/Default",
+                              "descendants": {
+                                "ds:lXs2ja": {
+                                  "content": "Dark"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "RNfwvK",
+                              "ref": "ds:AdNrrb",
+                              "name": "Chip/Active",
+                              "descendants": {
+                                "ds:cUY4Fi": {
+                                  "content": "Light"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "4YpgC5",
+                              "ref": "ds:LUcTan",
+                              "name": "Chip/Default",
+                              "descendants": {
+                                "ds:lXs2ja": {
+                                  "content": "Neutral"
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "V6vkwG",
+              "name": "Language",
+              "layout": "vertical",
+              "gap": 10,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "v4DZFK",
+                  "ref": "ds:fLuqjC",
+                  "name": "Text/H4",
+                  "content": "Language"
+                },
+                {
+                  "type": "frame",
+                  "id": "A9ewMO",
+                  "name": "Language Options",
+                  "width": 374,
+                  "clip": true,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "2JvQJb",
+                      "name": "Language Options Row",
+                      "gap": 12,
+                      "alignItems": "start",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "WUwprP",
+                          "name": "Chips",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "ubZcil",
+                              "ref": "ds:AdNrrb",
+                              "name": "Chip/Active",
+                              "descendants": {
+                                "ds:cUY4Fi": {
+                                  "content": "Device language"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "zE1Qqm",
+                              "ref": "ds:LUcTan",
+                              "name": "Chip/Default",
+                              "descendants": {
+                                "ds:lXs2ja": {
+                                  "content": "English"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "S9O7gd",
+                              "ref": "ds:LUcTan",
+                              "name": "Chip/Default",
+                              "descendants": {
+                                "ds:lXs2ja": {
+                                  "content": "Українська"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "PDXGJt",
+                              "ref": "ds:LUcTan",
+                              "name": "Chip/Default",
+                              "descendants": {
+                                "ds:lXs2ja": {
+                                  "content": "Polski"
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "YUxJqm",
+              "ref": "ds:uT1Ux",
+              "name": "Button / Log out",
+              "width": "fill_container",
+              "descendants": {
+                "ds:QLznA": {
+                  "content": "Log out"
+                },
+                "ds:w2aMIw": {
+                  "icon": "log-out"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "1Rm8dX",
+              "ref": "ds:PiqhAO",
+              "name": "Text/Caption",
+              "content": "Version 2.0.1"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "sZuydz",
+          "name": "Island Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16,
+            18,
+            16
+          ],
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "qVrz9a",
+              "ref": "ds:DrlRuW",
+              "name": "Mobile/Island",
+              "width": "fill_container",
+              "descendants": {
+                "ds:67K2eN": {
+                  "fill": "$ds:--secondary"
+                },
+                "ds:ApEsiS": {
+                  "fill": "$ds:--foreground"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 1470,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Light"
+      },
+      "context": "app /profile (pushed from the Home avatar) — Profile: theme (System follows the OS; Neutral = dim) and language are device-local preferences; Log out ends the session."
+    }
+  ]
+}

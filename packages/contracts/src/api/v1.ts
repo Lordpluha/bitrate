@@ -3025,6 +3025,245 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/api/v1/artists/me/promotion-profile': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** Read the artist's promotion profile */
+    get: operations['PromotionController_profile_v1']
+    /**
+     * Replace the artist's promotion profile
+     * @description Goal, channels, weekly time, audience and voice that every plan generation reads. Audience and example posts may not contain links, emails, phone numbers or @handles.
+     */
+    put: operations['PromotionController_saveProfile_v1']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/artists/me/promotion/allowance': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** Read the artist's AI allowance for this month */
+    get: operations['PromotionController_allowance_v1']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/artists/me/promotion/calendar': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Upcoming promotion steps across all releases
+     * @description Steps of the latest plan of every dated release, soonest first; rejected steps are left out. The window is at most 120 days.
+     */
+    get: operations['PromotionController_calendar_v1']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/artists/me/releases/{releaseId}/promotion/plans': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Generate a new promotion plan version for a release
+     * @description Starts generation in the background and returns the new GENERATING version. Steps the artist approved, edited or finished are kept; suggested ones are replaced.
+     */
+    post: operations['PromotionController_requestPlan_v1']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/artists/me/releases/{releaseId}/promotion/plans/latest': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Read a release's latest promotion plan
+     * @description Every step is dated from the release date as it is now.
+     */
+    get: operations['PromotionController_plan_v1']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/artists/me/releases/{releaseId}/promotion/steps/{stepId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    /**
+     * Approve, edit, reject or finish a promotion step
+     * @description Only steps of the latest version change. Editing marks the step as written by the artist.
+     */
+    patch: operations['PromotionController_updateStep_v1']
+    trace?: never
+  }
+  '/api/v1/artists/me/releases/{releaseId}/promotion/steps/{stepId}/regenerate': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Ask for a new suggestion for one promotion step
+     * @description Only a suggested step of the latest version. The step is marked `regenerating` until the job finishes; on failure the old text stays and `regenerationFailure` says why.
+     */
+    post: operations['PromotionController_regenerateStep_v1']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/artists/me/releases/{releaseId}/promotion/steps/{stepId}/posts': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** Read a promotion step's drafts and their translations */
+    get: operations['PromotionPostsController_list_v1']
+    put?: never
+    /**
+     * Write a POST step's English drafts, one per channel
+     * @description Runs in the background and returns the step with status GENERATING. Rewriting existing drafts marks their translations STALE.
+     */
+    post: operations['PromotionPostsController_write_v1']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/artists/me/releases/{releaseId}/promotion/steps/{stepId}/posts/{postId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    /**
+     * Edit a draft's English master
+     * @description Its translations become STALE; an edited translation keeps its text until the artist replaces it.
+     */
+    patch: operations['PromotionPostsController_edit_v1']
+    trace?: never
+  }
+  '/api/v1/artists/me/releases/{releaseId}/promotion/steps/{stepId}/posts/{postId}/translations': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Translate a draft into Ukrainian or Polish
+     * @description Runs in the background. Names, links and hashtags stay as they are. Replaces an existing translation of that language, including an edited one.
+     */
+    post: operations['PromotionPostsController_translate_v1']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/artists/me/releases/{releaseId}/promotion/steps/{stepId}/translations/{translationId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    /**
+     * Edit or rate a translation
+     * @description An edit makes the translation EDITED against the current English master.
+     */
+    patch: operations['PromotionPostsController_editTranslation_v1']
+    trace?: never
+  }
+  '/api/v1/artists/me/releases/{releaseId}/promotion/steps/{stepId}/posts/{postId}/actions': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Report that a post draft was copied or downloaded
+     * @description Records a promotion event; nothing is published.
+     */
+    post: operations['PromotionPostsController_recordAction_v1']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/api/v1/artists/me/profile': {
     parameters: {
       query?: never
@@ -3525,6 +3764,8 @@ export interface components {
       deletedAt: string | null
       /** @description Transactional-email locale, set at registration from Accept-Language. */
       locale: string
+      /** @description AI promotion is switched on for this artist (rollout flag). */
+      promotionEnabled: boolean
       /** @description Revision of the Terms of Use, Community Guidelines and Privacy Policy accepted at registration, if recorded. */
       legalVersion: string | null
       /**
@@ -5340,6 +5581,193 @@ export interface components {
     }
     SendSupportMessageDto: {
       text: string
+    }
+    /** @enum {string} */
+    PromotionGoal: 'STREAMS' | 'FOLLOWERS' | 'BUZZ'
+    /** @enum {string} */
+    PromotionChannel: 'INSTAGRAM' | 'TIKTOK' | 'TELEGRAM' | 'YOUTUBE_SHORTS'
+    PromotionProfileEntity: {
+      goal: components['schemas']['PromotionGoal']
+      channels: components['schemas']['PromotionChannel'][]
+      weeklyHours: number
+      /** @description ISO 3166-1 alpha-2 codes */
+      countries: string[]
+      audience: string | null
+      voiceWords: string[]
+      voiceExamples: string[]
+      /** Format: date-time */
+      updatedAt: string
+    }
+    PromotionProfileDto: {
+      /** @enum {string} */
+      goal: 'STREAMS' | 'FOLLOWERS' | 'BUZZ'
+      channels: ('INSTAGRAM' | 'TIKTOK' | 'TELEGRAM' | 'YOUTUBE_SHORTS')[]
+      /** @description Hours a week the artist will spend */
+      weeklyHours: number
+      /** @description ISO 3166-1 alpha-2 codes of the main audience */
+      countries: string[]
+      audience: string | null
+      voiceWords: string[]
+      /** @description Posts the artist wrote */
+      voiceExamples: string[]
+    }
+    AiAllowanceEntity: {
+      /** @description Spent this month, in micro-dollars (US$ 1 = 1,000,000) */
+      usedMicroUsd: number
+      /** @description Monthly ceiling, in micro-dollars */
+      limitMicroUsd: number
+      /** Format: date-time */
+      resetsAt: string
+      /** @description AI promotion is switched on for this artist; otherwise the UI hides it */
+      enabled: boolean
+    }
+    /** @enum {string} */
+    PromotionStepPhase: 'PRE' | 'LAUNCH' | 'POST'
+    /** @enum {string} */
+    PromotionStepKind: 'POST' | 'FOLLOWER_MESSAGE' | 'COUNTDOWN' | 'ACTION'
+    /** @enum {string} */
+    PromotionStepState: 'SUGGESTED' | 'APPROVED' | 'EDITED' | 'REJECTED' | 'DONE'
+    PromotionCalendarEntryEntity: {
+      /** Format: uuid */
+      stepId: string
+      /** Format: uuid */
+      releaseId: string
+      releaseTitle: string
+      /** @description Stored cover, as on the dashboard */
+      cover: string | null
+      /** Format: date-time */
+      dueAt: string
+      offsetDays: number
+      phase: components['schemas']['PromotionStepPhase']
+      kind: components['schemas']['PromotionStepKind']
+      channels: components['schemas']['PromotionChannel'][]
+      title: string
+      state: components['schemas']['PromotionStepState']
+      aiGenerated: boolean
+    }
+    /** @enum {string} */
+    PromotionPlanStatus: 'GENERATING' | 'READY' | 'FAILED'
+    PromotionStepEntity: {
+      /** Format: uuid */
+      id: string
+      position: number
+      /** @description Days from the release date */
+      offsetDays: number
+      /**
+       * Format: date-time
+       * @description Release date plus the offset; moves with the release, null without a date
+       */
+      dueAt: string | null
+      phase: components['schemas']['PromotionStepPhase']
+      kind: components['schemas']['PromotionStepKind']
+      channels: components['schemas']['PromotionChannel'][]
+      title: string
+      body: string
+      state: components['schemas']['PromotionStepState']
+      /** @description False once the artist edited the text */
+      aiGenerated: boolean
+      /** @description A new suggestion for this step is being written */
+      regenerating: boolean
+      /** @description Message key of the last failed regeneration; the old text was kept */
+      regenerationFailure: string | null
+    }
+    PromotionPlanEntity: {
+      /** Format: uuid */
+      id: string
+      version: number
+      status: components['schemas']['PromotionPlanStatus']
+      /** @description Message key when FAILED */
+      failure: string | null
+      /** Format: date-time */
+      releaseDate: string | null
+      steps: components['schemas']['PromotionStepEntity'][]
+      /** Format: date-time */
+      createdAt: string
+    }
+    UpdatePromotionStepDto: {
+      /** @enum {string} */
+      action: 'approve' | 'edit' | 'reject' | 'done'
+      /** @description Only with `edit` */
+      title?: string
+      /** @description Only with `edit` */
+      body?: string
+    }
+    RegenerateStepDto: {
+      /** @description How the new suggestion should differ, e.g. "shorter" or "no emoji" */
+      hint?: string
+    }
+    /** @enum {string} */
+    TranslationLanguage: 'uk' | 'pl'
+    /**
+     * @description MACHINE is labelled "Machine translation: please review"
+     * @enum {string}
+     */
+    PromotionTranslationState: 'TRANSLATING' | 'MACHINE' | 'EDITED' | 'STALE' | 'FAILED'
+    PromotionTranslationEntity: {
+      /** Format: uuid */
+      id: string
+      language: components['schemas']['TranslationLanguage']
+      /** @description Empty while the first translation is being made */
+      text: string
+      /** @description MACHINE is labelled "Machine translation: please review" */
+      state: components['schemas']['PromotionTranslationState']
+      /** @description False once the artist edited the text */
+      aiGenerated: boolean
+      /**
+       * @description 1 good, -1 needs work
+       * @enum {number|null}
+       */
+      rating: 1 | -1 | null
+    }
+    PromotionPostEntity: {
+      /** Format: uuid */
+      id: string
+      channel: components['schemas']['PromotionChannel']
+      /** @description The English master */
+      text: string
+      hashtags: string[]
+      /** @description False once the artist edited the master */
+      aiGenerated: boolean
+      /** @description Grows with every change of the master */
+      revision: number
+      /** @description The channel's length limit for `text` */
+      maxLength: number
+      translations: components['schemas']['PromotionTranslationEntity'][]
+    }
+    StepPostsEntity: {
+      /** Format: uuid */
+      stepId: string
+      /**
+       * @description Null until drafts are requested
+       * @enum {string|null}
+       */
+      status: 'GENERATING' | 'READY' | 'FAILED' | null
+      /** @description Message key when FAILED */
+      failure: string | null
+      posts: components['schemas']['PromotionPostEntity'][]
+    }
+    UpdatePromotionPostDto: {
+      text?: string
+      hashtags?: string[]
+    }
+    RequestTranslationDto: {
+      /**
+       * @description Target language; English is the master
+       * @enum {string}
+       */
+      language: 'uk' | 'pl'
+    }
+    UpdatePromotionTranslationDto: {
+      text?: string
+      /** @description 1 good, -1 needs work */
+      rating?: 1 | -1
+    }
+    PostActionDto: {
+      /**
+       * @description Copied to the clipboard, or downloaded as text
+       * @enum {string}
+       */
+      action: 'copied' | 'exported'
     }
     ArtistSocialLinksEntity: {
       /** Format: uri */
@@ -31206,6 +31634,2282 @@ export interface operations {
         content?: never
       }
       /** @description Too many messages */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  PromotionController_profile_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PromotionProfileEntity']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            message?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
+            /** @example Unauthorized */
+            error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
+          }
+        }
+      }
+      /** @description AI promotion is not enabled */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description No profile yet */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  PromotionController_saveProfile_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['PromotionProfileDto']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PromotionProfileEntity']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            message?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
+            /** @example Unauthorized */
+            error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
+          }
+        }
+      }
+      /** @description AI promotion is not enabled */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  PromotionController_allowance_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AiAllowanceEntity']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            message?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
+            /** @example Unauthorized */
+            error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
+          }
+        }
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  PromotionController_calendar_v1: {
+    parameters: {
+      query?: {
+        /** @description Inclusive; defaults to 7 days ago */
+        from?: string
+        /** @description Exclusive; defaults to 63 days after `from` */
+        to?: string
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PromotionCalendarEntryEntity'][]
+        }
+      }
+      /** @description Empty or too long window */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            message?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
+            /** @example Unauthorized */
+            error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
+          }
+        }
+      }
+      /** @description AI promotion is not enabled */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  PromotionController_requestPlan_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        releaseId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      202: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PromotionPlanEntity']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            message?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
+            /** @example Unauthorized */
+            error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
+          }
+        }
+      }
+      /** @description Monthly AI allowance used */
+      402: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description AI promotion is not enabled */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Release not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description No release date, no profile, or a version is already generating */
+      409: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  PromotionController_plan_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        releaseId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PromotionPlanEntity']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            message?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
+            /** @example Unauthorized */
+            error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
+          }
+        }
+      }
+      /** @description AI promotion is not enabled */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Release or plan not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  PromotionController_updateStep_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        releaseId: string
+        stepId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdatePromotionStepDto']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PromotionPlanEntity']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            message?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
+            /** @example Unauthorized */
+            error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
+          }
+        }
+      }
+      /** @description AI promotion is not enabled */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Release or step not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description The step changed, the action does not apply, or the plan was replaced */
+      409: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  PromotionController_regenerateStep_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        releaseId: string
+        stepId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['RegenerateStepDto']
+      }
+    }
+    responses: {
+      202: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PromotionPlanEntity']
+        }
+      }
+      /** @description The hint has contact details */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            message?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
+            /** @example Unauthorized */
+            error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
+          }
+        }
+      }
+      /** @description Monthly AI allowance used */
+      402: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description AI promotion is not enabled */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Release or step not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description The step was acted on, is already regenerating, or the plan was replaced */
+      409: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  PromotionPostsController_list_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        releaseId: string
+        stepId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['StepPostsEntity']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            message?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
+            /** @example Unauthorized */
+            error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
+          }
+        }
+      }
+      /** @description AI promotion is not enabled */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Release or step not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  PromotionPostsController_write_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        releaseId: string
+        stepId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      202: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['StepPostsEntity']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            message?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
+            /** @example Unauthorized */
+            error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
+          }
+        }
+      }
+      /** @description Monthly AI allowance used */
+      402: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description AI promotion is not enabled */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Release or step not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not a POST step, the step was rejected, or drafts are being written */
+      409: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  PromotionPostsController_edit_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        releaseId: string
+        stepId: string
+        postId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdatePromotionPostDto']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['StepPostsEntity']
+        }
+      }
+      /** @description Over the channel's length */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            message?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
+            /** @example Unauthorized */
+            error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
+          }
+        }
+      }
+      /** @description AI promotion is not enabled */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Release, step or post not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  PromotionPostsController_translate_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        releaseId: string
+        stepId: string
+        postId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['RequestTranslationDto']
+      }
+    }
+    responses: {
+      202: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['StepPostsEntity']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            message?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
+            /** @example Unauthorized */
+            error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
+          }
+        }
+      }
+      /** @description Monthly AI allowance used */
+      402: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description AI promotion is not enabled */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Release, step or post not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Already translating */
+      409: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  PromotionPostsController_editTranslation_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        releaseId: string
+        stepId: string
+        translationId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdatePromotionTranslationDto']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['StepPostsEntity']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            message?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
+            /** @example Unauthorized */
+            error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
+          }
+        }
+      }
+      /** @description AI promotion is not enabled */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Translation not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Still translating */
+      409: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  PromotionPostsController_recordAction_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        releaseId: string
+        stepId: string
+        postId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['PostActionDto']
+      }
+    }
+    responses: {
+      /** @description Recorded */
+      204: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            message?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
+            /** @example Unauthorized */
+            error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
+          }
+        }
+      }
+      /** @description AI promotion is not enabled */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Release, step or post not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description The plan was replaced */
+      409: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
       429: {
         headers: {
           [name: string]: unknown
