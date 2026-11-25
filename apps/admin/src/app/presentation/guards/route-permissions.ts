@@ -9,6 +9,7 @@ import type { Permission } from '@domain/access'
 export const ROUTE_PERMISSIONS: readonly { path: string; permission: Permission }[] = [
   { path: '/', permission: 'overview:read' },
   { path: '/moderation', permission: 'reports:read' },
+  { path: '/support', permission: 'support:read' },
   { path: '/catalog', permission: 'tracks:read' },
   { path: '/albums', permission: 'albums:read' },
   { path: '/playlists', permission: 'playlists:read' },

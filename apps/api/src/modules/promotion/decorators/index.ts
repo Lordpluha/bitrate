@@ -1,4 +1,5 @@
 export { GetAiAllowanceSwagger } from './get-ai-allowance.swagger'
+export { GetArtistCountdownSwagger } from './get-artist-countdown.swagger'
 export { GetPromotionCalendarSwagger } from './get-promotion-calendar.swagger'
 export { GetPromotionPlanSwagger } from './get-promotion-plan.swagger'
 export { GetPromotionProfileSwagger } from './get-promotion-profile.swagger'

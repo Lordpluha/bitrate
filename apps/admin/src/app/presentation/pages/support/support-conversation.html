@@ -1,0 +1,245 @@
+@if (conversation(); as c) {
+  <app-page-header
+    [back]="back()"
+    [eyebrow]="'supportConversation.eyebrow' | transloco: { id: shortId(c.id) }"
+    [title]="c.ticket.reason"
+    [subtitle]="subtitle(c, (c.lastMessageAt | elapsed) ?? '')"
+  >
+    <span headerStatus hlmBadge [variant]="stateBadge[c.state]">
+      {{ stateLabel[c.state] | transloco }}
+    </span>
+    <ng-container ngProjectAs="[headerActions]">
+      @if (canReply()) {
+        <button
+          hlmBtn
+          variant="secondary"
+          type="button"
+          [disabled]="pending()"
+          (click)="replying.set(true)"
+        >
+          <ng-icon name="lucideSend" aria-hidden="true" />
+          {{ 'supportConversation.action.reply' | transloco }}
+        </button>
+      }
+      @if (canReply() && resolvable(c)) {
+        <button hlmBtn type="button" [disabled]="pending()" (click)="confirmingResolve.set(true)">
+          <ng-icon name="lucideCheck" aria-hidden="true" />
+          {{ 'supportConversation.action.resolve' | transloco }}
+        </button>
+      }
+    </ng-container>
+  </app-page-header>
+
+  @if (failureText(); as message) {
+    <app-state-message
+      class="rounded-tile border border-error/40 bg-glass p-4 shadow-glass backdrop-blur-[22px]"
+      kind="error"
+      [title]="message"
+      [compact]="true"
+    />
+  }
+
+  <app-tile-grid>
+    <app-tile
+      icon="lucideMessagesSquare"
+      [title]="'supportConversation.tile.history' | transloco"
+      [meta]="'supportConversation.tile.historyMeta' | transloco"
+      [span]="3"
+    >
+      <ol class="flex flex-col gap-3" aria-live="polite">
+        @for (message of c.messages; track message.id) {
+          <li
+            class="flex flex-col gap-1 rounded-[14px] px-3.5 py-2.5 text-sm"
+            [class]="
+              message.role === 'user'
+                ? 'bg-foreground/4'
+                : message.role === 'operator'
+                  ? 'border border-primary/30 bg-primary/8'
+                  : 'border border-glass-line'
+            "
+          >
+            <span class="flex items-baseline justify-between gap-3 text-xs text-muted-foreground">
+              <span class="font-semibold text-foreground">
+                {{ roleLabel[message.role] | transloco }}
+              </span>
+              <time [attr.datetime]="message.createdAt.toISOString()">
+                {{ message.createdAt | localizedDate: 'dd.MM.yyyy HH:mm' }}
+              </time>
+            </span>
+            <p class="whitespace-pre-line break-words">{{ message.text }}</p>
+            @if (message.citations.length > 0) {
+              <p class="text-xs text-muted-foreground">
+                {{ 'supportConversation.sources' | transloco }}:
+                @for (citation of message.citations; track $index) {
+                  @if (citation.url) {
+                    <a
+                      class="underline"
+                      [href]="citation.url"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      >{{ citation.title }}</a
+                    >
+                  } @else {
+                    <span>{{ citation.title }}</span>
+                  }
+                  @if (!$last) {
+                    ·
+                  }
+                }
+              </p>
+            }
+          </li>
+        }
+      </ol>
+    </app-tile>
+
+    <app-tile
+      icon="lucideTicket"
+      [title]="'supportConversation.tile.ticket' | transloco"
+      [meta]="'supportConversation.tile.ticketMeta' | transloco"
+    >
+      <div>
+        <app-kv-row [label]="'supportConversation.tile.status' | transloco">
+          {{ ticketStatusLabel[c.ticket.status] | transloco }}
+        </app-kv-row>
+        <app-kv-row [label]="'supportConversation.tile.opened' | transloco">
+          {{ c.ticket.createdAt | localizedDate: 'dd.MM.yyyy HH:mm' }}
+        </app-kv-row>
+        @if (c.ticket.resolvedAt) {
+          <app-kv-row [label]="'supportConversation.tile.resolvedAt' | transloco">
+            {{ c.ticket.resolvedAt | localizedDate: 'dd.MM.yyyy HH:mm' }}
+          </app-kv-row>
+        }
+        <app-kv-row [label]="'supportConversation.tile.user' | transloco">
+          @if (c.userId) {
+            {{ 'supportConversation.tile.signedIn' | transloco }}
+            <span class="font-mono">{{ shortId(c.userId) }}</span>
+          } @else {
+            {{ 'supportConversation.tile.guest' | transloco }}
+          }
+        </app-kv-row>
+        <app-kv-row [label]="'supportConversation.tile.language' | transloco">
+          <span class="uppercase">{{ c.locale }}</span>
+        </app-kv-row>
+      </div>
+    </app-tile>
+  </app-tile-grid>
+
+  <hlm-dialog [state]="replying() ? 'open' : 'closed'" (closed)="dismissReply()">
+    <hlm-dialog-content *hlmDialogPortal="let ctx">
+      <form class="flex flex-col gap-4" [formGroup]="form" (ngSubmit)="sendReply()">
+        <hlm-dialog-header>
+          <h2 hlmDialogTitle>{{ 'supportConversation.dialog.replyTitle' | transloco }}</h2>
+          <p hlmDialogDescription>{{ 'supportConversation.dialog.replyDesc' | transloco }}</p>
+        </hlm-dialog-header>
+        <div class="flex flex-col gap-1.5">
+          <label hlmLabel for="support-reply">{{
+            'supportConversation.reply.label' | transloco
+          }}</label>
+          <textarea
+            id="support-reply"
+            class="w-full min-w-0 rounded-xl border border-glass-line bg-foreground/5 px-3 py-2 text-sm outline-hidden transition-[border-color,box-shadow] placeholder:text-muted-foreground focus-visible:border-primary/60 focus-visible:ring-3 focus-visible:ring-primary/20 disabled:opacity-50"
+            rows="5"
+            formControlName="text"
+            [placeholder]="'supportConversation.reply.placeholder' | transloco"
+            [attr.aria-invalid]="replyError() !== null"
+            [attr.aria-describedby]="replyError() ? 'support-reply-error' : 'support-reply-hint'"
+          ></textarea>
+          @if (replyError(); as key) {
+            <p class="text-xs text-error-text" id="support-reply-error" role="alert">
+              {{ key | transloco }}
+            </p>
+          } @else {
+            <p class="text-xs tabular-nums text-muted-foreground" id="support-reply-hint">
+              {{
+                'supportConversation.reply.hint'
+                  | transloco: { count: draftLength(), max: replyMax }
+              }}
+            </p>
+          }
+        </div>
+        @if (failureText(); as message) {
+          <p class="text-sm text-error-text" role="alert">{{ message }}</p>
+        }
+        <hlm-dialog-footer>
+          <button
+            hlmBtn
+            variant="ghost"
+            type="button"
+            [disabled]="pending()"
+            (click)="dismissReply()"
+          >
+            {{ 'ui.cancel' | transloco }}
+          </button>
+          <button hlmBtn type="submit" [disabled]="pending()">
+            <ng-icon name="lucideSend" aria-hidden="true" />
+            {{
+              pending()
+                ? ('ui.working' | transloco)
+                : ('supportConversation.reply.send' | transloco)
+            }}
+          </button>
+        </hlm-dialog-footer>
+      </form>
+    </hlm-dialog-content>
+  </hlm-dialog>
+
+  <hlm-dialog [state]="confirmingResolve() ? 'open' : 'closed'" (closed)="dismissResolve()">
+    <hlm-dialog-content *hlmDialogPortal="let ctx">
+      <hlm-dialog-header>
+        <h2 hlmDialogTitle>{{ 'supportConversation.dialog.resolveTitle' | transloco }}</h2>
+        <p hlmDialogDescription>{{ 'supportConversation.dialog.resolveDesc' | transloco }}</p>
+      </hlm-dialog-header>
+      <hlm-dialog-footer>
+        <button
+          hlmBtn
+          variant="ghost"
+          type="button"
+          [disabled]="pending()"
+          (click)="dismissResolve()"
+        >
+          {{ 'ui.cancel' | transloco }}
+        </button>
+        <button hlmBtn type="button" [disabled]="pending()" (click)="confirmResolve()">
+          {{
+            pending()
+              ? ('ui.working' | transloco)
+              : ('supportConversation.dialog.resolveAction' | transloco)
+          }}
+        </button>
+      </hlm-dialog-footer>
+    </hlm-dialog-content>
+  </hlm-dialog>
+} @else {
+  <app-page-header
+    [back]="back()"
+    [eyebrow]="'supportConversation.eyebrow' | transloco: { id: shortId(conversationId) }"
+    [title]="'supportConversation.loadingTitle' | transloco"
+  />
+  @if (loading()) {
+    <app-tile-grid role="status" [attr.aria-label]="'ui.loading' | transloco">
+      @for (tile of [3, 1]; track $index) {
+        <app-tile [title]="'ui.loading' | transloco" [span]="tile === 3 ? 3 : 1">
+          <app-skeleton class="h-3.5 w-full" />
+          <app-skeleton class="h-3.5 w-4/5" />
+          <app-skeleton class="h-3.5 w-3/5" />
+        </app-tile>
+      }
+    </app-tile-grid>
+  } @else if (notFound()) {
+    <app-state-message
+      class="min-h-[340px] rounded-tile border border-glass-line bg-glass p-5 shadow-glass backdrop-blur-[22px]"
+      kind="error"
+      [title]="'supportConversation.notFound.title' | transloco"
+      [description]="'supportConversation.notFound.desc' | transloco"
+    />
+  } @else if (failureText(); as message) {
+    <app-state-message
+      class="min-h-[340px] rounded-tile border border-glass-line bg-glass p-5 shadow-glass backdrop-blur-[22px]"
+      kind="error"
+      [title]="message"
+      [actionLabel]="'ui.tryAgain' | transloco"
+      (action)="reload()"
+    />
+  }
+}

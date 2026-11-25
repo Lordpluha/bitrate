@@ -266,6 +266,200 @@ const moderationReport = {
   perm: 'reports:read',
 }
 
+/* ---------- Operations · Support ---------- */
+const SUPPORT_STATE = {
+  waiting: { tone: 'warn', t: 'Waiting for an operator' },
+  operator: { tone: 'info', t: 'With an operator' },
+  resolved: { tone: 'up', t: 'Resolved' },
+}
+const support = {
+  kind: 'list',
+  nav: 'support',
+  route: '/support (support:read)',
+  icon: 'support',
+  eyebrow: 'OPERATIONS · SUPPORT',
+  title: 'Support inbox',
+  sub: 'Conversations the assistant handed to a person. Your reply reaches the user in the channel they wrote from.',
+  filters: [
+    {
+      key: 'status',
+      label: 'Status',
+      value: 'Open',
+      options: [
+        ['Open', ['Waiting for an operator', 'With an operator']],
+        ['Resolved', ['Resolved']],
+        ['All tickets', null],
+      ],
+    },
+    {
+      key: 'channel',
+      by: 's',
+      label: 'Channel',
+      value: 'All channels',
+      options: [
+        ['All channels', null],
+        ['Website', ['Website · Artist', 'Website · Listener']],
+        ['Telegram', ['Telegram · Listener']],
+      ],
+    },
+  ],
+  cols: [
+    { k: 'conversation', l: 'Conversation' },
+    { k: 'state', l: 'State', w: 190 },
+    { k: 'channel', l: 'Channel', w: 160 },
+    { k: 'activity', l: 'Last activity', w: 120 },
+  ],
+  rows: [
+    {
+      id: 'S-0412',
+      conversation: {
+        t: 'Payout for October is late',
+        s: 'Still nothing on my card, it was due on the 5th',
+      },
+      state: SUPPORT_STATE.waiting,
+      channel: 'Website · Artist',
+      activity: '3 min',
+    },
+    {
+      id: 'S-0409',
+      conversation: {
+        t: 'Wants a refund for a double charge',
+        s: 'I was charged twice for Premium this month',
+      },
+      state: SUPPORT_STATE.waiting,
+      channel: 'Telegram · Listener',
+      activity: '18 min',
+    },
+    {
+      id: 'S-0405',
+      conversation: {
+        t: 'Release stuck in review for a week',
+        s: 'Operator: I have asked the review team to look today',
+      },
+      state: SUPPORT_STATE.operator,
+      channel: 'Website · Artist',
+      activity: '1 h',
+    },
+    {
+      id: 'S-0398',
+      conversation: {
+        t: 'Cannot sign in after changing email',
+        s: 'The code never arrives at the new address',
+      },
+      state: SUPPORT_STATE.operator,
+      channel: 'Website · Listener',
+      activity: '2 h',
+    },
+  ],
+  card: { title: 'conversation', badge: 'state', meta: ['channel', 'activity'] },
+  pager: '1–4 of 4',
+  detail: 'support-conversation',
+  detailRow: 'S-0412',
+  empty: {
+    title: 'Nobody is waiting',
+    desc: 'Conversations appear here when the assistant hands one to a person.',
+  },
+  noresults: {
+    filter: { label: 'Channel', value: 'Telegram' },
+    title: 'No conversations match these filters',
+    desc: 'Try another status, channel or audience.',
+  },
+  error: {
+    title: 'Couldn’t load the inbox',
+    desc: 'The admin API didn’t respond. Nothing was changed.',
+  },
+  perm: 'support:read',
+}
+const supportConversation = {
+  kind: 'detail',
+  nav: 'support',
+  route: '/support/:id (support:read; replying and resolving need support:reply)',
+  parent: 'support',
+  hash: 'support/S-0412',
+  icon: 'support',
+  eyebrow: 'SUPPORT · S-0412',
+  title: 'Payout for October is late',
+  status: SUPPORT_STATE.waiting,
+  sub: 'Website · Artist · last message 3 min ago',
+  actions: [
+    { icon: 'send', label: 'Reply', dialog: 'reply' },
+    { icon: 'check', label: 'Resolve', primary: true, dialog: 'confirm' },
+  ],
+  tiles: [
+    {
+      w: 3,
+      icon: 'message',
+      title: 'Conversation',
+      meta: 'Oldest first',
+      blocks: [
+        {
+          type: 'feed',
+          items: [
+            ['User: My October payout still hasn’t arrived, it was due on the 5th.', '14:02'],
+            [
+              'Assistant: Payouts arrive within 10 working days of the month’s end. Sources: Payouts',
+              '14:02',
+            ],
+            ['User: It’s the 19th. I want to talk to a person.', '14:05'],
+            ['Assistant: I’ve passed this to the team. An operator will reply here.', '14:05'],
+          ],
+        },
+      ],
+    },
+    {
+      w: 1,
+      icon: 'inbox',
+      title: 'Ticket',
+      meta: 'Why it reached an operator',
+      blocks: [
+        {
+          type: 'kv',
+          rows: [
+            ['Ticket', { tone: 'warn', t: 'Open' }],
+            ['Handed off', 'Nov 24, 14:05'],
+            ['User', 'Guest'],
+            ['Language', 'UK'],
+          ],
+        },
+      ],
+    },
+  ],
+  dialogs: {
+    reply: {
+      tone: 'success',
+      icon: 'send',
+      title: 'Reply to the user',
+      desc: 'Sent to the channel the user wrote from. The conversation stays with operators until you resolve it.',
+      field: {
+        label: 'Your reply',
+        hint: '0 / 2000',
+        value: [
+          'Hi! I checked: your payout left on the 18th and should reach your card within two days.',
+        ],
+        error: 'Write a reply first.',
+      },
+      action: 'Send reply',
+    },
+    confirm: {
+      tone: 'success',
+      icon: 'check',
+      title: 'Resolve this conversation?',
+      desc: 'The ticket closes and the assistant answers the user’s next message again. Asking for a person reopens it.',
+      action: 'Resolve conversation',
+    },
+  },
+  saving: 'Sending…',
+  notfound: {
+    title: 'Conversation not found',
+    desc: 'It was never handed to an operator, or it was deleted 90 days after its last message.',
+  },
+  error: {
+    title: 'Couldn’t load the conversation',
+    desc: 'The admin API didn’t respond. Nothing was changed.',
+  },
+  perm: 'support:read',
+}
+
 /* ---------- Operations · Releases ---------- */
 const RELEASE_STATUS = {
   submitted: { tone: 'warn', t: 'Submitted' },
@@ -2680,6 +2874,8 @@ const noAccess = {
 export const RESOURCES = {
   moderation,
   'moderation-report': moderationReport,
+  support,
+  'support-conversation': supportConversation,
   releases,
   'release-review': releaseReview,
   catalog,
@@ -2767,6 +2963,71 @@ export const STATE_LABEL = {
 
 /** Ukrainian for the interface copy of these pages (data — names, titles, ids — stays as it is). */
 export const RESOURCES_UK = {
+  'OPERATIONS · SUPPORT': 'ОПЕРАЦІЇ · ПІДТРИМКА',
+  'Support inbox': 'Вхідні підтримки',
+  'Conversations the assistant handed to a person. Your reply reaches the user in the channel they wrote from.':
+    'Розмови, які асистент передав людині. Ваша відповідь приходить користувачу в той канал, з якого він писав.',
+  'Waiting for an operator': 'Чекає на оператора',
+  'With an operator': 'В оператора',
+  'All tickets': 'Усі звернення',
+  Channel: 'Канал',
+  'All channels': 'Усі канали',
+  Website: 'Сайт',
+  'Website · Artist': 'Сайт · Артист',
+  'Website · Listener': 'Сайт · Слухач',
+  'Telegram · Listener': 'Telegram · Слухач',
+  Conversation: 'Розмова',
+  'Last activity': 'Остання активність',
+  'Payout for October is late': 'Затримується виплата за жовтень',
+  'Still nothing on my card, it was due on the 5th': 'На картці досі нічого, мало прийти 5-го',
+  'Wants a refund for a double charge': 'Просить повернути подвійне списання',
+  'I was charged twice for Premium this month': 'З мене двічі списали за Premium цього місяця',
+  'Release stuck in review for a week': 'Реліз тиждень на перевірці',
+  'Operator: I have asked the review team to look today':
+    'Оператор: я попросив команду перевірки глянути сьогодні',
+  'Cannot sign in after changing email': 'Не може увійти після зміни пошти',
+  'The code never arrives at the new address': 'Код не приходить на нову адресу',
+  'Nobody is waiting': 'Ніхто не чекає',
+  'Conversations appear here when the assistant hands one to a person.':
+    'Розмови зʼявляються тут, коли асистент передає їх людині.',
+  'No conversations match these filters': 'Немає розмов за цими фільтрами',
+  'Try another status, channel or audience.': 'Спробуйте інший статус, канал чи аудиторію.',
+  'Couldn’t load the inbox': 'Не вдалося завантажити вхідні',
+  'SUPPORT · S-0412': 'ПІДТРИМКА · S-0412',
+  'Website · Artist · last message 3 min ago': 'Сайт · Артист · останнє повідомлення 3 хв тому',
+  Reply: 'Відповісти',
+  'Oldest first': 'Від найстаріших',
+  'User: My October payout still hasn’t arrived, it was due on the 5th.':
+    'Користувач: виплата за жовтень досі не прийшла, мала бути 5-го.',
+  'Assistant: Payouts arrive within 10 working days of the month’s end. Sources: Payouts':
+    'Асистент: виплати надходять протягом 10 робочих днів після кінця місяця. Джерела: Виплати',
+  'User: It’s the 19th. I want to talk to a person.':
+    'Користувач: вже 19-те. Хочу поговорити з людиною.',
+  'Assistant: I’ve passed this to the team. An operator will reply here.':
+    'Асистент: я передав це команді. Оператор відповість тут.',
+  Ticket: 'Звернення',
+  'Why it reached an operator': 'Чому розмова дійшла до оператора',
+  'Handed off': 'Передано',
+  User: 'Користувач',
+  Guest: 'Гість',
+  Language: 'Мова',
+  'Reply to the user': 'Відповідь користувачу',
+  'Sent to the channel the user wrote from. The conversation stays with operators until you resolve it.':
+    'Надсилається в канал, з якого писав користувач. Розмова лишається в операторів, доки ви її не вирішите.',
+  'Your reply': 'Ваша відповідь',
+  'Hi! I checked: your payout left on the 18th and should reach your card within two days.':
+    'Вітаю! Я перевірив: виплату відправлено 18-го, на картку вона надійде протягом двох днів.',
+  'Write a reply first.': 'Спершу напишіть відповідь.',
+  'Send reply': 'Надіслати',
+  'Resolve this conversation?': 'Вирішити цю розмову?',
+  'The ticket closes and the assistant answers the user’s next message again. Asking for a person reopens it.':
+    'Звернення закриється, і асистент знову відповідатиме на наступне повідомлення користувача. Запит на людину відкриє його знову.',
+  'Resolve conversation': 'Вирішити розмову',
+  'Sending…': 'Надсилання…',
+  'Conversation not found': 'Розмову не знайдено',
+  'It was never handed to an operator, or it was deleted 90 days after its last message.':
+    'Її не передавали оператору, або її видалено через 90 днів після останнього повідомлення.',
+  'Couldn’t load the conversation': 'Не вдалося завантажити розмову',
   'OPERATIONS · MODERATION': 'ОПЕРАЦІЇ · МОДЕРАЦІЯ',
   'Reports from listeners and artists. Oldest first, so nothing waits past the SLA.':
     'Скарги слухачів і артистів. Найстаріші вгорі, щоб ніщо не чекало довше за SLA.',

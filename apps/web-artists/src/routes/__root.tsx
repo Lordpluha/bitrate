@@ -1,3 +1,4 @@
+import { SupportChatWidget } from '@features/support-chat'
 import { QueryClientProvider } from '@shared/api/reactQueryClient'
 import { SITE_DESCRIPTION, SITE_NAME } from '@shared/constants'
 import { AuthProvider } from '@shared/hooks'
@@ -92,6 +93,7 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
             <AuthProvider>
               <WorkspaceThemeProvider>
                 <RouteProgress />
+                <SupportChatWidget />
                 {children}
               </WorkspaceThemeProvider>
             </AuthProvider>

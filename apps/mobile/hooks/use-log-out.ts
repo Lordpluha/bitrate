@@ -12,8 +12,12 @@ export function useLogOut() {
     mutationFn: logOut,
     onSettled: () => {
       usePlayerStore.getState().stop()
-      queryClient.clear()
+      /*
+       * Update the session query in place: `clear()` would detach the navigator's mounted
+       * observer from it, so the app kept rendering the signed-in screens after logging out.
+       */
       queryClient.setQueryData(ME_QUERY_KEY, null)
+      queryClient.removeQueries({ predicate: (query) => query.queryKey[0] !== ME_QUERY_KEY[0] })
     },
   })
 }

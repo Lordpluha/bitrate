@@ -10,6 +10,7 @@ import { AdminPlaylistsModule } from './playlists'
 import { AdminReleasesModule } from './releases'
 import { AdminRolesModule } from './roles'
 import { AdminStaffModule } from './staff'
+import { AdminSupportModule } from './support'
 import { AdminTracksModule } from './tracks'
 import { AdminUsersModule } from './users'
 
@@ -23,6 +24,7 @@ import { AdminUsersModule } from './users'
     AdminTracksModule,
     AdminAuditModule,
     AdminRolesModule,
+    AdminSupportModule,
     AdminStaffModule,
     AdminOverviewModule,
     AdminGenresModule,

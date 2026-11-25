@@ -32,7 +32,7 @@ export const aiAllowanceSchema = z.object({
 })
 export type AiAllowance = z.infer<typeof aiAllowanceSchema>
 
-export const promotionStepSchema = z.object({
+const promotionStepSchema = z.object({
   id: z.uuid(),
   position: z.number().int(),
   offsetDays: z.number().int(),
@@ -62,7 +62,7 @@ export const promotionPlanSchema = z.object({
 })
 export type PromotionPlan = z.infer<typeof promotionPlanSchema>
 
-export const promotionTranslationSchema = z.object({
+const promotionTranslationSchema = z.object({
   id: z.uuid(),
   language: z.enum(translationLanguages),
   text: z.string(),
@@ -72,7 +72,7 @@ export const promotionTranslationSchema = z.object({
 })
 export type PromotionTranslation = z.infer<typeof promotionTranslationSchema>
 
-export const promotionPostSchema = z.object({
+const promotionPostSchema = z.object({
   id: z.uuid(),
   channel,
   text: z.string(),

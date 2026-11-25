@@ -23,6 +23,7 @@ import { releaseChanges } from './releaseChanges'
 import { releaseErrors } from './releaseErrors'
 import { settings } from './settings'
 import { shell } from './shell'
+import { support } from './support'
 import { workspace } from './workspace'
 
 /** The source catalog. Each workspace area keeps its keys in its own file, merged here. */
@@ -52,6 +53,7 @@ export const en = {
   ...releaseErrors,
   ...settings,
   ...shell,
+  ...support,
   ...workspace,
 } as const
 

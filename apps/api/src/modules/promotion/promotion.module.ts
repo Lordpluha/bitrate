@@ -8,6 +8,7 @@ import { PromotionAccessService, PromotionEnabledGuard } from './access'
 import { createPromotionModels, PROMOTION_MODELS, PromotionGenerator } from './ai/generator'
 import { readPromotionModelConfig } from './ai/routing'
 import { PromotionCalendarService } from './calendar'
+import { ArtistCountdownService } from './countdown/artist-countdown.service'
 import { PromotionEventsService } from './events'
 import { InputModerationService } from './moderation'
 import {
@@ -34,6 +35,7 @@ import { PromotionProfileService } from './profile/promotion-profile.service'
 import { PromotionConsumer } from './promotion.consumer'
 import { PromotionController } from './promotion.controller'
 import { PROMOTION_QUEUE } from './promotion.queue'
+import { PromotionCountdownController } from './promotion-countdown.controller'
 import { PromotionPostsController } from './promotion-posts.controller'
 import { AI_QUOTA_LIMITS, type AiQuotaLimits, AiQuotaService, AiUsageService } from './usage'
 
@@ -48,7 +50,7 @@ const DEFAULT_MONTHLY_LIMIT_USD = 2
  */
 @Module({
   imports: [PrismaModule, TokensModule, BullModule.registerQueue({ name: PROMOTION_QUEUE })],
-  controllers: [PromotionController, PromotionPostsController],
+  controllers: [PromotionController, PromotionPostsController, PromotionCountdownController],
   providers: [
     {
       provide: PROMOTION_MODELS,
@@ -94,6 +96,7 @@ const DEFAULT_MONTHLY_LIMIT_USD = 2
     RequestStepRegenerationService,
     RegenerateStepService,
     PromotionCalendarService,
+    ArtistCountdownService,
     PromotionEventsService,
     InputModerationService,
     PromotionAccessService,

@@ -23,6 +23,8 @@
   "coverageDirectory": "../coverage",
   "testEnvironment": "node",
   "moduleNameMapper": {
+    "^@bitrate/support-core$": "<rootDir>/../../../packages/support-core/src/index.ts",
+    "^(\\.{1,2}/.*)\\.js$": "$1",
     "^@sentry/nestjs$": "<rootDir>/../test/mocks/sentry-nestjs.ts",
     "^music-metadata$": "<rootDir>/../test/__mocks__/music-metadata.ts",
     "^src/(.*)$": "<rootDir>/$1",

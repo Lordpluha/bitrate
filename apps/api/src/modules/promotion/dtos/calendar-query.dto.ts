@@ -1,4 +1,3 @@
-import { createZodDto } from 'nestjs-zod'
 import { z } from 'zod'
 import { calendarWindow, isValidCalendarWindow } from '../calendar/calendar-window'
 import { PROMOTION_VALIDATION } from '../promotion.errors'
@@ -13,5 +12,4 @@ export const CalendarQuerySchema = z
     message: PROMOTION_VALIDATION.CALENDAR_WINDOW,
     path: ['to'],
   })
-export class CalendarQueryDto extends createZodDto(CalendarQuerySchema) {}
 export type CalendarQuery = z.infer<typeof CalendarQuerySchema>

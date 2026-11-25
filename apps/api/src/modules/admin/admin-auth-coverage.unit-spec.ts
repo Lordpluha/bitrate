@@ -47,6 +47,10 @@ const ROUTE_PERMISSIONS: Record<string, Permission> = {
   'AdminAlbumsController.remove': 'albums:delete',
   'AdminAlbumsController.restore': 'albums:restore',
   'AdminReleasesController.list': 'releases:read',
+  'AdminSupportController.list': 'support:read',
+  'AdminSupportController.getById': 'support:read',
+  'AdminSupportController.reply': 'support:reply',
+  'AdminSupportController.resolve': 'support:reply',
   'AdminReleasesController.detail': 'releases:read',
   'AdminReleasesController.audio': 'releases:read',
   'AdminReleasesController.approve': 'releases:review',
@@ -178,6 +182,7 @@ describe('operator surface access control', () => {
       'AdminReleasesController',
       'AdminRolesController',
       'AdminStaffController',
+      'AdminSupportController',
       'AdminTracksController',
       'AdminUsersController',
     ])

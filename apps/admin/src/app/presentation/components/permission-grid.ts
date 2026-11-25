@@ -19,6 +19,7 @@ const GROUP_KEY: Record<string, string> = {
   reports: 'permissions.group.reports',
   roles: 'permissions.group.roles',
   staff: 'permissions.group.staff',
+  support: 'permissions.group.support',
   tracks: 'permissions.group.tracks',
   users: 'permissions.group.users',
 }
