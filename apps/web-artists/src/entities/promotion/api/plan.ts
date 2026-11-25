@@ -13,7 +13,7 @@ import { isPlanNotFound, readPromotion } from './promotionRequest'
 export const PLAN_POLL_MS = 3_000
 
 /** True while the server is still writing the plan or a step of it. */
-export const isPlanBusy = (plan: PromotionPlan | null | undefined) =>
+const isPlanBusy = (plan: PromotionPlan | null | undefined) =>
   plan?.status === 'GENERATING' ||
   Boolean(plan?.steps.some((s) => s.regenerating))
 
