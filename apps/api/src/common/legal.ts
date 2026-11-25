@@ -2,7 +2,7 @@
  * Revision of the Terms of Use, Community Guidelines and Privacy Policy that registration records as accepted.
  * One value covers the pair; bump it to the effective date of each new revision.
  */
-export const LEGAL_VERSION = '2026-10-01'
+export const LEGAL_VERSION = '2026-11-25'
 
 /** Revision of the Artist Agreement that artist registration records as accepted. */
 export const ARTIST_AGREEMENT_VERSION = '2026-10-01'
