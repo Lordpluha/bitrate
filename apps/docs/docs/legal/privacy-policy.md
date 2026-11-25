@@ -11,7 +11,7 @@ The apps hold their own copy in `src/shared/legal/documents.ts`; change all thre
 other legal sources; it says nothing about the policy's status.
 :::
 
-**Effective date:** 1 October 2026. **Last updated:** 22 November 2026.
+**Effective date:** 25 November 2026. **Last updated:** 25 November 2026.
 
 This policy explains what personal data Bitrate collects when you use the listener app at bitrate.me and the artist portal at artists.bitrate.me, why we collect it, who we share it with, how long we keep it and what rights you have.
 
@@ -37,6 +37,7 @@ Bitrate is for people aged **16 or over**. We do not knowingly collect data from
 | Error reports, performance traces and, for a sample of sessions, session recordings (Sentry) | Find and fix bugs | Legitimate interest in keeping the service working (6(1)(f)); see section 5 |
 | Reports you file, and reports filed about you | Moderation and legal compliance | Legal obligation (6(1)(c)); legitimate interest |
 | Records of the Terms of Use and Community Guidelines version you accepted, the Privacy Policy version shown to you, and when | Prove consent and contractual acceptance | Legal obligation; legitimate interest |
+| Support conversations: the messages you send to the support assistant or our team on the website or in Telegram, the channel and your Telegram chat id, your language, and, if you are signed in on the website, the link to your account | Answer your support questions, and hand them to a person when the assistant cannot help (section 11) | Legitimate interest in helping users (6(1)(f)); contract (6(1)(b)) when the question is about your account |
 
 Where we rely on legitimate interest you may object (section 9).
 
@@ -58,6 +59,8 @@ Bitrate sets cookies that are **strictly necessary** to sign you in and keep you
 
 In the listener web app and the artists portal, our error-monitoring tool (Sentry) records error details and, for about one in ten sessions and for every session in which an error occurs, a session replay of how the interface was used. Replays mask all text and everything you type, and block images and media, so they show the layout of the page, clicks and navigation, not what you read or enter. We use replays only to find and fix bugs, on the basis of our legitimate interest in a working service. You can object at any time by writing to us (section 9).
 
+While you use the support chat on the website, your browser keeps the conversation's id and a guest access token in session storage, so reloading the page finds the chat again. They are strictly necessary for the chat you opened and are deleted when you close the tab.
+
 ## 6. Who receives your data
 
 We use service providers (processors) under data processing agreements:
@@ -70,6 +73,12 @@ We use service providers (processors) under data processing agreements:
 | Resend, Inc. (email delivery) | Your email address and the content of service emails | USA, Standard Contractual Clauses |
 | Google LLC (if you use Google sign-in) | Sign-in identity | USA, EU–US Data Privacy Framework |
 | Meta Platforms Ireland Ltd (if you use Facebook sign-in) | Sign-in identity | Ireland (EU); Meta Platforms, Inc. under the EU–US Data Privacy Framework |
+| Anthropic, PBC (support assistant) | The messages you send to the support assistant and the help-centre text found for them, to write an answer | USA, Standard Contractual Clauses |
+| OpenAI, L.L.C. (help-centre search) | Help-centre articles and the support message used to search them | USA, Standard Contractual Clauses |
+
+Anthropic and OpenAI process support data only to provide their service to us and may not use it to train their models.
+
+If you write to Bitrate in Telegram, Telegram carries the messages between you and us under its own privacy policy: you chose that channel, and Telegram is not our processor. We receive your chat id, your language and the messages you send.
 
 We do not sell personal data. Other users see the profile information, playlists and public activity you choose to make public in the product. We may disclose data when required by law or to protect rights.
 
@@ -83,6 +92,7 @@ Our database and file storage stay in the EU. Some providers in section 6 are ba
 - **Listening and search history:** while your account exists. You can clear your listening history at any time.
 - **Audit logs, including IP addresses:** 12 months.
 - **Moderation records and reports:** 3 years after the case is closed.
+- **Support conversations:** 90 days after the last message, or sooner when a conversation linked to your account is deleted with the account.
 - **Records of the document versions you accepted:** while your account exists and for 3 years after, to prove acceptance.
 
 ## 9. Your rights
@@ -102,6 +112,8 @@ We use technical and organisational measures including hashed passwords, optiona
 ## 11. Automated decisions
 
 We do not make decisions that produce legal effects on you based solely on automated processing.
+
+Answers from the support assistant are written automatically by an AI model. They are information only: they have no legal effect on you, can be wrong, and never change your account. You can ask for a person at any time, and the assistant hands the conversation to our team when it cannot help.
 
 ## 12. Changes
 
