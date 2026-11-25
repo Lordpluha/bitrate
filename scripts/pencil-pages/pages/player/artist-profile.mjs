@@ -31,6 +31,7 @@ import {
 import { APP_STATES } from '../../pages-app.mjs'
 import { CONTEXT_STATES } from '../../pages-context-menu.mjs'
 import { mrows, std, songs, ARTISTS, artistRow } from './shared.mjs'
+import { countdownState } from './artist-countdown.mjs'
 
 /* profile: bento tiles */
 function profileTile(title, sub, body, o = {}) {
@@ -198,6 +199,7 @@ export const artistProfilePages = {
         { header: MHeader('') },
       ),
     states: [
+      countdownState(),
       state(
         'More sections',
         () =>
