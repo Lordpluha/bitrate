@@ -5,6 +5,7 @@ export const release = {
   'release.stage.review': 'Review',
   'release.stage.deliver': 'Deliver',
   'release.stage.launch': 'Launch',
+  'release.stage.promotion': 'Promotion',
   'release.progress.complete': 'Complete',
   'release.progress.current': 'In progress',
   'release.progress.optional': 'Optional',

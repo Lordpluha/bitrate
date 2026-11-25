@@ -4,6 +4,7 @@ export const release = {
   'release.stage.review': 'Weryfikacja',
   'release.stage.deliver': 'Dostawa',
   'release.stage.launch': 'Premiera',
+  'release.stage.promotion': 'Promocja',
   'release.progress.complete': 'Ukończone',
   'release.progress.current': 'W toku',
   'release.progress.optional': 'Opcjonalne',

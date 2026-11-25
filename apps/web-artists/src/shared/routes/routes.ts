@@ -10,6 +10,8 @@ export const ROUTES = {
     home: '/dashboard',
     music: '/dashboard/music',
     distribution: '/dashboard/distribution',
+    promotion: '/dashboard/promotion',
+    promotionProfile: '/dashboard/promotion/profile',
     analytics: '/dashboard/analytics',
     profile: '/dashboard/profile',
     settings: '/dashboard/settings',

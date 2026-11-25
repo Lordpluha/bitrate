@@ -4,6 +4,7 @@ export const release = {
   'release.stage.review': 'Перевірка',
   'release.stage.deliver': 'Доставка',
   'release.stage.launch': 'Запуск',
+  'release.stage.promotion': 'Просування',
   'release.progress.complete': 'Завершено',
   'release.progress.current': 'Триває',
   'release.progress.optional': 'Необов’язково',
