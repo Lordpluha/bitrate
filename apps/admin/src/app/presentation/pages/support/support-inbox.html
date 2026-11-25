@@ -1,0 +1,147 @@
+<app-page-header
+  [eyebrow]="'support.eyebrow' | transloco"
+  [title]="'support.title' | transloco"
+  [subtitle]="'support.subtitle' | transloco"
+/>
+
+<app-table-panel>
+  <app-panel-bar panelBar>
+    <app-filter-menu
+      [label]="'support.filter.status' | transloco"
+      [options]="statusOptions()"
+      [value]="query.state().status"
+      [defaultValue]="'open'"
+      [disabled]="collection.loading() && collection.items().length === 0"
+      (valueChange)="setStatus($event)"
+    />
+    <app-filter-menu
+      [label]="'support.filter.channel' | transloco"
+      [options]="channelOptions()"
+      [value]="query.state().channel"
+      [defaultValue]="null"
+      [disabled]="collection.loading() && collection.items().length === 0"
+      (valueChange)="setChannel($event)"
+    />
+    <app-filter-menu
+      [label]="'support.filter.audience' | transloco"
+      [options]="audienceOptions()"
+      [value]="query.state().audience"
+      [defaultValue]="null"
+      [disabled]="collection.loading() && collection.items().length === 0"
+      (valueChange)="setAudience($event)"
+    />
+    @if (range(); as r) {
+      <span class="ms-auto text-[0.8125rem] tabular-nums text-muted-foreground">
+        {{ 'ui.pagination.range' | transloco: r }}
+      </span>
+    }
+  </app-panel-bar>
+
+  @if (
+    collection.items().length === 0 && !collection.loading() && !collection.failure() && narrowed()
+  ) {
+    <app-state-message
+      class="min-h-[340px] p-5"
+      kind="noResults"
+      [title]="'support.noResults.title' | transloco"
+      [description]="'support.noResults.desc' | transloco"
+      [actionLabel]="'ui.clearFilters' | transloco"
+      (action)="clearFilters()"
+    />
+  } @else {
+    <app-collection-status
+      [loading]="collection.loading() && collection.items().length === 0"
+      [failure]="failureText()"
+      [isEmpty]="collection.items().length === 0"
+      [emptyMessage]="'support.empty.title' | transloco"
+      [retryLabel]="'ui.tryAgain' | transloco"
+      (retry)="retry()"
+    />
+  }
+
+  @if (collection.items().length > 0 && !collection.failure()) {
+    <div hlmTableContainer class="hidden md:block">
+      <table hlmTable>
+        <caption hlmCaption class="sr-only">
+          {{
+            'support.table.caption' | transloco
+          }}
+        </caption>
+        <thead hlmTHead>
+          <tr hlmTr>
+            <th hlmTh scope="col">{{ 'support.table.conversation' | transloco }}</th>
+            <th hlmTh scope="col">{{ 'support.table.state' | transloco }}</th>
+            <th hlmTh scope="col">{{ 'support.table.channel' | transloco }}</th>
+            <th hlmTh scope="col">{{ 'support.table.activity' | transloco }}</th>
+            <th hlmTh scope="col" class="w-11"></th>
+          </tr>
+        </thead>
+        <tbody hlmTBody>
+          @for (item of collection.items(); track item.id) {
+            <tr hlmTr>
+              <td hlmTd class="max-w-[28rem]">
+                <a
+                  class="block font-semibold hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+                  [routerLink]="['/support', item.id]"
+                  >{{ item.ticket.reason }}</a
+                >
+                <span class="block truncate text-xs text-muted-foreground">
+                  {{ item.lastMessage?.text ?? ('support.noMessages' | transloco) }}
+                </span>
+              </td>
+              <td hlmTd>
+                <span hlmBadge [variant]="stateBadge[item.state]">
+                  {{ stateLabel[item.state] | transloco }}
+                </span>
+              </td>
+              <td hlmTd class="text-muted-foreground">
+                {{ channelLabel[item.channel] | transloco }} ·
+                {{ audienceLabel[item.audience] | transloco }}
+              </td>
+              <td hlmTd class="tabular-nums text-muted-foreground">
+                {{ item.lastMessageAt | elapsed }}
+              </td>
+              <td hlmTd class="text-muted-foreground">
+                <ng-icon class="text-base" name="lucideChevronRight" aria-hidden="true" />
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <ul class="flex flex-col gap-2.5 p-3 md:hidden">
+      @for (item of collection.items(); track item.id) {
+        <li>
+          <a
+            class="flex flex-col gap-2 rounded-[18px] border border-glass-line bg-card/50 p-3.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+            [routerLink]="['/support', item.id]"
+          >
+            <span class="flex items-start gap-2.5">
+              <span class="min-w-0 flex-1 font-semibold">{{ item.ticket.reason }}</span>
+              <span hlmBadge [variant]="stateBadge[item.state]">
+                {{ stateLabel[item.state] | transloco }}
+              </span>
+            </span>
+            <span class="truncate text-xs text-muted-foreground">
+              {{ item.lastMessage?.text ?? ('support.noMessages' | transloco) }}
+            </span>
+            <span class="text-xs text-muted-foreground">
+              {{ channelLabel[item.channel] | transloco }} ·
+              {{ audienceLabel[item.audience] | transloco }} · {{ item.lastMessageAt | elapsed }}
+            </span>
+          </a>
+        </li>
+      }
+    </ul>
+  }
+
+  <app-paginator
+    panelFooter
+    [page]="collection.page()"
+    [pageCount]="collection.pageCount()"
+    [total]="collection.total()"
+    [disabled]="collection.loading()"
+    (goTo)="goToPage($event)"
+  />
+</app-table-panel>

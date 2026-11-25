@@ -28,5 +28,7 @@ import { supportTurnDepsProvider } from './support-turn-deps.provider'
     SupportChatService,
     SupportRetentionConsumer,
   ],
+  /** The messenger adapters run the same turns. */
+  exports: [SupportConversationsService, SupportTurnService],
 })
 export class SupportChatModule {}

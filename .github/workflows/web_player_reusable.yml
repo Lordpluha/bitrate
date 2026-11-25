@@ -116,6 +116,11 @@ jobs:
         if: ${{ inputs.run-tests }}
         run: pnpm --filter @bitrate/player run build
 
+      # `@bitrate/support-core/client` resolves to its dist in typecheck, tests and the build.
+      - name: Build support-core
+        if: ${{ inputs.run-tests }}
+        run: pnpm --filter @bitrate/support-core run build
+
       - name: Generate Next.js route types
         if: ${{ inputs.run-tests }}
         run: pnpm --filter @bitrate/web-player exec next typegen
