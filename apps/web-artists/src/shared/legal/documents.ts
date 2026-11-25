@@ -219,7 +219,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
         blocks: [
           {
             kind: 'paragraph',
-            text: '**Effective date:** 1 October 2026. **Last updated:** 22 November 2026.',
+            text: '**Effective date:** 25 November 2026. **Last updated:** 25 November 2026.',
           },
           {
             kind: 'paragraph',
@@ -302,6 +302,11 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
                 'Prove consent and contractual acceptance',
                 'Legal obligation; legitimate interest',
               ],
+              [
+                'Support conversations: the messages you send to the support assistant or our team on the website or in Telegram, the channel and your Telegram chat id, your language, and, if you are signed in on the website, the link to your account',
+                'Answer your support questions, and hand them to a person when the assistant cannot help (section 11)',
+                'Legitimate interest in helping users (6(1)(f)); contract (6(1)(b)) when the question is about your account',
+              ],
             ],
           },
           {
@@ -345,6 +350,10 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
           {
             kind: 'paragraph',
             text: 'In the listener web app and the artists portal, our error-monitoring tool (Sentry) records error details and, for about one in ten sessions and for every session in which an error occurs, a session replay of how the interface was used. Replays mask all text and everything you type, and block images and media, so they show the layout of the page, clicks and navigation, not what you read or enter. We use replays only to find and fix bugs, on the basis of our legitimate interest in a working service. You can object at any time by writing to us (section 9).',
+          },
+          {
+            kind: 'paragraph',
+            text: "While you use the support chat on the website, your browser keeps the conversation's id and a guest access token in session storage, so reloading the page finds the chat again. They are strictly necessary for the chat you opened and are deleted when you close the tab.",
           },
         ],
       },
@@ -393,7 +402,25 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
                 'Sign-in identity',
                 'Ireland (EU); Meta Platforms, Inc. under the EU–US Data Privacy Framework',
               ],
+              [
+                'Anthropic, PBC (support assistant)',
+                'The messages you send to the support assistant and the help-centre text found for them, to write an answer',
+                'USA, Standard Contractual Clauses',
+              ],
+              [
+                'OpenAI, L.L.C. (help-centre search)',
+                'Help-centre articles and the support message used to search them',
+                'USA, Standard Contractual Clauses',
+              ],
             ],
+          },
+          {
+            kind: 'paragraph',
+            text: 'Anthropic and OpenAI process support data only to provide their service to us and may not use it to train their models.',
+          },
+          {
+            kind: 'paragraph',
+            text: 'If you write to Bitrate in Telegram, Telegram carries the messages between you and us under its own privacy policy: you chose that channel, and Telegram is not our processor. We receive your chat id, your language and the messages you send.',
           },
           {
             kind: 'paragraph',
@@ -421,6 +448,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
               '**Listening and search history:** while your account exists. You can clear your listening history at any time.',
               '**Audit logs, including IP addresses:** 12 months.',
               '**Moderation records and reports:** 3 years after the case is closed.',
+              '**Support conversations:** 90 days after the last message, or sooner when a conversation linked to your account is deleted with the account.',
               '**Records of the document versions you accepted:** while your account exists and for 3 years after, to prove acceptance.',
             ],
           },
@@ -462,6 +490,10 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
           {
             kind: 'paragraph',
             text: 'We do not make decisions that produce legal effects on you based solely on automated processing.',
+          },
+          {
+            kind: 'paragraph',
+            text: 'Answers from the support assistant are written automatically by an AI model. They are information only: they have no legal effect on you, can be wrong, and never change your account. You can ask for a person at any time, and the assistant hands the conversation to our team when it cannot help.',
           },
         ],
       },
