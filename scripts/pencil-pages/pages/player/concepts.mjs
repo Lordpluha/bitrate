@@ -20,6 +20,7 @@ import {
   state,
 } from '../../ui.mjs'
 import { pageTitle, std, ARTISTS } from './shared.mjs'
+import { artistMessageState } from './notifications-artist-message.mjs'
 
 function activity() {
   return [
@@ -243,6 +244,7 @@ export const conceptsPages = {
         header: MHeader('Notifications', { actions: ['check-check'] }),
       }),
     states: [
+      artistMessageState(),
       state(
         'All caught up',
         () =>

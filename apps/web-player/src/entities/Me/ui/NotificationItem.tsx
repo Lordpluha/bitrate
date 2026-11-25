@@ -6,12 +6,14 @@ import {
   Disc3,
   HeartHandshake,
   ListMusic,
+  Sparkles,
   UserCheck,
   UserPlus,
 } from 'lucide-react'
 import Link from 'next/link'
 import { useReadNotification } from '@/entities/Me/api/client/hooks'
 import type { NotificationResponse } from '@/entities/Me/api/client/me.schemas'
+import { getNotificationArtistMessage } from '@/entities/Me/lib/notificationArtistMessage'
 import { getNotificationHref } from '@/entities/Me/lib/notificationHref'
 import { useI18n } from '@/shared/i18n'
 import { formatDate } from '@/shared/utils/formatDate'
@@ -42,6 +44,9 @@ export const NotificationItem = ({ notification }: NotificationItemProps) => {
   const { locale, t } = useI18n()
   const readNotification = useReadNotification()
   const href = getNotificationHref(notification)
+  const artistMessage = getNotificationArtistMessage({
+    payload: notification.payload,
+  })
   const Icon = ICON_BY_TYPE[notification.type]
   const isUnread = !notification.readAt
   const className = cn(
@@ -63,6 +68,17 @@ export const NotificationItem = ({ notification }: NotificationItemProps) => {
         {notification.body ? (
           <span className="line-clamp-2 text-[13px] text-muted-foreground">
             {notification.body}
+          </span>
+        ) : null}
+        {artistMessage ? (
+          <span className="line-clamp-3 text-[13px] text-foreground italic">
+            “{artistMessage.text}”
+          </span>
+        ) : null}
+        {artistMessage?.aiGenerated ? (
+          <span className="flex items-center gap-1 text-xs text-muted-foreground">
+            <Sparkles aria-hidden="true" size={12} />
+            {t('notifications.createdWithAi')}
           </span>
         ) : null}
         <span className="text-xs text-muted-foreground">

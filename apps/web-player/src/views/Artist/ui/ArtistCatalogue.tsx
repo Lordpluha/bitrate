@@ -8,6 +8,7 @@ import { useI18n } from '@/shared/i18n'
 import type { ArtistContent } from '../model/artist.types'
 import { ArtistAbout } from './ArtistAbout'
 import { ArtistActionBar } from './ArtistActionBar'
+import { ArtistCountdownTile } from './ArtistCountdownTile'
 import { ArtistDiscography } from './ArtistDiscography'
 import { ArtistFeaturing } from './ArtistFeaturing'
 import { ArtistPopularTracks } from './ArtistPopularTracks'
@@ -50,6 +51,8 @@ export const ArtistCatalogue = ({
         onShuffle={onShuffle}
         onTogglePlay={onTogglePlay}
       />
+
+      <ArtistCountdownTile artistId={artist.id} artistName={artist.username} />
 
       {content.tracks.length === 0 && content.albums.length === 0 ? (
         content.isPending ? (

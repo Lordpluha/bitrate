@@ -20,6 +20,8 @@ export const apiQueryKeys = {
     list: (params: { page?: number; limit?: number }) =>
       ['artists', 'list', params] as const,
     related: (artistId: string) => ['artists', 'related', artistId] as const,
+    countdown: (artistId: string) =>
+      ['artists', 'countdown', artistId] as const,
   },
   discovery: {
     all: ['discovery'] as const,
