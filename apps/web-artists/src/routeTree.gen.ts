@@ -21,9 +21,11 @@ import { Route as DashboardAnalyticsRouteImport } from './routes/dashboard.analy
 import { Route as DashboardDistributionRouteImport } from './routes/dashboard.distribution'
 import { Route as DashboardMusicRouteImport } from './routes/dashboard.music'
 import { Route as DashboardProfileRouteImport } from './routes/dashboard.profile'
+import { Route as DashboardPromotionRouteImport } from './routes/dashboard.promotion'
 import { Route as DashboardSettingsRouteImport } from './routes/dashboard.settings'
 import { Route as LegalSlugRouteImport } from './routes/legal.$slug'
 import { Route as DashboardMusicReleaseIdRouteImport } from './routes/dashboard.music_.$releaseId'
+import { Route as DashboardPromotionProfileRouteImport } from './routes/dashboard.promotion_.profile'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -85,6 +87,11 @@ const DashboardProfileRoute = DashboardProfileRouteImport.update({
   path: '/profile',
   getParentRoute: () => DashboardRoute,
 } as any)
+const DashboardPromotionRoute = DashboardPromotionRouteImport.update({
+  id: '/promotion',
+  path: '/promotion',
+  getParentRoute: () => DashboardRoute,
+} as any)
 const DashboardSettingsRoute = DashboardSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
@@ -100,6 +107,12 @@ const DashboardMusicReleaseIdRoute = DashboardMusicReleaseIdRouteImport.update({
   path: '/music/$releaseId',
   getParentRoute: () => DashboardRoute,
 } as any)
+const DashboardPromotionProfileRoute =
+  DashboardPromotionProfileRouteImport.update({
+    id: '/promotion_/profile',
+    path: '/promotion/profile',
+    getParentRoute: () => DashboardRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -113,10 +126,12 @@ export interface FileRoutesByFullPath {
   '/dashboard/distribution': typeof DashboardDistributionRoute
   '/dashboard/music': typeof DashboardMusicRoute
   '/dashboard/profile': typeof DashboardProfileRoute
+  '/dashboard/promotion': typeof DashboardPromotionRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
   '/legal/$slug': typeof LegalSlugRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/dashboard/music/$releaseId': typeof DashboardMusicReleaseIdRoute
+  '/dashboard/promotion/profile': typeof DashboardPromotionProfileRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -129,10 +144,12 @@ export interface FileRoutesByTo {
   '/dashboard/distribution': typeof DashboardDistributionRoute
   '/dashboard/music': typeof DashboardMusicRoute
   '/dashboard/profile': typeof DashboardProfileRoute
+  '/dashboard/promotion': typeof DashboardPromotionRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
   '/legal/$slug': typeof LegalSlugRoute
   '/dashboard': typeof DashboardIndexRoute
   '/dashboard/music/$releaseId': typeof DashboardMusicReleaseIdRoute
+  '/dashboard/promotion/profile': typeof DashboardPromotionProfileRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -147,10 +164,12 @@ export interface FileRoutesById {
   '/dashboard/distribution': typeof DashboardDistributionRoute
   '/dashboard/music': typeof DashboardMusicRoute
   '/dashboard/profile': typeof DashboardProfileRoute
+  '/dashboard/promotion': typeof DashboardPromotionRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
   '/legal/$slug': typeof LegalSlugRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/dashboard/music_/$releaseId': typeof DashboardMusicReleaseIdRoute
+  '/dashboard/promotion_/profile': typeof DashboardPromotionProfileRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -166,10 +185,12 @@ export interface FileRouteTypes {
     | '/dashboard/distribution'
     | '/dashboard/music'
     | '/dashboard/profile'
+    | '/dashboard/promotion'
     | '/dashboard/settings'
     | '/legal/$slug'
     | '/dashboard/'
     | '/dashboard/music/$releaseId'
+    | '/dashboard/promotion/profile'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -182,10 +203,12 @@ export interface FileRouteTypes {
     | '/dashboard/distribution'
     | '/dashboard/music'
     | '/dashboard/profile'
+    | '/dashboard/promotion'
     | '/dashboard/settings'
     | '/legal/$slug'
     | '/dashboard'
     | '/dashboard/music/$releaseId'
+    | '/dashboard/promotion/profile'
   id:
     | '__root__'
     | '/'
@@ -199,10 +222,12 @@ export interface FileRouteTypes {
     | '/dashboard/distribution'
     | '/dashboard/music'
     | '/dashboard/profile'
+    | '/dashboard/promotion'
     | '/dashboard/settings'
     | '/legal/$slug'
     | '/dashboard/'
     | '/dashboard/music_/$releaseId'
+    | '/dashboard/promotion_/profile'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -302,6 +327,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardProfileRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/dashboard/promotion': {
+      id: '/dashboard/promotion'
+      path: '/promotion'
+      fullPath: '/dashboard/promotion'
+      preLoaderRoute: typeof DashboardPromotionRouteImport
+      parentRoute: typeof DashboardRoute
+    }
     '/dashboard/settings': {
       id: '/dashboard/settings'
       path: '/settings'
@@ -323,6 +355,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardMusicReleaseIdRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/dashboard/promotion_/profile': {
+      id: '/dashboard/promotion_/profile'
+      path: '/promotion/profile'
+      fullPath: '/dashboard/promotion/profile'
+      preLoaderRoute: typeof DashboardPromotionProfileRouteImport
+      parentRoute: typeof DashboardRoute
+    }
   }
 }
 
@@ -331,9 +370,11 @@ interface DashboardRouteChildren {
   DashboardDistributionRoute: typeof DashboardDistributionRoute
   DashboardMusicRoute: typeof DashboardMusicRoute
   DashboardProfileRoute: typeof DashboardProfileRoute
+  DashboardPromotionRoute: typeof DashboardPromotionRoute
   DashboardSettingsRoute: typeof DashboardSettingsRoute
   DashboardIndexRoute: typeof DashboardIndexRoute
   DashboardMusicReleaseIdRoute: typeof DashboardMusicReleaseIdRoute
+  DashboardPromotionProfileRoute: typeof DashboardPromotionProfileRoute
 }
 
 const DashboardRouteChildren: DashboardRouteChildren = {
@@ -341,9 +382,11 @@ const DashboardRouteChildren: DashboardRouteChildren = {
   DashboardDistributionRoute: DashboardDistributionRoute,
   DashboardMusicRoute: DashboardMusicRoute,
   DashboardProfileRoute: DashboardProfileRoute,
+  DashboardPromotionRoute: DashboardPromotionRoute,
   DashboardSettingsRoute: DashboardSettingsRoute,
   DashboardIndexRoute: DashboardIndexRoute,
   DashboardMusicReleaseIdRoute: DashboardMusicReleaseIdRoute,
+  DashboardPromotionProfileRoute: DashboardPromotionProfileRoute,
 }
 
 const DashboardRouteWithChildren = DashboardRoute._addFileChildren(
