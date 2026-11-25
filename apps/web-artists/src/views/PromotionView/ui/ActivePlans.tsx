@@ -37,6 +37,7 @@ export function ActivePlans({ entries }: ActivePlansProps) {
             <Button asChild size="sm" variant="ghost">
               <Link
                 params={{ releaseId: plan.releaseId }}
+                search={{ step: 'promotion' }}
                 to="/dashboard/music/$releaseId"
               >
                 <ArrowUpRight aria-hidden="true" />

@@ -53,6 +53,7 @@ export function CalendarSection({
                 <Link
                   className="artist-release-row-title hover:underline"
                   params={{ releaseId: entry.releaseId }}
+                  search={{ step: 'promotion' }}
                   to="/dashboard/music/$releaseId"
                 >
                   {entry.title} — {entry.releaseTitle}

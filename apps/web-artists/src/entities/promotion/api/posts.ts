@@ -11,7 +11,7 @@ const STEP_POSTS =
   '/api/v1/artists/me/releases/{releaseId}/promotion/steps/{stepId}/posts' as const
 
 /** True while drafts or a translation are still being written. */
-export const arePostsBusy = (posts: StepPosts | undefined) =>
+const arePostsBusy = (posts: StepPosts | undefined) =>
   posts?.status === 'GENERATING' ||
   Boolean(
     posts?.posts.some((post) =>
