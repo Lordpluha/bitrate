@@ -1,6 +1,7 @@
-import type { Audience, Locale } from '@bitrate/support-core'
+import type { Audience, Channel, Locale } from '@bitrate/support-core'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import { Injectable, NotFoundException } from '@nestjs/common'
+import type { SupportConversation } from '@prisma/client'
 import { canAccessConversation, type SupportAccess } from './can-access-conversation'
 import { SupportConversationEntity } from './entities/support-conversation.entity'
 import { SUPPORT_ERRORS } from './errors/support.errors'
@@ -10,6 +11,7 @@ import {
   AUDIENCE_FROM_DB,
   AUDIENCE_TO_DB,
   CHANNEL_FROM_DB,
+  CHANNEL_TO_DB,
   STATE_FROM_DB,
 } from './support-enum-maps'
 
@@ -50,15 +52,40 @@ export class SupportConversationsService {
     if (!(row && canAccessConversation(row, access))) {
       throw new NotFoundException(SUPPORT_ERRORS.CONVERSATION_NOT_FOUND)
     }
-    return {
-      id: row.id,
-      audience: AUDIENCE_FROM_DB[row.audience],
-      locale: toLocale(row.locale),
-      channel: CHANNEL_FROM_DB[row.channel],
-      state: STATE_FROM_DB[row.state],
-      inputTokens: row.inputTokens,
-      outputTokens: row.outputTokens,
-    }
+    return toRow(row)
+  }
+
+  /**
+   * A messenger contact's conversation, created on their first message. One per contact: after
+   * a resolve the same conversation continues, and the 90-day retention starts a new one.
+   * Messenger contacts are anonymous listeners (#567).
+   */
+  async forContact(
+    channel: MessengerChannel,
+    externalId: string,
+    locale: Locale,
+  ): Promise<SupportConversationRow> {
+    const row = await this.prisma.supportConversation.upsert({
+      where: { channel_externalId: { channel: CHANNEL_TO_DB[channel], externalId } },
+      create: { audience: 'LISTENER', channel: CHANNEL_TO_DB[channel], externalId, locale },
+      update: {},
+    })
+    return toRow(row)
+  }
+}
+
+/** The messenger channels; a web conversation is opened through `create` instead. */
+type MessengerChannel = Exclude<Channel, 'web'>
+
+function toRow(row: SupportConversation): SupportConversationRow {
+  return {
+    id: row.id,
+    audience: AUDIENCE_FROM_DB[row.audience],
+    locale: toLocale(row.locale),
+    channel: CHANNEL_FROM_DB[row.channel],
+    state: STATE_FROM_DB[row.state],
+    inputTokens: row.inputTokens,
+    outputTokens: row.outputTokens,
   }
 }
 
