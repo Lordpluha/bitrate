@@ -7,7 +7,7 @@ import { useQuery } from '@tanstack/react-query'
 import { z } from 'zod'
 
 /** An upcoming release the artist counts down to: only its title, cover and release time. */
-export const artistCountdownSchema = z.object({
+const artistCountdownSchema = z.object({
   countdown: z
     .object({
       releaseId: z.string(),
