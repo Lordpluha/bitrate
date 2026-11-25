@@ -23,6 +23,7 @@ describe('AppSidebar', () => {
       nav: {
         overview: 'Overview',
         moderation: 'Moderation queue',
+        support: 'Support',
         catalog: 'Catalog pipeline',
         albums: 'Albums',
         playlists: 'Playlists',
@@ -76,7 +77,7 @@ describe('AppSidebar', () => {
     expect(host.textContent).toContain('Operations')
     expect(host.textContent).toContain('Accounts')
     expect(host.textContent).toContain('System')
-    expect(host.querySelectorAll('nav a')).toHaveLength(13)
+    expect(host.querySelectorAll('nav a')).toHaveLength(14)
   })
 
   /**

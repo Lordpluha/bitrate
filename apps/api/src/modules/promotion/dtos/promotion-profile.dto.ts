@@ -1,19 +1,8 @@
 import { createZodDto } from 'nestjs-zod'
 import { z } from 'zod'
-import { findContactDetails } from '../ai/contact-details'
 import { PROMOTION_VALIDATION } from '../promotion.errors'
+import { noContactDetails } from './no-contact-details'
 import { PROMOTION_CHANNELS, PROMOTION_GOALS } from './promotion-enums'
-
-/** Text the artist writes for AI must carry no contact details (ADR-0076: minimal data). */
-const noContactDetails = (max: number) =>
-  z
-    .string()
-    .trim()
-    .min(1)
-    .max(max)
-    .refine((text) => findContactDetails(text).length === 0, {
-      message: PROMOTION_VALIDATION.CONTACT_DETAILS,
-    })
 
 export const PromotionProfileSchema = z.strictObject({
   goal: z.enum(PROMOTION_GOALS),

@@ -93,7 +93,8 @@
         "src/**/*.unit-spec.ts",
         "src/**/*.node-spec.ts",
         "src/**/*.browser-spec.ts",
-        "scripts/make-cmaf-fixture.mjs"
+        "scripts/make-cmaf-fixture.mjs",
+        "scripts/make-encrypted-cmaf-fixture.mjs"
       ],
       "ignoreBinaries": ["ffmpeg"]
     },
@@ -114,7 +115,7 @@
       "ignoreDependencies": ["shaka-packager"]
     },
     "packages/support-core": {
-      "entry": ["src/index.ts", "src/ai-sdk/index.ts"]
+      "entry": ["src/index.ts", "src/ai-sdk/index.ts", "src/client/index.ts"]
     },
     "packages/ncs-parser": {
       "entry": ["src/main.ts", "tests/*.test.ts"]

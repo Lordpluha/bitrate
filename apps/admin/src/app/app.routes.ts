@@ -52,6 +52,22 @@ export const routes: Routes = [
           import('@presentation/pages/moderation/report-detail').then((m) => m.ReportDetailPage),
       },
       {
+        path: 'support',
+        title: 'Support inbox',
+        canActivate: [requirePermission('support:read')],
+        loadComponent: () =>
+          import('@presentation/pages/support/support-inbox').then((m) => m.SupportInbox),
+      },
+      {
+        path: 'support/:id',
+        title: 'Support conversation',
+        canActivate: [requirePermission('support:read')],
+        loadComponent: () =>
+          import('@presentation/pages/support/support-conversation').then(
+            (m) => m.SupportConversationPage,
+          ),
+      },
+      {
         path: 'catalog',
         title: 'Catalog pipeline',
         canActivate: [requirePermission('tracks:read')],

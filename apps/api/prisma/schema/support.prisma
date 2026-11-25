@@ -36,26 +36,29 @@ enum SupportTicketStatus {
 /// A conversation with the support assistant. Deleted 90 days after its last message
 /// (retention job, #567), and with the user's account.
 model SupportConversation {
-  id            String                   @id @default(uuid(7)) @db.Uuid
-  createdAt     DateTime                 @default(now())
-  updatedAt     DateTime                 @default(now()) @updatedAt
-  audience      SupportAudience
-  channel       SupportChannel           @default(WEB)
+  id             String                   @id @default(uuid(7)) @db.Uuid
+  createdAt      DateTime                 @default(now())
+  updatedAt      DateTime                 @default(now()) @updatedAt
+  audience       SupportAudience
+  channel        SupportChannel           @default(WEB)
   /// `en`, `uk` or `pl`.
-  locale        String                   @db.VarChar(8)
-  state         SupportConversationState @default(BOT)
+  locale         String                   @db.VarChar(8)
+  state          SupportConversationState @default(BOT)
   /// sha256 of the guest access token; the token itself is shown to the guest only once.
-  guestTokenHash String?                 @unique
-  userId        String?                  @db.Uuid
-  user          User?                    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  guestTokenHash String?                  @unique
+  userId         String?                  @db.Uuid
+  /// The messenger chat a conversation runs in (Telegram chat id); one conversation per contact.
+  externalId     String?                  @db.VarChar(64)
+  user           User?                    @relation(fields: [userId], references: [id], onDelete: Cascade)
   /// Model tokens spent in this conversation, for the per-conversation cap.
-  inputTokens   Int                      @default(0)
-  outputTokens  Int                      @default(0)
-  lastMessageAt DateTime                 @default(now())
+  inputTokens    Int                      @default(0)
+  outputTokens   Int                      @default(0)
+  lastMessageAt  DateTime                 @default(now())
 
   messages SupportMessage[]
   ticket   SupportTicket?
 
+  @@unique([channel, externalId])
   @@index([userId])
   @@index([lastMessageAt])
 }

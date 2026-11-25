@@ -109,6 +109,11 @@ jobs:
         if: ${{ inputs.run-tests || inputs.run-e2e || inputs.run-screenshot }}
         run: pnpm --filter @bitrate/player run build
 
+      # `@bitrate/support-core/client` resolves to its dist in typecheck, tests and the build.
+      - name: Build support-core
+        if: ${{ inputs.run-tests || inputs.run-e2e || inputs.run-screenshot }}
+        run: pnpm --filter @bitrate/support-core run build
+
       - name: Run web-artists typecheck
         if: ${{ inputs.run-tests }}
         run: pnpm --filter @bitrate/web-artists check-types

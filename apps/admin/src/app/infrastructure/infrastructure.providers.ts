@@ -10,6 +10,7 @@ import { PlaylistRepository } from '@domain/playlist'
 import { ReleaseChangeRepository, ReleaseReviewRepository } from '@domain/release-review'
 import { RoleRepository } from '@domain/role'
 import { StaffRepository, StaffSessionRepository } from '@domain/staff'
+import { SupportInboxRepository } from '@domain/support'
 import { TrackRepository } from '@domain/track'
 import { UserRepository } from '@domain/user'
 import { HttpAlbumRepository } from './albums'
@@ -22,6 +23,7 @@ import { HttpModerationReportRepository } from './moderation'
 import { HttpOverviewRepository } from './overview'
 import { HttpRoleRepository } from './roles'
 import { HttpStaffRepository, HttpStaffSessionRepository } from './staff'
+import { HttpSupportInboxRepository } from './support'
 import { HttpPlaylistRepository } from './playlists'
 import { HttpReleaseChangeRepository, HttpReleaseReviewRepository } from './release-review'
 import { HttpUserRepository } from './users'
@@ -43,6 +45,7 @@ export function provideAdminInfrastructure(): EnvironmentProviders {
     { provide: ReleaseReviewRepository, useClass: HttpReleaseReviewRepository },
     { provide: ReleaseChangeRepository, useClass: HttpReleaseChangeRepository },
     { provide: ModerationReportRepository, useClass: HttpModerationReportRepository },
+    { provide: SupportInboxRepository, useClass: HttpSupportInboxRepository },
     { provide: OverviewRepository, useClass: HttpOverviewRepository },
     { provide: RoleRepository, useClass: HttpRoleRepository },
     { provide: StaffRepository, useClass: HttpStaffRepository },

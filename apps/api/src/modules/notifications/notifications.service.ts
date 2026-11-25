@@ -1,5 +1,6 @@
 import { PrismaService } from '@infra/prisma/prisma.service'
 import { PUBLIC_ALBUM_WHERE } from '@modules/albums/orm'
+import { findApprovedFollowerMessage } from '@modules/promotion/follower-message'
 import { PUBLIC_TRACK_WHERE } from '@modules/tracks/orm'
 import { Injectable } from '@nestjs/common'
 import type {
@@ -20,7 +21,15 @@ type ReleasingArtist = { id: string; username: string }
 type NewReleaseMessage = {
   body: string
   dedupe: 'trackId' | 'albumId'
-  payload: { trackId: string; trackTitle: string; albumId?: string; albumTitle?: string }
+  payload: {
+    trackId: string
+    trackTitle: string
+    albumId?: string
+    albumTitle?: string
+    /** The artist's approved promotion message (spec AC-10); absent when there is none. */
+    artistMessage?: string
+    artistMessageAiGenerated?: boolean
+  }
 }
 
 /**
@@ -152,7 +161,8 @@ export class NotificationsService {
 
   /**
    * One "New release from {artist}" per follower when a whole release goes live as `albumId`.
-   * The payload keeps the track fields older clients link with, pointing at the first track.
+   * The payload keeps the track fields older clients link with, pointing at the first track,
+   * and carries the artist's follower message only if it was approved before going live.
    */
   async notifyReleasePublished({ albumId }: ReleasePublishedNotificationJob) {
     const album = await this.prisma.album.findFirst({
@@ -160,6 +170,7 @@ export class NotificationsService {
       select: {
         id: true,
         title: true,
+        publishedAt: true,
         artist: { select: { id: true, username: true } },
         tracks: {
           where: { track: PUBLIC_TRACK_WHERE },
@@ -170,7 +181,8 @@ export class NotificationsService {
       },
     })
     const first = album?.tracks[0]?.track
-    if (!(album && first)) return
+    if (!(album?.publishedAt && first)) return
+    const message = await findApprovedFollowerMessage(this.prisma, album.id, album.publishedAt)
     await this.notifyFollowers(album.artist, {
       body: album.title,
       dedupe: 'albumId',
@@ -179,6 +191,10 @@ export class NotificationsService {
         trackTitle: first.title,
         albumId: album.id,
         albumTitle: album.title,
+        ...(message && {
+          artistMessage: message.text,
+          artistMessageAiGenerated: message.aiGenerated,
+        }),
       },
     })
   }

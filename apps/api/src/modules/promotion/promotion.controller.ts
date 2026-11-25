@@ -12,25 +12,39 @@ import {
   Patch,
   Post,
   Put,
+  Query,
   Req,
 } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
 import { ZodValidationPipe } from 'nestjs-zod'
+import { PromotionAccessService, PromotionAuth } from './access'
+import { PromotionCalendarService } from './calendar'
 import {
   GetAiAllowanceSwagger,
+  GetPromotionCalendarSwagger,
   GetPromotionPlanSwagger,
   GetPromotionProfileSwagger,
+  RegenerateStepSwagger,
   RequestPromotionPlanSwagger,
   SavePromotionProfileSwagger,
   UpdatePromotionStepSwagger,
 } from './decorators'
 import {
+  type CalendarQuery,
+  CalendarQuerySchema,
   type PromotionProfileInput,
   PromotionProfileSchema,
+  type RegenerateStepInput,
+  RegenerateStepSchema,
   type UpdatePromotionStepInput,
   UpdatePromotionStepSchema,
 } from './dtos'
-import { PlanViewService, RequestPlanService, UpdateStepService } from './plans'
+import {
+  PlanViewService,
+  RequestPlanService,
+  RequestStepRegenerationService,
+  UpdateStepService,
+} from './plans'
 import { PromotionProfileService } from './profile/promotion-profile.service'
 import { AiQuotaService } from './usage'
 
@@ -44,10 +58,13 @@ export class PromotionController {
     private readonly views: PlanViewService,
     private readonly steps: UpdateStepService,
     private readonly quota: AiQuotaService,
+    private readonly regenerations: RequestStepRegenerationService,
+    private readonly calendars: PromotionCalendarService,
+    private readonly access: PromotionAccessService,
   ) {}
 
   @GetPromotionProfileSwagger()
-  @ArtistAuth()
+  @PromotionAuth()
   @Header('Cache-Control', 'private, no-store')
   @Get('promotion-profile')
   profile(@Req() request: ArtistAuthRequest) {
@@ -55,7 +72,7 @@ export class PromotionController {
   }
 
   @SavePromotionProfileSwagger()
-  @ArtistAuth()
+  @PromotionAuth()
   @Header('Cache-Control', 'private, no-store')
   @Put('promotion-profile')
   saveProfile(
@@ -69,12 +86,24 @@ export class PromotionController {
   @ArtistAuth()
   @Header('Cache-Control', 'private, no-store')
   @Get('promotion/allowance')
-  allowance(@Req() request: ArtistAuthRequest) {
-    return this.quota.allowance(request.artist.id)
+  async allowance(@Req() request: ArtistAuthRequest) {
+    const allowance = await this.quota.allowance(request.artist.id)
+    return { ...allowance, enabled: this.access.isEnabled(request.artist) }
+  }
+
+  @GetPromotionCalendarSwagger()
+  @PromotionAuth()
+  @Header('Cache-Control', 'private, no-store')
+  @Get('promotion/calendar')
+  calendar(
+    @Req() request: ArtistAuthRequest,
+    @Query(new ZodValidationPipe(CalendarQuerySchema)) query: CalendarQuery,
+  ) {
+    return this.calendars.calendar(request.artist.id, query.from, query.to)
   }
 
   @RequestPromotionPlanSwagger()
-  @ArtistAuth()
+  @PromotionAuth()
   @Header('Cache-Control', 'private, no-store')
   @HttpCode(HttpStatus.ACCEPTED)
   @Post('releases/:releaseId/promotion/plans')
@@ -86,7 +115,7 @@ export class PromotionController {
   }
 
   @GetPromotionPlanSwagger()
-  @ArtistAuth()
+  @PromotionAuth()
   @Header('Cache-Control', 'private, no-store')
   @Get('releases/:releaseId/promotion/plans/latest')
   plan(
@@ -97,7 +126,7 @@ export class PromotionController {
   }
 
   @UpdatePromotionStepSwagger()
-  @ArtistAuth()
+  @PromotionAuth()
   @Header('Cache-Control', 'private, no-store')
   @Patch('releases/:releaseId/promotion/steps/:stepId')
   updateStep(
@@ -107,5 +136,19 @@ export class PromotionController {
     @Body(new ZodValidationPipe(UpdatePromotionStepSchema)) input: UpdatePromotionStepInput,
   ) {
     return this.steps.update(request.artist.id, releaseId, stepId, input)
+  }
+
+  @RegenerateStepSwagger()
+  @PromotionAuth()
+  @Header('Cache-Control', 'private, no-store')
+  @HttpCode(HttpStatus.ACCEPTED)
+  @Post('releases/:releaseId/promotion/steps/:stepId/regenerate')
+  regenerateStep(
+    @Req() request: ArtistAuthRequest,
+    @Param('releaseId', new ParseUUIDPipe()) releaseId: string,
+    @Param('stepId', new ParseUUIDPipe()) stepId: string,
+    @Body(new ZodValidationPipe(RegenerateStepSchema)) input: RegenerateStepInput,
+  ) {
+    return this.regenerations.request(request.artist.id, releaseId, stepId, input.hint)
   }
 }

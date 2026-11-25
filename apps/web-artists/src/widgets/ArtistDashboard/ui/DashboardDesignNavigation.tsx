@@ -1,5 +1,4 @@
 import { cn } from '@bitrate/ui-react'
-import { useWorkspaceActions } from '@features/workspace-actions'
 import { useI18n } from '@shared/i18n'
 import { ROUTES } from '@shared/routes/routes'
 import { Link, useLocation } from '@tanstack/react-router'
@@ -14,7 +13,7 @@ import {
 } from 'lucide-react'
 import { useLayoutEffect, useRef, useState } from 'react'
 
-/** Designed order: live sections link, upcoming ones explain themselves in a dialog. */
+/** Designed order; every section links to its page. */
 const sections = [
   {
     label: 'shell.nav.dashboard',
@@ -27,7 +26,11 @@ const sections = [
     to: ROUTES.dashboard.distribution,
     icon: Send,
   },
-  { label: 'shell.nav.promotion', action: 'promotion', icon: Megaphone },
+  {
+    label: 'shell.nav.promotion',
+    to: ROUTES.dashboard.promotion,
+    icon: Megaphone,
+  },
   {
     label: 'shell.nav.analytics',
     to: ROUTES.dashboard.analytics,
@@ -43,12 +46,10 @@ const sections = [
 
 /** The section a path belongs to, matching how each link marks itself active. */
 function activeSection(pathname: string) {
-  return sections.findIndex(
-    (section) =>
-      'to' in section &&
-      (section.to === ROUTES.dashboard.home
-        ? pathname === section.to
-        : pathname === section.to || pathname.startsWith(`${section.to}/`)),
+  return sections.findIndex((section) =>
+    section.to === ROUTES.dashboard.home
+      ? pathname === section.to
+      : pathname === section.to || pathname.startsWith(`${section.to}/`),
   )
 }
 
@@ -86,7 +87,6 @@ export function DashboardDesignNavigation({
   compact?: boolean
   onNavigate?: () => void
 }) {
-  const { openAction } = useWorkspaceActions()
   const { t } = useI18n()
   const pathname = useLocation({ select: (location) => location.pathname })
   const { nav, pill } = useNavigationPill(activeSection(pathname))
@@ -118,7 +118,7 @@ export function DashboardDesignNavigation({
             <span className={cn(compact && 'sr-only')}>{label}</span>
           </>
         )
-        return 'to' in section ? (
+        return (
           <Link
             activeOptions={{ exact: section.to === ROUTES.dashboard.home }}
             activeProps={{
@@ -135,20 +135,6 @@ export function DashboardDesignNavigation({
           >
             {content}
           </Link>
-        ) : (
-          <button
-            className={itemClass}
-            data-nav-item=""
-            key={section.label}
-            onClick={() => {
-              onNavigate?.()
-              openAction(section.action)
-            }}
-            title={compact ? label : undefined}
-            type="button"
-          >
-            {content}
-          </button>
         )
       })}
     </nav>

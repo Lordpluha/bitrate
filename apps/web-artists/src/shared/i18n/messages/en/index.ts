@@ -13,12 +13,17 @@ import { music } from './music'
 import { notifications } from './notifications'
 import { player } from './player'
 import { profile } from './profile'
+import { promotion } from './promotion'
+import { promotionErrors } from './promotionErrors'
+import { promotionPages } from './promotionPages'
+import { promotionPosts } from './promotionPosts'
 import { publish } from './publish'
 import { release } from './release'
 import { releaseChanges } from './releaseChanges'
 import { releaseErrors } from './releaseErrors'
 import { settings } from './settings'
 import { shell } from './shell'
+import { support } from './support'
 import { workspace } from './workspace'
 
 /** The source catalog. Each workspace area keeps its keys in its own file, merged here. */
@@ -37,6 +42,10 @@ export const en = {
   ...music,
   ...notifications,
   ...player,
+  ...promotion,
+  ...promotionPosts,
+  ...promotionPages,
+  ...promotionErrors,
   ...profile,
   ...publish,
   ...release,
@@ -44,6 +53,7 @@ export const en = {
   ...releaseErrors,
   ...settings,
   ...shell,
+  ...support,
   ...workspace,
 } as const
 

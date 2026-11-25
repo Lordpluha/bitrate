@@ -15,6 +15,8 @@ const STEP_SELECT = {
   body: true,
   state: true,
   aiGenerated: true,
+  regenerating: true,
+  regenerationFailure: true,
 } as const
 
 /** Reads a release's latest plan version with every step dated from the current release date. */

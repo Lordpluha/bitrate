@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it } from '@jest/globals'
 import { BadRequestException, ConflictException, NotFoundException } from '@nestjs/common'
 import { type PrismaMock, prismaMock, resetPrismaMock } from '@test/mocks'
+import { PromotionEventsService } from '../events'
 import { PROMOTION_ERRORS, PROMOTION_VALIDATION } from '../promotion.errors'
 import { PostsViewService } from './posts-view.service'
 import { UpdatePostService } from './update-post.service'
@@ -66,7 +67,12 @@ describe('post and translation edits', () => {
   })
 
   describe('UpdateTranslationService', () => {
-    const service = () => new UpdateTranslationService(prisma, new PostsViewService(prisma))
+    const service = () =>
+      new UpdateTranslationService(
+        prisma,
+        new PostsViewService(prisma),
+        new PromotionEventsService(prisma),
+      )
 
     it('makes an edit EDITED against the current master revision', async () => {
       prisma.promotionPostTranslation.findFirst.mockResolvedValue({
@@ -78,6 +84,32 @@ describe('post and translation edits', () => {
       expect(prisma.promotionPostTranslation.updateMany).toHaveBeenCalledWith({
         where: { id: TRANSLATION, state: { not: 'TRANSLATING' } },
         data: { text: 'Новий текст', state: 'EDITED', aiGenerated: false, sourceRevision: 4 },
+      })
+    })
+
+    it('records an edit and a rating as separate events', async () => {
+      prisma.promotionPostTranslation.findFirst.mockResolvedValue({
+        state: 'MACHINE',
+        post: { revision: 1 },
+      } as never)
+      prisma.promotionPostTranslation.updateMany.mockResolvedValue({ count: 1 })
+      await service().update(ARTIST, RELEASE, STEP, TRANSLATION, { text: 'Tekst', rating: -1 })
+      expect(prisma.promotionEvent.create).toHaveBeenCalledWith({
+        data: {
+          artistId: ARTIST,
+          name: 'promotion.translation.edited',
+          schemaVersion: 1,
+          subjectId: TRANSLATION,
+        },
+      })
+      expect(prisma.promotionEvent.create).toHaveBeenCalledWith({
+        data: {
+          artistId: ARTIST,
+          name: 'promotion.translation.rated',
+          schemaVersion: 1,
+          subjectId: TRANSLATION,
+          data: { rating: -1 },
+        },
       })
     })
 

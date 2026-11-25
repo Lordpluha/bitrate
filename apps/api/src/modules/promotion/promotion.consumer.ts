@@ -1,7 +1,7 @@
 import { OnWorkerEvent, Processor, WorkerHost } from '@nestjs/bullmq'
 import { Injectable, Logger } from '@nestjs/common'
 import { type Job, UnrecoverableError } from 'bullmq'
-import { GeneratePlanService } from './plans'
+import { GeneratePlanService, RegenerateStepService } from './plans'
 import { GeneratePostsService, RunTranslationService } from './posts'
 import { PROMOTION_ERRORS } from './promotion.errors'
 import {
@@ -9,6 +9,7 @@ import {
   PROMOTION_QUEUE,
   parseGeneratePlanJob,
   parseGeneratePostsJob,
+  parseRegenerateStepJob,
   parseTranslatePostJob,
 } from './promotion.queue'
 
@@ -22,6 +23,7 @@ export class PromotionConsumer extends WorkerHost {
     private readonly plans: GeneratePlanService,
     private readonly posts: GeneratePostsService,
     private readonly translations: RunTranslationService,
+    private readonly steps: RegenerateStepService,
   ) {
     super()
   }
@@ -37,6 +39,11 @@ export class PromotionConsumer extends WorkerHost {
       case PROMOTION_JOBS.TRANSLATE_POST:
         await this.translations.run(this.parse(job, parseTranslatePostJob).translationId)
         return
+      case PROMOTION_JOBS.REGENERATE_STEP: {
+        const { stepId, hint } = this.parse(job, parseRegenerateStepJob)
+        await this.steps.regenerate(stepId, hint)
+        return
+      }
       default:
         this.logger.warn(`Ignoring unknown promotion job ${job.name}`)
     }
@@ -58,6 +65,9 @@ export class PromotionConsumer extends WorkerHost {
     } else if (job.name === PROMOTION_JOBS.TRANSLATE_POST) {
       const parsed = parseTranslatePostJob(job.data)
       if (parsed.success) await this.translations.fail(parsed.data.translationId)
+    } else if (job.name === PROMOTION_JOBS.REGENERATE_STEP) {
+      const parsed = parseRegenerateStepJob(job.data)
+      if (parsed.success) await this.steps.fail(parsed.data.stepId, failure)
     }
   }
 

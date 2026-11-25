@@ -45,6 +45,8 @@ x-api-env: &api-env
   QDRANT_URL: http://qdrant:6333
   OPENAI_API_KEY:
   ANTHROPIC_API_KEY:
+  TELEGRAM_BOT_TOKEN:
+  TELEGRAM_WEBHOOK_SECRET:
   # Whether `api` also consumes the audio-processing queue; `worker` forces it to "true" below.
   # Set it to false to rehearse the production cutover (apps/docs/docs/infrastructure/worker-rollout-runbook.md).
   AUDIO_PROCESSING_WORKER_ENABLED: ${AUDIO_PROCESSING_WORKER_ENABLED:-true}

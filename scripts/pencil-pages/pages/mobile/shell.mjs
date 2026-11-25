@@ -1,9 +1,9 @@
 // Native mobile app (apps/mobile) page shells: phone frames built only from library instances.
 import { C, id } from '../../kit.mjs'
-import { L, R, Row, Col, Tx, SectionHeader, fitStates, state } from '../../ui.mjs'
+import { L, R, Row, SectionHeader, fitStates, state } from '../../ui.mjs'
 
 /** Why a native-app state has no desktop frame. */
-export const NATIVE = 'native phone app (apps/mobile) — there is no desktop layout'
+const NATIVE = 'native phone app (apps/mobile) — there is no desktop layout'
 /** A state of a phone-only page. */
 export const ms = (label, mobile) => state(label, null, mobile, NATIVE)
 
@@ -16,7 +16,7 @@ const ISLAND_MODES = {
   loading: { playIcon: { icon: 'loader-circle' } },
 }
 /** The app's navigation + player island (design Mobile/Island) for the active tab and player mode. */
-export const Island = (tab = 'home', mode = 'playing') =>
+const Island = (tab = 'home', mode = 'playing') =>
   R(
     'Mobile/Island',
     { width: 'fill_container' },
@@ -96,9 +96,3 @@ export const Scroller = (name, children) =>
 
 /** Section title row as the app draws it (no "Show all" action in this release). */
 export const Section = (title) => SectionHeader(title, null)
-
-export const Heading = (title, sub) =>
-  Col({ name: 'Heading', gap: 6, width: 'fill_container' }, [
-    Tx('H1', title, { wrap: true }),
-    sub && Tx('Muted', sub, { wrap: true }),
-  ])

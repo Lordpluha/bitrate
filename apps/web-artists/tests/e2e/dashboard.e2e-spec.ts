@@ -2631,7 +2631,7 @@ test('workspace theme supports keyboard selection when browser storage is unavai
 })
 
 for (const theme of ['dark', 'light', 'dim'] as const) {
-  test(`${theme} design commands explain upcoming features and keep existing routes reachable`, async ({
+  test(`${theme} design commands keep every workspace route reachable`, async ({
     page,
     context,
     isMobile,
@@ -2645,14 +2645,9 @@ for (const theme of ['dark', 'light', 'dim'] as const) {
     await expect(
       page.getByRole('heading', { name: 'Dashboard', exact: true }),
     ).toBeVisible()
-    await openNavigation(page)
-    await page.getByRole('button', { name: 'Promotion', exact: true }).click()
-    const notice = page.getByRole('dialog', { name: 'Promotion', exact: true })
-    await expect(notice.getByText('Coming soon', { exact: true })).toBeVisible()
-    await expect(page.locator('body')).toHaveCSS('overflow', 'hidden')
-    await notice.getByRole('button', { name: 'Close dialog' }).click()
     for (const [name, path] of [
       ['Distribution', 'distribution'],
+      ['Promotion', 'promotion'],
       ['Analytics', 'analytics'],
       ['Profile', 'profile'],
       ['Settings', 'settings'],

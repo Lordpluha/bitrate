@@ -1,6 +1,7 @@
 import { PrismaService } from '@infra/prisma/prisma.service'
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common'
 import type { UpdatePromotionTranslationInput } from '../dtos'
+import { PromotionEventsService } from '../events'
 import { PROMOTION_ERRORS } from '../promotion.errors'
 import { findOwnedStep } from './find-owned-step'
 import { PostsViewService } from './posts-view.service'
@@ -14,6 +15,7 @@ export class UpdateTranslationService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly views: PostsViewService,
+    private readonly events: PromotionEventsService,
   ) {}
 
   async update(
@@ -45,6 +47,14 @@ export class UpdateTranslationService {
       },
     })
     if (count === 0) throw new ConflictException(PROMOTION_ERRORS.TRANSLATION_BUSY)
+    if (input.text !== undefined) {
+      await this.events.record(artistId, 'promotion.translation.edited', translationId)
+    }
+    if (input.rating !== undefined) {
+      await this.events.record(artistId, 'promotion.translation.rated', translationId, {
+        rating: input.rating,
+      })
+    }
     return this.views.view(artistId, releaseId, stepId)
   }
 }
