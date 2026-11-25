@@ -518,6 +518,8 @@ tasks:
   k8s:build:
     desc: Build app images for the local cluster and import them
     cmds:
+      # Postgres with pgvector (ADR-0080); the stock image cannot run the migrations.
+      - docker build -t bitrate/postgres:dev infra/postgres
       - docker build -f apps/api/Dockerfile --target production -t bitrate/api:dev .
       - >-
         docker build -f apps/web-player/Dockerfile --target production
@@ -534,7 +536,7 @@ tasks:
         docker build -f apps/admin/Dockerfile --target production
         --build-arg NG_APP_API_URL=http://admin.bitrate.localhost
         -t bitrate/admin:dev .
-      - k3d image import -m direct bitrate/api:dev bitrate/web-player:dev bitrate/web-artists:dev bitrate/admin:dev -c bitrate
+      - k3d image import -m direct bitrate/postgres:dev bitrate/api:dev bitrate/web-player:dev bitrate/web-artists:dev bitrate/admin:dev -c bitrate
 
   k8s:up:
     desc: Apply the manifests to the local cluster

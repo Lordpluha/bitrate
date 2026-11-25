@@ -80,6 +80,7 @@ how to apply it day to day.
 | [0077](./0077-cmaf-content-encryption.md) | CMAF `cbcs` encryption with one key per track, released only against a live play session; clear-key first, multi-DRM later |
 | [0078](./0078-listener-wide-playback-pacing.md) | A listener-wide bucket of two real-time streams across tracks, per-user session throttling, and pacing in memory while Redis is down |
 | [0079](./0079-rendition-caching-and-abuse-signals.md) | Rendition bytes are `no-store`; distinct tracks per listener in 10 minutes are reported at 40 and refused at 120 |
+| [0080](./0080-pgvector-in-postgres.md) | Recommendation vectors live in the existing PostgreSQL through pgvector, on our own alpine image; no separate vector store |
 
 Create new records from [`template.md`](./template.md). Accepted decisions are changed by
 a superseding ADR rather than silently rewriting history.

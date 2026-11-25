@@ -1,0 +1,106 @@
+/// How a play ended, as the player reported it.
+enum PlaybackEndReason {
+  /// The track played to its end.
+  COMPLETED
+  /// The listener moved on to another track before the end.
+  SKIPPED
+  /// Playback stopped and was not resumed: paused and abandoned, app closed, device lost.
+  STOPPED
+}
+
+/// Where a play was started from. Decides how much the play says about the listener's taste.
+enum PlaybackSource {
+  PLAYLIST
+  ALBUM
+  ARTIST
+  SEARCH
+  LIBRARY
+  HOME
+  CHART
+  HISTORY
+  /// Chosen by the system: a station started from a track or an artist.
+  RADIO
+  /// Chosen by the system: playback continued after the queue ended.
+  AUTOPLAY
+  /// Chosen by the system: the home mood pad.
+  MOOD
+  /// Chosen by the system: a weekly or daily mix.
+  GENERATED_PLAYLIST
+  /// Listening together; whose pick it was is reported separately.
+  JAM
+  OTHER
+}
+
+/// One finished play: how long it was listened to, how it ended and where it came from. The
+/// signal recommendations learn from. Kept 13 months, then removed by the retention job; never
+/// written during a private session. Owned by the `recommendations` module.
+model PlaybackEvent {
+  id           String            @id @default(uuid(7)) @db.Uuid
+  userId       String            @db.Uuid
+  trackId      String            @db.Uuid
+  /// The player's id for this play, so a retried report is stored once.
+  clientPlayId String            @db.Uuid
+  startedAt    DateTime          @db.Timestamptz(3)
+  endedAt      DateTime          @db.Timestamptz(3)
+  listenedMs   Int
+  /// The track's duration when it was played, from the catalogue rather than the client.
+  durationMs   Int
+  endReason    PlaybackEndReason
+  source       PlaybackSource
+  /// The playlist, album or artist the play started from, when the source has one.
+  sourceId     String?           @db.Uuid
+  /// 1 for a play the listener chose; less for system-chosen plays and other people's Jam picks.
+  tasteWeight  Float             @db.Real
+  createdAt    DateTime          @default(now()) @db.Timestamptz(3)
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  track Track @relation(fields: [trackId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, clientPlayId])
+  @@index([userId, endedAt(sort: Desc)])
+  @@index([trackId, endedAt])
+  /// The retention job deletes by age.
+  @@index([endedAt])
+}
+
+/// What "Not interested" can be applied to.
+enum NotInterestedType {
+  TRACK
+  ARTIST
+}
+
+/// "Not interested": the item never appears in this listener's recommendations. The entity is
+/// referenced by id only (it may be a track or an artist), so no foreign key backs `entityId`.
+model NotInterested {
+  userId     String            @db.Uuid
+  entityType NotInterestedType
+  entityId   String            @db.Uuid
+  createdAt  DateTime          @default(now()) @db.Timestamptz(3)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId, entityType, entityId])
+  @@index([userId, createdAt(sort: Desc)])
+}
+
+/// What "Don't use for my taste" can be applied to.
+enum TasteExclusionType {
+  PLAYLIST
+  ALBUM
+  TRACK
+}
+
+/// "Don't use for my taste": plays of this track, or plays started from this playlist or album,
+/// do not shape the listener's recommendations. Applied when the signals are read, so adding or
+/// removing an exclusion also covers past plays.
+model TasteExclusion {
+  userId     String             @db.Uuid
+  entityType TasteExclusionType
+  entityId   String             @db.Uuid
+  createdAt  DateTime           @default(now()) @db.Timestamptz(3)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId, entityType, entityId])
+  @@index([userId, createdAt(sort: Desc)])
+}

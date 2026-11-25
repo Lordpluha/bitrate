@@ -12,6 +12,7 @@ import { ModerationModule } from '@modules/moderation/moderation.module'
 import { NotificationsModule } from '@modules/notifications/notifications.module'
 import { PlaylistsModule } from '@modules/playlists/playlists.module'
 import { PromotionModule } from '@modules/promotion'
+import { RecommendationsModule } from '@modules/recommendations/recommendations.module'
 import { ReleasePublishingModule, ReleasesModule } from '@modules/releases'
 import { SearchModule } from '@modules/search/search.module'
 import { SupportChatModule, SupportKnowledgeModule, SupportTelegramModule } from '@modules/support'
@@ -38,6 +39,7 @@ import { AppCoreModule } from './app-core.module'
     NotificationsModule,
     FriendsModule,
     DiscoveryModule,
+    RecommendationsModule,
     MeModule,
     ReleasesModule,
     ReleasePublishingModule,

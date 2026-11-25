@@ -17,6 +17,8 @@ on:
       - 'packages/converter/**'
       - 'packages/ncs-parser/**'
       - 'turbo.json'
+      # The database image the API tests and migrations run on.
+      - 'infra/postgres/**'
       - '.github/workflows/api.yml'
       - '.github/workflows/api_reusable.yml'
       - 'scripts/smoke-api-image.mjs'
@@ -28,6 +30,8 @@ on:
       - 'packages/converter/**'
       - 'packages/ncs-parser/**'
       - 'turbo.json'
+      # The database image the API tests and migrations run on.
+      - 'infra/postgres/**'
       - '.github/workflows/api.yml'
       - '.github/workflows/api_reusable.yml'
       - 'scripts/smoke-api-image.mjs'

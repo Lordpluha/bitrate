@@ -1,6 +1,7 @@
 import type { CacheService } from '@infra/cache/cache.service'
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals'
 import { PUBLIC_ARTIST_SELECT } from '@modules/artists/orm'
+import { NotInterestedService } from '@modules/recommendations/taste/not-interested.service'
 import type { Prisma } from '@prisma/client'
 import { type PrismaMock, prismaMock, resetPrismaMock } from '@test/mocks'
 import { mockDeep } from 'jest-mock-extended'
@@ -16,7 +17,12 @@ describe('DiscoveryService public artist projections', () => {
     prisma = prismaMock
     const cache = mockDeep<CacheService>()
     cache.wrap.mockImplementation((_namespace, _key, _ttl, loader) => loader())
-    service = new DiscoveryService(prisma, cache, new PersonalTopService(prisma))
+    service = new DiscoveryService(
+      prisma,
+      cache,
+      new PersonalTopService(prisma),
+      new NotInterestedService(prisma),
+    )
   })
 
   afterEach(() => {
@@ -175,6 +181,7 @@ describe('DiscoveryService public artist projections', () => {
   describe('feed explicit content', () => {
     const stubFeedQueries = () => {
       prisma.queryRaw.mockResolvedValue([] as never)
+      prisma.notInterested.findMany.mockResolvedValue([])
       prisma.track.findMany.mockResolvedValue([])
       prisma.album.findMany.mockResolvedValue([])
       prisma.playlist.findMany.mockResolvedValue([])
@@ -212,6 +219,36 @@ describe('DiscoveryService public artist projections', () => {
       const where = prisma.track.findMany.mock.calls[0]?.[0]?.where
       expect(where).not.toHaveProperty('explicit')
       expect(prisma.userSettings.findUnique).not.toHaveBeenCalled()
+    })
+
+    it('leaves out tracks and artists the listener marked "Not interested"', async () => {
+      stubFeedQueries()
+      prisma.notInterested.findMany.mockResolvedValue([
+        { entityType: 'TRACK', entityId: 'track-9' },
+        { entityType: 'ARTIST', entityId: 'artist-9' },
+      ] as never)
+
+      await service.getFeed('user-1')
+
+      expect(prisma.track.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: expect.objectContaining({
+            id: { notIn: ['track-9'] },
+            artistId: { notIn: ['artist-9'] },
+          }),
+        }),
+      )
+    })
+
+    it('asks nothing about hidden items for guests', async () => {
+      stubFeedQueries()
+
+      await service.getFeed()
+
+      const where = prisma.track.findMany.mock.calls[0]?.[0]?.where
+      expect(where).not.toHaveProperty('id')
+      expect(where).not.toHaveProperty('artistId')
+      expect(prisma.notInterested.findMany).not.toHaveBeenCalled()
     })
   })
 })
