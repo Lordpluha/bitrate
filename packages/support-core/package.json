@@ -12,6 +12,9 @@
     "*": {
       "ai-sdk": [
         "./dist/ai-sdk/index.d.ts"
+      ],
+      "client": [
+        "./dist/client/index.d.ts"
       ]
     }
   },
@@ -23,6 +26,10 @@
     "./ai-sdk": {
       "types": "./dist/ai-sdk/index.d.ts",
       "default": "./dist/ai-sdk/index.js"
+    },
+    "./client": {
+      "types": "./dist/client/index.d.ts",
+      "default": "./dist/client/index.js"
     }
   },
   "files": [

@@ -20,6 +20,7 @@ import { releaseChanges } from './releaseChanges'
 import { releaseErrors } from './releaseErrors'
 import { settings } from './settings'
 import { shell } from './shell'
+import { support } from './support'
 import { workspace } from './workspace'
 
 export const pl = {
@@ -44,5 +45,6 @@ export const pl = {
   ...releaseErrors,
   ...settings,
   ...shell,
+  ...support,
   ...workspace,
 } satisfies Messages

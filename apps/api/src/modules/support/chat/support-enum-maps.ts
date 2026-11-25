@@ -21,6 +21,13 @@ export const AUDIENCE_FROM_DB: Record<SupportAudience, Audience> = {
   ARTIST: 'artist',
 }
 
+export const CHANNEL_TO_DB: Record<Channel, SupportChannel> = {
+  web: 'WEB',
+  telegram: 'TELEGRAM',
+  whatsapp: 'WHATSAPP',
+  instagram: 'INSTAGRAM',
+}
+
 export const CHANNEL_FROM_DB: Record<SupportChannel, Channel> = {
   WEB: 'web',
   TELEGRAM: 'telegram',

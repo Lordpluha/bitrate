@@ -6,7 +6,7 @@
   "children": [
     {
       "type": "frame",
-      "id": "93fH8h",
+      "id": "Am4Ktu",
       "name": "AI assistant / Desktop / Dark",
       "width": 1440,
       "height": 900,
@@ -20,7 +20,7 @@
       "children": [
         {
           "type": "frame",
-          "id": "FPwxwx",
+          "id": "GOov9i",
           "name": "Page",
           "gap": 12,
           "alignItems": "center",
@@ -30,7 +30,7 @@
         },
         {
           "type": "frame",
-          "id": "3icVMC",
+          "id": "D6Z0Oe",
           "name": "Assistant Dock",
           "layout": "vertical",
           "gap": 14,
@@ -39,7 +39,7 @@
           "children": [
             {
               "type": "ref",
-              "id": "SC5ny8",
+              "id": "PCgPPO",
               "ref": "ds:krpNYY",
               "name": "Assistant/Panel",
               "width": 380,
@@ -47,7 +47,7 @@
               "descendants": {
                 "ds:L9A4MS": {
                   "type": "frame",
-                  "id": "7tHn3R",
+                  "id": "KWhgFj",
                   "name": "Messages",
                   "layout": "vertical",
                   "width": "fill_container",
@@ -57,7 +57,7 @@
                   "children": [
                     {
                       "type": "frame",
-                      "id": "oBkVnR",
+                      "id": "i19zf2",
                       "name": "Welcome",
                       "layout": "vertical",
                       "gap": 10,
@@ -72,20 +72,20 @@
                       "children": [
                         {
                           "type": "ref",
-                          "id": "2qLcmp",
+                          "id": "U0heUv",
                           "ref": "ds:XtiIQ2",
                           "name": "Assistant/Orb"
                         },
                         {
                           "type": "ref",
-                          "id": "nSBRT3",
+                          "id": "R718v8",
                           "ref": "ds:fLuqjC",
                           "name": "Text/H4",
                           "content": "Hi, I am the Bitrate assistant"
                         },
                         {
                           "type": "ref",
-                          "id": "F6boNp",
+                          "id": "y8cu3P",
                           "ref": "ds:C5Ih8u",
                           "name": "Text/Muted",
                           "content": "Ask about the player, plans or releasing your music."
@@ -94,7 +94,7 @@
                     },
                     {
                       "type": "frame",
-                      "id": "xGoaf4",
+                      "id": "ldB2aC",
                       "name": "Suggestions",
                       "gap": 8,
                       "alignItems": "center",
@@ -103,7 +103,7 @@
                       "children": [
                         {
                           "type": "ref",
-                          "id": "qDfyXe",
+                          "id": "bxNYqy",
                           "ref": "ds:axpJn8",
                           "name": "Assistant/Suggestion",
                           "descendants": {
@@ -114,7 +114,7 @@
                         },
                         {
                           "type": "ref",
-                          "id": "UZczgE",
+                          "id": "o3W2Cz",
                           "ref": "ds:axpJn8",
                           "name": "Assistant/Suggestion",
                           "descendants": {
@@ -127,7 +127,7 @@
                     },
                     {
                       "type": "frame",
-                      "id": "pK3QDN",
+                      "id": "mlLBP3",
                       "name": "Suggestions",
                       "gap": 8,
                       "alignItems": "center",
@@ -136,7 +136,7 @@
                       "children": [
                         {
                           "type": "ref",
-                          "id": "xNU7Wm",
+                          "id": "6Og5ab",
                           "ref": "ds:axpJn8",
                           "name": "Assistant/Suggestion",
                           "descendants": {
@@ -147,7 +147,7 @@
                         },
                         {
                           "type": "ref",
-                          "id": "3jGDP8",
+                          "id": "b7hdLb",
                           "ref": "ds:axpJn8",
                           "name": "Assistant/Suggestion",
                           "descendants": {
@@ -164,7 +164,7 @@
             },
             {
               "type": "ref",
-              "id": "Mdpo4W",
+              "id": "Qo2jmk",
               "ref": "ds:9garaR",
               "name": "Assistant/FAB Open"
             }
@@ -176,11 +176,11 @@
       "theme": {
         "ds:Mode": "Dark"
       },
-      "context": "system — floating assistant on every page outside /main — Bottom-right button on the landing, auth, legal, verify, 404, error and offline pages (not inside the player). It expands into a 380×540 chat on desktop and a full-screen sheet on phones. While a request runs a thinking orb shows the phase: searching the docs, then composing. Answers cite Bitrate docs; never ask for passwords or payment data."
+      "context": "system — floating assistant on every page outside /main — Bottom-right button on the landing, auth, legal, verify, 404, error and offline pages of web-player (not inside the player, where it would cover the player bar) and on every page of the artist portal. It expands into a 380×540 chat on desktop and a full-screen sheet on phones. While a request runs a thinking orb shows the phase: searching the docs, then composing. Answers cite the help centre under the reply. When the assistant cannot help it hands the chat to the Bitrate team: the status line says an operator will reply, and their replies arrive in the same chat. Never ask for passwords or payment data. Behind NEXT_PUBLIC_SUPPORT_CHAT_ENABLED / VITE_SUPPORT_CHAT_ENABLED until launch (#572)."
     },
     {
       "type": "frame",
-      "id": "MTdD48",
+      "id": "MKvCvQ",
       "name": "AI assistant / Desktop / Light",
       "width": 1440,
       "height": 900,
@@ -194,7 +194,7 @@
       "children": [
         {
           "type": "frame",
-          "id": "eH3MDx",
+          "id": "MvmwAw",
           "name": "Page",
           "gap": 12,
           "alignItems": "center",
@@ -204,7 +204,7 @@
         },
         {
           "type": "frame",
-          "id": "rrqGDU",
+          "id": "PMHbN9",
           "name": "Assistant Dock",
           "layout": "vertical",
           "gap": 14,
@@ -213,7 +213,7 @@
           "children": [
             {
               "type": "ref",
-              "id": "DLwXVu",
+              "id": "Jt8KMr",
               "ref": "ds:krpNYY",
               "name": "Assistant/Panel",
               "width": 380,
@@ -221,7 +221,7 @@
               "descendants": {
                 "ds:L9A4MS": {
                   "type": "frame",
-                  "id": "4UYUts",
+                  "id": "gtvg95",
                   "name": "Messages",
                   "layout": "vertical",
                   "width": "fill_container",
@@ -231,7 +231,7 @@
                   "children": [
                     {
                       "type": "frame",
-                      "id": "PUxr6z",
+                      "id": "YENZTE",
                       "name": "Welcome",
                       "layout": "vertical",
                       "gap": 10,
@@ -246,20 +246,20 @@
                       "children": [
                         {
                           "type": "ref",
-                          "id": "Zd9kGF",
+                          "id": "KoTDxs",
                           "ref": "ds:XtiIQ2",
                           "name": "Assistant/Orb"
                         },
                         {
                           "type": "ref",
-                          "id": "a2RYSy",
+                          "id": "Bhg6Za",
                           "ref": "ds:fLuqjC",
                           "name": "Text/H4",
                           "content": "Hi, I am the Bitrate assistant"
                         },
                         {
                           "type": "ref",
-                          "id": "znmuFn",
+                          "id": "Seg1XN",
                           "ref": "ds:C5Ih8u",
                           "name": "Text/Muted",
                           "content": "Ask about the player, plans or releasing your music."
@@ -268,7 +268,7 @@
                     },
                     {
                       "type": "frame",
-                      "id": "SRLrgy",
+                      "id": "V8lmnT",
                       "name": "Suggestions",
                       "gap": 8,
                       "alignItems": "center",
@@ -277,7 +277,7 @@
                       "children": [
                         {
                           "type": "ref",
-                          "id": "kfRsyx",
+                          "id": "NaqdCx",
                           "ref": "ds:axpJn8",
                           "name": "Assistant/Suggestion",
                           "descendants": {
@@ -288,7 +288,7 @@
                         },
                         {
                           "type": "ref",
-                          "id": "3bSrCA",
+                          "id": "SdbZEV",
                           "ref": "ds:axpJn8",
                           "name": "Assistant/Suggestion",
                           "descendants": {
@@ -301,7 +301,7 @@
                     },
                     {
                       "type": "frame",
-                      "id": "cG99ty",
+                      "id": "EQ4Qo9",
                       "name": "Suggestions",
                       "gap": 8,
                       "alignItems": "center",
@@ -310,7 +310,7 @@
                       "children": [
                         {
                           "type": "ref",
-                          "id": "tQmso2",
+                          "id": "u89gth",
                           "ref": "ds:axpJn8",
                           "name": "Assistant/Suggestion",
                           "descendants": {
@@ -321,7 +321,7 @@
                         },
                         {
                           "type": "ref",
-                          "id": "hkhuaE",
+                          "id": "rQTEf1",
                           "ref": "ds:axpJn8",
                           "name": "Assistant/Suggestion",
                           "descendants": {
@@ -338,7 +338,7 @@
             },
             {
               "type": "ref",
-              "id": "fbjcRx",
+              "id": "UNMU1W",
               "ref": "ds:9garaR",
               "name": "Assistant/FAB Open"
             }
@@ -350,11 +350,11 @@
       "theme": {
         "ds:Mode": "Light"
       },
-      "context": "system — floating assistant on every page outside /main — Bottom-right button on the landing, auth, legal, verify, 404, error and offline pages (not inside the player). It expands into a 380×540 chat on desktop and a full-screen sheet on phones. While a request runs a thinking orb shows the phase: searching the docs, then composing. Answers cite Bitrate docs; never ask for passwords or payment data."
+      "context": "system — floating assistant on every page outside /main — Bottom-right button on the landing, auth, legal, verify, 404, error and offline pages of web-player (not inside the player, where it would cover the player bar) and on every page of the artist portal. It expands into a 380×540 chat on desktop and a full-screen sheet on phones. While a request runs a thinking orb shows the phase: searching the docs, then composing. Answers cite the help centre under the reply. When the assistant cannot help it hands the chat to the Bitrate team: the status line says an operator will reply, and their replies arrive in the same chat. Never ask for passwords or payment data. Behind NEXT_PUBLIC_SUPPORT_CHAT_ENABLED / VITE_SUPPORT_CHAT_ENABLED until launch (#572)."
     },
     {
       "type": "frame",
-      "id": "eYNbPw",
+      "id": "0irhxI",
       "name": "AI assistant / Desktop / Dim",
       "width": 1440,
       "height": 900,
@@ -368,7 +368,7 @@
       "children": [
         {
           "type": "frame",
-          "id": "5JJUjF",
+          "id": "OwX4ay",
           "name": "Page",
           "gap": 12,
           "alignItems": "center",
@@ -378,7 +378,7 @@
         },
         {
           "type": "frame",
-          "id": "MBgmHr",
+          "id": "LSjbSW",
           "name": "Assistant Dock",
           "layout": "vertical",
           "gap": 14,
@@ -387,7 +387,7 @@
           "children": [
             {
               "type": "ref",
-              "id": "d3jrgS",
+              "id": "pgacqr",
               "ref": "ds:krpNYY",
               "name": "Assistant/Panel",
               "width": 380,
@@ -395,7 +395,7 @@
               "descendants": {
                 "ds:L9A4MS": {
                   "type": "frame",
-                  "id": "fxJhrG",
+                  "id": "SYRoUr",
                   "name": "Messages",
                   "layout": "vertical",
                   "width": "fill_container",
@@ -405,7 +405,7 @@
                   "children": [
                     {
                       "type": "frame",
-                      "id": "BjnCMp",
+                      "id": "kgK7cr",
                       "name": "Welcome",
                       "layout": "vertical",
                       "gap": 10,
@@ -420,20 +420,20 @@
                       "children": [
                         {
                           "type": "ref",
-                          "id": "DDmd27",
+                          "id": "IZvn75",
                           "ref": "ds:XtiIQ2",
                           "name": "Assistant/Orb"
                         },
                         {
                           "type": "ref",
-                          "id": "va6k5c",
+                          "id": "FHxwMx",
                           "ref": "ds:fLuqjC",
                           "name": "Text/H4",
                           "content": "Hi, I am the Bitrate assistant"
                         },
                         {
                           "type": "ref",
-                          "id": "rQ3sov",
+                          "id": "CyWNh3",
                           "ref": "ds:C5Ih8u",
                           "name": "Text/Muted",
                           "content": "Ask about the player, plans or releasing your music."
@@ -442,7 +442,7 @@
                     },
                     {
                       "type": "frame",
-                      "id": "ENgRir",
+                      "id": "9MTeTt",
                       "name": "Suggestions",
                       "gap": 8,
                       "alignItems": "center",
@@ -451,7 +451,7 @@
                       "children": [
                         {
                           "type": "ref",
-                          "id": "zXcYMi",
+                          "id": "Tv7REX",
                           "ref": "ds:axpJn8",
                           "name": "Assistant/Suggestion",
                           "descendants": {
@@ -462,7 +462,7 @@
                         },
                         {
                           "type": "ref",
-                          "id": "QTgj9o",
+                          "id": "Qj3M0c",
                           "ref": "ds:axpJn8",
                           "name": "Assistant/Suggestion",
                           "descendants": {
@@ -475,7 +475,7 @@
                     },
                     {
                       "type": "frame",
-                      "id": "yeGda7",
+                      "id": "qlTBI3",
                       "name": "Suggestions",
                       "gap": 8,
                       "alignItems": "center",
@@ -484,7 +484,7 @@
                       "children": [
                         {
                           "type": "ref",
-                          "id": "Gs7bUR",
+                          "id": "SZZtMT",
                           "ref": "ds:axpJn8",
                           "name": "Assistant/Suggestion",
                           "descendants": {
@@ -495,7 +495,7 @@
                         },
                         {
                           "type": "ref",
-                          "id": "t4crmN",
+                          "id": "HyHf3W",
                           "ref": "ds:axpJn8",
                           "name": "Assistant/Suggestion",
                           "descendants": {
@@ -512,7 +512,7 @@
             },
             {
               "type": "ref",
-              "id": "knRqkK",
+              "id": "syfg4R",
               "ref": "ds:9garaR",
               "name": "Assistant/FAB Open"
             }
@@ -524,11 +524,11 @@
       "theme": {
         "ds:Mode": "Dim"
       },
-      "context": "system — floating assistant on every page outside /main — Bottom-right button on the landing, auth, legal, verify, 404, error and offline pages (not inside the player). It expands into a 380×540 chat on desktop and a full-screen sheet on phones. While a request runs a thinking orb shows the phase: searching the docs, then composing. Answers cite Bitrate docs; never ask for passwords or payment data."
+      "context": "system — floating assistant on every page outside /main — Bottom-right button on the landing, auth, legal, verify, 404, error and offline pages of web-player (not inside the player, where it would cover the player bar) and on every page of the artist portal. It expands into a 380×540 chat on desktop and a full-screen sheet on phones. While a request runs a thinking orb shows the phase: searching the docs, then composing. Answers cite the help centre under the reply. When the assistant cannot help it hands the chat to the Bitrate team: the status line says an operator will reply, and their replies arrive in the same chat. Never ask for passwords or payment data. Behind NEXT_PUBLIC_SUPPORT_CHAT_ENABLED / VITE_SUPPORT_CHAT_ENABLED until launch (#572)."
     },
     {
       "type": "frame",
-      "id": "PdtWcS",
+      "id": "IIyEOr",
       "name": "AI assistant / Mobile / Dark",
       "width": 390,
       "height": 844,
@@ -542,7 +542,7 @@
       "children": [
         {
           "type": "ref",
-          "id": "VuzAC4",
+          "id": "SByyuz",
           "ref": "ds:krpNYY",
           "name": "Assistant/Panel",
           "width": "fill_container",
@@ -550,7 +550,7 @@
           "descendants": {
             "ds:L9A4MS": {
               "type": "frame",
-              "id": "BNbUNv",
+              "id": "fPYiZd",
               "name": "Messages",
               "layout": "vertical",
               "width": "fill_container",
@@ -560,7 +560,7 @@
               "children": [
                 {
                   "type": "frame",
-                  "id": "nhB7HG",
+                  "id": "tpkrM0",
                   "name": "Welcome",
                   "layout": "vertical",
                   "gap": 10,
@@ -575,20 +575,20 @@
                   "children": [
                     {
                       "type": "ref",
-                      "id": "eBwHBv",
+                      "id": "ZA1b0V",
                       "ref": "ds:XtiIQ2",
                       "name": "Assistant/Orb"
                     },
                     {
                       "type": "ref",
-                      "id": "y6YfUU",
+                      "id": "acGhM3",
                       "ref": "ds:fLuqjC",
                       "name": "Text/H4",
                       "content": "Hi, I am the Bitrate assistant"
                     },
                     {
                       "type": "ref",
-                      "id": "cqPaFa",
+                      "id": "bLn76h",
                       "ref": "ds:C5Ih8u",
                       "name": "Text/Muted",
                       "content": "Ask about the player, plans or releasing your music."
@@ -597,7 +597,7 @@
                 },
                 {
                   "type": "frame",
-                  "id": "2RV3QS",
+                  "id": "qb6h7i",
                   "name": "Suggestions",
                   "gap": 8,
                   "alignItems": "center",
@@ -606,7 +606,7 @@
                   "children": [
                     {
                       "type": "ref",
-                      "id": "qdtRsi",
+                      "id": "44ESPX",
                       "ref": "ds:axpJn8",
                       "name": "Assistant/Suggestion",
                       "descendants": {
@@ -617,7 +617,7 @@
                     },
                     {
                       "type": "ref",
-                      "id": "YyPa5t",
+                      "id": "Z76B0a",
                       "ref": "ds:axpJn8",
                       "name": "Assistant/Suggestion",
                       "descendants": {
@@ -630,7 +630,7 @@
                 },
                 {
                   "type": "frame",
-                  "id": "upg6Me",
+                  "id": "JmEIoD",
                   "name": "Suggestions",
                   "gap": 8,
                   "alignItems": "center",
@@ -639,7 +639,7 @@
                   "children": [
                     {
                       "type": "ref",
-                      "id": "reFUnG",
+                      "id": "Lus8pn",
                       "ref": "ds:axpJn8",
                       "name": "Assistant/Suggestion",
                       "descendants": {
@@ -650,7 +650,7 @@
                     },
                     {
                       "type": "ref",
-                      "id": "d6BBm3",
+                      "id": "Ou5WFu",
                       "ref": "ds:axpJn8",
                       "name": "Assistant/Suggestion",
                       "descendants": {
@@ -671,11 +671,11 @@
       "theme": {
         "ds:Mode": "Dark"
       },
-      "context": "system — floating assistant on every page outside /main — Bottom-right button on the landing, auth, legal, verify, 404, error and offline pages (not inside the player). It expands into a 380×540 chat on desktop and a full-screen sheet on phones. While a request runs a thinking orb shows the phase: searching the docs, then composing. Answers cite Bitrate docs; never ask for passwords or payment data."
+      "context": "system — floating assistant on every page outside /main — Bottom-right button on the landing, auth, legal, verify, 404, error and offline pages of web-player (not inside the player, where it would cover the player bar) and on every page of the artist portal. It expands into a 380×540 chat on desktop and a full-screen sheet on phones. While a request runs a thinking orb shows the phase: searching the docs, then composing. Answers cite the help centre under the reply. When the assistant cannot help it hands the chat to the Bitrate team: the status line says an operator will reply, and their replies arrive in the same chat. Never ask for passwords or payment data. Behind NEXT_PUBLIC_SUPPORT_CHAT_ENABLED / VITE_SUPPORT_CHAT_ENABLED until launch (#572)."
     },
     {
       "type": "frame",
-      "id": "vUPoSX",
+      "id": "Kta0hK",
       "name": "AI assistant / Closed / Desktop",
       "width": 1440,
       "height": 900,
@@ -689,7 +689,7 @@
       "children": [
         {
           "type": "frame",
-          "id": "xzFMLq",
+          "id": "oxnBvB",
           "name": "Page",
           "gap": 12,
           "alignItems": "center",
@@ -699,7 +699,7 @@
         },
         {
           "type": "frame",
-          "id": "GGJhsf",
+          "id": "renW9F",
           "name": "Assistant Dock",
           "layout": "vertical",
           "gap": 14,
@@ -708,7 +708,7 @@
           "children": [
             {
               "type": "frame",
-              "id": "CAB6FZ",
+              "id": "vppeoB",
               "name": "Hint",
               "gap": 12,
               "alignItems": "center",
@@ -721,7 +721,7 @@
               "children": [
                 {
                   "type": "ref",
-                  "id": "zkZnvk",
+                  "id": "TsD3Vs",
                   "ref": "ds:9ZFzt3",
                   "name": "Tooltip/Action",
                   "descendants": {
@@ -737,7 +737,7 @@
             },
             {
               "type": "ref",
-              "id": "eHQZYS",
+              "id": "GD0nK8",
               "ref": "ds:L46Qb3",
               "name": "Assistant/FAB"
             }
@@ -749,11 +749,11 @@
       "theme": {
         "ds:Mode": "Dark"
       },
-      "context": "system — floating assistant on every page outside /main — Bottom-right button on the landing, auth, legal, verify, 404, error and offline pages (not inside the player). It expands into a 380×540 chat on desktop and a full-screen sheet on phones. While a request runs a thinking orb shows the phase: searching the docs, then composing. Answers cite Bitrate docs; never ask for passwords or payment data. · no mobile frame: phones show only the button; the hint appears on hover"
+      "context": "system — floating assistant on every page outside /main — Bottom-right button on the landing, auth, legal, verify, 404, error and offline pages of web-player (not inside the player, where it would cover the player bar) and on every page of the artist portal. It expands into a 380×540 chat on desktop and a full-screen sheet on phones. While a request runs a thinking orb shows the phase: searching the docs, then composing. Answers cite the help centre under the reply. When the assistant cannot help it hands the chat to the Bitrate team: the status line says an operator will reply, and their replies arrive in the same chat. Never ask for passwords or payment data. Behind NEXT_PUBLIC_SUPPORT_CHAT_ENABLED / VITE_SUPPORT_CHAT_ENABLED until launch (#572). · no mobile frame: phones show only the button; the hint appears on hover"
     },
     {
       "type": "frame",
-      "id": "AVzKRM",
+      "id": "TOviJV",
       "name": "AI assistant / Conversation / Desktop",
       "width": 1440,
       "height": 900,
@@ -767,7 +767,7 @@
       "children": [
         {
           "type": "frame",
-          "id": "MNWUef",
+          "id": "3eaUcq",
           "name": "Page",
           "gap": 12,
           "alignItems": "center",
@@ -777,7 +777,7 @@
         },
         {
           "type": "frame",
-          "id": "RCLTnT",
+          "id": "6ysKou",
           "name": "Assistant Dock",
           "layout": "vertical",
           "gap": 14,
@@ -786,7 +786,7 @@
           "children": [
             {
               "type": "ref",
-              "id": "DUsfFE",
+              "id": "y6DQNR",
               "ref": "ds:krpNYY",
               "name": "Assistant/Panel",
               "width": 380,
@@ -794,7 +794,7 @@
               "descendants": {
                 "ds:L9A4MS": {
                   "type": "frame",
-                  "id": "FG8oEt",
+                  "id": "np6AFS",
                   "name": "Messages",
                   "layout": "vertical",
                   "width": "fill_container",
@@ -804,7 +804,7 @@
                   "children": [
                     {
                       "type": "ref",
-                      "id": "3QH7u4",
+                      "id": "JCfbQk",
                       "ref": "ds:k7btvH",
                       "name": "Assistant/Message Mine",
                       "descendants": {
@@ -815,7 +815,7 @@
                     },
                     {
                       "type": "ref",
-                      "id": "jQGJm2",
+                      "id": "U6ZCJ8",
                       "ref": "ds:r6G7wB",
                       "name": "Assistant/Message",
                       "descendants": {
@@ -826,7 +826,7 @@
                     },
                     {
                       "type": "ref",
-                      "id": "CFs3Gc",
+                      "id": "VzUhSZ",
                       "ref": "ds:k7btvH",
                       "name": "Assistant/Message Mine",
                       "descendants": {
@@ -837,7 +837,7 @@
                     },
                     {
                       "type": "ref",
-                      "id": "yi89X6",
+                      "id": "YYXWiS",
                       "ref": "ds:r6G7wB",
                       "name": "Assistant/Message",
                       "descendants": {
@@ -848,14 +848,14 @@
                     },
                     {
                       "type": "frame",
-                      "id": "UqkcWU",
+                      "id": "34vT2m",
                       "name": "Row",
                       "gap": 8,
                       "alignItems": "center",
                       "children": [
                         {
                           "type": "ref",
-                          "id": "r4rYh4",
+                          "id": "rIxCfu",
                           "ref": "ds:G5tJp",
                           "name": "Button / Open Bitrate for Artists",
                           "descendants": {
@@ -875,7 +875,7 @@
             },
             {
               "type": "ref",
-              "id": "bPqrXa",
+              "id": "DPD3xV",
               "ref": "ds:9garaR",
               "name": "Assistant/FAB Open"
             }
@@ -887,11 +887,11 @@
       "theme": {
         "ds:Mode": "Dark"
       },
-      "context": "system — floating assistant on every page outside /main — Bottom-right button on the landing, auth, legal, verify, 404, error and offline pages (not inside the player). It expands into a 380×540 chat on desktop and a full-screen sheet on phones. While a request runs a thinking orb shows the phase: searching the docs, then composing. Answers cite Bitrate docs; never ask for passwords or payment data."
+      "context": "system — floating assistant on every page outside /main — Bottom-right button on the landing, auth, legal, verify, 404, error and offline pages of web-player (not inside the player, where it would cover the player bar) and on every page of the artist portal. It expands into a 380×540 chat on desktop and a full-screen sheet on phones. While a request runs a thinking orb shows the phase: searching the docs, then composing. Answers cite the help centre under the reply. When the assistant cannot help it hands the chat to the Bitrate team: the status line says an operator will reply, and their replies arrive in the same chat. Never ask for passwords or payment data. Behind NEXT_PUBLIC_SUPPORT_CHAT_ENABLED / VITE_SUPPORT_CHAT_ENABLED until launch (#572)."
     },
     {
       "type": "frame",
-      "id": "Gfuy5H",
+      "id": "N6uFoQ",
       "name": "AI assistant / Conversation / Mobile",
       "width": 390,
       "height": 844,
@@ -905,7 +905,7 @@
       "children": [
         {
           "type": "ref",
-          "id": "jJR6Jt",
+          "id": "x4bTG1",
           "ref": "ds:krpNYY",
           "name": "Assistant/Panel",
           "width": "fill_container",
@@ -913,7 +913,7 @@
           "descendants": {
             "ds:L9A4MS": {
               "type": "frame",
-              "id": "aERbkA",
+              "id": "a9nJBh",
               "name": "Messages",
               "layout": "vertical",
               "width": "fill_container",
@@ -923,7 +923,7 @@
               "children": [
                 {
                   "type": "ref",
-                  "id": "FX4fNM",
+                  "id": "GBMQ52",
                   "ref": "ds:k7btvH",
                   "name": "Assistant/Message Mine",
                   "descendants": {
@@ -934,7 +934,7 @@
                 },
                 {
                   "type": "ref",
-                  "id": "2ZqjYL",
+                  "id": "DClXGa",
                   "ref": "ds:r6G7wB",
                   "name": "Assistant/Message",
                   "descendants": {
@@ -945,7 +945,7 @@
                 },
                 {
                   "type": "ref",
-                  "id": "3d4WNj",
+                  "id": "AeEkhf",
                   "ref": "ds:k7btvH",
                   "name": "Assistant/Message Mine",
                   "descendants": {
@@ -956,7 +956,7 @@
                 },
                 {
                   "type": "ref",
-                  "id": "nn9zJv",
+                  "id": "FOdjzW",
                   "ref": "ds:r6G7wB",
                   "name": "Assistant/Message",
                   "descendants": {
@@ -967,14 +967,14 @@
                 },
                 {
                   "type": "frame",
-                  "id": "y37BHN",
+                  "id": "A57ucs",
                   "name": "Row",
                   "gap": 8,
                   "alignItems": "center",
                   "children": [
                     {
                       "type": "ref",
-                      "id": "4sV5Ax",
+                      "id": "WjaXPT",
                       "ref": "ds:G5tJp",
                       "name": "Button / Open Bitrate for Artists",
                       "descendants": {
@@ -998,11 +998,11 @@
       "theme": {
         "ds:Mode": "Dark"
       },
-      "context": "system — floating assistant on every page outside /main — Bottom-right button on the landing, auth, legal, verify, 404, error and offline pages (not inside the player). It expands into a 380×540 chat on desktop and a full-screen sheet on phones. While a request runs a thinking orb shows the phase: searching the docs, then composing. Answers cite Bitrate docs; never ask for passwords or payment data."
+      "context": "system — floating assistant on every page outside /main — Bottom-right button on the landing, auth, legal, verify, 404, error and offline pages of web-player (not inside the player, where it would cover the player bar) and on every page of the artist portal. It expands into a 380×540 chat on desktop and a full-screen sheet on phones. While a request runs a thinking orb shows the phase: searching the docs, then composing. Answers cite the help centre under the reply. When the assistant cannot help it hands the chat to the Bitrate team: the status line says an operator will reply, and their replies arrive in the same chat. Never ask for passwords or payment data. Behind NEXT_PUBLIC_SUPPORT_CHAT_ENABLED / VITE_SUPPORT_CHAT_ENABLED until launch (#572)."
     },
     {
       "type": "frame",
-      "id": "ZHpxfV",
+      "id": "SZbO5V",
       "name": "AI assistant / Searching / Desktop",
       "width": 1440,
       "height": 900,
@@ -1016,7 +1016,7 @@
       "children": [
         {
           "type": "frame",
-          "id": "7DSwok",
+          "id": "kcMGRA",
           "name": "Page",
           "gap": 12,
           "alignItems": "center",
@@ -1026,7 +1026,7 @@
         },
         {
           "type": "frame",
-          "id": "fYWbAz",
+          "id": "7NUv1k",
           "name": "Assistant Dock",
           "layout": "vertical",
           "gap": 14,
@@ -1035,7 +1035,7 @@
           "children": [
             {
               "type": "ref",
-              "id": "4BgzTh",
+              "id": "Nqe9IM",
               "ref": "ds:krpNYY",
               "name": "Assistant/Panel",
               "width": 380,
@@ -1043,7 +1043,7 @@
               "descendants": {
                 "ds:L9A4MS": {
                   "type": "frame",
-                  "id": "ySuDgk",
+                  "id": "4L76Mv",
                   "name": "Messages",
                   "layout": "vertical",
                   "width": "fill_container",
@@ -1053,7 +1053,7 @@
                   "children": [
                     {
                       "type": "ref",
-                      "id": "iP2zeN",
+                      "id": "c6bSCr",
                       "ref": "ds:k7btvH",
                       "name": "Assistant/Message Mine",
                       "descendants": {
@@ -1064,7 +1064,7 @@
                     },
                     {
                       "type": "ref",
-                      "id": "vxR6PW",
+                      "id": "98maq4",
                       "ref": "ds:r6G7wB",
                       "name": "Assistant/Message",
                       "descendants": {
@@ -1075,7 +1075,7 @@
                     },
                     {
                       "type": "ref",
-                      "id": "syHuhk",
+                      "id": "6PTPp8",
                       "ref": "ds:k7btvH",
                       "name": "Assistant/Message Mine",
                       "descendants": {
@@ -1086,7 +1086,7 @@
                     },
                     {
                       "type": "ref",
-                      "id": "RLeVec",
+                      "id": "TrjFhO",
                       "ref": "ds:PqDZSH",
                       "name": "Assistant/Typing"
                     }
@@ -1099,7 +1099,7 @@
             },
             {
               "type": "ref",
-              "id": "2t4LNB",
+              "id": "KV8Lak",
               "ref": "ds:9garaR",
               "name": "Assistant/FAB Open"
             }
@@ -1111,11 +1111,11 @@
       "theme": {
         "ds:Mode": "Dark"
       },
-      "context": "system — floating assistant on every page outside /main — Bottom-right button on the landing, auth, legal, verify, 404, error and offline pages (not inside the player). It expands into a 380×540 chat on desktop and a full-screen sheet on phones. While a request runs a thinking orb shows the phase: searching the docs, then composing. Answers cite Bitrate docs; never ask for passwords or payment data."
+      "context": "system — floating assistant on every page outside /main — Bottom-right button on the landing, auth, legal, verify, 404, error and offline pages of web-player (not inside the player, where it would cover the player bar) and on every page of the artist portal. It expands into a 380×540 chat on desktop and a full-screen sheet on phones. While a request runs a thinking orb shows the phase: searching the docs, then composing. Answers cite the help centre under the reply. When the assistant cannot help it hands the chat to the Bitrate team: the status line says an operator will reply, and their replies arrive in the same chat. Never ask for passwords or payment data. Behind NEXT_PUBLIC_SUPPORT_CHAT_ENABLED / VITE_SUPPORT_CHAT_ENABLED until launch (#572)."
     },
     {
       "type": "frame",
-      "id": "ALwwk8",
+      "id": "EA1tKJ",
       "name": "AI assistant / Searching / Mobile",
       "width": 390,
       "height": 844,
@@ -1129,7 +1129,7 @@
       "children": [
         {
           "type": "ref",
-          "id": "BX79uL",
+          "id": "4HATyc",
           "ref": "ds:krpNYY",
           "name": "Assistant/Panel",
           "width": "fill_container",
@@ -1137,7 +1137,7 @@
           "descendants": {
             "ds:L9A4MS": {
               "type": "frame",
-              "id": "8USMsh",
+              "id": "pnmMoU",
               "name": "Messages",
               "layout": "vertical",
               "width": "fill_container",
@@ -1147,7 +1147,7 @@
               "children": [
                 {
                   "type": "ref",
-                  "id": "g2gfhp",
+                  "id": "xTyDIg",
                   "ref": "ds:k7btvH",
                   "name": "Assistant/Message Mine",
                   "descendants": {
@@ -1158,7 +1158,7 @@
                 },
                 {
                   "type": "ref",
-                  "id": "eXGxSG",
+                  "id": "sShxSh",
                   "ref": "ds:r6G7wB",
                   "name": "Assistant/Message",
                   "descendants": {
@@ -1169,7 +1169,7 @@
                 },
                 {
                   "type": "ref",
-                  "id": "nxjTWX",
+                  "id": "vzEZHM",
                   "ref": "ds:k7btvH",
                   "name": "Assistant/Message Mine",
                   "descendants": {
@@ -1180,7 +1180,7 @@
                 },
                 {
                   "type": "ref",
-                  "id": "rnz6D5",
+                  "id": "yqW2VB",
                   "ref": "ds:PqDZSH",
                   "name": "Assistant/Typing"
                 }
@@ -1197,11 +1197,753 @@
       "theme": {
         "ds:Mode": "Dark"
       },
-      "context": "system — floating assistant on every page outside /main — Bottom-right button on the landing, auth, legal, verify, 404, error and offline pages (not inside the player). It expands into a 380×540 chat on desktop and a full-screen sheet on phones. While a request runs a thinking orb shows the phase: searching the docs, then composing. Answers cite Bitrate docs; never ask for passwords or payment data."
+      "context": "system — floating assistant on every page outside /main — Bottom-right button on the landing, auth, legal, verify, 404, error and offline pages of web-player (not inside the player, where it would cover the player bar) and on every page of the artist portal. It expands into a 380×540 chat on desktop and a full-screen sheet on phones. While a request runs a thinking orb shows the phase: searching the docs, then composing. Answers cite the help centre under the reply. When the assistant cannot help it hands the chat to the Bitrate team: the status line says an operator will reply, and their replies arrive in the same chat. Never ask for passwords or payment data. Behind NEXT_PUBLIC_SUPPORT_CHAT_ENABLED / VITE_SUPPORT_CHAT_ENABLED until launch (#572)."
     },
     {
       "type": "frame",
-      "id": "Azzhay",
+      "id": "wOk8Nf",
+      "name": "AI assistant / Answer with sources / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "gap": 20,
+      "padding": 24,
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "frame",
+          "id": "a7U4Fi",
+          "name": "Page",
+          "gap": 12,
+          "alignItems": "center",
+          "width": "fill_container",
+          "height": "fill_container",
+          "children": []
+        },
+        {
+          "type": "frame",
+          "id": "dzytzj",
+          "name": "Assistant Dock",
+          "layout": "vertical",
+          "gap": 14,
+          "width": "fill_container",
+          "alignItems": "end",
+          "children": [
+            {
+              "type": "ref",
+              "id": "RN6A7O",
+              "ref": "ds:krpNYY",
+              "name": "Assistant/Panel",
+              "width": 380,
+              "height": 540,
+              "descendants": {
+                "ds:L9A4MS": {
+                  "type": "frame",
+                  "id": "KpiObH",
+                  "name": "Messages",
+                  "layout": "vertical",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "padding": 14,
+                  "gap": 10,
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "sCQXvl",
+                      "ref": "ds:k7btvH",
+                      "name": "Assistant/Message Mine",
+                      "descendants": {
+                        "ds:Sa0FCz": {
+                          "content": "When do payouts arrive?"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "pwES6b",
+                      "ref": "ds:r6G7wB",
+                      "name": "Assistant/Message",
+                      "descendants": {
+                        "ds:52AVgR": {
+                          "content": "Payouts arrive within 10 working days after the month ends.\nSources: Payouts · Plans"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "2kfgP7",
+              "ref": "ds:9garaR",
+              "name": "Assistant/FAB Open"
+            }
+          ]
+        }
+      ],
+      "x": 10710,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "system — floating assistant on every page outside /main — Bottom-right button on the landing, auth, legal, verify, 404, error and offline pages of web-player (not inside the player, where it would cover the player bar) and on every page of the artist portal. It expands into a 380×540 chat on desktop and a full-screen sheet on phones. While a request runs a thinking orb shows the phase: searching the docs, then composing. Answers cite the help centre under the reply. When the assistant cannot help it hands the chat to the Bitrate team: the status line says an operator will reply, and their replies arrive in the same chat. Never ask for passwords or payment data. Behind NEXT_PUBLIC_SUPPORT_CHAT_ENABLED / VITE_SUPPORT_CHAT_ENABLED until launch (#572)."
+    },
+    {
+      "type": "frame",
+      "id": "qMF4Mt",
+      "name": "AI assistant / Answer with sources / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "gap": 20,
+      "padding": 24,
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "mxzcSy",
+          "ref": "ds:krpNYY",
+          "name": "Assistant/Panel",
+          "width": "fill_container",
+          "height": "fill_container",
+          "descendants": {
+            "ds:L9A4MS": {
+              "type": "frame",
+              "id": "ZO3ts0",
+              "name": "Messages",
+              "layout": "vertical",
+              "width": "fill_container",
+              "height": "fill_container",
+              "padding": 14,
+              "gap": 10,
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "3KXlAw",
+                  "ref": "ds:k7btvH",
+                  "name": "Assistant/Message Mine",
+                  "descendants": {
+                    "ds:Sa0FCz": {
+                      "content": "When do payouts arrive?"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "ctvEay",
+                  "ref": "ds:r6G7wB",
+                  "name": "Assistant/Message",
+                  "descendants": {
+                    "ds:52AVgR": {
+                      "content": "Payouts arrive within 10 working days after the month ends.\nSources: Payouts · Plans"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 12250,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "system — floating assistant on every page outside /main — Bottom-right button on the landing, auth, legal, verify, 404, error and offline pages of web-player (not inside the player, where it would cover the player bar) and on every page of the artist portal. It expands into a 380×540 chat on desktop and a full-screen sheet on phones. While a request runs a thinking orb shows the phase: searching the docs, then composing. Answers cite the help centre under the reply. When the assistant cannot help it hands the chat to the Bitrate team: the status line says an operator will reply, and their replies arrive in the same chat. Never ask for passwords or payment data. Behind NEXT_PUBLIC_SUPPORT_CHAT_ENABLED / VITE_SUPPORT_CHAT_ENABLED until launch (#572)."
+    },
+    {
+      "type": "frame",
+      "id": "1rt6N2",
+      "name": "AI assistant / Waiting for an operator / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "gap": 20,
+      "padding": 24,
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "frame",
+          "id": "JEkUpg",
+          "name": "Page",
+          "gap": 12,
+          "alignItems": "center",
+          "width": "fill_container",
+          "height": "fill_container",
+          "children": []
+        },
+        {
+          "type": "frame",
+          "id": "UnFGwX",
+          "name": "Assistant Dock",
+          "layout": "vertical",
+          "gap": 14,
+          "width": "fill_container",
+          "alignItems": "end",
+          "children": [
+            {
+              "type": "ref",
+              "id": "eqXmGS",
+              "ref": "ds:krpNYY",
+              "name": "Assistant/Panel",
+              "width": 380,
+              "height": 540,
+              "descendants": {
+                "ds:L9A4MS": {
+                  "type": "frame",
+                  "id": "fWYqSx",
+                  "name": "Messages",
+                  "layout": "vertical",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "padding": 14,
+                  "gap": 10,
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "bx4opz",
+                      "ref": "ds:k7btvH",
+                      "name": "Assistant/Message Mine",
+                      "descendants": {
+                        "ds:Sa0FCz": {
+                          "content": "When do payouts arrive?"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "eyngaO",
+                      "ref": "ds:r6G7wB",
+                      "name": "Assistant/Message",
+                      "descendants": {
+                        "ds:52AVgR": {
+                          "content": "Payouts arrive within 10 working days after the month ends.\nSources: Payouts · Plans"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "VTjMX9",
+                      "ref": "ds:k7btvH",
+                      "name": "Assistant/Message Mine",
+                      "descendants": {
+                        "ds:Sa0FCz": {
+                          "content": "It is the 19th and mine has not come. I want to talk to a person."
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "QUzhPN",
+                      "ref": "ds:r6G7wB",
+                      "name": "Assistant/Message",
+                      "descendants": {
+                        "ds:52AVgR": {
+                          "content": "I passed this to the team. An operator will reply here."
+                        }
+                      }
+                    }
+                  ]
+                },
+                "ds:EEjrpZ": {
+                  "content": "An operator will reply here as soon as possible."
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "bk8wxn",
+              "ref": "ds:9garaR",
+              "name": "Assistant/FAB Open"
+            }
+          ]
+        }
+      ],
+      "x": 12740,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "system — floating assistant on every page outside /main — Bottom-right button on the landing, auth, legal, verify, 404, error and offline pages of web-player (not inside the player, where it would cover the player bar) and on every page of the artist portal. It expands into a 380×540 chat on desktop and a full-screen sheet on phones. While a request runs a thinking orb shows the phase: searching the docs, then composing. Answers cite the help centre under the reply. When the assistant cannot help it hands the chat to the Bitrate team: the status line says an operator will reply, and their replies arrive in the same chat. Never ask for passwords or payment data. Behind NEXT_PUBLIC_SUPPORT_CHAT_ENABLED / VITE_SUPPORT_CHAT_ENABLED until launch (#572)."
+    },
+    {
+      "type": "frame",
+      "id": "98H74H",
+      "name": "AI assistant / Waiting for an operator / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "gap": 20,
+      "padding": 24,
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "Z1jCA7",
+          "ref": "ds:krpNYY",
+          "name": "Assistant/Panel",
+          "width": "fill_container",
+          "height": "fill_container",
+          "descendants": {
+            "ds:L9A4MS": {
+              "type": "frame",
+              "id": "gdm6Z3",
+              "name": "Messages",
+              "layout": "vertical",
+              "width": "fill_container",
+              "height": "fill_container",
+              "padding": 14,
+              "gap": 10,
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "Y3U3rJ",
+                  "ref": "ds:k7btvH",
+                  "name": "Assistant/Message Mine",
+                  "descendants": {
+                    "ds:Sa0FCz": {
+                      "content": "When do payouts arrive?"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "3KhnNN",
+                  "ref": "ds:r6G7wB",
+                  "name": "Assistant/Message",
+                  "descendants": {
+                    "ds:52AVgR": {
+                      "content": "Payouts arrive within 10 working days after the month ends.\nSources: Payouts · Plans"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "m3WO8C",
+                  "ref": "ds:k7btvH",
+                  "name": "Assistant/Message Mine",
+                  "descendants": {
+                    "ds:Sa0FCz": {
+                      "content": "It is the 19th and mine has not come. I want to talk to a person."
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "fDn51W",
+                  "ref": "ds:r6G7wB",
+                  "name": "Assistant/Message",
+                  "descendants": {
+                    "ds:52AVgR": {
+                      "content": "I passed this to the team. An operator will reply here."
+                    }
+                  }
+                }
+              ]
+            },
+            "ds:EEjrpZ": {
+              "content": "An operator will reply here as soon as possible."
+            }
+          }
+        }
+      ],
+      "x": 14280,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "system — floating assistant on every page outside /main — Bottom-right button on the landing, auth, legal, verify, 404, error and offline pages of web-player (not inside the player, where it would cover the player bar) and on every page of the artist portal. It expands into a 380×540 chat on desktop and a full-screen sheet on phones. While a request runs a thinking orb shows the phase: searching the docs, then composing. Answers cite the help centre under the reply. When the assistant cannot help it hands the chat to the Bitrate team: the status line says an operator will reply, and their replies arrive in the same chat. Never ask for passwords or payment data. Behind NEXT_PUBLIC_SUPPORT_CHAT_ENABLED / VITE_SUPPORT_CHAT_ENABLED until launch (#572)."
+    },
+    {
+      "type": "frame",
+      "id": "tCfpzP",
+      "name": "AI assistant / Operator replied / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "gap": 20,
+      "padding": 24,
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "frame",
+          "id": "3PrTQg",
+          "name": "Page",
+          "gap": 12,
+          "alignItems": "center",
+          "width": "fill_container",
+          "height": "fill_container",
+          "children": []
+        },
+        {
+          "type": "frame",
+          "id": "geARt7",
+          "name": "Assistant Dock",
+          "layout": "vertical",
+          "gap": 14,
+          "width": "fill_container",
+          "alignItems": "end",
+          "children": [
+            {
+              "type": "ref",
+              "id": "gAHgCL",
+              "ref": "ds:krpNYY",
+              "name": "Assistant/Panel",
+              "width": 380,
+              "height": 540,
+              "descendants": {
+                "ds:L9A4MS": {
+                  "type": "frame",
+                  "id": "xmngxL",
+                  "name": "Messages",
+                  "layout": "vertical",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "padding": 14,
+                  "gap": 10,
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "PZAo7I",
+                      "ref": "ds:k7btvH",
+                      "name": "Assistant/Message Mine",
+                      "descendants": {
+                        "ds:Sa0FCz": {
+                          "content": "When do payouts arrive?"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "SQJqT0",
+                      "ref": "ds:r6G7wB",
+                      "name": "Assistant/Message",
+                      "descendants": {
+                        "ds:52AVgR": {
+                          "content": "Payouts arrive within 10 working days after the month ends.\nSources: Payouts · Plans"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "DFUtJx",
+                      "ref": "ds:k7btvH",
+                      "name": "Assistant/Message Mine",
+                      "descendants": {
+                        "ds:Sa0FCz": {
+                          "content": "It is the 19th and mine has not come. I want to talk to a person."
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "w03ez8",
+                      "ref": "ds:r6G7wB",
+                      "name": "Assistant/Message",
+                      "descendants": {
+                        "ds:52AVgR": {
+                          "content": "I passed this to the team. An operator will reply here."
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Vfb2Xz",
+                      "ref": "ds:r6G7wB",
+                      "name": "Assistant/Message",
+                      "descendants": {
+                        "ds:52AVgR": {
+                          "content": "Bitrate team: your payout left on the 18th and reaches your card within two days."
+                        }
+                      }
+                    }
+                  ]
+                },
+                "ds:EEjrpZ": {
+                  "content": "An operator will reply here as soon as possible."
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "bKMozI",
+              "ref": "ds:9garaR",
+              "name": "Assistant/FAB Open"
+            }
+          ]
+        }
+      ],
+      "x": 14770,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "system — floating assistant on every page outside /main — Bottom-right button on the landing, auth, legal, verify, 404, error and offline pages of web-player (not inside the player, where it would cover the player bar) and on every page of the artist portal. It expands into a 380×540 chat on desktop and a full-screen sheet on phones. While a request runs a thinking orb shows the phase: searching the docs, then composing. Answers cite the help centre under the reply. When the assistant cannot help it hands the chat to the Bitrate team: the status line says an operator will reply, and their replies arrive in the same chat. Never ask for passwords or payment data. Behind NEXT_PUBLIC_SUPPORT_CHAT_ENABLED / VITE_SUPPORT_CHAT_ENABLED until launch (#572)."
+    },
+    {
+      "type": "frame",
+      "id": "HK8fST",
+      "name": "AI assistant / Operator replied / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "gap": 20,
+      "padding": 24,
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "FkydGq",
+          "ref": "ds:krpNYY",
+          "name": "Assistant/Panel",
+          "width": "fill_container",
+          "height": "fill_container",
+          "descendants": {
+            "ds:L9A4MS": {
+              "type": "frame",
+              "id": "cmgZOh",
+              "name": "Messages",
+              "layout": "vertical",
+              "width": "fill_container",
+              "height": "fill_container",
+              "padding": 14,
+              "gap": 10,
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "ICNUTf",
+                  "ref": "ds:k7btvH",
+                  "name": "Assistant/Message Mine",
+                  "descendants": {
+                    "ds:Sa0FCz": {
+                      "content": "When do payouts arrive?"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "LQ8RS9",
+                  "ref": "ds:r6G7wB",
+                  "name": "Assistant/Message",
+                  "descendants": {
+                    "ds:52AVgR": {
+                      "content": "Payouts arrive within 10 working days after the month ends.\nSources: Payouts · Plans"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "4GKXUx",
+                  "ref": "ds:k7btvH",
+                  "name": "Assistant/Message Mine",
+                  "descendants": {
+                    "ds:Sa0FCz": {
+                      "content": "It is the 19th and mine has not come. I want to talk to a person."
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "1BVj8A",
+                  "ref": "ds:r6G7wB",
+                  "name": "Assistant/Message",
+                  "descendants": {
+                    "ds:52AVgR": {
+                      "content": "I passed this to the team. An operator will reply here."
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "0KBDTH",
+                  "ref": "ds:r6G7wB",
+                  "name": "Assistant/Message",
+                  "descendants": {
+                    "ds:52AVgR": {
+                      "content": "Bitrate team: your payout left on the 18th and reaches your card within two days."
+                    }
+                  }
+                }
+              ]
+            },
+            "ds:EEjrpZ": {
+              "content": "An operator will reply here as soon as possible."
+            }
+          }
+        }
+      ],
+      "x": 16310,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "system — floating assistant on every page outside /main — Bottom-right button on the landing, auth, legal, verify, 404, error and offline pages of web-player (not inside the player, where it would cover the player bar) and on every page of the artist portal. It expands into a 380×540 chat on desktop and a full-screen sheet on phones. While a request runs a thinking orb shows the phase: searching the docs, then composing. Answers cite the help centre under the reply. When the assistant cannot help it hands the chat to the Bitrate team: the status line says an operator will reply, and their replies arrive in the same chat. Never ask for passwords or payment data. Behind NEXT_PUBLIC_SUPPORT_CHAT_ENABLED / VITE_SUPPORT_CHAT_ENABLED until launch (#572)."
+    },
+    {
+      "type": "frame",
+      "id": "fWi6QW",
+      "name": "AI assistant / Limit reached / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "gap": 20,
+      "padding": 24,
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "frame",
+          "id": "7SGh51",
+          "name": "Page",
+          "gap": 12,
+          "alignItems": "center",
+          "width": "fill_container",
+          "height": "fill_container",
+          "children": []
+        },
+        {
+          "type": "frame",
+          "id": "4QdOQk",
+          "name": "Assistant Dock",
+          "layout": "vertical",
+          "gap": 14,
+          "width": "fill_container",
+          "alignItems": "end",
+          "children": [
+            {
+              "type": "ref",
+              "id": "qnLne2",
+              "ref": "ds:krpNYY",
+              "name": "Assistant/Panel",
+              "width": 380,
+              "height": 540,
+              "descendants": {
+                "ds:L9A4MS": {
+                  "type": "frame",
+                  "id": "FyffHZ",
+                  "name": "Messages",
+                  "layout": "vertical",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "padding": 14,
+                  "gap": 10,
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "XznHvO",
+                      "ref": "ds:k7btvH",
+                      "name": "Assistant/Message Mine",
+                      "descendants": {
+                        "ds:Sa0FCz": {
+                          "content": "How do I release a single?"
+                        }
+                      }
+                    }
+                  ]
+                },
+                "ds:EEjrpZ": {
+                  "content": "Too many messages. Wait a moment and try again."
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "nUHUjY",
+              "ref": "ds:9garaR",
+              "name": "Assistant/FAB Open"
+            }
+          ]
+        }
+      ],
+      "x": 16800,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "system — floating assistant on every page outside /main — Bottom-right button on the landing, auth, legal, verify, 404, error and offline pages of web-player (not inside the player, where it would cover the player bar) and on every page of the artist portal. It expands into a 380×540 chat on desktop and a full-screen sheet on phones. While a request runs a thinking orb shows the phase: searching the docs, then composing. Answers cite the help centre under the reply. When the assistant cannot help it hands the chat to the Bitrate team: the status line says an operator will reply, and their replies arrive in the same chat. Never ask for passwords or payment data. Behind NEXT_PUBLIC_SUPPORT_CHAT_ENABLED / VITE_SUPPORT_CHAT_ENABLED until launch (#572)."
+    },
+    {
+      "type": "frame",
+      "id": "bFZ9j2",
+      "name": "AI assistant / Limit reached / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "gap": 20,
+      "padding": 24,
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "vJZ0fB",
+          "ref": "ds:krpNYY",
+          "name": "Assistant/Panel",
+          "width": "fill_container",
+          "height": "fill_container",
+          "descendants": {
+            "ds:L9A4MS": {
+              "type": "frame",
+              "id": "6w3cOD",
+              "name": "Messages",
+              "layout": "vertical",
+              "width": "fill_container",
+              "height": "fill_container",
+              "padding": 14,
+              "gap": 10,
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "OK6tFl",
+                  "ref": "ds:k7btvH",
+                  "name": "Assistant/Message Mine",
+                  "descendants": {
+                    "ds:Sa0FCz": {
+                      "content": "How do I release a single?"
+                    }
+                  }
+                }
+              ]
+            },
+            "ds:EEjrpZ": {
+              "content": "Too many messages. Wait a moment and try again."
+            }
+          }
+        }
+      ],
+      "x": 18340,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "system — floating assistant on every page outside /main — Bottom-right button on the landing, auth, legal, verify, 404, error and offline pages of web-player (not inside the player, where it would cover the player bar) and on every page of the artist portal. It expands into a 380×540 chat on desktop and a full-screen sheet on phones. While a request runs a thinking orb shows the phase: searching the docs, then composing. Answers cite the help centre under the reply. When the assistant cannot help it hands the chat to the Bitrate team: the status line says an operator will reply, and their replies arrive in the same chat. Never ask for passwords or payment data. Behind NEXT_PUBLIC_SUPPORT_CHAT_ENABLED / VITE_SUPPORT_CHAT_ENABLED until launch (#572)."
+    },
+    {
+      "type": "frame",
+      "id": "WWS8Eo",
       "name": "AI assistant / Error / Desktop",
       "width": 1440,
       "height": 900,
@@ -1215,7 +1957,7 @@
       "children": [
         {
           "type": "frame",
-          "id": "DU6vcn",
+          "id": "CpOV5V",
           "name": "Page",
           "gap": 12,
           "alignItems": "center",
@@ -1225,7 +1967,7 @@
         },
         {
           "type": "frame",
-          "id": "cca8bw",
+          "id": "xLTDOF",
           "name": "Assistant Dock",
           "layout": "vertical",
           "gap": 14,
@@ -1234,7 +1976,7 @@
           "children": [
             {
               "type": "ref",
-              "id": "8bf2aL",
+              "id": "5ZSrT1",
               "ref": "ds:krpNYY",
               "name": "Assistant/Panel",
               "width": 380,
@@ -1242,7 +1984,7 @@
               "descendants": {
                 "ds:L9A4MS": {
                   "type": "frame",
-                  "id": "LAhNNn",
+                  "id": "Cvg6VD",
                   "name": "Messages",
                   "layout": "vertical",
                   "width": "fill_container",
@@ -1252,7 +1994,7 @@
                   "children": [
                     {
                       "type": "ref",
-                      "id": "GsdkVJ",
+                      "id": "UhMEgc",
                       "ref": "ds:k7btvH",
                       "name": "Assistant/Message Mine",
                       "descendants": {
@@ -1263,7 +2005,7 @@
                     },
                     {
                       "type": "ref",
-                      "id": "5wzrSL",
+                      "id": "LmRyZT",
                       "ref": "ds:r6G7wB",
                       "name": "Assistant/Message",
                       "descendants": {
@@ -1274,14 +2016,14 @@
                     },
                     {
                       "type": "frame",
-                      "id": "VsVMSf",
+                      "id": "2k9CvS",
                       "name": "Row",
                       "gap": 8,
                       "alignItems": "center",
                       "children": [
                         {
                           "type": "ref",
-                          "id": "SnXATz",
+                          "id": "gAvCHd",
                           "ref": "ds:G5tJp",
                           "name": "Button / Try again",
                           "descendants": {
@@ -1304,23 +2046,23 @@
             },
             {
               "type": "ref",
-              "id": "P85HPY",
+              "id": "64T518",
               "ref": "ds:9garaR",
               "name": "Assistant/FAB Open"
             }
           ]
         }
       ],
-      "x": 10710,
+      "x": 18830,
       "y": 0,
       "theme": {
         "ds:Mode": "Dark"
       },
-      "context": "system — floating assistant on every page outside /main — Bottom-right button on the landing, auth, legal, verify, 404, error and offline pages (not inside the player). It expands into a 380×540 chat on desktop and a full-screen sheet on phones. While a request runs a thinking orb shows the phase: searching the docs, then composing. Answers cite Bitrate docs; never ask for passwords or payment data."
+      "context": "system — floating assistant on every page outside /main — Bottom-right button on the landing, auth, legal, verify, 404, error and offline pages of web-player (not inside the player, where it would cover the player bar) and on every page of the artist portal. It expands into a 380×540 chat on desktop and a full-screen sheet on phones. While a request runs a thinking orb shows the phase: searching the docs, then composing. Answers cite the help centre under the reply. When the assistant cannot help it hands the chat to the Bitrate team: the status line says an operator will reply, and their replies arrive in the same chat. Never ask for passwords or payment data. Behind NEXT_PUBLIC_SUPPORT_CHAT_ENABLED / VITE_SUPPORT_CHAT_ENABLED until launch (#572)."
     },
     {
       "type": "frame",
-      "id": "7CkiKf",
+      "id": "wwTwcj",
       "name": "AI assistant / Error / Mobile",
       "width": 390,
       "height": 844,
@@ -1334,7 +2076,7 @@
       "children": [
         {
           "type": "ref",
-          "id": "PLDQWD",
+          "id": "er2KSO",
           "ref": "ds:krpNYY",
           "name": "Assistant/Panel",
           "width": "fill_container",
@@ -1342,7 +2084,7 @@
           "descendants": {
             "ds:L9A4MS": {
               "type": "frame",
-              "id": "g2bigq",
+              "id": "LcJVM6",
               "name": "Messages",
               "layout": "vertical",
               "width": "fill_container",
@@ -1352,7 +2094,7 @@
               "children": [
                 {
                   "type": "ref",
-                  "id": "J69PvS",
+                  "id": "bhFAqZ",
                   "ref": "ds:k7btvH",
                   "name": "Assistant/Message Mine",
                   "descendants": {
@@ -1363,7 +2105,7 @@
                 },
                 {
                   "type": "ref",
-                  "id": "bQ642U",
+                  "id": "eW5dSq",
                   "ref": "ds:r6G7wB",
                   "name": "Assistant/Message",
                   "descendants": {
@@ -1374,14 +2116,14 @@
                 },
                 {
                   "type": "frame",
-                  "id": "eRRvFB",
+                  "id": "ZkkysC",
                   "name": "Row",
                   "gap": 8,
                   "alignItems": "center",
                   "children": [
                     {
                       "type": "ref",
-                      "id": "GAZoyD",
+                      "id": "fxs11s",
                       "ref": "ds:G5tJp",
                       "name": "Button / Try again",
                       "descendants": {
@@ -1403,16 +2145,16 @@
           }
         }
       ],
-      "x": 12250,
+      "x": 20370,
       "y": 0,
       "theme": {
         "ds:Mode": "Dark"
       },
-      "context": "system — floating assistant on every page outside /main — Bottom-right button on the landing, auth, legal, verify, 404, error and offline pages (not inside the player). It expands into a 380×540 chat on desktop and a full-screen sheet on phones. While a request runs a thinking orb shows the phase: searching the docs, then composing. Answers cite Bitrate docs; never ask for passwords or payment data."
+      "context": "system — floating assistant on every page outside /main — Bottom-right button on the landing, auth, legal, verify, 404, error and offline pages of web-player (not inside the player, where it would cover the player bar) and on every page of the artist portal. It expands into a 380×540 chat on desktop and a full-screen sheet on phones. While a request runs a thinking orb shows the phase: searching the docs, then composing. Answers cite the help centre under the reply. When the assistant cannot help it hands the chat to the Bitrate team: the status line says an operator will reply, and their replies arrive in the same chat. Never ask for passwords or payment data. Behind NEXT_PUBLIC_SUPPORT_CHAT_ENABLED / VITE_SUPPORT_CHAT_ENABLED until launch (#572)."
     },
     {
       "type": "frame",
-      "id": "xjue5y",
+      "id": "7fx6x6",
       "name": "AI assistant / Offline / Desktop",
       "width": 1440,
       "height": 900,
@@ -1426,7 +2168,7 @@
       "children": [
         {
           "type": "frame",
-          "id": "xMaLD8",
+          "id": "9FYyaX",
           "name": "Page",
           "gap": 12,
           "alignItems": "center",
@@ -1436,7 +2178,7 @@
         },
         {
           "type": "frame",
-          "id": "bsg9Nf",
+          "id": "gjH4aF",
           "name": "Assistant Dock",
           "layout": "vertical",
           "gap": 14,
@@ -1445,7 +2187,7 @@
           "children": [
             {
               "type": "ref",
-              "id": "DD7f5h",
+              "id": "yC0EpW",
               "ref": "ds:krpNYY",
               "name": "Assistant/Panel",
               "width": 380,
@@ -1453,7 +2195,7 @@
               "descendants": {
                 "ds:L9A4MS": {
                   "type": "frame",
-                  "id": "2jMUrg",
+                  "id": "nkT6Vh",
                   "name": "Messages",
                   "layout": "vertical",
                   "width": "fill_container",
@@ -1463,7 +2205,7 @@
                   "children": [
                     {
                       "type": "ref",
-                      "id": "F4HAqj",
+                      "id": "jrQFpi",
                       "ref": "ds:r6G7wB",
                       "name": "Assistant/Message",
                       "descendants": {
@@ -1481,23 +2223,23 @@
             },
             {
               "type": "ref",
-              "id": "c8ZuD7",
+              "id": "DT5PQd",
               "ref": "ds:9garaR",
               "name": "Assistant/FAB Open"
             }
           ]
         }
       ],
-      "x": 12740,
+      "x": 20860,
       "y": 0,
       "theme": {
         "ds:Mode": "Dark"
       },
-      "context": "system — floating assistant on every page outside /main — Bottom-right button on the landing, auth, legal, verify, 404, error and offline pages (not inside the player). It expands into a 380×540 chat on desktop and a full-screen sheet on phones. While a request runs a thinking orb shows the phase: searching the docs, then composing. Answers cite Bitrate docs; never ask for passwords or payment data."
+      "context": "system — floating assistant on every page outside /main — Bottom-right button on the landing, auth, legal, verify, 404, error and offline pages of web-player (not inside the player, where it would cover the player bar) and on every page of the artist portal. It expands into a 380×540 chat on desktop and a full-screen sheet on phones. While a request runs a thinking orb shows the phase: searching the docs, then composing. Answers cite the help centre under the reply. When the assistant cannot help it hands the chat to the Bitrate team: the status line says an operator will reply, and their replies arrive in the same chat. Never ask for passwords or payment data. Behind NEXT_PUBLIC_SUPPORT_CHAT_ENABLED / VITE_SUPPORT_CHAT_ENABLED until launch (#572)."
     },
     {
       "type": "frame",
-      "id": "R4MS8K",
+      "id": "PCebNX",
       "name": "AI assistant / Offline / Mobile",
       "width": 390,
       "height": 844,
@@ -1511,7 +2253,7 @@
       "children": [
         {
           "type": "ref",
-          "id": "3ZNdyj",
+          "id": "58NPig",
           "ref": "ds:krpNYY",
           "name": "Assistant/Panel",
           "width": "fill_container",
@@ -1519,7 +2261,7 @@
           "descendants": {
             "ds:L9A4MS": {
               "type": "frame",
-              "id": "hStSjj",
+              "id": "SDFtAx",
               "name": "Messages",
               "layout": "vertical",
               "width": "fill_container",
@@ -1529,7 +2271,7 @@
               "children": [
                 {
                   "type": "ref",
-                  "id": "wu7XS5",
+                  "id": "wrVe7O",
                   "ref": "ds:r6G7wB",
                   "name": "Assistant/Message",
                   "descendants": {
@@ -1546,12 +2288,12 @@
           }
         }
       ],
-      "x": 14280,
+      "x": 22400,
       "y": 0,
       "theme": {
         "ds:Mode": "Dark"
       },
-      "context": "system — floating assistant on every page outside /main — Bottom-right button on the landing, auth, legal, verify, 404, error and offline pages (not inside the player). It expands into a 380×540 chat on desktop and a full-screen sheet on phones. While a request runs a thinking orb shows the phase: searching the docs, then composing. Answers cite Bitrate docs; never ask for passwords or payment data."
+      "context": "system — floating assistant on every page outside /main — Bottom-right button on the landing, auth, legal, verify, 404, error and offline pages of web-player (not inside the player, where it would cover the player bar) and on every page of the artist portal. It expands into a 380×540 chat on desktop and a full-screen sheet on phones. While a request runs a thinking orb shows the phase: searching the docs, then composing. Answers cite the help centre under the reply. When the assistant cannot help it hands the chat to the Bitrate team: the status line says an operator will reply, and their replies arrive in the same chat. Never ask for passwords or payment data. Behind NEXT_PUBLIC_SUPPORT_CHAT_ENABLED / VITE_SUPPORT_CHAT_ENABLED until launch (#572)."
     }
   ]
 }
